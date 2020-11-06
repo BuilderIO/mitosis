@@ -18,7 +18,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js'],
   modulePathIgnorePatterns: ['dist'],
   moduleNameMapper: {
-    '@taxi/(.+)$': '<rootDir>packages/$1/src',
+    '@jsx-lite/(.+)$': '<rootDir>packages/$1/src',
   },
   notify: true,
   notifyMode: 'always',
