@@ -25,8 +25,8 @@ export function MyComponent() {
   );
 }
 ```
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fca634cac3aef4570a284bb647a1b5228" />
 
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fda8f27bf2deb40a886943bf41db07377" />
 
 ## Why
 
