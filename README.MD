@@ -1,6 +1,6 @@
 # JSX Lite
 
-Write JSX once that runs everywhere. Vue, React, Solid, Liquid, and more.
+Write JSX once that runs everywhere. Compiles to Vue, React, Solid, Liquid, and more.
 
 ## Example
 
