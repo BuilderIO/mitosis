@@ -2,6 +2,10 @@
 
 Write JSX once that runs everywhere. Vue, React, Solid, Liquid, and more.
 
+## Example
+
+**Source:**
+
 ```tsx
 import { useState } from '@jsx-lite/core';
 
@@ -21,6 +25,8 @@ export function MyComponent() {
   );
 }
 ```
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fca634cac3aef4570a284bb647a1b5228" />
+
 
 ## Why
 
