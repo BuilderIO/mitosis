@@ -34,7 +34,7 @@ export function MyComponent() {
 
 ## How does it work
 
-JSX Lite uses a static form of JSX. This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
+JSX Lite uses a static form of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
 
 ```tsx
 export function MyComponent() {
@@ -95,7 +95,6 @@ class MyComponent {
 ```
 
 Adding framework support is surprisingy easy with our plugins (docs coming soon!)
-
 
 ## Why
 
