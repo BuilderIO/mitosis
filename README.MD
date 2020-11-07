@@ -32,6 +32,71 @@ export function MyComponent() {
 
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fda8f27bf2deb40a886943bf41db07377" />
 
+## How does it work
+
+JSX Lite uses a static form of JSX. This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
+
+```tsx
+export function MyComponent() {
+  const state = useState({
+    name: 'Steve',
+  });
+
+  return (
+    <div>
+      <input
+        value={state.name}
+        onChange={(e) => (state.name = e.target.value)}
+      />
+    </div>
+  );
+}
+```
+
+becomes:
+
+```json
+{
+  "@type": "@jsx-lite/component",
+  "state": {
+    "name": "Steve"
+  },
+  "nodes": [
+    {
+      "@type": "@jsx-lite/node",
+      "name": "div",
+      "children": [
+        {
+          "@type": "@jsx-lite/node",
+          "bindings": {
+            "value": "state.name",
+            "onChange": "state.name = event.target.value"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+Which can be reserialized into many languges and framworks. For instance, to support angular, we just make a serializer that loops over the json and produces:
+
+```ts
+@Component({
+  template: `
+    <div>
+      <input [value]="name" (change)="name = $event.target.value" />
+    </div>
+  `,
+})
+class MyComponent {
+  name = 'Steve';
+}
+```
+
+Adding framework support is surprisingy easy with our plugins (docs coming soon!)
+
+
 ## Why
 
 1. Write JSX code _one time_ that can **compile and render to any language or framework**
@@ -50,5 +115,6 @@ export function MyComponent() {
 ## Coming soon
 
 - Stable (v1) release
-- Downloadable version of Builder.io's visual editor for visually editing Builder.io JSX locally
-- Plugin API for custom syntaxes and extensions
+- Downloadable version of Builder.io's visual editor for visually editing JSX lite locally
+- Plugin API docs for custom syntaxes and extensions
+- Import from design tools like Figma to JSX Lite
