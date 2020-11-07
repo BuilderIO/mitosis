@@ -4,6 +4,7 @@ import JSON5 from 'json5';
 import dedent from 'dedent';
 import { format } from 'prettier';
 import chalk from 'chalk';
+import json5 from 'json5';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 
@@ -212,6 +213,7 @@ export function parse(jsx: string): JSXLiteComponent {
     ],
   });
 
+  // To debug:
   // console.log(output!.code!);
 
   return JSON5.parse(output!.code!.replace('({', '{').replace('});', '}'));
@@ -270,6 +272,173 @@ const componentToVue = (json: JSXLiteComponent, options: ToVueOptions = {}) => {
   }
   return str;
 };
+type ToSvelteOptions = {
+  prettier?: boolean;
+};
+const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions = {}) => {
+  if (json.properties._text) {
+    return json.properties._text;
+  }
+
+  let str = `<${json.name} `;
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+  for (const key in json.bindings) {
+    const value = json.bindings[key] as string;
+    // TODO: proper babel transform to replace. Util for this
+    const useValue = value.replace(/state\./g, '');
+
+    if (key.startsWith('on')) {
+      const event = key.replace('on', '').toLowerCase();
+      str += ` on:${event}={event => ${useValue}} `;
+    } else {
+      str += ` ${key}={${useValue}} `;
+    }
+  }
+  if (selfClosingTags.has(json.name)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
+  }
+
+  str += `</${json.name}>`;
+  return str;
+};
+const componentToSvelte = (
+  json: JSXLiteComponent,
+  options: ToSvelteOptions = {},
+) => {
+  let str = dedent`
+    <script>
+      ${Object.keys(json.state)
+        .map((key) => `let ${key} = ${JSON5.stringify(json.state[key])};`)
+        .join('\n')}
+    </script>
+    ${json.children.map((item) => blockToSvelte(item)).join('\n')}
+  `;
+
+  if (options.prettier !== false) {
+    str = format(str, { parser: 'html' });
+  }
+  return str;
+};
+
+type ToReactOptions = {
+  prettier?: boolean;
+};
+const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
+  if (json.properties._text) {
+    return json.properties._text;
+  }
+
+  let str = `<${json.name} `;
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+  for (const key in json.bindings) {
+    const value = json.bindings[key] as string;
+
+    if (key.startsWith('on')) {
+      str += ` ${key}={event => (${value})} `;
+    } else {
+      str += ` ${key}={${JSON5.stringify(value)}} `;
+    }
+  }
+  if (selfClosingTags.has(json.name)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children.map((item) => blockToReact(item, options)).join('\n');
+  }
+
+  str += `</${json.name}>`;
+  return str;
+};
+const componentToReact = (
+  json: JSXLiteComponent,
+  options: ToReactOptions = {},
+) => {
+  let str = dedent`
+    import { useState } from '@jsx-lite/react';
+    
+    export default function MyComponent () {
+      const state = useState(() => (${JSON5.stringify(json.state)}));
+
+      return (<>
+        ${json.children.map((item) => blockToReact(item)).join('\n')}
+      </>)
+    }
+   
+  `;
+
+  if (options.prettier !== false) {
+    str = format(str, { parser: 'babel' });
+  }
+  return str;
+};
+
+type ToSolidOptions = {
+  prettier?: boolean;
+};
+const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
+  if (json.properties._text) {
+    return json.properties._text;
+  }
+
+  let str = `<${json.name} `;
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+  for (const key in json.bindings) {
+    const value = json.bindings[key] as string;
+
+    if (key.startsWith('on')) {
+      str += ` ${key}={event => (${value})} `;
+    } else {
+      str += ` ${key}={${JSON5.stringify(value)}} `;
+    }
+  }
+  if (selfClosingTags.has(json.name)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children.map((item) => blockToSolid(item, options)).join('\n');
+  }
+
+  str += `</${json.name}>`;
+  return str;
+};
+const componentToSolid = (
+  json: JSXLiteComponent,
+  options: ToSolidOptions = {},
+) => {
+  let str = dedent`
+    import { createMutable } from 'solid-js';
+    
+    export default function MyComponent () {
+      const state = createMutable(${JSON5.stringify(json.state)});
+
+      return (<>
+        ${json.children.map((item) => blockToSolid(item)).join('\n')}
+      </>)
+    }
+   
+  `;
+
+  if (options.prettier !== false) {
+    str = format(str, { parser: 'babel' });
+  }
+  return str;
+};
+
 type ToAngularOptions = {
   prettier?: boolean;
 };
