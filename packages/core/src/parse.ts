@@ -1,12 +1,10 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import JSON5 from 'json5';
-import dedent from 'dedent';
-import chalk from 'chalk';
 import { JSXLiteNode } from './types/jsx-lite-node';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from './types/json';
 import { createJSXLiteNode } from './helpers/create-jsx-lite-node';
-import { JSXLiteComponent } from './types/jsx-lite-component';
+import { JSXLiteComponent, JSXLiteImport } from './types/jsx-lite-component';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 
@@ -68,6 +66,7 @@ const jsonObjectToAst = (
 
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
+  context: any,
 ): JSONOrNode => {
   let state = {};
   for (const item of node.body.body) {
@@ -95,6 +94,7 @@ const componentFunctionToJson = (
   }
   return {
     '@type': '@jsx-lite/component',
+    imports: (context.builder && context.builder.imports) || {},
     state,
     children,
   };
@@ -152,18 +152,44 @@ export function parse(jsx: string): JSXLiteComponent {
         visitor: {
           FunctionDeclaration(
             path: babel.NodePath<babel.types.FunctionDeclaration>,
+            context: any,
           ) {
             const { node } = path;
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
-                path.replaceWith(jsonToAst(componentFunctionToJson(node)));
+                path.replaceWith(
+                  jsonToAst(componentFunctionToJson(node, context)),
+                );
               }
             }
           },
           ImportDeclaration(
             path: babel.NodePath<babel.types.ImportDeclaration>,
+            context: any,
           ) {
+            if (!context.builder) {
+              context.builder = {};
+            }
+            if (!context.builder.imports) {
+              context.builder.imports = [];
+            }
+            const importObject: JSXLiteImport = {
+              imports: {},
+              path: path.node.source.value,
+            };
+            for (const specifier of path.node.specifiers) {
+              if (types.isImportSpecifier(specifier)) {
+                context.builder.imports[
+                  (specifier.imported as babel.types.Identifier).name
+                ] = specifier.local.name;
+              } else if (types.isImportDefaultSpecifier(specifier)) {
+                context.builder.imports[specifier.local.name] = 'default';
+              } else if (types.isImportNamespaceSpecifier(specifier)) {
+                context.builder.imports[specifier.local.name] = '*';
+              }
+            }
+            context.builder.imports.push(importObject);
             path.remove();
           },
           ExportDefaultDeclaration(
@@ -188,27 +214,3 @@ export function parse(jsx: string): JSXLiteComponent {
 
   return JSON5.parse(output!.code!.replace('({', '{').replace('});', '}'));
 }
-
-const json = parse(
-  dedent`
-    import { useState } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        name: 'Steve',
-      });
-
-      return (
-        <div>
-          <input
-            value={state.name}
-            onChange={(event) => (state.name = event.target.value)}
-          />
-          Hello! I can run in React, Vue, Solid, or Liquid!
-        </div>
-      );
-    }
-  `,
-);
-
-console.log(chalk.blue('json'), json);
