@@ -92,9 +92,10 @@ const componentFunctionToJson = (
       children.push(jsxElementToJson(value) as JSXLiteNode);
     }
   }
+
   return {
     '@type': '@jsx-lite/component',
-    imports: (context.builder && context.builder.imports) || {},
+    imports: (context.builder && context.builder.imports) || [],
     state,
     children,
   };
@@ -180,16 +181,17 @@ export function parse(jsx: string): JSXLiteComponent {
             };
             for (const specifier of path.node.specifiers) {
               if (types.isImportSpecifier(specifier)) {
-                context.builder.imports[
+                importObject.imports[
                   (specifier.imported as babel.types.Identifier).name
                 ] = specifier.local.name;
               } else if (types.isImportDefaultSpecifier(specifier)) {
-                context.builder.imports[specifier.local.name] = 'default';
+                importObject.imports[specifier.local.name] = 'default';
               } else if (types.isImportNamespaceSpecifier(specifier)) {
-                context.builder.imports[specifier.local.name] = '*';
+                importObject.imports[specifier.local.name] = '*';
               }
             }
             context.builder.imports.push(importObject);
+            // console.log('context 1', context);
             path.remove();
           },
           ExportDefaultDeclaration(

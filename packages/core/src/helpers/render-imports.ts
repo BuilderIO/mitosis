@@ -65,5 +65,5 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
     importString += renderImport(theImport) + '\n';
   }
 
-  return '';
+  return importString;
 };
