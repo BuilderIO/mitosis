@@ -13,23 +13,6 @@ export interface FormInputProps {
   required?: boolean;
 }
 
-class FormInputComponent extends React.Component<FormInputProps> {
-  render() {
-    return (
-      <input
-        key={Builder.isEditing && this.props.defaultValue ? this.props.defaultValue : 'default-key'}
-        placeholder={this.props.placeholder}
-        type={this.props.type}
-        name={this.props.name}
-        value={this.props.value}
-        defaultValue={this.props.defaultValue}
-        required={this.props.required}
-        {...this.props.attributes}
-      />
-    );
-  }
-}
-
 export const FormInput = withBuilder(FormInputComponent, {
   name: 'Form:Input',
   image:
@@ -104,4 +87,19 @@ export const FormInput = withBuilder(FormInputComponent, {
     borderColor: '#ccc',
   },
 });
+
+export default function FormInputComponent(props: FormInputProps) {
+  return (
+    <input
+      key={Builder.isEditing && this.props.defaultValue ? this.props.defaultValue : 'default-key'}
+      placeholder={this.props.placeholder}
+      type={this.props.type}
+      name={this.props.name}
+      value={this.props.value}
+      defaultValue={this.props.defaultValue}
+      required={this.props.required}
+      {...this.props.attributes}
+    />
+  );
+}
 `

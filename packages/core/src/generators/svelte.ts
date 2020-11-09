@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
-import { renderImports } from '../helpers/render-imports';
+import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -48,7 +48,7 @@ const componentToSvelte = (
 ) => {
   let str = dedent`
     <script>
-      ${renderImports(json.imports)}
+      ${renderPreComponent(json)}
 
       ${Object.keys(json.state)
         .map((key) => `let ${key} = ${json5.stringify(json.state[key])};`)

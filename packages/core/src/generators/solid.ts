@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
-import { renderImports } from '../helpers/render-imports';
+import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -45,7 +45,7 @@ const componentToSolid = (
 ) => {
   let str = dedent`
     import { createMutable } from 'solid-js';
-    ${renderImports(json.imports)}
+    ${renderPreComponent(json)}
     
     export default function MyComponent () {
       const state = createMutable(${json5.stringify(json.state)});

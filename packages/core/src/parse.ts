@@ -5,6 +5,7 @@ import { JSXLiteNode } from './types/jsx-lite-node';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from './types/json';
 import { createJSXLiteNode } from './helpers/create-jsx-lite-node';
 import { JSXLiteComponent, JSXLiteImport } from './types/jsx-lite-component';
+import { createJSXLiteComponent } from './helpers/create-jsx-lite-component';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -12,6 +13,13 @@ const tsPreset = require('@babel/preset-typescript');
 export const selfClosingTags = new Set(['input', 'meta', 'bar']);
 
 const { types } = babel;
+
+type Context = {
+  // Babel has other context
+  builder: {
+    component: JSXLiteComponent;
+  };
+};
 
 const arrayToAst = (array: JSONOrNode[]) => {
   return types.arrayExpression(array.map((item) => jsonToAst(item)) as any);
@@ -67,7 +75,7 @@ const jsonObjectToAst = (
 
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
-  context: any,
+  context: Context,
 ): JSONOrNode => {
   let state = {};
   for (const item of node.body.body) {
@@ -95,11 +103,10 @@ const componentFunctionToJson = (
   }
 
   return {
-    '@type': '@jsx-lite/component',
-    imports: (context.builder && context.builder.imports) || [],
+    ...context.builder.component,
     state,
     children,
-  };
+  } as any;
 };
 
 const jsxElementToJson = (
@@ -139,6 +146,11 @@ const jsxElementToJson = (
           }
           return memo;
         }
+      } else if (types.isJSXSpreadAttribute(item)) {
+        // TODO: potentially like Vue store bindings and properties as array of key value pairs
+        // too so can do this accurately when order matters. Also tempting to not support spread,
+        // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
+        memo._spread = item.argument;
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
@@ -153,9 +165,35 @@ export function parse(jsx: string): JSXLiteComponent {
       jsxPlugin,
       () => ({
         visitor: {
+          Program(path: babel.NodePath<babel.types.Program>, context: Context) {
+            if (context.builder) {
+              return;
+            }
+            context.builder = {
+              component: createJSXLiteComponent(),
+            };
+
+            const isImportOrDefaultExport = (node: babel.Node) =>
+              types.isExportDefaultDeclaration(node) ||
+              types.isImportDeclaration(node);
+
+            const keepStatements = path.node.body.filter((statement) =>
+              isImportOrDefaultExport(statement),
+            );
+            const cutStatements = path.node.body.filter(
+              (statement) => !isImportOrDefaultExport(statement),
+            );
+
+            // TODO: support multiple? e.g. for others to add imports?
+            context.builder.component.hooks.preComponent = generate(
+              types.program(cutStatements),
+            ).code;
+
+            path.replaceWith(types.program(keepStatements));
+          },
           FunctionDeclaration(
             path: babel.NodePath<babel.types.FunctionDeclaration>,
-            context: any,
+            context: Context,
           ) {
             const { node } = path;
             if (types.isIdentifier(node.id)) {
@@ -169,14 +207,8 @@ export function parse(jsx: string): JSXLiteComponent {
           },
           ImportDeclaration(
             path: babel.NodePath<babel.types.ImportDeclaration>,
-            context: any,
+            context: Context,
           ) {
-            if (!context.builder) {
-              context.builder = {};
-            }
-            if (!context.builder.imports) {
-              context.builder.imports = [];
-            }
             const importObject: JSXLiteImport = {
               imports: {},
               path: path.node.source.value,
@@ -192,7 +224,7 @@ export function parse(jsx: string): JSXLiteComponent {
                 importObject.imports[specifier.local.name] = '*';
               }
             }
-            context.builder.imports.push(importObject);
+            context.builder.component.imports.push(importObject);
             // console.log('context 1', context);
             path.remove();
           },
@@ -213,8 +245,12 @@ export function parse(jsx: string): JSXLiteComponent {
     ],
   });
 
-  // To debug:
-  // console.log(output!.code!);
-
-  return JSON5.parse(output!.code!.replace('({', '{').replace('});', '}'));
+  try {
+    return JSON5.parse(
+      output!.code!.trim().replace(/^\({/, '{').replace(/}\);$/, '}'),
+    );
+  } catch (err) {
+    console.error('Could not parse code', output && output.code);
+    throw err;
+  }
 }

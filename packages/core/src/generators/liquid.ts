@@ -1,19 +1,28 @@
 import { format } from 'prettier';
-import { JSXLiteComponent, JSXLiteNode, selfClosingTags } from '../parse';
+import { selfClosingTags } from '../parse';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 
 type ToLiquidOptions = {
   prettier?: boolean;
 };
+// TODO: spread support
 const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
   if (json.properties._text) {
     return json.properties._text;
   }
 
   let str = `<${json.name} `;
+
+  if (json.bindings._spread) {
+    str += ` {...(${json.bindings._spread})} `;
+  }
+
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
+
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this

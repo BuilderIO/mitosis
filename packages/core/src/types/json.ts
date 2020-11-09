@@ -1,5 +1,5 @@
 // Pure JSON
-export type JSONPrimitive = string | null | number | boolean;
+export type JSONPrimitive = string | null | number | boolean | undefined;
 export type JSONObject = { [key: string]: JSON };
 export type JSON = JSONPrimitive | JSONObject | JSON[];
 

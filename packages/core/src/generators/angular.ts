@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier';
-import { renderImports } from '../helpers/render-imports';
+import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -50,7 +50,7 @@ export const componentToAngular = (
 ) => {
   let str = dedent`
     import { Component } from '@angular/core';
-    ${renderImports(json.imports)}
+    ${renderPreComponent(json)}
 
     @Component({
       template: \`

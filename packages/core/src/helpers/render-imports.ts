@@ -1,4 +1,4 @@
-import { JSXLiteImport } from '../types/jsx-lite-component';
+import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
 
 const getStarImport = (theImport: JSXLiteImport): string | null => {
   for (const key in theImport.imports) {
@@ -36,7 +36,7 @@ export const renderImport = (theImport: JSXLiteImport): string => {
     let firstAdded = false;
     for (const key in theImport.imports) {
       const value = theImport.imports[key];
-      if (['default', '*'].includes(value)) {
+      if (['default', '*'].includes(value!)) {
         continue;
       }
       if (firstAdded) {
@@ -66,4 +66,11 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
   }
 
   return importString;
+};
+
+export const renderPreComponent = (component: JSXLiteComponent): string => {
+  return `
+    ${renderImports(component.imports)}
+    ${component.hooks.preComponent || ''}
+  `;
 };

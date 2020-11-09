@@ -12,7 +12,7 @@ import { JSXLiteNode } from './jsx-lite-node';
  *      core: 'default',
  *    }
  *  }
- * 
+ *
  * @example
  *  // import * as core from '@jsx-lite/core'
  *  {
@@ -25,13 +25,18 @@ import { JSXLiteNode } from './jsx-lite-node';
 export interface JSXLiteImport {
   path: string;
   imports: {
-    [key: string]: string;
+    [key: string]: string | undefined;
   };
 }
 
 export type JSXLiteComponent = {
   '@type': '@jsx-lite/component';
   imports: JSXLiteImport[];
-  state: { [key: string]: JSON };
+  state: { [key: string]: JSON | undefined };
+  hooks: {
+    [key: string]: string | undefined;
+    preComponent?: string;
+    postComponent?: string;
+  };
   children: JSXLiteNode[];
 };
