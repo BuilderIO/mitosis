@@ -110,6 +110,7 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 
 - [Builder.io](https://github.com/builderio/builder)
 - [HTML to Figma](https://github.com/builderio/html-to-figma) (coming soon)
+- [Snap](https://github.com/builderio/snap) (coming soon)
 
 ## Coming soon
 
