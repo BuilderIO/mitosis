@@ -1,5 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier';
+import { renderImports } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -48,6 +49,9 @@ export const componentToAngular = (
   options: ToAngularOptions = {},
 ) => {
   let str = dedent`
+    import { Component } from '@angular/core';
+    ${renderImports(json.imports)}
+
     @Component({
       template: \`
         ${json.children.map((item) => blockToAngular(item)).join('\n')}

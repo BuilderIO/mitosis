@@ -1,6 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
+import { renderImports } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -50,6 +51,8 @@ export const componentToVue = (
       ${json.children.map((item) => blockToVue(item)).join('\n')}
     </template>
     <script>
+      ${renderImports(json.imports)}
+      
       export default {
         data: () => (${json5.stringify(json.state)})
       }

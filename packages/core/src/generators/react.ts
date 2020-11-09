@@ -1,7 +1,10 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
-import { JSXLiteComponent, JSXLiteNode, selfClosingTags } from '../parse';
+import { renderImports } from '../helpers/render-imports';
+import { selfClosingTags } from '../parse';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -42,6 +45,7 @@ export const componentToReact = (
 ) => {
   let str = dedent`
     import { useState } from '@jsx-lite/react';
+    ${renderImports(json.imports)}
     
     export default function MyComponent () {
       const state = useState(() => (${json5.stringify(json.state)}));
