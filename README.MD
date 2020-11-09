@@ -109,11 +109,14 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
   - E.g. want to make an open source library but can't choose which framework(s) to support? Write it once in Builder JSX and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
 - **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tired of duplicating components because you need to support multiple frameworks?
   - Write once and generate. New hot fraemework comes out? Write an adapter once and now all your current code supports the new framework
-- **Edit visually** - visually edit all code using Builder.io. Share with designers or marketers to create, repurpose, and extend either as code or in a headless CMS such as Builder.io
+- **Edit visually** - static code subsets like jsx-lite have the ability to also be visually edited, for instance with Builder.io. Share with designers or marketers to create, repurpose, and extend either as code or via an API
+
+## Who uses it
+
+- [Builder.io](https://github.com/builderio/builder)
 
 ## Coming soon
 
 - Stable (v1) release
-- Downloadable version of Builder.io's visual editor for visually editing JSX lite locally
 - Plugin API docs for custom syntaxes and extensions
 - Import from design tools like Figma to JSX Lite
