@@ -7,6 +7,7 @@ import { createJSXLiteNode } from './helpers/create-jsx-lite-node';
 import { JSXLiteComponent, JSXLiteImport } from './types/jsx-lite-component';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
+const tsPreset = require('@babel/preset-typescript');
 
 export const selfClosingTags = new Set(['input', 'meta', 'bar']);
 
@@ -147,6 +148,7 @@ const jsxElementToJson = (
 
 export function parse(jsx: string): JSXLiteComponent {
   const output = babel.transform(jsx, {
+    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       jsxPlugin,
       () => ({
