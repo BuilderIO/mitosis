@@ -98,18 +98,13 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 
 ## Why
 
-1. Write JSX code _one time_ that can **compile and render to any language or framework**
-2. **Edit the JSX code visually** using Builder.io's editor and write code / use your own coding tools _side by side_
-
-<img src="https://i.imgur.com/KTpBDvH.gif" >
-
-## Use cases
-
 - **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
   - E.g. want to make an open source library but can't choose which framework(s) to support? Write it once in Builder JSX and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
 - **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tired of duplicating components because you need to support multiple frameworks?
   - Write once and generate. New hot fraemework comes out? Write an adapter once and now all your current code supports the new framework
 - **Edit visually** - static code subsets like jsx-lite have the ability to also be visually edited, for instance with Builder.io. Share with designers or marketers to create, repurpose, and extend either as code or via an API
+
+<img src="https://i.imgur.com/KTpBDvH.gif" >
 
 ## Who uses it
 
