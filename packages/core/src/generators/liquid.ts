@@ -14,10 +14,6 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
 
   let str = `<${json.name} `;
 
-  if (json.bindings._spread) {
-    str += ` {...(${json.bindings._spread})} `;
-  }
-
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;

@@ -15,12 +15,20 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
   }
 
   let str = `<${json.name} `;
+
+  if (json.bindings._spread) {
+    str += ` {...(${json.bindings._spread})} `;
+  }
+
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
+    if (key === '_spread') {
+      continue;
+    }
 
     if (key.startsWith('on')) {
       str += ` ${key}={event => (${value})} `;

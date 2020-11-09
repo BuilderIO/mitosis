@@ -150,7 +150,7 @@ const jsxElementToJson = (
         // TODO: potentially like Vue store bindings and properties as array of key value pairs
         // too so can do this accurately when order matters. Also tempting to not support spread,
         // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
-        memo._spread = item.argument;
+        memo._spread = types.stringLiteral(generate(item.argument).code);
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
