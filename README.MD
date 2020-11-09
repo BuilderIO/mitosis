@@ -109,9 +109,10 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 ## Who uses it
 
 - [Builder.io](https://github.com/builderio/builder)
+- [HTML to Figma](https://github.com/builderio/html-to-figma) (coming soon)
 
 ## Coming soon
 
 - Stable (v1) release
 - Plugin API docs for custom syntaxes and extensions
-- Import from design tools like Figma to JSX Lite
+- Integration with design tools like Figma (Figma <-> JSX Lite)

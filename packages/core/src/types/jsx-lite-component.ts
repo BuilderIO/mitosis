@@ -1,3 +1,4 @@
+import { JSON } from "./json";
 import { JSXLiteNode } from "./jsx-lite-node";
 
 export type JSXLiteComponent = {
