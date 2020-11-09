@@ -105,9 +105,9 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 
 ## Use cases
 
-- **Platform universal code** - your same code compnents can run in a React app, or a Shopify store liquid template, a native app - you name it.
-  - E.g. want to make an open source library but can't choose what framework(s) to support? Write it once in Builder JSX and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
-- **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tried of duplicating components because you need to support multiple frameworks?
+- **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
+  - E.g. want to make an open source library but can't choose which framework(s) to support? Write it once in Builder JSX and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
+- **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tired of duplicating components because you need to support multiple frameworks?
   - Write once and generate. New hot fraemework comes out? Write an adapter once and now all your current code supports the new framework
 - **Edit visually** - visually edit all code using Builder.io. Share with designers or marketers to create, repurpose, and extend either as code or in a headless CMS such as Builder.io
 
