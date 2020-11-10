@@ -264,7 +264,8 @@ declare global {
       id?: string;
       lang?: string;
       spellcheck?: boolean;
-      style?: CSS.Properties | string;
+      style?: CSS.Properties;
+      css?: CSS.Properties | { [key: string]: CSS.Properties | undefined };
       tabindex?: number | string;
       title?: string;
       translate?: 'yes' | 'no';
@@ -860,7 +861,7 @@ declare global {
     interface StylableSVGAttributes {
       class?: string;
       className?: string;
-      style?: CSS.Properties | string;
+      style?: CSS.Properties;
     }
 
     interface TransformableSVGAttributes {

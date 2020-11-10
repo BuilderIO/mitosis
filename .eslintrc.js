@@ -16,6 +16,6 @@ module.exports = {
   },
 
   rules: {
-    '@jsx-lite/no-conditional-render': 'warn',
+    // '@jsx-lite/no-conditional-render': 'warn',
   },
 };
