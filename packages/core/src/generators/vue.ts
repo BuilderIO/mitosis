@@ -15,14 +15,22 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   }
 
   let str = `<${json.name} `;
+
+  if (json.bindings._spread) {
+    str += `v-bind="${json.bindings._spread}"`;
+  }
+
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
+    if (key === '_spread') {
+      continue;
+    }
     const value = json.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
-    const useValue = value.replace(/state\./g, '');
+    const useValue = value.replace(/state\./g, '').replace(/props\./g, '');
 
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();

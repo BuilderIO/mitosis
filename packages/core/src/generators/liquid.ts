@@ -3,6 +3,26 @@ import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
+/**
+ * Test if the binding expression would be likely to generate
+ * valid or invalid liquid. If we generate invalid liquid tags
+ * Shopify will reject our PUT to update the template
+ */
+export const isValidLiquidBinding = (str = '') => {
+  const strictMatches = Boolean(
+    // Test for our `context.shopify.liquid.*(expression), which
+    // we regex out later to transform back into valid liquid expressions
+    str.match(/(context|ctx)\s*(\.shopify\s*)?\.liquid\s*\./),
+  );
+
+  return (
+    strictMatches ||
+    // Test is the expression is simple and would map to Shopify bindings	    // Test for our `context.shopify.liquid.*(expression), which
+    // e.g. `state.product.price` -> `{{product.price}}	    // we regex out later to transform back into valid liquid expressions
+    Boolean(str.match(/^[a-z0-9_\.\s]+$/i))
+  );
+};
+
 type ToLiquidOptions = {
   prettier?: boolean;
 };
@@ -14,19 +34,33 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
 
   let str = `<${json.name} `;
 
+  if (
+    json.properties._spread === '_spread' &&
+    isValidLiquidBinding(json.properties._spread)
+  ) {
+    str += `
+      {% for _attr in ${json.properties._spread} %}
+        {{ _attr[0] }}="{{ _attr[1] }}"
+      {% endfor %}
+    `;
+  }
+
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
 
   for (const key in json.bindings) {
+    if (key === '_spread') {
+      continue;
+    }
     const value = json.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
-    const useValue = value.replace(/state\./g, '');
+    const useValue = value.replace(/state\./g, '').replace(/props\./g, '');
 
     if (key.startsWith('on')) {
       // Do nothing
-    } else {
+    } else if (isValidLiquidBinding(useValue)) {
       str += ` ${key}="{{${useValue}}}" `;
     }
   }

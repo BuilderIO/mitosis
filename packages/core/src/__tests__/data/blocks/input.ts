@@ -91,14 +91,14 @@ export const FormInput = withBuilder(FormInputComponent, {
 export default function FormInputComponent(props: FormInputProps) {
   return (
     <input
-      key={Builder.isEditing && this.props.defaultValue ? this.props.defaultValue : 'default-key'}
-      placeholder={this.props.placeholder}
-      type={this.props.type}
-      name={this.props.name}
-      value={this.props.value}
-      defaultValue={this.props.defaultValue}
-      required={this.props.required}
-      {...this.props.attributes}
+      key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+      {...props.attributes}
     />
   );
 }
