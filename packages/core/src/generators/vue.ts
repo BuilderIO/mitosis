@@ -56,6 +56,19 @@ export const componentToVue = (
   json: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
+  let dataString = json5.stringify({
+    ...json.state,
+  });
+
+  // Append refs to data as { foo, bar, etc }
+  dataString = dataString.replace(
+    /}$/,
+    `${json.imports
+      .map((thisImport) => Object.keys(thisImport.imports).join(','))
+      .filter(Boolean)
+      .join(',')}}`,
+  );
+
   let str = dedent`
     <template>
       ${json.children.map((item) => blockToVue(item)).join('\n')}
@@ -64,7 +77,7 @@ export const componentToVue = (
       ${renderPreComponent(json)}
       
       export default {
-        data: () => (${json5.stringify(json.state)})
+        data: () => (${dataString})
       }
     </script>
   `;

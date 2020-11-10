@@ -209,6 +209,11 @@ export function parse(jsx: string): JSXLiteComponent {
             path: babel.NodePath<babel.types.ImportDeclaration>,
             context: Context,
           ) {
+            // @jsx-lite/core imports compile away. yeehaw
+            if (path.node.source.value == '@jsx-lite/core') {
+              path.remove();
+              return;
+            }
             const importObject: JSXLiteImport = {
               imports: {},
               path: path.node.source.value,
@@ -225,7 +230,7 @@ export function parse(jsx: string): JSXLiteComponent {
               }
             }
             context.builder.component.imports.push(importObject);
-            // console.log('context 1', context);
+
             path.remove();
           },
           ExportDefaultDeclaration(

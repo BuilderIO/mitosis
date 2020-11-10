@@ -1,7 +1,5 @@
 export const inputBlock = `
-import React from 'react';
 import { Builder } from '@builder.io/sdk';
-import { withBuilder } from '../../functions/with-builder';
 
 export interface FormInputProps {
   type?: string;
@@ -16,6 +14,7 @@ export interface FormInputProps {
 export default function FormInputComponent(props: FormInputProps) {
   return (
     <input
+      {...props.attributes}
       key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}
       placeholder={props.placeholder}
       type={props.type}
@@ -23,7 +22,6 @@ export default function FormInputComponent(props: FormInputProps) {
       value={props.value}
       defaultValue={props.defaultValue}
       required={props.required}
-      {...props.attributes}
     />
   );
 }
