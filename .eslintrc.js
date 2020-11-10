@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@jsx-lite/eslint-plugin-jsx-lite'],
+  plugins: ['@jsx-lite'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [],
   parserOptions: {
@@ -16,6 +16,6 @@ module.exports = {
   },
 
   rules: {
-    'jsx-lite/no-conditional-render': 'warn',
+    '@jsx-lite/no-conditional-render': 'warn',
   },
 };

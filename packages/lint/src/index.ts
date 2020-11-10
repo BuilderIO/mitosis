@@ -6,7 +6,7 @@ import type {
 console.log(0)
 
 export const rules = {
-  'jsx-lite/no-conditional-render': {
+  'no-conditional-render': {
     meta: {
       messages: {
         no: 'No no no!',
@@ -15,10 +15,8 @@ export const rules = {
     create: (
       context: Readonly<RuleContext<string, readonly unknown[]>>,
     ): RuleListener => {
-      console.log(1)
       return {
         ConditionalExpression(node) {
-          console.log(2)
           context.report({
             node,
             messageId: 'no',
