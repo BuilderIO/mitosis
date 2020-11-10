@@ -59,6 +59,46 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React Select block 1`] = `
+"import { useState } from \\"@jsx-lite/react\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export interface FormSelectProps {
+  options?: {
+    name?: string,
+    value: string,
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+export default function MyComponent(props) {
+  const state = useState(() => ({}));
+
+  return (
+    <>
+      <select
+        {...props.attributes}
+        value={\\"props.value\\"}
+        key={
+          \\"Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'\\"
+        }
+        defaultValue={\\"props.defaultValue\\"}
+        name={\\"props.name\\"}
+      >
+        {props.options.map((option) => (
+          <option value={\\"option.value\\"}>{option.name || option.value}</option>
+        ))}
+      </select>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Submit button block 1`] = `
 "import { useState } from \\"@jsx-lite/react\\";
 

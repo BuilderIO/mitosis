@@ -83,7 +83,11 @@ export const componentToReact = (
     try {
       str = format(str, { parser: 'babel' });
     } catch (err) {
-      console.error('Format error for file:', str);
+      console.error(
+        'Format error for file:',
+        str,
+        JSON.stringify(json, null, 2),
+      );
       throw err;
     }
   }

@@ -133,7 +133,9 @@ const jsxElementToJson = (
   const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
 
   if (nodeName === 'For') {
-    const child = node.children[0];
+    const child = node.children.find((item) =>
+      types.isJSXExpressionContainer(item),
+    );
     if (types.isJSXExpressionContainer(child)) {
       const childExpression = child.expression;
 
@@ -273,9 +275,6 @@ export function parse(jsx: string): JSXLiteComponent {
             path: babel.NodePath<babel.types.ExportDefaultDeclaration>,
           ) {
             path.replaceWith(path.node.declaration);
-          },
-          JSXText(path: babel.NodePath<babel.types.JSXText>) {
-            path.replaceWith(types.stringLiteral(path.node.value));
           },
           JSXElement(path: babel.NodePath<babel.types.JSXElement>) {
             const { node } = path;

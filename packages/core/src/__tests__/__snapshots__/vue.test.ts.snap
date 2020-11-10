@@ -49,6 +49,43 @@ exports[`Vue Input block 1`] = `
 "
 `;
 
+exports[`Vue Select block 1`] = `
+"<template>
+  <select
+    v-bind=\\"props.attributes\\"
+    :value=\\"value\\"
+    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+    :defaultValue=\\"defaultValue\\"
+    :name=\\"name\\"
+  >
+    <template v-for=\\"option in props.options\\"
+      ><option :value=\\"option.value\\">
+        {option.name || option.value}
+      </option></template
+    >
+  </select>
+</template>
+<script>
+  import { Builder } from \\"@builder.io/sdk\\";
+
+  export interface FormSelectProps {
+    options?: {
+      name?: string,
+      value: string,
+    }[];
+    attributes?: any;
+    name?: string;
+    value?: string;
+    defaultValue?: string;
+  }
+
+  export default {
+    data: () => ({ Builder }),
+  };
+</script>
+"
+`;
+
 exports[`Vue Submit button block 1`] = `
 "<template>
   <button v-bind=\\"props.attributes\\" type=\\"submit\\">{props.text}</button>

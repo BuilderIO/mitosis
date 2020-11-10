@@ -21,7 +21,7 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   let str = '';
 
   if (json.name === 'For') {
-    str += `<template v-for="${json.bindings._forName} in ${json.bindings._forName}">`;
+    str += `<template v-for="${json.bindings._forName} in ${json.bindings._forEach}">`;
     str += json.children.map((item) => blockToVue(item, options)).join('\n');
     str += `</template>`;
   } else {
