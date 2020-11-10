@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useState } from \\"@jsx-lite/react\\";
+"import { useState, useRef } from \\"@jsx-lite/react\\";
 
 export default function MyComponent(props) {
   const state = useState(() => ({ name: \\"Steve\\" }));
@@ -22,7 +22,7 @@ export default function MyComponent(props) {
 `;
 
 exports[`React Form block 1`] = `
-"import { useState } from \\"@jsx-lite/react\\";
+"import { useState, useRef } from \\"@jsx-lite/react\\";
 
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -61,11 +61,7 @@ export default function MyComponent(props) {
     get submissionState() {
       return (Builder.isEditing && props.previewState) || state.state;
     },
-    onSubmit(
-      event: Event & {
-        currentTarget: HTMLFormElement;
-      }
-    ) {
+    onSubmit(event) {
       const sendWithJs =
         props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
@@ -80,19 +76,16 @@ export default function MyComponent(props) {
         event.preventDefault();
         const el = event.currentTarget;
         const headers = props.customHeaders || {};
-        let body: any;
+        let body;
         const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs: {
-          key: string;
-          value: File | boolean | number | string | FileList;
-        }[] = Array.from(
+        const formPairs = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
-          .filter((el) => !!(el as HTMLInputElement).name)
+          .filter((el) => !!el.name)
           .map((el) => {
-            let value: any;
-            const key = (el as HTMLImageElement).name;
+            let value;
+            const key = el.name;
 
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
@@ -118,7 +111,7 @@ export default function MyComponent(props) {
                 value = el.value;
               }
             } else {
-              value = (el as HTMLInputElement).value;
+              value = el.value;
             }
 
             return {
@@ -170,8 +163,8 @@ export default function MyComponent(props) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(presubmitEvent);
+        if (formRef.current) {
+          formRef.current.dispatchEvent(presubmitEvent);
 
           if (presubmitEvent.defaultPrevented) {
             return;
@@ -185,7 +178,7 @@ export default function MyComponent(props) {
           props.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
         fetch(
-          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!, // TODO: throw error if no action URL
+          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, // TODO: throw error if no action URL
           {
             body,
             headers,
@@ -228,26 +221,26 @@ export default function MyComponent(props) {
                 },
               });
 
-              if (formRef) {
-                formRef.dispatchEvent(submitSuccessEvent);
+              if (formRef.current) {
+                formRef.current.dispatchEvent(submitSuccessEvent);
 
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 } // TODO: option to turn this on/off?
 
                 if (props.resetFormOnSubmit !== false) {
-                  formRef.reset();
+                  formRef.current.reset();
                 }
               } // TODO: client side route event first that can be preventDefaulted
 
               if (props.successUrl) {
-                if (formRef) {
+                if (formRef.current) {
                   const event = new CustomEvent(\\"route\\", {
                     detail: {
                       url: props.successUrl,
                     },
                   });
-                  formRef.dispatchEvent(event);
+                  formRef.current.dispatchEvent(event);
 
                   if (!event.defaultPrevented) {
                     location.href = props.successUrl;
@@ -265,8 +258,8 @@ export default function MyComponent(props) {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitErrorEvent);
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitErrorEvent);
 
               if (submitErrorEvent.defaultPrevented) {
                 return;
@@ -281,6 +274,8 @@ export default function MyComponent(props) {
     },
   }));
 
+  const formRef = useRef();
+
   return (
     <>
       <form
@@ -294,7 +289,7 @@ export default function MyComponent(props) {
       >
         {Boolean(props.builderBlock && props.builderBlock.children) && (
           <>
-            {props.builderBlock!.children.map((block) => (
+            {props.builderBlock.children.map((block) => (
               <>
                 <BuilderBlockComponent
                   key={block.id}
@@ -309,7 +304,7 @@ export default function MyComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage!}
+              blocks={props.errorMessage}
             ></BuilderBlocks>
           </>
         )}
@@ -318,7 +313,7 @@ export default function MyComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage!}
+              blocks={props.sendingMessage}
             ></BuilderBlocks>
           </>
         )}
@@ -342,7 +337,7 @@ export default function MyComponent(props) {
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
-              blocks={props.successMessage!}
+              blocks={props.successMessage}
             ></BuilderBlocks>
           </>
         )}
@@ -354,7 +349,7 @@ export default function MyComponent(props) {
 `;
 
 exports[`React Input block 1`] = `
-"import { useState } from \\"@jsx-lite/react\\";
+"import { useState, useRef } from \\"@jsx-lite/react\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -394,7 +389,7 @@ export default function MyComponent(props) {
 `;
 
 exports[`React Select block 1`] = `
-"import { useState } from \\"@jsx-lite/react\\";
+"import { useState, useRef } from \\"@jsx-lite/react\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -438,7 +433,7 @@ export default function MyComponent(props) {
 `;
 
 exports[`React Submit button block 1`] = `
-"import { useState } from \\"@jsx-lite/react\\";
+"import { useState, useRef } from \\"@jsx-lite/react\\";
 
 export interface ButtonProps {
   attributes?: any;

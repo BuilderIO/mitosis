@@ -1,17 +1,11 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier';
-import traverse from 'traverse';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { getStateObjectString } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import {
-  selfClosingTags,
-} from '../parse';
+import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
@@ -78,10 +72,8 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
   return str;
 };
 
-
-const getRefsString = (json: JSXLiteComponent) => {
+const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
   let str = '';
-  const refs = getRefs(json);
 
   for (const ref of Array.from(refs)) {
     str += `\nconst ${ref} = useRef();`;
@@ -101,10 +93,10 @@ export const componentToReact = (
   let str = dedent`
     import { useState, useRef } from '@jsx-lite/react';
     ${renderPreComponent(json)}
-    ${getRefsString(json)}
     
     export default function MyComponent(props) {
       const state = useState(() => (${getStateObjectString(json)}));
+      ${getRefsString(json)}
 
       return (<>
         ${json.children.map((item) => blockToReact(item)).join('\n')}

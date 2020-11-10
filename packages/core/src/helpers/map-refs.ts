@@ -1,11 +1,13 @@
 import traverse from 'traverse';
-import babel from '@babel/core';
+import * as babel from '@babel/core';
 
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { getRefs } from './get-refs';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+
+const tsPreset = require('@babel/preset-typescript');
 
 export type RefMapper = (refName: string) => string;
 
@@ -14,21 +16,25 @@ const replaceRefsInString = (
   refs: string[],
   mapper: RefMapper,
 ) => {
-  return babel.transformSync(code, {
-    plugins: [
-      () => ({
-        visitor: {
-          Identifier(path: babel.NodePath<babel.types.Identifier>) {
-            const name = path.node.name;
-            const isRef = refs.includes(name);
-            if (isRef) {
-              path.replaceWith(babel.types.identifier(mapper(name)));
-            }
+  return babel
+    .transformSync(`let _ = ${code}`, {
+      presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+      plugins: [
+        () => ({
+          visitor: {
+            Identifier(path: babel.NodePath<babel.types.Identifier>) {
+              const name = path.node.name;
+              const isRef = refs.includes(name);
+              if (isRef) {
+                path.replaceWith(babel.types.identifier(mapper(name)));
+              }
+            },
           },
-        },
-      }),
-    ],
-  })!.code!;
+        }),
+      ],
+    })!
+    .code!.replace(/;$/, '')
+    .replace(/^let _ = /, '');
 };
 
 export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
@@ -38,13 +44,16 @@ export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
     const value = json.state[key];
     if (typeof value === 'string') {
       if (value.startsWith(methodLiteralPrefix)) {
+        const methodValue = value.replace(methodLiteralPrefix, '');
+        const isGet = Boolean(methodValue.match(/^get /));
+        const isSet = Boolean(methodValue.match(/^set /));
         json.state[key] =
           methodLiteralPrefix +
           replaceRefsInString(
-            value.replace(methodLiteralPrefix, ''),
+            methodValue.replace(/^(get |set )?/, 'function '),
             refs,
             mapper,
-          );
+          ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : '');
       } else if (value.startsWith(functionLiteralPrefix)) {
         json.state[key] =
           functionLiteralPrefix +
@@ -61,7 +70,7 @@ export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
-        if (typeof value === 'string') {
+        if (typeof value === 'string' && key !== 'ref') {
           item.bindings[key] = replaceRefsInString(value, refs, mapper);
         }
       }
