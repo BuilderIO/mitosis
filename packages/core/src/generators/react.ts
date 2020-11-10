@@ -55,7 +55,7 @@ export const componentToReact = (
     import { useState } from '@jsx-lite/react';
     ${renderPreComponent(json)}
     
-    export default function MyComponent () {
+    export default function MyComponent(props) {
       const state = useState(() => (${json5.stringify(json.state)}));
 
       return (<>
