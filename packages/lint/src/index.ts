@@ -1,6 +1,6 @@
 import type { Rule } from 'eslint';
 
-export const noConditionalRender = {
+export const staticControlFlow = {
   create: (
     context: Readonly<Rule.RuleContext>,
   ): Rule.RuleListener => {
@@ -16,5 +16,5 @@ export const noConditionalRender = {
 }
 
 export const rules = {
-  'no-conditional-render': noConditionalRender,
+  'static-control-flow': staticControlFlow,
 };

@@ -1,10 +1,10 @@
 import { RuleTester } from 'eslint';
 
-import { noConditionalRender } from '../index';
+import { staticControlFlow } from '../index';
 
 const ruleTester = new RuleTester();
 
-ruleTester.run('static-control-flow', noConditionalRender, {
+ruleTester.run('static-control-flow', staticControlFlow, {
   valid: [
     {
       code: '<Show when={foo}>{bar}</div>',
