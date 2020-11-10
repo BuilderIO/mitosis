@@ -1,34 +1,20 @@
-import type {
-  RuleContext,
-  RuleListener,
-} from '@typescript-eslint/experimental-utils/dist/ts-eslint/Rule';
+import type { Rule } from 'eslint';
 
-console.log(0)
+export const noConditionalRender = {
+  create: (
+    context: Readonly<Rule.RuleContext>,
+  ): Rule.RuleListener => {
+    return {
+      ConditionalExpression(node) {
+        context.report({
+          node,
+          message: 'No!',
+        });
+      },
+    };
+  },
+}
 
 export const rules = {
-  'no-conditional-render': {
-    meta: {
-      messages: {
-        no: 'No no no!',
-      },
-    },
-    create: (
-      context: Readonly<RuleContext<string, readonly unknown[]>>,
-    ): RuleListener => {
-      return {
-        ConditionalExpression(node) {
-          context.report({
-            node,
-            messageId: 'no',
-          });
-        },
-        FunctionDeclaration(node) {
-          context.report({
-            node,
-            messageId: 'no',
-          });
-        },
-      };
-    },
-  },
+  'no-conditional-render': noConditionalRender,
 };
