@@ -1,1 +1,1 @@
-declare module '@builder.io/sdk';
+declare module '@fake*';
