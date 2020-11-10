@@ -17,7 +17,7 @@ ruleTester.run('static-control-flow', staticControlFlow, {
   invalid: [
     {
       code: '<div>{foo ? <div /> : <span />}</div>',
-      errors: [{ message: /no/i }],
+      errors: [{ message: /static control flow/i }],
     },
     {
       code: '<div>{list.map(item => <span />)}</div>',
