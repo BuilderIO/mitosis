@@ -1,6 +1,9 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
+import { fastClone } from '../helpers/fast-clone';
+import { getStateObjectString } from '../helpers/get-state-object-string';
+import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -52,6 +55,8 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
         // TODO: proper babel transform to replace. Util for this
         const finalValue = useValue.replace(/event\./g, '$event.');
         str += ` @${event}="${finalValue}" `;
+      } else if (key === 'ref') {
+        str += ` ref="${useValue}" `;
       } else {
         str += ` :${key}="${useValue}" `;
       }
@@ -69,12 +74,14 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   return str;
 };
 export const componentToVue = (
-  json: JSXLiteComponent,
+  componentJson: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
-  let dataString = json5.stringify({
-    ...json.state,
-  });
+  const json = fastClone(componentJson);
+
+  mapRefs(json, (refName) => `this.$refs.${refName}`);
+
+  let dataString = getStateObjectString(json);
 
   // Append refs to data as { foo, bar, etc }
   dataString = dataString.replace(

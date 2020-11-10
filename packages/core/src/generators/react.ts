@@ -1,10 +1,15 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
+import traverse from 'traverse';
+import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { fastClone } from '../helpers/fast-clone';
+import { getRefs } from '../helpers/get-refs';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import {
-  functionLiteralPrefix,
-  methodLiteralPrefix,
   selfClosingTags,
 } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -73,36 +78,30 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
   return str;
 };
 
-// TODO: share with solid, etc
-export const getStateObjectString = (component: JSXLiteComponent) => {
-  let str = '{';
 
-  const { state } = component;
+const getRefsString = (json: JSXLiteComponent) => {
+  let str = '';
+  const refs = getRefs(json);
 
-  for (const key in state) {
-    const value = state[key];
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        str += ` ${key}: ${value.replace(functionLiteralPrefix, '')}, `;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        str += ` ${value.replace(methodLiteralPrefix, '')} ,`;
-      } else {
-        str += ` ${key}: ${json5.stringify(value)}, `;
-      }
-    }
+  for (const ref of Array.from(refs)) {
+    str += `\nconst ${ref} = useRef();`;
   }
 
-  str += '}';
   return str;
 };
 
 export const componentToReact = (
-  json: JSXLiteComponent,
+  componentJson: JSXLiteComponent,
   options: ToReactOptions = {},
 ) => {
+  const json = fastClone(componentJson);
+
+  mapRefs(json, (refName) => `${refName}.current`);
+
   let str = dedent`
-    import { useState } from '@jsx-lite/react';
+    import { useState, useRef } from '@jsx-lite/react';
     ${renderPreComponent(json)}
+    ${getRefsString(json)}
     
     export default function MyComponent(props) {
       const state = useState(() => (${getStateObjectString(json)}));

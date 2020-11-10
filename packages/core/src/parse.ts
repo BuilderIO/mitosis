@@ -6,6 +6,8 @@ import { JSONObject, JSONOrNode, JSONOrNodeObject } from './types/json';
 import { createJSXLiteNode } from './helpers/create-jsx-lite-node';
 import { JSXLiteComponent, JSXLiteImport } from './types/jsx-lite-component';
 import { createJSXLiteComponent } from './helpers/create-jsx-lite-component';
+import { functionLiteralPrefix } from './constants/function-literal-prefix';
+import { methodLiteralPrefix } from './constants/method-literal-prefix';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -78,9 +80,6 @@ const jsonObjectToAst = (
 const createSimpleTemplateLiteral = (str: string) => {
   return types.templateLiteral([types.templateElement({ raw: str })], []);
 };
-
-export const functionLiteralPrefix = `@jsx-lite/function:`;
-export const methodLiteralPrefix = `@jsx-lite/method:`;
 
 const createFunctionStringLiteral = (node: babel.types.Node) => {
   return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
