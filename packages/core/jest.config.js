@@ -27,6 +27,7 @@ module.exports = {
   testMatch: ['**/__tests__/*.+(ts|tsx|js)', '**/*.test.+(ts|tsx|js)'],
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.raw\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
   },
   setupFilesAfterEnv: ['<rootDir>../../jest/setupTests.ts'],
 };

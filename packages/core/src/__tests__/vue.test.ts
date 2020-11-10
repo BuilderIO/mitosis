@@ -1,8 +1,8 @@
 import { componentToVue } from '../generators/vue';
 import { parse } from '../parse';
-import { basic } from './data/basic';
-import { inputBlock } from './data/blocks/input';
-import { submitButtonBlock } from './data/blocks/submitButton';
+const basic = require('./data/basic.raw');
+const inputBlock = require('./data/blocks/input.raw');
+const submitButtonBlock = require('./data/blocks/submit-button.raw');
 
 describe('Vue', () => {
   test('Basic', () => {

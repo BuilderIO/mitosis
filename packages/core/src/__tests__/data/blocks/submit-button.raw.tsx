@@ -1,4 +1,5 @@
-export const submitButtonBlock = `
+import '@jsx-lite/core';
+
 export interface ButtonProps {
   attributes?: any;
   text?: string;
@@ -6,9 +7,8 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <button  {...this.props.attributes} type="submit">
+    <button {...props.attributes} type="submit">
       {props.text}
     </button>
   );
 }
-`;
