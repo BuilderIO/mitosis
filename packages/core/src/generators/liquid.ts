@@ -46,14 +46,26 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     ) {
       return str;
     }
-    str += `{% for ${json.properties._forName} in ${json.properties._forEach} %}`
+    str += `{% for ${json.properties._forName} in ${json.properties._forEach} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))
         .join('\n');
     }
 
-    str += '{% endfor %}'
+    str += '{% endfor %}';
+  } else if (json.name === 'Show') {
+    if (!isValidLiquidBinding(json.properties._when as string)) {
+      return str;
+    }
+    str += `{% if ${json.properties._when} %}`;
+    if (json.children) {
+      str += json.children
+        .map((item) => blockToLiquid(item, options))
+        .join('\n');
+    }
+
+    str += '{% endif %}';
   } else {
     str += `<${json.name} `;
 

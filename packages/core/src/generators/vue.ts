@@ -24,6 +24,10 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
     str += `<template v-for="${json.bindings._forName} in ${json.bindings._forEach}">`;
     str += json.children.map((item) => blockToVue(item, options)).join('\n');
     str += `</template>`;
+  } else if (json.name === 'Show') {
+    str += `<template v-if="${json.bindings._when}">`;
+    str += json.children.map((item) => blockToVue(item, options)).join('\n');
+    str += `</template>`;
   } else {
     str += `<${json.name} `;
 
