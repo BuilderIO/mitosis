@@ -1,9 +1,10 @@
 import { componentToReact } from '../generators/react';
 import { parse } from '../parse';
 const basic = require('./data/basic.raw');
+const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
-const submitButtonBlock = require('./data/blocks/submit-button.raw');
+const formBlock = require('./data/blocks/form.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -26,6 +27,12 @@ describe('React', () => {
 
   test('Select block', () => {
     const json = parse(selectBlock);
+    const output = componentToReact(json);
+    expect(output).toMatchSnapshot();
+  });
+  
+  test('Form block', () => {
+    const json = parse(formBlock);
     const output = componentToReact(json);
     expect(output).toMatchSnapshot();
   });

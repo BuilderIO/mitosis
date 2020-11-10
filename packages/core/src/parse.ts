@@ -132,6 +132,28 @@ const jsxElementToJson = (
 
   const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
 
+  if (nodeName === 'Show') {
+    const whenAttr:
+      | babel.types.JSXAttribute
+      | undefined = node.openingElement.attributes.find(
+      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+    ) as any;
+    const whenValue =
+      whenAttr &&
+      types.isJSXExpressionContainer(whenAttr.value) &&
+      generate(whenAttr.value.expression).code;
+
+    return createJSXLiteNode({
+      name: 'Show',
+      bindings: {
+        _when: whenValue,
+      },
+      children: node.children.map((item) =>
+        jsxElementToJson(item as any),
+      ) as any,
+    });
+  }
+
   if (nodeName === 'For') {
     const child = node.children.find((item) =>
       types.isJSXExpressionContainer(item),
