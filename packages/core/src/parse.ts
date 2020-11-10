@@ -73,6 +73,25 @@ const jsonObjectToAst = (
   return newNode;
 };
 
+// For simple single string templates = aka
+// createSimpleTemplateLiteral('string') -> `string`
+const createSimpleTemplateLiteral = (str: string) => {
+  return types.templateLiteral([types.templateElement({ raw: str })], []);
+};
+
+export const functionLiteralPrefix = `@jsx-lite/function:`;
+export const methodLiteralPrefix = `@jsx-lite/method:`;
+
+const createFunctionStringLiteral = (node: babel.types.Node) => {
+  return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
+};
+const createFunctionStringLiteralObjectProperty = (
+  key: babel.types.Expression,
+  node: babel.types.Node,
+) => {
+  return types.objectProperty(key, createFunctionStringLiteral(node));
+};
+
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
@@ -84,7 +103,51 @@ const componentFunctionToJson = (
       if (types.isCallExpression(init)) {
         const firstArg = init.arguments[0];
         if (types.isObjectExpression(firstArg)) {
-          const obj = JSON5.parse(generate(firstArg).code);
+          const properties = firstArg.properties;
+          const useProperties = properties.map((item) => {
+            if (types.isObjectProperty(item)) {
+              if (
+                types.isFunctionExpression(item.value) ||
+                types.isArrowFunctionExpression(item.value)
+              ) {
+                return createFunctionStringLiteralObjectProperty(
+                  item.key,
+                  item.value,
+                );
+              }
+            }
+            if (types.isObjectMethod(item)) {
+              return types.objectProperty(
+                item.key,
+                types.stringLiteral(
+                  `${methodLiteralPrefix}${
+                    generate({ ...item, returnType: null }).code
+                  }`,
+                ),
+              );
+            }
+            // Remove typescript types, e.g. from
+            // { foo: ('string' as SomeType) }
+            if (types.isObjectProperty(item)) {
+              let value = item.value;
+              if (types.isTSAsExpression(value)) {
+                value = value.expression;
+              }
+              return types.objectProperty(item.key, value);
+            }
+            return item;
+          });
+
+          const newObject = types.objectExpression(useProperties);
+          let code;
+          let obj;
+          try {
+            code = generate(newObject).code!;
+            obj = JSON5.parse(code);
+          } catch (err) {
+            console.error('Could not JSON5 parse object:\n', code);
+            throw err;
+          }
           state = obj;
         }
       }

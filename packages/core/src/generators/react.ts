@@ -2,7 +2,11 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
 import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parse';
+import {
+  functionLiteralPrefix,
+  methodLiteralPrefix,
+  selfClosingTags,
+} from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
@@ -50,7 +54,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
       if (key.startsWith('on')) {
         str += ` ${key}={event => (${value})} `;
       } else {
-        str += ` ${key}={${json5.stringify(value)}} `;
+        str += ` ${key}={${value}} `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -68,6 +72,30 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
 
   return str;
 };
+
+// TODO: share with solid, etc
+export const getStateObjectString = (component: JSXLiteComponent) => {
+  let str = '{';
+
+  const { state } = component;
+
+  for (const key in state) {
+    const value = state[key];
+    if (typeof value === 'string') {
+      if (value.startsWith(functionLiteralPrefix)) {
+        str += ` ${key}: ${value.replace(functionLiteralPrefix, '')}, `;
+      } else if (value.startsWith(methodLiteralPrefix)) {
+        str += ` ${value.replace(methodLiteralPrefix, '')} ,`;
+      } else {
+        str += ` ${key}: ${json5.stringify(value)}, `;
+      }
+    }
+  }
+
+  str += '}';
+  return str;
+};
+
 export const componentToReact = (
   json: JSXLiteComponent,
   options: ToReactOptions = {},
@@ -77,7 +105,7 @@ export const componentToReact = (
     ${renderPreComponent(json)}
     
     export default function MyComponent(props) {
-      const state = useState(() => (${json5.stringify(json.state)}));
+      const state = useState(() => (${getStateObjectString(json)}));
 
       return (<>
         ${json.children.map((item) => blockToReact(item)).join('\n')}
@@ -88,7 +116,7 @@ export const componentToReact = (
 
   if (options.prettier !== false) {
     try {
-      str = format(str, { parser: 'babel' });
+      str = format(str, { parser: 'typescript' });
     } catch (err) {
       console.error(
         'Format error for file:',
