@@ -34,7 +34,9 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
 
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
-      str += ` @${event}="${useValue}" `;
+      // TODO: proper babel transform to replace. Util for this
+      const finalValue = useValue.replaceAll('event.', '$event.');
+      str += ` @${event}="${finalValue}" `;
     } else {
       str += ` :${key}="${useValue}" `;
     }
