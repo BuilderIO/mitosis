@@ -23,10 +23,9 @@ module.exports = {
   },
   notify: true,
   notifyMode: 'always',
-  roots: ['<rootDir>../../packages'],
+  roots: ['<rootDir>'],
   testMatch: ['**/__tests__/*.+(ts|tsx|js)', '**/*.test.+(ts|tsx|js)'],
   transform: {
-    '^.+\\.raw\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
   setupFilesAfterEnv: ['<rootDir>../../jest/setupTests.ts'],
