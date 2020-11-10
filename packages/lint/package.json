@@ -1,5 +1,5 @@
 {
-  "name": "@jsx-lite/lint",
+  "name": "@jsx-lite/eslint-plugin-jsx-lite",
   "version": "0.0.1",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,10 +10,18 @@
     "url": "https://github.com/BuilderIO/jsx-lite"
   },
   "scripts": {
+    "build": "tsc",
+    "start": "tsc -w",
     "build:declaration": "tsc --project tsconfig.build.json",
     "build:es": "BABEL_ENV=build babel src --root-mode upward --out-dir dist --source-maps --extensions .ts,.tsx --delete-dir-on-start --no-comments"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "@typescript-eslint/experimental-utils": "^4.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.5"
+  }
 }
