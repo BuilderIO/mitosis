@@ -9,7 +9,7 @@ export interface FormSelectProps {
   defaultValue?: string;
 }
 
-export function SelectComponent(props: FormSelectProps) {
+export default function SelectComponent(props: FormSelectProps) {
   return (
     <select
       value={props.value}

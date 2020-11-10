@@ -1,4 +1,3 @@
-import '../internal-types';
 import { componentToLiquid } from '../generators/liquid';
 import { parse } from '../parse';
 const basic = require('./data/basic.raw');

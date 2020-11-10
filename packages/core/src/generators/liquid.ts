@@ -35,47 +35,70 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     return `{{${json.properties._text}}}`;
   }
 
-  let str = `<${json.name} `;
+  let str = '';
 
-  if (
-    json.properties._spread === '_spread' &&
-    isValidLiquidBinding(json.properties._spread)
-  ) {
-    str += `
-      {% for _attr in ${json.properties._spread} %}
-        {{ _attr[0] }}="{{ _attr[1] }}"
-      {% endfor %}
-    `;
-  }
-
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    str += ` ${key}="${value}" `;
-  }
-
-  for (const key in json.bindings) {
-    if (key === '_spread') {
-      continue;
+  if (json.name === 'For') {
+    if (
+      !(
+        isValidLiquidBinding(json.properties._forEach as string) &&
+        isValidLiquidBinding(json.properties._forName as string)
+      )
+    ) {
+      return str;
     }
-    const value = json.bindings[key] as string;
-    // TODO: proper babel transform to replace. Util for this
-    const useValue = value.replace(/state\./g, '').replace(/props\./g, '');
-
-    if (key.startsWith('on')) {
-      // Do nothing
-    } else if (isValidLiquidBinding(useValue)) {
-      str += ` ${key}="{{${useValue}}}" `;
+    str += `{% for ${json.properties._forName} in ${json.properties._forEach} %}`
+    if (json.children) {
+      str += json.children
+        .map((item) => blockToLiquid(item, options))
+        .join('\n');
     }
-  }
-  if (selfClosingTags.has(json.name)) {
-    return str + ' />';
-  }
-  str += '>';
-  if (json.children) {
-    str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
-  }
 
-  str += `</${json.name}>`;
+    str += '{% endfor %}'
+  } else {
+    str += `<${json.name} `;
+
+    if (
+      json.properties._spread === '_spread' &&
+      isValidLiquidBinding(json.properties._spread)
+    ) {
+      str += `
+          {% for _attr in ${json.properties._spread} %}
+            {{ _attr[0] }}="{{ _attr[1] }}"
+          {% endfor %}
+        `;
+    }
+
+    for (const key in json.properties) {
+      const value = json.properties[key];
+      str += ` ${key}="${value}" `;
+    }
+
+    for (const key in json.bindings) {
+      if (key === '_spread') {
+        continue;
+      }
+      const value = json.bindings[key] as string;
+      // TODO: proper babel transform to replace. Util for this
+      const useValue = value.replace(/state\./g, '').replace(/props\./g, '');
+
+      if (key.startsWith('on')) {
+        // Do nothing
+      } else if (isValidLiquidBinding(useValue)) {
+        str += ` ${key}="{{${useValue}}}" `;
+      }
+    }
+    if (selfClosingTags.has(json.name)) {
+      return str + ' />';
+    }
+    str += '>';
+    if (json.children) {
+      str += json.children
+        .map((item) => blockToLiquid(item, options))
+        .join('\n');
+    }
+
+    str += `</${json.name}>`;
+  }
   return str;
 };
 

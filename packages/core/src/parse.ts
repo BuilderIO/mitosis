@@ -129,8 +129,34 @@ const jsxElementToJson = (
       },
     });
   }
+
+  const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
+
+  if (nodeName === 'For') {
+    const child = node.children[0];
+    if (types.isJSXExpressionContainer(child)) {
+      const childExpression = child.expression;
+
+      if (types.isArrowFunctionExpression(childExpression)) {
+        const argName = (childExpression.params[0] as babel.types.Identifier)
+          .name;
+        return createJSXLiteNode({
+          name: 'For',
+          bindings: {
+            _forEach: generate(
+              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                .value as babel.types.JSXExpressionContainer).expression,
+            ).code,
+            _forName: argName,
+          },
+          children: [jsxElementToJson(childExpression.body as any)],
+        });
+      }
+    }
+  }
+
   return createJSXLiteNode({
-    name: (node.openingElement.name as babel.types.JSXIdentifier).name,
+    name: nodeName,
     properties: node.openingElement.attributes.reduce((memo, item) => {
       if (types.isJSXAttribute(item)) {
         const key = item.name.name as string;
