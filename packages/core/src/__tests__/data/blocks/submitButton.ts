@@ -7,7 +7,7 @@ export interface ButtonProps {
 export default function SubmitButton(props: ButtonProps) {
   return (
     <button  {...this.props.attributes} type="submit">
-      {this.props.text}
+      {props.text}
     </button>
   );
 }

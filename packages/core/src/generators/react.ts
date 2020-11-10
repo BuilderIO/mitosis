@@ -13,6 +13,9 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
   if (json.properties._text) {
     return json.properties._text;
   }
+  if (json.bindings._text) {
+    return `{${json.bindings._text}}`;
+  }
 
   let str = `<${json.name} `;
 

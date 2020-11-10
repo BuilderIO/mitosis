@@ -14,6 +14,10 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
     return json.properties._text;
   }
 
+  if (json.bindings._text) {
+    return `{${json.bindings._text}}`;
+  }
+
   let str = `<${json.name} `;
 
   if (json.bindings._spread) {

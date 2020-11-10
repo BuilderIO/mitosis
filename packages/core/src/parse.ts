@@ -110,12 +110,22 @@ const componentFunctionToJson = (
 };
 
 const jsxElementToJson = (
-  node: babel.types.JSXElement | babel.types.JSXText,
+  node:
+    | babel.types.JSXElement
+    | babel.types.JSXText
+    | babel.types.JSXExpressionContainer,
 ): JSXLiteNode => {
   if (types.isJSXText(node)) {
     return createJSXLiteNode({
       properties: {
         _text: node.value,
+      },
+    });
+  }
+  if (types.isJSXExpressionContainer(node)) {
+    return createJSXLiteNode({
+      bindings: {
+        _text: generate(node.expression).code,
       },
     });
   }
