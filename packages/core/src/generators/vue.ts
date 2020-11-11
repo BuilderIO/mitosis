@@ -19,7 +19,9 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   }
 
   if (json.bindings._text) {
-    return `{${json.bindings._text}}`;
+    return `{${(json.bindings._text as string)
+      .replace(/state\./g, '')
+      .replace(/props\./g, '')}}`;
   }
 
   let str = '';
@@ -118,7 +120,15 @@ export const componentToVue = (
   `;
 
   if (options.prettier !== false) {
-    str = format(str, { parser: 'html' });
+    str = format(str, {
+      parser: 'vue',
+      plugins: [
+        // To support running in browsers
+        require('prettier/parser-html'),
+        require('prettier/parser-postcss'),
+        require('prettier/parser-babel'),
+      ],
+    });
   }
   return str;
 };

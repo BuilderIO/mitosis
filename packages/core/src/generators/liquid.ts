@@ -34,7 +34,9 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     return json.properties._text;
   }
   if (json.bindings._text) {
-    return `{{${json.bindings._text}}}`;
+    return `{{${(json.bindings._text as string)
+      .replace(/state\./g, '')
+      .replace(/props\./g, '')}}}`;
   }
 
   let str = '';
@@ -88,7 +90,7 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     }
 
     for (const key in json.bindings) {
-      if (key === '_spread') {
+      if (key === '_spread' || key === 'ref' || key === 'css') {
         continue;
       }
       const value = json.bindings[key] as string;
@@ -129,7 +131,15 @@ export const componentToLiquid = (
   }
 
   if (options.prettier !== false) {
-    str = format(str, { parser: 'html' });
+    str = format(str, {
+      parser: 'html',
+      plugins: [
+        // To support running in browsers
+        require('prettier/parser-html'),
+        require('prettier/parser-postcss'),
+        require('prettier/parser-babel'),
+      ],
+    });
   }
   return str;
 };

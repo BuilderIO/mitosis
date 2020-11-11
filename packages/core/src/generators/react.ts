@@ -107,7 +107,12 @@ export const componentToReact = (
 
   if (options.prettier !== false) {
     try {
-      str = format(str, { parser: 'typescript' });
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [
+          require('prettier/parser-typescript'), // To support running in browsers
+        ],
+      });
     } catch (err) {
       console.error(
         'Format error for file:',
