@@ -2,7 +2,7 @@ import { useLocalStore, useObserver } from 'mobx-react-lite';
 import React, { useRef } from 'react';
 import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
-import { useReaction } from '../functions/use-reaction';
+import { useReaction } from '../hooks/use-reaction';
 import { setQueryParam } from '../functions/set-query-param';
 import * as monaco from 'monaco-editor';
 import logo from '../assets/jsx-lite-logo-white.png';
@@ -19,6 +19,7 @@ import { defaultCode, templates } from '../constants/templates';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 import { colors } from '../constants/colors';
+import { useEventListener } from '../hooks/use-event-lisetener';
 
 const BuilderEditor: any = 'builder-editor';
 
@@ -70,6 +71,14 @@ export default function Fiddle() {
 
   const editorRef = useRef<any>();
 
+  useEventListener<KeyboardEvent>(document.body, 'keydown', (e) => {
+    // Cancel cmd+s, sometimes people hit it instinctively when editing code and the browser
+    // "save webpage" dialog is unwanted and annoying
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault();
+    }
+  });
+
   useReaction(
     () => state.code,
     (code) => setQueryParam('code', code),
@@ -95,7 +104,7 @@ export default function Fiddle() {
     { delay: 1000 },
   );
 
-  const outputMonacoEditorSize = 'calc(50vh - 140px)';
+  const outputMonacoEditorSize = 'calc(50vh - 200px)';
 
   return useObserver(() => (
     <div css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -122,6 +131,17 @@ export default function Fiddle() {
               height: 60,
             }}
           />
+        </a>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          css={{
+            marginLeft: 'auto',
+            marginRight: 25,
+          }}
+          href="https://github.com/builderio/jsx-lite"
+        >
+          About
         </a>
       </div>
       <div css={{ display: 'flex', flexGrow: 1 }}>
@@ -231,9 +251,16 @@ export default function Fiddle() {
             >
               Output code:
             </Typography>
-          </div>
-          <div>
             <Tabs
+              css={{
+                minHeight: 0,
+                marginLeft: 'auto',
+                // borderBottom: `1px solid ${colors.contrast}`,
+                '& button': {
+                  minHeight: 0,
+                  minWidth: 100,
+                },
+              }}
               value={state.tab}
               onChange={(e, value) => (state.tab = value)}
               indicatorColor="primary"
@@ -244,6 +271,8 @@ export default function Fiddle() {
               <Tab label="Liquid" value="liquid" />
               <Tab label="JSON" value="json" />
             </Tabs>
+          </div>
+          <div>
             <div css={{ padding: 15 }}>
               <MonacoEditor
                 height={outputMonacoEditorSize}
@@ -302,17 +331,17 @@ export default function Fiddle() {
               flexGrow: 1,
               '& builder-editor': {
                 width: '100%',
-                filter: 'invert(0.88)',
+                filter: 'invert(0.89)',
+                transition: 'filter 0.2s ease-in-out',
                 height: '100%',
+
+                '&:hover': {
+                  filter: 'invert(0)',
+                },
               },
             }}
           >
-            <BuilderEditor
-              ref={editorRef}
-              theme={JSON.stringify({
-                colors: { primary: 'rgba(169, 104, 70, 1)' },
-              })}
-            />
+            <BuilderEditor ref={editorRef} />
           </div>
         </div>
       </div>
