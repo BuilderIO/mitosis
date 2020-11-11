@@ -32,6 +32,9 @@ export function MyComponent() {
 
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fda8f27bf2deb40a886943bf41db07377" />
 
+Or see it in real time:
+<img src="https://i.imgur.com/1ZqXv65.gif" />
+
 ## How does it work
 
 JSX Lite uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
@@ -96,8 +99,6 @@ class MyComponent {
 
 Adding framework support is surprisingy easy with our plugins (docs coming soon!)
 
-<img src="https://i.imgur.com/1ZqXv65.gif" />
-
 ## Why
 
 - **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
@@ -111,7 +112,7 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 ## Who uses it
 
 - [Builder.io](https://github.com/builderio/builder)
-- [Snap](https://github.com/builderio/snap) 
+- [Snap](https://github.com/builderio/snap)
 - [HTML to Figma](https://github.com/builderio/html-to-figma) (coming soon)
 
 ## Coming soon
