@@ -33,7 +33,8 @@ export function MyComponent() {
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fda8f27bf2deb40a886943bf41db07377" />
 
 Or see it in real time:
-<img src="https://i.imgur.com/1ZqXv65.gif" />
+
+<img src="https://i.imgur.com/7uQUIB9.gif" />
 
 ## How does it work
 
