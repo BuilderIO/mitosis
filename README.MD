@@ -96,6 +96,8 @@ class MyComponent {
 
 Adding framework support is surprisingy easy with our plugins (docs coming soon!)
 
+<img src="https://i.imgur.com/1ZqXv65.gif" />
+
 ## Why
 
 - **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
