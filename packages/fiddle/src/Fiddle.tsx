@@ -7,7 +7,6 @@ import { setQueryParam } from './functions/set-query-param';
 import * as monaco from 'monaco-editor';
 import dedent from 'dedent';
 import logo from './assets/jsx-lite-logo-white.png';
-
 import {
   parse,
   componentToVue,
@@ -16,21 +15,31 @@ import {
 } from '@jsx-lite/core';
 import { MenuItem, Select, Tab, Tabs, Typography } from '@material-ui/core';
 import { deleteQueryParam } from './functions/delete-query-param';
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import types from 'raw-loader!@jsx-lite/core/dist/jsx';
+
+monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+  target: monaco.languages.typescript.ScriptTarget.Latest,
+  allowNonTsExtensions: true,
+  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+  module: monaco.languages.typescript.ModuleKind.CommonJS,
+  noEmit: true,
+  esModuleInterop: true,
+  jsx: monaco.languages.typescript.JsxEmit.React,
+  reactNamespace: 'React',
+  allowJs: true,
+  typeRoots: ['node_modules/@types'],
+});
 
 monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-  noSemanticValidation: true,
-  noSyntaxValidation: true, // This line disables errors in jsx tags like <div>, etc.
+  noSemanticValidation: false,
+  noSyntaxValidation: false,
 });
 
-// I don't think the following makes any difference
-monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-  // jsx: 'react',
-  jsx: monaco.languages.typescript.JsxEmit.Preserve,
-  reactNamespace: 'React',
-  allowNonTsExtensions: true,
-  allowJs: true,
-  target: monaco.languages.typescript.ScriptTarget.Latest,
-});
+monaco.languages.typescript.typescriptDefaults.addExtraLib(
+  types,
+  `file:///node_modules/@react/types/index.d.ts`,
+);
 
 const defaultCode = `
 import { useState } from '@jsx-lite/core';
@@ -78,13 +87,43 @@ const templates: { [key: string]: string } = {
       );
     }
   `,
-  'actions and refs': dedent`
+
+  computed: dedent`
+    import { useState } from '@jsx-lite/core';
+
+    export default function MyComponent() {
+      const state = useState({
+        name: 'Steve',
+        get lowerCaseName() {
+          return state.name.toLowerCase()
+        }
+      });
+    
+      return (
+        <div>
+          <Show when={props.showInput}>
+            <input
+              value={state.name}
+              onChange={(event) => (state.name = event.target.value)}
+            />
+          </Show>
+          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
+        </div>
+      );
+    }
+  `,
+  'methods and refs': dedent`
+    import { useState } from '@jsx-lite/core';
+
     export default function MyComponent() {
       const state = useState({
         name: 'Steve',
         onBlur() {
           // Maintain focus
           inputRef.focus()
+        },
+        get lowerCaseName() {
+          return state.name.toLowerCase()
         }
       });
 
@@ -101,7 +140,7 @@ const templates: { [key: string]: string } = {
               onChange={(event) => (state.name = event.target.value)}
             />
           </Show>
-          Hello {state.name}! I can run in React, Vue, Solid, or Liquid!
+          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
     }

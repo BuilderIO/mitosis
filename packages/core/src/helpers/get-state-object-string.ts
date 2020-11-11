@@ -7,10 +7,7 @@ export type GetStateObjectStringOptions = {
   data?: boolean;
   functions?: boolean;
   getters?: boolean;
-  valueMapper?: (
-    code: string,
-    type: 'data' | 'function' | 'getter',
-  ) => string;
+  valueMapper?: (code: string, type: 'data' | 'function' | 'getter') => string;
 };
 
 export const getStateObjectString = (
@@ -21,6 +18,8 @@ export const getStateObjectString = (
 
   const { state } = component;
 
+  const valueMapper = options.valueMapper || ((val: string) => val);
+
   for (const key in state) {
     const value = state[key];
     if (typeof value === 'string') {
@@ -28,7 +27,8 @@ export const getStateObjectString = (
         if (options.functions === false) {
           continue;
         }
-        str += ` ${key}: ${value.replace(functionLiteralPrefix, '')}, `;
+        const functionValue = value.replace(functionLiteralPrefix, '');
+        str += ` ${key}: ${valueMapper(functionValue, 'function')}, `;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(/^get /));
@@ -38,12 +38,12 @@ export const getStateObjectString = (
         if (!isGet && options.functions === false) {
           continue;
         }
-        str += ` ${methodValue} ,`;
+        str += ` ${valueMapper(methodValue, isGet ? 'getter' : 'function')} ,`;
       } else {
         if (options.data === false) {
           continue;
         }
-        str += ` ${key}: ${json5.stringify(value)}, `;
+        str += ` ${key}: ${valueMapper(json5.stringify(value), 'data')}, `;
       }
     }
   }

@@ -103,13 +103,17 @@ export const componentToVue = (
     data: false,
     getters: true,
     functions: false,
-    valueMapper: (code) => stripStateAndPropsRefs(code.replace(/^get /, '')),
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(code.replace(/^get /, ''), {
+        replaceWith: 'this.',
+      }),
   });
   const functionsString = getStateObjectString(json, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => stripStateAndPropsRefs(code),
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
   });
 
   // Append refs to data as { foo, bar, etc }
