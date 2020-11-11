@@ -1,12 +1,11 @@
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 import React from 'react';
-import { getQueryParam } from './functions/get-query-param';
+import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
-import { useReaction } from './functions/use-reaction';
-import { setQueryParam } from './functions/set-query-param';
+import { useReaction } from '../functions/use-reaction';
+import { setQueryParam } from '../functions/set-query-param';
 import * as monaco from 'monaco-editor';
-import dedent from 'dedent';
-import logo from './assets/jsx-lite-logo-white.png';
+import logo from '../assets/jsx-lite-logo-white.png';
 import {
   parseJsx,
   componentToVue,
@@ -14,7 +13,9 @@ import {
   componentToLiquid,
 } from '@jsx-lite/core';
 import { MenuItem, Select, Tab, Tabs, Typography } from '@material-ui/core';
-import { deleteQueryParam } from './functions/delete-query-param';
+import { deleteQueryParam } from '../functions/delete-query-param';
+import { TextLink } from './TextLink';
+import { defaultCode, templates } from '../constants/templates';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 
@@ -41,119 +42,12 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(
   `file:///node_modules/@react/types/index.d.ts`,
 );
 
-const defaultCode = `
-import { useState } from '@jsx-lite/core';
-
-export default function MyComponent(props) {
-  const state = useState({
-    name: 'Steve'
-  });
-
-  return (
-    <div>
-      <Show when={props.showInput}>
-        <input
-          css={{ color: 'red' }}
-          value={state.name}
-          onChange={(event) => (state.name = event.target.value)}
-        />
-      </Show>
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
-}
-`;
-
-const templates: { [key: string]: string } = {
-  basic: dedent`
-    import { useState } from '@jsx-lite/core';
-    
-    export default function MyComponent(props) {
-      const state = useState({
-        name: 'Steve'
-      });
-    
-      return (
-        <div>
-          <Show when={props.showInput}>
-            <input
-              css={{ color: 'red' }}
-              value={state.name}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
-          Hello {state.name}! I can run in React, Vue, Solid, or Liquid!
-        </div>
-      );
-    }
-  `,
-
-  computed: dedent`
-    import { useState } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        name: 'Steve',
-        get lowerCaseName() {
-          return state.name.toLowerCase()
-        }
-      });
-    
-      return (
-        <div>
-          <Show when={props.showInput}>
-            <input
-              value={state.name}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
-          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
-        </div>
-      );
-    }
-  `,
-  'methods and refs': dedent`
-    import { useState } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        name: 'Steve',
-        onBlur() {
-          // Maintain focus
-          inputRef.focus()
-        },
-        get lowerCaseName() {
-          return state.name.toLowerCase()
-        }
-      });
-
-      const inputRef = useRef();
-    
-      return (
-        <div>
-          <Show when={props.showInput}>
-            <input
-              ref={inputRef}
-              css={{ color: 'red' }}
-              value={state.name}
-              onBlur={() => state.onBlur()}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
-          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
-        </div>
-      );
-    }
-  `,
-};
-
+// TODO: Build this Fiddle app with JSX Lite :)
 export default function Fiddle() {
   const state = useLocalStore(() => ({
     code: getQueryParam('code') || defaultCode,
     output: '',
-    secondOutput: '',
-    tab: getQueryParam('firstTab') || 'vue',
-    secondTab: getQueryParam('secondTab') || 'react',
+    tab: getQueryParam('tab') || 'vue',
     updateOutput() {
       try {
         const json = parseJsx(state.code);
@@ -162,16 +56,7 @@ export default function Fiddle() {
             ? componentToLiquid(json)
             : state.tab === 'react'
             ? componentToReact(json)
-            : state.tab === 'json'
-            ? JSON.stringify(json, null, 2)
-            : componentToVue(json);
-
-        state.secondOutput =
-          state.secondTab === 'liquid'
-            ? componentToLiquid(json)
-            : state.secondTab === 'react'
-            ? componentToReact(json)
-            : state.secondTab === 'json'
+            : state.tab === 'json' || state.tab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
       } catch (err) {
@@ -189,20 +74,9 @@ export default function Fiddle() {
     () => state.tab,
     (tab) => {
       if (state.code) {
-        setQueryParam('firstTab', tab);
+        setQueryParam('tab', tab);
       } else {
-        deleteQueryParam('firstTab');
-      }
-      state.updateOutput();
-    },
-  );
-  useReaction(
-    () => state.secondTab,
-    (tab) => {
-      if (state.code) {
-        setQueryParam('secondTab', tab);
-      } else {
-        deleteQueryParam('secondTab');
+        deleteQueryParam('tab');
       }
       state.updateOutput();
     },
@@ -341,6 +215,7 @@ export default function Fiddle() {
               <Tab label="Vue" value="vue" />
               <Tab label="React" value="react" />
               <Tab label="Liquid" value="liquid" />
+              <Tab label="Builder.io" value="builder" />
               <Tab label="JSON" value="json" />
             </Tabs>
             <div css={{ padding: 15 }}>
@@ -355,7 +230,7 @@ export default function Fiddle() {
                 }}
                 theme="vs-dark"
                 language={
-                  state.tab === 'json'
+                  state.tab === 'json' || state.tab === 'builder'
                     ? 'json'
                     : state.tab === 'react'
                     ? 'typescript'
@@ -369,42 +244,16 @@ export default function Fiddle() {
             variant="body2"
             css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
           >
-            No-code tool interop (Builder.io):
-          </Typography>
-          <div>
-            <Tabs
-              value={state.secondTab}
-              onChange={(e, value) => (state.secondTab = value)}
-              indicatorColor="primary"
-              textColor="primary"
+            No-code tool interop (
+            <TextLink
+              target="_blank"
+              href="https://github.com/builderio/builder"
             >
-              <Tab label="Vue" value="vue" />
-              <Tab label="React" value="react" />
-              <Tab label="Liquid" value="liquid" />
-              <Tab label="JSON" value="json" />
-            </Tabs>
-            <div css={{ padding: 15 }}>
-              <MonacoEditor
-                height="calc(50vh - 50px)"
-                options={{
-                  automaticLayout: true,
-                  readOnly: true,
-                  minimap: { enabled: false },
-                  selectionHighlight: false,
-                  renderLineHighlight: 'none',
-                }}
-                theme="vs-dark"
-                language={
-                  state.secondTab === 'json'
-                    ? 'json'
-                    : state.secondTab === 'react'
-                    ? 'typescript'
-                    : 'html'
-                }
-                value={state.secondOutput}
-              />
-            </div>
-          </div>
+              Builder.io
+            </TextLink>
+            ):
+          </Typography>
+          <div>{/* TODO: Builder embedded editor */}</div>
         </div>
       </div>
     </div>

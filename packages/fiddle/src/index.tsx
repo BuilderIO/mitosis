@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import App from './components/App';
 import reportWebVitals from './reportWebVitals';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { colors } from './constants/colors';
 
 const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
-    primary: { main: 'rgba(28, 151, 204, 1)' },
+    primary: { main: colors.primary },
   },
 });
 
