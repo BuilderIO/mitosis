@@ -1,3 +1,4 @@
 export const colors = {
-  primary: 'rgba(28, 151, 204, 1)',
+  primary: 'rgb(84, 203, 255)',
+  contrast: '#444'
 };

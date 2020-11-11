@@ -1,5 +1,5 @@
 import { useLocalStore, useObserver } from 'mobx-react-lite';
-import React from 'react';
+import React, { useRef } from 'react';
 import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
 import { useReaction } from '../functions/use-reaction';
@@ -18,6 +18,9 @@ import { TextLink } from './TextLink';
 import { defaultCode, templates } from '../constants/templates';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
+import { colors } from '../constants/colors';
+
+const BuilderEditor: any = 'builder-editor';
 
 monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
   target: monaco.languages.typescript.ScriptTarget.Latest,
@@ -65,6 +68,8 @@ export default function Fiddle() {
     },
   }));
 
+  const editorRef = useRef<any>();
+
   useReaction(
     () => state.code,
     (code) => setQueryParam('code', code),
@@ -94,7 +99,14 @@ export default function Fiddle() {
 
   return useObserver(() => (
     <div css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div css={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+      <div
+        css={{
+          display: 'flex',
+          flexShrink: 0,
+          alignItems: 'center',
+          borderBottom: `1px solid ${colors.contrast}`,
+        }}
+      >
         <a
           target="_blank"
           rel="noreferrer"
@@ -107,7 +119,7 @@ export default function Fiddle() {
               marginLeft: 10,
               objectFit: 'contain',
               width: 200,
-              height: 50,
+              height: 60,
             }}
           />
         </a>
@@ -119,6 +131,7 @@ export default function Fiddle() {
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
+            borderRight: `1px solid ${colors.contrast}`,
           }}
         >
           <div
@@ -127,6 +140,8 @@ export default function Fiddle() {
               alignItems: 'center',
               padding: '0 20px',
               flexShrink: 0,
+              height: 40,
+              borderBottom: `1px solid ${colors.contrast}`,
             }}
           >
             <Typography
@@ -136,6 +151,7 @@ export default function Fiddle() {
               Input code:
             </Typography>
             <Select
+              disableUnderline
               css={{
                 marginLeft: 'auto',
                 marginRight: 10,
@@ -172,8 +188,12 @@ export default function Fiddle() {
           <div css={{ padding: 15, flexGrow: 1 }}>
             <MonacoEditor
               options={{
+                renderLineHighlightOnlyWhenFocus: true,
+                overviewRulerBorder: false,
+                hideCursorInOverviewRuler: true,
                 automaticLayout: true,
                 minimap: { enabled: false },
+                scrollbar: { vertical: 'hidden' },
               }}
               theme="vs-dark"
               language="typescript"
@@ -196,11 +216,18 @@ export default function Fiddle() {
               alignItems: 'center',
               padding: 5,
               flexShrink: 0,
+              height: 40,
+              borderBottom: `1px solid ${colors.contrast}`,
             }}
           >
             <Typography
               variant="body2"
-              css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
+              css={{
+                flexGrow: 1,
+                textAlign: 'left',
+                opacity: 0.7,
+                paddingLeft: 10,
+              }}
             >
               Output code:
             </Typography>
@@ -215,7 +242,6 @@ export default function Fiddle() {
               <Tab label="Vue" value="vue" />
               <Tab label="React" value="react" />
               <Tab label="Liquid" value="liquid" />
-              <Tab label="Builder.io" value="builder" />
               <Tab label="JSON" value="json" />
             </Tabs>
             <div css={{ padding: 15 }}>
@@ -223,10 +249,16 @@ export default function Fiddle() {
                 height={outputMonacoEditorSize}
                 options={{
                   automaticLayout: true,
+                  overviewRulerBorder: false,
+                  highlightActiveIndentGuide: false,
+                  foldingHighlight: false,
+                  renderLineHighlightOnlyWhenFocus: true,
+                  occurrencesHighlight: false,
                   readOnly: true,
                   minimap: { enabled: false },
                   renderLineHighlight: 'none',
                   selectionHighlight: false,
+                  scrollbar: { vertical: 'hidden' },
                 }}
                 theme="vs-dark"
                 language={
@@ -240,20 +272,48 @@ export default function Fiddle() {
               />
             </div>
           </div>
-          <Typography
-            variant="body2"
-            css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
+          <div
+            css={{
+              borderBottom: `1px solid ${colors.contrast}`,
+              borderTop: `1px solid ${colors.contrast}`,
+            }}
           >
-            No-code tool interop (
-            <TextLink
-              target="_blank"
-              href="https://github.com/builderio/builder"
+            <Typography
+              variant="body2"
+              css={{
+                flexGrow: 1,
+                textAlign: 'left',
+                padding: 10,
+                color: 'rgba(255, 255, 255, 0.7)',
+              }}
             >
-              Builder.io
-            </TextLink>
-            ):
-          </Typography>
-          <div>{/* TODO: Builder embedded editor */}</div>
+              No-code tool interop (
+              <TextLink
+                target="_blank"
+                href="https://github.com/builderio/builder"
+              >
+                Builder.io
+              </TextLink>
+              ):
+            </Typography>
+          </div>
+          <div
+            css={{
+              flexGrow: 1,
+              '& builder-editor': {
+                width: '100%',
+                filter: 'invert(0.88)',
+                height: '100%',
+              },
+            }}
+          >
+            <BuilderEditor
+              ref={editorRef}
+              theme={JSON.stringify({
+                colors: { primary: 'rgba(169, 104, 70, 1)' },
+              })}
+            />
+          </div>
         </div>
       </div>
     </div>
