@@ -8,7 +8,7 @@ import * as monaco from 'monaco-editor';
 import dedent from 'dedent';
 import logo from './assets/jsx-lite-logo-white.png';
 import {
-  parse,
+  parseJsx,
   componentToVue,
   componentToReact,
   componentToLiquid,
@@ -156,7 +156,7 @@ export default function Fiddle() {
     secondTab: getQueryParam('secondTab') || 'react',
     updateOutput() {
       try {
-        const json = parse(state.code);
+        const json = parseJsx(state.code);
         state.output =
           state.tab === 'liquid'
             ? componentToLiquid(json)
@@ -365,6 +365,12 @@ export default function Fiddle() {
               />
             </div>
           </div>
+          <Typography
+            variant="body2"
+            css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
+          >
+            No-code tool interop (Builder.io):
+          </Typography>
           <div>
             <Tabs
               value={state.secondTab}

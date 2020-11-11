@@ -1,13 +1,13 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import JSON5 from 'json5';
-import { JSXLiteNode } from './types/jsx-lite-node';
-import { JSONObject, JSONOrNode, JSONOrNodeObject } from './types/json';
-import { createJSXLiteNode } from './helpers/create-jsx-lite-node';
-import { JSXLiteComponent, JSXLiteImport } from './types/jsx-lite-component';
-import { createJSXLiteComponent } from './helpers/create-jsx-lite-component';
-import { functionLiteralPrefix } from './constants/function-literal-prefix';
-import { methodLiteralPrefix } from './constants/method-literal-prefix';
+import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
+import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
+import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
+import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -280,7 +280,7 @@ const jsxElementToJson = (
   });
 };
 
-export function parse(jsx: string): JSXLiteComponent {
+export function parseJsx(jsx: string): JSXLiteComponent {
   const output = babel.transform(jsx, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [

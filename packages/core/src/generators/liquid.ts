@@ -2,7 +2,7 @@ import { format } from 'prettier';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parse';
+import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
