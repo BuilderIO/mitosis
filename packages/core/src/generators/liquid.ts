@@ -1,6 +1,7 @@
 import { format } from 'prettier';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -34,9 +35,10 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     return json.properties._text;
   }
   if (json.bindings._text) {
-    return `{{${(json.bindings._text as string)
-      .replace(/state\./g, '')
-      .replace(/props\./g, '')}}}`;
+    if (!isValidLiquidBinding(json.bindings._text as string)) {
+      return '';
+    }
+    return `{{${stripStateAndPropsRefs(json.bindings._text as string)}}}`;
   }
 
   let str = '';
@@ -44,13 +46,15 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
   if (json.name === 'For') {
     if (
       !(
-        isValidLiquidBinding(json.properties._forEach as string) &&
-        isValidLiquidBinding(json.properties._forName as string)
+        isValidLiquidBinding(json.bindings._forEach as string) &&
+        isValidLiquidBinding(json.bindings._forName as string)
       )
     ) {
       return str;
     }
-    str += `{% for ${json.properties._forName} in ${json.properties._forEach} %}`;
+    str += `{% for ${json.bindings._forName} in ${stripStateAndPropsRefs(
+      json.bindings._forEach as string,
+    )} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))
@@ -59,10 +63,12 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
 
     str += '{% endfor %}';
   } else if (json.name === 'Show') {
-    if (!isValidLiquidBinding(json.properties._when as string)) {
+    if (!isValidLiquidBinding(json.bindings._when as string)) {
       return str;
     }
-    str += `{% if ${json.properties._when} %}`;
+    str += `{% if ${stripStateAndPropsRefs(
+      json.bindings._when as string,
+    )} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))
@@ -74,11 +80,11 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     str += `<${json.name} `;
 
     if (
-      json.properties._spread === '_spread' &&
-      isValidLiquidBinding(json.properties._spread)
+      json.bindings._spread === '_spread' &&
+      isValidLiquidBinding(json.bindings._spread)
     ) {
       str += `
-          {% for _attr in ${json.properties._spread} %}
+          {% for _attr in ${json.bindings._spread} %}
             {{ _attr[0] }}="{{ _attr[1] }}"
           {% endfor %}
         `;
@@ -95,7 +101,7 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
       }
       const value = json.bindings[key] as string;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = value.replace(/state\./g, '').replace(/props\./g, '');
+      const useValue = stripStateAndPropsRefs(value);
 
       if (key.startsWith('on')) {
         // Do nothing

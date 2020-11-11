@@ -2,6 +2,7 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier';
 import { renderPreComponent } from '../helpers/render-imports';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -22,7 +23,7 @@ const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions = {}) => {
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
-    const useValue = value.replace(/state\./g, '');
+    const useValue = stripStateAndPropsRefs(value);
 
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
