@@ -1,16 +1,18 @@
 import { useLocalStore, useObserver } from 'mobx-react-lite';
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
 import { useReaction } from '../hooks/use-reaction';
 import { setQueryParam } from '../functions/set-query-param';
 import * as monaco from 'monaco-editor';
 import logo from '../assets/jsx-lite-logo-white.png';
+import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
 import {
   parseJsx,
   componentToVue,
   componentToReact,
   componentToLiquid,
+  componentToBuilder,
 } from '@jsx-lite/core';
 import { MenuItem, Select, Tab, Tabs, Typography } from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
@@ -20,8 +22,13 @@ import { defaultCode, templates } from '../constants/templates';
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 import { colors } from '../constants/colors';
 import { useEventListener } from '../hooks/use-event-lisetener';
+import { adapt } from 'webcomponents-in-react';
 
-const BuilderEditor: any = 'builder-editor';
+const builderOptions = {
+  useDefaultStyles: false,
+};
+
+const BuilderEditor = adapt('builder-editor');
 
 monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
   target: monaco.languages.typescript.ScriptTarget.Latest,
@@ -48,10 +55,12 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(
 
 // TODO: Build this Fiddle app with JSX Lite :)
 export default function Fiddle() {
+  const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalStore(() => ({
     code: getQueryParam('code') || defaultCode,
     output: '',
     tab: getQueryParam('tab') || 'vue',
+    builderData: {} as any,
     updateOutput() {
       try {
         const json = parseJsx(state.code);
@@ -63,13 +72,15 @@ export default function Fiddle() {
             : state.tab === 'json' || state.tab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
+
+        const newBuilderData = componentToBuilder(json);
+        console.log('Setting Builder data', { builderData: newBuilderData });
+        setBuilderData(newBuilderData);
       } catch (err) {
         console.warn(err);
       }
     },
   }));
-
-  const editorRef = useRef<any>();
 
   useEventListener<KeyboardEvent>(document.body, 'keydown', (e) => {
     // Cancel cmd+s, sometimes people hit it instinctively when editing code and the browser
@@ -111,6 +122,7 @@ export default function Fiddle() {
       <div
         css={{
           display: 'flex',
+          position: 'relative',
           flexShrink: 0,
           alignItems: 'center',
           borderBottom: `1px solid ${colors.contrast}`,
@@ -132,22 +144,37 @@ export default function Fiddle() {
             }}
           />
         </a>
+        {/* TODO: maybe add back, TBD */}
+        {/* <div css={{ marginLeft: 'auto', color: '#ccc' }}>
+          Made with ❤️ by{' '}
+          <TextLink href="https://www.builder.io" target="_blank">
+            Builder.io
+          </TextLink>
+        </div> */}
         <a
           target="_blank"
           rel="noreferrer"
           css={{
             marginLeft: 'auto',
             marginRight: 25,
+            display: 'flex',
+            alignItems: 'center',
           }}
           href="https://github.com/builderio/jsx-lite"
         >
-          About
+          Source
+          <img
+            width={30}
+            src={githubLogo}
+            css={{ marginLeft: 10 }}
+            alt="Github Mark"
+          />
         </a>
       </div>
       <div css={{ display: 'flex', flexGrow: 1 }}>
         <div
           css={{
-            width: '50%',
+            width: '40%',
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -224,7 +251,7 @@ export default function Fiddle() {
         </div>
         <div
           css={{
-            width: '50%',
+            width: '60%',
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -341,7 +368,13 @@ export default function Fiddle() {
               },
             }}
           >
-            <BuilderEditor ref={editorRef} />
+            <BuilderEditor
+              onChange={(e: CustomEvent) => {
+                console.log('editor change', e);
+              }}
+              data={builderData}
+              options={builderOptions}
+            />
           </div>
         </div>
       </div>

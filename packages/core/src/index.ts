@@ -12,3 +12,4 @@ export * from './parsers/jsx';
 export * from './generators/vue'
 export * from './generators/react'
 export * from './generators/liquid'
+export * from './generators/builder'
