@@ -254,7 +254,6 @@ declare global {
     interface HTMLAttributes<T> extends DOMAttributes<T> {
       // Standard HTML Attributes
       accessKey?: string;
-      className?: string;
       class?: string;
       contenteditable?: boolean | 'inherit';
       contextmenu?: string;
@@ -860,7 +859,6 @@ declare global {
 
     interface StylableSVGAttributes {
       class?: string;
-      className?: string;
       style?: CSS.Properties;
     }
 

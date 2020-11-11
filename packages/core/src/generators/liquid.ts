@@ -1,4 +1,6 @@
 import { format } from 'prettier';
+import { collectCss } from '../helpers/collect-styles';
+import { fastClone } from '../helpers/fast-clone';
 import { selfClosingTags } from '../parse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -115,10 +117,16 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
 };
 
 export const componentToLiquid = (
-  json: JSXLiteComponent,
+  componentJson: JSXLiteComponent,
   options: ToLiquidOptions = {},
 ) => {
+  const json = fastClone(componentJson);
   let str = json.children.map((item) => blockToLiquid(item)).join('\n');
+
+  const css = collectCss(json);
+  if (css.trim().length) {
+    str += `<style>${css}</style>`;
+  }
 
   if (options.prettier !== false) {
     str = format(str, { parser: 'html' });

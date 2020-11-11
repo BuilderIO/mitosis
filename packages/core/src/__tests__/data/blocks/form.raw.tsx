@@ -277,7 +277,7 @@ export default function FormComponent(props: FormProps) {
 
       <Show when={state.submissionState === 'error' && state.responseData}>
         <pre
-          className="builder-form-error-text"
+          class="builder-form-error-text"
           css={{ padding: '10px', color: 'red', textAlign: 'center' }}
         >
           {JSON.stringify(state.responseData, null, 2)}

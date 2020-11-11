@@ -1,6 +1,6 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier';
+import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
@@ -12,6 +12,7 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 export type ToVueOptions = {
   prettier?: boolean;
 };
+
 export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   if (json.properties._text) {
     return json.properties._text;
@@ -73,13 +74,17 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   }
   return str;
 };
+
 export const componentToVue = (
   componentJson: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
+  // Make a copy we can safely mutate, similar to babel's toolchain
   const json = fastClone(componentJson);
 
   mapRefs(json, (refName) => `this.$refs.${refName}`);
+
+  const css = collectCss(json);
 
   let dataString = getStateObjectString(json);
 
@@ -103,6 +108,13 @@ export const componentToVue = (
         data: () => (${dataString})
       }
     </script>
+    ${
+      !css.trim().length
+        ? ''
+        : `<style>
+      ${css}
+    </style>`
+    }
   `;
 
   if (options.prettier !== false) {
