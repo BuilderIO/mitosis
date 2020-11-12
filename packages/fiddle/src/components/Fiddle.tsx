@@ -258,7 +258,7 @@ export default function Fiddle() {
         >
           <div
             css={{
-              width: '50%',
+              width: '45%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -341,7 +341,7 @@ export default function Fiddle() {
           </div>
           <div
             css={{
-              width: '50%',
+              width: '55%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',

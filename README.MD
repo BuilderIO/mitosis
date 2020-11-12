@@ -74,7 +74,7 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 
 JSX Lite's static JSON format also enables no-code tooling for visual code editing, for instance with [Builder.io](https://github.com/builderio/builder) or Figma (coming soon)
 
-<img src="https://i.imgur.com/KTpBDvH.gif" >
+<img src="https://imgur.com/3TjfY2H.gif" >
 
 ## Who uses it
 
