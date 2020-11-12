@@ -7,7 +7,11 @@ export const localStorageGet = (
   options: LocalStorageGetOptions = {},
 ): any => {
   try {
-    return JSON.parse(localStorage.get(key));
+    const val = localStorage.getItem(key);
+    if (typeof val === 'string') {
+      return JSON.parse(val);
+    }
+    return val;
   } catch (err) {
     if (!options.suppressWarning) {
       console.warn('Could not get from localStorage', err);

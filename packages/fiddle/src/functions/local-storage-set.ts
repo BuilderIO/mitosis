@@ -8,7 +8,7 @@ export const localStorageSet = (
   options: LocalStorageSetOptions = {},
 ): any => {
   try {
-    return localStorage.set(key, JSON.stringify(value));
+    return localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
     if (!options.suppressWarning) {
       console.warn('Could not set from localStorage', err);

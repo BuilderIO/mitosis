@@ -35,6 +35,9 @@ import { colors } from '../constants/colors';
 import { useEventListener } from '../hooks/use-event-lisetener';
 import { adapt } from 'webcomponents-in-react';
 import { theme } from '../constants/theme';
+import { breakpoints } from '../constants/breakpoints';
+import { device } from '../constants/device';
+import { Show } from './Show';
 
 const builderOptions = {
   useDefaultStyles: false,
@@ -42,6 +45,9 @@ const builderOptions = {
 };
 
 const BuilderEditor = adapt('builder-editor');
+
+const smallBreakpoint = breakpoints.mediaQueries.small;
+const responsiveColHeight = 'calc(50vh - 30px)';
 
 monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
   target: monaco.languages.typescript.ScriptTarget.Latest,
@@ -148,12 +154,17 @@ export default function Fiddle() {
     { delay: 1000 },
   );
 
-  const outputMonacoEditorSize = 'calc(50vh - 200px)';
-
   return useObserver(() => {
+    const outputMonacoEditorSize = device.small
+      ? 'calc(50vh - 50px)'
+      : 'calc(50vh - 200px)';
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
-    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs-light';
-    const barStyle = theme.darkMode ? null : { backgroundColor: 'white' };
+    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
+    const barStyle: any = {
+      overflow: 'auto',
+      whiteSpace: 'nowrap',
+      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
+    };
 
     return (
       <div
@@ -238,7 +249,13 @@ export default function Fiddle() {
             />
           </a>
         </div>
-        <div css={{ display: 'flex', flexGrow: 1 }}>
+        <div
+          css={{
+            display: 'flex',
+            flexGrow: 1,
+            [smallBreakpoint]: { flexDirection: 'column' },
+          }}
+        >
           <div
             css={{
               width: '40%',
@@ -246,6 +263,11 @@ export default function Fiddle() {
               display: 'flex',
               flexDirection: 'column',
               borderRight: `1px solid ${colors.contrast}`,
+              [smallBreakpoint]: {
+                width: '100%',
+                height: responsiveColHeight,
+                overflow: 'hidden',
+              },
             }}
           >
             <div
@@ -323,6 +345,11 @@ export default function Fiddle() {
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
+              [smallBreakpoint]: {
+                width: '100%',
+                height: responsiveColHeight,
+                overflow: 'hidden',
+              },
             }}
           >
             <div
@@ -333,6 +360,9 @@ export default function Fiddle() {
                 flexShrink: 0,
                 height: 40,
                 borderBottom: `1px solid ${colors.contrast}`,
+                [smallBreakpoint]: {
+                  borderTop: `1px solid ${colors.contrast}`,
+                },
                 ...barStyle,
               }}
             >
@@ -397,101 +427,104 @@ export default function Fiddle() {
                 />
               </div>
             </div>
-            <div
-              css={{
-                borderBottom: `1px solid ${colors.contrast}`,
-                borderTop: `1px solid ${colors.contrast}`,
-                alignItems: 'center',
-                display: 'flex',
-                ...barStyle,
-              }}
-            >
-              <Typography
-                variant="body2"
+            <Show when={!device.small}>
+              <div
+                css={{
+                  borderBottom: `1px solid ${colors.contrast}`,
+                  borderTop: `1px solid ${colors.contrast}`,
+                  alignItems: 'center',
+                  display: 'flex',
+                  ...barStyle,
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  css={{
+                    flexGrow: 1,
+                    textAlign: 'left',
+                    padding: '10px 15px',
+                    color: theme.darkMode
+                      ? 'rgba(255, 255, 255, 0.7)'
+                      : 'rgba(0, 0, 0, 0.7)',
+                  }}
+                >
+                  No-code tool interop:
+                </Typography>
+                {state.pendingBuilderChange && (
+                  <Button
+                    css={{ marginRight: 30 }}
+                    onClick={() => state.applyPendingBuilderChange()}
+                    color="primary"
+                    variant="outlined"
+                    size="small"
+                  >
+                    Save
+                  </Button>
+                )}
+                <Tabs
+                  css={{
+                    minHeight: 0,
+                    marginLeft: 'auto',
+                    // borderBottom: `1px solid ${colors.contrast}`,
+                    '& button': {
+                      minHeight: 0,
+                      minWidth: 100,
+                    },
+                  }}
+                  value={state.noCodeTab}
+                  onChange={(e, value) => (state.noCodeTab = value)}
+                  indicatorColor="primary"
+                  textColor="primary"
+                >
+                  <Tab label="Builder.io" value="builder" />
+                  <Tab label="Figma" value="figma" />
+                </Tabs>
+              </div>
+              <div
                 css={{
                   flexGrow: 1,
-                  textAlign: 'left',
-                  padding: '10px 15px',
-                  color: theme.darkMode
-                    ? 'rgba(255, 255, 255, 0.7)'
-                    : 'rgba(0, 0, 0, 0.7)',
-                }}
-              >
-                No-code tool interop:
-              </Typography>
-              {state.pendingBuilderChange && (
-                <Button
-                  css={{ marginRight: 30 }}
-                  onClick={() => state.applyPendingBuilderChange()}
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                >
-                  Save
-                </Button>
-              )}
-              <Tabs
-                css={{
-                  minHeight: 0,
-                  marginLeft: 'auto',
-                  // borderBottom: `1px solid ${colors.contrast}`,
-                  '& button': {
-                    minHeight: 0,
-                    minWidth: 100,
-                  },
-                }}
-                value={state.noCodeTab}
-                onChange={(e, value) => (state.noCodeTab = value)}
-                indicatorColor="primary"
-                textColor="primary"
-              >
-                <Tab label="Builder.io" value="builder" />
-                <Tab label="Figma" value="figma" />
-              </Tabs>
-            </div>
-            <div
-              css={{
-                flexGrow: 1,
-                '& builder-editor': {
-                  width: '100%',
-                  filter: theme.darkMode ? 'invert(0.89)' : '',
-                  transition: 'filter 0.2s ease-in-out',
-                  height: '100%',
-                  display: state.noCodeTab === 'builder' ? undefined : 'none ',
-
-                  '&:hover': {
-                    ...(theme.darkMode && {
-                      filter: 'invert(0)',
-                    }),
-                  },
-                },
-              }}
-            >
-              <BuilderEditor
-                onChange={(e: CustomEvent) => {
-                  if (useSaveButton) {
-                    if (document.activeElement?.tagName === 'IFRAME') {
-                      state.pendingBuilderChange = e.detail;
-                    }
-                  } else {
-                    state.applyPendingBuilderChange(e.detail);
-                  }
-                }}
-                data={builderData}
-                options={builderOptions}
-              />
-              {state.noCodeTab === 'figma' && (
-                <iframe
-                  title="figma-embed"
-                  css={{
-                    height: '100%',
+                  '& builder-editor': {
                     width: '100%',
-                    border: 0,
+                    filter: theme.darkMode ? 'invert(0.89)' : '',
+                    transition: 'filter 0.2s ease-in-out',
+                    height: '100%',
+                    display:
+                      state.noCodeTab === 'builder' ? undefined : 'none ',
+
+                    '&:hover': {
+                      ...(theme.darkMode && {
+                        filter: 'invert(0)',
+                      }),
+                    },
+                  },
+                }}
+              >
+                <BuilderEditor
+                  onChange={(e: CustomEvent) => {
+                    if (useSaveButton) {
+                      if (document.activeElement?.tagName === 'IFRAME') {
+                        state.pendingBuilderChange = e.detail;
+                      }
+                    } else {
+                      state.applyPendingBuilderChange(e.detail);
+                    }
                   }}
-                  src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2Fn0MTjxKKcD7IHN0uDMVdHB%2FUntitled%3Fnode-id%3D0%253A1"
+                  data={builderData}
+                  options={builderOptions}
                 />
-              )}
-            </div>
+                {state.noCodeTab === 'figma' && (
+                  <iframe
+                    title="figma-embed"
+                    css={{
+                      height: '100%',
+                      width: '100%',
+                      border: 0,
+                    }}
+                    src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2Fn0MTjxKKcD7IHN0uDMVdHB%2FUntitled%3Fnode-id%3D0%253A1"
+                  />
+                )}
+              </div>
+            </Show>
           </div>
         </div>
       </div>

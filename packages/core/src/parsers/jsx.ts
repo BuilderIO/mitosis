@@ -12,7 +12,22 @@ import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 
-export const selfClosingTags = new Set(['input', 'meta', 'bar']);
+export const selfClosingTags = new Set([
+  'area',
+  'base',
+  'br',
+  'col',
+  'embed',
+  'hr',
+  'img',
+  'input',
+  'link',
+  'meta',
+  'param',
+  'source',
+  'track',
+  'wbr',
+]);
 
 const { types } = babel;
 
