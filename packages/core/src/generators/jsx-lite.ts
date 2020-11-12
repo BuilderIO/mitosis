@@ -49,7 +49,9 @@ const blockToJsxLite = (json: JSXLiteNode, options: ToJsxLiteOptions = {}) => {
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToJsxLite(item, options)).join('\n');
+    str += json.children
+      .map((item) => blockToJsxLite(item, options))
+      .join('\n');
   }
 
   str += `</${json.name}>`;
@@ -83,9 +85,9 @@ export const componentToJsxLite = (
       const state = useState(${getStateObjectString(json)});
       ${getRefsString(json)}
 
-      return (<>
+      return (
         ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
-      </>)
+      )
     }
    
   `;
