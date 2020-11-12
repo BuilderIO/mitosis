@@ -13,8 +13,11 @@ import {
   componentToReact,
   componentToLiquid,
   componentToBuilder,
+  builderContentToJsxLiteComponent,
+  componentToJsxLite,
 } from '@jsx-lite/core';
 import {
+  Button,
   FormControlLabel,
   MenuItem,
   Select,
@@ -35,6 +38,7 @@ import { theme } from '../constants/theme';
 
 const builderOptions = {
   useDefaultStyles: false,
+  previewUrl: 'https://jsx-lite-fiddle.web.app/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
@@ -62,17 +66,35 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(
   `file:///node_modules/@react/types/index.d.ts`,
 );
 
+const useSaveButton = true;
+
 // TODO: Build this Fiddle app with JSX Lite :)
 export default function Fiddle() {
+  const [staticState] = useState(() => ({
+    ignoreNextBuilderUpdate: false,
+  }));
   const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalStore(() => ({
     code: getQueryParam('code') || defaultCode,
     output: '',
     tab: getQueryParam('tab') || 'vue',
+    pendingBuilderChange: null as any,
     noCodeTab: 'builder',
     builderData: {} as any,
+    applyPendingBuilderChange(update?: any) {
+      const builderJson = update || state.pendingBuilderChange;
+      if (!builderJson) {
+        return;
+      }
+      const jsxJson = builderContentToJsxLiteComponent(builderJson);
+      state.code = componentToJsxLite(jsxJson);
+      console.log('Builder set code', state.code);
+      state.pendingBuilderChange = null;
+    },
     updateOutput() {
       try {
+        state.pendingBuilderChange = null;
+        staticState.ignoreNextBuilderUpdate = true;
         const json = parseJsx(state.code);
         state.output =
           state.tab === 'liquid'
@@ -97,6 +119,7 @@ export default function Fiddle() {
     // "save webpage" dialog is unwanted and annoying
     if ((e.metaKey || e.ctrlKey) && e.key === 's') {
       e.preventDefault();
+      state.applyPendingBuilderChange();
     }
   });
 
@@ -138,7 +161,7 @@ export default function Fiddle() {
           display: 'flex',
           flexDirection: 'column',
           height: '100vh',
-          '& .react-monaco-editor-container *': {
+          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input': {
             backgroundColor: 'transparent !important',
           },
         }}
@@ -378,6 +401,7 @@ export default function Fiddle() {
               css={{
                 borderBottom: `1px solid ${colors.contrast}`,
                 borderTop: `1px solid ${colors.contrast}`,
+                alignItems: 'center',
                 display: 'flex',
                 ...barStyle,
               }}
@@ -387,7 +411,7 @@ export default function Fiddle() {
                 css={{
                   flexGrow: 1,
                   textAlign: 'left',
-                  padding: 10,
+                  padding: '10px 15px',
                   color: theme.darkMode
                     ? 'rgba(255, 255, 255, 0.7)'
                     : 'rgba(0, 0, 0, 0.7)',
@@ -395,6 +419,17 @@ export default function Fiddle() {
               >
                 No-code tool interop:
               </Typography>
+              {state.pendingBuilderChange && (
+                <Button
+                  css={{ marginRight: 30 }}
+                  onClick={() => state.applyPendingBuilderChange()}
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                >
+                  Save
+                </Button>
+              )}
               <Tabs
                 css={{
                   minHeight: 0,
@@ -434,10 +469,19 @@ export default function Fiddle() {
               {state.noCodeTab === 'builder' ? (
                 <BuilderEditor
                   onChange={(e: CustomEvent) => {
-                    console.log('editor change', e);
+                    if (useSaveButton) {
+                      state.pendingBuilderChange = e.detail;
+                    } else {
+                      state.applyPendingBuilderChange(e.detail);
+                    }
                   }}
                   data={builderData}
                   options={builderOptions}
+                  theme={{
+                    colors: {
+                      primary: 'rgba(255, 0, 0, 1)',
+                    },
+                  }}
                 />
               ) : (
                 <iframe
