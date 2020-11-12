@@ -14,7 +14,15 @@ import {
   componentToLiquid,
   componentToBuilder,
 } from '@jsx-lite/core';
-import { MenuItem, Select, Tab, Tabs, Typography } from '@material-ui/core';
+import {
+  FormControlLabel,
+  MenuItem,
+  Select,
+  Switch,
+  Tab,
+  Tabs,
+  Typography,
+} from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
 import { TextLink } from './TextLink';
 import { defaultCode, templates } from '../constants/templates';
@@ -23,6 +31,7 @@ import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 import { colors } from '../constants/colors';
 import { useEventListener } from '../hooks/use-event-lisetener';
 import { adapt } from 'webcomponents-in-react';
+import { theme } from '../constants/theme';
 
 const builderOptions = {
   useDefaultStyles: false,
@@ -60,6 +69,7 @@ export default function Fiddle() {
     code: getQueryParam('code') || defaultCode,
     output: '',
     tab: getQueryParam('tab') || 'vue',
+    noCodeTab: 'builder',
     builderData: {} as any,
     updateOutput() {
       try {
@@ -117,267 +127,324 @@ export default function Fiddle() {
 
   const outputMonacoEditorSize = 'calc(50vh - 200px)';
 
-  return useObserver(() => (
-    <div css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div
-        css={{
-          display: 'flex',
-          position: 'relative',
-          flexShrink: 0,
-          alignItems: 'center',
-          borderBottom: `1px solid ${colors.contrast}`,
-        }}
-      >
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href="https://github.com/builderio/jsx-lite"
+  return useObserver(() => {
+    const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
+    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs-light';
+    const barStyle = theme.darkMode ? null : { backgroundColor: '#f8f8f8' };
+
+    return (
+      <div css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <div
+          css={{
+            display: 'flex',
+            position: 'relative',
+            flexShrink: 0,
+            alignItems: 'center',
+            borderBottom: `1px solid ${colors.contrast}`,
+            backgroundColor: '#1e1e1e',
+            color: 'white',
+          }}
         >
-          <img
-            alt="JSX Lite Logo"
-            src={logo}
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href="https://github.com/builderio/jsx-lite"
             css={{
-              marginLeft: 10,
-              objectFit: 'contain',
-              width: 200,
-              height: 60,
+              marginRight: 'auto',
             }}
-          />
-        </a>
-        {/* TODO: maybe add back, TBD */}
-        {/* <div css={{ marginLeft: 'auto', color: '#ccc' }}>
+          >
+            <img
+              alt="JSX Lite Logo"
+              src={logo}
+              css={{
+                marginLeft: 10,
+                objectFit: 'contain',
+                width: 200,
+                height: 60,
+                ...lightColorInvert,
+              }}
+            />
+          </a>
+          {/* TODO: maybe add back, TBD */}
+          {/* <div css={{ marginLeft: 'auto', color: '#ccc' }}>
           Made with ❤️ by{' '}
           <TextLink href="https://www.builder.io" target="_blank">
             Builder.io
           </TextLink>
         </div> */}
-        <a
-          target="_blank"
-          rel="noreferrer"
-          css={{
-            marginLeft: 'auto',
-            marginRight: 25,
-            display: 'flex',
-            alignItems: 'center',
-          }}
-          href="https://github.com/builderio/jsx-lite"
-        >
-          Source
-          <img
-            width={30}
-            src={githubLogo}
-            css={{ marginLeft: 10 }}
-            alt="Github Mark"
+
+          <FormControlLabel
+            css={{ marginRight: 20 }}
+            value="start"
+            control={
+              <Switch
+                color="primary"
+                checked={theme.darkMode}
+                onChange={(e, value) => (theme.darkMode = value)}
+              />
+            }
+            label="Dark Mode"
+            labelPlacement="start"
           />
-        </a>
-      </div>
-      <div css={{ display: 'flex', flexGrow: 1 }}>
-        <div
-          css={{
-            width: '40%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            borderRight: `1px solid ${colors.contrast}`,
-          }}
-        >
-          <div
+
+          <a
+            target="_blank"
+            rel="noreferrer"
             css={{
+              marginRight: 25,
               display: 'flex',
               alignItems: 'center',
-              padding: '0 20px',
-              flexShrink: 0,
-              height: 40,
-              borderBottom: `1px solid ${colors.contrast}`,
             }}
+            href="https://github.com/builderio/jsx-lite"
           >
-            <Typography
-              variant="body2"
-              css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
-            >
-              Input code:
-            </Typography>
-            <Select
-              disableUnderline
-              css={{
-                marginLeft: 'auto',
-                marginRight: 10,
-              }}
-              renderValue={(value) => (
-                <span css={{ textTransform: 'capitalize' }}>
-                  {value === '_none' ? 'Choose template' : (value as string)}
-                </span>
-              )}
-              defaultValue="_none"
-              onChange={(e) => {
-                const template = templates[e.target.value as string];
-                if (template) {
-                  state.code = template;
-                }
-              }}
-            >
-              <MenuItem value="_none" disabled>
-                Choose template
-              </MenuItem>
-              {Object.keys(templates).map((key) => (
-                <MenuItem
-                  key={key}
-                  value={key}
-                  css={{
-                    textTransform: 'capitalize',
-                  }}
-                >
-                  {key}
-                </MenuItem>
-              ))}
-            </Select>
-          </div>
-          <div css={{ padding: 15, flexGrow: 1 }}>
-            <MonacoEditor
-              options={{
-                renderLineHighlightOnlyWhenFocus: true,
-                overviewRulerBorder: false,
-                hideCursorInOverviewRuler: true,
-                automaticLayout: true,
-                minimap: { enabled: false },
-                scrollbar: { vertical: 'hidden' },
-              }}
-              theme="vs-dark"
-              language="typescript"
-              value={state.code}
-              onChange={(val) => (state.code = val)}
+            Source
+            <img
+              width={30}
+              src={githubLogo}
+              css={{ marginLeft: 10, ...lightColorInvert }}
+              alt="Github Mark"
             />
-          </div>
+          </a>
         </div>
-        <div
-          css={{
-            width: '60%',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
+        <div css={{ display: 'flex', flexGrow: 1 }}>
           <div
             css={{
+              width: '40%',
+              height: '100%',
               display: 'flex',
-              alignItems: 'center',
-              padding: 5,
-              flexShrink: 0,
-              height: 40,
-              borderBottom: `1px solid ${colors.contrast}`,
+              flexDirection: 'column',
+              borderRight: `1px solid ${colors.contrast}`,
             }}
           >
-            <Typography
-              variant="body2"
+            <div
               css={{
-                flexGrow: 1,
-                textAlign: 'left',
-                opacity: 0.7,
-                paddingLeft: 10,
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 20px',
+                flexShrink: 0,
+                height: 40,
+                borderBottom: `1px solid ${colors.contrast}`,
+                ...barStyle,
               }}
             >
-              Output code:
-            </Typography>
-            <Tabs
-              css={{
-                minHeight: 0,
-                marginLeft: 'auto',
-                // borderBottom: `1px solid ${colors.contrast}`,
-                '& button': {
-                  minHeight: 0,
-                  minWidth: 100,
-                },
-              }}
-              value={state.tab}
-              onChange={(e, value) => (state.tab = value)}
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              <Tab label="Vue" value="vue" />
-              <Tab label="React" value="react" />
-              <Tab label="Liquid" value="liquid" />
-              <Tab label="JSON" value="json" />
-            </Tabs>
-          </div>
-          <div>
-            <div css={{ padding: 15 }}>
+              <Typography
+                variant="body2"
+                css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
+              >
+                Input code:
+              </Typography>
+              <Select
+                disableUnderline
+                css={{
+                  marginLeft: 'auto',
+                  marginRight: 10,
+                }}
+                renderValue={(value) => (
+                  <span css={{ textTransform: 'capitalize' }}>
+                    {value === '_none' ? 'Choose template' : (value as string)}
+                  </span>
+                )}
+                defaultValue="_none"
+                onChange={(e) => {
+                  const template = templates[e.target.value as string];
+                  if (template) {
+                    state.code = template;
+                  }
+                }}
+              >
+                <MenuItem value="_none" disabled>
+                  Choose template
+                </MenuItem>
+                {Object.keys(templates).map((key) => (
+                  <MenuItem
+                    key={key}
+                    value={key}
+                    css={{
+                      textTransform: 'capitalize',
+                    }}
+                  >
+                    {key}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div css={{ padding: 15, flexGrow: 1 }}>
               <MonacoEditor
-                height={outputMonacoEditorSize}
                 options={{
-                  automaticLayout: true,
-                  overviewRulerBorder: false,
-                  highlightActiveIndentGuide: false,
-                  foldingHighlight: false,
                   renderLineHighlightOnlyWhenFocus: true,
-                  occurrencesHighlight: false,
-                  readOnly: true,
+                  overviewRulerBorder: false,
+                  hideCursorInOverviewRuler: true,
+                  automaticLayout: true,
                   minimap: { enabled: false },
-                  renderLineHighlight: 'none',
-                  selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
-                theme="vs-dark"
-                language={
-                  state.tab === 'json' || state.tab === 'builder'
-                    ? 'json'
-                    : state.tab === 'react'
-                    ? 'typescript'
-                    : 'html'
-                }
-                value={state.output}
+                theme={monacoTheme}
+                language="typescript"
+                value={state.code}
+                onChange={(val) => (state.code = val)}
               />
             </div>
           </div>
           <div
             css={{
-              borderBottom: `1px solid ${colors.contrast}`,
-              borderTop: `1px solid ${colors.contrast}`,
+              width: '60%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <Typography
-              variant="body2"
+            <div
               css={{
-                flexGrow: 1,
-                textAlign: 'left',
-                padding: 10,
-                color: 'rgba(255, 255, 255, 0.7)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: 5,
+                flexShrink: 0,
+                height: 40,
+                borderBottom: `1px solid ${colors.contrast}`,
+                ...barStyle,
               }}
             >
-              No-code tool interop (
-              <TextLink
-                target="_blank"
-                href="https://github.com/builderio/builder"
+              <Typography
+                variant="body2"
+                css={{
+                  flexGrow: 1,
+                  textAlign: 'left',
+                  opacity: 0.7,
+                  paddingLeft: 10,
+                }}
               >
-                Builder.io
-              </TextLink>
-              ):
-            </Typography>
-          </div>
-          <div
-            css={{
-              flexGrow: 1,
-              '& builder-editor': {
-                width: '100%',
-                filter: 'invert(0.89)',
-                transition: 'filter 0.2s ease-in-out',
-                height: '100%',
-
-                '&:hover': {
-                  filter: 'invert(0)',
-                },
-              },
-            }}
-          >
-            <BuilderEditor
-              onChange={(e: CustomEvent) => {
-                console.log('editor change', e);
+                Output code:
+              </Typography>
+              <Tabs
+                css={{
+                  minHeight: 0,
+                  marginLeft: 'auto',
+                  // borderBottom: `1px solid ${colors.contrast}`,
+                  '& button': {
+                    minHeight: 0,
+                    minWidth: 100,
+                  },
+                }}
+                value={state.tab}
+                onChange={(e, value) => (state.tab = value)}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab label="Vue" value="vue" />
+                <Tab label="React" value="react" />
+                <Tab label="Liquid" value="liquid" />
+                <Tab label="JSON" value="json" />
+              </Tabs>
+            </div>
+            <div>
+              <div css={{ padding: 15 }}>
+                <MonacoEditor
+                  height={outputMonacoEditorSize}
+                  options={{
+                    automaticLayout: true,
+                    overviewRulerBorder: false,
+                    highlightActiveIndentGuide: false,
+                    foldingHighlight: false,
+                    renderLineHighlightOnlyWhenFocus: true,
+                    occurrencesHighlight: false,
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    renderLineHighlight: 'none',
+                    selectionHighlight: false,
+                    scrollbar: { vertical: 'hidden' },
+                  }}
+                  theme={monacoTheme}
+                  language={
+                    state.tab === 'json' || state.tab === 'builder'
+                      ? 'json'
+                      : state.tab === 'react'
+                      ? 'typescript'
+                      : 'html'
+                  }
+                  value={state.output}
+                />
+              </div>
+            </div>
+            <div
+              css={{
+                borderBottom: `1px solid ${colors.contrast}`,
+                borderTop: `1px solid ${colors.contrast}`,
+                display: 'flex',
+                ...barStyle,
               }}
-              data={builderData}
-              options={builderOptions}
-            />
+            >
+              <Typography
+                variant="body2"
+                css={{
+                  flexGrow: 1,
+                  textAlign: 'left',
+                  padding: 10,
+                  color: theme.darkMode
+                    ? 'rgba(255, 255, 255, 0.7)'
+                    : 'rgba(0, 0, 0, 0.7)',
+                }}
+              >
+                No-code tool interop:
+              </Typography>
+              <Tabs
+                css={{
+                  minHeight: 0,
+                  marginLeft: 'auto',
+                  // borderBottom: `1px solid ${colors.contrast}`,
+                  '& button': {
+                    minHeight: 0,
+                    minWidth: 100,
+                  },
+                }}
+                value={state.noCodeTab}
+                onChange={(e, value) => (state.noCodeTab = value)}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab label="Builder.io" value="builder" />
+                <Tab label="Figma" value="figma" />
+              </Tabs>
+            </div>
+            <div
+              css={{
+                flexGrow: 1,
+                '& builder-editor': {
+                  width: '100%',
+                  filter: theme.darkMode ? 'invert(0.89)' : '',
+                  transition: 'filter 0.2s ease-in-out',
+                  height: '100%',
+
+                  '&:hover': {
+                    ...(theme.darkMode && {
+                      filter: 'invert(0)',
+                    }),
+                  },
+                },
+              }}
+            >
+              {state.noCodeTab === 'builder' ? (
+                <BuilderEditor
+                  onChange={(e: CustomEvent) => {
+                    console.log('editor change', e);
+                  }}
+                  data={builderData}
+                  options={builderOptions}
+                />
+              ) : (
+                <iframe
+                  title="figma-embed"
+                  css={{
+                    height: '100%',
+                    width: '100%',
+                    border: 0,
+                  }}
+                  src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2Fn0MTjxKKcD7IHN0uDMVdHB%2FUntitled%3Fnode-id%3D0%253A1"
+                />
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  ));
+    );
+  });
 }
