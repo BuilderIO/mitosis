@@ -157,7 +157,7 @@ export default function Fiddle() {
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
       ? 'calc(50vh - 50px)'
-      : 'calc(50vh - 200px)';
+      : 'calc(50vh - 100px)';
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -258,7 +258,7 @@ export default function Fiddle() {
         >
           <div
             css={{
-              width: '40%',
+              width: '50%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -341,7 +341,7 @@ export default function Fiddle() {
           </div>
           <div
             css={{
-              width: '60%',
+              width: '50%',
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
