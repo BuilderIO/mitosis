@@ -130,10 +130,19 @@ export default function Fiddle() {
   return useObserver(() => {
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs-light';
-    const barStyle = theme.darkMode ? null : { backgroundColor: '#f8f8f8' };
+    const barStyle = theme.darkMode ? null : { backgroundColor: 'white' };
 
     return (
-      <div css={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100vh',
+          '& .react-monaco-editor-container *': {
+            backgroundColor: 'transparent !important',
+          },
+        }}
+      >
         <div
           css={{
             display: 'flex',

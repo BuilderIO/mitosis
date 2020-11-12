@@ -8,4 +8,7 @@ export const colors = observable({
   get contrast() {
     return theme.darkMode ? '#444' : '#ddd';
   },
+  get background() {
+    return theme.darkMode ? '#1e1e1e' : '#f8f8f8';
+  },
 });

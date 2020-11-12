@@ -21,7 +21,7 @@ export default function App() {
           <CssBaseline />
           <style>{`
             body {
-              background-color: ${theme.darkMode ? '#1e1e1e' : 'white'};
+              background-color: ${colors.background};
             }
           `}</style>
           <Fiddle />
