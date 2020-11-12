@@ -135,6 +135,9 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 - Stable (v1) release
 - Plugin API docs for custom syntaxes and extensions
 - Integration with design tools like Figma (Figma <-> JSX Lite)
+- JSX Lite Fiddle
+
+<img src="https://cdn.builder.io/api/v1/image/assets%2F7f7bbcf72a1a4d72bac5daa359e7befd%2F21ed8b6d32aa4106afbe7724da48e3e4" />
 
 <br />
 <p align="center">

@@ -198,14 +198,14 @@ export default function Fiddle() {
             />
           </a>
           {/* TODO: maybe add back, TBD */}
-          {/* <div css={{ marginLeft: 'auto', color: '#ccc' }}>
-          Made with ❤️ by{' '}
-          <TextLink href="https://www.builder.io" target="_blank">
-            Builder.io
-          </TextLink>
-        </div> */}
+          {/* <div css={{ marginRight: 'auto', color: '#bbb' }}>
+            Made with <span css={{ opacity: 0.7 }}>❤️</span> by{' '}
+            <TextLink href="https://www.builder.io" target="_blank">
+              Builder.io
+            </TextLink>
+          </div> */}
 
-          <FormControlLabel
+          {/* <FormControlLabel
             css={{ marginRight: 20 }}
             value="start"
             control={
@@ -217,7 +217,7 @@ export default function Fiddle() {
             }
             label="Dark Mode"
             labelPlacement="start"
-          />
+          /> */}
 
           <a
             target="_blank"
