@@ -4,7 +4,7 @@
   Write components once, run everywhere. Compiles to Vue, React, Solid, Liquid, and more.
 </p>
 
-<img src="https://cdn.builder.io/api/v1/image/assets%2F7f7bbcf72a1a4d72bac5daa359e7befd%2Ffcdc63b27ad24d928a95c5a456ba8564" />
+<img src="https://imgur.com/ZX9WvvZ.gif" />
 
 ## How does it work
 
