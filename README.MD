@@ -70,13 +70,9 @@ class MyComponent {
 
 Adding framework support is surprisingy easy with our plugins (docs coming soon!)
 
-## Why
+## No-code tooling
 
-- **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
-  - E.g. want to make an open source library but can't choose which framework(s) to support? Write it once in JSX Lite and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
-- **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tired of duplicating components because you need to support multiple frameworks?
-  - Write once and generate. New hot framework comes out? Write an adapter once and now all your current code supports the new framework
-- **Edit visually** - static code subsets like jsx-lite have the ability to also be visually edited, for instance with no-code tools like [Builder.io](https://github.com/builderio/builder) or Figma. Share with designers or marketers to create, repurpose, and extend either as code or via an API
+JSX Lite's static JSON format also enables no-code tooling for visual code editing, for instance with [Builder.io](https://github.com/builderio/builder) or Figma (coming soon)
 
 <img src="https://i.imgur.com/KTpBDvH.gif" >
 
@@ -102,10 +98,10 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 
 ## Coming soon
 
+- JSX Lite Fiddle
 - Stable (v1) release
 - Plugin API docs for custom syntaxes and extensions
 - Integration with design tools like Figma (Figma <-> JSX Lite)
-- JSX Lite Fiddle
 
 <br />
 <p align="center">
