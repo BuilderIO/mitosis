@@ -457,6 +457,7 @@ export default function Fiddle() {
                   filter: theme.darkMode ? 'invert(0.89)' : '',
                   transition: 'filter 0.2s ease-in-out',
                   height: '100%',
+                  display: state.noCodeTab === 'builder' ? undefined : 'none ',
 
                   '&:hover': {
                     ...(theme.darkMode && {
@@ -466,24 +467,20 @@ export default function Fiddle() {
                 },
               }}
             >
-              {state.noCodeTab === 'builder' ? (
-                <BuilderEditor
-                  onChange={(e: CustomEvent) => {
-                    if (useSaveButton) {
+              <BuilderEditor
+                onChange={(e: CustomEvent) => {
+                  if (useSaveButton) {
+                    if (document.activeElement?.tagName === 'IFRAME') {
                       state.pendingBuilderChange = e.detail;
-                    } else {
-                      state.applyPendingBuilderChange(e.detail);
                     }
-                  }}
-                  data={builderData}
-                  options={builderOptions}
-                  theme={{
-                    colors: {
-                      primary: 'rgba(255, 0, 0, 1)',
-                    },
-                  }}
-                />
-              ) : (
+                  } else {
+                    state.applyPendingBuilderChange(e.detail);
+                  }
+                }}
+                data={builderData}
+                options={builderOptions}
+              />
+              {state.noCodeTab === 'figma' && (
                 <iframe
                   title="figma-embed"
                   css={{
