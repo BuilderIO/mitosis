@@ -8,33 +8,7 @@
 
 ## Example
 
-**Source:**
-
-```tsx
-import { useState } from '@jsx-lite/core';
-
-export function MyComponent() {
-  const state = useState({
-    name: 'Steve',
-  });
-
-  return (
-    <div>
-      <input
-        value={state.name}
-        onChange={(e) => (state.name = e.target.value)}
-      />
-      Hello, {state.name}. I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
-}
-```
-
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fda8f27bf2deb40a886943bf41db07377" />
-
-Or see it in real time:
-
-<img src="https://i.imgur.com/7uQUIB9.gif" />
+<img src="https://cdn.builder.io/api/v1/image/assets%2F7f7bbcf72a1a4d72bac5daa359e7befd%2Fa68a0a4397ee4e5bb8a7190f992a92b0" />
 
 ## How does it work
 
@@ -105,7 +79,7 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 - **Platform universal code** - your same code components can run in a React app, or a Shopify store liquid template, a native app - you name it.
   - E.g. want to make an open source library but can't choose which framework(s) to support? Write it once in JSX Lite and generate code for all frameworks (React, Vue, Native, Shopify, etc...)
 - **Future proof your code** - tired of writing the same UI components for every hot new framework as it comes out? Tired of duplicating components because you need to support multiple frameworks?
-  - Write once and generate. New hot fraemework comes out? Write an adapter once and now all your current code supports the new framework
+  - Write once and generate. New hot framework comes out? Write an adapter once and now all your current code supports the new framework
 - **Edit visually** - static code subsets like jsx-lite have the ability to also be visually edited, for instance with no-code tools like [Builder.io](https://github.com/builderio/builder) or Figma. Share with designers or marketers to create, repurpose, and extend either as code or via an API
 
 <img src="https://i.imgur.com/KTpBDvH.gif" >
@@ -136,8 +110,6 @@ Adding framework support is surprisingy easy with our plugins (docs coming soon!
 - Plugin API docs for custom syntaxes and extensions
 - Integration with design tools like Figma (Figma <-> JSX Lite)
 - JSX Lite Fiddle
-
-<img src="https://cdn.builder.io/api/v1/image/assets%2F7f7bbcf72a1a4d72bac5daa359e7befd%2F21ed8b6d32aa4106afbe7724da48e3e4" />
 
 <br />
 <p align="center">
