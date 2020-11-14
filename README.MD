@@ -94,17 +94,17 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 ## Status
 
-| Framework    | Status      |
-| ------------ | ----------- |
-| React        | Alpha       |
-| Vue          | Alpha       |
-| Liquid       | Alpha       |
-| Builder      | Alpha       |
-| Svelte       | Planned     |
-| Solid        | Planned     |
-| Figma        | Planned     |
-| React Native | Planned     |
-| Angular      | Considering |
+| Framework    | Status  |
+| ------------ | ------- |
+| React        | Alpha   |
+| Vue          | Alpha   |
+| Liquid       | Alpha   |
+| Builder      | Alpha   |
+| Svelte       | Planned |
+| Solid        | Planned |
+| Figma        | Planned |
+| React Native | Planned |
+| Angular      | Planned |
 
 ## Coming soon
 
