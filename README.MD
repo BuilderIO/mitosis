@@ -6,6 +6,16 @@
 
 <img src="https://imgur.com/H1WTtGe.gif" />
 
+## Why
+
+- **Authoring a component library that can be used across multiple frameworks**. Think UI libraries (Material, Semantic, etc), SDKs, etc. This applies to both open source as well as larger companies who make internal design systems but must support multiple frameworks used internally
+
+- **JS framework fatigue**. If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease, for example when a hot new framework comes out that has something you need (better perf, native rendering, etc)
+
+- **No-code tools**. We want to bridge the gap between code and no-code. No-code tools require a higher level of abstraction, but allow rich and intuitive editing and debugging experience. This also means you can drag/drop to build UIs and edit as code side by side, as well as generate React, Vue, etc code from no-code tools like [Builder.io](https://github.com/builderio/builder) and others (Figma, etc with time)
+
+- **Modern workflows for legacy platforms**. E.g. Shopify is an enormously powerful platform but only supports rendering server side with their Liquid templating language. This means people either still write Shopify stores as liquid + jQuery, or opt to not render server side at all. With JSX lite you can modernize your workflow and generate Liquid code that hydrates to React in the browser making you still high speed and SEO friendly with SSR but then have fast and clean renders on the client and even be an SPA from there forward (no more server side navigarion after the first load).
+
 ## How does it work
 
 JSX Lite uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
