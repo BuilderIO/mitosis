@@ -8,7 +8,7 @@
 
 ## Why
 
-- **Authoring a component library that can be used across multiple frameworks**. Think UI libraries (Material, Semantic, etc), SDKs, etc. This applies to both open source as well as larger companies who make internal design systems but must support multiple frameworks used internally
+- **Component libraries**. Think UI libraries (Material, Semantic, etc), SDKs, etc. This applies to both open source as well as larger companies who make internal design systems but must support multiple frameworks used internally
 
 - **JS framework fatigue**. If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease, for example when a hot new framework comes out that has something you need (better perf, native rendering, etc)
 
