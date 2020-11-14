@@ -14,7 +14,7 @@
 
 - **No-code tools**. We want to bridge the gap between code and no-code. No-code tools require a higher level of abstraction, but allow rich and intuitive editing and debugging experience. This also means you can drag/drop to build UIs and edit as code side by side, as well as generate React, Vue, etc code from no-code tools like [Builder.io](https://github.com/builderio/builder) and others (Figma, etc with time)
 
-- **Modern workflows for legacy platforms**. E.g. Shopify is an enormously powerful platform but only supports rendering server side with their Liquid templating language. This means people either still write Shopify stores as liquid + jQuery, or opt to not render server side at all. With JSX lite you can modernize your workflow and generate Liquid code that hydrates to React in the browser making you still high speed and SEO friendly with SSR but then have fast and clean renders on the client and even be an SPA from there forward (no more server side navigarion after the first load).
+- **Modern workflows for all platforms**. E.g. Shopify is an enormously powerful platform but only supports rendering server side with their Liquid templating language. This means people either still write Shopify stores as liquid + jQuery, or opt to not render server side at all. With JSX lite you can modernize your workflow and generate Liquid code that hydrates to React in the browser making you still high speed and SEO friendly with SSR but then have fast and clean renders on the client and even be an SPA from there forward (no more server side navigarion after the first load).
 
 ## How does it work
 
