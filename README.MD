@@ -78,7 +78,7 @@ class MyComponent {
 }
 ```
 
-Adding framework support is surprisingy easy with our plugins (docs coming soon!)
+Adding framework support is surprisingly easy with our plugins (docs coming soon!)
 
 ## No-code tooling
 
