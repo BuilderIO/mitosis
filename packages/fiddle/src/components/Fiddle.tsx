@@ -13,21 +13,20 @@ import {
   componentToReact,
   componentToLiquid,
   componentToBuilder,
+  componentToSolid,
   builderContentToJsxLiteComponent,
   componentToJsxLite,
 } from '@jsx-lite/core';
 import {
   Button,
-  FormControlLabel,
   MenuItem,
+  Paper,
   Select,
-  Switch,
   Tab,
   Tabs,
   Typography,
 } from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
-import { TextLink } from './TextLink';
 import { defaultCode, templates } from '../constants/templates';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
@@ -38,9 +37,11 @@ import { theme } from '../constants/theme';
 import { breakpoints } from '../constants/breakpoints';
 import { device } from '../constants/device';
 import { Show } from './Show';
+import { TextLink } from './TextLink';
 
 const builderOptions = {
   useDefaultStyles: false,
+  hideAnimateTab: true,
   previewUrl: 'https://jsx-lite-fiddle.web.app/preview.html',
 };
 
@@ -48,6 +49,8 @@ const BuilderEditor = adapt('builder-editor');
 
 const smallBreakpoint = breakpoints.mediaQueries.small;
 const responsiveColHeight = 'calc(50vh - 30px)';
+
+const builderEnvParam = getQueryParam('builderEnv');
 
 monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
   target: monaco.languages.typescript.ScriptTarget.Latest,
@@ -107,6 +110,8 @@ export default function Fiddle() {
             ? componentToLiquid(json)
             : state.tab === 'react'
             ? componentToReact(json)
+            : state.tab === 'solid'
+            ? componentToSolid(json)
             : state.tab === 'json' || state.tab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
@@ -156,8 +161,8 @@ export default function Fiddle() {
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
-      ? 'calc(50vh - 50px)'
-      : 'calc(50vh - 100px)';
+      ? 'calc(45vh - 50px)'
+      : 'calc(45vh - 100px)';
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -322,7 +327,7 @@ export default function Fiddle() {
                 ))}
               </Select>
             </div>
-            <div css={{ padding: 15, flexGrow: 1 }}>
+            <div css={{ paddingTop: 15, flexGrow: 1 }}>
               <MonacoEditor
                 options={{
                   renderLineHighlightOnlyWhenFocus: true,
@@ -333,6 +338,7 @@ export default function Fiddle() {
                   scrollbar: { vertical: 'hidden' },
                 }}
                 theme={monacoTheme}
+                height="calc(100vh - 105px)"
                 language="typescript"
                 value={state.code}
                 onChange={(val) => (state.code = val)}
@@ -395,11 +401,12 @@ export default function Fiddle() {
                 <Tab label="Vue" value="vue" />
                 <Tab label="React" value="react" />
                 <Tab label="Liquid" value="liquid" />
+                <Tab label="Solid" value="solid" />
                 <Tab label="JSON" value="json" />
               </Tabs>
             </div>
             <div>
-              <div css={{ padding: 15 }}>
+              <div css={{ paddingTop: 15 }}>
                 <MonacoEditor
                   height={outputMonacoEditorSize}
                   options={{
@@ -419,7 +426,7 @@ export default function Fiddle() {
                   language={
                     state.tab === 'json' || state.tab === 'builder'
                       ? 'json'
-                      : state.tab === 'react'
+                      : state.tab === 'react' || state.tab === 'solid'
                       ? 'typescript'
                       : 'html'
                   }
@@ -458,7 +465,7 @@ export default function Fiddle() {
                     variant="outlined"
                     size="small"
                   >
-                    Save
+                    Update JSX
                   </Button>
                 )}
                 <Tabs
@@ -483,6 +490,8 @@ export default function Fiddle() {
               <div
                 css={{
                   flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
                   '& builder-editor': {
                     width: '100%',
                     filter: theme.darkMode ? 'invert(0.89)' : '',
@@ -511,17 +520,60 @@ export default function Fiddle() {
                   }}
                   data={builderData}
                   options={builderOptions}
+                  env={builderEnvParam || undefined}
                 />
                 {state.noCodeTab === 'figma' && (
-                  <iframe
-                    title="figma-embed"
+                  <div
                     css={{
-                      height: '100%',
-                      width: '100%',
-                      border: 0,
+                      background: colors.background,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexGrow: 1,
                     }}
-                    src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2Fn0MTjxKKcD7IHN0uDMVdHB%2FUntitled%3Fnode-id%3D0%253A1"
-                  />
+                  >
+                    <Paper
+                      elevation={4}
+                      css={{ margin: 'auto', maxWidth: 600, padding: 20 }}
+                    >
+                      <Typography
+                        variant="body1"
+                        css={{ marginBottom: 15, textAlign: 'center' }}
+                      >
+                        Import from Figma
+                      </Typography>
+                      <ul>
+                        <li>
+                          Download the{' '}
+                          <TextLink
+                            target="_blank"
+                            href="https://www.figma.com/community/plugin/747985167520967365/HTML-To-Figma"
+                          >
+                            HTML to Figma plugin
+                          </TextLink>
+                        </li>
+                        <li>
+                          Open the plugin. E.g. with a Figma canvas open, hit{' '}
+                          <code>ctrl+/</code> or <code>cmd+/</code>
+                          and type "html to figma" and press enter
+                        </li>
+                        <li>
+                          From the plugin window, choose "download selecton as
+                          JSON"
+                        </li>
+                        <li>Upload the downloaded JSON below:</li>
+                      </ul>
+
+                      <Button
+                        css={{ marginTop: 10 }}
+                        fullWidth
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                      >
+                        Upload Figma JSON
+                      </Button>
+                    </Paper>
+                  </div>
                 )}
               </div>
             </Show>

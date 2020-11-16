@@ -223,7 +223,7 @@ const jsxElementToJson = (
     return createJSXLiteNode({
       name: 'Show',
       bindings: {
-        _when: whenValue,
+        when: whenValue,
       },
       children: node.children.map((item) =>
         jsxElementToJson(item as any),
@@ -244,7 +244,7 @@ const jsxElementToJson = (
         return createJSXLiteNode({
           name: 'For',
           bindings: {
-            _forEach: generate(
+            each: generate(
               ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
                 .value as babel.types.JSXExpressionContainer).expression,
             ).code,

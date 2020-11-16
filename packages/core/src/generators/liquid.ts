@@ -46,14 +46,14 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
   if (json.name === 'For') {
     if (
       !(
-        isValidLiquidBinding(json.bindings._forEach as string) &&
+        isValidLiquidBinding(json.bindings.each as string) &&
         isValidLiquidBinding(json.bindings._forName as string)
       )
     ) {
       return str;
     }
     str += `{% for ${json.bindings._forName} in ${stripStateAndPropsRefs(
-      json.bindings._forEach as string,
+      json.bindings.each as string,
     )} %}`;
     if (json.children) {
       str += json.children
@@ -63,11 +63,11 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
 
     str += '{% endfor %}';
   } else if (json.name === 'Show') {
-    if (!isValidLiquidBinding(json.bindings._when as string)) {
+    if (!isValidLiquidBinding(json.bindings.when as string)) {
       return str;
     }
     str += `{% if ${stripStateAndPropsRefs(
-      json.bindings._when as string,
+      json.bindings.when as string,
     )} %}`;
     if (json.children) {
       str += json.children

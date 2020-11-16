@@ -77,6 +77,8 @@ export const componentToJsxLite = (
 
   mapRefs(json, (refName) => `${refName}.current`);
 
+  const addWrapper = json.children.length > 1;
+
   let str = dedent`
     import { useState, useRef } from '@jsx-lite/core';
     ${renderPreComponent(json)}
@@ -85,9 +87,9 @@ export const componentToJsxLite = (
       const state = useState(${getStateObjectString(json)});
       ${getRefsString(json)}
 
-      return (
+      return (${addWrapper ? '<div>' : ''}
         ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
-      )
+        ${addWrapper ? '</div>' : ''})
     }
    
   `;

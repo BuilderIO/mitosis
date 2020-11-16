@@ -23,13 +23,13 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
   let str = '';
 
   if (json.name === 'For') {
-    str += `{${json.bindings._forEach}.map(${json.bindings._forName} => (
+    str += `{${json.bindings.each}.map(${json.bindings._forName} => (
       <>
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
       </>
     ))}`;
   } else if (json.name === 'Show') {
-    str += `{Boolean(${json.bindings._when}) && (<>
+    str += `{Boolean(${json.bindings.when}) && (<>
       ${json.children.map((item) => blockToReact(item, options)).join('\n')}
       </>
     )}`;

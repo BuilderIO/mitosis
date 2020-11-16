@@ -28,12 +28,12 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
   if (json.name === 'For') {
     str += `<template v-for="${
       json.bindings._forName
-    } in ${stripStateAndPropsRefs(json.bindings._forEach as string)}">`;
+    } in ${stripStateAndPropsRefs(json.bindings.each as string)}">`;
     str += json.children.map((item) => blockToVue(item, options)).join('\n');
     str += `</template>`;
   } else if (json.name === 'Show') {
     str += `<template v-if="${stripStateAndPropsRefs(
-      json.bindings._when as string,
+      json.bindings.when as string,
     )}">`;
     str += json.children.map((item) => blockToVue(item, options)).join('\n');
     str += `</template>`;
