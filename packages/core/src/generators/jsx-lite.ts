@@ -12,9 +12,22 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 type ToJsxLiteOptions = {
   prettier?: boolean;
 };
-const blockToJsxLite = (json: JSXLiteNode, options: ToJsxLiteOptions = {}) => {
+const blockToJsxLite = (
+  json: JSXLiteNode,
+  options: ToJsxLiteOptions = {},
+): string => {
+  if (json.name === 'For') {
+    const needsWrapper = json.children.length !== 1;
+    return `<For each={${json.bindings.each}}>
+    {(${json.bindings._forName}, index) => 
+      ${needsWrapper ? '<>' : ''}
+        ${json.children.map((child) => blockToJsxLite(child, options))}}
+      ${needsWrapper ? '</>' : ''}
+    </For>`;
+  }
+
   if (json.properties._text) {
-    return json.properties._text;
+    return json.properties._text as string;
   }
   if (json.bindings._text) {
     return `{${json.bindings._text}}`;
@@ -79,8 +92,9 @@ export const componentToJsxLite = (
 
   const addWrapper = json.children.length > 1;
 
+  // TODO: smart only pull in imports as needed
   let str = dedent`
-    import { useState, useRef } from '@jsx-lite/core';
+    import { useState, useRef, Show, For } from '@jsx-lite/core';
     ${renderPreComponent(json)}
     
     export default function MyComponent(props) {

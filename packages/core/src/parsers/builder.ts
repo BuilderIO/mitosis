@@ -5,12 +5,38 @@ import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
+const componentMappers: {
+  [key: string]: (
+    block: BuilderElement,
+    options: BuilerToJSXLiteOptions,
+  ) => JSXLiteNode;
+} = {
+  'Shopify:For': (block, options) => {
+    return createJSXLiteNode({
+      name: 'For',
+      bindings: {
+        _forName: block.component!.options!.repeat!.itemName,
+        each: `state.${block.component!.options!.repeat!.collection}`,
+      },
+      children: (block.children || []).map((child) =>
+        builderElementToJsxLiteNode(child, options),
+      ),
+    });
+  },
+};
+
 export type BuilerToJSXLiteOptions = {};
 
 export const builderElementToJsxLiteNode = (
   block: BuilderElement,
   options: BuilerToJSXLiteOptions = {},
 ): JSXLiteNode => {
+  const mapper = block.component && componentMappers[block.component!.name];
+
+  if (mapper) {
+    return mapper(block, options);
+  }
+
   const bindings: any = {};
   // TODO: more
   if (block.bindings?.['component.options.text']) {

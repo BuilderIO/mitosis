@@ -45,6 +45,11 @@ export const getStateObjectString = (
         }
         str += ` ${key}: ${valueMapper(json5.stringify(value), 'data')}, `;
       }
+    } else {
+      if (options.data === false) {
+        continue;
+      }
+      str += ` ${key}: ${valueMapper(json5.stringify(value), 'data')}, `;
     }
   }
 

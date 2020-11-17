@@ -17,6 +17,8 @@ import {
   builderContentToJsxLiteComponent,
   componentToJsxLite,
   liquidToBuilder,
+  reactiveScriptRe,
+  parseReactiveScript,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -112,7 +114,6 @@ const TabLabelWithIcon = (props: { icon: string; label: string }) => {
 };
 
 const defaultLiquidCode = `
-
 <!-- Edit this code to see it update the JSX Lite -->
 <div>
   <h2>
@@ -130,7 +131,8 @@ const defaultLiquidCode = `
   export default {
     state: {
       name: 'Steve',
-      products: [{ title: 'Blue suede shoes' }] // This could also be passed from liquid, e.g. {{ products | json }}
+      // This could also be passed from liquid, e.g. {{ products | json }}
+      products: [{ title: 'Blue suede shoes' }] 
     }
   }
 </script>
@@ -161,12 +163,22 @@ export default function Fiddle() {
       state.pendingBuilderChange = null;
     },
     async parseInputCode() {
+      const jsxState = parseReactiveScript(state.inputCode, {
+        format: 'html',
+      }).state;
+
       // TODO: parse reactive state out too
-      const builderJson = await liquidToBuilder(state.inputCode);
+      const builderJson = await liquidToBuilder(
+        state.inputCode.replace(reactiveScriptRe, ''),
+      );
+      console.log({ builderJson });
       const jsx = builderContentToJsxLiteComponent({
         data: { blocks: builderJson },
       });
-      state.code = componentToJsxLite(jsx);
+      state.code = componentToJsxLite({
+        ...jsx,
+        state: jsxState,
+      });
     },
     updateOutput() {
       try {

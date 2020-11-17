@@ -618,10 +618,15 @@ const stringWithBindingsToLiquid = (str: string) => {
   return liquidStr;
 };
 
+const isSimpleLiquidBinding = (str = '') =>
+  Boolean(str.match(/^[a-z0-9_\.\s]+$/i));
+
 const liquidBindingTemplate = (str: string) =>
-  `context.shopify.liquid.get("${str
-    .replace(/\n+/g, ' ')
-    .replace(/"/g, '\\"')}", state)`;
+  isSimpleLiquidBinding(str)
+    ? str
+    : `context.shopify.liquid.get("${str
+        .replace(/\n+/g, ' ')
+        .replace(/"/g, '\\"')}", state)`;
 
 const liquidRenderTemplate = (str: string) =>
   `context.shopify.liquid.render("${str
@@ -2904,17 +2909,18 @@ export const liquidToBuilder = async (
   }
 
   if (options.importSections !== false) {
-    blocks.unshift(
-      el({
-        layerName: 'BuiltWithBuilder flag',
-        component: {
-          name: 'Custom Code',
-          options: {
-            code: '<script>window.builtWithBuilder = true</script>',
-          },
-        },
-      }),
-    );
+    // TODO: special option for this
+    // blocks.unshift(
+    //   el({
+    //     layerName: 'BuiltWithBuilder flag',
+    //     component: {
+    //       name: 'Custom Code',
+    //       options: {
+    //         code: '<script>window.builtWithBuilder = true</script>',
+    //       },
+    //     },
+    //   }),
+    // );
   }
   if (options.log) {
     console.log('liquidToBuilder: blocks', JSON.stringify(blocks));

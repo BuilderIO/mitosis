@@ -96,10 +96,10 @@ const createSimpleTemplateLiteral = (str: string) => {
   return types.templateLiteral([types.templateElement({ raw: str })], []);
 };
 
-const createFunctionStringLiteral = (node: babel.types.Node) => {
+export const createFunctionStringLiteral = (node: babel.types.Node) => {
   return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
 };
-const createFunctionStringLiteralObjectProperty = (
+export const createFunctionStringLiteralObjectProperty = (
   key: babel.types.Expression,
   node: babel.types.Node,
 ) => {
@@ -111,6 +111,7 @@ const componentFunctionToJson = (
   context: Context,
 ): JSONOrNode => {
   let state = {};
+  // TODO: limit to only useState name
   for (const item of node.body.body) {
     if (types.isVariableDeclaration(item)) {
       const init = item.declarations[0].init;
