@@ -624,19 +624,13 @@ const isSimpleLiquidBinding = (str = '') =>
 const liquidBindingTemplate = (str: string) =>
   isSimpleLiquidBinding(str)
     ? str
-    : `context.shopify.liquid.get("${str
-        .replace(/\n+/g, ' ')
-        .replace(/"/g, '\\"')}", state)`;
+    : `liquid.get("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const liquidRenderTemplate = (str: string) =>
-  `context.shopify.liquid.render("${str
-    .replace(/\n+/g, ' ')
-    .replace(/"/g, '\\"')}", state)`;
+  `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const liquidConditionTemplate = (str: string) =>
-  `context.shopify.liquid.condition("${str
-    .replace(/\n+/g, ' ')
-    .replace(/"/g, '\\"')}", state)`;
+  `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const isIfTemplate = (template: ITemplate): template is IfTemplate =>
   template.token.type === 'tag' && (template.token as any).name === 'if';
@@ -1555,33 +1549,15 @@ export const htmlNodeToBuilder = async (
 
     // TODO: classname, etc
     const block = el({
-      tagName: 'span',
-      responsiveStyles: {
-        large: {
-          display: 'inline',
-        },
-      },
+      // tagName: 'span',
+
       bindings: {
         ...(parsedOutput &&
           translation == null && {
             ['component.options.text']: liquidBindingTemplate(parsedOutput.raw),
           }),
-        // ...(parsed &&
-        //   parsed.name === 'if' && {
-        //     show: liquidBindingTemplate(parsed.value),
-        //   }),
-        // ...(parsed &&
-        //   parsed.name === 'unless' && {
-        //     show: liquidBindingTemplate(parsed.value),
-        //   }),
       } as { [key: string]: string },
-      ...(parsedFor &&
-        {
-          // repeat: {
-          //   itemName: parsedFor.variable,
-          //   collection: liquidBindingTemplate(parsedFor.collection),
-          // },
-        }),
+
       component: {
         name: 'Text',
         options: { text },
