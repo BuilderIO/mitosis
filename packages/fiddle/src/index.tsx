@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
+const { stopReportingRuntimeErrors } = require('react-error-overlay');
+
+if (process.env.NODE_ENV === 'development') {
+  // These freeze the browser when syntax highlighting, sometimes for **long** periods
+  stopReportingRuntimeErrors();
+}
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

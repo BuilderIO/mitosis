@@ -16,6 +16,7 @@ import {
   componentToSolid,
   builderContentToJsxLiteComponent,
   componentToJsxLite,
+  liquidToBuilder,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -38,6 +39,7 @@ import { breakpoints } from '../constants/breakpoints';
 import { device } from '../constants/device';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
+import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
 
 const builderOptions = {
   useDefaultStyles: false,
@@ -77,6 +79,63 @@ monaco.languages.typescript.typescriptDefaults.addExtraLib(
 
 const useSaveButton = true;
 
+const TabLogo = (props: { src: string }) => {
+  const size = 12;
+  return (
+    <img
+      alt="Icon"
+      src={`${props.src}?width=${size * 2}`}
+      css={{
+        marginRight: 7,
+        objectFit: 'contain',
+        objectPosition: 'center',
+        height: size,
+        width: size,
+        filter: 'grayscale(100%)',
+        opacity: 0.6,
+        '.Mui-selected.MuiButtonBase-root &': {
+          filter: 'none',
+          opacity: 1,
+        },
+      }}
+    />
+  );
+};
+
+const TabLabelWithIcon = (props: { icon: string; label: string }) => {
+  const useIcon = false;
+  return (
+    <div css={{ display: 'flex', alignItems: 'center' }}>
+      {useIcon && <TabLogo src={props.icon} />} {props.label}
+    </div>
+  );
+};
+
+const defaultLiquidCode = `
+
+<!-- Edit this code to see it update the JSX Lite -->
+<div>
+  <h2>
+    Welcome, {{name}}
+  </h2>
+  {% for product in products %}
+    <div>
+        {{product.title}}
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Optionally add a reactive script for browser-only reactive state -->
+<script reactive>
+  export default {
+    state: {
+      name: 'Steve',
+      products: [{ title: 'Blue suede shoes' }] // This could also be passed from liquid, e.g. {{ products | json }}
+    }
+  }
+</script>
+`;
+
 // TODO: Build this Fiddle app with JSX Lite :)
 export default function Fiddle() {
   const [staticState] = useState(() => ({
@@ -85,10 +144,11 @@ export default function Fiddle() {
   const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalStore(() => ({
     code: getQueryParam('code') || defaultCode,
+    inputCode: defaultLiquidCode,
     output: '',
-    tab: getQueryParam('tab') || 'vue',
+    outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    noCodeTab: 'builder',
+    inputTab: getQueryParam('inputTab') || 'builder',
     builderData: {} as any,
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -100,19 +160,27 @@ export default function Fiddle() {
       console.log('Builder set code', state.code);
       state.pendingBuilderChange = null;
     },
+    async parseInputCode() {
+      // TODO: parse reactive state out too
+      const builderJson = await liquidToBuilder(state.inputCode);
+      const jsx = builderContentToJsxLiteComponent({
+        data: { blocks: builderJson },
+      });
+      state.code = componentToJsxLite(jsx);
+    },
     updateOutput() {
       try {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
         const json = parseJsx(state.code);
         state.output =
-          state.tab === 'liquid'
+          state.outputTab === 'liquid'
             ? componentToLiquid(json)
-            : state.tab === 'react'
+            : state.outputTab === 'react'
             ? componentToReact(json)
-            : state.tab === 'solid'
+            : state.outputTab === 'solid'
             ? componentToSolid(json)
-            : state.tab === 'json' || state.tab === 'builder'
+            : state.outputTab === 'json' || state.outputTab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
 
@@ -140,12 +208,12 @@ export default function Fiddle() {
     { fireImmediately: false },
   );
   useReaction(
-    () => state.tab,
+    () => state.outputTab,
     (tab) => {
       if (state.code) {
-        setQueryParam('tab', tab);
+        setQueryParam('outputTab', tab);
       } else {
-        deleteQueryParam('tab');
+        deleteQueryParam('outputTab');
       }
       state.updateOutput();
     },
@@ -158,11 +226,19 @@ export default function Fiddle() {
     },
     { delay: 1000 },
   );
+  useReaction(
+    () => state.inputCode,
+    (code) => {
+      state.parseInputCode();
+    },
+    { delay: 1000, fireImmediately: false },
+  );
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
       ? 'calc(45vh - 50px)'
       : 'calc(45vh - 100px)';
+    const inputMonacoEditorSize = 'calc(55vh - 100px)';
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -290,7 +366,7 @@ export default function Fiddle() {
                 variant="body2"
                 css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
               >
-                Input code:
+                JSX Lite code:
               </Typography>
               <Select
                 disableUnderline
@@ -381,7 +457,7 @@ export default function Fiddle() {
                   paddingLeft: 10,
                 }}
               >
-                Output code:
+                Outputs:
               </Typography>
               <Tabs
                 css={{
@@ -393,16 +469,56 @@ export default function Fiddle() {
                     minWidth: 100,
                   },
                 }}
-                value={state.tab}
-                onChange={(e, value) => (state.tab = value)}
+                value={state.outputTab}
+                onChange={(e, value) => (state.outputTab = value)}
                 indicatorColor="primary"
                 textColor="primary"
               >
-                <Tab label="Vue" value="vue" />
-                <Tab label="React" value="react" />
-                <Tab label="Liquid" value="liquid" />
-                <Tab label="Solid" value="solid" />
-                <Tab label="JSON" value="json" />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="vue"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
+                    />
+                  }
+                  value="Vue"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="React"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1c7afa570a734d9f98e8ad45df0755e2"
+                    />
+                  }
+                  value="react"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Solid"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F3835d178881b44db8fc51d3569ae97c6"
+                    />
+                  }
+                  value="solid"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Liquid"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff98433f5a2b747f094bf01e2e88bde08"
+                    />
+                  }
+                  value="liquid"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="JSON"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa64744451c9546a085a3ca662f7d5572"
+                    />
+                  }
+                  value="json"
+                />
               </Tabs>
             </div>
             <div>
@@ -424,9 +540,10 @@ export default function Fiddle() {
                   }}
                   theme={monacoTheme}
                   language={
-                    state.tab === 'json' || state.tab === 'builder'
+                    state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
-                      : state.tab === 'react' || state.tab === 'solid'
+                      : state.outputTab === 'react' ||
+                        state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'
                   }
@@ -455,7 +572,7 @@ export default function Fiddle() {
                       : 'rgba(0, 0, 0, 0.7)',
                   }}
                 >
-                  No-code tool interop:
+                  Inputs:
                 </Typography>
                 {state.pendingBuilderChange && (
                   <Button
@@ -478,13 +595,38 @@ export default function Fiddle() {
                       minWidth: 100,
                     },
                   }}
-                  value={state.noCodeTab}
-                  onChange={(e, value) => (state.noCodeTab = value)}
+                  value={state.inputTab}
+                  onChange={(e, value) => (state.inputTab = value)}
                   indicatorColor="primary"
                   textColor="primary"
                 >
-                  <Tab label="Builder.io" value="builder" />
-                  <Tab label="Figma" value="figma" />
+                  <Tab
+                    label={
+                      <TabLabelWithIcon
+                        label="Builder.io"
+                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                      />
+                    }
+                    value="builder"
+                  />
+                  <Tab
+                    label={
+                      <TabLabelWithIcon
+                        label="Figma"
+                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F2bc3a4ef83644b0a88bc88b4d173d5b0"
+                      />
+                    }
+                    value="figma"
+                  />
+                  <Tab
+                    label={
+                      <TabLabelWithIcon
+                        label="Liquid"
+                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff98433f5a2b747f094bf01e2e88bde08"
+                      />
+                    }
+                    value="liquid"
+                  />
                 </Tabs>
               </div>
               <div
@@ -497,8 +639,7 @@ export default function Fiddle() {
                     filter: theme.darkMode ? 'invert(0.89)' : '',
                     transition: 'filter 0.2s ease-in-out',
                     height: '100%',
-                    display:
-                      state.noCodeTab === 'builder' ? undefined : 'none ',
+                    display: state.inputTab === 'builder' ? undefined : 'none ',
 
                     '&:hover': {
                       ...(theme.darkMode && {
@@ -522,18 +663,28 @@ export default function Fiddle() {
                   options={builderOptions}
                   env={builderEnvParam || undefined}
                 />
-                {state.noCodeTab === 'figma' && (
+                <Show when={state.inputTab === 'figma'}>
                   <div
                     css={{
                       background: colors.background,
                       display: 'flex',
                       flexDirection: 'column',
                       flexGrow: 1,
+                      overflow: 'auto',
+                      flexShrink: 1,
                     }}
                   >
                     <Paper
-                      elevation={4}
-                      css={{ margin: 'auto', maxWidth: 600, padding: 20 }}
+                      elevation={0}
+                      css={{
+                        background: 'transparent',
+                        margin: 'auto',
+                        maxWidth: 600,
+                        padding: 20,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'stretch',
+                      }}
                     >
                       <Typography
                         variant="body1"
@@ -541,6 +692,42 @@ export default function Fiddle() {
                       >
                         Import from Figma
                       </Typography>
+                      <Paper
+                        css={{
+                          margin: '0 auto 20px',
+                          minHeight: 300,
+                          height: '20vh',
+                          maxHeight: 400,
+                        }}
+                      >
+                        <video
+                          autoPlay
+                          muted
+                          loop
+                          css={{ maxWidth: '100%', maxHeight: '100%' }}
+                        >
+                          <source
+                            src="https://cdn.builder.io/o/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fab055052473c4817b0eae1e92933acc1?alt=media&token=45f450c1-8815-440a-84da-a352644524ad&amp;apiKey=YJIGb4i01jvw0SRdL5Bt"
+                            type="video/mp4"
+                          />
+                        </video>
+                      </Paper>
+                      <Button
+                        css={{ marginBottom: 10 }}
+                        fullWidth
+                        color="primary"
+                        variant="contained"
+                        size="large"
+                        onClick={async () => {
+                          const json = await promptUploadFigmaJsonFile();
+                          state.code = componentToJsxLite(
+                            await builderContentToJsxLiteComponent(json),
+                          );
+                          state.inputTab = 'builder';
+                        }}
+                      >
+                        Upload Figma JSON
+                      </Button>
                       <ul>
                         <li>
                           Download the{' '}
@@ -552,29 +739,46 @@ export default function Fiddle() {
                           </TextLink>
                         </li>
                         <li>
-                          Open the plugin. E.g. with a Figma canvas open, hit{' '}
-                          <code>ctrl+/</code> or <code>cmd+/</code>
-                          and type "html to figma" and press enter
+                          Open the plugin (e.g.{' '}
+                          <code>
+                            {navigator.appVersion.includes('Mac')
+                              ? 'cmd'
+                              : 'ctrl'}
+                            +/
+                          </code>{' '}
+                          and search "HTML to Figma")
                         </li>
                         <li>
-                          From the plugin window, choose "download selecton as
-                          JSON"
+                          From the plugin window, choose "download as JSON"
                         </li>
                         <li>Upload the downloaded JSON below:</li>
                       </ul>
-
-                      <Button
-                        css={{ marginTop: 10 }}
-                        fullWidth
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                      >
-                        Upload Figma JSON
-                      </Button>
                     </Paper>
                   </div>
-                )}
+                </Show>
+                <Show when={state.inputTab === 'liquid'}>
+                  <MonacoEditor
+                    height={inputMonacoEditorSize}
+                    options={{
+                      automaticLayout: true,
+                      overviewRulerBorder: false,
+                      highlightActiveIndentGuide: false,
+                      foldingHighlight: false,
+                      renderLineHighlightOnlyWhenFocus: true,
+                      occurrencesHighlight: false,
+                      minimap: { enabled: false },
+                      renderLineHighlight: 'none',
+                      selectionHighlight: false,
+                      scrollbar: { vertical: 'hidden' },
+                    }}
+                    onChange={(value) => {
+                      state.inputCode = value;
+                    }}
+                    theme={monacoTheme}
+                    language="html"
+                    value={state.inputCode}
+                  />
+                </Show>
               </div>
             </Show>
           </div>

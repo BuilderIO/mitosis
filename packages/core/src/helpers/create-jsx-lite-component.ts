@@ -5,6 +5,7 @@ export const createJSXLiteComponent = (
 ): JSXLiteComponent => ({
   '@type': '@jsx-lite/component',
   imports: [],
+  meta: {},
   state: {},
   children: [],
   hooks: {},

@@ -10,6 +10,7 @@ export const createContext = () => null as any;
 
 export * from './parsers/jsx';
 export * from './parsers/builder';
+export * from './parsers/liquid'
 export * from './generators/vue'
 export * from './generators/react'
 export * from './generators/solid'
