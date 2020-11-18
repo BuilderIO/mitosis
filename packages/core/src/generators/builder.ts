@@ -6,6 +6,19 @@ import { fastClone } from '../helpers/fast-clone';
 import dedent from 'dedent';
 import { format } from 'prettier';
 
+const componentMappers: {
+  [key: string]: (
+    node: JSXLiteNode,
+    options: ToBuilderOptions,
+  ) => BuilderElement;
+} = {
+  For(node, options) {
+    return el({
+      // TODO
+    });
+  },
+};
+
 const el = (options: Partial<BuilderElement>): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...options,
@@ -42,6 +55,10 @@ export const blockToBuilder = (
   json: JSXLiteNode,
   options: ToBuilderOptions = {},
 ): BuilderElement => {
+  const mapper = componentMappers[json.name];
+  if (mapper) {
+    return mapper(json, options);
+  }
   if (json.properties._text || json.bindings._text) {
     return el({
       tagName: 'span',

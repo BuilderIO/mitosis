@@ -302,26 +302,15 @@ export default function Fiddle() {
             />
           </a>
           {/* TODO: maybe add back, TBD */}
-          {/* <div css={{ marginRight: 'auto', color: '#bbb' }}>
-            Made with <span css={{ opacity: 0.7 }}>❤️</span> by{' '}
-            <TextLink href="https://www.builder.io" target="_blank">
-              Builder.io
-            </TextLink>
-          </div> */}
-
-          {/* <FormControlLabel
-            css={{ marginRight: 20 }}
-            value="start"
-            control={
-              <Switch
-                color="primary"
-                checked={theme.darkMode}
-                onChange={(e, value) => (theme.darkMode = value)}
-              />
-            }
-            label="Dark Mode"
-            labelPlacement="start"
-          /> */}
+          <div css={{ marginRight: 'auto', color: '#ddd' }}>
+            This is an early alpha preview, please share{' '}
+            <TextLink
+              href="https://github.com/BuilderIO/jsx-lite/issues"
+              target="_blank"
+            >
+              feedkback
+            </TextLink>{' '}
+          </div>
 
           <a
             target="_blank"
@@ -763,7 +752,7 @@ export default function Fiddle() {
                         <li>
                           From the plugin window, choose "download as JSON"
                         </li>
-                        <li>Upload the downloaded JSON below:</li>
+                        <li>Upload the downloaded JSON above</li>
                       </ul>
                     </Paper>
                   </div>
