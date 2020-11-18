@@ -1,6 +1,7 @@
 import dedent from 'dedent';
 import { format } from 'prettier';
 import { fastClone } from '../helpers/fast-clone';
+import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
@@ -82,23 +83,59 @@ const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
   return str;
 };
 
+const jsxLiteCoreComponents = ['Show', 'For'];
+
 export const componentToJsxLite = (
   componentJson: JSXLiteComponent,
   options: ToJsxLiteOptions = {},
 ) => {
   const json = fastClone(componentJson);
 
+  const refs = getRefs(json);
+
   mapRefs(json, (refName) => `${refName}.current`);
 
   const addWrapper = json.children.length > 1;
 
+  const components = Array.from(getComponents(json));
+
+  const jsxLiteComponents = components.filter((item) =>
+    jsxLiteCoreComponents.includes(item),
+  );
+  const otherComponents = components.filter(
+    (item) => !jsxLiteCoreComponents.includes(item),
+  );
+
+  const hasState = Boolean(Object.keys(componentJson.state).length);
+
+  const needsJsxLiteCoreImport = Boolean(
+    hasState || refs.size || jsxLiteComponents.length,
+  );
+
   // TODO: smart only pull in imports as needed
   let str = dedent`
-    import { useState, useRef, Show, For } from '@jsx-lite/core';
+    ${
+      !needsJsxLiteCoreImport
+        ? ''
+        : `import { ${!hasState ? '' : 'useState, '} ${
+            !refs.size ? '' : 'useRef, '
+          } ${jsxLiteComponents.join(', ')} } from '@jsx-lite/core';`
+    }
+    ${
+      !otherComponents.length
+        ? ''
+        : `import { ${otherComponents.join(
+            ',',
+          )} } from '@builder.io/components';`
+    }
     ${renderPreComponent(json)}
     
     export default function MyComponent(props) {
-      const state = useState(${getStateObjectString(json)});
+      ${
+        !hasState
+          ? ''
+          : `const state = useState(${getStateObjectString(json)});`
+      }
       ${getRefsString(json)}
 
       return (${addWrapper ? '<div>' : ''}

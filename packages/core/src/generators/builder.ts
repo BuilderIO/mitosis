@@ -5,6 +5,24 @@ import { getStateObjectString } from '../helpers/get-state-object-string';
 import { fastClone } from '../helpers/fast-clone';
 import dedent from 'dedent';
 import { format } from 'prettier';
+import json5 from 'json5';
+import { isUpperCase } from '../helpers/is-upper-case';
+
+const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
+const mapComponentName = (name: string) => {
+  if (name === 'CustomCode') {
+    return 'Custom Code';
+  }
+  for (const prefix of builderBlockPrefixes) {
+    if (name.startsWith(prefix)) {
+      const suffix = name.replace(prefix, '');
+      if (isUpperCase(suffix[0])) {
+        return `${prefix}:${name.replace(prefix, '')}`;
+      }
+    }
+  }
+  return name;
+};
 
 const componentMappers: {
   [key: string]: (
@@ -14,13 +32,24 @@ const componentMappers: {
 } = {
   For(node, options) {
     return el({
-      // TODO
       component: {
         name: 'Fragment',
       },
       repeat: {
         collection: node.bindings.each as string,
         itemName: node.bindings._forName as string,
+      },
+      children: node.children.map((node) => blockToBuilder(node, options)),
+    });
+  },
+  Show(node, options) {
+    return el({
+      // TODO: the reverse mapping for this
+      component: {
+        name: 'Fragment',
+      },
+      bindings: {
+        show: node.bindings.when as string,
       },
       children: node.children.map((node) => blockToBuilder(node, options)),
     });
@@ -91,10 +120,31 @@ export const blockToBuilder = (
       },
     });
   }
+
+  const thisIsComponent = isComponent(json);
+
+  let bindings = thisIsComponent ? {} : json.bindings;
+  if (thisIsComponent) {
+    for (const key in json.bindings) {
+      bindings[`component.options.${key}`] = json.bindings[key];
+    }
+  }
+
   return el({
-    tagName: isComponent(json) ? 'span' : json.name,
-    properties: json.properties as any,
-    bindings: json.bindings as any,
+    tagName: thisIsComponent ? undefined : json.name,
+    ...(json.bindings.css && {
+      responsiveStyles: {
+        large: json5.parse(json.bindings.css as string),
+      },
+    }),
+    ...(thisIsComponent && {
+      component: {
+        name: mapComponentName(json.name),
+        options: json.properties,
+      },
+    }),
+    properties: thisIsComponent ? undefined : (json.properties as any),
+    bindings: thisIsComponent ? undefined : (json.bindings as any),
     children: json.children
       .filter(filterEmptyTextNodes)
       .map((child) => blockToBuilder(child, options)),

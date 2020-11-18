@@ -1,6 +1,6 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { omit } from 'lodash';
+import { last, omit } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -92,7 +92,10 @@ export const builderElementToJsxLiteNode = (
 
   if (block.bindings) {
     for (const key in block.bindings) {
-      const useKey = key.replace(/$(component\.)?options\./, '');
+      if (key === 'css') {
+        continue;
+      }
+      const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
         bindings[useKey] = block.bindings[key];
       }
@@ -100,10 +103,14 @@ export const builderElementToJsxLiteNode = (
   }
   const properties = {
     ...block.properties,
+    ...block.component?.options,
   };
 
   return createJSXLiteNode({
-    name: block.component?.name || block.tagName || 'div',
+    name:
+      block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
+      block.tagName ||
+      'div',
     properties,
     bindings: {
       ...bindings,
