@@ -92,8 +92,9 @@ export const builderElementToJsxLiteNode = (
 
   if (block.bindings) {
     for (const key in block.bindings) {
-      if (!key.includes('.')) {
-        bindings[key] = block.bindings[key];
+      const useKey = key.replace(/$(component\.)?options\./, '');
+      if (!useKey.includes('.')) {
+        bindings[useKey] = block.bindings[key];
       }
     }
   }
@@ -102,7 +103,7 @@ export const builderElementToJsxLiteNode = (
   };
 
   return createJSXLiteNode({
-    name: block.tagName || 'div',
+    name: block.component?.name || block.tagName || 'div',
     properties,
     bindings: {
       ...bindings,

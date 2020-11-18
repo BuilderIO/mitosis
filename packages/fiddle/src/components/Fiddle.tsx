@@ -23,11 +23,13 @@ import {
 } from '@jsx-lite/core';
 import {
   Button,
+  createMuiTheme,
   MenuItem,
   Paper,
   Select,
   Tab,
   Tabs,
+  ThemeProvider,
   Typography,
 } from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
@@ -304,15 +306,31 @@ export default function Fiddle() {
           </a>
           {/* TODO: maybe add back, TBD */}
           <div css={{ marginRight: 'auto' }}>
-            <Alert severity="info">
-              This is an early alpha preview, please share{' '}
-              <TextLink
-                href="https://github.com/BuilderIO/jsx-lite/issues"
-                target="_blank"
+            <ThemeProvider
+              theme={createMuiTheme({
+                palette: {
+                  type: 'dark',
+                  primary: { main: colors.primary },
+                },
+              })}
+            >
+              <Alert
+                severity="info"
+                css={{
+                  background: 'none',
+                  fontSize: 15,
+                }}
               >
-                feedkback
-              </TextLink>{' '}
-            </Alert>
+                This is an early alpha preview, please{' '}
+                <TextLink
+                  css={{ color: 'inherit', textDecoration: 'underline' }}
+                  href="https://github.com/BuilderIO/jsx-lite/issues"
+                  target="_blank"
+                >
+                  report bugs and share feedback
+                </TextLink>
+              </Alert>
+            </ThemeProvider>
           </div>
 
           <a
