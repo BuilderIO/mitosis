@@ -115,7 +115,7 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 | React        | Alpha       |
 | Vue          | Alpha       |
 | Liquid       | Alpha       |
-| Builder      | Alpha       |
+| Builder.io   | Alpha       |
 | Solid        | Alpha       |
 | Figma        | Alpha       |
 | React Native | Planned     |
