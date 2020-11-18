@@ -29,8 +29,23 @@ export const isValidLiquidBinding = (str = '') => {
 type ToLiquidOptions = {
   prettier?: boolean;
 };
+
+const mappers: {
+  [key: string]: (json: JSXLiteNode, options: ToLiquidOptions) => string;
+} = {
+  Fragment: (json, options) => {
+    return `<div>${json.children
+      .map((item) => blockToLiquid(item, options))
+      .join('\n')}</div>`;
+  },
+};
+
 // TODO: spread support
 const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
+  if (mappers[json.name]) {
+    return mappers[json.name](json, options);
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -66,9 +81,7 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
     if (!isValidLiquidBinding(json.bindings.when as string)) {
       return str;
     }
-    str += `{% if ${stripStateAndPropsRefs(
-      json.bindings.when as string,
-    )} %}`;
+    str += `{% if ${stripStateAndPropsRefs(json.bindings.when as string)} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))

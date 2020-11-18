@@ -5,6 +5,7 @@ const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
 const formBlock = require('./data/blocks/form.raw');
+const button = require('./data/blocks/button.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -30,9 +31,15 @@ describe('React', () => {
     const output = componentToReact(json);
     expect(output).toMatchSnapshot();
   });
-  
+
   test('Form block', () => {
     const json = parseJsx(formBlock);
+    const output = componentToReact(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Button', () => {
+    const json = parseJsx(button);
     const output = componentToReact(json);
     expect(output).toMatchSnapshot();
   });
