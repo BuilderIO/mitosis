@@ -1,3 +1,4 @@
+import { Alert } from '@material-ui/lab';
 import { useLocalStore, useObserver } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { getQueryParam } from '../functions/get-query-param';
@@ -302,14 +303,16 @@ export default function Fiddle() {
             />
           </a>
           {/* TODO: maybe add back, TBD */}
-          <div css={{ marginRight: 'auto', color: '#ddd' }}>
-            This is an early alpha preview, please share{' '}
-            <TextLink
-              href="https://github.com/BuilderIO/jsx-lite/issues"
-              target="_blank"
-            >
-              feedkback
-            </TextLink>{' '}
+          <div css={{ marginRight: 'auto' }}>
+            <Alert severity="info">
+              This is an early alpha preview, please share{' '}
+              <TextLink
+                href="https://github.com/BuilderIO/jsx-lite/issues"
+                target="_blank"
+              >
+                feedkback
+              </TextLink>{' '}
+            </Alert>
           </div>
 
           <a

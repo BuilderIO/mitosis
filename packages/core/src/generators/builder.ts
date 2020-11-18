@@ -15,6 +15,14 @@ const componentMappers: {
   For(node, options) {
     return el({
       // TODO
+      component: {
+        name: 'Fragment',
+      },
+      repeat: {
+        collection: node.bindings.each as string,
+        itemName: node.bindings._forName as string,
+      },
+      children: node.children.map((node) => blockToBuilder(node, options)),
     });
   },
 };
