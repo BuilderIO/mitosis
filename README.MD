@@ -18,7 +18,7 @@ An organization might want to build a new component library to be used across th
 
 We want to bridge the gap between code and no-code. No-code tools require a higher level of abstraction and allow a rich and intuitive editing experience. But that abstraction usually means less control for those who know how to code, and the inability to work no-code workflows into the development cycle.
 
-With JSX lite, you can drag/drop to build UIs and edit the code _side by side_, generating usable and editable code as you need to. Support for no-code tools like [Builder.io](https://github.com/builderio/builder) is in active development, and other tools like Figma will be supported in the future.
+With JSX lite, you can drag/drop to build UIs and edit the code _side by side_, generating usable and editable code as you need to. Support for no-code tools like [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
 
 ### Modern unified workflows for all platforms
 
@@ -98,7 +98,7 @@ Adding framework support is surprisingly easy with our plugins (docs coming soon
 
 ## No-code tooling
 
-JSX Lite's static JSON format also enables no-code tooling for visual code editing, for instance with [Builder.io](https://github.com/builderio/builder) or Figma (coming soon)
+JSX Lite's static JSON format also enables no-code tooling for visual code editing, for instance with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
 
 <img src="https://imgur.com/3TjfY2H.gif" >
 
@@ -106,7 +106,7 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 - [Builder.io](https://github.com/builderio/builder)
 - [Snap](https://github.com/builderio/snap)
-- [HTML to Figma](https://github.com/builderio/html-to-figma) (coming soon)
+- [HTML to Figma](https://github.com/builderio/html-to-figma)
 
 ## Status
 
@@ -127,7 +127,6 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 - JSX Lite Fiddle
 - Stable (v1) release
 - Plugin API docs for custom syntaxes and extensions
-- Integration with design tools like Figma (Figma <-> JSX Lite)
 
 <br />
 <p align="center">
