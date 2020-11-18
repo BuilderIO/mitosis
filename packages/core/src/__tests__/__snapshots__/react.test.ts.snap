@@ -21,6 +21,46 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React Button 1`] = `
+"import { useState, useRef } from \\"@jsx-lite/react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function MyComponent(props) {
+  const state = useState(() => ({}));
+
+  return (
+    <>
+      <>
+        {Boolean(props.link) && (
+          <>
+            <a
+              {...props.attributes}
+              href={props.link}
+              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {props.text}
+            </a>
+          </>
+        )}
+
+        {Boolean(!props.link) && (
+          <>
+            <span {...props.attributes}>{props.text}</span>
+          </>
+        )}
+      </>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Form block 1`] = `
 "import { useState, useRef } from \\"@jsx-lite/react\\";
 

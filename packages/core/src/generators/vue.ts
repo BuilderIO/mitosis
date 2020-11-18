@@ -14,7 +14,21 @@ export type ToVueOptions = {
   prettier?: boolean;
 };
 
+const mappers: {
+  [key: string]: (json: JSXLiteNode, options: ToVueOptions) => string;
+} = {
+  Fragment: (json, options) => {
+    return `<div>${json.children
+      .map((item) => blockToVue(item, options))
+      .join('\n')}</div>`;
+  },
+};
+
 export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
+  if (mappers[json.name]) {
+    return mappers[json.name](json, options);
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }

@@ -9,13 +9,19 @@ exports[`Liquid Basic 1`] = `
 "
 `;
 
+exports[`Liquid Button 1`] = `
+"<div>
+  {% if link %}
+
+  <a href=\\"{{link}}\\"> {{text}} </a>
+
+  {% endif %}
+</div>
+"
+`;
+
 exports[`Liquid Form block 1`] = `
-"<form
-  validate=\\"{{validate}}\\"
-  ref=\\"{{formRef}}\\"
-  method=\\"{{method}}\\"
-  name=\\"{{name}}\\"
-></form>
+"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
 <style>
   .pre-1 {
     padding: 10px;
@@ -39,15 +45,15 @@ exports[`Liquid Input block 1`] = `
 `;
 
 exports[`Liquid Select block 1`] = `
-"<select
-  value=\\"{{value}}\\"
-  defaultValue=\\"{{defaultValue}}\\"
-  name=\\"{{name}}\\"
-></select>
+"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+  {% for option in options %}
+  <option value=\\"{{option.value}}\\"></option>
+  {% endfor %}
+</select>
 "
 `;
 
 exports[`Liquid Submit button block 1`] = `
-"<button type=\\"submit\\">{{props.text}}</button>
+"<button type=\\"submit\\">{{text}}</button>
 "
 `;

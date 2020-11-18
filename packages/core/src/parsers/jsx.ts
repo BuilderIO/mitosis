@@ -175,7 +175,7 @@ const componentFunctionToJson = (
   const children: JSXLiteNode[] = [];
   if (theReturn) {
     const value = (theReturn as babel.types.ReturnStatement).argument;
-    if (types.isJSXElement(value)) {
+    if (types.isJSXElement(value) || types.isJSXFragment(value)) {
       children.push(jsxElementToJson(value) as JSXLiteNode);
     }
   }
@@ -191,6 +191,7 @@ const jsxElementToJson = (
   node:
     | babel.types.JSXElement
     | babel.types.JSXText
+    | babel.types.JSXFragment
     | babel.types.JSXExpressionContainer,
 ): JSXLiteNode => {
   if (types.isJSXText(node)) {
@@ -205,6 +206,15 @@ const jsxElementToJson = (
       bindings: {
         _text: generate(node.expression).code,
       },
+    });
+  }
+
+  if (types.isJSXFragment(node)) {
+    return createJSXLiteNode({
+      name: 'Fragment',
+      children: node.children.map((item) =>
+        jsxElementToJson(item as any),
+      ) as any,
     });
   }
 

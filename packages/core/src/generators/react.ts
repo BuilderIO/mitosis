@@ -12,7 +12,22 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 type ToReactOptions = {
   prettier?: boolean;
 };
+
+const mappers: {
+  [key: string]: (json: JSXLiteNode, options: ToReactOptions) => string;
+} = {
+  Fragment: (json, options) => {
+    return `<>${json.children
+      .map((item) => blockToReact(item, options))
+      .join('\n')}</>`;
+  },
+};
+
 const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
+  if (mappers[json.name]) {
+    return mappers[json.name](json, options);
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
