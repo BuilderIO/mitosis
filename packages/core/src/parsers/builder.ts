@@ -48,6 +48,7 @@ const componentMappers: {
     });
 
     delete node.bindings.columns;
+    delete node.properties.columns;
 
     node.children = block.component?.options.columns.map((col: any) =>
       createJSXLiteNode({
