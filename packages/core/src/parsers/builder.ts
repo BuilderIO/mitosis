@@ -5,6 +5,22 @@ import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
+// Omit some superflous styles that can come from Builder's web importer
+const styleOmitList: (
+  | keyof CSSStyleDeclaration
+  | 'backgroundRepeatX'
+  | 'backgroundRepeatY'
+)[] = [
+  'backgroundRepeatX',
+  'backgroundRepeatY',
+  'backgroundPositionX',
+  'backgroundPositionY',
+  'borderBottomLeftRadius',
+  'borderBottomRightRadius',
+  'borderTopRightRadius',
+  'borderTopRightRadius',
+];
+
 const hasStyles = (block: BuilderElement) => {
   if (block.responsiveStyles) {
     for (const key in block.responsiveStyles) {
@@ -16,12 +32,34 @@ const hasStyles = (block: BuilderElement) => {
   return false;
 };
 
+type InternalOptions = {
+  skipMapper?: boolean;
+};
+
 const componentMappers: {
   [key: string]: (
     block: BuilderElement,
     options: BuilerToJSXLiteOptions,
   ) => JSXLiteNode;
 } = {
+  Columns(block, options) {
+    const node = builderElementToJsxLiteNode(block, options, {
+      skipMapper: true,
+    });
+
+    delete node.bindings.columns;
+
+    node.children = block.component?.options.columns.map((col: any) =>
+      createJSXLiteNode({
+        name: 'Column',
+        children: col.blocks.map((col: any) =>
+          builderElementToJsxLiteNode(col, options),
+        ),
+      }),
+    );
+
+    return node;
+  },
   'Shopify:For': (block, options) => {
     return createJSXLiteNode({
       name: 'For',
@@ -81,8 +119,12 @@ export type BuilerToJSXLiteOptions = {};
 export const builderElementToJsxLiteNode = (
   block: BuilderElement,
   options: BuilerToJSXLiteOptions = {},
+  _internalOptions: InternalOptions = {},
 ): JSXLiteNode => {
-  const mapper = block.component && componentMappers[block.component!.name];
+  const mapper =
+    !_internalOptions.skipMapper &&
+    block.component &&
+    componentMappers[block.component!.name];
 
   if (mapper) {
     return mapper(block, options);
@@ -115,7 +157,9 @@ export const builderElementToJsxLiteNode = (
     bindings: {
       ...bindings,
       ...(Boolean(Object.keys(block.responsiveStyles?.large || {}).length) && {
-        css: JSON.stringify(block.responsiveStyles?.large || {}),
+        css: JSON.stringify(
+          omit(block.responsiveStyles?.large || {}, styleOmitList),
+        ),
       }),
     },
     children: (block.children || []).map((item) =>

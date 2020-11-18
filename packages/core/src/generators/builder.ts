@@ -30,6 +30,19 @@ const componentMappers: {
     options: ToBuilderOptions,
   ) => BuilderElement;
 } = {
+  Columns(node, options) {
+    const block = blockToBuilder(node, options, { skipMapper: true });
+
+    const columns = block.children!.map((item) => ({
+      blocks: item.children,
+    }));
+
+    block.component!.options.columns = columns;
+
+    block.children = [];
+
+    return block;
+  },
   For(node, options) {
     return el({
       component: {
@@ -88,11 +101,16 @@ const filterEmptyTextNodes = (node: JSXLiteNode) =>
 const isComponent = (json: JSXLiteNode) =>
   json.name.toLowerCase() !== json.name;
 
+type InternalOptions = {
+  skipMapper?: boolean;
+};
+
 export const blockToBuilder = (
   json: JSXLiteNode,
   options: ToBuilderOptions = {},
+  _internalOptions: InternalOptions = {},
 ): BuilderElement => {
-  const mapper = componentMappers[json.name];
+  const mapper = !_internalOptions.skipMapper && componentMappers[json.name];
   if (mapper) {
     return mapper(json, options);
   }
