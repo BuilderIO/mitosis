@@ -51,7 +51,7 @@ const debug = getQueryParam('debug') === 'true';
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
-  previewUrl: 'https://jsx-lite-fiddle.web.app/preview.html',
+  previewUrl: 'https://jsx-lite.builder.io/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
