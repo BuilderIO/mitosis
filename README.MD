@@ -14,6 +14,8 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ## Why
 
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1491677acd00479896e9ca41fe55308a" />
+
 ### Component libraries
 
 Managing support for libraries that provide logic or functionality meant to be used across frameworks (e.g. Material, Semantic, SDKs, etc.) is a _pain_. There are no viable current solutions for writing logic once and instantly having a version that works natively across frameworks.
