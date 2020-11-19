@@ -135,7 +135,6 @@ const componentMappers: {
   },
 };
 
-console.log('\n\n\n\n\nlatest?');
 export type BuilerToJSXLiteOptions = {
   context?: { [key: string]: any };
 };
