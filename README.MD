@@ -4,11 +4,13 @@
   Write components once, run everywhere. Compiles to Vue, React, Solid, and Liquid. Import code from Figma and Builder.io
 </p>
 
-<img src="https://imgur.com/H1WTtGe.gif" />
-
 ## Try it out
 
 Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please [report bugs and share feedback](https://github.com/BuilderIO/jsx-lite/issues)!
+
+<a href="https://jsx-lite.builder.io" target="_blank" rel="noopenner">
+<img src="https://imgur.com/H1WTtGe.gif" />
+</a>
 
 ## Why
 
