@@ -4,6 +4,15 @@
   Write components once, run everywhere. Compiles to Vue, React, Solid, and Liquid. Import code from Figma and Builder.io
 </p>
 
+<br />
+<p align="center">
+  <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
+  <a href="https://github.com/BuilderIO/jsx-lite/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
+  <a href="https://github.com/BuilderIO/jsx-lite"><img alt="License" src="https://img.shields.io/github/license/BuilderIO/jsx-lite" /></a>
+  <a href="https://www.npmjs.com/package/@jsx-lite/core"><img alt="Types" src="https://img.shields.io/npm/types/@jsx-lite/core" /></a>
+  <a href="https://www.npmjs.com/package/@jsx-lite/core" rel="nofollow"><img src="https://img.shields.io/npm/v/@jsx-lite/core.svg?sanitize=true"></a>
+</p>
+
 ## Try it out
 
 Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please [report bugs and share feedback](https://github.com/BuilderIO/jsx-lite/issues)!
@@ -14,7 +23,7 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ## Why
 
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1491677acd00479896e9ca41fe55308a" />
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d6575c7bff84ab790c8253d55f86a38" />
 
 ### Component libraries
 
