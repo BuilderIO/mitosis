@@ -22,8 +22,6 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ## Why
 
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d6575c7bff84ab790c8253d55f86a38" />
-
 ### Component libraries
 
 Managing support for libraries that provide logic or functionality meant to be used across frameworks (e.g. Material, Semantic, SDKs, etc.) is a _pain_. There are no viable current solutions for writing logic once and instantly having a version that works natively across frameworks.
@@ -47,6 +45,10 @@ JSX lite allows you to modernize your workflow by generating Liquid code that hy
 If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease. It also allows for incremental adoption of a new framework without having to write logic twice.
 
 Plus, if a new framework comes along that you are just itching to try and think will solve your site's performance problems, all you need is to run a command to get a version of your app with that new framework. Bye bye rewrites!
+
+<p align="center">
+<img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe1885f0ff4674d20a241690e479611f9" />
+</p>
 
 ## How does it work
 
