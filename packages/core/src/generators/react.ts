@@ -57,7 +57,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
 
     for (const key in json.properties) {
       const value = json.properties[key];
-      str += ` ${key}="${value}" `;
+      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
     }
     for (const key in json.bindings) {
       const value = json.bindings[key] as string;

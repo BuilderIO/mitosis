@@ -1,6 +1,6 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { last, omit } from 'lodash';
+import { last, omit, pickBy } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -42,6 +42,26 @@ const componentMappers: {
     options: BuilerToJSXLiteOptions,
   ) => JSXLiteNode;
 } = {
+  Symbol(block, options) {
+    const node = builderElementToJsxLiteNode(
+      omit(block, 'component.options.symbol.content'),
+      options,
+      {
+        skipMapper: true,
+      },
+    );
+
+    // TODO: full component code in a new component and hoist it. will need to pass through a `context` object, maybe on options
+    const blocks = block.component?.options?.symbol?.content?.data?.blocks;
+    if (blocks) {
+      node.children = blocks.map((child: any) =>
+        builderElementToJsxLiteNode(child, options),
+      );
+      node.bindings.useChildren = 'true';
+    }
+
+    return node;
+  },
   Columns(block, options) {
     const node = builderElementToJsxLiteNode(block, options, {
       skipMapper: true,
@@ -115,7 +135,13 @@ const componentMappers: {
   },
 };
 
-export type BuilerToJSXLiteOptions = {};
+console.log('\n\n\n\n\nlatest?');
+export type BuilerToJSXLiteOptions = {
+  context?: { [key: string]: any };
+};
+export type InternalBuilerToJSXLiteOptions = BuilerToJSXLiteOptions & {
+  context: { [key: string]: any };
+};
 
 export const builderElementToJsxLiteNode = (
   block: BuilderElement,
@@ -144,10 +170,25 @@ export const builderElementToJsxLiteNode = (
       }
     }
   }
+
   const properties = {
     ...block.properties,
-    ...block.component?.options,
   };
+
+  if (block.component?.options) {
+    for (const key in block.component.options) {
+      const value = block.component.options[key];
+      if (typeof value === 'string') {
+        properties[key] = value;
+      } else {
+        bindings[key] = json5.stringify(value);
+      }
+    }
+  }
+
+  if (block.component && block.tagName && block.tagName !== 'div') {
+    properties.builderTag = block.tagName;
+  }
 
   return createJSXLiteNode({
     name:
