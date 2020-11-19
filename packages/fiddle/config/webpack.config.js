@@ -229,7 +229,7 @@ module.exports = function (webpackEnv) {
       globalObject: 'this',
     },
     optimization: {
-      minimize: false, // isEnvProduction,
+      minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({
@@ -270,6 +270,7 @@ module.exports = function (webpackEnv) {
               ascii_only: true,
             },
           },
+          parallel: 2,
           sourceMap: shouldUseSourceMap,
         }),
         // This is only used in production mode
