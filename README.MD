@@ -6,6 +6,10 @@
 
 <img src="https://imgur.com/H1WTtGe.gif" />
 
+## Try it out
+
+Try our early our [alpha preview here](https://jsx-lite-fiddle.web.app/) and please [report bugs and share feedback](https://github.com/BuilderIO/jsx-lite/issues)!
+
 ## Why
 
 ### Component libraries
