@@ -604,7 +604,7 @@ export default function Fiddle() {
                     css={{ marginRight: 30 }}
                     onClick={() => state.applyPendingBuilderChange()}
                     color="primary"
-                    variant="outlined"
+                    variant="contained"
                     size="small"
                   >
                     Update JSX
