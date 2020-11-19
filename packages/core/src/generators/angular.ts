@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { format } from 'prettier';
+import { format } from 'prettier/standalone';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';

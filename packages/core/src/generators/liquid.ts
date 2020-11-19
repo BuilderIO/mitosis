@@ -1,4 +1,4 @@
-import { format } from 'prettier';
+import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -150,15 +150,19 @@ export const componentToLiquid = (
   }
 
   if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'html',
-      plugins: [
-        // To support running in browsers
-        require('prettier/parser-html'),
-        require('prettier/parser-postcss'),
-        require('prettier/parser-babel'),
-      ],
-    });
+    try {
+      str = format(str, {
+        parser: 'html',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Could not prettify', { string: str }, err)
+    }
   }
   return str;
 };

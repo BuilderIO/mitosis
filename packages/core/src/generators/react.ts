@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { format } from 'prettier';
+import { format } from 'prettier/standalone';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';

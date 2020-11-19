@@ -3,9 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App';
 import reportWebVitals from './reportWebVitals';
-const { stopReportingRuntimeErrors } = require('react-error-overlay');
+import { configure } from 'mobx';
+
+configure({
+  enforceActions: 'never',
+});
 
 if (process.env.NODE_ENV === 'development') {
+  const { stopReportingRuntimeErrors } = require('react-error-overlay');
   // These freeze the browser when syntax highlighting, sometimes for **long** periods
   stopReportingRuntimeErrors();
 }

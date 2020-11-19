@@ -46,6 +46,8 @@ import { Show } from './Show';
 import { TextLink } from './TextLink';
 import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
 
+const debug = getQueryParam('debug') === 'true';
+
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
@@ -162,7 +164,6 @@ export default function Fiddle() {
       }
       const jsxJson = builderContentToJsxLiteComponent(builderJson);
       state.code = componentToJsxLite(jsxJson);
-      console.log('Builder set code', state.code);
       state.pendingBuilderChange = null;
     },
     async parseInputCode() {
@@ -170,11 +171,10 @@ export default function Fiddle() {
         format: 'html',
       }).state;
 
-      // TODO: parse reactive state out too
       const builderJson = await liquidToBuilder(
         state.inputCode.replace(reactiveScriptRe, ''),
       );
-      console.log({ builderJson });
+
       const jsx = builderContentToJsxLiteComponent({
         data: { blocks: builderJson },
       });
@@ -200,10 +200,13 @@ export default function Fiddle() {
             : componentToVue(json);
 
         const newBuilderData = componentToBuilder(json);
-        console.log('Setting Builder data', { builderData: newBuilderData });
         setBuilderData(newBuilderData);
       } catch (err) {
-        console.warn(err);
+        if (debug) {
+          throw err;
+        } else {
+          console.warn(err);
+        }
       }
     },
   }));
@@ -503,7 +506,7 @@ export default function Fiddle() {
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
                     />
                   }
-                  value="Vue"
+                  value="vue"
                 />
                 <Tab
                   label={

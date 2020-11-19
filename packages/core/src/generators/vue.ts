@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { format } from 'prettier';
+import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -180,15 +180,19 @@ export const componentToVue = (
   `;
 
   if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'vue',
-      plugins: [
-        // To support running in browsers
-        require('prettier/parser-html'),
-        require('prettier/parser-postcss'),
-        require('prettier/parser-babel'),
-      ],
-    });
+    try {
+      str = format(str, {
+        parser: 'vue',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Could not prettify', { string: str }, err);
+    }
   }
   return str;
 };
