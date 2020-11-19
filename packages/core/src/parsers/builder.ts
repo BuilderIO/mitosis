@@ -227,7 +227,10 @@ export const builderContentToJsxLiteComponent = (
   }
 
   return createJSXLiteComponent({
-    state,
+    state: {
+      ...state,
+      ...builderContent.data?.state,
+    },
     children: (builderContent.data?.blocks || [])
       .filter((item) => {
         if (item.properties?.src?.includes('/api/v1/pixel')) {
