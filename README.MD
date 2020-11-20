@@ -24,7 +24,7 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ### Component libraries
 
-Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc)
+Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere with full compatibilty
 
 ### No-code tools
 
