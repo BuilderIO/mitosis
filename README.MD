@@ -47,7 +47,7 @@ If you have ever had to migrate a huge codebase from one framework to another, i
 Plus, if a new framework comes along that you are just itching to try and think will solve your site's performance problems, all you need is to run a command to get a version of your app with that new framework. Bye bye rewrites!
 
 <p align="center">
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fe1885f0ff4674d20a241690e479611f9" />
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F3c0dc574aa8c4b06adff6f91e01cda3d" />
 </p>
 
 ## How does it work
