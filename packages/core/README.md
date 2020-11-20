@@ -24,27 +24,19 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ### Component libraries
 
-Managing support for libraries that provide logic or functionality meant to be used across frameworks (e.g. Material, Semantic, SDKs, etc.) is a _pain_. There are no viable current solutions for writing logic once and instantly having a version that works natively across frameworks.
-
-An organization might want to build a new component library to be used across the business, but they also have teams working with different frameworks (e.g. React, Vue, Angular). Writing the library in JSX lite allows the component team to write the logic once and let each team consume the components in different formats.
+Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc)
 
 ### No-code tools
 
-We want to bridge the gap between code and no-code. No-code tools require a higher level of abstraction and allow a rich and intuitive editing experience. But that abstraction usually means less control for those who know how to code, and the inability to work no-code workflows into the development cycle.
-
-With JSX lite, you can drag/drop to build UIs and edit the code _side by side_, generating usable and editable code as you need to. Support for no-code tools like [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
+With JSX lite, you can drag/drop to build UIs and edit the code _side by side_, generating usable and editable code as you need to, and even import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch
 
 ### Modern unified workflows for all platforms
 
-JSX lite allows you to incrementally adopt modern and familiar workflows for many different platforms. For example, Shopify is an enormously powerful ecommerce platform, but only supports rendering server-side with their Liquid templating language. This means people either need to build Shopify stores with Liquid + jQuery, or opt to not render server-side at all.
-
-JSX lite allows you to modernize your workflow by generating Liquid code that hydrates to React in the browser, making your store high speed and SEO friendly with SSR while still having fast and clean renders on the client. This flow could even allow your site to become a SPA after the first page load (no more server-side navigation after the first load).
+JSX lite allows you to incrementally adopt modern and familiar workflows for many different platforms, for for Shopify instance you can server side render to liquid and hydrate with React
 
 ### JS framework fatigue
 
-If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease. It also allows for incremental adoption of a new framework without having to write logic twice.
-
-Plus, if a new framework comes along that you are just itching to try and think will solve your site's performance problems, all you need is to run a command to get a version of your app with that new framework. Bye bye rewrites!
+If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
 
 <p align="center">
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F3c0dc574aa8c4b06adff6f91e01cda3d" />
