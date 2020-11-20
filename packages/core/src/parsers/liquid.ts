@@ -304,7 +304,7 @@ export function blockToLiquid(
   const bindingClass =
     block.bindings?.class && convertBinding(block.bindings.class, options);
   const classes = uniq([
-    'builder-block',
+    // 'builder-block',
     block.id,
     block.class,
     bindingClass,
@@ -315,7 +315,7 @@ export function blockToLiquid(
 
   const attributes = mapToAttributes({
     ...block.properties,
-    ['builder-id']: block.id,
+    // ['builder-id']: block.id,
     class: classes.join(' '),
     ...(size(stylesList) && {
       style: stylesList.join(';'),

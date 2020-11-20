@@ -122,7 +122,7 @@ const componentMappers: {
       });
     }
     return createJSXLiteNode({
-      name: block.tagName,
+      name: block.tagName || 'div',
       properties: {
         ...properties,
         ...innerProperties,
@@ -175,8 +175,8 @@ export const builderElementToJsxLiteNode = (
     ...block.properties,
     ...(options.includeBuilderExtras && {
       ['builder-id']: block.id!,
+      class: `builder-block ${block.id} ${block.properties?.class || ''}`,
     }),
-    class: `builder-block ${block.id} ${block.properties?.class || ''}`,
   };
 
   if (block.component?.options) {
