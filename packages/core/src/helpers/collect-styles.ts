@@ -5,6 +5,20 @@ import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { dashCase } from './dash-case';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 
+export const hasStyles = (component: JSXLiteComponent) => {
+  let hasStyles = false;
+
+  traverse(component).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      if (item.bindings.css) {
+        hasStyles = true;
+        this.stop();
+      }
+    }
+  });
+  return hasStyles;
+};
+
 /**
  * e.g.:
  * {

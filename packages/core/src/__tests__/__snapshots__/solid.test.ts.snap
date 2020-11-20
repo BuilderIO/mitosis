@@ -1,67 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`React Basic 1`] = `
-"import { useProxy } from \\"valtio\\";
+exports[`Solid Basic 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
 
-export default function MyComponent(props) {
-  const state = useProxy({ name: \\"Steve\\" });
+export default function MyComponent() {
+  const state = createMutable({ name: \\"Steve\\" });
 
   return (
-    <>
-      <div>
-        <input
-          value={state.name}
-          onChange={(event) => (state.name = event.target.value)}
-        />
-        Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
-    </>
+    <div>
+      <input
+        value={state.name}
+        onChange={(event) => (state.name = event.target.value)}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   );
 }
 "
 `;
 
-exports[`React Button 1`] = `
-"export interface ButtonProps {
+exports[`Solid Button 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
 }
 
-export default function MyComponent(props) {
-  return (
-    <>
-      <>
-        {Boolean(props.link) && (
-          <>
-            <a
-              {...props.attributes}
-              href={props.link}
-              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-            >
-              {props.text}
-            </a>
-          </>
-        )}
+export default function MyComponent() {
+  const state = createMutable({});
 
-        {Boolean(!props.link) && (
-          <>
-            <span {...props.attributes}>{props.text}</span>
-          </>
-        )}
-      </>
-    </>
+  return (
+    <Fragment>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+
+      <Show when={!props.link}>
+        <span {...props.attributes}>{props.text}</span>
+      </Show>
+    </Fragment>
   );
 }
 "
 `;
 
-exports[`React Form block 1`] = `
-"import { useProxy } from \\"valtio\\";
-import { useRef } from \\"react\\";
-/** @jsx jsx */
-import { jsx } from \\"@emotion/react\\";
+exports[`Solid Form block 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
 
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
@@ -93,15 +87,19 @@ export interface FormProps {
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
-export default function MyComponent(props) {
-  const state = useProxy({
+export default function MyComponent() {
+  const state = createMutable({
     state: \\"unsubmitted\\",
     responseData: null,
     formErrorMessage: \\"\\",
     get submissionState() {
       return (Builder.isEditing && props.previewState) || state.state;
     },
-    onSubmit(event) {
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
       const sendWithJs =
         props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
@@ -116,16 +114,19 @@ export default function MyComponent(props) {
         event.preventDefault();
         const el = event.currentTarget;
         const headers = props.customHeaders || {};
-        let body;
+        let body: any;
         const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
           event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
         )
-          .filter((el) => !!el.name)
+          .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
-            let value;
-            const key = el.name;
+            let value: any;
+            const key = (el as HTMLImageElement).name;
 
             if (el instanceof HTMLInputElement) {
               if (el.type === \\"radio\\") {
@@ -151,7 +152,7 @@ export default function MyComponent(props) {
                 value = el.value;
               }
             } else {
-              value = el.value;
+              value = (el as HTMLInputElement).value;
             }
 
             return {
@@ -203,8 +204,8 @@ export default function MyComponent(props) {
           },
         });
 
-        if (formRef.current) {
-          formRef.current.dispatchEvent(presubmitEvent);
+        if (formRef) {
+          formRef.dispatchEvent(presubmitEvent);
 
           if (presubmitEvent.defaultPrevented) {
             return;
@@ -218,7 +219,7 @@ export default function MyComponent(props) {
           props.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
         fetch(
-          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, // TODO: throw error if no action URL
+          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!, // TODO: throw error if no action URL
           {
             body,
             headers,
@@ -261,26 +262,26 @@ export default function MyComponent(props) {
                 },
               });
 
-              if (formRef.current) {
-                formRef.current.dispatchEvent(submitSuccessEvent);
+              if (formRef) {
+                formRef.dispatchEvent(submitSuccessEvent);
 
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 } // TODO: option to turn this on/off?
 
                 if (props.resetFormOnSubmit !== false) {
-                  formRef.current.reset();
+                  formRef.reset();
                 }
               } // TODO: client side route event first that can be preventDefaulted
 
               if (props.successUrl) {
-                if (formRef.current) {
+                if (formRef) {
                   const event = new CustomEvent(\\"route\\", {
                     detail: {
                       url: props.successUrl,
                     },
                   });
-                  formRef.current.dispatchEvent(event);
+                  formRef.dispatchEvent(event);
 
                   if (!event.defaultPrevented) {
                     location.href = props.successUrl;
@@ -298,8 +299,8 @@ export default function MyComponent(props) {
               },
             });
 
-            if (formRef.current) {
-              formRef.current.dispatchEvent(submitErrorEvent);
+            if (formRef) {
+              formRef.dispatchEvent(submitErrorEvent);
 
               if (submitErrorEvent.defaultPrevented) {
                 return;
@@ -317,79 +318,66 @@ export default function MyComponent(props) {
   const formRef = useRef();
 
   return (
-    <>
-      <form
-        {...props.attributes}
-        validate={props.validate}
-        ref={formRef}
-        action={!props.sendWithJs && props.action}
-        method={props.method}
-        name={props.name}
-        onSubmit={(event) => state.onSubmit(event)}
-      >
-        {Boolean(props.builderBlock && props.builderBlock.children) && (
-          <>
-            {props.builderBlock.children.map((block) => (
-              <>
-                <BuilderBlockComponent
-                  key={block.id}
-                  block={block}
-                ></BuilderBlockComponent>
-              </>
-            ))}
-          </>
-        )}
+    <form
+      {...props.attributes}
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => state.onSubmit(event)}
+    >
+      <Show when={props.builderBlock && props.builderBlock.children}>
+        <For each={props.builderBlock!.children} _forName={block}>
+          <BuilderBlockComponent
+            key={block.id}
+            block={block}
+          ></BuilderBlockComponent>
+        </For>
+      </Show>
 
-        {Boolean(state.submissionState === \\"error\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            ></BuilderBlocks>
-          </>
-        )}
+      <Show when={state.submissionState === \\"error\\"}>
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          blocks={props.errorMessage!}
+        ></BuilderBlocks>
+      </Show>
 
-        {Boolean(state.submissionState === \\"sending\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            ></BuilderBlocks>
-          </>
-        )}
+      <Show when={state.submissionState === \\"sending\\"}>
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage!}
+        ></BuilderBlocks>
+      </Show>
 
-        {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
-          <>
-            <pre
-              class=\\"builder-form-error-text\\"
-              css={{
-                padding: \\"10px\\",
-                color: \\"red\\",
-                textAlign: \\"center\\",
-              }}
-            >
-              {JSON.stringify(state.responseData, null, 2)}
-            </pre>
-          </>
-        )}
+      <Show when={state.submissionState === \\"error\\" && state.responseData}>
+        <pre
+          class={css({
+            padding: \\"10px\\",
+            color: \\"red\\",
+            textAlign: \\"center\\",
+          })}
+        >
+          {JSON.stringify(state.responseData, null, 2)}
+        </pre>
+      </Show>
 
-        {Boolean(state.submissionState === \\"success\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            ></BuilderBlocks>
-          </>
-        )}
-      </form>
-    </>
+      <Show when={state.submissionState === \\"success\\"}>
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage!}
+        ></BuilderBlocks>
+      </Show>
+    </form>
   );
 }
 "
 `;
 
-exports[`React Input block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+exports[`Solid Input block 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export interface FormInputProps {
   type?: string;
@@ -401,31 +389,33 @@ export interface FormInputProps {
   required?: boolean;
 }
 
-export default function MyComponent(props) {
+export default function MyComponent() {
+  const state = createMutable({});
+
   return (
-    <>
-      <input
-        {...props.attributes}
-        key={
-          Builder.isEditing && props.defaultValue
-            ? props.defaultValue
-            : \\"default-key\\"
-        }
-        placeholder={props.placeholder}
-        type={props.type}
-        name={props.name}
-        value={props.value}
-        defaultValue={props.defaultValue}
-        required={props.required}
-      />
-    </>
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
   );
 }
 "
 `;
 
-exports[`React Select block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+exports[`Solid Select block 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export interface FormSelectProps {
   options?: {
@@ -438,45 +428,45 @@ export interface FormSelectProps {
   defaultValue?: string;
 }
 
-export default function MyComponent(props) {
+export default function MyComponent() {
+  const state = createMutable({});
+
   return (
-    <>
-      <select
-        {...props.attributes}
-        value={props.value}
-        key={
-          Builder.isEditing && props.defaultValue
-            ? props.defaultValue
-            : \\"default-key\\"
-        }
-        defaultValue={props.defaultValue}
-        name={props.name}
-      >
-        {props.options.map((option) => (
-          <>
-            <option value={option.value}>{option.name || option.value}</option>
-          </>
-        ))}
-      </select>
-    </>
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      <For each={props.options} _forName={option}>
+        <option value={option.value}>{option.name || option.value}</option>
+      </For>
+    </select>
   );
 }
 "
 `;
 
-exports[`React Submit button block 1`] = `
-"export interface ButtonProps {
+exports[`Solid Submit button block 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export interface ButtonProps {
   attributes?: any;
   text?: string;
 }
 
-export default function MyComponent(props) {
+export default function MyComponent() {
+  const state = createMutable({});
+
   return (
-    <>
-      <button {...props.attributes} type=\\"submit\\">
-        {props.text}
-      </button>
-    </>
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
   );
 }
 "

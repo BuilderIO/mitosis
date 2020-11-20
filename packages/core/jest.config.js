@@ -29,5 +29,4 @@ module.exports = {
     '^.+\\.raw\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  setupFilesAfterEnv: ['<rootDir>../../jest/setupTests.ts'],
 };

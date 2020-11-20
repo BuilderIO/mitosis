@@ -1,5 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
+import { hasStyles } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -11,6 +12,7 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 
 type ToReactOptions = {
   prettier?: boolean;
+  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
 };
 
 const mappers: {
@@ -102,15 +104,31 @@ export const componentToReact = (
   options: ToReactOptions = {},
 ) => {
   const json = fastClone(componentJson);
+  const compnoentHasStyles = hasStyles(json);
 
+  const hasRefs = Boolean(getRefs(componentJson).size);
+  const hasState = Boolean(Object.keys(json.state).length);
   mapRefs(json, (refName) => `${refName}.current`);
 
   let str = dedent`
-    import { useState, useRef } from '@jsx-lite/react';
+    ${hasState ? `import { useProxy } from 'valtio';` : ''}
+    ${hasRefs ? `import { useRef } from 'react';` : ''}
+    ${
+      compnoentHasStyles
+        ? dedent`
+      /** @jsx jsx */
+      import { jsx } from '@emotion/react'
+    `.trim()
+        : ''
+    }
     ${renderPreComponent(json)}
     
     export default function MyComponent(props) {
-      const state = useState(() => (${getStateObjectString(json)}));
+      ${
+        hasState
+          ? `const state = useProxy(${getStateObjectString(json)});`
+          : ''
+      }
       ${getRefsString(json)}
 
       return (<>

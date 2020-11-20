@@ -1,13 +1,63 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { fastClone } from '../helpers/fast-clone';
+import { hasStyles } from '../helpers/collect-styles';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
-import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+
+const collectClassString = (json: JSXLiteNode): string | null => {
+  const staticClasses: string[] = [];
+
+  const hasStaticClasses = Boolean(staticClasses.length);
+  if (json.properties.class) {
+    staticClasses.push(json.properties.class);
+    delete json.properties.class;
+  }
+  if (json.properties.className) {
+    staticClasses.push(json.properties.className);
+    delete json.properties.className;
+  }
+
+  const dynamicClasses: string[] = [];
+  if (typeof json.bindings.class === 'string') {
+    dynamicClasses.push(json.bindings.class as any);
+    delete json.bindings.class;
+  }
+  if (typeof json.bindings.className === 'string') {
+    dynamicClasses.push(json.bindings.className as any);
+    delete json.bindings.className;
+  }
+  if (typeof json.bindings.className === 'string') {
+    dynamicClasses.push(json.bindings.className as any);
+    delete json.bindings.className;
+  }
+  if (typeof json.bindings.css === 'string') {
+    dynamicClasses.push(`css(${json.bindings.css})`);
+    delete json.bindings.css;
+  }
+  const staticClassesString = staticClasses.join(' ');
+
+  const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
+
+  const hasDynamicClasses = Boolean(dynamicClasses.length);
+
+  if (hasStaticClasses && !hasDynamicClasses) {
+    return `"${staticClassesString}"`;
+  }
+
+  if (hasDynamicClasses && !hasStaticClasses) {
+    return `{${dynamicClassesString}}`;
+  }
+
+  if (hasDynamicClasses && hasStaticClasses) {
+    return `{"${staticClassesString} " + ${dynamicClassesString}}`;
+  }
+
+  return null;
+};
 
 type ToSolidOptions = {
   prettier?: boolean;
@@ -23,6 +73,11 @@ const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
   let str = '';
 
   str += `<${json.name} `;
+
+  const classString = collectClassString(json);
+  if (classString) {
+    str += ` class=${classString} `;
+  }
 
   if (json.bindings._spread) {
     str += ` {...(${json.bindings._spread})} `;
@@ -71,9 +126,15 @@ export const componentToSolid = (
   json: JSXLiteComponent,
   options: ToSolidOptions = {},
 ) => {
+  const componentHasStyles = hasStyles(json);
   const addWrapper = json.children.length > 1;
   let str = dedent`
     import { createMutable, Show, For } from 'solid-js';
+    ${
+      !componentHasStyles
+        ? ''
+        : `import { css } from "solid-styled-components";`
+    }
     ${renderPreComponent(json)}
     
     export default function MyComponent () {
@@ -89,8 +150,8 @@ export const componentToSolid = (
 
   if (options.prettier !== false) {
     str = format(str, {
-      parser: 'babel',
-      plugins: [require('prettier/parser-babel')],
+      parser: 'typescript',
+      plugins: [require('prettier/parser-typescript')],
     });
   }
   return str;
