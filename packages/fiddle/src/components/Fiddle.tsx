@@ -48,6 +48,34 @@ import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file
 
 const debug = getQueryParam('debug') === 'true';
 
+const AlphaPreviewMessage = () => (
+  <ThemeProvider
+    theme={createMuiTheme({
+      palette: {
+        type: 'dark',
+        primary: { main: colors.primary },
+      },
+    })}
+  >
+    <Alert
+      severity="info"
+      css={{
+        background: 'none',
+        fontSize: 15,
+      }}
+    >
+      This is an early alpha preview, please{' '}
+      <TextLink
+        css={{ color: 'inherit', textDecoration: 'underline' }}
+        href="https://github.com/BuilderIO/jsx-lite/issues"
+        target="_blank"
+      >
+        report bugs and share feedback
+      </TextLink>
+    </Alert>
+  </ThemeProvider>
+);
+
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
@@ -278,82 +306,76 @@ export default function Fiddle() {
       >
         <div
           css={{
-            display: 'flex',
-            position: 'relative',
-            flexShrink: 0,
-            alignItems: 'center',
-            borderBottom: `1px solid ${colors.contrast}`,
             backgroundColor: '#1e1e1e',
-            color: 'white',
           }}
         >
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://github.com/builderio/jsx-lite"
+          <div
             css={{
-              marginRight: 'auto',
-            }}
-          >
-            <img
-              alt="JSX Lite Logo"
-              src={logo}
-              css={{
-                marginLeft: 10,
-                objectFit: 'contain',
-                width: 200,
-                height: 60,
-                ...lightColorInvert,
-              }}
-            />
-          </a>
-          {/* TODO: maybe add back, TBD */}
-          <div css={{ marginRight: 'auto' }}>
-            <ThemeProvider
-              theme={createMuiTheme({
-                palette: {
-                  type: 'dark',
-                  primary: { main: colors.primary },
-                },
-              })}
-            >
-              <Alert
-                severity="info"
-                css={{
-                  background: 'none',
-                  fontSize: 15,
-                }}
-              >
-                This is an early alpha preview, please{' '}
-                <TextLink
-                  css={{ color: 'inherit', textDecoration: 'underline' }}
-                  href="https://github.com/BuilderIO/jsx-lite/issues"
-                  target="_blank"
-                >
-                  report bugs and share feedback
-                </TextLink>
-              </Alert>
-            </ThemeProvider>
-          </div>
-
-          <a
-            target="_blank"
-            rel="noreferrer"
-            css={{
-              marginRight: 25,
               display: 'flex',
+              position: 'relative',
+              flexShrink: 0,
               alignItems: 'center',
+              color: 'white',
             }}
-            href="https://github.com/builderio/jsx-lite"
           >
-            Source
-            <img
-              width={30}
-              src={githubLogo}
-              css={{ marginLeft: 10, ...lightColorInvert }}
-              alt="Github Mark"
-            />
-          </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://github.com/builderio/jsx-lite"
+              css={{
+                marginRight: 'auto',
+              }}
+            >
+              <img
+                alt="JSX Lite Logo"
+                src={logo}
+                css={{
+                  marginLeft: 10,
+                  objectFit: 'contain',
+                  width: 200,
+                  height: 60,
+                  ...lightColorInvert,
+                }}
+              />
+            </a>
+            <div
+              css={{
+                marginRight: 'auto',
+                [smallBreakpoint]: { display: 'none' },
+              }}
+            >
+              <AlphaPreviewMessage />
+            </div>
+
+            <a
+              target="_blank"
+              rel="noreferrer"
+              css={{
+                marginRight: 25,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              href="https://github.com/builderio/jsx-lite"
+            >
+              Source
+              <img
+                width={30}
+                src={githubLogo}
+                css={{ marginLeft: 10, ...lightColorInvert }}
+                alt="Github Mark"
+              />
+            </a>
+          </div>
+          <div
+            css={{
+              display: 'none',
+              textAlign: 'center',
+              borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+              [smallBreakpoint]: { display: 'block' },
+            }}
+          >
+            <AlphaPreviewMessage />
+          </div>
         </div>
         <div
           css={{
