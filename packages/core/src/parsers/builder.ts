@@ -137,6 +137,7 @@ const componentMappers: {
 
 export type BuilerToJSXLiteOptions = {
   context?: { [key: string]: any };
+  includeBuilderExtras?: boolean;
 };
 export type InternalBuilerToJSXLiteOptions = BuilerToJSXLiteOptions & {
   context: { [key: string]: any };
@@ -170,8 +171,12 @@ export const builderElementToJsxLiteNode = (
     }
   }
 
-  const properties = {
+  const properties: { [key: string]: string } = {
     ...block.properties,
+    ...(options.includeBuilderExtras && {
+      ['builder-id']: block.id!,
+    }),
+    class: `builder-block ${block.id} ${block.properties?.class || ''}`,
   };
 
   if (block.component?.options) {
