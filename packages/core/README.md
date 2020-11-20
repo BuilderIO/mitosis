@@ -28,9 +28,9 @@ Managing support for libraries that provide UI components across frameworks is a
 
 ### No-code tools
 
-With JSX lite, you can drag/drop to build UIs and edit the code _side by side_, generating usable and editable code as you need to, and even import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch
+With JSX lite, you can import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
 
-### Modern unified workflows for all platforms
+### Modern workflows for all platforms
 
 JSX lite allows you to incrementally adopt modern and familiar workflows for many different platforms, for for Shopify instance you can server side render to liquid and hydrate with React
 
