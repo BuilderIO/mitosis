@@ -24,7 +24,7 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 ### Component libraries
 
-Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc)
+Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere with full compatibilty
 
 ### No-code tools
 
@@ -108,9 +108,11 @@ Adding framework support is surprisingly easy with our plugins (docs coming soon
 
 ## No-code tooling
 
-JSX Lite's static JSON format also enables no-code tooling for visual code editing, for instance with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
+JSX Lite's static JSON format also enables no-code tooling for visual code editing and importing, for instance with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
 
 <img src="https://imgur.com/3TjfY2H.gif" >
+
+<img src="https://i.imgur.com/vsAKt7f.gif" >
 
 ## Who uses it
 
