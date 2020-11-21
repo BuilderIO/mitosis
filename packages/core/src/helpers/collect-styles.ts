@@ -41,8 +41,17 @@ type ClassStyleMap = { [key: string]: StyleMap };
 
 type FlatClassStyleMap = { [key: string]: CSS.Properties };
 
-export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
+type CollectStyleOptions = {
+  classProperty?: 'class' | 'className';
+};
+
+export const collectStyles = (
+  json: JSXLiteComponent,
+  options: CollectStyleOptions = {},
+): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
+
+  const classProperty = options.classProperty || 'class';
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
@@ -55,7 +64,9 @@ export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties.class = `${item.properties.class || ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
@@ -67,8 +78,11 @@ export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
   return styleMap;
 };
 
-export const collectCss = (json: JSXLiteComponent): string => {
-  const styles = collectStyles(json);
+export const collectCss = (
+  json: JSXLiteComponent,
+  options: CollectStyleOptions = {},
+): string => {
+  const styles = collectStyles(json, options);
   return classStyleMapToCss(styles);
 };
 

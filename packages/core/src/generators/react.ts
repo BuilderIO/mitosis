@@ -116,7 +116,9 @@ export const componentToReact = (
 
   const stylesType = options.stylesType || 'emotion';
 
-  const css = stylesType === 'styled-jsx' && collectCss(json);
+  const css =
+    stylesType === 'styled-jsx' &&
+    collectCss(json, { classProperty: 'className' });
   const needsWrapperFragment =
     json.children.length > 1 || (hasStyles && stylesType === 'styled-jsx');
 
