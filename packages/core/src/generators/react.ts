@@ -1,10 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import {
-  collectCss,
-  collectStyles,
-  hasStyles,
-} from '../helpers/collect-styles';
+import { collectCss, hasStyles } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -120,7 +116,8 @@ export const componentToReact = (
     stylesType === 'styled-jsx' &&
     collectCss(json, { classProperty: 'className' });
   const needsWrapperFragment =
-    json.children.length > 1 || (hasStyles && stylesType === 'styled-jsx');
+    json.children.length > 1 ||
+    (compnoentHasStyles && stylesType === 'styled-jsx');
 
   let str = dedent`
   ${
@@ -142,7 +139,7 @@ export const componentToReact = (
       return (
         ${needsWrapperFragment ? '<>' : ''}
         ${
-          hasStyles && stylesType === 'styled-jsx'
+          compnoentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
