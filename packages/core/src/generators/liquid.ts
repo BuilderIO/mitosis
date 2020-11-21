@@ -142,9 +142,9 @@ export const componentToLiquid = (
   options: ToLiquidOptions = {},
 ) => {
   const json = fastClone(componentJson);
+  const css = collectCss(json);
   let str = json.children.map((item) => blockToLiquid(item)).join('\n');
 
-  const css = collectCss(json);
   if (css.trim().length) {
     str += `<style>${css}</style>`;
   }
@@ -161,7 +161,7 @@ export const componentToLiquid = (
         ],
       });
     } catch (err) {
-      console.warn('Could not prettify', { string: str }, err)
+      console.warn('Could not prettify', { string: str }, err);
     }
   }
   return str;

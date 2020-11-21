@@ -856,7 +856,7 @@ export default function Fiddle() {
                               : 'ctrl'}
                             +/
                           </code>{' '}
-                          and search "HTML to Figma")
+                          and search "HTML Figma")
                         </li>
                         <li>
                           From the plugin window, choose "download as JSON"
