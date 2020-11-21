@@ -845,7 +845,7 @@ export default function Fiddle() {
                             target="_blank"
                             href="https://www.figma.com/community/plugin/747985167520967365/HTML-To-Figma"
                           >
-                            HTML to Figma plugin
+                            HTML Figma plugin
                           </TextLink>
                         </li>
                         <li>
