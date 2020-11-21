@@ -136,7 +136,6 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 ## Coming soon
 
-- JSX Lite Fiddle
 - Stable (v1) release
 - Plugin API docs for custom syntaxes and extensions
 - VS code plugin
