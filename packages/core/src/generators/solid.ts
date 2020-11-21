@@ -89,7 +89,7 @@ const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
   }
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
-    if (key === '_spread') {
+    if (key === '_spread' || key === '_forName') {
       continue;
     }
 
