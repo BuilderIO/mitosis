@@ -1,5 +1,5 @@
 import { Alert } from '@material-ui/lab';
-import { useLocalStore, useObserver } from 'mobx-react-lite';
+import { useLocalObservable, useObserver } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
@@ -24,8 +24,12 @@ import {
 import {
   Button,
   createMuiTheme,
+  Divider,
+  FormControlLabel,
   MenuItem,
   Paper,
+  Radio,
+  RadioGroup,
   Select,
   Tab,
   Tabs,
@@ -45,6 +49,8 @@ import { device } from '../constants/device';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
 import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
+import { localStorageGet } from '../functions/local-storage-get';
+import { localStorageSet } from '../functions/local-storage-set';
 
 const debug = getQueryParam('debug') === 'true';
 
@@ -177,7 +183,7 @@ export default function Fiddle() {
     ignoreNextBuilderUpdate: false,
   }));
   const [builderData, setBuilderData] = useState<any>(null);
-  const state = useLocalStore(() => ({
+  const state = useLocalObservable(() => ({
     code: getQueryParam('code') || defaultCode,
     inputCode: defaultLiquidCode,
     output: '',
@@ -185,6 +191,11 @@ export default function Fiddle() {
     pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'builder',
     builderData: {} as any,
+    options: {
+      reactStyleType:
+        localStorageGet('options.reactStyleType') ||
+        ('emotion' as 'emotion' | 'styled-jsx'),
+    },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
       if (!builderJson) {
@@ -220,7 +231,9 @@ export default function Fiddle() {
           state.outputTab === 'liquid'
             ? componentToLiquid(json)
             : state.outputTab === 'react'
-            ? componentToReact(json)
+            ? componentToReact(json, {
+                stylesType: state.options.reactStyleType,
+              })
             : state.outputTab === 'solid'
             ? componentToSolid(json)
             : state.outputTab === 'json' || state.outputTab === 'builder'
@@ -248,6 +261,10 @@ export default function Fiddle() {
     }
   });
 
+  useReaction(
+    () => state.options.reactStyleType,
+    (type) => localStorageSet('options.reactStyleType', type),
+  );
   useReaction(
     () => state.code,
     (code) => setQueryParam('code', code),
@@ -568,6 +585,52 @@ export default function Fiddle() {
                 />
               </Tabs>
             </div>
+            <Show when={state.outputTab === 'react'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  css={{ marginRight: 'auto', marginLeft: 10 }}
+                >
+                  Style library:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Style type"
+                  name="reactStyleType"
+                  value={state.options.reactStyleType}
+                  onChange={(e) => {
+                    state.options.reactStyleType = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="emotion"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Emotion CSS prop"
+                  />
+                  <FormControlLabel
+                    value="styled-jsx"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Styled JSX"
+                  />
+                </RadioGroup>
+              </div>
+              <Divider />
+            </Show>
             <div>
               <div css={{ paddingTop: 15 }}>
                 <MonacoEditor

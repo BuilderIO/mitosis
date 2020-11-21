@@ -1,6 +1,10 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { hasStyles } from '../helpers/collect-styles';
+import {
+  collectCss,
+  collectStyles,
+  hasStyles,
+} from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -110,30 +114,38 @@ export const componentToReact = (
   const hasState = Boolean(Object.keys(json.state).length);
   mapRefs(json, (refName) => `${refName}.current`);
 
+  const stylesType = options.stylesType || 'emotion';
+
+  const css = stylesType === 'styled-jsx' && collectCss(json);
+  const needsWrapperFragment =
+    json.children.length > 1 || (hasStyles && stylesType === 'styled-jsx');
+
   let str = dedent`
+  ${
+    compnoentHasStyles && stylesType === 'emotion'
+      ? `/** @jsx jsx */
+    import { jsx } from '@emotion/react'`.trim()
+      : ''
+  }
     ${hasState ? `import { useProxy } from 'valtio';` : ''}
     ${hasRefs ? `import { useRef } from 'react';` : ''}
-    ${
-      compnoentHasStyles
-        ? dedent`
-      /** @jsx jsx */
-      import { jsx } from '@emotion/react'
-    `.trim()
-        : ''
-    }
     ${renderPreComponent(json)}
     
     export default function MyComponent(props) {
       ${
-        hasState
-          ? `const state = useProxy(${getStateObjectString(json)});`
-          : ''
+        hasState ? `const state = useProxy(${getStateObjectString(json)});` : ''
       }
       ${getRefsString(json)}
 
-      return (<>
+      return (
+        ${needsWrapperFragment ? '<>' : ''}
+        ${
+          hasStyles && stylesType === 'styled-jsx'
+            ? `<style jsx>{\`${css}\`}</style>`
+            : ''
+        }
         ${json.children.map((item) => blockToReact(item)).join('\n')}
-      </>)
+        ${needsWrapperFragment ? '</>' : ''})
     }
    
   `;
@@ -144,6 +156,7 @@ export const componentToReact = (
         parser: 'typescript',
         plugins: [
           require('prettier/parser-typescript'), // To support running in browsers
+          require('prettier/parser-postcss'),
         ],
       });
     } catch (err) {
