@@ -60,7 +60,10 @@ export const collectStyles = (
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
         delete item.bindings.css;
-        const componentName = dashCase(item.name || 'div');
+        const componentName = /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
+          ? item.name
+          : dashCase(item.name || 'div');
+
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
