@@ -8,6 +8,8 @@ import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
+// This should really be a preprocessor mapping the `class` attribute binding based on what other values have
+// to make this more pluggable
 const collectClassString = (json: JSXLiteNode): string | null => {
   const staticClasses: string[] = [];
 
