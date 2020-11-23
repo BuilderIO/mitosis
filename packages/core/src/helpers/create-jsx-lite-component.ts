@@ -1,4 +1,4 @@
-import { JSXLiteComponent } from '../types/jsx-lite-Component';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
 
 export const createJSXLiteComponent = (
   options?: Partial<JSXLiteComponent>,
