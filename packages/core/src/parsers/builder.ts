@@ -4,6 +4,7 @@ import { last, omit, pickBy } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { sizes, Size } from '../constants/media-sizes';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -194,6 +195,37 @@ export const builderElementToJsxLiteNode = (
     properties.builderTag = block.tagName;
   }
 
+  const sizeKeys = Object.keys(block.responsiveStyles || {});
+  const hasCss = Boolean(sizeKeys.length);
+  const css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
+  if (hasCss) {
+    for (const size of sizeKeys) {
+      if (size === 'large') {
+        css.large = omit(
+          {
+            ...css.large,
+            ...block.responsiveStyles!.large,
+          },
+          styleOmitList,
+        );
+      } else if (
+        block.responsiveStyles &&
+        block.responsiveStyles[size as Size]
+      ) {
+        const mediaQueryKey = `@media (max-width: ${
+          sizes[size as Size].max
+        }px)`;
+        css[mediaQueryKey] = omit(
+          {
+            ...css[mediaQueryKey],
+            ...block.responsiveStyles[size as Size],
+          },
+          styleOmitList,
+        );
+      }
+    }
+  }
+
   return createJSXLiteNode({
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
@@ -202,10 +234,8 @@ export const builderElementToJsxLiteNode = (
     properties,
     bindings: {
       ...bindings,
-      ...(Boolean(Object.keys(block.responsiveStyles?.large || {}).length) && {
-        css: JSON.stringify(
-          omit(block.responsiveStyles?.large || {}, styleOmitList),
-        ),
+      ...(hasCss && {
+        css: JSON.stringify(css),
       }),
     },
     children: (block.children || []).map((item) =>
