@@ -7,6 +7,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import json5 from 'json5';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -152,12 +153,40 @@ export const blockToBuilder = (
     }
   }
 
+  const hasCss = !!json.bindings.css;
+  let responsiveStyles: {
+    large: Partial<CSSStyleDeclaration>;
+    medium?: Partial<CSSStyleDeclaration>;
+    small?: Partial<CSSStyleDeclaration>;
+  } = {
+    large: {},
+  };
+  if (hasCss) {
+    const cssRules = json5.parse(json.bindings.css as string);
+    const cssRuleKeys = Object.keys(cssRules);
+    for (const ruleKey of cssRuleKeys) {
+      const mediaQueryMatch = ruleKey.match(mediaQueryRegex);
+      if (mediaQueryMatch) {
+        const [fullmatch, pixelSize] = mediaQueryMatch;
+        const sizeForWidth = sizes.getSizeForWidth(Number(pixelSize));
+        const currentSizeStyles = responsiveStyles[sizeForWidth] || {};
+        responsiveStyles[sizeForWidth] = {
+          ...currentSizeStyles,
+          ...cssRules[ruleKey],
+        };
+      } else {
+        responsiveStyles.large = {
+          ...responsiveStyles.large,
+          [ruleKey]: cssRules[ruleKey],
+        };
+      }
+    }
+  }
+
   return el({
     tagName: thisIsComponent ? undefined : json.name,
-    ...(json.bindings.css && {
-      responsiveStyles: {
-        large: json5.parse(json.bindings.css as string),
-      },
+    ...(hasCss && {
+      responsiveStyles,
     }),
     ...(thisIsComponent && {
       component: {
