@@ -22,6 +22,36 @@ const styleOmitList: (
   'borderTopRightRadius',
 ];
 
+const getCssFromBlock = (block: BuilderElement) => {
+  const blockSizes: Size[] = Object.keys(
+    block.responsiveStyles || {},
+  ).filter((size) => sizeNames.includes(size as Size)) as Size[];
+  const hasCss = Boolean(blockSizes.length);
+  let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
+  for (const size of blockSizes) {
+    if (size === 'large') {
+      css = omit(
+        {
+          ...css,
+          ...block.responsiveStyles?.large,
+        },
+        styleOmitList,
+      );
+    } else if (block.responsiveStyles && block.responsiveStyles[size]) {
+      const mediaQueryKey = `@media (max-width: ${sizes[size].max}px)`;
+      css[mediaQueryKey] = omit(
+        {
+          ...css[mediaQueryKey],
+          ...block.responsiveStyles[size],
+        },
+        styleOmitList,
+      );
+    }
+  }
+
+  return css;
+};
+
 const hasStyles = (block: BuilderElement) => {
   if (block.responsiveStyles) {
     for (const key in block.responsiveStyles) {
@@ -95,10 +125,11 @@ const componentMappers: {
     });
   },
   Text: (block, options) => {
+    let css = getCssFromBlock(block);
     const bindings: any = {
       ...omit(block.bindings, 'component.options.text'),
-      ...(Boolean(Object.keys(block.responsiveStyles?.large || {}).length) && {
-        css: JSON.stringify(block.responsiveStyles?.large || {}),
+      ...(Object.keys(css).length && {
+        css: JSON.stringify(css),
       }),
     };
     const properties = { ...block.properties };
@@ -227,31 +258,7 @@ export const builderElementToJsxLiteNode = (
     properties.builderTag = block.tagName;
   }
 
-  const blockSizes: Size[] = Object.keys(
-    block.responsiveStyles || {},
-  ).filter((size) => sizeNames.includes(size as Size)) as Size[];
-  const hasCss = Boolean(blockSizes.length);
-  let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
-  for (const size of blockSizes) {
-    if (size === 'large') {
-      css = omit(
-        {
-          ...css,
-          ...block.responsiveStyles?.large,
-        },
-        styleOmitList,
-      );
-    } else if (block.responsiveStyles && block.responsiveStyles[size]) {
-      const mediaQueryKey = `@media (max-width: ${sizes[size].max}px)`;
-      css[mediaQueryKey] = omit(
-        {
-          ...css[mediaQueryKey],
-          ...block.responsiveStyles[size],
-        },
-        styleOmitList,
-      );
-    }
-  }
+  const css = getCssFromBlock(block);
 
   return createJSXLiteNode({
     name:
@@ -261,7 +268,7 @@ export const builderElementToJsxLiteNode = (
     properties,
     bindings: {
       ...bindings,
-      ...(hasCss && {
+      ...(Object.keys(css).length && {
         css: JSON.stringify(css),
       }),
     },
