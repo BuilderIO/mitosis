@@ -12,15 +12,15 @@ export default function Button(props: ButtonProps) {
     <>
       <Show when={props.link}>
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? '_blank' : undefined}
-          {...props.attributes}
         >
           {props.text}
         </a>
       </Show>
       <Show when={!props.link}>
-        <span {...props.attributes}>{props.text}</span>
+        <button {...props.attributes} type="button">{props.text}</button>
       </Show>
     </>
   );
