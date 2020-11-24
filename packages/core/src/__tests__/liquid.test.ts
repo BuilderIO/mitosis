@@ -6,6 +6,7 @@ const selectBlock = require('./data/blocks/select.raw');
 const formBlock = require('./data/blocks/form.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const button = require('./data/blocks/button.raw');
+const image = require('./data/blocks/image.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -42,5 +43,9 @@ describe('Liquid', () => {
     const json = parseJsx(button);
     const output = componentToLiquid(json);
     expect(output).toMatchSnapshot();
+  });
+
+  test('Image', () => {
+    expect(componentToLiquid(parseJsx(image))).toMatchSnapshot();
   });
 });

@@ -6,6 +6,7 @@ const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
 const formBlock = require('./data/blocks/form.raw');
 const button = require('./data/blocks/button.raw');
+const image = require('./data/blocks/image.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -42,5 +43,9 @@ describe('React', () => {
     const json = parseJsx(button);
     const output = componentToReact(json);
     expect(output).toMatchSnapshot();
+  });
+
+  test('Image', () => {
+    expect(componentToReact(parseJsx(image))).toMatchSnapshot();
   });
 });
