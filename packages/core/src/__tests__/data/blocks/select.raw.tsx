@@ -12,6 +12,7 @@ export interface FormSelectProps {
 export default function SelectComponent(props: FormSelectProps) {
   return (
     <select
+      {...props.attributes}
       value={props.value}
       key={
         Builder.isEditing && props.defaultValue
@@ -20,7 +21,6 @@ export default function SelectComponent(props: FormSelectProps) {
       }
       defaultValue={props.defaultValue}
       name={props.name}
-      {...props.attributes}
     >
       <For each={props.options}>
         {(option) => (
