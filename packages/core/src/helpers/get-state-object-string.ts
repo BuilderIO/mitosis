@@ -8,17 +8,22 @@ export type GetStateObjectStringOptions = {
   functions?: boolean;
   getters?: boolean;
   valueMapper?: (code: string, type: 'data' | 'function' | 'getter') => string;
+  format?: 'object' | 'class' | 'variables';
 };
 
 export const getStateObjectString = (
   component: JSXLiteComponent,
   options: GetStateObjectStringOptions = {},
 ) => {
-  let str = '{';
+  const format = options.format || 'object';
+  let str = format === 'object' ? '{' : '';
 
   const { state } = component;
 
   const valueMapper = options.valueMapper || ((val: string) => val);
+
+  const keyValueDelimiter = format === 'object' ? ':' : '=';
+  const lineItemDelimiter = format === 'object' ? ',' : '\n';
 
   for (const key in state) {
     const value = state[key];
@@ -28,7 +33,10 @@ export const getStateObjectString = (
           continue;
         }
         const functionValue = value.replace(functionLiteralPrefix, '');
-        str += ` ${key}: ${valueMapper(functionValue, 'function')}, `;
+        str += ` ${key} ${keyValueDelimiter} ${valueMapper(
+          functionValue,
+          'function',
+        )}${lineItemDelimiter} `;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(/^get /));
@@ -38,21 +46,30 @@ export const getStateObjectString = (
         if (!isGet && options.functions === false) {
           continue;
         }
-        str += ` ${valueMapper(methodValue, isGet ? 'getter' : 'function')} ,`;
+        str += ` ${valueMapper(
+          methodValue,
+          isGet ? 'getter' : 'function',
+        )} ${lineItemDelimiter}`;
       } else {
         if (options.data === false) {
           continue;
         }
-        str += ` ${key}: ${valueMapper(json5.stringify(value), 'data')}, `;
+        str += ` ${key}${keyValueDelimiter} ${valueMapper(
+          json5.stringify(value),
+          'data',
+        )}${lineItemDelimiter} `;
       }
     } else {
       if (options.data === false) {
         continue;
       }
-      str += ` ${key}: ${valueMapper(json5.stringify(value), 'data')}, `;
+      str += ` ${key}${keyValueDelimiter} ${valueMapper(
+        json5.stringify(value),
+        'data',
+      )}${lineItemDelimiter} `;
     }
   }
 
-  str += '}';
+  str += format === 'object' ? '}' : '';
   return str;
 };

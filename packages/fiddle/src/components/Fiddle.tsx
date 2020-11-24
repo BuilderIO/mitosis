@@ -14,6 +14,7 @@ import {
   componentToReact,
   componentToLiquid,
   componentToBuilder,
+  componentToAngular,
   componentToSolid,
   builderContentToJsxLiteComponent,
   componentToJsxLite,
@@ -143,11 +144,11 @@ const TabLogo = (props: { src: string }) => {
   );
 };
 
-const TabLabelWithIcon = (props: { icon: string; label: string }) => {
+const TabLabelWithIcon = (props: { icon?: string; label: string }) => {
   const useIcon = false;
   return (
     <div css={{ display: 'flex', alignItems: 'center' }}>
-      {useIcon && <TabLogo src={props.icon} />} {props.label}
+      {useIcon && props.icon && <TabLogo src={props.icon} />} {props.label}
     </div>
   );
 };
@@ -236,6 +237,8 @@ export default function Fiddle() {
               })
             : state.outputTab === 'solid'
             ? componentToSolid(json)
+            : state.outputTab === 'angular'
+            ? componentToAngular(json)
             : state.outputTab === 'json' || state.outputTab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
@@ -541,7 +544,7 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="vue"
+                      label="Vue"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
                     />
                   }
@@ -564,6 +567,15 @@ export default function Fiddle() {
                     />
                   }
                   value="solid"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Angular"
+                      // icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
+                    />
+                  }
+                  value="angular"
                 />
                 <Tab
                   label={
@@ -653,6 +665,7 @@ export default function Fiddle() {
                     state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
+                        state.outputTab === 'angular' ||
                         state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'
