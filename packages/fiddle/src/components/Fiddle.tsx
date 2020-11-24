@@ -41,7 +41,7 @@ import { defaultCode, templates } from '../constants/templates';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 import { colors } from '../constants/colors';
-import { useEventListener } from '../hooks/use-event-lisetener';
+import { useEventListener } from '../hooks/use-event-listener';
 import { adapt } from 'webcomponents-in-react';
 import { theme } from '../constants/theme';
 import { breakpoints } from '../constants/breakpoints';
