@@ -118,7 +118,7 @@ export const componentToAngular = (
   const json = fastClone(componentJson);
 
   const refs = Array.from(getRefs(json));
-  mapRefs(json, (refName) => `this.${refName}`);
+  mapRefs(json, (refName) => `this.${refName}.nativeElement`);
 
   let css = collectCss(json);
   if (options.prettier !== false) {
@@ -138,7 +138,7 @@ export const componentToAngular = (
 
   let str = dedent`
     import { Component ${
-      refs.length ? ', ViewChild' : ''
+      refs.length ? ', ViewChild, ElementRef' : ''
     } } from '@angular/core';
     ${renderPreComponent(json)}
 
@@ -155,7 +155,7 @@ export const componentToAngular = (
       }
     })
     export default class MyComponent {
-      ${refs.map((refName) => `@ViewChild('${refName}') ${refName}`).join('\n')}
+      ${refs.map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`).join('\n')}
 
       ${dataString}
     }
