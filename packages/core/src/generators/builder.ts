@@ -164,7 +164,6 @@ export const blockToBuilder = (
       const mediaQueryMatch = ruleKey.match(mediaQueryRegex);
       if (mediaQueryMatch) {
         const [fullmatch, pixelSize] = mediaQueryMatch;
-        console.log('MEDIA QUERY MATCH: ', mediaQueryMatch);
         const sizeForWidth = sizes.getSizeForWidth(Number(pixelSize));
         const currentSizeStyles = responsiveStyles[sizeForWidth] || {};
         responsiveStyles[sizeForWidth] = {
@@ -174,7 +173,7 @@ export const blockToBuilder = (
       } else {
         responsiveStyles.large = {
           ...responsiveStyles.large,
-          ...cssRules[ruleKey],
+          [ruleKey]: cssRules[ruleKey],
         };
       }
     }

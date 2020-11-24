@@ -4,7 +4,7 @@ import { last, omit, pickBy } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { sizes, Size } from '../constants/media-sizes';
+import { sizes, Size, sizeNames } from '../constants/media-sizes';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -195,34 +195,29 @@ export const builderElementToJsxLiteNode = (
     properties.builderTag = block.tagName;
   }
 
-  const sizeKeys = Object.keys(block.responsiveStyles || {});
-  const hasCss = Boolean(sizeKeys.length);
-  const css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
-  if (hasCss) {
-    for (const size of sizeKeys) {
-      if (size === 'large') {
-        css.large = omit(
-          {
-            ...css.large,
-            ...block.responsiveStyles!.large,
-          },
-          styleOmitList,
-        );
-      } else if (
-        block.responsiveStyles &&
-        block.responsiveStyles[size as Size]
-      ) {
-        const mediaQueryKey = `@media (max-width: ${
-          sizes[size as Size].max
-        }px)`;
-        css[mediaQueryKey] = omit(
-          {
-            ...css[mediaQueryKey],
-            ...block.responsiveStyles[size as Size],
-          },
-          styleOmitList,
-        );
-      }
+  const blockSizes: Size[] = Object.keys(
+    block.responsiveStyles || {},
+  ).filter((size) => sizeNames.includes(size as Size)) as Size[];
+  const hasCss = Boolean(blockSizes.length);
+  let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
+  for (const size of blockSizes) {
+    if (size === 'large') {
+      css = omit(
+        {
+          ...css,
+          ...block.responsiveStyles?.large,
+        },
+        styleOmitList,
+      );
+    } else if (block.responsiveStyles && block.responsiveStyles[size]) {
+      const mediaQueryKey = `@media (max-width: ${sizes[size].max}px)`;
+      css[mediaQueryKey] = omit(
+        {
+          ...css[mediaQueryKey],
+          ...block.responsiveStyles[size],
+        },
+        styleOmitList,
+      );
     }
   }
 
