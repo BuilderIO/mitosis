@@ -38,7 +38,7 @@ export const blockToAngular = (
   }
 
   if (json.bindings._text) {
-    return `{${stripStateAndPropsRefs(json.bindings._text as string)}}`;
+    return `{{${stripStateAndPropsRefs(json.bindings._text as string)}}}`;
   }
 
   let str = '';
