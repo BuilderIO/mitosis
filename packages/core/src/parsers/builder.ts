@@ -148,6 +148,38 @@ export const builderElementToJsxLiteNode = (
   options: BuilerToJSXLiteOptions = {},
   _internalOptions: InternalOptions = {},
 ): JSXLiteNode => {
+  // Special builder properties
+  // TODO: support hide and repeat
+  const showBinding = block.bindings?.show;
+  if (showBinding) {
+    const isFragment = block.component?.name === 'Fragment';
+    // TODO: handle having other things, like a repeat too
+    if (isFragment) {
+      return createJSXLiteNode({
+        name: 'Show',
+        bindings: {
+          when: showBinding,
+        },
+        children:
+          block.children?.map((child) =>
+            builderElementToJsxLiteNode(child, options),
+          ) || [],
+      });
+    } else {
+      return createJSXLiteNode({
+        name: 'Show',
+        bindings: {
+          when: showBinding,
+        },
+        children: [
+          builderElementToJsxLiteNode({
+            ...block,
+            bindings: omit(block.bindings, 'show'),
+          }),
+        ],
+      });
+    }
+  }
   const mapper =
     !_internalOptions.skipMapper &&
     block.component &&

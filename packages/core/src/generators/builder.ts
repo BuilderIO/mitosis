@@ -52,7 +52,9 @@ const componentMappers: {
         collection: node.bindings.each as string,
         itemName: node.bindings._forName as string,
       },
-      children: node.children.map((node) => blockToBuilder(node, options)),
+      children: node.children
+        .filter(filterEmptyTextNodes)
+        .map((node) => blockToBuilder(node, options)),
     });
   },
   Show(node, options) {
@@ -64,7 +66,9 @@ const componentMappers: {
       bindings: {
         show: node.bindings.when as string,
       },
-      children: node.children.map((node) => blockToBuilder(node, options)),
+      children: node.children
+        .filter(filterEmptyTextNodes)
+        .map((node) => blockToBuilder(node, options)),
     });
   },
 };
