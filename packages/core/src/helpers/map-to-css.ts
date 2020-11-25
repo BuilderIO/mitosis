@@ -13,9 +13,9 @@ export function mapToCss(
       return (
         memo +
         (value && value.trim()
-          ? `${uewNewLine ? '\n' : ''}${' '.repeat(spaces)}${kebabCase(key)}: ${
-              value + (important ? ' !important' : '')
-            };`
+          ? `${uewNewLine ? '\n' : ''}${' '.repeat(spaces)}${kebabCase(
+              key,
+            )}: ${value + (important ? ' !important' : '')};`
           : '')
       );
     },

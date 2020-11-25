@@ -1,7 +1,6 @@
 import { reduce, size } from 'lodash';
 import { StringMap } from '../types/string-map';
 
-
 // This list is not exhaustive of all HTML boolean attributes, but we can add more in the future if needed.
 const booleanHTMLAttributes = new Set(['checked', 'disabled', 'selected']);
 

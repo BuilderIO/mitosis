@@ -155,7 +155,9 @@ export const componentToAngular = (
       }
     })
     export default class MyComponent {
-      ${refs.map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`).join('\n')}
+      ${refs
+        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
+        .join('\n')}
 
       ${dataString}
     }
