@@ -6,6 +6,7 @@ const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
 const formBlock = require('./data/blocks/form.raw');
 const button = require('./data/blocks/button.raw');
+const textarea = require('./data/blocks/textarea.raw');
 
 describe('Solid', () => {
   test('Basic', () => {
@@ -40,6 +41,12 @@ describe('Solid', () => {
 
   test('Button', () => {
     const json = parseJsx(button);
+    const output = componentToSolid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Textarea', () => {
+    const json = parseJsx(textarea);
     const output = componentToSolid(json);
     expect(output).toMatchSnapshot();
   });
