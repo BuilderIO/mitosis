@@ -1,6 +1,10 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { collectCss, hasStyles } from '../helpers/collect-styles';
+import {
+  collectCss,
+  collectStyledComponents,
+  hasStyles,
+} from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -115,6 +119,10 @@ export const componentToReact = (
   const css =
     stylesType === 'styled-jsx' &&
     collectCss(json, { classProperty: 'className' });
+
+  const styledComponentsCode =
+    stylesType === 'styled-components' && collectStyledComponents(json);
+
   const needsWrapperFragment =
     json.children.length > 1 ||
     (compnoentHasStyles && stylesType === 'styled-jsx');
@@ -129,6 +137,7 @@ export const componentToReact = (
     ${hasState ? `import { useProxy } from 'valtio';` : ''}
     ${hasRefs ? `import { useRef } from 'react';` : ''}
     ${renderPreComponent(json)}
+    ${styledComponentsCode ? styledComponentsCode : ''}
     
     export default function MyComponent(props) {
       ${

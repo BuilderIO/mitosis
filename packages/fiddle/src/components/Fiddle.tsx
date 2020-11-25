@@ -647,6 +647,12 @@ export default function Fiddle() {
                     label="Emotion CSS prop"
                   />
                   <FormControlLabel
+                    value="styled-components"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Styled Components"
+                  />
+                  <FormControlLabel
                     value="styled-jsx"
                     labelPlacement="start"
                     control={<Radio color="primary" />}
