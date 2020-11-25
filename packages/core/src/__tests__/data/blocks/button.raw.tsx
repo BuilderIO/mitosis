@@ -20,7 +20,9 @@ export default function Button(props: ButtonProps) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type="button">{props.text}</button>
+        <button {...props.attributes} type="button">
+          {props.text}
+        </button>
       </Show>
     </>
   );

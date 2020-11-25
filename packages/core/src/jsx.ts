@@ -1201,9 +1201,8 @@ declare global {
           'color-interpolation' | 'color-rendering'
         > {}
 
-    interface AnimateMotionSVGAttributes<
-      T
-    > extends AnimationElementSVGAttributes<T>,
+    interface AnimateMotionSVGAttributes<T>
+      extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationTimingSVGAttributes,
         AnimationValueSVGAttributes,
@@ -1214,9 +1213,8 @@ declare global {
       origin?: 'default';
     }
 
-    interface AnimateTransformSVGAttributes<
-      T
-    > extends AnimationElementSVGAttributes<T>,
+    interface AnimateTransformSVGAttributes<T>
+      extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationAttributeTargetSVGAttributes,
         AnimationTimingSVGAttributes,
@@ -1366,9 +1364,8 @@ declare global {
       stdDeviation?: number | string;
     }
 
-    interface FeImageSVGAttributes<
-      T
-    > extends FilterPrimitiveElementSVGAttributes<T>,
+    interface FeImageSVGAttributes<T>
+      extends FilterPrimitiveElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         ExternalResourceSVGAttributes,
         StylableSVGAttributes {

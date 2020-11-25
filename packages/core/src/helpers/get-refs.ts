@@ -4,7 +4,7 @@ import { isJsxLiteNode } from './is-jsx-lite-node';
 
 export const getRefs = (json: JSXLiteComponent) => {
   const refs = new Set<string>();
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.ref === 'string') {
         refs.add(item.bindings.ref);

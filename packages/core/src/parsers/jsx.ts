@@ -397,7 +397,10 @@ export function parseJsx(jsx: string): JSXLiteComponent {
 
   try {
     return JSON5.parse(
-      output!.code!.trim().replace(/^\({/, '{').replace(/}\);$/, '}'),
+      output!
+        .code!.trim()
+        .replace(/^\({/, '{')
+        .replace(/}\);$/, '}'),
     );
   } catch (err) {
     console.error('Could not parse code', output && output.code);
