@@ -14,6 +14,7 @@ import {
   componentToReact,
   componentToLiquid,
   componentToBuilder,
+  componentToSvelte,
   componentToAngular,
   componentToSolid,
   builderContentToJsxLiteComponent,
@@ -239,6 +240,8 @@ export default function Fiddle() {
             ? componentToSolid(json)
             : state.outputTab === 'angular'
             ? componentToAngular(json)
+            : state.outputTab === 'svelte'
+            ? componentToSvelte(json)
             : state.outputTab === 'json' || state.outputTab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
@@ -527,6 +530,7 @@ export default function Fiddle() {
                 Outputs:
               </Typography>
               <Tabs
+                variant="scrollable"
                 css={{
                   minHeight: 0,
                   marginLeft: 'auto',
@@ -576,6 +580,15 @@ export default function Fiddle() {
                     />
                   }
                   value="angular"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Svelte"
+                      // icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
+                    />
+                  }
+                  value="svelte"
                 />
                 <Tab
                   label={

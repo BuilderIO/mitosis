@@ -9,6 +9,7 @@ export type GetStateObjectStringOptions = {
   getters?: boolean;
   valueMapper?: (code: string, type: 'data' | 'function' | 'getter') => string;
   format?: 'object' | 'class' | 'variables';
+  keyPrefix?: string;
 };
 
 export const getStateObjectString = (
@@ -24,6 +25,7 @@ export const getStateObjectString = (
 
   const keyValueDelimiter = format === 'object' ? ':' : '=';
   const lineItemDelimiter = format === 'object' ? ',' : '\n';
+  const keyPrefix = options.keyPrefix || '';
 
   for (const key in state) {
     const value = state[key];
@@ -33,7 +35,7 @@ export const getStateObjectString = (
           continue;
         }
         const functionValue = value.replace(functionLiteralPrefix, '');
-        str += ` ${key} ${keyValueDelimiter} ${valueMapper(
+        str += ` ${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
           functionValue,
           'function',
         )}${lineItemDelimiter} `;
@@ -46,7 +48,7 @@ export const getStateObjectString = (
         if (!isGet && options.functions === false) {
           continue;
         }
-        str += ` ${valueMapper(
+        str += `${keyPrefix} ${valueMapper(
           methodValue,
           isGet ? 'getter' : 'function',
         )} ${lineItemDelimiter}`;
@@ -54,7 +56,7 @@ export const getStateObjectString = (
         if (options.data === false) {
           continue;
         }
-        str += ` ${key}${keyValueDelimiter} ${valueMapper(
+        str += ` ${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
           json5.stringify(value),
           'data',
         )}${lineItemDelimiter} `;
@@ -63,7 +65,7 @@ export const getStateObjectString = (
       if (options.data === false) {
         continue;
       }
-      str += ` ${key}${keyValueDelimiter} ${valueMapper(
+      str += ` ${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
         json5.stringify(value),
         'data',
       )}${lineItemDelimiter} `;
