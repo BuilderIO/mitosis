@@ -1,7 +1,7 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F873aa9bf5d8d4960abbee6d913862e1c"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, and Liquid. Import code from Figma and Builder.io
+  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. Import code from Figma and Builder.io
 </p>
 
 <p align="center">
@@ -119,20 +119,21 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 - [Builder.io](https://github.com/builderio/builder)
 - [Snap](https://github.com/builderio/snap)
 - [HTML <> Figma](https://github.com/builderio/html-to-figma)
+- [Build.](https://github.com/builderio/build.) (coming soon)
 
 ## Status
 
-| Framework    | Status      |
-| ------------ | ----------- |
-| React        | Alpha       |
-| Vue          | Alpha       |
-| Liquid       | Alpha       |
-| Builder.io   | Alpha       |
-| Solid        | Alpha       |
-| Figma        | Alpha       |
-| Angular      | Alpha       |
-| React Native | Planned     |
-| Svelte       | Considering |
+| Framework    | Status  |
+| ------------ | ------- |
+| React        | Alpha   |
+| Vue          | Alpha   |
+| Liquid       | Alpha   |
+| Builder.io   | Alpha   |
+| Solid        | Alpha   |
+| Figma        | Alpha   |
+| Angular      | Alpha   |
+| Svelte       | Alpha   |
+| React Native | Planned |
 
 ## Coming soon
 
