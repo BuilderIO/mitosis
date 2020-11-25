@@ -64,13 +64,14 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}${index}`;
-        item.name = className;
 
         const css = styleMapToCss(value);
 
         const prefix = isUpperCase(item.name[0])
           ? `styled(${item.name})\``
           : `styled.${item.name}\``;
+
+        item.name = className;
 
         styledComponentsCode += `
           const ${className} = ${prefix}${css}\`
