@@ -1,16 +1,17 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { getRefs } from '../helpers/get-refs';
+import traverse from 'traverse';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
+import { getProps } from '../helpers/get-props';
+import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
-import { mapRefs } from '../helpers/map-refs';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { getProps } from '../helpers/get-props';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
@@ -104,6 +105,31 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
   return str;
 };
 
+/**
+ * Replace
+ *    <input value={state.name} onChange={event => state.name = event.target.value}
+ * with
+ *    <input bind:value={state.name}/>
+ * when easily identified, for more idiomatic svelte code
+ */
+const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      const { value, onChange } = item.bindings;
+      if (value && onChange) {
+        if (
+          (onChange as string).replace(/\s+/g, '') ===
+          `${value}=event.target.value`
+        ) {
+          delete item.bindings.value;
+          delete item.bindings.onChange;
+          item.bindings['bind:value'] = value;
+        }
+      }
+    }
+  });
+};
+
 export const componentToSvelte = (
   componentJson: JSXLiteComponent,
   options: ToSvelteOptions = {},
@@ -112,7 +138,7 @@ export const componentToSvelte = (
   const json = fastClone(componentJson);
 
   const refs = Array.from(getRefs(json));
-  // mapRefs(json, (refName) => `${refName}`);
+  useBindValue(json, options);
 
   const css = collectCss(json);
 
