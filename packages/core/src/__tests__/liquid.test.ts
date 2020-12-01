@@ -7,6 +7,7 @@ const formBlock = require('./data/blocks/form.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const button = require('./data/blocks/button.raw');
 const textarea = require('./data/blocks/textarea.raw');
+const img = require('./data/blocks/img.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -47,6 +48,12 @@ describe('Liquid', () => {
 
   test('Textarea', () => {
     const json = parseJsx(textarea);
+    const output = componentToLiquid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Img', () => {
+    const json = parseJsx(img);
     const output = componentToLiquid(json);
     expect(output).toMatchSnapshot();
   });

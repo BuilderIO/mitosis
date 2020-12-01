@@ -376,6 +376,47 @@ export default function MyComponent() {
 "
 `;
 
+exports[`Solid Img 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+export default function MyComponent() {
+  const state = createMutable({});
+
+  return (
+    <img
+      {...props.attributes}
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={imgSrc}
+    />
+  );
+}
+"
+`;
+
 exports[`Solid Input block 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 
