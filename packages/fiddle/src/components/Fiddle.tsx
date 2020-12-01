@@ -195,8 +195,8 @@ export default function Fiddle() {
     builderData: {} as any,
     isDraggingOutputsCodeBar: false,
     isDraggingJSXCodeBar: false,
-    jsxCodeTabWidth: 45,
-    outputsTabHeight: 45,
+    jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
+    outputsTabHeight: Number(localStorageGet('outputsTabHeight')) || 45,
     options: {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
@@ -275,13 +275,17 @@ export default function Fiddle() {
     if (state.isDraggingJSXCodeBar) {
       const windowWidth = window.innerWidth;
       const pointerRelativeXpos = e.clientX;
-      state.jsxCodeTabWidth = (pointerRelativeXpos / windowWidth) * 100;
+      const newWidth = Math.max((pointerRelativeXpos / windowWidth) * 100, 5);
+      state.jsxCodeTabWidth = Math.min(newWidth, 95);
     } else if (state.isDraggingOutputsCodeBar) {
       const bannerHeight = 0;
       const windowHeight = window.innerHeight;
       const pointerRelativeYPos = e.clientY;
-      state.outputsTabHeight =
-        ((pointerRelativeYPos + bannerHeight) / windowHeight) * 100;
+      const newHeight = Math.max(
+        ((pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
+        5,
+      );
+      state.outputsTabHeight = Math.min(newHeight, 95);
     }
   });
 
@@ -289,6 +293,18 @@ export default function Fiddle() {
     state.isDraggingJSXCodeBar = false;
     state.isDraggingOutputsCodeBar = false;
   });
+
+  useReaction(
+    () => state.jsxCodeTabWidth,
+    (width) => localStorageSet('jsxCodeTabWidth', width),
+    { fireImmediately: false, delay: 1000 },
+  );
+
+  useReaction(
+    () => state.outputsTabHeight,
+    (width) => localStorageSet('outputsTabHeight', width),
+    { fireImmediately: false, delay: 1000 },
+  );
 
   useReaction(
     () => state.options.reactStyleType,
@@ -520,6 +536,8 @@ export default function Fiddle() {
             css={{
               minWidth: '3px',
               cursor: 'col-resize',
+              position: 'relative',
+              zIndex: 100,
               borderRight: `1px solid ${colors.contrast}`,
             }}
             onMouseDown={(event) => {
@@ -734,6 +752,8 @@ export default function Fiddle() {
                   minHeight: '3px',
                   cursor: 'row-resize',
                   borderTop: `1px solid ${colors.contrast}`,
+                  position: 'relative',
+                  zIndex: 100,
                 }}
                 onMouseDown={(event) => {
                   state.isDraggingOutputsCodeBar = true;
