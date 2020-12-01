@@ -190,7 +190,7 @@ export const componentToSvelte = (
       ${renderPreComponent(json)}
 
       ${
-        !hasData || options.stateType === 'proxies'
+        !hasData || options.stateType === 'variables'
           ? ''
           : `import onChange from 'on-change'`
       }
