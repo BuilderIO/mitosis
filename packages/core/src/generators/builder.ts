@@ -8,6 +8,7 @@ import { format } from 'prettier/standalone';
 import json5 from 'json5';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { mediaQueryRegex, sizes } from '../constants/media-sizes';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -96,12 +97,6 @@ function tryFormat(code: string) {
   }
   return str;
 }
-
-const filterEmptyTextNodes = (node: JSXLiteNode) =>
-  !(
-    typeof node.properties._text === 'string' &&
-    !node.properties._text.trim().length
-  );
 
 const isComponent = (json: JSXLiteNode) =>
   json.name.toLowerCase() !== json.name;

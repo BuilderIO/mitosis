@@ -22,6 +22,7 @@ import { startCase } from 'lodash';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -53,21 +54,24 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
   let str = '';
 
+  const children = json.children.filter(filterEmptyTextNodes);
+
   if (json.name === 'For') {
     str += `{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      <>
-        ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-      </>
+      ${children.length === 1 ? '' : '<>'}
+        ${children.map((item) => blockToReact(item, options)).join('\n')}
+      ${children.length === 1 ? '' : '</>'}
     ))}`;
   } else if (json.name === 'Show') {
     str += `{Boolean(${processBinding(
       json.bindings.when as string,
       options,
-    )}) && (<>
-      ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-      </>
+    )}) && (
+      ${children.length === 1 ? '' : '<>'}
+        ${children.map((item) => blockToReact(item, options)).join('\n')}
+      ${children.length === 1 ? '' : '</>'}
     )}`;
   } else {
     str += `<${json.name} `;
