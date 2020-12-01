@@ -36,6 +36,7 @@ import {
   Tab,
   Tabs,
   ThemeProvider,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
@@ -197,6 +198,12 @@ export default function Fiddle() {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
         ('emotion' as 'emotion' | 'styled-jsx'),
+      reactStateType:
+        localStorageGet('options.reactStateType') ||
+        ('useState' as 'useState' | 'mobx' | 'valtio'),
+      svelteStateType:
+        localStorageGet('options.svelteStateType') ||
+        ('variables' as 'variables' | 'proxy'),
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -235,6 +242,7 @@ export default function Fiddle() {
             : state.outputTab === 'react'
             ? componentToReact(json, {
                 stylesType: state.options.reactStyleType,
+                stateType: state.options.reactStateType,
               })
             : state.outputTab === 'solid'
             ? componentToSolid(json)
@@ -270,6 +278,14 @@ export default function Fiddle() {
   useReaction(
     () => state.options.reactStyleType,
     (type) => localStorageSet('options.reactStyleType', type),
+  );
+  useReaction(
+    () => state.options.reactStateType,
+    (type) => localStorageSet('options.reactStateType', type),
+  );
+  useReaction(
+    () => state.options.svelteStateType,
+    (type) => localStorageSet('options.svelteStateType', type),
   );
   useReaction(
     () => state.code,
@@ -658,6 +674,112 @@ export default function Fiddle() {
                     control={<Radio color="primary" />}
                     label="Styled JSX"
                   />
+                </RadioGroup>
+              </div>
+              <Divider css={{ opacity: 0.4 }} />
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  css={{ marginRight: 'auto', marginLeft: 10 }}
+                >
+                  State library:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="State type"
+                  name="reactStateType"
+                  value={state.options.reactStateType}
+                  onChange={(e) => {
+                    state.options.reactStateType = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <Tooltip title="Does not support nested state mutation">
+                    <FormControlLabel
+                      value="useState"
+                      control={<Radio color="primary" />}
+                      labelPlacement="start"
+                      label="React.useState"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Supports nested state mutation">
+                    <FormControlLabel
+                      value="mobx"
+                      labelPlacement="start"
+                      control={<Radio color="primary" />}
+                      label="Mobx"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Supports nested state mutation">
+                    <FormControlLabel
+                      value="valtio"
+                      labelPlacement="start"
+                      control={<Radio color="primary" />}
+                      label="Valtio"
+                    />
+                  </Tooltip>
+                </RadioGroup>
+              </div>
+              <Divider />
+            </Show>
+            <Show when={state.outputTab === 'svelte'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  css={{ marginRight: 'auto', marginLeft: 10 }}
+                >
+                  State handling:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="State type"
+                  name="svelteStateType"
+                  value={state.options.svelteStateType}
+                  onChange={(e) => {
+                    state.options.svelteStateType = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <Tooltip title="Does not support nested state mutation">
+                    <FormControlLabel
+                      value="variables"
+                      control={<Radio color="primary" />}
+                      labelPlacement="start"
+                      label="Variables"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Supports nested state mutation">
+                    <FormControlLabel
+                      value="proxies"
+                      labelPlacement="start"
+                      control={<Radio color="primary" />}
+                      label="Proxies"
+                    />
+                  </Tooltip>
                 </RadioGroup>
               </div>
               <Divider />

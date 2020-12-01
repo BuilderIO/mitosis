@@ -1,5 +1,9 @@
 import dedent from 'dedent';
+import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   collectCss,
   collectStyledComponents,
@@ -13,10 +17,16 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import traverse from 'traverse';
+import { startCase } from 'lodash';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { babelTransformCode } from '../helpers/babel-transform';
+import { types } from '@babel/core';
 
 type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
+  stateType?: 'useState' | 'mobx' | 'valtio';
 };
 
 const mappers: {
@@ -29,7 +39,7 @@ const mappers: {
   },
 };
 
-const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
+const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -38,19 +48,24 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
     return json.properties._text;
   }
   if (json.bindings._text) {
-    return `{${json.bindings._text}}`;
+    return `{${processBinding(json.bindings._text as string, options)}}`;
   }
 
   let str = '';
 
   if (json.name === 'For') {
-    str += `{${json.bindings.each}.map(${json.bindings._forName} => (
+    str += `{${processBinding(json.bindings.each as string, options)}.map(${
+      json.bindings._forName
+    } => (
       <>
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
       </>
     ))}`;
   } else if (json.name === 'Show') {
-    str += `{Boolean(${json.bindings.when}) && (<>
+    str += `{Boolean(${processBinding(
+      json.bindings.when as string,
+      options,
+    )}) && (<>
       ${json.children.map((item) => blockToReact(item, options)).join('\n')}
       </>
     )}`;
@@ -58,7 +73,10 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
     str += `<${json.name} `;
 
     if (json.bindings._spread) {
-      str += ` {...(${json.bindings._spread})} `;
+      str += ` {...(${processBinding(
+        json.bindings._spread as string,
+        options,
+      )})} `;
     }
 
     for (const key in json.properties) {
@@ -72,9 +90,9 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions = {}) => {
       }
 
       if (key.startsWith('on')) {
-        str += ` ${key}={event => (${value})} `;
+        str += ` ${key}={event => (${processBinding(value, options)})} `;
       } else {
-        str += ` ${key}={${value}} `;
+        str += ` ${key}={${processBinding(value, options)}} `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -103,56 +121,208 @@ const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
   return str;
 };
 
+const processBinding = (str: string, options: ToReactOptions) => {
+  if (options.stateType !== 'useState') {
+    return str;
+  }
+
+  return stripStateAndPropsRefs(str, {
+    includeState: true,
+    includeProps: false,
+  });
+};
+
+const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
+  let str = '';
+
+  const { state } = json;
+
+  const valueMapper = (val: string) => processBinding(val, options);
+
+  const keyValueDelimiter = '=';
+  const lineItemDelimiter = '\n';
+
+  for (const key in state) {
+    const value = state[key];
+    if (typeof value === 'string') {
+      if (value.startsWith(functionLiteralPrefix)) {
+        const functionValue = value.replace(functionLiteralPrefix, '');
+        str += `const [${key}, set${startCase(
+          key,
+        )}] ${keyValueDelimiter} ${valueMapper(
+          functionValue,
+        )}${lineItemDelimiter} `;
+      } else if (value.startsWith(methodLiteralPrefix)) {
+        const methodValue = value.replace(methodLiteralPrefix, '');
+        const useValue = methodValue.replace(/^(get )?/, 'function ');
+        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
+      } else {
+        str += `const [${key}, set${startCase(
+          key,
+        )}] ${keyValueDelimiter} ${valueMapper(
+          json5.stringify(value),
+        )}${lineItemDelimiter} `;
+      }
+    } else {
+      str += `const [${key}, set${startCase(
+        key,
+      )}] ${keyValueDelimiter} ${valueMapper(
+        json5.stringify(value),
+      )}${lineItemDelimiter} `;
+    }
+  }
+
+  return str;
+};
+
+const updateStateSetters = (json: JSXLiteComponent) => {
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      for (const key in item.bindings) {
+        const value = item.bindings[key] as string;
+        let matchFound = false;
+        const newValue = babelTransformCode(value, {
+          AssignmentExpression(
+            path: babel.NodePath<babel.types.AssignmentExpression>,
+          ) {
+            const { node } = path;
+            if (types.isMemberExpression(node.left)) {
+              if (types.isIdentifier(node.left.object)) {
+                // TODO: utillity to properly trace this reference to the beginning
+                if (node.left.object.name === 'state') {
+                  // TODO: ultimately support other property access like strings
+                  const propertyName = (node.left.property as types.Identifier)
+                    .name;
+                  matchFound = true;
+                  path.replaceWith(
+                    types.callExpression(
+                      types.identifier(`set${startCase(propertyName)}`),
+                      [node.right],
+                    ),
+                  );
+                }
+              }
+            }
+          },
+        });
+        if (matchFound) {
+          item.bindings[key] = newValue;
+        }
+      }
+    }
+  });
+};
+
+/**
+ * Map getters like `useState({ get foo() { ... }})` from `state.foo` to `foo()`
+ */
+const updateGetterRefs = (json: JSXLiteComponent) => {
+  const getterKeys = Object.keys(json.state).filter((item) => {
+    const value = json.state[item];
+    if (
+      typeof value === 'string' &&
+      value.startsWith(methodLiteralPrefix) &&
+      value.replace(methodLiteralPrefix, '').startsWith('get ')
+    ) {
+      return true;
+    }
+    return false;
+  });
+  console.log('getterKeys', getterKeys);
+  traverse(json).forEach(function (item) {
+    // TODO: not all strings are expressions!
+    if (typeof item === 'string') {
+      let value = item;
+      for (const key of getterKeys) {
+        try {
+          this.update(
+            value.replace(
+              new RegExp(`state\\s*\\.\\s*${key}([^a-z0-9]|$)`, 'i'),
+              `${key}()$1`,
+            ),
+          );
+        } catch (err) {
+          console.error('Could not update getter ref', err);
+        }
+      }
+    }
+  });
+};
+
 export const componentToReact = (
   componentJson: JSXLiteComponent,
   options: ToReactOptions = {},
 ) => {
   const json = fastClone(componentJson);
-  const compnoentHasStyles = hasStyles(json);
+  const componentHasStyles = hasStyles(json);
+  if (options.stateType === 'useState') {
+    updateGetterRefs(json);
+    updateStateSetters(json);
+  }
 
   const hasRefs = Boolean(getRefs(componentJson).size);
   const hasState = Boolean(Object.keys(json.state).length);
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
+  const stateType = options.stateType || 'valtio';
 
   const css =
     stylesType === 'styled-jsx' &&
     collectCss(json, { classProperty: 'className' });
 
   const styledComponentsCode =
-    stylesType === 'styled-components' && collectStyledComponents(json);
+    stylesType === 'styled-components' &&
+    componentHasStyles &&
+    collectStyledComponents(json);
 
   const needsWrapperFragment =
     json.children.length > 1 ||
-    (compnoentHasStyles && stylesType === 'styled-jsx');
+    (componentHasStyles && stylesType === 'styled-jsx');
 
   let str = dedent`
   ${
-    compnoentHasStyles && stylesType === 'emotion'
+    componentHasStyles && stylesType === 'emotion'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
       : ''
   }
-    ${hasState ? `import { useProxy } from 'valtio';` : ''}
+    ${
+      hasState && stateType === 'valtio'
+        ? `import { useProxy } from 'valtio';`
+        : ''
+    }
+    ${
+      stateType === 'mobx' && hasState
+        ? `import { useLocalObservable } from 'mobx-react-lite';`
+        : ''
+    }
     ${hasRefs ? `import { useRef } from 'react';` : ''}
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
     
     export default function MyComponent(props) {
       ${
-        hasState ? `const state = useProxy(${getStateObjectString(json)});` : ''
+        hasState
+          ? stateType === 'mobx'
+            ? `const state = useLocalObservable(() => (${getStateObjectString(
+                json,
+              )}))`
+            : stateType === 'useState'
+            ? getUseStateCode(json, options)
+            : `const state = useProxy(${getStateObjectString(json)});`
+          : ''
       }
       ${getRefsString(json)}
 
       return (
         ${needsWrapperFragment ? '<>' : ''}
         ${
-          compnoentHasStyles && stylesType === 'styled-jsx'
+          componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
-        ${json.children.map((item) => blockToReact(item)).join('\n')}
+        ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${needsWrapperFragment ? '</>' : ''})
     }
    
@@ -166,7 +336,9 @@ export const componentToReact = (
           require('prettier/parser-typescript'), // To support running in browsers
           require('prettier/parser-postcss'),
         ],
-      });
+      })
+        // Remove spaces between imports
+        .replace(/;\n\nimport\s/g, ';\nimport ');
     } catch (err) {
       console.error(
         'Format error for file:',

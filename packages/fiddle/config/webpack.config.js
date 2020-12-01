@@ -229,7 +229,7 @@ module.exports = function (webpackEnv) {
       globalObject: 'this',
     },
     optimization: {
-      minimize: isEnvProduction,
+      minimize: false, // isEnvProduction, // <- currently this is blowing out memory
       minimizer: [
         // This is only used in production mode
         new TerserPlugin({

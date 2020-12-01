@@ -14,6 +14,7 @@ import { getProps } from '../helpers/get-props';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
+  stateType?: 'proxy' | 'variables';
 };
 
 const mappers: {
@@ -40,7 +41,7 @@ export const blockToSvelte = (
 
   if (json.bindings._text) {
     return `{${stripStateAndPropsRefs(json.bindings._text as string, {
-      includeState: false,
+      includeState: options.stateType !== 'variables',
     })}}`;
   }
 
@@ -48,13 +49,13 @@ export const blockToSvelte = (
 
   if (json.name === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
-      includeState: false,
+      includeState: options.stateType !== 'variables',
     })} as ${json.bindings._forName} }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/each}`;
   } else if (json.name === 'Show') {
     str += `{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
-      includeState: false,
+      includeState: options.stateType !== 'variables',
     })} }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/if}`;
@@ -63,7 +64,7 @@ export const blockToSvelte = (
 
     if (json.bindings._spread) {
       str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
-        includeState: false,
+        includeState: options.stateType !== 'variables',
       })}}`;
     }
 
@@ -78,7 +79,7 @@ export const blockToSvelte = (
       const value = json.bindings[key] as string;
       // TODO: proper babel transform to replace. Util for this
       const useValue = stripStateAndPropsRefs(value, {
-        includeState: false,
+        includeState: options.stateType !== 'variables',
       });
 
       if (key.startsWith('on')) {
@@ -124,7 +125,7 @@ export const componentToSvelte = (
     getters: false,
     valueMapper: (code) =>
       stripStateAndPropsRefs(code, {
-        includeState: false,
+        includeState: options.stateType !== 'variables',
       }),
   });
 
@@ -138,7 +139,7 @@ export const componentToSvelte = (
       stripStateAndPropsRefs(
         code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
         {
-          includeState: false,
+          includeState: options.stateType !== 'variables',
         },
       ),
   });
@@ -150,7 +151,9 @@ export const componentToSvelte = (
     format: 'variables',
     keyPrefix: 'function ',
     valueMapper: (code) =>
-      stripStateAndPropsRefs(code, { includeState: false }),
+      stripStateAndPropsRefs(code, {
+        includeState: options.stateType !== 'variables',
+      }),
   });
 
   const hasData = dataString.length > 4;
