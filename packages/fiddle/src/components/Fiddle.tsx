@@ -193,6 +193,10 @@ export default function Fiddle() {
     pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'builder',
     builderData: {} as any,
+    isDraggingOutputsCodeBar: false,
+    isDraggingJSXCodeBar: false,
+    jsxCodeTabWidth: 45,
+    outputsTabHeight: 45,
     options: {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
@@ -267,6 +271,25 @@ export default function Fiddle() {
     }
   });
 
+  useEventListener<MouseEvent>(document.body, 'mousemove', (e) => {
+    if (state.isDraggingJSXCodeBar) {
+      const windowWidth = window.innerWidth;
+      const pointerRelativeXpos = e.clientX;
+      state.jsxCodeTabWidth = (pointerRelativeXpos / windowWidth) * 100;
+    } else if (state.isDraggingOutputsCodeBar) {
+      const bannerHeight = 0;
+      const windowHeight = window.innerHeight;
+      const pointerRelativeYPos = e.clientY;
+      state.outputsTabHeight =
+        ((pointerRelativeYPos + bannerHeight) / windowHeight) * 100;
+    }
+  });
+
+  useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
+    state.isDraggingJSXCodeBar = false;
+    state.isDraggingOutputsCodeBar = false;
+  });
+
   useReaction(
     () => state.options.reactStyleType,
     (type) => localStorageSet('options.reactStyleType', type),
@@ -305,9 +328,11 @@ export default function Fiddle() {
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
-      ? 'calc(45vh - 50px)'
-      : 'calc(45vh - 100px)';
-    const inputMonacoEditorSize = 'calc(55vh - 100px)';
+      ? `calc(${state.outputsTabHeight}vh - 50px)`
+      : `calc(${state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -409,7 +434,7 @@ export default function Fiddle() {
         >
           <div
             css={{
-              width: '45%',
+              width: `${state.jsxCodeTabWidth}%`,
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -493,7 +518,17 @@ export default function Fiddle() {
           </div>
           <div
             css={{
-              width: '55%',
+              minWidth: '3px',
+              cursor: 'col-resize',
+              borderRight: `1px solid ${colors.contrast}`,
+            }}
+            onMouseDown={(event) => {
+              state.isDraggingJSXCodeBar = true;
+            }}
+          ></div>
+          <div
+            css={{
+              width: `${100 - state.jsxCodeTabWidth}%`,
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -694,6 +729,16 @@ export default function Fiddle() {
               </div>
             </div>
             <Show when={!device.small}>
+              <div
+                css={{
+                  minHeight: '3px',
+                  cursor: 'row-resize',
+                  borderTop: `1px solid ${colors.contrast}`,
+                }}
+                onMouseDown={(event) => {
+                  state.isDraggingOutputsCodeBar = true;
+                }}
+              ></div>
               <div
                 css={{
                   borderBottom: `1px solid ${colors.contrast}`,
