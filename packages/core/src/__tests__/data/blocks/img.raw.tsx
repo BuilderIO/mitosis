@@ -26,7 +26,7 @@ export default function ImgComponent({ imgSrc, ...props }: ImgProps) {
         objectPosition: props.backgroundPosition || 'center',
       }}
       {...props.attributes}
-      key={Builder.isEditing && imgSrc || 'default-key'}
+      key={(Builder.isEditing && imgSrc) || 'default-key'}
       alt={props.altText}
       src={imgSrc}
     />
