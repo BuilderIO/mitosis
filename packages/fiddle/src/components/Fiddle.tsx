@@ -204,7 +204,7 @@ export default function Fiddle() {
         ('emotion' as 'emotion' | 'styled-jsx'),
       reactStateType:
         localStorageGet('options.reactStateType') ||
-        ('useState' as 'useState' | 'mobx' | 'valtio'),
+        ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
         localStorageGet('options.svelteStateType') ||
         ('variables' as 'variables' | 'proxies'),
@@ -786,10 +786,10 @@ export default function Fiddle() {
                   </Tooltip>
                   <Tooltip title="Supports nested state mutation">
                     <FormControlLabel
-                      value="valtio"
+                      value="solid"
                       labelPlacement="start"
                       control={<Radio color="primary" />}
-                      label="Valtio"
+                      label="Solid"
                     />
                   </Tooltip>
                 </RadioGroup>

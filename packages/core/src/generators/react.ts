@@ -305,6 +305,11 @@ export const componentToReact = (
         : ''
     }
     ${
+      hasState && stateType === 'solid'
+        ? `import { useMutable } from 'react-solid-state';`
+        : ''
+    }
+    ${
       stateType === 'mobx' && hasState
         ? `import { useLocalObservable } from 'mobx-react-lite';`
         : ''
@@ -322,6 +327,8 @@ export const componentToReact = (
               )}))`
             : stateType === 'useState'
             ? useStateCode
+            : stateType === 'solid'
+            ? `const state = useMutable(${getStateObjectString(json)});`
             : `const state = useLocalProxy(${getStateObjectString(json)});`
           : ''
       }
