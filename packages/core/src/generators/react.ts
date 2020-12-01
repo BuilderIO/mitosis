@@ -69,9 +69,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
       json.bindings.when as string,
       options,
     )}) && (
-      ${children.length === 1 ? '' : '<>'}
-        ${children.map((item) => blockToReact(item, options)).join('\n')}
-      ${children.length === 1 ? '' : '</>'}
+      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
     )}`;
   } else {
     str += `<${json.name} `;
@@ -317,7 +315,7 @@ export const componentToReact = (
     ${hasRefs ? `import { useRef } from 'react';` : ''}
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
-    
+
     export default function MyComponent(props) {
       ${
         hasState
@@ -344,7 +342,7 @@ export const componentToReact = (
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${needsWrapperFragment ? '</>' : ''})
     }
-   
+
   `;
 
   if (options.prettier !== false) {

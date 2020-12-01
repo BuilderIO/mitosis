@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useProxy } from \\"valtio\\";
+"import { useLocalObservable } from \\"mobx-react-lite\\";
 
 export default function MyComponent(props) {
-  const state = useProxy({ name: \\"Steve\\" });
+  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
 
   return (
     <div>
@@ -58,9 +58,8 @@ export default function MyComponent(props) {
 exports[`React Form block 1`] = `
 "/** @jsx jsx */
 import { jsx } from \\"@emotion/react\\";
-import { useProxy } from \\"valtio\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
 import { useRef } from \\"react\\";
-
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -92,7 +91,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 export default function MyComponent(props) {
-  const state = useProxy({
+  const state = useLocalObservable(() => ({
     state: \\"unsubmitted\\",
     responseData: null,
     formErrorMessage: \\"\\",
@@ -310,7 +309,7 @@ export default function MyComponent(props) {
         );
       }
     },
-  });
+  }));
 
   const formRef = useRef();
 
@@ -327,12 +326,10 @@ export default function MyComponent(props) {
       {Boolean(props.builderBlock && props.builderBlock.children) && (
         <>
           {props.builderBlock.children.map((block) => (
-            <>
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-              ></BuilderBlockComponent>
-            </>
+            <BuilderBlockComponent
+              key={block.id}
+              block={block}
+            ></BuilderBlockComponent>
           ))}
         </>
       )}
@@ -483,9 +480,7 @@ export default function MyComponent(props) {
       name={props.name}
     >
       {props.options.map((option) => (
-        <>
-          <option value={option.value}>{option.name || option.value}</option>
-        </>
+        <option value={option.value}>{option.name || option.value}</option>
       ))}
     </select>
   );
