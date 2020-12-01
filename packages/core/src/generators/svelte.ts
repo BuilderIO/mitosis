@@ -113,7 +113,7 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
