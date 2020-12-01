@@ -194,6 +194,10 @@ export default function Fiddle() {
     pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'builder',
     builderData: {} as any,
+    isDraggingOutputsCodeBar: false,
+    isDraggingJSXCodeBar: false,
+    jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
+    outputsTabHeight: Number(localStorageGet('outputsTabHeight')) || 45,
     options: {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
@@ -277,6 +281,41 @@ export default function Fiddle() {
     }
   });
 
+  useEventListener<MouseEvent>(document.body, 'mousemove', (e) => {
+    if (state.isDraggingJSXCodeBar) {
+      const windowWidth = window.innerWidth;
+      const pointerRelativeXpos = e.clientX;
+      const newWidth = Math.max((pointerRelativeXpos / windowWidth) * 100, 5);
+      state.jsxCodeTabWidth = Math.min(newWidth, 95);
+    } else if (state.isDraggingOutputsCodeBar) {
+      const bannerHeight = 0;
+      const windowHeight = window.innerHeight;
+      const pointerRelativeYPos = e.clientY;
+      const newHeight = Math.max(
+        ((pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
+        5,
+      );
+      state.outputsTabHeight = Math.min(newHeight, 95);
+    }
+  });
+
+  useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
+    state.isDraggingJSXCodeBar = false;
+    state.isDraggingOutputsCodeBar = false;
+  });
+
+  useReaction(
+    () => state.jsxCodeTabWidth,
+    (width) => localStorageSet('jsxCodeTabWidth', width),
+    { fireImmediately: false, delay: 1000 },
+  );
+
+  useReaction(
+    () => state.outputsTabHeight,
+    (width) => localStorageSet('outputsTabHeight', width),
+    { fireImmediately: false, delay: 1000 },
+  );
+
   useReaction(
     () => state.options.reactStyleType,
     (type) => localStorageSet('options.reactStyleType', type),
@@ -323,9 +362,11 @@ export default function Fiddle() {
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
-      ? 'calc(45vh - 50px)'
-      : 'calc(45vh - 100px)';
-    const inputMonacoEditorSize = 'calc(55vh - 100px)';
+      ? `calc(${state.outputsTabHeight}vh - 50px)`
+      : `calc(${state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -427,7 +468,7 @@ export default function Fiddle() {
         >
           <div
             css={{
-              width: '45%',
+              width: `${state.jsxCodeTabWidth}%`,
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -511,7 +552,19 @@ export default function Fiddle() {
           </div>
           <div
             css={{
-              width: '55%',
+              minWidth: '3px',
+              cursor: 'col-resize',
+              position: 'relative',
+              zIndex: 100,
+              borderRight: `1px solid ${colors.contrast}`,
+            }}
+            onMouseDown={(event) => {
+              state.isDraggingJSXCodeBar = true;
+            }}
+          ></div>
+          <div
+            css={{
+              width: `${100 - state.jsxCodeTabWidth}%`,
               height: '100%',
               display: 'flex',
               flexDirection: 'column',
@@ -818,6 +871,18 @@ export default function Fiddle() {
               </div>
             </div>
             <Show when={!device.small}>
+              <div
+                css={{
+                  minHeight: '3px',
+                  cursor: 'row-resize',
+                  borderTop: `1px solid ${colors.contrast}`,
+                  position: 'relative',
+                  zIndex: 100,
+                }}
+                onMouseDown={(event) => {
+                  state.isDraggingOutputsCodeBar = true;
+                }}
+              ></div>
               <div
                 css={{
                   borderBottom: `1px solid ${colors.contrast}`,
