@@ -1,4 +1,4 @@
-import './jsx';
+// import './jsx';
 
 export * from './flow';
 
