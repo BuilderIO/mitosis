@@ -27,7 +27,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
-  stateType?: 'useState' | 'mobx' | 'valtio';
+  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid';
 };
 
 const mappers: {
@@ -153,9 +153,9 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
         const functionValue = value.replace(functionLiteralPrefix, '');
         str += `const [${key}, set${startCase(
           key,
-        )}] ${keyValueDelimiter} ${valueMapper(
+        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           functionValue,
-        )}${lineItemDelimiter} `;
+        )}))${lineItemDelimiter} `;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
@@ -163,16 +163,16 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
       } else {
         str += `const [${key}, set${startCase(
           key,
-        )}] ${keyValueDelimiter} ${valueMapper(
+        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           json5.stringify(value),
-        )}${lineItemDelimiter} `;
+        )}))${lineItemDelimiter} `;
       }
     } else {
       str += `const [${key}, set${startCase(
         key,
-      )}] ${keyValueDelimiter} ${valueMapper(
+      )}] ${keyValueDelimiter} useState(() => (${valueMapper(
         json5.stringify(value),
-      )}${lineItemDelimiter} `;
+      )}))${lineItemDelimiter} `;
     }
   }
 
@@ -269,7 +269,10 @@ export const componentToReact = (
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
-  const stateType = options.stateType || 'valtio';
+  const stateType = options.stateType || 'mobx';
+
+  const useStateCode =
+    stateType === 'useState' && getUseStateCode(json, options);
 
   const css =
     stylesType === 'styled-jsx' &&
@@ -286,6 +289,11 @@ export const componentToReact = (
 
   let str = dedent`
   ${
+    useStateCode && useStateCode.length > 4
+      ? `import { useState } from 'react'`
+      : ''
+  }
+  ${
     componentHasStyles && stylesType === 'emotion'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
@@ -293,7 +301,7 @@ export const componentToReact = (
   }
     ${
       hasState && stateType === 'valtio'
-        ? `import { useProxy } from 'valtio';`
+        ? `import { useLocalProxy } from 'valtio/utils';`
         : ''
     }
     ${
@@ -313,8 +321,8 @@ export const componentToReact = (
                 json,
               )}))`
             : stateType === 'useState'
-            ? getUseStateCode(json, options)
-            : `const state = useProxy(${getStateObjectString(json)});`
+            ? useStateCode
+            : `const state = useLocalProxy(${getStateObjectString(json)});`
           : ''
       }
       ${getRefsString(json)}
