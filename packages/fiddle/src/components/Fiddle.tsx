@@ -203,7 +203,7 @@ export default function Fiddle() {
         ('useState' as 'useState' | 'mobx' | 'valtio'),
       svelteStateType:
         localStorageGet('options.svelteStateType') ||
-        ('variables' as 'variables' | 'proxy'),
+        ('variables' as 'variables' | 'proxies'),
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -249,7 +249,9 @@ export default function Fiddle() {
             : state.outputTab === 'angular'
             ? componentToAngular(json)
             : state.outputTab === 'svelte'
-            ? componentToSvelte(json)
+            ? componentToSvelte(json, {
+                stateType: state.options.svelteStateType,
+              })
             : state.outputTab === 'json' || state.outputTab === 'builder'
             ? JSON.stringify(json, null, 2)
             : componentToVue(json);
@@ -676,7 +678,7 @@ export default function Fiddle() {
                   />
                 </RadioGroup>
               </div>
-              <Divider css={{ opacity: 0.4 }} />
+              <Divider css={{ opacity: 0.6 }} />
               <div
                 css={{
                   display: 'flex',
@@ -711,7 +713,7 @@ export default function Fiddle() {
                       value="useState"
                       control={<Radio color="primary" />}
                       labelPlacement="start"
-                      label="React.useState"
+                      label="useState"
                     />
                   </Tooltip>
                   <Tooltip title="Supports nested state mutation">

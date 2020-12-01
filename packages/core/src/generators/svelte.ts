@@ -14,7 +14,7 @@ import { getProps } from '../helpers/get-props';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
-  stateType?: 'proxy' | 'variables';
+  stateType?: 'proxies' | 'variables';
 };
 
 const mappers: {
@@ -27,10 +27,7 @@ const mappers: {
   },
 };
 
-export const blockToSvelte = (
-  json: JSXLiteNode,
-  options: ToSvelteOptions = {},
-) => {
+export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -123,6 +120,7 @@ export const componentToSvelte = (
     data: true,
     functions: false,
     getters: false,
+    format: options.stateType === 'proxies' ? 'object' : 'variables',
     valueMapper: (code) =>
       stripStateAndPropsRefs(code, {
         includeState: options.stateType !== 'variables',
@@ -164,7 +162,11 @@ export const componentToSvelte = (
     <script>
       ${renderPreComponent(json)}
 
-      ${!hasData ? '' : `import onChange from 'on-change'`}
+      ${
+        !hasData || options.stateType !== 'proxies'
+          ? ''
+          : `import onChange from 'on-change'`
+      }
       ${refs
         .concat(props)
         .map((name) => `let ${name};`)
@@ -174,13 +176,15 @@ export const componentToSvelte = (
       ${getterString.length < 4 ? '' : getterString}
       
       ${
-        dataString.length < 4
-          ? ''
-          : `let state = onChange(${dataString}, () => state = state)`
+        options.stateType === 'proxies'
+          ? dataString.length < 4
+            ? ''
+            : `let state = onChange(${dataString}, () => state = state)`
+          : dataString
       }
     </script>
 
-    ${json.children.map((item) => blockToSvelte(item)).join('\n')}
+    ${json.children.map((item) => blockToSvelte(item, options)).join('\n')}
 
     ${
       !css.trim().length
