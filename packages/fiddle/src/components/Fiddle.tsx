@@ -552,13 +552,20 @@ export default function Fiddle() {
           </div>
           <div
             css={{
-              minWidth: '3px',
               cursor: 'col-resize',
               position: 'relative',
               zIndex: 100,
-              borderRight: `1px solid ${colors.contrast}`,
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: -5,
+                right: -5,
+              },
             }}
             onMouseDown={(event) => {
+              event.preventDefault();
               state.isDraggingJSXCodeBar = true;
             }}
           ></div>
@@ -873,13 +880,20 @@ export default function Fiddle() {
             <Show when={!device.small}>
               <div
                 css={{
-                  minHeight: '3px',
                   cursor: 'row-resize',
-                  borderTop: `1px solid ${colors.contrast}`,
                   position: 'relative',
                   zIndex: 100,
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: -5,
+                    bottom: -5,
+                    left: 0,
+                    right: 0,
+                  },
                 }}
                 onMouseDown={(event) => {
+                  event.preventDefault();
                   state.isDraggingOutputsCodeBar = true;
                 }}
               ></div>
