@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useProxy } from \\"valtio\\";
+"import { useLocalObservable } from \\"mobx-react-lite\\";
 
 export default function MyComponent(props) {
-  const state = useProxy({ name: \\"Steve\\" });
+  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
 
   return (
     <div>
@@ -31,23 +31,19 @@ export default function MyComponent(props) {
   return (
     <>
       {Boolean(props.link) && (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
       )}
 
       {Boolean(!props.link) && (
-        <>
-          <button {...props.attributes} type=\\"button\\">
-            {props.text}
-          </button>
-        </>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
       )}
     </>
   );
@@ -483,9 +479,7 @@ export default function MyComponent(props) {
       name={props.name}
     >
       {props.options.map((option) => (
-        <>
-          <option value={option.value}>{option.name || option.value}</option>
-        </>
+        <option value={option.value}>{option.name || option.value}</option>
       ))}
     </select>
   );
