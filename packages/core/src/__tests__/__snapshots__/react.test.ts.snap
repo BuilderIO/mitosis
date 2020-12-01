@@ -31,19 +31,23 @@ export default function MyComponent(props) {
   return (
     <>
       {Boolean(props.link) && (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
       )}
 
       {Boolean(!props.link) && (
-        <button {...props.attributes} type=\\"button\\">
-          {props.text}
-        </button>
+        <>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </>
       )}
     </>
   );
@@ -321,7 +325,7 @@ export default function MyComponent(props) {
     >
       {Boolean(props.builderBlock && props.builderBlock.children) && (
         <>
-          {props.builderBlock.children.map((block) => (
+          {props.builderBlock?.children.map((block) => (
             <BuilderBlockComponent
               key={block.id}
               block={block}

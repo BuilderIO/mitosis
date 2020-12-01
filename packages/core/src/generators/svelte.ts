@@ -186,7 +186,7 @@ export const componentToSvelte = (
   const props = Array.from(getProps(json));
 
   let str = dedent`
-    <script>
+    <script lang="typescript">
       ${renderPreComponent(json)}
 
       ${
@@ -198,10 +198,10 @@ export const componentToSvelte = (
         .concat(props)
         .map((name) => `let ${name};`)
         .join('\n')}
-      
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
-      
+
       ${
         options.stateType === 'proxies'
           ? dataString.length < 4

@@ -259,19 +259,19 @@ export default function FormComponent(props: FormProps) {
       {...props.attributes}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
-        <For each={props.builderBlock!.children}>
+        <For each={props.builderBlock?.children}>
           {(block) => <BuilderBlockComponent key={block.id} block={block} />}
         </For>
       </Show>
 
       <Show when={state.submissionState === 'error'}>
-        <BuilderBlocks dataPath="errorMessage" blocks={props.errorMessage!} />
+        <BuilderBlocks dataPath="errorMessage" blocks={props.errorMessage} />
       </Show>
 
       <Show when={state.submissionState === 'sending'}>
         <BuilderBlocks
           dataPath="sendingMessage"
-          blocks={props.sendingMessage!}
+          blocks={props.sendingMessage}
         />
       </Show>
 
@@ -287,7 +287,7 @@ export default function FormComponent(props: FormProps) {
       <Show when={state.submissionState === 'success'}>
         <BuilderBlocks
           dataPath="successMessage"
-          blocks={props.successMessage!}
+          blocks={props.successMessage}
         />
       </Show>
     </form>
