@@ -38,7 +38,7 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
 
   if (json.bindings._text) {
     return `{${stripStateAndPropsRefs(json.bindings._text as string, {
-      includeState: options.stateType !== 'variables',
+      includeState: options.stateType === 'variables',
     })}}`;
   }
 
@@ -46,13 +46,13 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
 
   if (json.name === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
-      includeState: options.stateType !== 'variables',
+      includeState: options.stateType === 'variables',
     })} as ${json.bindings._forName} }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/each}`;
   } else if (json.name === 'Show') {
     str += `{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
-      includeState: options.stateType !== 'variables',
+      includeState: options.stateType === 'variables',
     })} }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/if}`;
@@ -61,7 +61,7 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
 
     if (json.bindings._spread) {
       str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
-        includeState: options.stateType !== 'variables',
+        includeState: options.stateType === 'variables',
       })}}`;
     }
 
@@ -76,7 +76,7 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
       const value = json.bindings[key] as string;
       // TODO: proper babel transform to replace. Util for this
       const useValue = stripStateAndPropsRefs(value, {
-        includeState: options.stateType !== 'variables',
+        includeState: options.stateType === 'variables',
       });
 
       if (key.startsWith('on')) {
@@ -121,9 +121,10 @@ export const componentToSvelte = (
     functions: false,
     getters: false,
     format: options.stateType === 'proxies' ? 'object' : 'variables',
+    keyPrefix: options.stateType === 'variables' ? 'let ' : '',
     valueMapper: (code) =>
       stripStateAndPropsRefs(code, {
-        includeState: options.stateType !== 'variables',
+        includeState: options.stateType === 'variables',
       }),
   });
 
@@ -137,7 +138,7 @@ export const componentToSvelte = (
       stripStateAndPropsRefs(
         code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
         {
-          includeState: options.stateType !== 'variables',
+          includeState: options.stateType === 'variables',
         },
       ),
   });
@@ -150,7 +151,7 @@ export const componentToSvelte = (
     keyPrefix: 'function ',
     valueMapper: (code) =>
       stripStateAndPropsRefs(code, {
-        includeState: options.stateType !== 'variables',
+        includeState: options.stateType === 'variables',
       }),
   });
 
@@ -163,7 +164,7 @@ export const componentToSvelte = (
       ${renderPreComponent(json)}
 
       ${
-        !hasData || options.stateType !== 'proxies'
+        !hasData || options.stateType === 'proxies'
           ? ''
           : `import onChange from 'on-change'`
       }
