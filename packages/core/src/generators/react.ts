@@ -57,19 +57,21 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   const children = json.children.filter(filterEmptyTextNodes);
 
   if (json.name === 'For') {
-    str += `{${processBinding(json.bindings.each as string, options)}.map(${
+    str += `<>{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      ${children.length === 1 ? '' : '<>'}
+      ${children.length === 1 ? '' : ''}
         ${children.map((item) => blockToReact(item, options)).join('\n')}
-      ${children.length === 1 ? '' : '</>'}
-    ))}`;
+      ${children.length === 1 ? '' : ''}
+    ))}</>`;
   } else if (json.name === 'Show') {
     str += `{Boolean(${processBinding(
       json.bindings.when as string,
       options,
     )}) && (
-      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
+      ${children.length === 1 ? '' : '<>'}
+        ${children.map((item) => blockToReact(item, options)).join('\n')}
+      ${children.length === 1 ? '' : '</>'}
     )}`;
   } else {
     str += `<${json.name} `;

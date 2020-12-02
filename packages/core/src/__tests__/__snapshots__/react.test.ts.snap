@@ -331,45 +331,37 @@ export default function MyComponent(props) {
       )}
 
       {Boolean(state.submissionState === \\"error\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"errorMessage\\"
-            blocks={props.errorMessage}
-          ></BuilderBlocks>
-        </>
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          blocks={props.errorMessage}
+        ></BuilderBlocks>
       )}
 
       {Boolean(state.submissionState === \\"sending\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          ></BuilderBlocks>
-        </>
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage}
+        ></BuilderBlocks>
       )}
 
       {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
-        <>
-          <pre
-            class=\\"builder-form-error-text\\"
-            css={{
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            }}
-          >
-            {JSON.stringify(state.responseData, null, 2)}
-          </pre>
-        </>
+        <pre
+          class=\\"builder-form-error-text\\"
+          css={{
+            padding: \\"10px\\",
+            color: \\"red\\",
+            textAlign: \\"center\\",
+          }}
+        >
+          {JSON.stringify(state.responseData, null, 2)}
+        </pre>
       )}
 
       {Boolean(state.submissionState === \\"success\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          ></BuilderBlocks>
-        </>
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage}
+        ></BuilderBlocks>
       )}
     </form>
   );
@@ -475,9 +467,11 @@ export default function MyComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options.map((option) => (
-        <option value={option.value}>{option.name || option.value}</option>
-      ))}
+      <>
+        {props.options.map((option) => (
+          <option value={option.value}>{option.name || option.value}</option>
+        ))}
+      </>
     </select>
   );
 }
