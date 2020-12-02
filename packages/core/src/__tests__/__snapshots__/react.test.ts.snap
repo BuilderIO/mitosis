@@ -330,16 +330,14 @@ export default function MyComponent(props) {
       >
         {Boolean(props.builderBlock && props.builderBlock.children) && (
           <>
-            <>
-              {props.builderBlock.children.map((block) => (
-                <>
-                  <BuilderBlockComponent
-                    key={block.id}
-                    block={block}
-                  ></BuilderBlockComponent>
-                </>
-              ))}
-            </>
+            {props.builderBlock.children.map((block) => (
+              <>
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                ></BuilderBlockComponent>
+              </>
+            ))}
           </>
         )}
 
@@ -494,15 +492,11 @@ export default function MyComponent(props) {
         defaultValue={props.defaultValue}
         name={props.name}
       >
-        <>
-          {props.options.map((option) => (
-            <>
-              <option value={option.value}>
-                {option.name || option.value}
-              </option>
-            </>
-          ))}
-        </>
+        {props.options.map((option) => (
+          <>
+            <option value={option.value}>{option.name || option.value}</option>
+          </>
+        ))}
       </select>
     </>
   );
