@@ -60,9 +60,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
     str += `{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      ${children.length === 1 ? '' : '<>'}
-        ${children.map((item) => blockToReact(item, options)).join('\n')}
-      ${children.length === 1 ? '' : '</>'}
+      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
     ))}`;
   } else if (json.name === 'Show') {
     str += `{Boolean(${processBinding(
@@ -281,10 +279,6 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
-  const needsWrapperFragment =
-    json.children.length > 1 ||
-    (componentHasStyles && stylesType === 'styled-jsx');
-
   let str = dedent`
   ${
     useStateCode && useStateCode.length > 4
@@ -333,14 +327,15 @@ export const componentToReact = (
       ${getRefsString(json)}
 
       return (
-        ${needsWrapperFragment ? '<>' : ''}
+        <>
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-        ${needsWrapperFragment ? '</>' : ''})
+        </>
+      );
     }
 
   `;

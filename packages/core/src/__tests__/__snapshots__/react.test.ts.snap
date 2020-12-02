@@ -7,13 +7,15 @@ export default function MyComponent(props) {
   const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
 
   return (
-    <div>
-      <input
-        value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
-      />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <>
+      <div>
+        <input
+          value={state.name}
+          onChange={(event) => (state.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 "
@@ -30,21 +32,27 @@ exports[`React Button 1`] = `
 export default function MyComponent(props) {
   return (
     <>
-      {Boolean(props.link) && (
-        <a
-          {...props.attributes}
-          href={props.link}
-          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-        >
-          {props.text}
-        </a>
-      )}
+      <>
+        {Boolean(props.link) && (
+          <>
+            <a
+              {...props.attributes}
+              href={props.link}
+              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {props.text}
+            </a>
+          </>
+        )}
 
-      {Boolean(!props.link) && (
-        <button {...props.attributes} type=\\"button\\">
-          {props.text}
-        </button>
-      )}
+        {Boolean(!props.link) && (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {props.text}
+            </button>
+          </>
+        )}
+      </>
     </>
   );
 }
@@ -310,68 +318,72 @@ export default function MyComponent(props) {
   const formRef = useRef();
 
   return (
-    <form
-      {...props.attributes}
-      validate={props.validate}
-      ref={formRef}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => state.onSubmit(event)}
-    >
-      {Boolean(props.builderBlock && props.builderBlock.children) && (
-        <>
-          {props.builderBlock.children.map((block) => (
-            <BuilderBlockComponent
-              key={block.id}
-              block={block}
-            ></BuilderBlockComponent>
-          ))}
-        </>
-      )}
+    <>
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => state.onSubmit(event)}
+      >
+        {Boolean(props.builderBlock && props.builderBlock.children) && (
+          <>
+            {props.builderBlock.children.map((block) => (
+              <>
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                ></BuilderBlockComponent>
+              </>
+            ))}
+          </>
+        )}
 
-      {Boolean(state.submissionState === \\"error\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"errorMessage\\"
-            blocks={props.errorMessage}
-          ></BuilderBlocks>
-        </>
-      )}
+        {Boolean(state.submissionState === \\"error\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={props.errorMessage}
+            ></BuilderBlocks>
+          </>
+        )}
 
-      {Boolean(state.submissionState === \\"sending\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          ></BuilderBlocks>
-        </>
-      )}
+        {Boolean(state.submissionState === \\"sending\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={props.sendingMessage}
+            ></BuilderBlocks>
+          </>
+        )}
 
-      {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
-        <>
-          <pre
-            class=\\"builder-form-error-text\\"
-            css={{
-              padding: \\"10px\\",
-              color: \\"red\\",
-              textAlign: \\"center\\",
-            }}
-          >
-            {JSON.stringify(state.responseData, null, 2)}
-          </pre>
-        </>
-      )}
+        {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
+          <>
+            <pre
+              class=\\"builder-form-error-text\\"
+              css={{
+                padding: \\"10px\\",
+                color: \\"red\\",
+                textAlign: \\"center\\",
+              }}
+            >
+              {JSON.stringify(state.responseData, null, 2)}
+            </pre>
+          </>
+        )}
 
-      {Boolean(state.submissionState === \\"success\\") && (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          ></BuilderBlocks>
-        </>
-      )}
-    </form>
+        {Boolean(state.submissionState === \\"success\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={props.successMessage}
+            ></BuilderBlocks>
+          </>
+        )}
+      </form>
+    </>
   );
 }
 "
@@ -399,16 +411,18 @@ export interface ImgProps {
 
 export default function MyComponent(props) {
   return (
-    <img
-      {...props.attributes}
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={imgSrc}
-    />
+    <>
+      <img
+        {...props.attributes}
+        style={{
+          objectFit: props.backgroundSize || \\"cover\\",
+          objectPosition: props.backgroundPosition || \\"center\\",
+        }}
+        key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={imgSrc}
+      />
+    </>
   );
 }
 "
@@ -429,20 +443,22 @@ export interface FormInputProps {
 
 export default function MyComponent(props) {
   return (
-    <input
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-    />
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+      />
+    </>
   );
 }
 "
@@ -464,21 +480,25 @@ export interface FormSelectProps {
 
 export default function MyComponent(props) {
   return (
-    <select
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
-      {props.options.map((option) => (
-        <option value={option.value}>{option.name || option.value}</option>
-      ))}
-    </select>
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        {props.options.map((option) => (
+          <>
+            <option value={option.value}>{option.name || option.value}</option>
+          </>
+        ))}
+      </select>
+    </>
   );
 }
 "
@@ -492,9 +512,11 @@ exports[`React Submit button block 1`] = `
 
 export default function MyComponent(props) {
   return (
-    <button {...props.attributes} type=\\"submit\\">
-      {props.text}
-    </button>
+    <>
+      <button {...props.attributes} type=\\"submit\\">
+        {props.text}
+      </button>
+    </>
   );
 }
 "
@@ -511,13 +533,15 @@ exports[`React Textarea 1`] = `
 
 export default function MyComponent(props) {
   return (
-    <textarea
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    ></textarea>
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
   );
 }
 "
