@@ -60,9 +60,9 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
     str += `<>{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      ${children.length === 1 ? '' : ''}
+      ${children.length === 1 ? '' : '<>'}
         ${children.map((item) => blockToReact(item, options)).join('\n')}
-      ${children.length === 1 ? '' : ''}
+      ${children.length === 1 ? '' : '</>'}
     ))}</>`;
   } else if (json.name === 'Show') {
     str += `{Boolean(${processBinding(
