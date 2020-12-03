@@ -1,6 +1,7 @@
 import { types } from '@babel/core';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
+import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
@@ -270,6 +271,7 @@ export const componentToHtml = (
   const json = fastClone(componentJson);
   replaceForNameIdentifiers(json);
   addUpdateAfterSet(json);
+  const componentHasProps = hasProps(json);
 
   const hasLoop = hasComponent('For', json);
 
@@ -289,6 +291,7 @@ export const componentToHtml = (
     str += `
       <script>
         let state = ${getStateObjectString(json)};
+        ${componentHasProps ? `let props = {};` : ''}
 
         // Function to update data bindings and loops
         // call update() when you mutate state and need the updates to reflect
