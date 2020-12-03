@@ -47,6 +47,32 @@ export const templates: { [key: string]: string } = {
     }
   `,
 
+  tailwind: dedent`
+  import { useState, For } from '@jsx-lite/core';
+
+  export default function MyComponent() {
+    const state = useState({
+      name: 'Steve',
+    });
+  
+    return (
+      <div css={{ padding: '10px' }}>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />          
+        <input 
+          class="shadow-md rounded w-full px-4 py-2"
+          placeholder="What is your name?"
+          value={state.name} 
+          onChange={event => state.name = event.target.value} />
+
+        <h1 class="text-lg" css={{ marginTop: '10px' }}>
+          Hello, {state.name}!
+        </h1>
+      </div>
+    );
+  }
+  
+  `,
+
   computed: dedent`
     import { useState } from '@jsx-lite/core';
 
