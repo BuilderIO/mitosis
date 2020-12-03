@@ -311,7 +311,7 @@ export const componentToHtml = (
 
         ${useOptions.js}
 
-        // Update with in initial state on first load
+        // Update with initial state on first load
         update()
 
         ${
