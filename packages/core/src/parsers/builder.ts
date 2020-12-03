@@ -101,13 +101,29 @@ const componentMappers: {
     delete node.bindings.columns;
     delete node.properties.columns;
 
-    node.children = block.component?.options.columns.map((col: any) =>
-      createJSXLiteNode({
-        name: 'Column',
-        children: col.blocks.map((col: any) =>
-          builderElementToJsxLiteNode(col, options),
-        ),
-      }),
+    const columnsOptions = block.component?.options || {};
+    const numColumns = columnsOptions.columns?.length;
+    const stackColumnsAt = columnsOptions.stackColumnsAt;
+    const space = columnsOptions.space;
+
+    node.children = block.component?.options.columns.map(
+      (col: any, index: number) =>
+        createJSXLiteNode({
+          name: 'Column',
+          bindings: {
+            index: index,
+            space,
+            numColumns,
+            width: col.width,
+          },
+          properties: {
+            link: col.link,
+            stackColumnsAt: stackColumnsAt,
+          },
+          children: col.blocks.map((col: any) =>
+            builderElementToJsxLiteNode(col, options),
+          ),
+        }),
     );
 
     return node;

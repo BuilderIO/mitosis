@@ -141,13 +141,6 @@ export const blockToBuilder = (
 
   const thisIsComponent = isComponent(json);
 
-  let bindings = thisIsComponent ? {} : json.bindings;
-  if (thisIsComponent) {
-    for (const key in json.bindings) {
-      bindings[`component.options.${key}`] = json.bindings[key];
-    }
-  }
-
   const hasCss = !!json.bindings.css;
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
@@ -175,6 +168,15 @@ export const blockToBuilder = (
           [ruleKey]: cssRules[ruleKey],
         };
       }
+    }
+
+    // delete json.bindings.css;
+  }
+
+  let bindings = thisIsComponent ? {} : json.bindings;
+  if (thisIsComponent) {
+    for (const key in json.bindings) {
+      bindings[`component.options.${key}`] = json.bindings[key];
     }
   }
 

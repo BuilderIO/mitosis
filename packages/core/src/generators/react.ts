@@ -27,7 +27,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
-  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid';
+  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
 };
 
 const mappers: {
@@ -82,8 +82,11 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
     }
 
     for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+      let useValue = json.properties[key];
+      if (typeof useValue === 'string') {
+        useValue = useValue.replace(/"/g, '&quot;');
+      }
+      str += ` ${key}="${useValue}" `;
     }
     for (const key in json.bindings) {
       const value = json.bindings[key] as string;
@@ -178,7 +181,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -231,7 +234,7 @@ const updateGetterRefs = (json: JSXLiteComponent) => {
     return false;
   });
   console.log('getterKeys', getterKeys);
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     // TODO: not all strings are expressions!
     if (typeof item === 'string') {
       let value = item;
@@ -325,6 +328,8 @@ export const componentToReact = (
               )}))`
             : stateType === 'useState'
             ? useStateCode
+            : stateType === 'builder'
+            ? `const state = useBuilderState(${getStateObjectString(json)})`
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectString(json)});`
             : `const state = useLocalProxy(${getStateObjectString(json)});`
