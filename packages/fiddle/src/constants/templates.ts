@@ -110,8 +110,9 @@ export const templates: { [key: string]: string } = {
     export default function MyComponent() {
       const state = useState({
         list: [{ text: 'hello' }, { text: 'world' }],
+        newItemName: 'New item',
         addItem() {
-          state.list = [...state.list, { text: '!' }]
+          state.list = [...state.list, { text: state.newItemName }]
         }
       });
     
@@ -124,6 +125,9 @@ export const templates: { [key: string]: string } = {
               </div>
             )}
           </For>
+          <input 
+            value={state.newItemName} 
+            onChange={event => state.newItemName = event.target.value} />
           <button 
             css={{ padding: '10px' }} 
             onClick={() => state.addItem()}>
