@@ -23,6 +23,7 @@ import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { gettersToFunctions } from '../helpers/getters-to-functions';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -60,9 +61,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
     str += `{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      ${children.length === 1 ? '' : '<>'}
-        ${children.map((item) => blockToReact(item, options)).join('\n')}
-      ${children.length === 1 ? '' : '</>'}
+      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
     ))}`;
   } else if (json.name === 'Show') {
     str += `{Boolean(${processBinding(
@@ -218,42 +217,6 @@ const updateStateSetters = (json: JSXLiteComponent) => {
   });
 };
 
-/**
- * Map getters like `useState({ get foo() { ... }})` from `state.foo` to `foo()`
- */
-const updateGetterRefs = (json: JSXLiteComponent) => {
-  const getterKeys = Object.keys(json.state).filter((item) => {
-    const value = json.state[item];
-    if (
-      typeof value === 'string' &&
-      value.startsWith(methodLiteralPrefix) &&
-      value.replace(methodLiteralPrefix, '').startsWith('get ')
-    ) {
-      return true;
-    }
-    return false;
-  });
-  console.log('getterKeys', getterKeys);
-  traverse(json).forEach(function (item) {
-    // TODO: not all strings are expressions!
-    if (typeof item === 'string') {
-      let value = item;
-      for (const key of getterKeys) {
-        try {
-          this.update(
-            value.replace(
-              new RegExp(`state\\s*\\.\\s*${key}([^a-z0-9]|$)`, 'i'),
-              `${key}()$1`,
-            ),
-          );
-        } catch (err) {
-          console.error('Could not update getter ref', err);
-        }
-      }
-    }
-  });
-};
-
 export const componentToReact = (
   componentJson: JSXLiteComponent,
   options: ToReactOptions = {},
@@ -261,7 +224,7 @@ export const componentToReact = (
   const json = fastClone(componentJson);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
-    updateGetterRefs(json);
+    gettersToFunctions(json);
     updateStateSetters(json);
   }
 
@@ -283,10 +246,6 @@ export const componentToReact = (
     stylesType === 'styled-components' &&
     componentHasStyles &&
     collectStyledComponents(json);
-
-  const needsWrapperFragment =
-    json.children.length > 1 ||
-    (componentHasStyles && stylesType === 'styled-jsx');
 
   let str = dedent`
   ${
@@ -338,14 +297,15 @@ export const componentToReact = (
       ${getRefsString(json)}
 
       return (
-        ${needsWrapperFragment ? '<>' : ''}
+        <>
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-        ${needsWrapperFragment ? '</>' : ''})
+        </>
+      );
     }
 
   `;
