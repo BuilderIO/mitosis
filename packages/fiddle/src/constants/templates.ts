@@ -104,4 +104,33 @@ export const templates: { [key: string]: string } = {
       );
     }
   `,
+  loop: dedent`
+    import { useState, For } from '@jsx-lite/core';
+
+    export default function MyComponent() {
+      const state = useState({
+        list: [{ text: 'hello' }, { text: 'world' }],
+        addItem() {
+          state.list = [...state.list, { text: '!' }]
+        }
+      });
+    
+      return (
+        <div>
+          <For each={state.list}>
+            {item => (
+              <div css={{ padding: '10px' }}>
+                {item.text}
+              </div>
+            )}
+          </For>
+          <button 
+            css={{ padding: '10px' }} 
+            onClick={() => state.addItem()}>
+            Add list item
+          </button>
+        </div>
+      );
+    }
+  `,
 };

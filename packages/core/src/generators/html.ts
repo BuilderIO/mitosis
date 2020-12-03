@@ -8,6 +8,10 @@ import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { dashCase } from '../helpers/dash-case';
 import { isComponent } from '../helpers/is-component';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import traverse from 'traverse';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 
 type ToHtmlOptions = {
   prettier?: boolean;
@@ -17,6 +21,54 @@ type StringMap = { [key: string]: string };
 type InternalToHtmlOptions = ToHtmlOptions & {
   onChangeJsById: StringMap;
   js: string;
+};
+
+const getGetters = (json: JSXLiteComponent) => {
+  const getters: string[] = [];
+  for (const key in json.state) {
+    const value = json.state[key];
+    if (typeof value === 'string') {
+      if (value.startsWith(methodLiteralPrefix + 'get ')) {
+        getters.push(key);
+      }
+    }
+  }
+  return getters;
+};
+
+const getForNames = (json: JSXLiteComponent) => {
+  const names: string[] = [];
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      if (item.name === 'For') {
+        names.push(item.bindings._forName as string);
+      }
+    }
+  });
+  return names;
+};
+
+const replaceForNameIdentifiers = (json: JSXLiteComponent) => {
+  // TODO: cache this. by reference? lru?
+  const forNames = getForNames(json);
+
+  traverse(json).forEach((item) => {
+    if (isJsxLiteNode(item)) {
+      for (const key in item.bindings) {
+        if (key === 'css' || key === '_forName') {
+          continue;
+        }
+        const value = item.bindings[key];
+        if (typeof value === 'string') {
+          item.bindings[key] = replaceIdentifiers(
+            value,
+            forNames,
+            (name) => `getContext(el, "${name}")`,
+          ) as string;
+        }
+      }
+    }
+  });
 };
 
 const mappers: {
@@ -66,10 +118,31 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   let str = '';
 
   if (json.name === 'For') {
+    const itemName = json.bindings._forName;
+    addOnChangeJs(
+      elId,
+      options,
+      `
+        el.innerHTML = '';
+        var _array = ${json.bindings.each};
+        var template = document.querySelector('[data-template="${elId}"]');
+        for (var value of _array) {
+          var tmp = document.createElement('span');
+          tmp.innerHTML = template.innerHTML;
+          Array.from(tmp.children).forEach(function (child) {
+            contextMap.set(child, {
+              ...contextMap.get(child),
+              ${itemName}: value
+            });
+            el.appendChild(child);
+          });
+        }
+      `,
+    );
     // TODO: decide on how to handle this...
-    str += `<template data-for="${json.bindings._forName} in ${
-      json.bindings.each as string
-    }">`;
+    str += `
+      <span data-uid="${elId}"></span>
+      <template data-template="${elId}">`;
     if (json.children) {
       str += json.children.map((item) => blockToHtml(item, options)).join('\n');
     }
@@ -155,6 +228,7 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   return str;
 };
 
+// TODO: props support via custom elements
 export const componentToHtml = (
   componentJson: JSXLiteComponent,
   options: ToHtmlOptions = {},
@@ -165,6 +239,7 @@ export const componentToHtml = (
     js: '',
   };
   const json = fastClone(componentJson);
+  replaceForNameIdentifiers(json);
 
   const hasState = Boolean(Object.keys(json.state).length);
 
@@ -184,6 +259,7 @@ export const componentToHtml = (
         var rawState = ${getStateObjectString(json)};
 
         var observers = [];
+        var contextMap = new WeakMap();
         var state = new Proxy(rawState, {
           set(target, key, value, receiver) {
             Reflect.set(target, key, value, receiver);
@@ -217,6 +293,15 @@ export const componentToHtml = (
         }
         function onChange(cb) {
           observers.push(cb);
+        }
+        function getContext(el, name) {
+          var parent = el;
+          do {
+            var context = contextMap.get(parent);
+            if (context && name in context) {
+              return context[name];
+            }
+          } while (parent = parent.parentNode)
         }
       </script>
     `;
