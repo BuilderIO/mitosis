@@ -10,7 +10,7 @@ import { isUpperCase } from './is-upper-case';
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (item.bindings.css) {
         hasStyles = true;
@@ -52,7 +52,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -93,7 +93,7 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -105,8 +105,9 @@ export const collectStyles = (
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties[classProperty] = `${item.properties[classProperty] ||
-          ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
@@ -123,15 +124,16 @@ export const collectCss = (
   options: CollectStyleOptions = {},
 ): string => {
   const styles = collectStyles(json, options);
+  // TODO create and use a root selector
   return classStyleMapToCss(styles);
 };
 
-const classStyleMapToCss = (map: ClassStyleMap): string => {
+const classStyleMapToCss = (map: ClassStyleMap, rootSelector = ''): string => {
   let str = '';
 
   for (const key in map) {
-    str += `.${key} { 
-      ${styleMapToCss(map[key], `.${key}`)}
+    str += `.${key.replace(/&/g, rootSelector)} { 
+      ${styleMapToCss(map[key])}
      }`;
   }
   return str;
@@ -144,14 +146,14 @@ const flattenClassStyleMap = (map: ClassStyleMap): FlatClassStyleMap => {
   return flattenedStyleMap;
 };
 
-export const styleMapToCss = (map: StyleMap, rootSelector = ''): string => {
+export const styleMapToCss = (map: StyleMap): string => {
   let str = '';
 
   for (const key in map) {
     const value = map[key];
 
     if (typeof value === 'string') {
-      str += `\n${key.replace(/&/g, rootSelector)}: ${value};`;
+      str += `\n${dashCase(key)}: ${value};`;
     } else {
       // TODO: recursion
     }
