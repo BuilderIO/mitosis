@@ -13,6 +13,7 @@ import {
   componentToVue,
   componentToReact,
   componentToLiquid,
+  componentToHtml,
   componentToBuilder,
   componentToSvelte,
   componentToAngular,
@@ -243,6 +244,8 @@ export default function Fiddle() {
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid(json)
+            : state.outputTab === 'html'
+            ? componentToHtml(json)
             : state.outputTab === 'react'
             ? componentToReact(json, {
                 stylesType: state.options.reactStyleType,
@@ -364,8 +367,9 @@ export default function Fiddle() {
     const outputMonacoEditorSize = device.small
       ? `calc(${state.outputsTabHeight}vh - 50px)`
       : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -650,23 +654,14 @@ export default function Fiddle() {
                   value="solid"
                 />
                 <Tab
-                  label={
-                    <TabLabelWithIcon
-                      label="Angular"
-                      // icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
-                    />
-                  }
+                  label={<TabLabelWithIcon label="Angular" />}
                   value="angular"
                 />
                 <Tab
-                  label={
-                    <TabLabelWithIcon
-                      label="Svelte"
-                      // icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fb7d34a76a77b40e2a981ef420d12d1c8"
-                    />
-                  }
+                  label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
                 />
+                <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
                   label={
                     <TabLabelWithIcon

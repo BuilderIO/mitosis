@@ -9,6 +9,7 @@ import json5 from 'json5';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { isComponent } from '../helpers/is-component';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -98,8 +99,6 @@ function tryFormat(code: string) {
   return str;
 }
 
-const isComponent = (json: JSXLiteNode) =>
-  json.name.toLowerCase() !== json.name;
 
 type InternalOptions = {
   skipMapper?: boolean;
