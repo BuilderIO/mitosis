@@ -1,39 +1,65 @@
+import { types } from '@babel/core';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import traverse from 'traverse';
+import { babelTransformCode } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
+import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
+import { getStateObjectString } from '../helpers/get-state-object-string';
+import { hasComponent } from '../helpers/has-component';
+import { isComponent } from '../helpers/is-component';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { dashCase } from '../helpers/dash-case';
-import { isComponent } from '../helpers/is-component';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 
 type ToHtmlOptions = {
   prettier?: boolean;
 };
 
-type StringMap = { [key: string]: string };
+type StringRecord = { [key: string]: string };
+type NumberRecord = { [key: string]: number };
 type InternalToHtmlOptions = ToHtmlOptions & {
-  onChangeJsById: StringMap;
+  onChangeJsById: StringRecord;
   js: string;
+  namesMap: NumberRecord;
 };
 
-const getGetters = (json: JSXLiteComponent) => {
-  const getters: string[] = [];
-  for (const key in json.state) {
-    const value = json.state[key];
-    if (typeof value === 'string') {
-      if (value.startsWith(methodLiteralPrefix + 'get ')) {
-        getters.push(key);
+const addUpdateAfterSet = (json: JSXLiteComponent) => {
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      for (const key in item.bindings) {
+        const value = item.bindings[key] as string;
+        let matchFound = false;
+        const newValue = babelTransformCode(value, {
+          AssignmentExpression(
+            path: babel.NodePath<babel.types.AssignmentExpression>,
+          ) {
+            const { node } = path;
+            if (types.isMemberExpression(node.left)) {
+              if (types.isIdentifier(node.left.object)) {
+                // TODO: utillity to properly trace this reference to the beginning
+                if (node.left.object.name === 'state') {
+                  // TODO: ultimately support other property access like strings
+                  const propertyName = (node.left.property as types.Identifier)
+                    .name;
+                  matchFound = true;
+                  path.insertAfter(
+                    types.callExpression(types.identifier('update'), []),
+                  );
+                }
+              }
+            }
+          },
+        });
+        if (matchFound) {
+          item.bindings[key] = newValue;
+        }
       }
     }
-  }
-  return getters;
+  });
 };
 
 const getForNames = (json: JSXLiteComponent) => {
@@ -79,8 +105,15 @@ const mappers: {
   },
 };
 
-const getId = (json: JSXLiteNode) =>
-  `${dashCase(json.name)}-${Math.random().toString(26).slice(9)}`;
+const getId = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
+  const name = /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
+    ? json.name
+    : dashCase(json.name || 'div');
+
+  const newNameNum = (options.namesMap[name] || 0) + 1;
+  options.namesMap[name] = newNameNum;
+  return `${name}-${newNameNum}`;
+};
 
 const addOnChangeJs = (
   id: string,
@@ -98,8 +131,8 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
-    elId = getId(json);
-    json.properties['data-uid'] = elId;
+    elId = getId(json, options);
+    json.properties['data-name'] = elId;
   }
 
   if (mappers[json.name]) {
@@ -112,7 +145,7 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   if (json.bindings._text) {
     addOnChangeJs(elId, options, `el.innerText = ${json.bindings._text};`);
 
-    return `<span data-uid="${elId}"></span>`;
+    return `<span data-name="${elId}"></span>`;
   }
 
   let str = '';
@@ -122,27 +155,18 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     addOnChangeJs(
       elId,
       options,
+      // TODO: be smarter about rendering, deleting old items and adding new ones by
+      // querying dom potentially
       `
-        el.innerHTML = '';
-        var _array = ${json.bindings.each};
-        var template = document.querySelector('[data-template="${elId}"]');
-        for (var value of _array) {
-          var tmp = document.createElement('span');
-          tmp.innerHTML = template.innerHTML;
-          Array.from(tmp.children).forEach(function (child) {
-            contextMap.set(child, {
-              ...contextMap.get(child),
-              ${itemName}: value
-            });
-            el.appendChild(child);
-          });
-        }
+        let array = ${json.bindings.each};
+        let template = document.querySelector('[data-template-for="${elId}"]');
+        renderLoop(el, array, template, "${itemName}");
       `,
     );
     // TODO: decide on how to handle this...
     str += `
-      <span data-uid="${elId}"></span>
-      <template data-template="${elId}">`;
+      <span data-name="${elId}"></span>
+      <template data-template-for="${elId}">`;
     if (json.children) {
       str += json.children.map((item) => blockToHtml(item, options)).join('\n');
     }
@@ -151,10 +175,13 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     addOnChangeJs(
       elId,
       options,
-      `el.style.display = ${json.bindings.when} ? 'inline' : 'none'`,
+      `el.style.display = ${(json.bindings.when as string).replace(
+        /;$/,
+        '',
+      )} ? 'inline' : 'none'`,
     );
 
-    str += `<span data-uid="${elId}">`;
+    str += `<span data-name="${elId}">`;
     if (json.children) {
       str += json.children.map((item) => blockToHtml(item, options)).join('\n');
     }
@@ -192,6 +219,7 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
         }
         const fnName = camelCase(`on-${elId}-${event}`);
         options.js += `
+          // Event handler for '${event}' event on ${elId}
           function ${fnName}(event) {
             ${useValue}
           }
@@ -237,9 +265,13 @@ export const componentToHtml = (
     ...options,
     onChangeJsById: {},
     js: '',
+    namesMap: {},
   };
   const json = fastClone(componentJson);
   replaceForNameIdentifiers(json);
+  addUpdateAfterSet(json);
+
+  const hasLoop = hasComponent('For', json);
 
   const hasState = Boolean(Object.keys(json.state).length);
 
@@ -256,18 +288,12 @@ export const componentToHtml = (
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
-        var rawState = ${getStateObjectString(json)};
+        let state = ${getStateObjectString(json)};
 
-        var observers = [];
-        var contextMap = new WeakMap();
-        var state = new Proxy(rawState, {
-          set(target, key, value, receiver) {
-            Reflect.set(target, key, value, receiver);
-            runObservers(key, value, receiver)
-          },
-        });
-
-        onChange(function () {
+        // Function to update data bindings and loops
+        // call update() when you mutate state and need the updates to reflect
+        // in the dom
+        function update() {
           ${Object.keys(useOptions.onChangeJsById)
             .map((key) => {
               const value = useOptions.onChangeJsById[key];
@@ -275,33 +301,52 @@ export const componentToHtml = (
                 return '';
               }
               return `
-              document.querySelectorAll("[data-uid='${key}']").forEach(function (el) {
+              document.querySelectorAll("[data-name='${key}']").forEach(function (el) {
                 ${value}
               })
             `;
             })
             .join('\n\n')}
-        })
-        runObservers()
+        }
 
         ${useOptions.js}
 
-        function runObservers(key, value, receiver) {
-          observers.forEach(function (cb) {
-            cb(key, value, receiver);
-          })
-        }
-        function onChange(cb) {
-          observers.push(cb);
-        }
-        function getContext(el, name) {
-          var parent = el;
-          do {
-            var context = contextMap.get(parent);
-            if (context && name in context) {
-              return context[name];
+        // Update with in initial state on first load
+        update()
+
+        ${
+          !hasLoop
+            ? ''
+            : `
+
+          // Helper to render loops
+          function renderLoop(el, array, template, itemName) {
+            el.innerHTML = '';
+            for (let value of array) {
+              let tmp = document.createElement('span');
+              tmp.innerHTML = template.innerHTML;
+              Array.from(tmp.children).forEach(function (child) {
+                contextMap.set(child, {
+                  ...contextMap.get(child),
+                  [itemName]: value
+                });
+                el.appendChild(child);
+              });
             }
-          } while (parent = parent.parentNode)
+          }
+
+          // Helper to pass context down for loops
+          let contextMap = new WeakMap();
+          function getContext(el, name) {
+            let parent = el;
+            do {
+              let context = contextMap.get(parent);
+              if (context && name in context) {
+                return context[name];
+              }
+            } while (parent = parent.parentNode)
+          }
+        `
         }
       </script>
     `;
