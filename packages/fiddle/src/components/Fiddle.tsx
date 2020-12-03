@@ -259,8 +259,10 @@ export default function Fiddle() {
             ? componentToSvelte(json, {
                 stateType: state.options.svelteStateType,
               })
-            : state.outputTab === 'json' || state.outputTab === 'builder'
+            : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
+            : state.outputTab === 'builder'
+            ? JSON.stringify(componentToBuilder(json), null, 2)
             : componentToVue(json);
 
         const newBuilderData = componentToBuilder(json);
@@ -679,6 +681,15 @@ export default function Fiddle() {
                     />
                   }
                   value="json"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Builder"
+                      // icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa64744451c9546a085a3ca662f7d5572"
+                    />
+                  }
+                  value="builder"
                 />
               </Tabs>
             </div>
