@@ -18,6 +18,7 @@ import {
   componentToSvelte,
   componentToAngular,
   componentToSolid,
+  componentToReactNative,
   builderContentToJsxLiteComponent,
   componentToJsxLite,
   liquidToBuilder,
@@ -249,6 +250,10 @@ export default function Fiddle() {
             : state.outputTab === 'react'
             ? componentToReact(json, {
                 stylesType: state.options.reactStyleType,
+                stateType: state.options.reactStateType,
+              })
+            : state.outputTab === 'reactNative'
+            ? componentToReactNative(json, {
                 stateType: state.options.reactStateType,
               })
             : state.outputTab === 'solid'
@@ -646,6 +651,19 @@ export default function Fiddle() {
                   }
                   value="react"
                 />
+
+                <Tab
+                  label={<TabLabelWithIcon label="Angular" />}
+                  value="angular"
+                />
+                <Tab
+                  label={<TabLabelWithIcon label="Svelte" />}
+                  value="svelte"
+                />
+                <Tab
+                  label={<TabLabelWithIcon label="React Native" />}
+                  value="reactNative"
+                />
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -654,14 +672,6 @@ export default function Fiddle() {
                     />
                   }
                   value="solid"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Angular" />}
-                  value="angular"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Svelte" />}
-                  value="svelte"
                 />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
@@ -744,6 +754,12 @@ export default function Fiddle() {
                 </RadioGroup>
               </div>
               <Divider css={{ opacity: 0.6 }} />
+            </Show>
+            <Show
+              when={
+                state.outputTab === 'react' || state.outputTab === 'reactNative'
+              }
+            >
               <div
                 css={{
                   display: 'flex',
@@ -873,6 +889,7 @@ export default function Fiddle() {
                     state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
+                        state.outputTab === 'reactNative' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'solid'
                       ? 'typescript'

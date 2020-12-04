@@ -32,14 +32,14 @@ export const hasStyles = (component: JSXLiteComponent) => {
  *  }
  * }
  */
-type StyleMap = {
+export type StyleMap = {
   [className: string]: CSS.Properties | StyleMap;
 };
 
 /**
  * { 'my-class': { display: 'block', '&.foo': { display: 'none' } }}
  */
-type ClassStyleMap = { [key: string]: StyleMap };
+export type ClassStyleMap = { [key: string]: StyleMap };
 
 type FlatClassStyleMap = { [key: string]: CSS.Properties };
 
