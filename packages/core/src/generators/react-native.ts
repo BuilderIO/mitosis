@@ -290,6 +290,7 @@ const guessAtComponentsUsed = (code: string) => {
   for (const component of [
     'View',
     'TextInput',
+    'Text',
     'Image',
     'TouchableWithoutFeedback',
     'ScrollView',
