@@ -459,9 +459,6 @@ export const componentToCustomElement = (
         constructor() {
           super();
 
-          this.id = Math.random().toString(36).split('.')[1];
-          this.setAttribute('data-uid', this.id);
-
           this.state = ${getStateObjectString(json)};
 
           ${
