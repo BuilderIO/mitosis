@@ -15,9 +15,11 @@ import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 
 type ToHtmlOptions = {
   prettier?: boolean;
+  format?: 'class' | 'script';
 };
 
 type StringRecord = { [key: string]: string };
@@ -28,7 +30,10 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
 };
 
-const addUpdateAfterSet = (json: JSXLiteComponent) => {
+const addUpdateAfterSet = (
+  json: JSXLiteComponent,
+  options: InternalToHtmlOptions,
+) => {
   traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
@@ -48,7 +53,12 @@ const addUpdateAfterSet = (json: JSXLiteComponent) => {
                     .name;
                   matchFound = true;
                   path.insertAfter(
-                    types.callExpression(types.identifier('update'), []),
+                    types.callExpression(
+                      types.identifier(
+                        options.format === 'class' ? 'this.update' : 'update',
+                      ),
+                      [],
+                    ),
                   );
                 }
               }
@@ -116,6 +126,21 @@ const getId = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   return `${name}-${newNameNum}`;
 };
 
+const updateReferencesInCode = (
+  code: string,
+  options: InternalToHtmlOptions,
+) => {
+  if (options.format === 'class') {
+    return stripStateAndPropsRefs(code, {
+      // TODO: add props to top level and replace with `this.` and add setters that call this.update()
+      includeProps: false,
+      includeState: true,
+      replaceWith: 'this.state.',
+    });
+  }
+  return code;
+};
+
 const addOnChangeJs = (
   id: string,
   options: InternalToHtmlOptions,
@@ -160,7 +185,9 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
       // querying dom potentially
       `
         let array = ${json.bindings.each};
-        let template = document.querySelector('[data-template-for="${elId}"]');
+        let template = ${
+          options.format === 'class' ? 'this' : 'document'
+        }.querySelector('[data-template-for="${elId}"]');
         renderLoop(el, array, template, "${itemName}");
       `,
     );
@@ -221,16 +248,23 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
         const fnName = camelCase(`on-${elId}-${event}`);
         options.js += `
           // Event handler for '${event}' event on ${elId}
-          function ${fnName}(event) {
-            ${useValue}
+          ${
+            options.format === 'class'
+              ? `this.${fnName} = (event) => {`
+              : `function ${fnName} (event) {`
+          }
+            ${updateReferencesInCode(useValue, options)}
           }
         `;
+        const fnIdentifier = `${
+          options.format === 'class' ? 'this.' : ''
+        }${fnName}`;
         addOnChangeJs(
           elId,
           options,
           `
-            el.removeEventListener('${event}', ${fnName});
-            el.addEventListener('${event}', ${fnName});
+            el.removeEventListener('${event}', ${fnIdentifier});
+            el.addEventListener('${event}', ${fnIdentifier});
           `,
         );
       } else {
@@ -267,10 +301,11 @@ export const componentToHtml = (
     onChangeJsById: {},
     js: '',
     namesMap: {},
+    format: 'script',
   };
   const json = fastClone(componentJson);
   replaceForNameIdentifiers(json);
-  addUpdateAfterSet(json);
+  addUpdateAfterSet(json, useOptions);
   const componentHasProps = hasProps(json);
 
   const hasLoop = hasComponent('For', json);
@@ -304,7 +339,7 @@ export const componentToHtml = (
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach(function (el) {
+              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
                 ${value}
               })
             `;
@@ -359,11 +394,157 @@ export const componentToHtml = (
     try {
       str = format(str, {
         parser: 'html',
+        htmlWhitespaceSensitivity: 'ignore',
         plugins: [
           // To support running in browsers
           require('prettier/parser-html'),
           require('prettier/parser-postcss'),
           require('prettier/parser-babel'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Could not prettify', { string: str }, err);
+    }
+  }
+  return str;
+};
+
+// TODO: props support via custom elements
+export const componentToCustomElement = (
+  componentJson: JSXLiteComponent,
+  options: ToHtmlOptions = {},
+) => {
+  const useOptions: InternalToHtmlOptions = {
+    ...options,
+    onChangeJsById: {},
+    js: '',
+    namesMap: {},
+    format: 'class',
+  };
+  const json = fastClone(componentJson);
+  replaceForNameIdentifiers(json);
+  addUpdateAfterSet(json, useOptions);
+
+  const hasLoop = hasComponent('For', json);
+
+  const css = collectCss(json);
+
+  let html = json.children
+    .map((item) => blockToHtml(item, useOptions))
+    .join('\n');
+
+  html += `<style>${css}</style>`;
+
+  if (options.prettier !== false) {
+    try {
+      html = format(html, {
+        parser: 'html',
+        htmlWhitespaceSensitivity: 'ignore',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+          require('prettier/parser-typescript'),
+        ],
+      });
+      html = html.trim().replace(/\n/g, '\n      ');
+    } catch (err) {
+      console.warn('Could not prettify', { string: html }, err);
+    }
+  }
+
+  let str = `
+      class MyComponent extends HTMLElement {
+        constructor() {
+          super();
+
+          this.id = Math.random().toString(36).split('.')[1];
+          this.setAttribute('data-uid', this.id);
+
+          this.state = ${getStateObjectString(json)};
+
+          ${
+            !hasLoop
+              ? ''
+              : `
+            // Helper to pass context down for loops
+            contextMap = new WeakMap();
+          `
+          }
+
+          ${useOptions.js}
+        }
+
+        update() {
+          ${Object.keys(useOptions.onChangeJsById)
+            .map((key) => {
+              const value = useOptions.onChangeJsById[key];
+              if (!value) {
+                return '';
+              }
+              return `
+              this.querySelectorAll("[data-name='${key}']").forEach((el) => {
+                ${updateReferencesInCode(value, useOptions)}
+              })
+            `;
+            })
+            .join('\n\n')}
+        }
+      
+        connectedCallback() {
+          this.innerHTML = \`
+      ${html}\`;
+          this.update();
+        }
+
+        ${
+          !hasLoop
+            ? ''
+            : `
+
+          // Helper to render loops
+          renderLoop(el, array, template, itemName) {
+            el.innerHTML = '';
+            for (let value of array) {
+              let tmp = document.createElement('span');
+              tmp.innerHTML = template.innerHTML;
+              Array.from(tmp.children).forEach(function (child) {
+                contextMap.set(child, {
+                  ...contextMap.get(child),
+                  [itemName]: value
+                });
+                el.appendChild(child);
+              });
+            }
+          }
+
+          getContext(el, name) {
+            let parent = el;
+            do {
+              let context = contextMap.get(parent);
+              if (context && name in context) {
+                return context[name];
+              }
+            } while (parent = parent.parentNode)
+          }
+        `
+        }
+      }
+      
+      customElements.define('my-component', MyComponent);
+    `;
+
+  if (options.prettier !== false) {
+    try {
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+          require('prettier/parser-typescript'),
         ],
       });
     } catch (err) {

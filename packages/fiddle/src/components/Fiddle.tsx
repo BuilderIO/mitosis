@@ -24,6 +24,7 @@ import {
   liquidToBuilder,
   reactiveScriptRe,
   parseReactiveScript,
+  componentToCustomElement,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -247,6 +248,8 @@ export default function Fiddle() {
             ? componentToLiquid(json)
             : state.outputTab === 'html'
             ? componentToHtml(json)
+            : state.outputTab === 'webcomponents'
+            ? componentToCustomElement(json)
             : state.outputTab === 'react'
             ? componentToReact(json, {
                 stylesType: state.options.reactStyleType,
@@ -673,6 +676,10 @@ export default function Fiddle() {
                   }
                   value="solid"
                 />
+                <Tab
+                  label={<TabLabelWithIcon label="Webcomponents" />}
+                  value="webcomponents"
+                />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
                   label={
@@ -891,6 +898,7 @@ export default function Fiddle() {
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
                         state.outputTab === 'angular' ||
+                        state.outputTab === 'webcomponents' ||
                         state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'

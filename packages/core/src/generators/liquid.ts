@@ -153,6 +153,7 @@ export const componentToLiquid = (
     try {
       str = format(str, {
         parser: 'html',
+        htmlWhitespaceSensitivity: 'ignore',
         plugins: [
           // To support running in browsers
           require('prettier/parser-html'),

@@ -2549,6 +2549,7 @@ export const tryFormat = (str: string) => {
   try {
     return format(str, {
       parser: 'html',
+      htmlWhitespaceSensitivity: 'ignore',
       plugins: [htmlParser],
     });
   } catch (err) {
