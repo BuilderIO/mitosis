@@ -137,6 +137,7 @@ const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
   return str;
 };
 
+// TODO: add JS support similar to componentToHtml()
 export const componentToLiquid = (
   componentJson: JSXLiteComponent,
   options: ToLiquidOptions = {},

@@ -20,5 +20,6 @@ export * from './generators/builder';
 export * from './generators/html';
 export * from './generators/svelte';
 export * from './generators/jsx-lite';
+export * from './generators/swift-ui';
 export * from './generators/react-native';
 export * from './helpers/parse-reactive-script';

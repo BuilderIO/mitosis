@@ -12,6 +12,7 @@ import {
   parseJsx,
   componentToVue,
   componentToReact,
+  componentToSwift,
   componentToLiquid,
   componentToHtml,
   componentToBuilder,
@@ -255,6 +256,8 @@ export default function Fiddle() {
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
               })
+            : state.outputTab === 'swift'
+            ? componentToSwift(json)
             : state.outputTab === 'reactNative'
             ? componentToReactNative(json, {
                 stateType: state.options.reactStateType,
@@ -667,6 +670,7 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="React Native" />}
                   value="reactNative"
                 />
+                <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -710,6 +714,17 @@ export default function Fiddle() {
                 />
               </Tabs>
             </div>
+            <Show when={state.outputTab === 'swift'}>
+              <Alert
+                css={{
+                  border: '1px solid rgb(128 182 224)',
+                  margin: 10,
+                }}
+                severity="info"
+              >
+                SwiftUI support is <b>highly experimental</b>
+              </Alert>
+            </Show>
             <Show when={state.outputTab === 'react'}>
               <div
                 css={{
@@ -893,7 +908,10 @@ export default function Fiddle() {
                   }}
                   theme={monacoTheme}
                   language={
-                    state.outputTab === 'json' || state.outputTab === 'builder'
+                    state.outputTab === 'swift'
+                      ? 'swift'
+                      : state.outputTab === 'json' ||
+                        state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
