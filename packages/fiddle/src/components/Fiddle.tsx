@@ -885,7 +885,7 @@ export default function Fiddle() {
                     foldingHighlight: false,
                     renderLineHighlightOnlyWhenFocus: true,
                     occurrencesHighlight: false,
-                    readOnly: true,
+                    readOnly: getQueryParam('readOnly') !== 'false',
                     minimap: { enabled: false },
                     renderLineHighlight: 'none',
                     selectionHighlight: false,

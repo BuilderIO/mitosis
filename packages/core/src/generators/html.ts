@@ -476,6 +476,12 @@ export const componentToCustomElement = (
           ${useOptions.js}
         }
 
+        connectedCallback() {
+          this.innerHTML = \`
+      ${html}\`;
+          this.update();
+        }
+
         update() {
           ${Object.keys(useOptions.onChangeJsById)
             .map((key) => {
@@ -490,12 +496,6 @@ export const componentToCustomElement = (
             `;
             })
             .join('\n\n')}
-        }
-      
-        connectedCallback() {
-          this.innerHTML = \`
-      ${html}\`;
-          this.update();
         }
 
         ${
