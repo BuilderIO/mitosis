@@ -24,11 +24,19 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  plugins?: Plugin[];
 };
 
 const mappers: {
@@ -177,7 +185,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -214,12 +222,14 @@ const updateStateSetters = (json: JSXLiteComponent) => {
   });
 };
 
-
 export const componentToReact = (
   componentJson: JSXLiteComponent,
   options: ToReactOptions = {},
 ) => {
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
@@ -245,6 +255,9 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   let str = dedent`
   ${
     useStateCode && useStateCode.length > 4
@@ -308,6 +321,9 @@ export const componentToReact = (
 
   `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -327,6 +343,9 @@ export const componentToReact = (
       );
       throw err;
     }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };
