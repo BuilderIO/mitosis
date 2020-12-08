@@ -38,6 +38,38 @@ const scrolls = (json: JSXLiteNode) => {
   return getStyles(json)?.overflow === 'auto';
 };
 
+const preSpaceRegex = /^ */g;
+const getPreSpaces = (str: string) => str.match(preSpaceRegex)?.[0].length || 0;
+
+const fixIndents = (str: string) => {
+  const lines = str.split('\n');
+  let last = 0;
+  lines.forEach((item, index) => {
+    const spaces = getPreSpaces(item);
+    const maxSpaces = last + 2;
+    if (spaces > maxSpaces) {
+      const delta = spaces - maxSpaces;
+      lines.slice(index).every((nextLine, incrIndex) => {
+        const nextLineSpaces = getPreSpaces(nextLine);
+        if (nextLineSpaces > maxSpaces) {
+          const newItem = nextLine.replace(
+            preSpaceRegex,
+            ' '.repeat(nextLineSpaces - delta),
+          );
+          lines[index + incrIndex] = newItem;
+          return true;
+        } else {
+          return false;
+        }
+      });
+      last = maxSpaces;
+    } else {
+      last = spaces;
+    }
+  });
+  return lines.join('\n');
+};
+
 const mappers: {
   [key: string]: (json: JSXLiteNode, options: ToSwiftOptions) => string;
 } = {
@@ -127,6 +159,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
       const value = json.bindings[key] as string;
       if (
         key === '_spread' ||
+        key === 'ref' ||
         key === 'css' ||
         key === 'class' ||
         key === 'className'
@@ -328,5 +361,5 @@ export const componentToSwift = (
     // Convert </For> to }
     .replace(/}}\s*<\/For>\s*\),?/g, '}');
 
-  return str;
+  return fixIndents(str);
 };
