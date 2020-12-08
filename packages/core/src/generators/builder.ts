@@ -47,41 +47,55 @@ const componentMappers: {
     return block;
   },
   For(node, options) {
-    return el({
-      component: {
-        name: 'Fragment',
+    return el(
+      {
+        component: {
+          name: 'Fragment',
+        },
+        repeat: {
+          collection: node.bindings.each as string,
+          itemName: node.bindings._forName as string,
+        },
+        children: node.children
+          .filter(filterEmptyTextNodes)
+          .map((node) => blockToBuilder(node, options)),
       },
-      repeat: {
-        collection: node.bindings.each as string,
-        itemName: node.bindings._forName as string,
-      },
-      children: node.children
-        .filter(filterEmptyTextNodes)
-        .map((node) => blockToBuilder(node, options)),
-    });
+      options,
+    );
   },
   Show(node, options) {
-    return el({
-      // TODO: the reverse mapping for this
-      component: {
-        name: 'Fragment',
+    return el(
+      {
+        // TODO: the reverse mapping for this
+        component: {
+          name: 'Fragment',
+        },
+        bindings: {
+          show: node.bindings.when as string,
+        },
+        children: node.children
+          .filter(filterEmptyTextNodes)
+          .map((node) => blockToBuilder(node, options)),
       },
-      bindings: {
-        show: node.bindings.when as string,
-      },
-      children: node.children
-        .filter(filterEmptyTextNodes)
-        .map((node) => blockToBuilder(node, options)),
-    });
+      options,
+    );
   },
 };
 
-const el = (options: Partial<BuilderElement>): BuilderElement => ({
+const el = (
+  options: Partial<BuilderElement>,
+  toBuilderOptions: ToBuilderOptions,
+): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
+  ...(toBuilderOptions.includeIds && {
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
+  }),
   ...options,
 });
 
-export type ToBuilderOptions = {};
+export type ToBuilderOptions = {
+  includeIds?: boolean;
+};
 
 function tryFormat(code: string) {
   let str = code;
@@ -99,7 +113,6 @@ function tryFormat(code: string) {
   return str;
 }
 
-
 type InternalOptions = {
   skipMapper?: boolean;
 };
@@ -114,28 +127,31 @@ export const blockToBuilder = (
     return mapper(json, options);
   }
   if (json.properties._text || json.bindings._text) {
-    return el({
-      tagName: 'span',
-      // responsiveStyles: {
-      //   large: json.properties.css as any,
-      // },
-      bindings: {
-        // TODO: css to responsiveStyles and back
-        // ...(json.bindings as any),
-        ...(json.bindings._text
-          ? {
-              'component.options.text': json.bindings._text as string,
-              'json.bindings._text': undefined as any,
-            }
-          : {}),
-      },
-      component: {
-        name: 'Text',
-        options: {
-          text: json.properties._text,
+    return el(
+      {
+        tagName: 'span',
+        // responsiveStyles: {
+        //   large: json.properties.css as any,
+        // },
+        bindings: {
+          // TODO: css to responsiveStyles and back
+          // ...(json.bindings as any),
+          ...(json.bindings._text
+            ? {
+                'component.options.text': json.bindings._text as string,
+                'json.bindings._text': undefined as any,
+              }
+            : {}),
+        },
+        component: {
+          name: 'Text',
+          options: {
+            text: json.properties._text,
+          },
         },
       },
-    });
+      options,
+    );
   }
 
   const thisIsComponent = isComponent(json);
@@ -177,23 +193,26 @@ export const blockToBuilder = (
     }
   }
 
-  return el({
-    tagName: thisIsComponent ? undefined : json.name,
-    ...(hasCss && {
-      responsiveStyles,
-    }),
-    ...(thisIsComponent && {
-      component: {
-        name: mapComponentName(json.name),
-        options: json.properties,
-      },
-    }),
-    properties: thisIsComponent ? undefined : (json.properties as any),
-    bindings: thisIsComponent ? undefined : (json.bindings as any),
-    children: json.children
-      .filter(filterEmptyTextNodes)
-      .map((child) => blockToBuilder(child, options)),
-  });
+  return el(
+    {
+      tagName: thisIsComponent ? undefined : json.name,
+      ...(hasCss && {
+        responsiveStyles,
+      }),
+      ...(thisIsComponent && {
+        component: {
+          name: mapComponentName(json.name),
+          options: json.properties,
+        },
+      }),
+      properties: thisIsComponent ? undefined : (json.properties as any),
+      bindings: thisIsComponent ? undefined : (json.bindings as any),
+      children: json.children
+        .filter(filterEmptyTextNodes)
+        .map((child) => blockToBuilder(child, options)),
+    },
+    options,
+  );
 };
 
 export const componentToBuilder = (
