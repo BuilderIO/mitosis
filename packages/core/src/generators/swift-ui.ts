@@ -28,7 +28,7 @@ const getStyles = (json: JSXLiteNode) => {
   try {
     css = json5.parse(json.bindings.css as string);
   } catch (err) {
-    console.warn('Could not json 5 parse css');
+    console.warn('Could not json 5 parse css', err);
     return null;
   }
   return css;
@@ -241,8 +241,36 @@ const swiftMethodMap: { [key: string]: string } = {
   push: 'append',
 };
 
-const replaceSwiftMethods = (code: string) =>
-  babelTransformCode(code, {
+const replaceSwiftMethods = (code: string) => {
+  function hasSpread(nodes: babel.Node[]) {
+    return Boolean(nodes.find((node) => types.isSpreadElement(node)));
+  }
+
+  function push(_props: any, nodes: babel.Node[]) {
+    if (!_props.length) return _props;
+    nodes.push(types.arrayExpression(_props));
+    return [];
+  }
+
+  function build(props: any[], scope: any) {
+    const nodes = [];
+    let _props: any[] = [];
+
+    for (const prop of props) {
+      if (types.isSpreadElement(prop)) {
+        _props = push(_props, nodes);
+        nodes.push(prop.argument);
+      } else {
+        _props.push(prop);
+      }
+    }
+
+    push(_props, nodes);
+
+    return nodes;
+  }
+
+  return babelTransformCode(code, {
     CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
       const { callee } = path.node;
       if (types.isMemberExpression(callee)) {
@@ -259,7 +287,31 @@ const replaceSwiftMethods = (code: string) =>
         }
       }
     },
+
+    // Convert array spreads to swift concat syntax (`+` operator)
+    ArrayExpression(path: babel.NodePath<babel.types.ArrayExpression>) {
+      const { node, scope } = path;
+      const elements = node.elements;
+      if (!hasSpread(elements as any)) return;
+
+      const nodes = build(elements, scope);
+      let first = nodes[0];
+
+      if (nodes.length === 1 && first !== (elements[0] as any).argument) {
+        path.replaceWith(first);
+        return;
+      }
+
+      if (!types.isArrayExpression(first)) {
+        first = types.arrayExpression([]);
+      } else {
+        nodes.shift();
+      }
+
+      path.replaceWith(types.binaryExpression('+', nodes[0], nodes[1]));
+    },
   });
+};
 
 export const componentToSwift = (
   componentJson: JSXLiteComponent,
@@ -297,7 +349,7 @@ export const componentToSwift = (
       ${methodString}
 
       __body = {
-        _: VStack({})({
+        _: VStack({ padding: 0 })({
           ${children}
         })
       }
