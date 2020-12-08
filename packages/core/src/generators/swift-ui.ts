@@ -78,6 +78,7 @@ const mappers: {
       .map((item) => blockToSwift(item, options))
       .join('\n')}`;
   },
+  link: () => '',
   Image: (json, options) => {
     return `_: Image(${
       json.bindings.image || `"${json.properties.image}"`
@@ -114,9 +115,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
   // TODO: do as preprocess step and do more mappings of dom attributes to special
   // Image, TextField, etc component props
   const name =
-    json.name === 'link'
-      ? 'Unsupported'
-      : json.name === 'input'
+    json.name === 'input'
       ? 'TextField'
       : json.name === 'img'
       ? 'Image'
@@ -132,7 +131,13 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
       : json.name;
 
   if (name === 'VStack' || name === 'HStack') {
-    json.bindings.padding = '0';
+    // json.bindings.padding = '0';
+  }
+
+  if (name === 'TextField') {
+    const placeholder = json.properties.placeholder;
+    delete json.properties.placeholder;
+    json.properties._ = placeholder || '';
   }
 
   if (json.name === 'For') {
@@ -183,6 +188,15 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
       }
     }
     str += `${temp('}')})`;
+
+    str += `${temp('(')}{`;
+    if (json.children) {
+      str += json.children
+        .map((item) => blockToSwift(item, options))
+        .join('\n');
+    }
+
+    str += `}${temp(')')}`;
     for (const key in style) {
       let useKey = key;
       const rawValue = style[key as keyof CSS.Properties]!;
@@ -198,14 +212,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
       }
       str += `.${useKey}(${value})`;
     }
-    str += `${temp('(')}{`;
-    if (json.children) {
-      str += json.children
-        .map((item) => blockToSwift(item, options))
-        .join('\n');
-    }
-
-    str += `}${temp('),')}`;
+    str += ',';
   }
 
   return str;
@@ -338,7 +345,17 @@ export const componentToSwift = (
     format: 'class',
     data: false,
     getters: false,
+    keyPrefix: '@func ',
     valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
+  });
+  const getterString = getStateObjectString(json, {
+    format: 'class',
+    data: false,
+    getters: true,
+    functions: false,
+    keyPrefix: '@func ',
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(code.replace('get ', ''), { replaceWith: '' }),
   });
 
   let str = dedent`
@@ -347,9 +364,10 @@ export const componentToSwift = (
     class MyComponent {
       ${dataString}
       ${methodString}
+      ${getterString}
 
       __body = {
-        _: VStack({ padding: 0 })({
+        _: VStack({})({
           ${children}
         })
       }
@@ -362,6 +380,7 @@ export const componentToSwift = (
     try {
       str = format(str, {
         semi: false,
+        trailingComma: 'none',
         singleQuote: false,
         parser: 'typescript',
         plugins: [
@@ -381,6 +400,8 @@ export const componentToSwift = (
     }
   }
 
+  console.log(0, str);
+
   // Remove JS / JSX artifacts
   str = str
     // Remove temp property prefixes
@@ -394,6 +415,8 @@ export const componentToSwift = (
     .replace('class MyComponent', 'struct MyComponent : View')
     // Convert @State foo = to @State private var foo =
     .replace(/@State\s+/g, '@State private var ')
+    // Convert @func foo() to func foo()
+    .replace(/@func\s+/g, 'func ')
     // Convert __body = to var body: some View =
     .replace(/(\s*)__body = /, '\n$1var body: some View ')
     // Convert import 'foo' to import foo;
@@ -402,8 +425,6 @@ export const componentToSwift = (
     .replace(/([A-Z][a-zA-Z0-9]+)\({([\s\S]*?)}\)/g, '$1($2)')
     // Remove arrow function
     .replace(/\(\)\s*=>/g, '')
-    // Remove dangling "()"
-    .replace(/([^\w\d])\(\)/g, '$1')
     // Remove dangling "({"
     .replace(/\({/g, ' {')
     // Remove dangling "})"
@@ -420,7 +441,11 @@ export const componentToSwift = (
       'ForEach($1, id: \\.self) { $2 in',
     )
     // Convert </For> to }
-    .replace(/}}\s*<\/For>\s*\),?/g, '}');
+    .replace(/}}\s*<\/For>\s*\),?/g, '}')
+    // Remove dangling "()"
+    .replace(/(\s[A-Z][\w\d]+)\(\) {/g, '$1 {')
+    // Replace multiple newlines with one
+    .replace(/\n{3,}/g, '\n\n');
 
   return fixIndents(str);
 };

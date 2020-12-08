@@ -718,7 +718,7 @@ export default function Fiddle() {
               <Alert
                 css={{
                   border: '1px solid rgb(128 182 224)',
-                  margin: 10,
+                  margin: '10px 10px 0 10px',
                 }}
                 severity="info"
               >
