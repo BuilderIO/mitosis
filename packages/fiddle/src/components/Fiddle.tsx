@@ -722,7 +722,7 @@ export default function Fiddle() {
                 }}
                 severity="info"
               >
-                SwiftUI support is <b>highly experimental</b>
+                SwiftUI support is <b>experimental</b>
               </Alert>
             </Show>
             <Show when={state.outputTab === 'react'}>
