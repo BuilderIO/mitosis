@@ -444,6 +444,10 @@ export const componentToSwift = (
     .replace(/}}\s*<\/For>\s*\),?/g, '}')
     // Remove dangling "()"
     .replace(/(\s[A-Z][\w\d]+)\(\) {/g, '$1 {')
+    // Replace (action: { foo() }) with (action: foo)
+    .replace(/\(\s*action:\s*{\s*([\w\d]+)\(\)\s*}\s*\)/g, '(action: $1)')
+    // Replace action: { foo() } with action: foo
+    .replace(/action:\s*{\s*([\w\d]+)\(\)\s*}/g, 'action: $1')
     // Replace multiple newlines with one
     .replace(/\n{3,}/g, '\n\n');
 
