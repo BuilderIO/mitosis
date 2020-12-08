@@ -131,6 +131,10 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
         : 'VStack'
       : json.name;
 
+  if (name === 'VStack' || name === 'HStack') {
+    json.bindings.padding = '0';
+  }
+
   if (json.name === 'For') {
     str += `_: <For each={${processBinding(
       json.bindings.each as string,
@@ -173,7 +177,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
           useKey = 'action';
         }
         // TODO: replace with fn refs
-        str += ` ${key}: () => { ${processBinding(value, options)} }, `;
+        str += ` ${useKey}: () => { ${processBinding(value, options)} }, `;
       } else {
         str += ` ${key}: ${processBinding(value, options)}, `;
       }
@@ -278,11 +282,19 @@ export const componentToSwift = (
     valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
   });
 
+  const methodString = getStateObjectString(json, {
+    format: 'class',
+    data: false,
+    getters: false,
+    valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
+  });
+
   let str = dedent`
     import "SwiftUI"
 
     class MyComponent {
       ${dataString}
+      ${methodString}
 
       __body = {
         _: VStack({})({
@@ -291,8 +303,6 @@ export const componentToSwift = (
       }
     }
   `;
-
-  console.log(`Preprocessed 1\n\n`, str);
 
   str = replaceSwiftMethods(str);
 
@@ -307,7 +317,6 @@ export const componentToSwift = (
           require('prettier/parser-postcss'),
         ],
       });
-      console.log(`Preprocessed 2\n\n`, str);
     } catch (err) {
       console.error(
         'Format error for file:',
@@ -342,7 +351,7 @@ export const componentToSwift = (
     // Remove arrow function
     .replace(/\(\)\s*=>/g, '')
     // Remove dangling "()"
-    .replace(/\(\)/g, '')
+    .replace(/([^\w\d])\(\)/g, '$1')
     // Remove dangling "({"
     .replace(/\({/g, ' {')
     // Remove dangling "})"

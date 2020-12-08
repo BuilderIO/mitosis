@@ -135,10 +135,10 @@ export const templates: { [key: string]: string } = {
 
     export default function MyComponent() {
       const state = useState({
-        list: [{ text: 'hello' }, { text: 'world' }],
+        list: ['hello', 'world'],
         newItemName: 'New item',
         addItem() {
-          state.list = [...state.list, { text: state.newItemName }]
+          state.list = [...state.list, state.newItemName]
         }
       });
     
@@ -159,7 +159,7 @@ export const templates: { [key: string]: string } = {
             <For each={state.list}>
               {item => (
                 <div class="border-gray-200 border-b" css={{ padding: '10px' }}>
-                  {item.text}
+                  {item}
                 </div>
               )}
             </For>
