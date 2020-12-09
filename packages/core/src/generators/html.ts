@@ -3,7 +3,7 @@ import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
-import { babelTransformCode } from '../helpers/babel-transform';
+import { babelTransformExpression } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
@@ -39,7 +39,7 @@ const addUpdateAfterSet = (
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
         let matchFound = false;
-        const newValue = babelTransformCode(value, {
+        const newValue = babelTransformExpression(value, {
           AssignmentExpression(
             path: babel.NodePath<babel.types.AssignmentExpression>,
           ) {

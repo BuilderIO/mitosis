@@ -8,7 +8,7 @@ import { capitalize } from '../helpers/capitalize';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { babelTransformCode } from '../helpers/babel-transform';
+import { babelTransformExpression } from '../helpers/babel-transform';
 import { ClassStyleMap } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
@@ -252,7 +252,7 @@ const updateStateSetters = (json: JSXLiteComponent) => {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
         let matchFound = false;
-        const newValue = babelTransformCode(value, {
+        const newValue = babelTransformExpression(value, {
           AssignmentExpression(
             path: babel.NodePath<babel.types.AssignmentExpression>,
           ) {

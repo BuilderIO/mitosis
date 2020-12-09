@@ -19,7 +19,7 @@ import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import traverse from 'traverse';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { babelTransformCode } from '../helpers/babel-transform';
+import { babelTransformExpression } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
@@ -190,7 +190,7 @@ const updateStateSetters = (json: JSXLiteComponent) => {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
         let matchFound = false;
-        const newValue = babelTransformCode(value, {
+        const newValue = babelTransformExpression(value, {
           AssignmentExpression(
             path: babel.NodePath<babel.types.AssignmentExpression>,
           ) {

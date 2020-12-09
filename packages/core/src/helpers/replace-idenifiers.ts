@@ -1,12 +1,12 @@
 import { types } from '@babel/core';
-import { babelTransformCode } from './babel-transform';
+import { babelTransformExpression } from './babel-transform';
 
 export const replaceIdentifiers = (
   code: string,
   from: string | string[],
   to: string | ((identifier: string) => string),
 ) => {
-  return babelTransformCode(code, {
+  return babelTransformExpression(code, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       if (
         // TODO: other exclusions

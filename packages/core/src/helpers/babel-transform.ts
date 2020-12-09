@@ -29,3 +29,12 @@ export const babelTransformCode = <VisitorContextType = any>(
 ) => {
   return babelTransform(code, visitor)?.code || '';
 };
+export const babelTransformExpression = <VisitorContextType = any>(
+  code: string,
+  visitor: Visitor<VisitorContextType>,
+) => {
+  const useCode = `let _ = ${code}`;
+  return (babelTransform(useCode, visitor)?.code || '')
+    .replace(/;$/, '')
+    .replace(/^let _ = /, '');
+};
