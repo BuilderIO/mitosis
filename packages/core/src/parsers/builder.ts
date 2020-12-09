@@ -1,10 +1,11 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { last, omit, pickBy } from 'lodash';
+import { last, mapKeys, omit, pickBy } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { sizes, Size, sizeNames } from '../constants/media-sizes';
+import { capitalize } from '../helpers/capitalize';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -67,6 +68,25 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
+const getBlockActions = (block: BuilderElement) => ({
+  ...block.actions,
+  ...block.code?.actions,
+});
+
+const getBlockActionsAsBindings = (block: BuilderElement) => {
+  return mapKeys(getBlockActions(block), (key) => `on${capitalize(key)}`);
+};
+
+const getBlockNonActionBindings = (block: BuilderElement) => ({
+  ...block.bindings,
+  ...block.code?.bindings,
+});
+
+const getBlockBindings = (block: BuilderElement) => ({
+  ...getBlockNonActionBindings(block),
+  ...getBlockActionsAsBindings(block),
+});
+
 const componentMappers: {
   [key: string]: (
     block: BuilderElement,
@@ -126,8 +146,9 @@ const componentMappers: {
   },
   Text: (block, options) => {
     let css = getCssFromBlock(block);
+    const blockBindings = getBlockBindings(block);
     const bindings: any = {
-      ...omit(block.bindings, 'component.options.text'),
+      ...omit(blockBindings, 'component.options.text'),
       ...(Object.keys(css).length && {
         css: JSON.stringify(css),
       }),
@@ -135,7 +156,7 @@ const componentMappers: {
     const properties = { ...block.properties };
 
     const innerBindings = {
-      _text: block.bindings?.['component.options.text'],
+      _text: blockBindings['component.options.text'],
     };
     const innerProperties = {
       _text: block.component!.options.text,
@@ -182,7 +203,8 @@ export const builderElementToJsxLiteNode = (
 ): JSXLiteNode => {
   // Special builder properties
   // TODO: support hide and repeat
-  const showBinding = block.bindings?.show;
+  const blockBindings = getBlockBindings(block);
+  const showBinding = blockBindings.show;
   if (showBinding) {
     const isFragment = block.component?.name === 'Fragment';
     // TODO: handle having other things, like a repeat too
@@ -206,7 +228,7 @@ export const builderElementToJsxLiteNode = (
         children: [
           builderElementToJsxLiteNode({
             ...block,
-            bindings: omit(block.bindings, 'show'),
+            bindings: omit(blockBindings, 'show'),
           }),
         ],
       });
@@ -223,14 +245,14 @@ export const builderElementToJsxLiteNode = (
 
   const bindings: any = {};
 
-  if (block.bindings) {
-    for (const key in block.bindings) {
+  if (blockBindings) {
+    for (const key in blockBindings) {
       if (key === 'css') {
         continue;
       }
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
-        bindings[useKey] = block.bindings[key];
+        bindings[useKey] = blockBindings[key];
       }
     }
   }

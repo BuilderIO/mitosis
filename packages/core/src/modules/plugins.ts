@@ -1,6 +1,8 @@
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 
-export type Plugin = {
+export type Plugin = (
+  options?: any,
+) => {
   json?: {
     // Happens before any modifiers
     pre?: (json: JSXLiteComponent) => JSXLiteComponent | void;
@@ -18,10 +20,11 @@ export type Plugin = {
 export const runPreJsonPlugins = (
   json: JSXLiteComponent,
   plugins: Plugin[],
+  options?: any,
 ) => {
   let useJson = json;
   for (const plugin of plugins) {
-    const preFunction = plugin.json?.pre;
+    const preFunction = plugin(options).json?.pre;
     if (preFunction) {
       useJson = preFunction(json) || json;
     }
@@ -32,10 +35,11 @@ export const runPreJsonPlugins = (
 export const runPostJsonPlugins = (
   json: JSXLiteComponent,
   plugins: Plugin[],
+  options?: any,
 ) => {
   let useJson = json;
   for (const plugin of plugins) {
-    const postFunction = plugin.json?.post;
+    const postFunction = plugin(options).json?.post;
     if (postFunction) {
       useJson = postFunction(json) || json;
     }
@@ -43,10 +47,14 @@ export const runPostJsonPlugins = (
   return useJson;
 };
 
-export const runPreCodePlugins = (code: string, plugins: Plugin[]) => {
+export const runPreCodePlugins = (
+  code: string,
+  plugins: Plugin[],
+  options?: any,
+) => {
   let string = code;
   for (const plugin of plugins) {
-    const preFunction = plugin.code?.pre;
+    const preFunction = plugin(options).code?.pre;
     if (preFunction) {
       string = preFunction(string);
     }
@@ -54,10 +62,14 @@ export const runPreCodePlugins = (code: string, plugins: Plugin[]) => {
   return string;
 };
 
-export const runPostCodePlugins = (code: string, plugins: Plugin[]) => {
+export const runPostCodePlugins = (
+  code: string,
+  plugins: Plugin[],
+  options?: any,
+) => {
   let string = code;
   for (const plugin of plugins) {
-    const postFunction = plugin.code?.post;
+    const postFunction = plugin(options).code?.post;
     if (postFunction) {
       string = postFunction(string);
     }
