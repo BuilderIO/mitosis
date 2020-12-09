@@ -18,7 +18,6 @@ import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import traverse from 'traverse';
-import { startCase } from 'lodash';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
@@ -31,6 +30,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import { capitalize } from '../helpers/capitalize';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -156,7 +156,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `const [${key}, set${startCase(
+        str += `const [${key}, set${capitalize(
           key,
         )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           functionValue,
@@ -166,14 +166,14 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
         const useValue = methodValue.replace(/^(get )?/, 'function ');
         str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else {
-        str += `const [${key}, set${startCase(
+        str += `const [${key}, set${capitalize(
           key,
         )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           json5.stringify(value),
         )}))${lineItemDelimiter} `;
       }
     } else {
-      str += `const [${key}, set${startCase(
+      str += `const [${key}, set${capitalize(
         key,
       )}] ${keyValueDelimiter} useState(() => (${valueMapper(
         json5.stringify(value),
@@ -205,7 +205,7 @@ const updateStateSetters = (json: JSXLiteComponent) => {
                   matchFound = true;
                   path.replaceWith(
                     types.callExpression(
-                      types.identifier(`set${startCase(propertyName)}`),
+                      types.identifier(`set${capitalize(propertyName)}`),
                       [node.right],
                     ),
                   );

@@ -2,8 +2,9 @@ import { types } from '@babel/core';
 import * as CSS from 'csstype';
 import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase, startCase } from 'lodash';
+import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
+import { capitalize } from '../helpers/capitalize';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -217,7 +218,7 @@ const getUseStateCode = (
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `const [${key}, set${startCase(
+        str += `const [${key}, set${capitalize(
           key,
         )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           functionValue,
@@ -227,14 +228,14 @@ const getUseStateCode = (
         const useValue = methodValue.replace(/^(get )?/, 'function ');
         str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else {
-        str += `const [${key}, set${startCase(
+        str += `const [${key}, set${capitalize(
           key,
         )}] ${keyValueDelimiter} useState(() => (${valueMapper(
           json5.stringify(value),
         )}))${lineItemDelimiter} `;
       }
     } else {
-      str += `const [${key}, set${startCase(
+      str += `const [${key}, set${capitalize(
         key,
       )}] ${keyValueDelimiter} useState(() => (${valueMapper(
         json5.stringify(value),
@@ -266,7 +267,7 @@ const updateStateSetters = (json: JSXLiteComponent) => {
                   matchFound = true;
                   path.replaceWith(
                     types.callExpression(
-                      types.identifier(`set${startCase(propertyName)}`),
+                      types.identifier(`set${capitalize(propertyName)}`),
                       [node.right],
                     ),
                   );

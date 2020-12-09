@@ -1,8 +1,9 @@
 import * as CSS from 'csstype';
-import json5, { stringify } from 'json5';
-import { camelCase, startCase } from 'lodash';
+import json5 from 'json5';
+import { camelCase } from 'lodash';
 import traverse from 'traverse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { capitalize } from './capitalize';
 import { dashCase } from './dash-case';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 import { isUpperCase } from './is-upper-case';
@@ -59,7 +60,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
         delete item.bindings.css;
         const componentName = /^h\d$/.test(item.name || '')
           ? item.name
-          : startCase(camelCase(item.name || 'div'));
+          : capitalize(camelCase(item.name || 'div'));
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
