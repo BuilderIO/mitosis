@@ -1,4 +1,4 @@
-import { JSXLiteNode } from "src/types/jsx-lite-node";
+import { JSXLiteNode } from 'src/types/jsx-lite-node';
 
 /**
  * This node is a component, vs a plain html tag (<Foo> vs <div>)

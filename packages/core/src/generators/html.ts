@@ -16,10 +16,18 @@ import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 type ToHtmlOptions = {
   prettier?: boolean;
   format?: 'class' | 'script';
+  plugins?: Plugin[];
 };
 
 type StringRecord = { [key: string]: string };
@@ -34,7 +42,7 @@ const addUpdateAfterSet = (
   json: JSXLiteComponent,
   options: InternalToHtmlOptions,
 ) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -75,7 +83,7 @@ const addUpdateAfterSet = (
 
 const getForNames = (json: JSXLiteComponent) => {
   const names: string[] = [];
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (item.name === 'For') {
         names.push(item.bindings._forName as string);
@@ -303,7 +311,10 @@ export const componentToHtml = (
     namesMap: {},
     format: 'script',
   };
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   replaceForNameIdentifiers(json);
   addUpdateAfterSet(json, useOptions);
   const componentHasProps = hasProps(json);
@@ -312,6 +323,9 @@ export const componentToHtml = (
 
   const hasState = Boolean(Object.keys(json.state).length);
 
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   const css = collectCss(json);
   let str = json.children
     .map((item) => blockToHtml(item, useOptions))
@@ -390,6 +404,9 @@ export const componentToHtml = (
     `;
   }
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -406,6 +423,9 @@ export const componentToHtml = (
       console.warn('Could not prettify', { string: str }, err);
     }
   }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
+  }
   return str;
 };
 
@@ -421,11 +441,18 @@ export const componentToCustomElement = (
     namesMap: {},
     format: 'class',
   };
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   replaceForNameIdentifiers(json);
   addUpdateAfterSet(json, useOptions);
 
   const hasLoop = hasComponent('For', json);
+
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
 
   const css = collectCss(json);
 
@@ -532,6 +559,9 @@ export const componentToCustomElement = (
       customElements.define('my-component', MyComponent);
     `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -547,6 +577,9 @@ export const componentToCustomElement = (
     } catch (err) {
       console.warn('Could not prettify', { string: str }, err);
     }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };

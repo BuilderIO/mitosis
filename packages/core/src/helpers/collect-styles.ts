@@ -1,6 +1,7 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
+import { JSXLiteNode } from 'src/types/jsx-lite-node';
 import traverse from 'traverse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { capitalize } from './capitalize';
@@ -8,12 +9,19 @@ import { dashCase } from './dash-case';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 import { isUpperCase } from './is-upper-case';
 
+export const nodeHasStyles = (node: JSXLiteNode) => {
+  return Boolean(
+    typeof node.bindings.css === 'string' &&
+      node.bindings.css.trim().length > 6,
+  );
+};
+
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function (item) {
+  traverse(component).forEach(function(item) {
     if (isJsxLiteNode(item)) {
-      if (item.bindings.css) {
+      if (nodeHasStyles(item)) {
         hasStyles = true;
         this.stop();
       }
@@ -53,10 +61,10 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
-      if (typeof item.bindings.css === 'string') {
-        const value = json5.parse(item.bindings.css);
+      if (nodeHasStyles(item)) {
+        const value = json5.parse(item.bindings.css as string);
         delete item.bindings.css;
         const componentName = /^h\d$/.test(item.name || '')
           ? item.name
@@ -78,6 +86,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
           const ${className} = ${prefix}${css}\`
         `;
       }
+      delete item.bindings.css;
     }
   });
 
@@ -94,10 +103,10 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
-      if (typeof item.bindings.css === 'string') {
-        const value = json5.parse(item.bindings.css);
+      if (nodeHasStyles(item)) {
+        const value = json5.parse(item.bindings.css as string);
         delete item.bindings.css;
         const componentName = /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
@@ -106,14 +115,14 @@ export const collectStyles = (
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties[classProperty] = `${
-          item.properties[classProperty] || ''
-        } ${className}`
+        item.properties[classProperty] = `${item.properties[classProperty] ||
+          ''} ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
         styleMap[className] = value;
       }
+      delete item.bindings.css;
     }
   });
 

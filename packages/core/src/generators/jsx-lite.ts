@@ -13,7 +13,7 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 type ToJsxLiteOptions = {
   prettier?: boolean;
 };
-const blockToJsxLite = (
+export const blockToJsxLite = (
   json: JSXLiteNode,
   options: ToJsxLiteOptions = {},
 ): string => {

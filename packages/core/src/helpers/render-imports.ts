@@ -62,6 +62,10 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
   let importString = '';
 
   for (const theImport of imports) {
+    // Remove compile away components
+    if (theImport.path === '@builder.io/components') {
+      continue;
+    }
     importString += renderImport(theImport) + '\n';
   }
 

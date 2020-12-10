@@ -7,3 +7,10 @@ export const parseNode = (str: string) => {
     }
   `).children[0];
 };
+export const parseNodes = (str: string) => {
+  return parseJsx(`
+    export default function MyCompoennt() {
+      return (<>${str}</>)
+    }
+  `).children[0].children;
+};

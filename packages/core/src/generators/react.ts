@@ -97,6 +97,9 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
       if (key === '_spread') {
         continue;
       }
+      if (key === 'css' && value.trim() === '{}') {
+        continue;
+      }
 
       if (key.startsWith('on')) {
         str += ` ${key}={event => (${processBinding(value, options)})} `;
@@ -185,7 +188,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;

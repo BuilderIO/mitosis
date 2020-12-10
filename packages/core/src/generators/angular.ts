@@ -10,9 +10,17 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 export type ToAngularOptions = {
   prettier?: boolean;
+  plugins?: Plugin[];
 };
 
 const mappers: {
@@ -115,11 +123,17 @@ export const componentToAngular = (
   options: ToAngularOptions = {},
 ) => {
   // Make a copy we can safely mutate, similar to babel's toolchain
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
 
   const refs = Array.from(getRefs(json));
   mapRefs(json, (refName) => `this.${refName}.nativeElement`);
 
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   let css = collectCss(json);
   if (options.prettier !== false) {
     css = tryFormat(css, 'postcss');
@@ -163,8 +177,14 @@ export const componentToAngular = (
     }
   `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     str = tryFormat(str, 'typescript');
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };

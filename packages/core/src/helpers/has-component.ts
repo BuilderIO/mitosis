@@ -4,7 +4,7 @@ import { isJsxLiteNode } from './is-jsx-lite-node';
 
 export const hasComponent = (name: string, json: JSXLiteComponent) => {
   let has = false;
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (item.name === name) {
         has = true;

@@ -9,9 +9,17 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 export type ToVueOptions = {
   prettier?: boolean;
+  plugins?: Plugin[];
 };
 
 const mappers: {
@@ -101,10 +109,16 @@ export const componentToVue = (
   options: ToVueOptions = {},
 ) => {
   // Make a copy we can safely mutate, similar to babel's toolchain
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
 
   mapRefs(json, (refName) => `this.$refs.${refName}`);
 
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   const css = collectCss(json);
 
   let dataString = getStateObjectString(json, {
@@ -179,6 +193,9 @@ export const componentToVue = (
     }
   `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -193,6 +210,9 @@ export const componentToVue = (
     } catch (err) {
       console.warn('Could not prettify', { string: str }, err);
     }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };
