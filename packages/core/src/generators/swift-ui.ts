@@ -13,26 +13,14 @@ import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { getStyles } from '../helpers/get-styles';
+import { JSXLiteStyles } from '../types/jsx-lite-styles';
 
 type ToSwiftOptions = {
   prettier?: boolean;
 };
 
 const temp = (fragment: string) => fragment;
-
-const getStyles = (json: JSXLiteNode) => {
-  if (!json.bindings.css) {
-    return null;
-  }
-  let css: CSS.Properties;
-  try {
-    css = json5.parse(json.bindings.css as string);
-  } catch (err) {
-    console.warn('Could not json 5 parse css', err);
-    return null;
-  }
-  return css;
-};
 
 const scrolls = (json: JSXLiteNode) => {
   return getStyles(json)?.overflow === 'auto';
@@ -199,7 +187,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
     str += `}${temp(')')}`;
     for (const key in style) {
       let useKey = key;
-      const rawValue = style[key as keyof CSS.Properties]!;
+      const rawValue = style[key as keyof JSXLiteStyles]!;
       let value: number | string = `"${rawValue}"`;
       if (['padding', 'margin'].includes(key)) {
         // TODO: throw error if calc()

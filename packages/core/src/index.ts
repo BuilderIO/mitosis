@@ -23,3 +23,5 @@ export * from './generators/jsx-lite';
 export * from './generators/swift-ui';
 export * from './generators/react-native';
 export * from './helpers/parse-reactive-script';
+export * from './plugins/compile-away-builder-components';
+export * from './plugins/map-styles';

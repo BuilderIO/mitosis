@@ -26,6 +26,8 @@ import {
   reactiveScriptRe,
   parseReactiveScript,
   componentToCustomElement,
+  compileAwayBuilderComponents,
+  mapStyles,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -60,6 +62,7 @@ import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
 
 const debug = getQueryParam('debug') === 'true';
+const lite = getQueryParam('lite') === 'true';
 
 const AlphaPreviewMessage = () => (
   <ThemeProvider
@@ -240,6 +243,18 @@ export default function Fiddle() {
       });
     },
     updateOutput() {
+      const plugins = [
+        compileAwayBuilderComponents(),
+        mapStyles({
+          map: (styles) => ({
+            ...styles,
+            boxSizing: undefined,
+            flexShrink: undefined,
+            alignItems:
+              styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+          }),
+        }),
+      ];
       try {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
@@ -255,6 +270,7 @@ export default function Fiddle() {
             ? componentToReact(json, {
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
+                plugins,
               })
             : state.outputTab === 'swift'
             ? componentToSwift(json)
@@ -1042,20 +1058,22 @@ export default function Fiddle() {
                   },
                 }}
               >
-                <BuilderEditor
-                  onChange={(e: CustomEvent) => {
-                    if (useSaveButton) {
-                      if (document.activeElement?.tagName === 'IFRAME') {
-                        state.pendingBuilderChange = e.detail;
+                {!lite && (
+                  <BuilderEditor
+                    onChange={(e: CustomEvent) => {
+                      if (useSaveButton) {
+                        if (document.activeElement?.tagName === 'IFRAME') {
+                          state.pendingBuilderChange = e.detail;
+                        }
+                      } else {
+                        state.applyPendingBuilderChange(e.detail);
                       }
-                    } else {
-                      state.applyPendingBuilderChange(e.detail);
-                    }
-                  }}
-                  data={builderData}
-                  options={builderOptions}
-                  env={builderEnvParam || undefined}
-                />
+                    }}
+                    data={builderData}
+                    options={builderOptions}
+                    env={builderEnvParam || undefined}
+                  />
+                )}
                 <Show when={state.inputTab === 'figma'}>
                   <div
                     css={{
