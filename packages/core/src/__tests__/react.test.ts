@@ -8,6 +8,7 @@ const formBlock = require('./data/blocks/form.raw');
 const button = require('./data/blocks/button.raw');
 const textarea = require('./data/blocks/textarea.raw');
 const img = require('./data/blocks/img.raw');
+const video = require('./data/blocks/video.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -54,6 +55,12 @@ describe('React', () => {
 
   test('Img', () => {
     const json = parseJsx(img);
+    const output = componentToReact(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Video', () => {
+    const json = parseJsx(video);
     const output = componentToReact(json);
     expect(output).toMatchSnapshot();
   });
