@@ -8,11 +8,17 @@ export interface SectionProps {
   maxWidth?: number;
 }
 
-export default function SectionComponent({ maxWidth, builderBlock, ...props}: SectionProps) {
+export default function SectionComponent({
+  maxWidth,
+  builderBlock,
+  ...props
+}: SectionProps) {
   return (
     <section
       {...props.attributes}
-      style={maxWidth && typeof maxWidth === 'number' ? { maxWidth } : undefined}
+      style={
+        maxWidth && typeof maxWidth === 'number' ? { maxWidth } : undefined
+      }
     >
       <Show when={builderBlock && builderBlock.children}>
         <For each={builderBlock?.children}>
