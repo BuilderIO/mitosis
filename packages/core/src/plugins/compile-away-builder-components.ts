@@ -38,7 +38,7 @@ type CompileAwayBuilderComponentsOptions = {
 
 export const compileAwayBuilderComponents = (
   pluginOptions: CompileAwayBuilderComponentsOptions = {},
-) => (options?: any) => {
+) => {
   let obj = components;
   if (pluginOptions.omit) {
     obj = omit(obj, pluginOptions.omit);
