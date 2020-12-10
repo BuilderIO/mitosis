@@ -1,5 +1,5 @@
 import { mapValues, omit, pick } from 'lodash';
-import { parseNode } from 'src/helpers/parse-node';
+import { parseNode } from '../helpers/parse-node';
 import { TraverseContext } from 'traverse';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
