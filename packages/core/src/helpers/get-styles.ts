@@ -1,5 +1,6 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
+import { size } from 'lodash';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { JSXLiteStyles } from '../types/jsx-lite-styles';
 
@@ -17,6 +18,10 @@ export const getStyles = (json: JSXLiteNode) => {
   return css;
 };
 
-export const setStyles = (json: JSXLiteNode, styles: JSXLiteStyles) => {
-  json.bindings.css = json5.stringify(styles);
+export const setStyles = (json: JSXLiteNode, styles: JSXLiteStyles | null) => {
+  if (!size(styles)) {
+    delete json.bindings.css;
+  } else {
+    json.bindings.css = json5.stringify(styles);
+  }
 };
