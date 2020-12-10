@@ -10,7 +10,8 @@ export interface VideoProps {
   width?: number;
   height?: number;
   fit?: 'contain' | 'cover' | 'fill';
-  position?:     | 'center'
+  position?:
+    | 'center'
     | 'top'
     | 'left'
     | 'right'

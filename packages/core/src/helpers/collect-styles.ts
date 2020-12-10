@@ -11,7 +11,7 @@ import { isUpperCase } from './is-upper-case';
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function (item) {
+  traverse(component).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (item.bindings.css) {
         hasStyles = true;
@@ -53,7 +53,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -94,7 +94,7 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -106,9 +106,8 @@ export const collectStyles = (
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties[classProperty] = `${
-          item.properties[classProperty] || ''
-        } ${className}`
+        item.properties[classProperty] = `${item.properties[classProperty] ||
+          ''} ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 

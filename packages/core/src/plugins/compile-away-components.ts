@@ -25,7 +25,7 @@ type CompileAwayComponentsOptions = {
  *    componentToReact(jsxLiteJson, {
  *      plugins: [
  *        compileAwayComponents({
- *          Image: (node) => {  
+ *          Image: (node) => {
  *             return jsx(`
  *               <div>
  *                 <img src="${node.properties.image}" />
@@ -41,7 +41,7 @@ export const compileAwayComponents = (
 ) => (options?: any) => ({
   json: {
     pre: (json: JSXLiteComponent) => {
-      traverse(json).forEach(function (item) {
+      traverse(json).forEach(function(item) {
         if (isJsxLiteNode(item)) {
           const mapper = pluginOptions.components[item.name];
           if (mapper) {

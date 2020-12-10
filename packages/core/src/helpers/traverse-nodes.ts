@@ -7,7 +7,7 @@ export function tarverseNodes(
   component: JSXLiteComponent | JSXLiteNode,
   cb: (node: JSXLiteNode, context: TraverseContext) => void,
 ) {
-  traverse(component).forEach(function (item) {
+  traverse(component).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       cb(item, this);
     }
