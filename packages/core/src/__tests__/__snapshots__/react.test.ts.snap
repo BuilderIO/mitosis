@@ -330,7 +330,7 @@ export default function MyComponent(props) {
       >
         {Boolean(props.builderBlock && props.builderBlock.children) && (
           <>
-            {props.builderBlock.children.map((block) => (
+            {props.builderBlock?.children.map((block) => (
               <>
                 <BuilderBlockComponent
                   key={block.id}
@@ -458,6 +458,47 @@ export default function MyComponent(props) {
         defaultValue={props.defaultValue}
         required={props.required}
       />
+    </>
+  );
+}
+"
+`;
+
+exports[`React Section 1`] = `
+"import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+
+export interface SectionProps {
+  attributes?: any;
+  builderBlock?: BuilderElement;
+  maxWidth?: number;
+}
+
+export default function MyComponent(props) {
+  return (
+    <>
+      <section
+        {...props.attributes}
+        style={
+          maxWidth && typeof maxWidth === \\"number\\"
+            ? {
+                maxWidth,
+              }
+            : undefined
+        }
+      >
+        {Boolean(builderBlock && builderBlock.children) && (
+          <>
+            {builderBlock?.children.map((block) => (
+              <>
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                ></BuilderBlockComponent>
+              </>
+            ))}
+          </>
+        )}
+      </section>
     </>
   );
 }

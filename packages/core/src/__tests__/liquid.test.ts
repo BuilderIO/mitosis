@@ -1,14 +1,15 @@
 import { componentToLiquid } from '../generators/liquid';
 import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
+const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
 const formBlock = require('./data/blocks/form.raw');
-const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const button = require('./data/blocks/button.raw');
 const textarea = require('./data/blocks/textarea.raw');
 const img = require('./data/blocks/img.raw');
 const video = require('./data/blocks/video.raw');
+const section = require('./data/blocks/section.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -61,6 +62,12 @@ describe('Liquid', () => {
 
   test('Video', () => {
     const json = parseJsx(video);
+    const output = componentToLiquid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Section', () => {
+    const json = parseJsx(section);
     const output = componentToLiquid(json);
     expect(output).toMatchSnapshot();
   });
