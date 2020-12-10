@@ -8,6 +8,7 @@ const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const button = require('./data/blocks/button.raw');
 const textarea = require('./data/blocks/textarea.raw');
 const img = require('./data/blocks/img.raw');
+const video = require('./data/blocks/video.raw');
 
 describe('Vue', () => {
   test('Basic', () => {
@@ -54,6 +55,12 @@ describe('Vue', () => {
 
   test('Img', () => {
     const json = parseJsx(img);
+    const output = componentToVue(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Video', () => {
+    const json = parseJsx(video);
     const output = componentToVue(json);
     expect(output).toMatchSnapshot();
   });
