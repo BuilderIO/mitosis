@@ -5,6 +5,13 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 /**
  * Test if the binding expression would be likely to generate
@@ -28,6 +35,7 @@ export const isValidLiquidBinding = (str = '') => {
 
 type ToLiquidOptions = {
   prettier?: boolean;
+  plugins?: Plugin[];
 };
 
 const mappers: {
@@ -142,14 +150,23 @@ export const componentToLiquid = (
   componentJson: JSXLiteComponent,
   options: ToLiquidOptions = {},
 ) => {
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   const css = collectCss(json);
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   let str = json.children.map((item) => blockToLiquid(item)).join('\n');
 
   if (css.trim().length) {
     str += `<style>${css}</style>`;
   }
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -165,6 +182,9 @@ export const componentToLiquid = (
     } catch (err) {
       console.warn('Could not prettify', { string: str }, err);
     }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };

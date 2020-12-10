@@ -7,6 +7,14 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
+import { fastClone } from '../helpers/fast-clone';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
@@ -63,6 +71,7 @@ const collectClassString = (json: JSXLiteNode): string | null => {
 
 type ToSolidOptions = {
   prettier?: boolean;
+  plugins?: Plugin[];
 };
 const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
   if (json.properties._text) {
@@ -125,11 +134,18 @@ const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
 };
 
 export const componentToSolid = (
-  json: JSXLiteComponent,
+  componentJson: JSXLiteComponent,
   options: ToSolidOptions = {},
 ) => {
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   const componentHasStyles = hasStyles(json);
   const addWrapper = json.children.length > 1;
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
   let str = dedent`
     import { createMutable, Show, For } from 'solid-js';
     ${
@@ -150,11 +166,17 @@ export const componentToSolid = (
    
   `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     str = format(str, {
       parser: 'typescript',
       plugins: [require('prettier/parser-typescript')],
     });
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };

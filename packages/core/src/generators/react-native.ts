@@ -22,13 +22,20 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  Plugin,
+  runPostCodePlugins,
+  runPostJsonPlugins,
+  runPreCodePlugins,
+  runPreJsonPlugins,
+} from '../modules/plugins';
 
 export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -50,6 +57,7 @@ export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
 type ToReactNativeOptions = {
   prettier?: boolean;
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  plugins?: Plugin[];
 };
 
 const getStyles = (json: JSXLiteNode) => {
@@ -247,7 +255,7 @@ const getUseStateCode = (
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -307,7 +315,10 @@ export const componentToReactNative = (
   componentJson: JSXLiteComponent,
   options: ToReactNativeOptions = {},
 ) => {
-  const json = fastClone(componentJson);
+  let json = fastClone(componentJson);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json);
@@ -321,6 +332,10 @@ export const componentToReactNative = (
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stateType = options.stateType || 'mobx';
+
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
 
   const useStateCode =
     stateType === 'useState' && getUseStateCode(json, options);
@@ -393,6 +408,9 @@ export const componentToReactNative = (
 
   `;
 
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
   if (options.prettier !== false) {
     try {
       str = format(str, {
@@ -412,6 +430,9 @@ export const componentToReactNative = (
       );
       throw err;
     }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
   }
   return str;
 };

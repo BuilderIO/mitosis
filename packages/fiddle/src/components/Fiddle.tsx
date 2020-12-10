@@ -261,7 +261,7 @@ export default function Fiddle() {
         const json = parseJsx(state.code);
         state.output =
           state.outputTab === 'liquid'
-            ? componentToLiquid(json)
+            ? componentToLiquid(json, { plugins })
             : state.outputTab === 'html'
             ? componentToHtml(json, { plugins })
             : state.outputTab === 'webcomponents'
@@ -277,14 +277,16 @@ export default function Fiddle() {
             : state.outputTab === 'reactNative'
             ? componentToReactNative(json, {
                 stateType: state.options.reactStateType,
+                plugins,
               })
             : state.outputTab === 'solid'
-            ? componentToSolid(json)
+            ? componentToSolid(json, { plugins })
             : state.outputTab === 'angular'
             ? componentToAngular(json, { plugins })
             : state.outputTab === 'svelte'
             ? componentToSvelte(json, {
                 stateType: state.options.svelteStateType,
+                plugins,
               })
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
@@ -396,8 +398,9 @@ export default function Fiddle() {
     const outputMonacoEditorSize = device.small
       ? `calc(${state.outputsTabHeight}vh - 50px)`
       : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {

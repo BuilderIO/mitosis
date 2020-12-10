@@ -188,7 +188,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -248,6 +248,9 @@ export const componentToReact = (
 
   const useStateCode =
     stateType === 'useState' && getUseStateCode(json, options);
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
 
   const css =
     stylesType === 'styled-jsx' &&
@@ -258,9 +261,6 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
   let str = dedent`
   ${
     useStateCode && useStateCode.length > 4
