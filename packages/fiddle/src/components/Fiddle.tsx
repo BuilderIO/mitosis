@@ -28,6 +28,7 @@ import {
   componentToCustomElement,
   compileAwayBuilderComponents,
   mapStyles,
+  componentToTemplate,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -277,6 +278,10 @@ export default function Fiddle() {
             : state.outputTab === 'reactNative'
             ? componentToReactNative(json, {
                 stateType: state.options.reactStateType,
+                plugins,
+              })
+            : state.outputTab === 'template'
+            ? componentToTemplate(json, {
                 plugins,
               })
             : state.outputTab === 'solid'
@@ -712,6 +717,10 @@ export default function Fiddle() {
                   value="liquid"
                 />
                 <Tab
+                  label={<TabLabelWithIcon label="Template" />}
+                  value="template"
+                />
+                <Tab
                   label={
                     <TabLabelWithIcon
                       label="JSON"
@@ -932,6 +941,7 @@ export default function Fiddle() {
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
+                        state.outputTab === 'template' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||
                         state.outputTab === 'solid'
