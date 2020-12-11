@@ -458,12 +458,10 @@ export default function MyComponent() {
 exports[`Solid Section 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 
-import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
-
 export interface SectionProps {
-  attributes?: any;
-  builderBlock?: BuilderElement;
   maxWidth?: number;
+  attributes?: any;
+  children?: any;
 }
 
 export default function MyComponent() {
@@ -480,14 +478,7 @@ export default function MyComponent() {
           : undefined
       }
     >
-      <Show when={builderBlock && builderBlock.children}>
-        <For each={builderBlock?.children}>
-          <BuilderBlockComponent
-            key={block.id}
-            block={block}
-          ></BuilderBlockComponent>
-        </For>
-      </Show>
+      {props.children}
     </section>
   );
 }

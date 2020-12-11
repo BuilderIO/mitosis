@@ -1,18 +1,12 @@
-import { Show, For } from '@jsx-lite/core';
-import { BuilderElement } from '@builder.io/sdk';
-import { BuilderBlock as BuilderBlockComponent } from '@fake';
+import '@jsx-lite/core';
 
 export interface SectionProps {
-  attributes?: any;
-  builderBlock?: BuilderElement;
   maxWidth?: number;
+  attributes?: any;
+  children?: any;
 }
 
-export default function SectionComponent({
-  maxWidth,
-  builderBlock,
-  ...props
-}: SectionProps) {
+export default function SectionComponent({ maxWidth, ...props }: SectionProps) {
   return (
     <section
       {...props.attributes}
@@ -20,11 +14,7 @@ export default function SectionComponent({
         maxWidth && typeof maxWidth === 'number' ? { maxWidth } : undefined
       }
     >
-      <Show when={builderBlock && builderBlock.children}>
-        <For each={builderBlock?.children}>
-          {(block) => <BuilderBlockComponent key={block.id} block={block} />}
-        </For>
-      </Show>
+      {props.children}
     </section>
   );
 }

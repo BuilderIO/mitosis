@@ -465,12 +465,10 @@ export default function MyComponent(props) {
 `;
 
 exports[`React Section 1`] = `
-"import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
-
-export interface SectionProps {
-  attributes?: any;
-  builderBlock?: BuilderElement;
+"export interface SectionProps {
   maxWidth?: number;
+  attributes?: any;
+  children?: any;
 }
 
 export default function MyComponent(props) {
@@ -486,18 +484,7 @@ export default function MyComponent(props) {
             : undefined
         }
       >
-        {Boolean(builderBlock && builderBlock.children) && (
-          <>
-            {builderBlock?.children.map((block) => (
-              <>
-                <BuilderBlockComponent
-                  key={block.id}
-                  block={block}
-                ></BuilderBlockComponent>
-              </>
-            ))}
-          </>
-        )}
+        {props.children}
       </section>
     </>
   );
