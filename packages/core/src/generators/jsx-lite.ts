@@ -20,7 +20,7 @@ export const blockToJsxLite = (
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each}}>
-    {(${json.bindings._forName}, index) => 
+    {(${json.bindings._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToJsxLite(child, options))}}
       ${needsWrapper ? '</>' : ''}
@@ -30,6 +30,7 @@ export const blockToJsxLite = (
   if (json.properties._text) {
     return json.properties._text as string;
   }
+
   if (json.bindings._text) {
     return `{${json.bindings._text}}`;
   }
@@ -129,7 +130,7 @@ export const componentToJsxLite = (
           )} } from '@builder.io/components';`
     }
     ${renderPreComponent(json)}
-    
+
     export default function MyComponent(props) {
       ${
         !hasState
@@ -142,7 +143,7 @@ export const componentToJsxLite = (
         ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
         ${addWrapper ? '</div>' : ''})
     }
-   
+
   `;
 
   if (options.prettier !== false) {

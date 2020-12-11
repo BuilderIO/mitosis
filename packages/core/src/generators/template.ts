@@ -58,7 +58,7 @@ const blockToTemplate = (
         .join('\n');
     }
 
-    str += '\`).join("")}';
+    str += '`).join("")}';
   } else if (json.name === 'Show') {
     str += `\${!(${json.bindings.when as string}) ? '' : \``;
     if (json.children) {

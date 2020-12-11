@@ -330,7 +330,7 @@ export default function MyComponent() {
       onSubmit={(event) => state.onSubmit(event)}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
-        <For each={props.builderBlock!.children}>
+        <For each={props.builderBlock?.children}>
           <BuilderBlockComponent
             key={block.id}
             block={block}
@@ -450,6 +450,36 @@ export default function MyComponent() {
       defaultValue={props.defaultValue}
       required={props.required}
     />
+  );
+}
+"
+`;
+
+exports[`Solid Section 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+export default function MyComponent() {
+  const state = createMutable({});
+
+  return (
+    <section
+      {...props.attributes}
+      style={
+        maxWidth && typeof maxWidth === \\"number\\"
+          ? {
+              maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
   );
 }
 "

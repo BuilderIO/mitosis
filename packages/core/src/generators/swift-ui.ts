@@ -5,6 +5,7 @@ import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { babelTransformCode } from '../helpers/babel-transform';
 import traverse from 'traverse';
+import isChildren from '../helpers/is-children';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getStateObjectString } from '../helpers/get-state-object-string';
@@ -73,9 +74,16 @@ const mappers: {
   },
 };
 
-const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
+const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  // TODO: Add support for `{props.children}` bindings
+  // Right now we return an empty string because the generated code
+  // is very likely wrong.
+  if (isChildren(json)) {
+    return '// `props.children` is not supported yet for SwiftUI';
   }
 
   if (json.properties._text) {

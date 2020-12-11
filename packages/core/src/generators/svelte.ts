@@ -19,6 +19,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
@@ -36,9 +37,16 @@ const mappers: {
   },
 };
 
-export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
+export const blockToSvelte = (
+  json: JSXLiteNode,
+  options: ToSvelteOptions,
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  if (isChildren(json)) {
+    return `<slot></slot>`;
   }
 
   if (json.properties._text) {
@@ -121,7 +129,7 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
@@ -212,10 +220,10 @@ export const componentToSvelte = (
         .concat(props)
         .map((name) => `let ${name};`)
         .join('\n')}
-      
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
-      
+
       ${
         options.stateType === 'proxies'
           ? dataString.length < 4

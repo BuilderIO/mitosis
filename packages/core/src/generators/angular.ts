@@ -17,6 +17,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 export type ToAngularOptions = {
   prettier?: boolean;
@@ -36,9 +37,13 @@ const mappers: {
 export const blockToAngular = (
   json: JSXLiteNode,
   options: ToAngularOptions = {},
-) => {
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  if (isChildren(json)) {
+    return `<ng-slot></ng-slot>`;
   }
 
   if (json.properties._text) {

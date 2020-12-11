@@ -49,14 +49,20 @@ const mappers: {
 };
 
 // TODO: spread support
-const blockToLiquid = (json: JSXLiteNode, options: ToLiquidOptions = {}) => {
+const blockToLiquid = (
+  json: JSXLiteNode,
+  options: ToLiquidOptions = {},
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
 
+  // TODO: Add support for `{props.children}` bindings
+
   if (json.properties._text) {
     return json.properties._text;
   }
+
   if (json.bindings._text) {
     if (!isValidLiquidBinding(json.bindings._text as string)) {
       return '';

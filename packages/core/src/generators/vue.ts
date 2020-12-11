@@ -16,6 +16,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -32,9 +33,16 @@ const mappers: {
   },
 };
 
-export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
+export const blockToVue = (
+  json: JSXLiteNode,
+  options: ToVueOptions = {},
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  if (isChildren(json)) {
+    return `<slot></slot>`;
   }
 
   if (json.properties._text) {
@@ -159,7 +167,7 @@ export const componentToVue = (
     </template>
     <script>
       ${renderPreComponent(json)}
-      
+
       export default {
         ${
           dataString.length < 4

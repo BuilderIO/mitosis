@@ -29,6 +29,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
@@ -91,9 +92,15 @@ const mappers: {
 const blockToReactNative = (
   json: JSXLiteNode,
   options: ToReactNativeOptions,
-) => {
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  if (isChildren(json)) {
+    // The default generator uses `<Text/>` so we override it here
+    // to use `<View/>` which is the ReactNative analog to React's `<div/>`
+    return `<View>{${json.bindings._text}}</View>`;
   }
 
   if (json.properties._text) {
@@ -401,7 +408,7 @@ export const componentToReactNative = (
       !hasStyles
         ? ''
         : `
-    
+
       const styles = StyleSheet.create(${json5.stringify(styles)})
     `
     }

@@ -59,7 +59,7 @@ exports[`Vue Form block 1`] = `
     @submit=\\"onSubmit(event)\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
-      <template v-for=\\"block in builderBlock.children\\"
+      <template v-for=\\"block in builderBlock?.children\\"
         ><BuilderBlockComponent
           :key=\\"block.id\\"
           :block=\\"block\\"
@@ -440,6 +440,33 @@ export interface FormInputProps {
 export default {
   data: () => ({ Builder }),
 };
+</script>
+"
+`;
+
+exports[`Vue Section 1`] = `
+"<template>
+  <section
+    v-bind=\\"attributes\\"
+    :style=\\"
+      maxWidth && typeof maxWidth === 'number'
+        ? {
+            maxWidth,
+          }
+        : undefined
+    \\"
+  >
+    <slot></slot>
+  </section>
+</template>
+<script>
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+export default {};
 </script>
 "
 `;

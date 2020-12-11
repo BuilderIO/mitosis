@@ -23,6 +23,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 type ToHtmlOptions = {
   prettier?: boolean;
@@ -171,6 +172,10 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
 
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
+  }
+
+  if (isChildren(json)) {
+    return `<slot></slot>`;
   }
 
   if (json.properties._text) {
@@ -555,7 +560,7 @@ export const componentToCustomElement = (
         `
         }
       }
-      
+
       customElements.define('my-component', MyComponent);
     `;
 
