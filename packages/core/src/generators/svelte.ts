@@ -36,7 +36,10 @@ const mappers: {
   },
 };
 
-export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
+export const blockToSvelte = (
+  json: JSXLiteNode,
+  options: ToSvelteOptions,
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }

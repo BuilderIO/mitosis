@@ -36,7 +36,7 @@ const mappers: {
 export const blockToAngular = (
   json: JSXLiteNode,
   options: ToAngularOptions = {},
-) => {
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }

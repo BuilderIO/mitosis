@@ -32,7 +32,10 @@ const mappers: {
   },
 };
 
-export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
+export const blockToVue = (
+  json: JSXLiteNode,
+  options: ToVueOptions = {},
+): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }

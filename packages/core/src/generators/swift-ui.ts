@@ -73,12 +73,17 @@ const mappers: {
   },
 };
 
-const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
+const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
 
   // TODO: Add support for `{props.children}` bindings
+  // Right now we return an empty string because the generated code
+  // is very likely wrong.
+  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+    return '// `props.children` is not supported yet for SwiftUI';
+  }
 
   if (json.properties._text) {
     if (!json.properties._text.trim().length) {
