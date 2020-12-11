@@ -19,6 +19,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import isChildren from '../helpers/is-children';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
@@ -44,7 +45,7 @@ export const blockToSvelte = (
     return mappers[json.name](json, options);
   }
 
-  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+  if (isChildren(json)) {
     return `<slot></slot>`;
   }
 
