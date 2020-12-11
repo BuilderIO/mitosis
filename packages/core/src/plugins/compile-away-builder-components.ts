@@ -4,6 +4,7 @@ import { TraverseContext } from 'traverse';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { compileAwayComponents } from './compile-away-components';
 import { blockToJsxLite } from '../generators/jsx-lite';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 
 const getRenderOptions = (node: JSXLiteNode) => {
   return {
@@ -29,7 +30,7 @@ const components: {
   ) => JSXLiteNode | void;
 } = {
   Columns(node: JSXLiteNode, context) {
-    const columns = node.children.map((item) => ({
+    const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
       width: parseFloat(item.properties.width) || 0,
       children: item.children,
     }));
@@ -60,11 +61,11 @@ const components: {
               "@media (max-width: ${
                 properties.stackColumnsAt !== 'tablet' ? 639 : 999
               }px)": {
-                flexDirection: ${
+                flexDirection: "${
                   properties.reverseColumnsWhenStacked === 'true'
                     ? 'column-reverse'
                     : 'column'
-                },
+                }",
                 alignItems: 'stretch',
               },
             `

@@ -12,7 +12,7 @@ export const getStyles = (json: JSXLiteNode) => {
   try {
     css = json5.parse(json.bindings.css as string);
   } catch (err) {
-    console.warn('Could not json 5 parse css', err);
+    console.warn('Could not json 5 parse css', err, json.bindings.css);
     return null;
   }
   return css;
