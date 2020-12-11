@@ -31,6 +31,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { capitalize } from '../helpers/capitalize';
+import { JSXLiteStyles } from 'src/types/jsx-lite-styles';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -188,7 +189,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -223,6 +224,19 @@ const updateStateSetters = (json: JSXLiteComponent) => {
       }
     }
   });
+};
+
+const getInitCode = (json: JSXLiteComponent): string => {
+  if (!json.hooks.init) {
+    return '';
+  }
+  return `
+    const [firstRender, setFirstRender] = React.useState(true);
+    if (firstRender) {
+      setFirstRender(false);
+      ${json.hooks.init}
+    }
+  `;
 };
 
 export const componentToReact = (
@@ -309,6 +323,7 @@ export const componentToReact = (
           : ''
       }
       ${getRefsString(json)}
+      ${getInitCode(json)}
 
       return (
         <>

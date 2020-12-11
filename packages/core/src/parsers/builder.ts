@@ -317,10 +317,23 @@ export const builderContentToJsxLiteComponent = (
     }
   }
 
+  const customCode = builderContent.data?.tsCode || builderContent.data?.jsCode;
+
   return createJSXLiteComponent({
     state: {
       ...state,
       ...builderContent.data?.state,
+    },
+    hooks: {
+      ...(customCode && {
+        init: `
+          try {
+            ${customCode}
+          } catch (err) {
+            console.error('Builder custom code error', err)
+          }
+        `,
+      }),
     },
     children: (builderContent.data?.blocks || [])
       .filter((item) => {
