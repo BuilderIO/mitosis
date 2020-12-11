@@ -41,6 +41,10 @@ export const blockToAngular = (
     return mappers[json.name](json, options);
   }
 
+  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+    return `<ng-slot></ng-slot>`;
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }

@@ -173,6 +173,10 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     return mappers[json.name](json, options);
   }
 
+  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+    return `<slot></slot>`;
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -555,7 +559,7 @@ export const componentToCustomElement = (
         `
         }
       }
-      
+
       customElements.define('my-component', MyComponent);
     `;
 

@@ -37,6 +37,10 @@ export const blockToVue = (json: JSXLiteNode, options: ToVueOptions = {}) => {
     return mappers[json.name](json, options);
   }
 
+  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+    return `<slot></slot>`;
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -159,7 +163,7 @@ export const componentToVue = (
     </template>
     <script>
       ${renderPreComponent(json)}
-      
+
       export default {
         ${
           dataString.length < 4

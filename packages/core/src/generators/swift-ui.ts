@@ -78,6 +78,8 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions) => {
     return mappers[json.name](json, options);
   }
 
+  // TODO: Add support for `{props.children}` bindings
+
   if (json.properties._text) {
     if (!json.properties._text.trim().length) {
       return '';

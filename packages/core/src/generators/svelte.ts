@@ -41,6 +41,10 @@ export const blockToSvelte = (json: JSXLiteNode, options: ToSvelteOptions) => {
     return mappers[json.name](json, options);
   }
 
+  if (`${json.bindings._text || ''}`.replace(/\s+/g, '') === 'props.children') {
+    return `<slot></slot>`;
+  }
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -212,10 +216,10 @@ export const componentToSvelte = (
         .concat(props)
         .map((name) => `let ${name};`)
         .join('\n')}
-      
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
-      
+
       ${
         options.stateType === 'proxies'
           ? dataString.length < 4
