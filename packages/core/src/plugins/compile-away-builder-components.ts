@@ -114,12 +114,16 @@ const components: {
     const { srcset } = node.properties;
     const widths = [100, 200, 400, 800, 1200, 1600, 2000];
 
-    let aspectRatio = node.properties.aspectRatio
-      ? parseFloat(node.properties.aspectRatio)
+    let aspectRatio = node.bindings.aspectRatio
+      ? parseFloat(node.bindings.aspectRatio as string)
       : null;
     if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
       aspectRatio = null;
     }
+    console.log(
+      '🚀 ~ file: compile-away-builder-components.ts ~ line 122 ~ Image ~ aspectRatio',
+      aspectRatio,
+    );
 
     const srcSet =
       srcset ||
@@ -180,7 +184,7 @@ const components: {
           class="builder-image-sizer"
           css={{
             width: '100%',
-            paddingTop: ${aspectRatio * 100 + '%'},
+            paddingTop: "${aspectRatio * 100 + '%'}",
             pointerEvents: 'none',
             fontSize: '0',
           }} />`
