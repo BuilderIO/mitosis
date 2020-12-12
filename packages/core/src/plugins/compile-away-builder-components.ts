@@ -92,7 +92,7 @@ const components: {
                   
                   "@media (max-width: ${
                     properties.stackColumnsAt !== 'tablet' ? 639 : 999
-                  }": {
+                  }px)": {
                     width: '100%',
                     marginLeft: 0,
                   },

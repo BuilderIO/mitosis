@@ -1,6 +1,7 @@
 import * as CSS from 'csstype';
+import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase } from 'lodash';
+import { camelCase, pickBy } from 'lodash';
 import { JSXLiteNode } from 'src/types/jsx-lite-node';
 import traverse from 'traverse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -19,7 +20,7 @@ export const nodeHasStyles = (node: JSXLiteNode) => {
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         hasStyles = true;
@@ -61,7 +62,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -74,7 +75,14 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}${index}`;
 
-        const css = styleMapToCss(value);
+        let str = '';
+        const styles = getStylesOnly(value);
+        str += `${styleMapToCss(styles)}\n`;
+        const nestedSelectors = getNestedSelectors(value);
+        for (const nestedSelector in nestedSelectors) {
+          const value = nestedSelectors[nestedSelector] as any;
+          str += `${nestedSelector} { ${styleMapToCss(value)} }`;
+        }
 
         const prefix = isUpperCase(item.name[0])
           ? `styled(${item.name})\``
@@ -83,7 +91,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
         item.name = className;
 
         styledComponentsCode += `
-          const ${className} = ${prefix}${css}\`
+          const ${className} = ${prefix}${str}\`
         `;
       }
       delete item.bindings.css;
@@ -103,7 +111,7 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -115,8 +123,9 @@ export const collectStyles = (
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties[classProperty] = `${item.properties[classProperty] ||
-          ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
@@ -138,22 +147,34 @@ export const collectCss = (
   return classStyleMapToCss(styles);
 };
 
-const classStyleMapToCss = (map: ClassStyleMap, rootSelector = ''): string => {
+const getNestedSelectors = (map: StyleMap) => {
+  return pickBy(map, (value) => typeof value === 'object');
+};
+const getStylesOnly = (map: StyleMap) => {
+  return pickBy(map, (value) => typeof value === 'string');
+};
+
+const classStyleMapToCss = (map: ClassStyleMap): string => {
   let str = '';
 
   for (const key in map) {
-    str += `.${key.replace(/&/g, rootSelector)} { 
-      ${styleMapToCss(map[key])}
-     }`;
+    const styles = getStylesOnly(map[key]);
+    str += `.${key} { ${styleMapToCss(styles)} }`;
+    const nestedSelectors = getNestedSelectors(map[key]);
+    for (const nestedSelector in nestedSelectors) {
+      const value = nestedSelectors[nestedSelector] as any;
+      if (nestedSelector.startsWith('@')) {
+        str += `${nestedSelector} { .${key} { ${styleMapToCss(value)} } }`;
+      } else {
+        const useSelector = nestedSelector.includes('&')
+          ? nestedSelector.replace(/&/g, `.${key}`)
+          : `.${key} ${nestedSelector}`;
+        str += `${useSelector} { ${styleMapToCss(value)} }`;
+      }
+    }
   }
-  return str;
-};
 
-// TODO: use this for recursion - aka flatten all nested selectors into one
-// long one
-const flattenClassStyleMap = (map: ClassStyleMap): FlatClassStyleMap => {
-  const flattenedStyleMap: FlatClassStyleMap = {};
-  return flattenedStyleMap;
+  return str;
 };
 
 export const styleMapToCss = (map: StyleMap): string => {
@@ -165,7 +186,7 @@ export const styleMapToCss = (map: StyleMap): string => {
     if (typeof value === 'string') {
       str += `\n${dashCase(key)}: ${value};`;
     } else {
-      // TODO: recursion
+      // TODO: do nothing
     }
   }
 
