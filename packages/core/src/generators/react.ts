@@ -93,12 +93,9 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
         continue;
       }
 
-      if (key.startsWith('on')) {
-        str += ` ${key}={event => (${processBinding(value, options)})} `;
-      } else {
-        str += ` ${key}={${processBinding(value, options)}} `;
-      }
+      str += ` ${key}={${processBinding(value, options)}} `;
     }
+
     if (selfClosingTags.has(json.name)) {
       return str + ' />';
     }
@@ -229,11 +226,15 @@ export const componentToReact = (
   }
 
   const hasRefs = Boolean(getRefs(componentJson).size);
-  const hasState = Boolean(Object.keys(json.state).length);
+  let hasState = Boolean(Object.keys(json.state).length);
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
+  if (stateType === 'builder') {
+    // Always use state if we are generate Builder react code
+    hasState = true;
+  }
 
   const useStateCode =
     stateType === 'useState' && getUseStateCode(json, options);

@@ -99,7 +99,6 @@ function tryFormat(code: string) {
   return str;
 }
 
-
 type InternalOptions = {
   skipMapper?: boolean;
 };
@@ -169,7 +168,7 @@ export const blockToBuilder = (
       }
     }
 
-    // delete json.bindings.css;
+    delete json.bindings.css;
   }
 
   let bindings = thisIsComponent ? {} : json.bindings;

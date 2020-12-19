@@ -1,6 +1,6 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { last, omit, pickBy } from 'lodash';
+import { omit, upperFirst } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -70,28 +70,19 @@ type InternalOptions = {
 const componentMappers: {
   [key: string]: (
     block: BuilderElement,
-    options: BuilerToJSXLiteOptions,
+    options: BuilderToJSXLiteOptions,
   ) => JSXLiteNode;
 } = {
   Symbol(block, options) {
-    const node = builderElementToJsxLiteNode(
-      omit(block, 'component.options.symbol.content'),
-      options,
-      {
-        skipMapper: true,
+    return createJSXLiteNode({
+      name: 'Symbol',
+      bindings: {
+        symbol: JSON.stringify({
+          data: block.component?.options.symbol.content.data,
+          content: block.component?.options.symbol.content,
+        }),
       },
-    );
-
-    // TODO: full component code in a new component and hoist it. will need to pass through a `context` object, maybe on options
-    const blocks = block.component?.options?.symbol?.content?.data?.blocks;
-    if (blocks) {
-      node.children = blocks.map((child: any) =>
-        builderElementToJsxLiteNode(child, options),
-      );
-      node.bindings.useChildren = 'true';
-    }
-
-    return node;
+    });
   },
   Columns(block, options) {
     const node = builderElementToJsxLiteNode(block, options, {
@@ -101,25 +92,18 @@ const componentMappers: {
     delete node.bindings.columns;
     delete node.properties.columns;
 
-    const columnsOptions = block.component?.options || {};
-    const numColumns = columnsOptions.columns?.length;
-    const stackColumnsAt = columnsOptions.stackColumnsAt;
-    const space = columnsOptions.space;
-
     node.children = block.component?.options.columns.map(
       (col: any, index: number) =>
         createJSXLiteNode({
           name: 'Column',
           bindings: {
-            index: index,
-            space,
-            numColumns,
             width: col.width,
           },
-          properties: {
-            link: col.link,
-            stackColumnsAt: stackColumnsAt,
-          },
+          ...(col.link && {
+            properties: {
+              link: col.link,
+            },
+          }),
           children: col.blocks.map((col: any) =>
             builderElementToJsxLiteNode(col, options),
           ),
@@ -183,17 +167,17 @@ const componentMappers: {
   },
 };
 
-export type BuilerToJSXLiteOptions = {
+export type BuilderToJSXLiteOptions = {
   context?: { [key: string]: any };
   includeBuilderExtras?: boolean;
 };
-export type InternalBuilerToJSXLiteOptions = BuilerToJSXLiteOptions & {
+export type InternalBuilderToJSXLiteOptions = BuilderToJSXLiteOptions & {
   context: { [key: string]: any };
 };
 
 export const builderElementToJsxLiteNode = (
   block: BuilderElement,
-  options: BuilerToJSXLiteOptions = {},
+  options: BuilderToJSXLiteOptions = {},
   _internalOptions: InternalOptions = {},
 ): JSXLiteNode => {
   // Special builder properties
@@ -238,6 +222,7 @@ export const builderElementToJsxLiteNode = (
   }
 
   const bindings: any = {};
+  const styleBindings: any = {};
 
   if (block.bindings) {
     for (const key in block.bindings) {
@@ -247,7 +232,23 @@ export const builderElementToJsxLiteNode = (
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
         bindings[useKey] = block.bindings[key];
+      } else if (useKey.includes('style') && useKey.includes('.')) {
+        const styleProperty = useKey.split('.')[1];
+        styleBindings[styleProperty] =
+          block.code?.bindings?.[key] || block.bindings[key];
       }
+    }
+  }
+
+  const actions = {
+    ...block.actions,
+    ...block.code?.actions,
+  };
+  const actionKeys = Object.keys(actions);
+  if (actionKeys.length) {
+    for (const key of actionKeys) {
+      const useKey = `on${upperFirst(key)}`;
+      bindings[useKey] = `(event) => {${actions[key]}}`;
     }
   }
 
@@ -275,6 +276,18 @@ export const builderElementToJsxLiteNode = (
   }
 
   const css = getCssFromBlock(block);
+  let styleString = '';
+
+  const styleKeys = Object.keys(styleBindings);
+  if (styleKeys.length) {
+    styleString = '{';
+    styleKeys.forEach((key) => {
+      styleString += ` ${key}: ${styleBindings[key]
+        .replace('var _virtual_index=', '')
+        .replace(';return _virtual_index', '')},`;
+    });
+    styleString += ' }';
+  }
 
   return createJSXLiteNode({
     name:
@@ -284,7 +297,10 @@ export const builderElementToJsxLiteNode = (
     properties,
     bindings: {
       ...bindings,
-      ...(Object.keys(css).length && {
+      ...(styleString && {
+        style: styleString,
+      }),
+      ...(css && {
         css: JSON.stringify(css),
       }),
     },
@@ -296,7 +312,7 @@ export const builderElementToJsxLiteNode = (
 
 export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
-  options: BuilerToJSXLiteOptions = {},
+  options: BuilderToJSXLiteOptions = {},
 ) => {
   const generatedStateMatch = (builderContent?.data?.jsCode || '')
     .trim()

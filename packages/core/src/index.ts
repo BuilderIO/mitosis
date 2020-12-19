@@ -21,3 +21,7 @@ export * from './generators/html';
 export * from './generators/svelte';
 export * from './generators/jsx-lite';
 export * from './helpers/parse-reactive-script';
+export * from './helpers/is-jsx-lite-node';
+
+export * from './types/jsx-lite-node';
+export * from './types/jsx-lite-component';
