@@ -1,6 +1,6 @@
-import { BuilderContent, BuilderElement } from '@builder.io/sdk';
+import { Builder, BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { omit, upperFirst } from 'lodash';
+import { omitBy, upperFirst, omit } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -52,6 +52,53 @@ const getCssFromBlock = (block: BuilderElement) => {
   return css;
 };
 
+const getActionBindingsFromBlock = (block: BuilderElement) => {
+  const actions = {
+    ...block.actions,
+    ...block.code?.actions,
+  };
+  const bindings: any = {};
+  const actionKeys = Object.keys(actions);
+  if (actionKeys.length) {
+    for (const key of actionKeys) {
+      const useKey = `on${upperFirst(key)}`;
+      bindings[useKey] = `(event) => {${actions[key]}}`;
+    }
+  }
+
+  return bindings;
+};
+
+const getStyleStringFromBlock = (block: BuilderElement) => {
+  const styleBindings: any = {};
+  let styleString = '';
+
+  if (block.bindings) {
+    for (const key in block.bindings) {
+      if (key.includes('style') && key.includes('.')) {
+        const styleProperty = key.split('.')[1];
+        styleBindings[styleProperty] =
+          block.code?.bindings?.[key] || block.bindings[key];
+      }
+    }
+  }
+
+  const styleKeys = Object.keys(styleBindings);
+  if (styleKeys.length) {
+    styleString = '{';
+    styleKeys.forEach((key) => {
+      // TODO: figure out how to have multiline style bindings here
+      // I tried (function{binding code})() and that did not work
+      styleString += ` ${key}: ${styleBindings[key]
+        .replace(/var _virtual_index\s*=\s*/g, '')
+        .replace(/;*\s*return _virtual_index;*/, '')},`;
+    });
+    styleString += ' }';
+  }
+
+  return styleString;
+};
+
 const hasStyles = (block: BuilderElement) => {
   if (block.responsiveStyles) {
     for (const key in block.responsiveStyles) {
@@ -74,12 +121,23 @@ const componentMappers: {
   ) => JSXLiteNode;
 } = {
   Symbol(block, options) {
+    let css = getCssFromBlock(block);
+    const styleString = getStyleStringFromBlock(block);
+    const actionBindings = getActionBindingsFromBlock(block);
+
     return createJSXLiteNode({
       name: 'Symbol',
       bindings: {
         symbol: JSON.stringify({
           data: block.component?.options.symbol.content.data,
           content: block.component?.options.symbol.content,
+        }),
+        ...actionBindings,
+        ...(styleString && {
+          style: styleString,
+        }),
+        ...(Object.keys(css).length && {
+          css: JSON.stringify(css),
         }),
       },
     });
@@ -126,8 +184,25 @@ const componentMappers: {
   },
   Text: (block, options) => {
     let css = getCssFromBlock(block);
+    const styleString = getStyleStringFromBlock(block);
+    const actionBindings = getActionBindingsFromBlock(block);
+
     const bindings: any = {
-      ...omit(block.bindings, 'component.options.text'),
+      ...omitBy(block.bindings, (value, key) => {
+        if (key === 'component.options.text') {
+          return true;
+        }
+
+        if (key && key.includes('style')) {
+          return true;
+        }
+
+        return false;
+      }),
+      ...actionBindings,
+      ...(styleString && {
+        style: styleString,
+      }),
       ...(Object.keys(css).length && {
         css: JSON.stringify(css),
       }),
@@ -153,6 +228,7 @@ const componentMappers: {
         ],
       });
     }
+
     return createJSXLiteNode({
       name: block.tagName || 'div',
       properties: {
@@ -222,7 +298,6 @@ export const builderElementToJsxLiteNode = (
   }
 
   const bindings: any = {};
-  const styleBindings: any = {};
 
   if (block.bindings) {
     for (const key in block.bindings) {
@@ -232,23 +307,7 @@ export const builderElementToJsxLiteNode = (
       const useKey = key.replace(/^(component\.)?options\./, '');
       if (!useKey.includes('.')) {
         bindings[useKey] = block.bindings[key];
-      } else if (useKey.includes('style') && useKey.includes('.')) {
-        const styleProperty = useKey.split('.')[1];
-        styleBindings[styleProperty] =
-          block.code?.bindings?.[key] || block.bindings[key];
       }
-    }
-  }
-
-  const actions = {
-    ...block.actions,
-    ...block.code?.actions,
-  };
-  const actionKeys = Object.keys(actions);
-  if (actionKeys.length) {
-    for (const key of actionKeys) {
-      const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = `(event) => {${actions[key]}}`;
     }
   }
 
@@ -276,18 +335,8 @@ export const builderElementToJsxLiteNode = (
   }
 
   const css = getCssFromBlock(block);
-  let styleString = '';
-
-  const styleKeys = Object.keys(styleBindings);
-  if (styleKeys.length) {
-    styleString = '{';
-    styleKeys.forEach((key) => {
-      styleString += ` ${key}: ${styleBindings[key]
-        .replace('var _virtual_index=', '')
-        .replace(';return _virtual_index', '')},`;
-    });
-    styleString += ' }';
-  }
+  let styleString = getStyleStringFromBlock(block);
+  const actionBindings = getActionBindingsFromBlock(block);
 
   return createJSXLiteNode({
     name:
@@ -297,6 +346,7 @@ export const builderElementToJsxLiteNode = (
     properties,
     bindings: {
       ...bindings,
+      ...actionBindings,
       ...(styleString && {
         style: styleString,
       }),
@@ -332,6 +382,11 @@ export const builderContentToJsxLiteComponent = (
       ...state,
       ...builderContent.data?.state,
     },
+    ...(builderContent.data?.jsCode && {
+      meta: {
+        jsCode: builderContent.data.jsCode,
+      },
+    }),
     children: (builderContent.data?.blocks || [])
       .filter((item) => {
         if (item.properties?.src?.includes('/api/v1/pixel')) {

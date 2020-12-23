@@ -248,6 +248,32 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
+  const getBuilderStateCodePreFunction = () => {
+    return dedent`
+          let state = {};
+          let hasInitJsCode = false;
+        `;
+  };
+
+  const getBuilderStateCode = (json: JSXLiteComponent) => {
+    const jsCode = json.meta?.jsCode;
+    const wrappedJsCode = dedent`
+      try {
+        if (!hasInitJsCode) {
+          hasInitJsCode = true;
+          ${jsCode}
+        }
+      } catch (e) {
+        console.error(e);
+      };
+    `;
+
+    return dedent`
+        state = useBuilderState({...${getStateObjectString(json)}, ...state});
+        ${(jsCode && wrappedJsCode) || ''}
+      `;
+  };
+
   let str = dedent`
   ${
     useStateCode && useStateCode.length > 4
@@ -279,6 +305,8 @@ export const componentToReact = (
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
 
+    ${stateType === 'builder' ? getBuilderStateCodePreFunction() : ''}
+
     export default function MyComponent(props) {
       ${
         hasState
@@ -289,7 +317,7 @@ export const componentToReact = (
             : stateType === 'useState'
             ? useStateCode
             : stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectString(json)})`
+            ? getBuilderStateCode(json)
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectString(json)});`
             : `const state = useLocalProxy(${getStateObjectString(json)});`
