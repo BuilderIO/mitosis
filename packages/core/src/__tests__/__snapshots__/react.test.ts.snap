@@ -418,9 +418,9 @@ export default function MyComponent(props) {
           objectFit: props.backgroundSize || \\"cover\\",
           objectPosition: props.backgroundPosition || \\"center\\",
         }}
-        key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
         alt={props.altText}
-        src={imgSrc}
+        src={props.imgSrc}
       />
     </>
   );
@@ -477,9 +477,9 @@ export default function MyComponent(props) {
       <section
         {...props.attributes}
         style={
-          maxWidth && typeof maxWidth === \\"number\\"
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
             ? {
-                maxWidth,
+                maxWidth: props.maxWidth,
               }
             : undefined
         }
