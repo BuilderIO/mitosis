@@ -103,7 +103,7 @@ export const blockToVue = (
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
     } else if (BINDING_MAPPERS[key]) {
-      str += ` ${BINDING_MAPPERS[key]}=${useValue} `;
+      str += ` :${BINDING_MAPPERS[key]}="${useValue}" `;
     } else {
       str += ` :${key}="${useValue}" `;
     }

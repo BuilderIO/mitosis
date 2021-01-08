@@ -10,6 +10,7 @@ const textarea = require('./data/blocks/textarea.raw');
 const img = require('./data/blocks/img.raw');
 const video = require('./data/blocks/video.raw');
 const section = require('./data/blocks/section.raw');
+const text = require('./data/blocks/text.raw');
 
 describe('Solid', () => {
   test('Basic', () => {
@@ -68,6 +69,12 @@ describe('Solid', () => {
 
   test('Section', () => {
     const json = parseJsx(section);
+    const output = componentToSolid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Text', () => {
+    const json = parseJsx(text);
     const output = componentToSolid(json);
     expect(output).toMatchSnapshot();
   });
