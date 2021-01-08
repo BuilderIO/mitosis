@@ -1,6 +1,6 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { last, mapKeys, omit, pickBy } from 'lodash';
+import { mapKeys, omit } from 'lodash';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -27,7 +27,6 @@ const getCssFromBlock = (block: BuilderElement) => {
   const blockSizes: Size[] = Object.keys(
     block.responsiveStyles || {},
   ).filter((size) => sizeNames.includes(size as Size)) as Size[];
-  const hasCss = Boolean(blockSizes.length);
   let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
   for (const size of blockSizes) {
     if (size === 'large') {
@@ -37,7 +36,7 @@ const getCssFromBlock = (block: BuilderElement) => {
           ...block.responsiveStyles?.large,
         },
         styleOmitList,
-      );
+      ) as typeof css;
     } else if (block.responsiveStyles && block.responsiveStyles[size]) {
       const mediaQueryKey = `@media (max-width: ${sizes[size].max}px)`;
       css[mediaQueryKey] = omit(

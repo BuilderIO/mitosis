@@ -20,7 +20,7 @@ export const nodeHasStyles = (node: JSXLiteNode) => {
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function (item) {
+  traverse(component).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         hasStyles = true;
@@ -62,7 +62,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -111,7 +111,7 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -123,9 +123,8 @@ export const collectStyles = (
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}-${index}`;
-        item.properties[classProperty] = `${
-          item.properties[classProperty] || ''
-        } ${className}`
+        item.properties[classProperty] = `${item.properties[classProperty] ||
+          ''} ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
