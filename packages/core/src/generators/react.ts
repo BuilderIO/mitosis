@@ -71,9 +71,11 @@ const NODE_MAPPERS: {
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
-const BINDING_MAPPERS: { [key: string]: string | ((key: string, value: string) => [newKey: string, newValue: string]) } = {
+const BINDING_MAPPERS: {
+  [key: string]: string | ((key: string, value: string) => [string, string]);
+} = {
   innerHTML(_key, value) {
-    return ['dangerouslySetInnerHTML', JSON.stringify({ __html: value })]
+    return ['dangerouslySetInnerHTML', JSON.stringify({ __html: value })];
   },
 };
 

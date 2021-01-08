@@ -184,7 +184,9 @@ export const componentToVue = (
       export default {
         ${
           elementProps.size
-            ? `props: ${JSON.stringify(Array.from(elementProps).filter(prop => prop !== 'children'))},`
+            ? `props: ${JSON.stringify(
+                Array.from(elementProps).filter((prop) => prop !== 'children'),
+              )},`
             : ''
         }
         ${

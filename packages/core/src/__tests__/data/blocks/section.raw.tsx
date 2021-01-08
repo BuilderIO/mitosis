@@ -11,7 +11,9 @@ export default function SectionComponent(props: SectionProps) {
     <section
       {...props.attributes}
       style={
-        props.maxWidth && typeof props.maxWidth === 'number' ? { maxWidth: props.maxWidth } : undefined
+        props.maxWidth && typeof props.maxWidth === 'number'
+          ? { maxWidth: props.maxWidth }
+          : undefined
       }
     >
       {props.children}
