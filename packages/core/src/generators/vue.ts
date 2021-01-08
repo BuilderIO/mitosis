@@ -99,8 +99,7 @@ export const blockToVue = (
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: proper babel transform to replace. Util for this
-      const finalValue = useValue.replace(/event\./g, '$event.');
-      str += ` @${event}="${finalValue}" `;
+      str += ` @${event}="${useValue.replace(/event\./g, '$event.')}" `;
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
     } else if (BINDING_MAPPERS[key]) {
@@ -183,7 +182,11 @@ export const componentToVue = (
       ${renderPreComponent(component)}
 
       export default {
-        ${elementProps.size ? `props: ${JSON.stringify(Array.from(elementProps))},` : ''}
+        ${
+          elementProps.size
+            ? `props: ${JSON.stringify(Array.from(elementProps))},`
+            : ''
+        }
         ${
           dataString.length < 4
             ? ''
