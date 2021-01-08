@@ -24,7 +24,7 @@ export type ToVueOptions = {
   plugins?: Plugin[];
 };
 
-const mappers: {
+const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToVueOptions) => string;
 } = {
   Fragment(json, options) {
@@ -48,12 +48,17 @@ const mappers: {
   },
 };
 
+// TODO: Maybe in the future allow defining `string | function` as values
+const BINDING_MAPPERS: { [key: string]: string } = {
+  innerHTML: 'v-html',
+};
+
 export const blockToVue = (
   node: JSXLiteNode,
   options: ToVueOptions = {},
 ): string => {
-  if (mappers[node.name]) {
-    return mappers[node.name](node, options);
+  if (NODE_MAPPERS[node.name]) {
+    return NODE_MAPPERS[node.name](node, options);
   }
 
   if (isChildren(node)) {
@@ -98,6 +103,8 @@ export const blockToVue = (
       str += ` @${event}="${finalValue}" `;
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
+    } else if (BINDING_MAPPERS[key]) {
+      str += ` ${BINDING_MAPPERS[key]}=${useValue} `;
     } else {
       str += ` :${key}="${useValue}" `;
     }
