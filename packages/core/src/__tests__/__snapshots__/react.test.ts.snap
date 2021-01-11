@@ -418,9 +418,9 @@ export default function MyComponent(props) {
           objectFit: props.backgroundSize || \\"cover\\",
           objectPosition: props.backgroundPosition || \\"center\\",
         }}
-        key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
         alt={props.altText}
-        src={imgSrc}
+        src={props.imgSrc}
       />
     </>
   );
@@ -477,9 +477,9 @@ export default function MyComponent(props) {
       <section
         {...props.attributes}
         style={
-          maxWidth && typeof maxWidth === \\"number\\"
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
             ? {
-                maxWidth,
+                maxWidth: props.maxWidth,
               }
             : undefined
         }
@@ -544,6 +544,32 @@ export default function MyComponent(props) {
       <button {...props.attributes} type=\\"submit\\">
         {props.text}
       </button>
+    </>
+  );
+}
+"
+`;
+
+exports[`React Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+export default function MyComponent(props) {
+  return (
+    <>
+      <div
+        contentEditable={allowEditingText || undefined}
+        dangerouslySetInnerHTML={{
+          __html: \\"props.text || props.content || ''\\",
+        }}
+      ></div>
     </>
   );
 }

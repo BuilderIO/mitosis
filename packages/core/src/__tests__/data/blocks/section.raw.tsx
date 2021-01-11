@@ -6,12 +6,14 @@ export interface SectionProps {
   children?: any;
 }
 
-export default function SectionComponent({ maxWidth, ...props }: SectionProps) {
+export default function SectionComponent(props: SectionProps) {
   return (
     <section
       {...props.attributes}
       style={
-        maxWidth && typeof maxWidth === 'number' ? { maxWidth } : undefined
+        props.maxWidth && typeof props.maxWidth === 'number'
+          ? { maxWidth: props.maxWidth }
+          : undefined
       }
     >
       {props.children}

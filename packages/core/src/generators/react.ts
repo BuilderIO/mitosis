@@ -31,7 +31,6 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { capitalize } from '../helpers/capitalize';
-import { JSXLiteStyles } from 'src/types/jsx-lite-styles';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -40,19 +39,49 @@ type ToReactOptions = {
   plugins?: Plugin[];
 };
 
-const mappers: {
+const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToReactOptions) => string;
 } = {
-  Fragment: (json, options) => {
+  Fragment(json, options) {
     return `<>${json.children
       .map((item) => blockToReact(item, options))
       .join('\n')}</>`;
   },
+  For(json, options) {
+    return `{${processBinding(json.bindings.each as string, options)}.map(${
+      json.bindings._forName
+    } => (
+      <>${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options))
+        .join('\n')}</>
+    ))}`;
+  },
+  Show(json, options) {
+    return `{Boolean(${processBinding(
+      json.bindings.when as string,
+      options,
+    )}) && (
+      <>${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToReact(item, options))
+        .join('\n')}</>
+    )}`;
+  },
+};
+
+// TODO: Maybe in the future allow defining `string | function` as values
+const BINDING_MAPPERS: {
+  [key: string]: string | ((key: string, value: string) => [string, string]);
+} = {
+  innerHTML(_key, value) {
+    return ['dangerouslySetInnerHTML', JSON.stringify({ __html: value })];
+  },
 };
 
 const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
-  if (mappers[json.name]) {
-    return mappers[json.name](json, options);
+  if (NODE_MAPPERS[json.name]) {
+    return NODE_MAPPERS[json.name](json, options);
   }
 
   if (json.properties._text) {
@@ -64,64 +93,53 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
   let str = '';
 
-  const children = json.children.filter(filterEmptyTextNodes);
+  str += `<${json.name} `;
 
-  if (json.name === 'For') {
-    str += `{${processBinding(json.bindings.each as string, options)}.map(${
-      json.bindings._forName
-    } => (
-      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
-    ))}`;
-  } else if (json.name === 'Show') {
-    str += `{Boolean(${processBinding(
-      json.bindings.when as string,
+  if (json.bindings._spread) {
+    str += ` {...(${processBinding(
+      json.bindings._spread as string,
       options,
-    )}) && (
-      <>${children.map((item) => blockToReact(item, options)).join('\n')}</>
-    )}`;
-  } else {
-    str += `<${json.name} `;
-
-    if (json.bindings._spread) {
-      str += ` {...(${processBinding(
-        json.bindings._spread as string,
-        options,
-      )})} `;
-    }
-
-    for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
-    }
-    for (const key in json.bindings) {
-      const value = json.bindings[key] as string;
-      if (key === '_spread') {
-        continue;
-      }
-      if (key === 'css' && value.trim() === '{}') {
-        continue;
-      }
-
-      if (key.startsWith('on')) {
-        str += ` ${key}={event => (${processBinding(value, options)})} `;
-      } else {
-        str += ` ${key}={${processBinding(value, options)}} `;
-      }
-    }
-    if (selfClosingTags.has(json.name)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children
-        .map((item) => blockToReact(item, options))
-        .join('\n');
-    }
-
-    str += `</${json.name}>`;
+    )})} `;
   }
 
-  return str;
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+  }
+
+  for (const key in json.bindings) {
+    const value = json.bindings[key] as string;
+    if (key === '_spread') {
+      continue;
+    }
+    if (key === 'css' && value.trim() === '{}') {
+      continue;
+    }
+
+    const useBindingValue = processBinding(value, options);
+    if (key.startsWith('on')) {
+      str += ` ${key}={event => (${useBindingValue})} `;
+    } else if (BINDING_MAPPERS[key]) {
+      const mapper = BINDING_MAPPERS[key];
+      if (typeof mapper === 'function') {
+        const [newKey, newValue] = mapper(key, useBindingValue);
+        str += ` ${newKey}={${newValue}} `;
+      } else {
+        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+      }
+    } else {
+      str += ` ${key}={${useBindingValue}} `;
+    }
+  }
+  if (selfClosingTags.has(json.name)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children.map((item) => blockToReact(item, options)).join('\n');
+  }
+
+  return str + `</${json.name}>`;
 };
 
 const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {

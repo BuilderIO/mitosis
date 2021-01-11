@@ -408,9 +408,9 @@ export default function MyComponent() {
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
-      key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
-      src={imgSrc}
+      src={props.imgSrc}
     />
   );
 }
@@ -471,9 +471,9 @@ export default function MyComponent() {
     <section
       {...props.attributes}
       style={
-        maxWidth && typeof maxWidth === \\"number\\"
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
           ? {
-              maxWidth,
+              maxWidth: props.maxWidth,
             }
           : undefined
       }
@@ -540,6 +540,32 @@ export default function MyComponent() {
     <button {...props.attributes} type=\\"submit\\">
       {props.text}
     </button>
+  );
+}
+"
+`;
+
+exports[`Solid Text 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+export default function MyComponent() {
+  const state = createMutable({});
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      innerHTML={props.text || props.content || \\"\\"}
+    ></div>
   );
 }
 "

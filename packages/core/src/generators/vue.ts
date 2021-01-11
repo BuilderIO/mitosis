@@ -6,6 +6,7 @@ import { getStateObjectString } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
@@ -23,119 +24,128 @@ export type ToVueOptions = {
   plugins?: Plugin[];
 };
 
-const mappers: {
+const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToVueOptions) => string;
 } = {
-  Fragment: (json, options) => {
+  Fragment(json, options) {
     return `<div>${json.children
       .map((item) => blockToVue(item, options))
       .join('\n')}</div>`;
   },
+  For(json, options) {
+    return `<template v-for="${
+      json.bindings._forName
+    } in ${stripStateAndPropsRefs(json.bindings.each as string)}">
+      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+    </template>`;
+  },
+  Show(json, options) {
+    return `<template v-if="${stripStateAndPropsRefs(
+      json.bindings.when as string,
+    )}">
+      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+    </template>`;
+  },
+};
+
+// TODO: Maybe in the future allow defining `string | function` as values
+const BINDING_MAPPERS: { [key: string]: string } = {
+  innerHTML: 'v-html',
 };
 
 export const blockToVue = (
-  json: JSXLiteNode,
+  node: JSXLiteNode,
   options: ToVueOptions = {},
 ): string => {
-  if (mappers[json.name]) {
-    return mappers[json.name](json, options);
+  if (NODE_MAPPERS[node.name]) {
+    return NODE_MAPPERS[node.name](node, options);
   }
 
-  if (isChildren(json)) {
+  if (isChildren(node)) {
     return `<slot></slot>`;
   }
 
-  if (json.properties._text) {
-    return json.properties._text;
+  if (node.properties._text) {
+    return `${node.properties._text}`;
   }
 
-  if (json.bindings._text) {
-    return `{${stripStateAndPropsRefs(json.bindings._text as string)}}`;
+  if (node.bindings._text) {
+    return `{{${stripStateAndPropsRefs(node.bindings._text as string)}}}`;
   }
 
   let str = '';
 
-  if (json.name === 'For') {
-    str += `<template v-for="${
-      json.bindings._forName
-    } in ${stripStateAndPropsRefs(json.bindings.each as string)}">`;
-    str += json.children.map((item) => blockToVue(item, options)).join('\n');
-    str += `</template>`;
-  } else if (json.name === 'Show') {
-    str += `<template v-if="${stripStateAndPropsRefs(
-      json.bindings.when as string,
-    )}">`;
-    str += json.children.map((item) => blockToVue(item, options)).join('\n');
-    str += `</template>`;
-  } else {
-    str += `<${json.name} `;
+  str += `<${node.name} `;
 
-    if (json.bindings._spread) {
-      str += `v-bind="${stripStateAndPropsRefs(
-        json.bindings._spread as string,
-      )}"`;
-    }
-
-    for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${value}" `;
-    }
-    for (const key in json.bindings) {
-      if (key === '_spread') {
-        continue;
-      }
-      const value = json.bindings[key] as string;
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value);
-
-      if (key.startsWith('on')) {
-        const event = key.replace('on', '').toLowerCase();
-        // TODO: proper babel transform to replace. Util for this
-        const finalValue = useValue.replace(/event\./g, '$event.');
-        str += ` @${event}="${finalValue}" `;
-      } else if (key === 'ref') {
-        str += ` ref="${useValue}" `;
-      } else {
-        str += ` :${key}="${useValue}" `;
-      }
-    }
-    if (selfClosingTags.has(json.name)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children.map((item) => blockToVue(item, options)).join('\n');
-    }
-
-    str += `</${json.name}>`;
+  if (node.bindings._spread) {
+    str += `v-bind="${stripStateAndPropsRefs(
+      node.bindings._spread as string,
+    )}"`;
   }
-  return str;
+
+  for (const key in node.properties) {
+    const value = node.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+
+  for (const key in node.bindings) {
+    if (key === '_spread') {
+      continue;
+    }
+    const value = node.bindings[key] as string;
+    // TODO: proper babel transform to replace. Util for this
+    const useValue = stripStateAndPropsRefs(value);
+
+    if (key.startsWith('on')) {
+      const event = key.replace('on', '').toLowerCase();
+      // TODO: proper babel transform to replace. Util for this
+      str += ` @${event}="${useValue.replace(/event\./g, '$event.')}" `;
+    } else if (key === 'ref') {
+      str += ` ref="${useValue}" `;
+    } else if (BINDING_MAPPERS[key]) {
+      str += ` :${BINDING_MAPPERS[key]}="${useValue}" `;
+    } else {
+      str += ` :${key}="${useValue}" `;
+    }
+  }
+
+  if (selfClosingTags.has(node.name)) {
+    return str + ' />';
+  }
+
+  str += '>';
+  if (node.children) {
+    str += node.children.map((item) => blockToVue(item, options)).join('');
+  }
+
+  return str + `</${node.name}>`;
 };
 
 export const componentToVue = (
-  componentJson: JSXLiteComponent,
+  component: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
   // Make a copy we can safely mutate, similar to babel's toolchain
-  let json = fastClone(componentJson);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-
-  mapRefs(json, (refName) => `this.$refs.${refName}`);
+  component = fastClone(component);
 
   if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
+    component = runPreJsonPlugins(component, options.plugins);
   }
-  const css = collectCss(json);
 
-  let dataString = getStateObjectString(json, {
+  mapRefs(component, (refName) => `this.$refs.${refName}`);
+
+  if (options.plugins) {
+    component = runPostJsonPlugins(component, options.plugins);
+  }
+  const css = collectCss(component);
+
+  let dataString = getStateObjectString(component, {
     data: true,
     functions: false,
     getters: false,
   });
 
-  const getterString = getStateObjectString(json, {
+  const getterString = getStateObjectString(component, {
     data: false,
     getters: true,
     functions: false,
@@ -144,7 +154,8 @@ export const componentToVue = (
         replaceWith: 'this.',
       }),
   });
-  const functionsString = getStateObjectString(json, {
+
+  const functionsString = getStateObjectString(component, {
     data: false,
     getters: false,
     functions: true,
@@ -155,20 +166,29 @@ export const componentToVue = (
   // Append refs to data as { foo, bar, etc }
   dataString = dataString.replace(
     /}$/,
-    `${json.imports
+    `${component.imports
       .map((thisImport) => Object.keys(thisImport.imports).join(','))
       .filter(Boolean)
       .join(',')}}`,
   );
 
+  const elementProps = getProps(component);
+
   let str = dedent`
     <template>
-      ${json.children.map((item) => blockToVue(item)).join('\n')}
+      ${component.children.map((item) => blockToVue(item)).join('\n')}
     </template>
     <script>
-      ${renderPreComponent(json)}
+      ${renderPreComponent(component)}
 
       export default {
+        ${
+          elementProps.size
+            ? `props: ${JSON.stringify(
+                Array.from(elementProps).filter((prop) => prop !== 'children'),
+              )},`
+            : ''
+        }
         ${
           dataString.length < 4
             ? ''
@@ -204,7 +224,7 @@ export const componentToVue = (
   if (options.plugins) {
     str = runPreCodePlugins(str, options.plugins);
   }
-  if (options.prettier !== false) {
+  if (true || options.prettier !== false) {
     try {
       str = format(str, {
         parser: 'vue',

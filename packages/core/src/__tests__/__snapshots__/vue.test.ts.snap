@@ -4,7 +4,6 @@ exports[`Vue Basic 1`] = `
 "<template>
   <div>
     <input :value=\\"name\\" @change=\\"name = $event.target.value\\" />
-
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -25,12 +24,14 @@ exports[`Vue Button 1`] = `
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
       >
-        {text}
+        {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">{text}</button>
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
     </template>
   </div>
 </template>
@@ -42,7 +43,9 @@ export interface ButtonProps {
   openLinkInNewTab?: boolean;
 }
 
-export default {};
+export default {
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+};
 </script>
 "
 `;
@@ -59,12 +62,12 @@ exports[`Vue Form block 1`] = `
     @submit=\\"onSubmit(event)\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
-      <template v-for=\\"block in builderBlock?.children\\"
-        ><BuilderBlockComponent
+      <template v-for=\\"block in builderBlock?.children\\">
+        <BuilderBlockComponent
           :key=\\"block.id\\"
           :block=\\"block\\"
-        ></BuilderBlockComponent
-      ></template>
+        ></BuilderBlockComponent>
+      </template>
     </template>
 
     <template v-if=\\"submissionState === 'error'\\">
@@ -83,9 +86,7 @@ exports[`Vue Form block 1`] = `
 
     <template v-if=\\"submissionState === 'error' && responseData\\">
       <pre class=\\"builder-form-error-text pre-1\\">
-        
-{JSON.stringify(responseData, null, 2)}
-
+        {{ JSON.stringify(responseData, null, 2) }}
       </pre>
     </template>
 
@@ -129,6 +130,27 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 export default {
+  props: [
+    \\"previewState\\",
+    \\"sendWithJs\\",
+    \\"sendSubmissionsTo\\",
+    \\"action\\",
+    \\"customHeaders\\",
+    \\"contentType\\",
+    \\"sendSubmissionsToEmail\\",
+    \\"name\\",
+    \\"method\\",
+    \\"errorMessagePath\\",
+    \\"resetFormOnSubmit\\",
+    \\"successUrl\\",
+    \\"validate\\",
+    \\"attributes\\",
+    \\"builderBlock\\",
+    \\"errorMessage\\",
+    \\"sendingMessage\\",
+    \\"successMessage\\",
+  ],
+
   data: () => ({
     state: \\"unsubmitted\\",
     responseData: null,
@@ -405,6 +427,14 @@ export interface ImgProps {
 }
 
 export default {
+  props: [
+    \\"backgroundSize\\",
+    \\"backgroundPosition\\",
+    \\"attributes\\",
+    \\"imgSrc\\",
+    \\"altText\\",
+  ],
+
   data: () => ({ Builder }),
 };
 </script>
@@ -438,6 +468,16 @@ export interface FormInputProps {
 }
 
 export default {
+  props: [
+    \\"attributes\\",
+    \\"defaultValue\\",
+    \\"placeholder\\",
+    \\"type\\",
+    \\"name\\",
+    \\"value\\",
+    \\"required\\",
+  ],
+
   data: () => ({ Builder }),
 };
 </script>
@@ -451,7 +491,7 @@ exports[`Vue Section 1`] = `
     :style=\\"
       maxWidth && typeof maxWidth === 'number'
         ? {
-            maxWidth,
+            maxWidth: maxWidth,
           }
         : undefined
     \\"
@@ -466,7 +506,9 @@ export interface SectionProps {
   children?: any;
 }
 
-export default {};
+export default {
+  props: [\\"attributes\\", \\"maxWidth\\"],
+};
 </script>
 "
 `;
@@ -480,11 +522,9 @@ exports[`Vue Select block 1`] = `
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
   >
-    <template v-for=\\"option in options\\"
-      ><option :value=\\"option.value\\">
-        {option.name || option.value}
-      </option></template
-    >
+    <template v-for=\\"option in options\\">
+      <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
+    </template>
   </select>
 </template>
 <script>
@@ -502,6 +542,8 @@ export interface FormSelectProps {
 }
 
 export default {
+  props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
+
   data: () => ({ Builder }),
 };
 </script>
@@ -510,7 +552,9 @@ export default {
 
 exports[`Vue Submit button block 1`] = `
 "<template>
-  <button v-bind=\\"attributes\\" type=\\"submit\\">{text}</button>
+  <button v-bind=\\"attributes\\" type=\\"submit\\">
+    {{ text }}
+  </button>
 </template>
 <script>
 export interface ButtonProps {
@@ -518,7 +562,36 @@ export interface ButtonProps {
   text?: string;
 }
 
-export default {};
+export default {
+  props: [\\"attributes\\", \\"text\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue Text 1`] = `
+"<template>
+  <div
+    :contentEditable=\\"allowEditingText || undefined\\"
+    :v-html=\\"text || content || ''\\"
+  ></div>
+</template>
+<script>
+import { Builder } from \\"@builder.io/sdk\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+export default {
+  props: [\\"text\\", \\"content\\"],
+
+  data: () => ({ Builder }),
+};
 </script>
 "
 `;
@@ -542,7 +615,9 @@ export interface TextareaProps {
   placeholder?: string;
 }
 
-export default {};
+export default {
+  props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
+};
 </script>
 "
 `;
@@ -597,7 +672,19 @@ export interface VideoProps {
   lazyLoad?: boolean;
 }
 
-export default {};
+export default {
+  props: [
+    \\"attributes\\",
+    \\"fit\\",
+    \\"position\\",
+    \\"video\\",
+    \\"posterImage\\",
+    \\"autoPlay\\",
+    \\"muted\\",
+    \\"controls\\",
+    \\"loop\\",
+  ],
+};
 </script>
 "
 `;
