@@ -37,6 +37,8 @@ export type JSXLiteComponent = {
   hooks: {
     [key: string]: string | undefined;
 
+    afterRender?: string;
+
     preComponent?: string;
     postComponent?: string;
   };
