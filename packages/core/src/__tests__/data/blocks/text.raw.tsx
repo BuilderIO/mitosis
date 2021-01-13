@@ -19,6 +19,9 @@ export default function Text(props: TextProps) {
       props.builderBlock?.bindings?.['text']
     );
 
+  // TODO: Add back dynamic `direction` CSS prop when we add support for some
+  //       sort of dynamic CSS
+  // css={{ direction: props.rtlMode ? 'rtl' : 'ltr' }}
   return (
     <div
       contentEditable={allowEditingText || undefined}
