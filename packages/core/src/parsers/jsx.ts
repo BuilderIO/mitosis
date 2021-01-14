@@ -110,7 +110,7 @@ const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
-  const hooks: { [key: string]: string | undefined } = {};
+  const hooks: JSXLiteComponent['hooks'] = {};
   let state = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
@@ -132,7 +132,6 @@ const componentFunctionToJson = (
 
     if (types.isVariableDeclaration(item)) {
       const init = item.declarations[0].init;
-      //
       if (types.isCallExpression(init)) {
         if (types.isIdentifier(init.callee)) {
           if (init.callee.name === 'useState') {
@@ -420,7 +419,10 @@ export function parseJsx(jsx: string): JSXLiteComponent {
 
   try {
     return JSON5.parse(
-      output!.code!.trim().replace(/^\({/, '{').replace(/}\);$/, '}'),
+      output!
+        .code!.trim()
+        .replace(/^\({/, '{')
+        .replace(/}\);$/, '}'),
     );
   } catch (err) {
     console.error('Could not parse code', output && output.code);
