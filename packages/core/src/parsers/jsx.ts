@@ -110,60 +110,81 @@ const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
+  const hooks: JSXLiteComponent['hooks'] = {};
   let state = {};
-  // TODO: limit to only useState name
   for (const item of node.body.body) {
+    if (types.isExpressionStatement(item)) {
+      const expression = item.expression;
+      if (types.isCallExpression(expression)) {
+        if (types.isIdentifier(expression.callee)) {
+          if (expression.callee.name === 'afterRender') {
+            const firstArg = expression.arguments[0];
+            if (
+              types.isFunctionExpression(firstArg) ||
+              types.isArrowFunctionExpression(firstArg)
+            ) {
+              hooks.afterRender = generate(expression.arguments[0]).code;
+            }
+          }
+        }
+      }
+    }
+
     if (types.isVariableDeclaration(item)) {
       const init = item.declarations[0].init;
       if (types.isCallExpression(init)) {
-        const firstArg = init.arguments[0];
-        if (types.isObjectExpression(firstArg)) {
-          const properties = firstArg.properties;
-          const useProperties = properties.map((item) => {
-            if (types.isObjectProperty(item)) {
-              if (
-                types.isFunctionExpression(item.value) ||
-                types.isArrowFunctionExpression(item.value)
-              ) {
-                return createFunctionStringLiteralObjectProperty(
-                  item.key,
-                  item.value,
-                );
-              }
-            }
-            if (types.isObjectMethod(item)) {
-              return types.objectProperty(
-                item.key,
-                types.stringLiteral(
-                  `${methodLiteralPrefix}${
-                    generate({ ...item, returnType: null }).code
-                  }`,
-                ),
-              );
-            }
-            // Remove typescript types, e.g. from
-            // { foo: ('string' as SomeType) }
-            if (types.isObjectProperty(item)) {
-              let value = item.value;
-              if (types.isTSAsExpression(value)) {
-                value = value.expression;
-              }
-              return types.objectProperty(item.key, value);
-            }
-            return item;
-          });
+        if (types.isIdentifier(init.callee)) {
+          if (init.callee.name === 'useState') {
+            const firstArg = init.arguments[0];
+            if (types.isObjectExpression(firstArg)) {
+              const properties = firstArg.properties;
+              const useProperties = properties.map((item) => {
+                if (types.isObjectProperty(item)) {
+                  if (
+                    types.isFunctionExpression(item.value) ||
+                    types.isArrowFunctionExpression(item.value)
+                  ) {
+                    return createFunctionStringLiteralObjectProperty(
+                      item.key,
+                      item.value,
+                    );
+                  }
+                }
+                if (types.isObjectMethod(item)) {
+                  return types.objectProperty(
+                    item.key,
+                    types.stringLiteral(
+                      `${methodLiteralPrefix}${
+                        generate({ ...item, returnType: null }).code
+                      }`,
+                    ),
+                  );
+                }
+                // Remove typescript types, e.g. from
+                // { foo: ('string' as SomeType) }
+                if (types.isObjectProperty(item)) {
+                  let value = item.value;
+                  if (types.isTSAsExpression(value)) {
+                    value = value.expression;
+                  }
+                  return types.objectProperty(item.key, value);
+                }
+                return item;
+              });
 
-          const newObject = types.objectExpression(useProperties);
-          let code;
-          let obj;
-          try {
-            code = generate(newObject).code!;
-            obj = JSON5.parse(code);
-          } catch (err) {
-            console.error('Could not JSON5 parse object:\n', code);
-            throw err;
+              const newObject = types.objectExpression(useProperties);
+              let code;
+              let obj;
+              try {
+                code = generate(newObject).code!;
+                obj = JSON5.parse(code);
+              } catch (err) {
+                console.error('Could not JSON5 parse object:\n', code);
+                throw err;
+              }
+              state = obj;
+            }
           }
-          state = obj;
         }
       }
     }
@@ -184,6 +205,7 @@ const componentFunctionToJson = (
     ...context.builder.component,
     state,
     children,
+    hooks,
   } as any;
 };
 

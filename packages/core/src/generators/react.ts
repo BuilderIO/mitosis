@@ -343,6 +343,14 @@ export const componentToReact = (
       ${getRefsString(json)}
       ${getInitCode(json)}
 
+      ${
+        json.hooks.afterRender
+          ? `useEffect(
+            ${processBinding(json.hooks.afterRender, options)}
+          , [])`
+          : ''
+      }
+
       return (
         <>
         ${
