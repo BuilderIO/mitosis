@@ -154,8 +154,8 @@ export const componentToSolid = (
         : `import { css } from "solid-styled-components";`
     }
     ${renderPreComponent(json)}
-    
-    export default function MyComponent () {
+
+    export default function ${componentJson.name}() {
       const state = createMutable(${getStateObjectString(json)});
       ${getRefsString(json)}
 
@@ -163,7 +163,7 @@ export const componentToSolid = (
         ${json.children.map((item) => blockToSolid(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
     }
-   
+
   `;
 
   if (options.plugins) {

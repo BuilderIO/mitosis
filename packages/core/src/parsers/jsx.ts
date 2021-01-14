@@ -201,12 +201,13 @@ const componentFunctionToJson = (
     }
   }
 
-  return {
+  return createJSXLiteComponent({
     ...context.builder.component,
+    name: node.id?.name,
     state,
     children,
     hooks,
-  } as any;
+  }) as any;
 };
 
 const jsxElementToJson = (

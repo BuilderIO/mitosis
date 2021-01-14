@@ -356,7 +356,7 @@ export const componentToSwift = (
   let str = dedent`
     import "SwiftUI"
 
-    class MyComponent {
+    class ${componentJson.name} {
       ${dataString}
       ${methodString}
       ${getterString}
@@ -407,7 +407,10 @@ export const componentToSwift = (
     // Deserialize html quotes
     .replace(/&quot;/g, '\\"')
     // Convert class MyComponent to struct MyComponent : View
-    .replace('class MyComponent', 'struct MyComponent : View')
+    .replace(
+      `class ${componentJson.name}`,
+      `struct ${componentJson.name} : View`,
+    )
     // Convert @State foo = to @State private var foo =
     .replace(/@State\s+/g, '@State private var ')
     // Convert @func foo() to func foo()

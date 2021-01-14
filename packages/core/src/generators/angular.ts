@@ -173,7 +173,7 @@ export const componentToAngular = (
           : ''
       }
     })
-    export default class MyComponent {
+    export default class ${componentJson.name} {
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}

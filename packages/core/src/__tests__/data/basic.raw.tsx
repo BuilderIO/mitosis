@@ -1,6 +1,6 @@
 import { useState } from '@jsx-lite/core';
 
-export default function MyComponent() {
+export default function MyBasicComponent() {
   const state = useState({
     name: 'Steve',
   });
