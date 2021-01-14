@@ -487,7 +487,7 @@ export const componentToCustomElement = (
   }
 
   let str = `
-      class MyComponent extends HTMLElement {
+      class ${componentJson.name} extends HTMLElement {
         constructor() {
           super();
 
@@ -561,7 +561,9 @@ export const componentToCustomElement = (
         }
       }
 
-      customElements.define('my-component', MyComponent);
+      customElements.define('${componentJson.name
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .toLowerCase()}', ${componentJson.name});
     `;
 
   if (options.plugins) {

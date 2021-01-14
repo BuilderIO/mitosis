@@ -324,7 +324,7 @@ export const componentToReact = (
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
 
-    export default function MyComponent(props) {
+    export default function ${json.name}(props) {
       ${
         hasState
           ? stateType === 'mobx'

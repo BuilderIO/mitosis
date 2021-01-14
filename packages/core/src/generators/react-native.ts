@@ -379,7 +379,7 @@ export const componentToReactNative = (
     ${hasRefs ? `import { useRef } from 'react';` : ''}
     ${renderPreComponent(json)}
 
-    export default function MyComponent(props) {
+    export default function ${componentJson.name}(props) {
       ${
         hasState
           ? stateType === 'mobx'

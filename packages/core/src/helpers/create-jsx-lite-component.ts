@@ -9,5 +9,6 @@ export const createJSXLiteComponent = (
   state: {},
   children: [],
   hooks: {},
+  name: options?.name || 'MyComponent',
   ...options,
 });

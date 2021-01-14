@@ -31,6 +31,7 @@ export interface JSXLiteImport {
 
 export type JSXLiteComponent = {
   '@type': '@jsx-lite/component';
+  name: string;
   imports: JSXLiteImport[];
   meta: { [key: string]: JSON | undefined };
   state: { [key: string]: JSON | undefined };

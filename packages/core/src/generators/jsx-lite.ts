@@ -131,7 +131,7 @@ export const componentToJsxLite = (
     }
     ${renderPreComponent(json)}
 
-    export default function MyComponent(props) {
+    export default function ${componentJson.name}(props) {
       ${
         !hasState
           ? ''
