@@ -9,6 +9,7 @@ type RenderContentProps = {
   options?: GetContentOptions;
   content?: BuilderContent;
   children: any;
+  contentLoaded?: (content: BuilderContent) => void;
 };
 
 export function RenderContent(props: RenderContentProps) {
@@ -45,7 +46,7 @@ export function RenderContent(props: RenderContentProps) {
           }
 
           if (props.contentLoaded) {
-            props.contentLoaded(content.data);
+            props.contentLoaded(content);
           }
 
           break;
@@ -61,7 +62,9 @@ export function RenderContent(props: RenderContentProps) {
   });
 
   afterUnmount(() => {
-    removeEventListener('message', state.onWindowMessage);
+    if (Builder.isEditing) {
+      removeEventListener('message', state.onWindowMessage);
+    }
   });
 
   return (
@@ -69,6 +72,7 @@ export function RenderContent(props: RenderContentProps) {
       <Show when={!content}>{props.children}</Show>
       <Show when={content}>
         <div
+          data-builder-model-name={props.model}
           data-builder-component={content!.name}
           data-builder-content-id={content!.id}
           data-builder-variation-id={content!.testVariationId || content!.id}
