@@ -50,7 +50,7 @@ export const getStateObjectString = (
         }
         str += `${keyPrefix} ${valueMapper(
           methodValue,
-          isGet ? 'getter' : 'function',
+          isGet ? 'getter' : 'function', // TODO: create a separate method type
         )} ${lineItemDelimiter}`;
       } else {
         if (options.data === false) {
