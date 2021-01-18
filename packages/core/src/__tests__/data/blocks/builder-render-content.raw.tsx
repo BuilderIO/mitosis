@@ -1,8 +1,8 @@
-import { Show, onMount, useState } from '@jsx-lite/core';
-import { BuilderContent, GetContentOptions } from '@builder.io/sdk';
+import { Show, onMount, useState, For, afterUnmount } from '@jsx-lite/core';
+import { Builder, BuilderContent, GetContentOptions } from '@builder.io/sdk';
+import { applyPatchWithMinimalMutationChain } from '@builder.io/utils';
 import { useBuilderData } from '@builder.io/jsx-lite';
 import { RenderBlock } from './builder-render-block.raw';
-import { For } from 'src/flow';
 
 type RenderContentProps = {
   model: string;
@@ -18,6 +18,50 @@ export function RenderContent(props: RenderContentProps) {
     get css() {
       return '';
     },
+    onWindowMessage(event: MessageEvent) {
+      const message = event.data;
+      if (!message) {
+        return;
+      }
+      switch (message.type) {
+        case 'builder.patchUpdates': {
+          const { data } = message;
+          if (!content) {
+            return;
+          }
+          if (!(data && data.data)) {
+            break;
+          }
+          const patches = data.data[content.data?.id];
+          if (!(patches && patches.length)) {
+            return;
+          }
+
+          if (location.href.includes('builder.debug=true')) {
+            eval('debugger');
+          }
+          for (const patch of patches) {
+            applyPatchWithMinimalMutationChain(content.data, patch);
+          }
+
+          if (props.contentLoaded) {
+            props.contentLoaded(content.data);
+          }
+
+          break;
+        }
+      }
+    },
+  });
+
+  onMount(() => {
+    if (Builder.isEditing) {
+      addEventListener('message', state.onWindowMessage);
+    }
+  });
+
+  afterUnmount(() => {
+    removeEventListener('message', state.onWindowMessage);
   });
 
   return (
