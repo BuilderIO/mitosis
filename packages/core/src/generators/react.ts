@@ -344,9 +344,9 @@ export const componentToReact = (
       ${getInitCode(json)}
 
       ${
-        json.hooks.afterRender
+        json.hooks.onMount
           ? `useEffect(
-            ${processBinding(json.hooks.afterRender, options)}
+            ${processBinding(json.hooks.onMount, options)}
           , [])`
           : ''
       }
