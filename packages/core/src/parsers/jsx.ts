@@ -117,13 +117,13 @@ const componentFunctionToJson = (
       const expression = item.expression;
       if (types.isCallExpression(expression)) {
         if (types.isIdentifier(expression.callee)) {
-          if (expression.callee.name === 'afterRender') {
+          if (expression.callee.name === 'onMount') {
             const firstArg = expression.arguments[0];
             if (
               types.isFunctionExpression(firstArg) ||
               types.isArrowFunctionExpression(firstArg)
             ) {
-              hooks.afterRender = generate(expression.arguments[0]).code;
+              hooks.onMount = generate(expression.arguments[0]).code;
             }
           }
         }
