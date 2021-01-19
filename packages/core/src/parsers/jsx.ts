@@ -123,7 +123,13 @@ const componentFunctionToJson = (
               types.isFunctionExpression(firstArg) ||
               types.isArrowFunctionExpression(firstArg)
             ) {
-              hooks.onMount = generate(expression.arguments[0]).code;
+              hooks.onMount = generate(firstArg.body)
+                .code.trim()
+                // Remove abtrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
             }
           }
         }
