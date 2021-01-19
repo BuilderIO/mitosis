@@ -15,9 +15,9 @@ const replaceRefsInString = (
   code: string,
   refs: string[],
   mapper: RefMapper,
-) => {
+): string => {
   return babel
-    .transformSync(`let _ = ${code}`, {
+    .transformSync(`const _ = ${code}`, {
       presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
       plugins: [
         () => ({
@@ -34,20 +34,23 @@ const replaceRefsInString = (
       ],
     })!
     .code!.replace(/;$/, '')
-    .replace(/^let _ = /, '');
+    .replace(/^const _ = /, '');
 };
 
-export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
-  const refs = Array.from(getRefs(json));
+export const mapRefs = (
+  component: JSXLiteComponent,
+  mapper: RefMapper,
+): void => {
+  const refs = Array.from(getRefs(component));
 
-  for (const key in json.state) {
-    const value = json.state[key];
+  for (const key of Object.keys(component.state)) {
+    const value = component.state[key];
     if (typeof value === 'string') {
       if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(/^get /));
         const isSet = Boolean(methodValue.match(/^set /));
-        json.state[key] =
+        component.state[key] =
           methodLiteralPrefix +
           replaceRefsInString(
             methodValue.replace(/^(get |set )?/, 'function '),
@@ -55,7 +58,7 @@ export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
             mapper,
           ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : '');
       } else if (value.startsWith(functionLiteralPrefix)) {
-        json.state[key] =
+        component.state[key] =
           functionLiteralPrefix +
           replaceRefsInString(
             value.replace(functionLiteralPrefix, ''),
@@ -66,9 +69,9 @@ export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(component).forEach(function(item) {
     if (isJsxLiteNode(item)) {
-      for (const key in item.bindings) {
+      for (const key of Object.keys(item.bindings)) {
         const value = item.bindings[key];
         if (typeof value === 'string' && key !== 'ref') {
           item.bindings[key] = replaceRefsInString(value, refs, mapper);
@@ -76,4 +79,13 @@ export const mapRefs = (json: JSXLiteComponent, mapper: RefMapper) => {
       }
     }
   });
+
+  for (const key of Object.keys(
+    component.hooks,
+  ) as (keyof typeof component.hooks)[]) {
+    const hookCode = component.hooks[key];
+    if (hookCode) {
+      component.hooks[key] = replaceRefsInString(hookCode, refs, mapper);
+    }
+  }
 };
