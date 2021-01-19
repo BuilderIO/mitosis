@@ -10,6 +10,7 @@ import { isUpperCase } from '../helpers/is-upper-case';
 import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
+import { hasProps } from '../helpers/has-props';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -88,11 +89,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -226,6 +223,8 @@ export const componentToBuilder = (
   return fastClone({
     data: {
       jsCode: tryFormat(dedent`
+        ${!hasProps(componentJson) ? '' : `var props = state;`}
+
         Object.assign(state, ${getStateObjectString(componentJson)});
 
         ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
