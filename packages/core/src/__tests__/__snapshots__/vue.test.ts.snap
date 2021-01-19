@@ -3,7 +3,7 @@
 exports[`Vue Basic 1`] = `
 "<template>
   <div>
-    <input :value=\\"name;\\" @change=\\"name = $event.target.value\\" />
+    <input :value=\\"name\\" @change=\\"name = $event.target.value\\" />
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -18,19 +18,19 @@ export default {
 exports[`Vue Button 1`] = `
 "<template>
   <div>
-    <template v-if=\\"link;\\">
+    <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes;\\"
-        :href=\\"link;\\"
-        :target=\\"openLinkInNewTab ? '_blank' : undefined;\\"
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
       >
-        {{text;}}
+        {{ text }}
       </a>
     </template>
 
-    <template v-if=\\"!link;\\">
-      <button v-bind=\\"attributes;\\" type=\\"button\\">
-        {{text;}}
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
       </button>
     </template>
   </div>
@@ -396,14 +396,14 @@ export default {
 exports[`Vue Input block 1`] = `
 "<template>
   <input
-    v-bind=\\"attributes;\\"
-    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key';\\"
-    :placeholder=\\"placeholder;\\"
-    :type=\\"type;\\"
-    :name=\\"name;\\"
-    :value=\\"value;\\"
-    :defaultValue=\\"defaultValue;\\"
-    :required=\\"required;\\"
+    v-bind=\\"attributes\\"
+    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+    :placeholder=\\"placeholder\\"
+    :type=\\"type\\"
+    :name=\\"name\\"
+    :value=\\"value\\"
+    :defaultValue=\\"defaultValue\\"
+    :required=\\"required\\"
   />
 </template>
 <script>
@@ -429,8 +429,8 @@ export default {
 exports[`Vue RawText 1`] = `
 "<template>
   <span
-    :class=\\"attributes?.class || attributes?.className;\\"
-    :v-html=\\"text || '';\\"
+    :class=\\"attributes?.class || attributes?.className\\"
+    :v-html=\\"text || ''\\"
   ></span>
 </template>
 <script>
@@ -444,12 +444,16 @@ export default {
 exports[`Vue Section 1`] = `
 "<template>
   <section
-    v-bind=\\"attributes;\\"
-    :style=\\"maxWidth && typeof maxWidth === 'number' ? {
-maxWidth: maxWidth
-} : undefined;\\"
+    v-bind=\\"attributes\\"
+    :style=\\"
+      maxWidth && typeof maxWidth === 'number'
+        ? {
+            maxWidth: maxWidth,
+          }
+        : undefined
+    \\"
   >
-    {{children;}}
+    <slot></slot>
   </section>
 </template>
 <script>
@@ -463,14 +467,14 @@ export default {
 exports[`Vue Select block 1`] = `
 "<template>
   <select
-    v-bind=\\"attributes;\\"
-    :value=\\"value;\\"
-    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key';\\"
-    :defaultValue=\\"defaultValue;\\"
-    :name=\\"name;\\"
+    v-bind=\\"attributes\\"
+    :value=\\"value\\"
+    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+    :defaultValue=\\"defaultValue\\"
+    :name=\\"name\\"
   >
-    <template v-for=\\"option; in options;\\">
-      <option :value=\\"option.value;\\">{{option.name || option.value;}}</option>
+    <template v-for=\\"option in options\\">
+      <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
     </template>
   </select>
 </template>
@@ -488,8 +492,8 @@ export default {
 
 exports[`Vue Submit button block 1`] = `
 "<template>
-  <button v-bind=\\"attributes;\\" type=\\"submit\\">
-    {{text;}}
+  <button v-bind=\\"attributes\\" type=\\"submit\\">
+    {{ text }}
   </button>
 </template>
 <script>
@@ -503,8 +507,8 @@ export default {
 exports[`Vue Text 1`] = `
 "<template>
   <div
-    :contentEditable=\\"allowEditingText || undefined;\\"
-    :v-html=\\"text || content || '';\\"
+    :contentEditable=\\"allowEditingText || undefined\\"
+    :v-html=\\"text || content || ''\\"
   ></div>
 </template>
 <script>
@@ -522,11 +526,11 @@ export default {
 exports[`Vue Textarea 1`] = `
 "<template>
   <textarea
-    v-bind=\\"attributes;\\"
-    :placeholder=\\"placeholder;\\"
-    :name=\\"name;\\"
-    :value=\\"value;\\"
-    :defaultValue=\\"defaultValue;\\"
+    v-bind=\\"attributes\\"
+    :placeholder=\\"placeholder\\"
+    :name=\\"name\\"
+    :value=\\"value\\"
+    :defaultValue=\\"defaultValue\\"
   ></textarea>
 </template>
 <script>
