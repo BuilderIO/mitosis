@@ -257,6 +257,8 @@ const getInitCode = (json: JSXLiteComponent): string => {
   `;
 };
 
+type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
+
 export const componentToReact = (
   componentJson: JSXLiteComponent,
   options: ToReactOptions = {},
@@ -271,7 +273,7 @@ export const componentToReact = (
     updateStateSetters(json);
   }
 
-  const hasRefs = Boolean(getRefs(componentJson).size);
+  const refs = getRefs(componentJson);
   const hasState = Boolean(Object.keys(json.state).length);
   mapRefs(json, (refName) => `${refName}.current`);
 
@@ -293,10 +295,18 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
+  const reactLibImports: Set<ReactExports> = new Set();
+  if (useStateCode && useStateCode.length > 4) {
+    reactLibImports.add('useState');
+  }
+  if (refs.size) {
+    reactLibImports.add('useRef');
+  }
+
   let str = dedent`
   ${
-    useStateCode && useStateCode.length > 4
-      ? `import { useState } from 'react'`
+    reactLibImports.size
+      ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
       : ''
   }
   ${
@@ -320,7 +330,6 @@ export const componentToReact = (
         ? `import { useLocalObservable } from 'mobx-react-lite';`
         : ''
     }
-    ${hasRefs ? `import { useRef } from 'react';` : ''}
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
 

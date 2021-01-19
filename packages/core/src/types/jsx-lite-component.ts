@@ -36,10 +36,8 @@ export type JSXLiteComponent = {
   meta: { [key: string]: JSON | undefined };
   state: { [key: string]: JSON | undefined };
   hooks: {
-    [key: string]: string | undefined;
-
+    init?: string;
     onMount?: string;
-
     preComponent?: string;
     postComponent?: string;
   };

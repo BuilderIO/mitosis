@@ -24,8 +24,19 @@ export type ToVueOptions = {
   plugins?: Plugin[];
 };
 
+function processBinding(code: string, _options: ToVueOptions): string {
+  return stripStateAndPropsRefs(code, {
+    includeState: true,
+    includeProps: true,
+
+    replaceWith: 'this.',
+  });
+}
+
 const NODE_MAPPERS: {
-  [key: string]: (json: JSXLiteNode, options: ToVueOptions) => string;
+  [key: string]:
+    | ((json: JSXLiteNode, options: ToVueOptions) => string)
+    | undefined;
 } = {
   Fragment(json, options) {
     return `<div>${json.children
@@ -49,7 +60,7 @@ const NODE_MAPPERS: {
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
-const BINDING_MAPPERS: { [key: string]: string } = {
+const BINDING_MAPPERS: { [key: string]: string | undefined } = {
   innerHTML: 'v-html',
 };
 
@@ -57,8 +68,9 @@ export const blockToVue = (
   node: JSXLiteNode,
   options: ToVueOptions = {},
 ): string => {
-  if (NODE_MAPPERS[node.name]) {
-    return NODE_MAPPERS[node.name](node, options);
+  const nodeMapper = NODE_MAPPERS[node.name];
+  if (nodeMapper) {
+    return nodeMapper(node, options);
   }
 
   if (isChildren(node)) {
@@ -174,6 +186,8 @@ export const componentToVue = (
 
   const elementProps = getProps(component);
 
+  const hasSetup = !!component.hooks.onMount;
+
   let str = dedent`
     <template>
       ${component.children.map((item) => blockToVue(item)).join('\n')}
@@ -195,6 +209,19 @@ export const componentToVue = (
             : `
         data: () => (${dataString}),
         `
+        }
+        ${
+          hasSetup
+            ? `setup() {
+              ${
+                component.hooks.onMount
+                  ? `onMounted(() => {
+                      ${processBinding(component.hooks.onMount, options)}
+                    })`
+                  : ''
+              }
+              },`
+            : ''
         }
         ${
           getterString.length < 4

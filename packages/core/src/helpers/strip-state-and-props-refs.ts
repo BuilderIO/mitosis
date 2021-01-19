@@ -15,7 +15,7 @@ export type StripStateAndPropsRefsOptions = {
 export const stripStateAndPropsRefs = (
   code?: string,
   options: StripStateAndPropsRefsOptions = {},
-) => {
+): string => {
   let newCode = code || '';
   const replaceStr = options.replaceWith || '';
 
