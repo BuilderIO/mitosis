@@ -33,8 +33,21 @@ export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
 ) => {
-  const useCode = `let _ = ${code}`;
-  return (babelTransform(useCode, visitor)?.code || '')
+  let useCode = code;
+
+  // Detect method fragments. These get passed sometimes and otherwise
+  // generate compile errors. They are of the form `foo() { ... }`
+  const isMethod = Boolean(
+    !code.startsWith('function') && code.match(/^[a-z0-9]+\s*\([^\)]*\)\s*\{/i),
+  );
+
+  if (isMethod) {
+    useCode = `function ${useCode}`;
+  }
+  useCode = `let _ = ${useCode}`;
+  const result = (babelTransform(useCode, visitor)?.code || '')
     .replace(/;$/, '')
     .replace(/let _ =\s/, '');
+
+  return isMethod ? result.replace('function', '') : result;
 };

@@ -6,6 +6,7 @@ import { getRefs } from './get-refs';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { babelTransformExpression } from './babel-transform';
 
 const tsPreset = require('@babel/preset-typescript');
 
@@ -15,26 +16,16 @@ const replaceRefsInString = (
   code: string,
   refs: string[],
   mapper: RefMapper,
-): string => {
-  return babel
-    .transformSync(`const _ = ${code}`, {
-      presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-      plugins: [
-        () => ({
-          visitor: {
-            Identifier(path: babel.NodePath<babel.types.Identifier>) {
-              const name = path.node.name;
-              const isRef = refs.includes(name);
-              if (isRef) {
-                path.replaceWith(babel.types.identifier(mapper(name)));
-              }
-            },
-          },
-        }),
-      ],
-    })!
-    .code!.replace(/;$/, '')
-    .replace(/^const _ = /, '');
+) => {
+  return babelTransformExpression(code, {
+    Identifier(path: babel.NodePath<babel.types.Identifier>) {
+      const name = path.node.name;
+      const isRef = refs.includes(name);
+      if (isRef) {
+        path.replaceWith(babel.types.identifier(mapper(name)));
+      }
+    },
+  });
 };
 
 export const mapRefs = (

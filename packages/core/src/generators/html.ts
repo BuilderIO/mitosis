@@ -552,20 +552,10 @@ export const componentToCustomElement = (
           
           const self = this;
           this.state = ${getStateObjectString(json, {
-            valueMapper: (value, type) => {
-              let useValue = value.trim();
-              const isMethod = Boolean(
-                type === 'function' &&
-                  !useValue.startsWith('function') &&
-                  useValue.match(/^[a-z0-9]+\s*\(/gi),
-              );
-
-              if (isMethod) {
-                useValue = `function ${useValue}`;
-              }
-              const returnVal = stripStateAndPropsRefs(
+            valueMapper: (value) => {
+              return stripStateAndPropsRefs(
                 stripStateAndPropsRefs(
-                  addUpdateAfterSetInCode(useValue, useOptions, 'self.update'),
+                  addUpdateAfterSetInCode(value, useOptions, 'self.update'),
                   {
                     includeProps: false,
                     includeState: true,
@@ -580,7 +570,6 @@ export const componentToCustomElement = (
                   replaceWith: 'self.props.',
                 },
               );
-              return isMethod ? returnVal.replace('function', '') : returnVal;
             },
           })};
           ${
