@@ -414,7 +414,7 @@ export const componentToHtml = (
         ${useOptions.js}
 
         // Update with initial state on first load
-        update()
+        update();
 
         ${
           !json.hooks.onMount
@@ -422,7 +422,7 @@ export const componentToHtml = (
             : // TODO: make prettier by grabbing only the function body
               `
               // onMount
-              (${json.hooks.onMount})()`
+              ;(${json.hooks.onMount})()`
         }
 
         ${
@@ -608,7 +608,7 @@ export const componentToCustomElement = (
               : // TODO: make prettier by grabbing only the function body
                 `
                 // onMount
-                (${json.hooks.onMount})()`
+                ;(${json.hooks.onMount})()`
           }
         }
 
