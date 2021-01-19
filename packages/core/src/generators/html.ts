@@ -422,7 +422,10 @@ export const componentToHtml = (
             : // TODO: make prettier by grabbing only the function body
               `
               // onMount
-              ${json.hooks.onMount}
+              ${updateReferencesInCode(
+                addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                useOptions,
+              )}
               `
         }
 
@@ -609,7 +612,10 @@ export const componentToCustomElement = (
               : // TODO: make prettier by grabbing only the function body
                 `
                 // onMount
-                ${json.hooks.onMount}
+                ${updateReferencesInCode(
+                  addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                  useOptions,
+                )}
                 `
           }
         }
