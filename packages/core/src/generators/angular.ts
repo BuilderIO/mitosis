@@ -18,6 +18,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
+import { getProps } from '../helpers/get-props';
 
 export type ToAngularOptions = {
   prettier?: boolean;
@@ -133,6 +134,8 @@ export const componentToAngular = (
     json = runPreJsonPlugins(json, options.plugins);
   }
 
+  const props = getProps(componentJson);
+
   const refs = Array.from(getRefs(json));
   mapRefs(json, (refName) => `this.${refName}.nativeElement`);
 
@@ -156,9 +159,9 @@ export const componentToAngular = (
   });
 
   let str = dedent`
-    import { Component ${
-      refs.length ? ', ViewChild, ElementRef' : ''
-    } } from '@angular/core';
+    import { Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
+    props.size ? ', Input' : ''
+  } } from '@angular/core';
     ${renderPreComponent(json)}
 
     @Component({
@@ -174,6 +177,9 @@ export const componentToAngular = (
       }
     })
     export default class ${componentJson.name} {
+      ${Array.from(props)
+        .map((item) => `@Input() ${item}: any`)
+        .join('\n')}
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
