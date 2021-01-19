@@ -7,6 +7,10 @@ export const useState = <T>(obj: T) => obj;
 export const useRef = () => null as any;
 export const useContext = () => null as any;
 export const createContext = () => null as any;
+export const onMount = (fn: () => any) => null as any;
+export const afterUnmount = (fn: () => any) => null as any;
+export const useDynamicTag = (fn: () => any) => null as any;
+export const onError = (fn: () => any) => null as any;
 
 export * from './parsers/jsx';
 export * from './parsers/builder';
