@@ -123,7 +123,13 @@ const componentFunctionToJson = (
               types.isFunctionExpression(firstArg) ||
               types.isArrowFunctionExpression(firstArg)
             ) {
-              hooks.onMount = generate(firstArg.body).code;
+              hooks.onMount = generate(firstArg.body)
+                .code.trim()
+                // Remove abtrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
             }
           }
         }
@@ -420,10 +426,7 @@ export function parseJsx(jsx: string): JSXLiteComponent {
 
   try {
     return JSON5.parse(
-      output!
-        .code!.trim()
-        .replace(/^\({/, '{')
-        .replace(/}\);$/, '}'),
+      output!.code!.trim().replace(/^\({/, '{').replace(/}\);$/, '}'),
     );
   } catch (err) {
     console.error('Could not parse code', output && output.code);
