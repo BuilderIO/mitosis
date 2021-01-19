@@ -38,9 +38,6 @@ export function RenderContent(props: RenderContentProps) {
             return;
           }
 
-          if (location.href.includes('builder.debug=true')) {
-            eval('debugger');
-          }
           for (const patch of patches) {
             applyPatchWithMinimalMutationChain(content.data, patch);
           }
