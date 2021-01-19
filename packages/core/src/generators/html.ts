@@ -1,4 +1,4 @@
-import { types } from '@babel/core';
+import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
@@ -24,6 +24,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
+import generate from '@babel/generator';
 
 type ToHtmlOptions = {
   prettier?: boolean;
@@ -47,34 +48,9 @@ const addUpdateAfterSet = (
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
-        let matchFound = false;
-        const newValue = babelTransformExpression(value, {
-          AssignmentExpression(
-            path: babel.NodePath<babel.types.AssignmentExpression>,
-          ) {
-            const { node } = path;
-            if (types.isMemberExpression(node.left)) {
-              if (types.isIdentifier(node.left.object)) {
-                // TODO: utillity to properly trace this reference to the beginning
-                if (node.left.object.name === 'state') {
-                  // TODO: ultimately support other property access like strings
-                  const propertyName = (node.left.property as types.Identifier)
-                    .name;
-                  matchFound = true;
-                  path.insertAfter(
-                    types.callExpression(
-                      types.identifier(
-                        options.format === 'class' ? 'this.update' : 'update',
-                      ),
-                      [],
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        });
-        if (matchFound) {
+
+        const newValue = addUpdateAfterSetInCode(value, options);
+        if (newValue !== value) {
           item.bindings[key] = newValue;
         }
       }
@@ -94,7 +70,10 @@ const getForNames = (json: JSXLiteComponent) => {
   return names;
 };
 
-const replaceForNameIdentifiers = (json: JSXLiteComponent) => {
+const replaceForNameIdentifiers = (
+  json: JSXLiteComponent,
+  options: InternalToHtmlOptions,
+) => {
   // TODO: cache this. by reference? lru?
   const forNames = getForNames(json);
 
@@ -109,7 +88,10 @@ const replaceForNameIdentifiers = (json: JSXLiteComponent) => {
           item.bindings[key] = replaceIdentifiers(
             value,
             forNames,
-            (name) => `getContext(el, "${name}")`,
+            (name) =>
+              `${
+                options.format === 'class' ? 'this.' : ''
+              }getContext(el, "${name}")`,
           ) as string;
         }
       }
@@ -140,12 +122,19 @@ const updateReferencesInCode = (
   options: InternalToHtmlOptions,
 ) => {
   if (options.format === 'class') {
-    return stripStateAndPropsRefs(code, {
-      // TODO: add props to top level and replace with `this.` and add setters that call this.update()
-      includeProps: false,
-      includeState: true,
-      replaceWith: 'this.state.',
-    });
+    return stripStateAndPropsRefs(
+      stripStateAndPropsRefs(code, {
+        includeProps: false,
+        includeState: true,
+        replaceWith: 'this.state.',
+      }),
+      {
+        // TODO: replace with `this.` and add setters that call this.update()
+        includeProps: true,
+        includeState: false,
+        replaceWith: 'this.props.',
+      },
+    );
   }
   return code;
 };
@@ -201,7 +190,9 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
         let template = ${
           options.format === 'class' ? 'this' : 'document'
         }.querySelector('[data-template-for="${elId}"]');
-        renderLoop(el, array, template, "${itemName}");
+        ${
+          options.format === 'class' ? 'this.' : ''
+        }renderLoop(el, array, template, "${itemName}");
       `,
     );
     // TODO: decide on how to handle this...
@@ -304,6 +295,54 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   return str;
 };
 
+function addUpdateAfterSetInCode(
+  code: string,
+  options: InternalToHtmlOptions,
+  useString = options.format === 'class' ? 'this.update' : 'update',
+) {
+  let updates = 0;
+  return babelTransformExpression(code, {
+    AssignmentExpression(
+      path: babel.NodePath<babel.types.AssignmentExpression>,
+    ) {
+      const { node } = path;
+      if (types.isMemberExpression(node.left)) {
+        if (types.isIdentifier(node.left.object)) {
+          // TODO: utillity to properly trace this reference to the beginning
+          if (node.left.object.name === 'state') {
+            // TODO: ultimately do updates by property, e.g. updateName()
+            // that updates any attributes dependent on name, etcç
+            let parent: NodePath<any> = path;
+
+            // `_temp = ` assignments are created sometimes when we insertAfter
+            // for simple expressions. this causes us to re-process the same expression
+            // in an infinite loop
+            while ((parent = parent.parentPath)) {
+              if (
+                types.isAssignmentExpression(parent.node) &&
+                types.isIdentifier(parent.node.left) &&
+                parent.node.left.name.startsWith('_temp')
+              ) {
+                return;
+              }
+            }
+
+            // Uncomment to debug infinite loops:
+            // if (updates++ > 1000) {
+            //   console.error('Infinite assignment detected');
+            //   return;
+            // }
+
+            path.insertAfter(
+              types.callExpression(types.identifier(useString), []),
+            );
+          }
+        }
+      }
+    },
+  });
+}
+
 // TODO: props support via custom elements
 export const componentToHtml = (
   componentJson: JSXLiteComponent,
@@ -320,7 +359,7 @@ export const componentToHtml = (
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
-  replaceForNameIdentifiers(json);
+  replaceForNameIdentifiers(json, useOptions);
   addUpdateAfterSet(json, useOptions);
   const componentHasProps = hasProps(json);
 
@@ -344,7 +383,13 @@ export const componentToHtml = (
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
-        let state = ${getStateObjectString(json)};
+        let state = ${getStateObjectString(json, {
+          valueMapper: (value) =>
+            addUpdateAfterSetInCode(
+              updateReferencesInCode(value, useOptions),
+              useOptions,
+            ),
+        })};
         ${componentHasProps ? `let props = {};` : ''}
 
         // Function to update data bindings and loops
@@ -369,7 +414,16 @@ export const componentToHtml = (
         ${useOptions.js}
 
         // Update with initial state on first load
-        update()
+        update();
+
+        ${
+          !json.hooks.onMount
+            ? ''
+            : // TODO: make prettier by grabbing only the function body
+              `
+              // onMount
+              ;(${json.hooks.onMount})()`
+        }
 
         ${
           !hasLoop
@@ -450,7 +504,8 @@ export const componentToCustomElement = (
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
-  replaceForNameIdentifiers(json);
+  const componentHasProps = hasProps(json);
+  replaceForNameIdentifiers(json, useOptions);
   addUpdateAfterSet(json, useOptions);
 
   const hasLoop = hasComponent('For', json);
@@ -490,15 +545,52 @@ export const componentToCustomElement = (
       class ${componentJson.name} extends HTMLElement {
         constructor() {
           super();
+          
+          const self = this;
+          this.state = ${getStateObjectString(json, {
+            valueMapper: (value, type) => {
+              let useValue = value.trim();
+              const isMethod = Boolean(
+                type === 'function' &&
+                  !useValue.startsWith('function') &&
+                  useValue.match(/^[a-z0-9]+\s*\(/gi),
+              );
 
-          this.state = ${getStateObjectString(json)};
+              if (isMethod) {
+                useValue = `function ${useValue}`;
+              }
+              const returnVal = stripStateAndPropsRefs(
+                stripStateAndPropsRefs(
+                  addUpdateAfterSetInCode(useValue, useOptions, 'self.update'),
+                  {
+                    includeProps: false,
+                    includeState: true,
+                    // TODO: if it's an arrow function it's this.state.
+                    replaceWith: 'self.state.',
+                  },
+                ),
+                {
+                  // TODO: replace with `this.` and add setters that call this.update()
+                  includeProps: true,
+                  includeState: false,
+                  replaceWith: 'self.props.',
+                },
+              );
+              return isMethod ? returnVal.replace('function', '') : returnVal;
+            },
+          })};
+          ${
+            componentHasProps /* TODO: accept these as attributes/properties on the custom element */
+              ? `this.props = {};`
+              : ''
+          }
 
           ${
             !hasLoop
               ? ''
               : `
             // Helper to pass context down for loops
-            contextMap = new WeakMap();
+            this.contextMap = new WeakMap();
           `
           }
 
@@ -509,6 +601,15 @@ export const componentToCustomElement = (
           this.innerHTML = \`
       ${html}\`;
           this.update();
+
+          ${
+            !json.hooks.onMount
+              ? ''
+              : // TODO: make prettier by grabbing only the function body
+                `
+                // onMount
+                ;(${json.hooks.onMount})()`
+          }
         }
 
         update() {
@@ -538,9 +639,9 @@ export const componentToCustomElement = (
             for (let value of array) {
               let tmp = document.createElement('span');
               tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach(function (child) {
-                contextMap.set(child, {
-                  ...contextMap.get(child),
+              Array.from(tmp.children).forEach((child) => {
+                this.contextMap.set(child, {
+                  ...this.contextMap.get(child),
                   [itemName]: value
                 });
                 el.appendChild(child);
@@ -551,7 +652,7 @@ export const componentToCustomElement = (
           getContext(el, name) {
             let parent = el;
             do {
-              let context = contextMap.get(parent);
+              let context = this.contextMap.get(parent);
               if (context && name in context) {
                 return context[name];
               }

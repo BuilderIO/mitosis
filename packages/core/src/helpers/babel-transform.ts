@@ -36,5 +36,5 @@ export const babelTransformExpression = <VisitorContextType = any>(
   const useCode = `let _ = ${code}`;
   return (babelTransform(useCode, visitor)?.code || '')
     .replace(/;$/, '')
-    .replace(/^let _ = /, '');
+    .replace(/let _ =\s/, '');
 };
