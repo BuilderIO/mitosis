@@ -180,6 +180,7 @@ export const componentToAngular = (
       ${Array.from(props)
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
+        
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
