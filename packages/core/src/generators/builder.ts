@@ -227,6 +227,8 @@ export const componentToBuilder = (
     data: {
       jsCode: tryFormat(dedent`
         Object.assign(state, ${getStateObjectString(componentJson)});
+
+        ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
       `),
       blocks: componentJson.children
         .filter(filterEmptyTextNodes)

@@ -303,9 +303,10 @@ export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilerToJSXLiteOptions = {},
 ) => {
+  const stateAssignRegex = /Object\.assign\(state\s*,\s*(\{[\s\S]+\})\s*\)/i;
   const generatedStateMatch = (builderContent?.data?.jsCode || '')
     .trim()
-    .match(/Object\.assign\(state\s*,\s*(\{[\s\S]+\})\s*\)/i);
+    .match(stateAssignRegex);
 
   let state = {};
   if (generatedStateMatch?.[1]) {
@@ -316,7 +317,13 @@ export const builderContentToJsxLiteComponent = (
     }
   }
 
-  const customCode = builderContent.data?.tsCode || builderContent.data?.jsCode;
+  const customCode = (
+    builderContent.data?.tsCode ||
+    builderContent.data?.jsCode ||
+    ''
+  )
+    .replace(stateAssignRegex, '')
+    .trim();
 
   return createJSXLiteComponent({
     state: {
@@ -325,13 +332,7 @@ export const builderContentToJsxLiteComponent = (
     },
     hooks: {
       ...(customCode && {
-        init: `
-          try {
-            ${customCode}
-          } catch (err) {
-            console.error('Builder custom code error', err)
-          }
-        `,
+        onMount: customCode,
       }),
     },
     children: (builderContent.data?.blocks || [])
