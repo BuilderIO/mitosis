@@ -422,7 +422,8 @@ export const componentToHtml = (
             : // TODO: make prettier by grabbing only the function body
               `
               // onMount
-              ;(${json.hooks.onMount})()`
+              ${json.hooks.onMount}
+              `
         }
 
         ${
@@ -608,7 +609,8 @@ export const componentToCustomElement = (
               : // TODO: make prettier by grabbing only the function body
                 `
                 // onMount
-                ;(${json.hooks.onMount})()`
+                ${json.hooks.onMount}
+                `
           }
         }
 
