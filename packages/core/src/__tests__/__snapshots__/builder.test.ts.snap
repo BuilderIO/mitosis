@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Builder Stamped 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": Object {},
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "review.reviewMessage",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "properties": Object {},
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "background": "white",
+                    "margin": "10px",
+                    "padding": "10px",
+                  },
+                },
+                "tagName": "div",
+              },
+            ],
+            "component": Object {
+              "name": "Fragment",
+            },
+            "repeat": Object {
+              "collection": "state.reviews",
+              "itemName": "review",
+            },
+          },
+        ],
+        "properties": Object {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  reviews: [],
+  addReview: () => {
+    // Hello
+  },
+});
+
+fetch(
+  \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+    props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+  }&productId=\${props.productId || \\"2410511106127\\"}\`
+)
+  .then((res) => res.json())
+  .then((data) => {
+    state.reviews = data.data;
+  });
+",
+  },
+}
+`;

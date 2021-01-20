@@ -331,7 +331,11 @@ export const builderContentToJsxLiteComponent = (
   options: BuilerToJSXLiteOptions = {},
 ) => {
   const stateAssignRegex = /Object\.assign\(state\s*,\s*(\{[\s\S]+\})\s*\)/i;
-  const generatedStateMatch = (builderContent?.data?.jsCode || '')
+  const generatedStateMatch = (
+    builderContent?.data?.tsCode ||
+    builderContent?.data?.jsCode ||
+    ''
+  )
     .trim()
     .match(stateAssignRegex);
 

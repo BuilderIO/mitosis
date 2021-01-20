@@ -490,6 +490,51 @@ export default {
 "
 `;
 
+exports[`Vue Stamped.io 1`] = `
+"<template>
+  <div>
+    <template v-for=\\"review in reviews\\">
+      <div class=\\"div-1\\">
+        {{ review.reviewMessage }}
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"apiKey\\", \\"productId\\"],
+
+  data: () => ({ reviews: [] }),
+
+  mounted() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  },
+
+  methods: {
+    addReview: () => {
+      // Hello
+    },
+  },
+};
+</script>
+<style>
+.div-1 {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+}
+</style>
+"
+`;
+
 exports[`Vue Submit button block 1`] = `
 "<template>
   <button v-bind=\\"attributes\\" type=\\"submit\\">

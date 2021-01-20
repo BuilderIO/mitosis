@@ -471,6 +471,54 @@ export default function SelectComponent(props) {
 "
 `;
 
+exports[`React Stamped.io 1`] = `
+"/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function SmileReviews(props) {
+  const state = useLocalObservable(() => ({
+    reviews: [],
+    addReview: () => {
+      // Hello
+    },
+  }));
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
+  }, []);
+
+  return (
+    <>
+      <div>
+        {state.reviews.map((review) => (
+          <>
+            <div
+              css={{
+                margin: \\"10px\\",
+                padding: \\"10px\\",
+                background: \\"white\\",
+              }}
+            >
+              {review.reviewMessage}
+            </div>
+          </>
+        ))}
+      </div>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Submit button block 1`] = `
 "export default function SubmitButton(props) {
   return (

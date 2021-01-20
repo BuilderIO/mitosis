@@ -90,7 +90,11 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id: 'builder-' + Math.random().toString(36).split('.')[1],
+    id:
+      'builder-' +
+      Math.random()
+        .toString(36)
+        .split('.')[1],
   }),
   ...options,
 });

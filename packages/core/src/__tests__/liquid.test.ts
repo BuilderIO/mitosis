@@ -12,6 +12,7 @@ const video = require('./data/blocks/video.raw');
 const section = require('./data/blocks/section.raw');
 const text = require('./data/blocks/text.raw');
 const rawText = require('./data/blocks/raw-text.raw');
+const stamped = require('./data/blocks/stamped-io.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -82,6 +83,12 @@ describe('Liquid', () => {
 
   test('RawText', () => {
     const json = parseJsx(rawText);
+    const output = componentToLiquid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Stamped.io', () => {
+    const json = parseJsx(stamped);
     const output = componentToLiquid(json);
     expect(output).toMatchSnapshot();
   });
