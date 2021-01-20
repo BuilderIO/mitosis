@@ -11,6 +11,7 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
+import { omit } from 'lodash';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -89,11 +90,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -211,7 +208,7 @@ export const blockToBuilder = (
         },
       }),
       properties: thisIsComponent ? undefined : (json.properties as any),
-      bindings: thisIsComponent ? undefined : (json.bindings as any),
+      bindings: thisIsComponent ? undefined : omit(json.bindings as any, 'css'),
       children: json.children
         .filter(filterEmptyTextNodes)
         .map((child) => blockToBuilder(child, options)),
