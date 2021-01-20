@@ -472,17 +472,20 @@ export default function SelectComponent(props) {
 `;
 
 exports[`React Stamped.io 1`] = `
-"/** @jsx jsx */
-import { jsx } from \\"@emotion/react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState } from \\"react\\";
+import styled from \\"styled-components\\";
+
+const Div1 = styled.div\`
+  margin: 10px;
+  padding: 10px;
+  background: white;
+\`;
 
 export default function SmileReviews(props) {
-  const state = useLocalObservable(() => ({
-    reviews: [],
-    addReview: () => {
-      // Hello
-    },
-  }));
+  const [reviews, setReviews] = useState(() => []);
+  function addReview() {
+    // Hello
+  }
 
   useEffect(() => {
     fetch(
@@ -492,24 +495,16 @@ export default function SmileReviews(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-        state.reviews = data.data;
+        reviews = data.data;
       });
   }, []);
 
   return (
     <>
       <div>
-        {state.reviews.map((review) => (
+        {reviews.map((review) => (
           <>
-            <div
-              css={{
-                margin: \\"10px\\",
-                padding: \\"10px\\",
-                background: \\"white\\",
-              }}
-            >
-              {review.reviewMessage}
-            </div>
+            <Div1>{review.reviewMessage}</Div1>
           </>
         ))}
       </div>

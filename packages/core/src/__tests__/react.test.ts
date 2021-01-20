@@ -89,7 +89,10 @@ describe('React', () => {
 
   test('Stamped.io', () => {
     const json = parseJsx(stamped);
-    const output = componentToReact(json);
+    const output = componentToReact(json, {
+      stylesType: 'styled-components',
+      stateType: 'useState',
+    });
     expect(output).toMatchSnapshot();
   });
 });

@@ -8,7 +8,7 @@ type SmileReviewsProps = {
 export default function SmileReviews(props: SmileReviewsProps) {
   const state = useState({
     reviews: [] as any[],
-    addReview: () => {
+    addReview() {
       // Hello
     },
   });
