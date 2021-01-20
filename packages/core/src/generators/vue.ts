@@ -215,7 +215,7 @@ export const componentToVue = (
           component.hooks.onMount
             ? `mounted() {
                 ${processBinding(component.hooks.onMount, options)}
-              }`
+              },`
             : ''
         }
 
