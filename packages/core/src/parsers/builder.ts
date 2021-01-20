@@ -233,6 +233,33 @@ export const builderElementToJsxLiteNode = (
       });
     }
   }
+  const forBinding = block.repeat?.collection;
+  if (forBinding) {
+    const isFragment = block.component?.name === 'Fragment';
+    // TODO: handle having other things, like a repeat too
+    if (isFragment) {
+      return createJSXLiteNode({
+        name: 'For',
+        bindings: {
+          each: block.repeat?.collection,
+          _forName: block.repeat?.itemName || 'item',
+        },
+        children:
+          block.children?.map((child) =>
+            builderElementToJsxLiteNode(child, options),
+          ) || [],
+      });
+    } else {
+      return createJSXLiteNode({
+        name: 'For',
+        bindings: {
+          each: block.repeat?.collection,
+          _forName: block.repeat?.itemName || 'item',
+        },
+        children: [builderElementToJsxLiteNode(omit(block, 'repeat'))],
+      });
+    }
+  }
   const mapper =
     !_internalOptions.skipMapper &&
     block.component &&
