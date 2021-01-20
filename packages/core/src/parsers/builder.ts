@@ -330,7 +330,8 @@ export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilerToJSXLiteOptions = {},
 ) => {
-  const stateAssignRegex = /Object\.assign\(state\s*,\s*(\{[\s\S]+\})\s*\)/i;
+  // TODO: properly parse this out
+  const stateAssignRegex = /Object\.assign\(state\s*,\s*(\{[\s\S]+\n\})\s*\)/i;
   const generatedStateMatch = (
     builderContent?.data?.tsCode ||
     builderContent?.data?.jsCode ||
@@ -354,6 +355,7 @@ export const builderContentToJsxLiteComponent = (
     ''
   )
     .replace(stateAssignRegex, '')
+    .replace(/(let|const|var)\s+props\s*=\s*state;?/, '')
     .trim();
 
   return createJSXLiteComponent({
