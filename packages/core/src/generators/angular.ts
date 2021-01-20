@@ -212,6 +212,7 @@ const tryFormat = (str: string, parser: string) => {
         require('prettier/parser-html'),
         require('prettier/parser-babel'),
       ],
+      htmlWhitespaceSensitivity: 'ignore',
     });
   } catch (err) {
     console.warn('Could not prettify', { string: str }, err);
