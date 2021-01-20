@@ -210,19 +210,15 @@ export const componentToVue = (
         data: () => (${dataString}),
         `
         }
+        
         ${
-          hasSetup
-            ? `setup() {
-              ${
-                component.hooks.onMount
-                  ? `onMounted(() => {
-                      ${processBinding(component.hooks.onMount, options)}
-                    })`
-                  : ''
-              }
-              },`
+          component.hooks.onMount
+            ? `mounted() {
+                ${processBinding(component.hooks.onMount, options)}
+              }`
             : ''
         }
+
         ${
           getterString.length < 4
             ? ''
