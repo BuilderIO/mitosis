@@ -75,6 +75,6 @@ export const babelTransformExpression = <VisitorContextType = any>(
 
     return isMethod ? result.replace('function', '') : result;
   } else {
-    return result;
+    return result!;
   }
 };
