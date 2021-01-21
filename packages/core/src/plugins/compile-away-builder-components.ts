@@ -120,10 +120,6 @@ const components: {
     if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
       aspectRatio = null;
     }
-    console.log(
-      '🚀 ~ file: compile-away-builder-components.ts ~ line 122 ~ Image ~ aspectRatio',
-      aspectRatio,
-    );
 
     const srcSet =
       srcset ||
