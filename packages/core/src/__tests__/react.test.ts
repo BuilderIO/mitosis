@@ -13,6 +13,7 @@ const section = require('./data/blocks/section.raw');
 const text = require('./data/blocks/text.raw');
 const rawText = require('./data/blocks/raw-text.raw');
 const stamped = require('./data/blocks/stamped-io.raw');
+const customCode = require('./data/blocks/custom-code.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -93,6 +94,12 @@ describe('React', () => {
       stylesType: 'styled-components',
       stateType: 'useState',
     });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('CustomCode', () => {
+    const json = parseJsx(customCode);
+    const output = componentToReact(json);
     expect(output).toMatchSnapshot();
   });
 });
