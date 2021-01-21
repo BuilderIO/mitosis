@@ -1,5 +1,5 @@
 import MonacoEditor, { MonacoEditorProps } from 'react-monaco-editor';
-import type { Linter as ESLinter } from 'eslint';
+import { Linter as ESLinter } from 'eslint';
 import * as monaco from 'monaco-editor';
 // eslint-disable-next-line import/no-webpack-loader-syntax
 import types from 'raw-loader!@jsx-lite/core/dist/jsx';
