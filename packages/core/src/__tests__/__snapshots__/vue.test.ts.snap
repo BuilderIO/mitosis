@@ -47,9 +47,7 @@ exports[`Vue CustomCode 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :className=\\"
-      'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     :v-html=\\"code\\"
   ></div>
 </template>
@@ -67,6 +65,7 @@ export default {
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {
@@ -114,9 +113,7 @@ exports[`Vue Embed 1`] = `
 "<template>
   <div
     ref=\\"elem\\"
-    :className=\\"
-      'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
-    \\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
     :v-html=\\"code\\"
   ></div>
 </template>
@@ -134,6 +131,7 @@ export default {
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {

@@ -15,9 +15,8 @@ export default function CustomCode(props: CustomCodeProps) {
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem && typeof window !== 'undefined') {
-        const scripts = elem.getElementsByTagName(
-          'script',
-        ) as HTMLScriptElement[];
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.getElementsByTagName('script');
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
           if (script.src) {

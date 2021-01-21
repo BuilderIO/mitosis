@@ -8,7 +8,7 @@ Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
         "bindings": Object {
-          "className": "'builder-custom-code' + (this.props.replaceNodes ? ' replace-nodes' : '')",
+          "class": "'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')",
           "innerHTML": "props.code",
           "ref": "elem",
         },
@@ -28,6 +28,7 @@ Object.assign(state, {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -77,6 +78,7 @@ useState({
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -138,6 +140,7 @@ export default function MyComponent(props) {
       findAndRunScripts() {
         // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem.current && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
           const scripts = elem.current.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -184,9 +187,8 @@ export default function MyComponent(props) {
   return (
     <div
       ref={elem}
-      className={
-        \\"builder-custom-code\\" +
-        (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      class={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
     ></div>
@@ -211,7 +213,7 @@ Object {
           "actions": Object {},
         },
         "properties": Object {
-          "className": "builder-embed",
+          "class": "builder-embed",
         },
         "tagName": "div",
       },
@@ -224,6 +226,7 @@ Object.assign(state, {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -273,6 +276,7 @@ useState({
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
       const scripts = elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
@@ -334,6 +338,7 @@ export default function MyComponent(props) {
       findAndRunScripts() {
         // TODO: Move this function to standalone one in '@builder.io/utils'
         if (elem.current && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
           const scripts = elem.current.getElementsByTagName(\\"script\\");
 
           for (let i = 0; i < scripts.length; i++) {
@@ -377,9 +382,7 @@ export default function MyComponent(props) {
     });
   });
 
-  return (
-    <div className=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>
-  );
+  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>;
 }
 "
 `;

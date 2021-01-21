@@ -69,9 +69,8 @@ const mappers: {
   },
   link: () => '',
   Image: (json, options) => {
-    return `_: Image(${
-      json.bindings.image || `"${json.properties.image}"`
-    })${temp(',')}`;
+    return `_: Image(${json.bindings.image ||
+      `"${json.properties.image}"`})${temp(',')}`;
   },
 };
 
@@ -222,7 +221,7 @@ const processBinding = (str: string, options: ToSwiftOptions) => {
 };
 
 const useTextBinding = (json: JSXLiteComponent, options: ToSwiftOptions) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {

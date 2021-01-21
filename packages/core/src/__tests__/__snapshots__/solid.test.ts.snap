@@ -51,13 +51,14 @@ export default function Button() {
 exports[`Solid CustomCode 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 
-export default function Embed() {
+export default function CustomCode() {
   const state = createMutable({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = elem.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {
@@ -102,8 +103,7 @@ export default function Embed() {
   return (
     <div
       class={
-        \\"builder-custom-code\\" +
-        (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       ref={elem}
       innerHTML={props.code}
@@ -116,13 +116,14 @@ export default function Embed() {
 exports[`Solid Embed 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 
-export default function Embed() {
+export default function CustomCode() {
   const state = createMutable({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = elem.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {
@@ -167,8 +168,7 @@ export default function Embed() {
   return (
     <div
       class={
-        \\"builder-custom-code\\" +
-        (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       ref={elem}
       innerHTML={props.code}

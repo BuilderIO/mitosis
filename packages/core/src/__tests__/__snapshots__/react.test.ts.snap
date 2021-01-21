@@ -56,13 +56,14 @@ exports[`React CustomCode 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function Embed(props) {
+export default function CustomCode(props) {
   const state = useLocalObservable(() => ({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = elem.current.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {
@@ -112,9 +113,8 @@ export default function Embed(props) {
     <>
       <div
         ref={elem}
-        className={
-          \\"builder-custom-code\\" +
-          (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
       ></div>
@@ -128,13 +128,14 @@ exports[`React Embed 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function Embed(props) {
+export default function CustomCode(props) {
   const state = useLocalObservable(() => ({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
         const scripts = elem.current.getElementsByTagName(\\"script\\");
 
         for (let i = 0; i < scripts.length; i++) {
@@ -184,9 +185,8 @@ export default function Embed(props) {
     <>
       <div
         ref={elem}
-        className={
-          \\"builder-custom-code\\" +
-          (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
       ></div>
