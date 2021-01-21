@@ -8,7 +8,7 @@ export const staticControlFlow = {
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {
             context.report({
-              node: node.expression as any,
+              node: node as any,
               message:
                 'Static rendering is required. E.g. {foo ? bar : baz} should be <Show when={foo}>{bar}</Show>',
             });
