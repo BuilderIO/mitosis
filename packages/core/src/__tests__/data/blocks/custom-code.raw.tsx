@@ -41,7 +41,7 @@ export default function Embed(props: EmbedProps) {
               state.scriptsRun.push(script.innerText);
               new Function(script.innerText)();
             } catch (error) {
-              console.warn('Builder custom code component error:', error);
+              console.warn('`CustomCode`: Error running script:', error);
             }
           }
         }

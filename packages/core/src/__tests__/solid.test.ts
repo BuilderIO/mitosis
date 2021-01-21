@@ -13,6 +13,7 @@ const section = require('./data/blocks/section.raw');
 const text = require('./data/blocks/text.raw');
 const rawText = require('./data/blocks/raw-text.raw');
 const customCode = require('./data/blocks/custom-code.raw');
+const embed = require('./data/blocks/embed.raw');
 
 describe('Solid', () => {
   test('Basic', () => {
@@ -88,6 +89,12 @@ describe('Solid', () => {
   });
 
   test('CustomCode', () => {
+    const json = parseJsx(customCode);
+    const output = componentToSolid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Embed', () => {
     const json = parseJsx(customCode);
     const output = componentToSolid(json);
     expect(output).toMatchSnapshot();

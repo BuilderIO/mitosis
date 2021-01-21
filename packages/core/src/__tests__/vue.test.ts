@@ -14,6 +14,7 @@ const text = require('./data/blocks/text.raw');
 const rawText = require('./data/blocks/raw-text.raw');
 const stamped = require('./data/blocks/stamped-io.raw');
 const customCode = require('./data/blocks/custom-code.raw');
+const embed = require('./data/blocks/embed.raw');
 
 describe('Vue', () => {
   test('Basic', () => {
@@ -95,6 +96,12 @@ describe('Vue', () => {
   });
 
   test('CustomCode', () => {
+    const json = parseJsx(customCode);
+    const output = componentToVue(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Embed', () => {
     const json = parseJsx(customCode);
     const output = componentToVue(json);
     expect(output).toMatchSnapshot();
