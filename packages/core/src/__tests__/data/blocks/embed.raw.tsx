@@ -8,13 +8,15 @@ export default function Embed(props: EmbedProps) {
   const elem = useRef();
 
   const state = useState({
-    scriptsInserted: [],
-    scriptsRun: [],
+    scriptsInserted: [] as string[],
+    scriptsRun: [] as string[],
 
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem && typeof window !== 'undefined') {
-        const scripts = elem.getElementsByTagName('script');
+        const scripts = elem.getElementsByTagName(
+          'script',
+        ) as HTMLScriptElement[];
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
           if (script.src) {
@@ -53,7 +55,5 @@ export default function Embed(props: EmbedProps) {
     state.findAndRunScripts();
   });
 
-  return (
-    <div ref={elem} className="builder-embed" innerHTML={props.content}></div>
-  );
+  return <div ref={elem} class="builder-embed" innerHTML={props.content}></div>;
 }

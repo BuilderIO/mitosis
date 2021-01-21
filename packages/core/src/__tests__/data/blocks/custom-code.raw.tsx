@@ -1,20 +1,23 @@
 import { useState, useRef, onMount } from '@jsx-lite/core';
 
-export interface EmbedProps {
+export interface CustomCodeProps {
   code: string;
+  replaceNodes?: boolean;
 }
 
-export default function Embed(props: EmbedProps) {
+export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef();
 
   const state = useState({
-    scriptsInserted: [],
-    scriptsRun: [],
+    scriptsInserted: [] as string[],
+    scriptsRun: [] as string[],
 
     findAndRunScripts() {
       // TODO: Move this function to standalone one in '@builder.io/utils'
       if (elem && typeof window !== 'undefined') {
-        const scripts = elem.getElementsByTagName('script');
+        const scripts = elem.getElementsByTagName(
+          'script',
+        ) as HTMLScriptElement[];
         for (let i = 0; i < scripts.length; i++) {
           const script = scripts[i];
           if (script.src) {
@@ -56,9 +59,8 @@ export default function Embed(props: EmbedProps) {
   return (
     <div
       ref={elem}
-      className={
-        'builder-custom-code' +
-        (this.props.replaceNodes ? ' replace-nodes' : '')
+      class={
+        'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')
       }
       innerHTML={props.code}
     ></div>
