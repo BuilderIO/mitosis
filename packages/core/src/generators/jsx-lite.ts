@@ -141,6 +141,12 @@ export const componentToJsxLite = (
 
       ${!json.hooks.onMount ? '' : `onMount(() => { ${json.hooks.onMount} })`}
 
+      ${
+        !json.hooks.onUnMount
+          ? ''
+          : `onUnMount(() => { ${json.hooks.onUnMount} })`
+      }
+
       return (${addWrapper ? '<div>' : ''}
         ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
         ${addWrapper ? '</div>' : ''})

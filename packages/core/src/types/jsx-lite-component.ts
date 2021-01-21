@@ -38,6 +38,7 @@ export type JSXLiteComponent = {
   hooks: {
     init?: string;
     onMount?: string;
+    onUnMount?: string;
     preComponent?: string;
     postComponent?: string;
   };

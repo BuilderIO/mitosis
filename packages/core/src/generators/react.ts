@@ -357,7 +357,18 @@ export const componentToReact = (
         json.hooks.onMount
           ? `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onMount!),
+              updateStateSettersInCode(json.hooks.onMount),
+              options,
+            )}
+          }, [])`
+          : ''
+      }
+
+      ${
+        json.hooks.onUnMount
+          ? `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onUnMount),
               options,
             )}
           }, [])`

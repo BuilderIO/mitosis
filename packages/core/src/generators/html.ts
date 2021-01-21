@@ -549,7 +549,7 @@ export const componentToCustomElement = (
       class ${componentJson.name} extends HTMLElement {
         constructor() {
           super();
-          
+
           const self = this;
           this.state = ${getStateObjectString(json, {
             valueMapper: (value) => {
@@ -588,6 +588,20 @@ export const componentToCustomElement = (
           }
 
           ${useOptions.js}
+        }
+
+        ${
+          !json.hooks.onUnMount
+            ? ''
+            : `
+          disconnectedCallback() {
+            // onUnMount
+            ${updateReferencesInCode(
+              addUpdateAfterSetInCode(json.hooks.onUnMount, useOptions),
+              useOptions,
+            )}
+          }
+          `
         }
 
         connectedCallback() {

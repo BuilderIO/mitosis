@@ -182,7 +182,7 @@ export const componentToAngular = (
       ${Array.from(props)
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
-        
+
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
@@ -190,13 +190,21 @@ export const componentToAngular = (
       ${
         !componentJson.hooks.onMount
           ? ''
-          : `
-      ngOnInit() {
-        ${stripStateAndPropsRefs(componentJson.hooks.onMount, {
-          replaceWith: 'this.',
-        })}
+          : `ngOnInit() {
+              ${stripStateAndPropsRefs(componentJson.hooks.onMount, {
+                replaceWith: 'this.',
+              })}
+            }`
       }
-      `
+
+      ${
+        !componentJson.hooks.onUnMount
+          ? ''
+          : `ngOnDestroy() {
+              ${stripStateAndPropsRefs(componentJson.hooks.onUnMount, {
+                replaceWith: 'this.',
+              })}
+            }`
       }
 
       ${dataString}
