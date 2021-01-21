@@ -3,8 +3,13 @@ import { types } from '@babel/core';
 
 export const staticControlFlow = {
   create: (context: Readonly<Rule.RuleContext>): Rule.RuleListener => {
+    console.log('create 5');
     return {
+      Identifier(node) {
+        console.log('\n\n\nIDENTIFIER', { node });
+      },
       JSXExpressionContainer(node: any) {
+        console.log('ran 1?');
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {
             context.report({

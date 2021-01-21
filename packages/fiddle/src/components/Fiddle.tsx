@@ -5,7 +5,7 @@ import { getQueryParam } from '../functions/get-query-param';
 import MonacoEditor from 'react-monaco-editor';
 import { useReaction } from '../hooks/use-reaction';
 import { setQueryParam } from '../functions/set-query-param';
-import * as monaco from 'monaco-editor';
+
 import logo from '../assets/jsx-lite-logo-white.png';
 import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
 import {
@@ -48,8 +48,6 @@ import {
 } from '@material-ui/core';
 import { deleteQueryParam } from '../functions/delete-query-param';
 import { defaultCode, templates } from '../constants/templates';
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import types from 'raw-loader!@jsx-lite/core/dist/jsx';
 import { colors } from '../constants/colors';
 import { useEventListener } from '../hooks/use-event-listener';
 import { adapt } from 'webcomponents-in-react';
@@ -61,6 +59,7 @@ import { TextLink } from './TextLink';
 import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
 import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
+import { CodeEditor } from './CodeEditor';
 
 const debug = getQueryParam('debug') === 'true';
 const lite = getQueryParam('lite') === 'true';
@@ -105,29 +104,6 @@ const smallBreakpoint = breakpoints.mediaQueries.small;
 const responsiveColHeight = 'calc(50vh - 30px)';
 
 const builderEnvParam = getQueryParam('builderEnv');
-
-monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-  target: monaco.languages.typescript.ScriptTarget.Latest,
-  allowNonTsExtensions: true,
-  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-  module: monaco.languages.typescript.ModuleKind.CommonJS,
-  noEmit: true,
-  esModuleInterop: true,
-  jsx: monaco.languages.typescript.JsxEmit.React,
-  reactNamespace: 'React',
-  allowJs: true,
-  typeRoots: ['node_modules/@types'],
-});
-
-monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-  noSemanticValidation: false,
-  noSyntaxValidation: false,
-});
-
-monaco.languages.typescript.typescriptDefaults.addExtraLib(
-  types,
-  `file:///node_modules/@react/types/index.d.ts`,
-);
 
 const useSaveButton = true;
 
@@ -571,7 +547,7 @@ export default function Fiddle() {
               </Select>
             </div>
             <div css={{ paddingTop: 15, flexGrow: 1 }}>
-              <MonacoEditor
+              <CodeEditor
                 options={{
                   renderLineHighlightOnlyWhenFocus: true,
                   overviewRulerBorder: false,
