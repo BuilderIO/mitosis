@@ -216,6 +216,13 @@ export const componentToVue = (
               },`
             : ''
         }
+        ${
+          component.hooks.onUnMount
+            ? `unmounted() {
+                ${processBinding(component.hooks.onUnMount, options)}
+              },`
+            : ''
+        }
 
         ${
           getterString.length < 4
