@@ -48,6 +48,71 @@ export default function Button() {
 "
 `;
 
+exports[`Solid CustomCode 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Embed() {
+  const state = createMutable({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem && typeof window !== \\"undefined\\") {
+        const scripts = elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"Builder custom code component error:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  return (
+    <div
+      class={
+        \\"builder-custom-code\\" +
+        (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      ref={elem}
+      innerHTML={props.code}
+    ></div>
+  );
+}
+"
+`;
+
 exports[`Solid Form block 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 import { css } from \\"solid-styled-components\\";

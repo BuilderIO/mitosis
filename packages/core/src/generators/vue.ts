@@ -186,8 +186,6 @@ export const componentToVue = (
 
   const elementProps = getProps(component);
 
-  const hasSetup = !!component.hooks.onMount;
-
   let str = dedent`
     <template>
       ${component.children.map((item) => blockToVue(item)).join('\n')}
@@ -210,7 +208,7 @@ export const componentToVue = (
         data: () => (${dataString}),
         `
         }
-        
+
         ${
           component.hooks.onMount
             ? `mounted() {

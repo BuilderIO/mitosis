@@ -52,6 +52,78 @@ exports[`React Button 1`] = `
 "
 `;
 
+exports[`React CustomCode 1`] = `
+"import { useRef } from \\"react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Embed(props) {
+  const state = useLocalObservable(() => ({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"Builder custom code component error:\\", error);
+            }
+          }
+        }
+      }
+    },
+  }));
+
+  const elem = useRef();
+
+  useEffect(() => {
+    state.findAndRunScripts();
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={elem}
+        className={
+          \\"builder-custom-code\\" +
+          (this.props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+      ></div>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Form block 1`] = `
 "import { useRef } from \\"react\\";
 /** @jsx jsx */
