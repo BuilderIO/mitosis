@@ -59,7 +59,7 @@ Object.assign(state, {
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
-            console.warn(\\"Builder custom code component error:\\", error);
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
           }
         }
       }
@@ -108,7 +108,7 @@ useState({
             state.scriptsRun.push(script.innerText);
             new Function(script.innerText)();
           } catch (error) {
-            console.warn(\\"Builder custom code component error:\\", error);
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
           }
         }
       }
@@ -169,7 +169,7 @@ export default function MyComponent(props) {
                 state.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
-                console.warn(\\"Builder custom code component error:\\", error);
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
               }
             }
           }
@@ -190,6 +190,195 @@ export default function MyComponent(props) {
       }
       innerHTML={props.code}
     ></div>
+  );
+}
+"
+`;
+
+exports[`Builder Embed 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "innerHTML": "props.content",
+          "ref": "elem",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+        },
+        "properties": Object {
+          "className": "builder-embed",
+        },
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`Embed\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+state.findAndRunScripts();
+",
+    "tsCode": "var props = state;
+
+useState({
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`Embed\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+onMount(() => {
+  state.findAndRunScripts();
+});
+",
+  },
+}
+`;
+
+exports[`Builder Embed 2`] = `
+"import { useRef } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const elem = useRef();
+
+  onMount(() => {
+    useState({
+      scriptsInserted: [],
+      scriptsRun: [],
+
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (elem.current && typeof window !== \\"undefined\\") {
+          const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (state.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              state.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (state.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                state.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`Embed\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+    });
+    onMount(() => {
+      state.findAndRunScripts();
+    });
+  });
+
+  return (
+    <div className=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>
   );
 }
 "
