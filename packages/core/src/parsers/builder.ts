@@ -73,7 +73,10 @@ const getBlockActions = (block: BuilderElement) => ({
 });
 
 const getBlockActionsAsBindings = (block: BuilderElement) => {
-  return mapKeys(getBlockActions(block), (value, key) => `on${capitalize(key)}`);
+  return mapKeys(
+    getBlockActions(block),
+    (value, key) => `on${capitalize(key)}`,
+  );
 };
 
 const getBlockNonActionBindings = (block: BuilderElement) => ({
