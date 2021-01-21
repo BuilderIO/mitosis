@@ -493,9 +493,26 @@ export default {
 exports[`Vue Stamped.io 1`] = `
 "<template>
   <div>
+    <button @click=\\"showReviewPrompt = true\\">Write a review</button>
+    <template v-if=\\"showReviewPrompt\\">
+      <input placeholder=\\"Email\\" />
+
+      <input placeholder=\\"Title\\" class=\\"input-1\\" />
+
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea-1\\"
+      ></textarea>
+
+      <button class=\\"button-1\\" @click=\\"showReviewPrompt = false\\">Submit</button>
+    </template>
     <template v-for=\\"review in reviews\\">
       <div class=\\"div-1\\">
-        {{ review.reviewMessage }}
+        <img class=\\"img-1\\" :src=\\"review.avatar\\" />
+        <div>
+          <div>{{ review.author }}</div>
+          <div>{{ review.reviewMessage }}</div>
+        </div>
       </div>
     </template>
   </div>
@@ -504,7 +521,7 @@ exports[`Vue Stamped.io 1`] = `
 export default {
   props: [\\"apiKey\\", \\"productId\\"],
 
-  data: () => ({ reviews: [] }),
+  data: () => ({ reviews: [], showReviewPrompt: false }),
 
   mounted() {
     fetch(
@@ -517,19 +534,30 @@ export default {
         this.reviews = data.data;
       });
   },
-
-  methods: {
-    addReview() {
-      // Hello
-    },
-  },
 };
 </script>
 <style>
+.input-1 {
+  display: block;
+}
+.textarea-1 {
+  display: block;
+}
+.button-1 {
+  display: block;
+}
 .div-1 {
   margin: 10px;
   padding: 10px;
   background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.img-1 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
 }
 </style>
 "

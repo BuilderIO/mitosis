@@ -11,7 +11,7 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { omit } from 'lodash';
+import { kebabCase, omit } from 'lodash';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -90,11 +90,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -162,14 +158,32 @@ export const blockToBuilder = (
 
   const thisIsComponent = isComponent(json);
 
-  let bindings = thisIsComponent ? {} : json.bindings;
-  if (thisIsComponent) {
-    for (const key in json.bindings) {
-      bindings[`component.options.${key}`] = json.bindings[key];
+  const bindings = thisIsComponent ? {} : json.bindings;
+  const actions: { [key: string]: string } = {};
+
+  for (const key in bindings) {
+    const eventBindingKeyRegex = /^on([A-Z])/;
+    const firstCharMatchForEventBindingKey = key.match(
+      eventBindingKeyRegex,
+    )?.[1];
+    if (firstCharMatchForEventBindingKey) {
+      actions[
+        key.replace(
+          eventBindingKeyRegex,
+          firstCharMatchForEventBindingKey.toLowerCase(),
+        )
+      ] = bindings[key] as string;
+      delete bindings[key];
     }
   }
 
-  const hasCss = !!json.bindings.css;
+  if (thisIsComponent) {
+    for (const key in bindings) {
+      bindings[`component.options.${key}`] = bindings[key];
+    }
+  }
+
+  const hasCss = !!bindings.css;
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
     medium?: Partial<CSSStyleDeclaration>;
@@ -178,7 +192,7 @@ export const blockToBuilder = (
     large: {},
   };
   if (hasCss) {
-    const cssRules = json5.parse(json.bindings.css as string);
+    const cssRules = json5.parse(bindings.css as string);
     const cssRuleKeys = Object.keys(cssRules);
     for (const ruleKey of cssRuleKeys) {
       const mediaQueryMatch = ruleKey.match(mediaQueryRegex);
@@ -211,8 +225,12 @@ export const blockToBuilder = (
           options: json.properties,
         },
       }),
+      code: {
+        actions,
+      },
       properties: thisIsComponent ? undefined : (json.properties as any),
-      bindings: thisIsComponent ? undefined : omit(json.bindings as any, 'css'),
+      bindings: thisIsComponent ? undefined : omit(bindings as any, 'css'),
+      actions,
       children: json.children
         .filter(filterEmptyTextNodes)
         .map((child) => blockToBuilder(child, options)),
@@ -233,6 +251,19 @@ export const componentToBuilder = (
         Object.assign(state, ${getStateObjectString(componentJson)});
 
         ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
+      `),
+      tsCode: tryFormat(dedent`
+        ${!hasProps(componentJson) ? '' : `var props = state;`}
+
+        useState(${getStateObjectString(componentJson)});
+
+        ${
+          !componentJson.hooks.onMount
+            ? ''
+            : `onMount(() => {
+                ${componentJson.hooks.onMount}
+              })`
+        }
       `),
       blocks: componentJson.children
         .filter(filterEmptyTextNodes)
