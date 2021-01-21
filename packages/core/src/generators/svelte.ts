@@ -129,7 +129,7 @@ export const blockToSvelte = (
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
@@ -209,6 +209,7 @@ export const componentToSvelte = (
 
   let str = dedent`
     <script>
+      ${!json.hooks.onMount ? '' : `import { onMount } from 'svelte'`}
       ${renderPreComponent(json)}
 
       ${
@@ -218,7 +219,7 @@ export const componentToSvelte = (
       }
       ${refs
         .concat(props)
-        .map((name) => `let ${name};`)
+        .map((name) => `export let ${name};`)
         .join('\n')}
 
       ${functionsString.length < 4 ? '' : functionsString}
@@ -230,6 +231,14 @@ export const componentToSvelte = (
             ? ''
             : `let state = onChange(${dataString}, () => state = state)`
           : dataString
+      }
+
+      ${
+        !json.hooks.onMount
+          ? ''
+          : `onMount(() => { ${stripStateAndPropsRefs(json.hooks.onMount, {
+              includeState: options.stateType === 'variables',
+            })} });`
       }
     </script>
 

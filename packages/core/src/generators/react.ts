@@ -207,40 +207,41 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
-        let matchFound = false;
-        const newValue = babelTransformExpression(value, {
-          AssignmentExpression(
-            path: babel.NodePath<babel.types.AssignmentExpression>,
-          ) {
-            const { node } = path;
-            if (types.isMemberExpression(node.left)) {
-              if (types.isIdentifier(node.left.object)) {
-                // TODO: utillity to properly trace this reference to the beginning
-                if (node.left.object.name === 'state') {
-                  // TODO: ultimately support other property access like strings
-                  const propertyName = (node.left.property as types.Identifier)
-                    .name;
-                  matchFound = true;
-                  path.replaceWith(
-                    types.callExpression(
-                      types.identifier(`set${capitalize(propertyName)}`),
-                      [node.right],
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        });
-        if (matchFound) {
+        const newValue = updateStateSettersInCode(value);
+        if (newValue !== value) {
           item.bindings[key] = newValue;
         }
       }
     }
+  });
+};
+
+const updateStateSettersInCode = (value: string) => {
+  return babelTransformExpression(value, {
+    AssignmentExpression(
+      path: babel.NodePath<babel.types.AssignmentExpression>,
+    ) {
+      const { node } = path;
+      if (types.isMemberExpression(node.left)) {
+        if (types.isIdentifier(node.left.object)) {
+          // TODO: utillity to properly trace this reference to the beginning
+          if (node.left.object.name === 'state') {
+            // TODO: ultimately support other property access like strings
+            const propertyName = (node.left.property as types.Identifier).name;
+            path.replaceWith(
+              types.callExpression(
+                types.identifier(`set${capitalize(propertyName)}`),
+                [node.right],
+              ),
+            );
+          }
+        }
+      }
+    },
   });
 };
 
@@ -355,7 +356,10 @@ export const componentToReact = (
       ${
         json.hooks.onMount
           ? `useEffect(() => {
-            ${processBinding(json.hooks.onMount, options)}
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onMount!),
+              options,
+            )}
           }, [])`
           : ''
       }

@@ -688,11 +688,11 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
                 />
-                <Tab
+                {/* <Tab
                   label={<TabLabelWithIcon label="React Native" />}
                   value="reactNative"
                 />
-                <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
+                <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" /> */}
                 <Tab
                   label={
                     <TabLabelWithIcon

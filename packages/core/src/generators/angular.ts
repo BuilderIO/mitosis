@@ -19,6 +19,7 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
+import { kebabCase } from 'lodash';
 
 export type ToAngularOptions = {
   prettier?: boolean;
@@ -165,6 +166,7 @@ export const componentToAngular = (
     ${renderPreComponent(json)}
 
     @Component({
+      selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
         ${indent(template, 8)}
       \`,
@@ -184,6 +186,18 @@ export const componentToAngular = (
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
+
+      ${
+        !componentJson.hooks.onMount
+          ? ''
+          : `
+      ngOnInit() {
+        ${stripStateAndPropsRefs(componentJson.hooks.onMount, {
+          replaceWith: 'this.',
+        })}
+      }
+      `
+      }
 
       ${dataString}
     }
