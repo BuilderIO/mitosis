@@ -1,18 +1,22 @@
 import { useState, useRef, onMount, onUnMount, Show } from '@jsx-lite/core';
 
+// TODO: AMP Support?
+
 export interface ImageProps {
+  className?: string;
   image: string;
-  sizes: string;
-  lazy: boolean;
-  srcset: string;
+  sizes?: string;
+  lazy?: boolean;
   height?: number;
   width?: number;
   altText?: string;
   backgroundSize?: string;
   backgroundPosition?: string;
-  className?: string;
+  // TODO: Support generating Builder.io and or Shopify `srcset`s when needed
+  srcset?: string;
   // TODO: Implement support for custom aspect ratios
   aspectRatio?: number;
+  // TODO: This might not work as expected in terms of positioning
   children?: any;
 }
 
