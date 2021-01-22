@@ -15,6 +15,7 @@ const rawText = require('./data/blocks/raw-text.raw');
 const customCode = require('./data/blocks/custom-code.raw');
 const stamped = require('./data/blocks/stamped-io.raw');
 const embed = require('./data/blocks/embed.raw');
+const image = require('./data/blocks/image.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -103,6 +104,12 @@ describe('Liquid', () => {
 
   test('Embed', () => {
     const json = parseJsx(customCode);
+    const output = componentToLiquid(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Image', () => {
+    const json = parseJsx(image);
     const output = componentToLiquid(json);
     expect(output).toMatchSnapshot();
   });
