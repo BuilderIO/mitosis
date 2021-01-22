@@ -52,6 +52,65 @@ exports[`React Button 1`] = `
 "
 `;
 
+exports[`React Columns 1`] = `
+"/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Column(props) {
+  const state = useLocalObservable(() => ({
+    // TODO: This methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  }));
+
+  return (
+    <>
+      <div
+        className=\\"builder-columns\\"
+        css={{
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+          lineHeight: \\"normal\\",
+        }}
+      >
+        {props.columns.map((column) => (
+          <>
+            <div
+              className=\\"builder-column\\"
+              key={index}
+              css={{
+                flexGrow: 1,
+              }}
+            >
+              {column.content}
+            </div>
+          </>
+        ))}
+      </div>
+    </>
+  );
+}
+"
+`;
+
 exports[`React CustomCode 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
