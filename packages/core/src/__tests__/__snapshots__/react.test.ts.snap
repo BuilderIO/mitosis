@@ -563,26 +563,26 @@ export default function Image(props) {
             <>
               <img
                 alt={props.altText}
-                role={props.altText ? \\"presentation\\" : undefined}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
                 css={{
                   opacity: 1,
                   transition: \\"opacity 0.2s ease-in-out\\",
                   objectFit: \\"cover\\",
                   objectPosition: \\"center\\",
                 }}
-                className={
+                class={
                   \\"builder-image\\" +
                   (props.className ? \\" \\" + props.className : \\"\\")
                 }
                 src={props.image}
                 onLoad={(event) => state.setLoaded}
-                srcSet={props.srcset}
+                srcset={props.srcset}
                 sizes={props.sizes}
               />
             </>
           )}
 
-          <source srcSet={props.srcset} />
+          <source srcset={props.srcset} />
         </picture>
 
         {props.children}

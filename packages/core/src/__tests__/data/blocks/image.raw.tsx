@@ -1,15 +1,8 @@
-import {
-  useState,
-  useRef,
-  onMount,
-  onUnMount,
-  Fragment,
-  Show,
-} from '@jsx-lite/core';
+import { useState, useRef, onMount, onUnMount, Show } from '@jsx-lite/core';
 
 export interface ImageProps {
   image: string;
-  sizes: number[];
+  sizes: string;
   lazy: boolean;
   srcset: string;
   height?: number;
@@ -27,7 +20,7 @@ export default function Image(props: ImageProps) {
   const pictureRef = useRef();
 
   const state = useState({
-    scrollListener: null,
+    scrollListener: null as null | (() => void),
     imageLoaded: false,
     load: false,
     setLoaded() {
@@ -75,31 +68,31 @@ export default function Image(props: ImageProps) {
   });
 
   return (
-    <Fragment>
+    <>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
           <img
             alt={props.altText}
-            role={props.altText ? 'presentation' : undefined}
+            aria-role={props.altText ? 'presentation' : undefined}
             css={{
               opacity: 1,
               transition: 'opacity 0.2s ease-in-out',
               objectFit: 'cover',
               objectPosition: 'center',
             }}
-            className={
+            class={
               'builder-image' + (props.className ? ' ' + props.className : '')
             }
             src={props.image}
             onLoad={state.setLoaded}
             // TODO: memoize on image on client
-            srcSet={props.srcset}
+            srcset={props.srcset}
             sizes={props.sizes}
           />
         </Show>
-        <source srcSet={props.srcset} />
+        <source srcset={props.srcset} />
       </picture>
       {props.children}
-    </Fragment>
+    </>
   );
 }

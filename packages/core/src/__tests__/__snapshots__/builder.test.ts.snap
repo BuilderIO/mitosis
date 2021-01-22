@@ -415,11 +415,11 @@ Object {
                     },
                     "bindings": Object {
                       "alt": "props.altText",
-                      "className": "'builder-image' + (props.className ? ' ' + props.className : '')",
-                      "role": "props.altText ? 'presentation' : undefined",
+                      "aria-role": "props.altText ? 'presentation' : undefined",
+                      "class": "'builder-image' + (props.className ? ' ' + props.className : '')",
                       "sizes": "props.sizes",
                       "src": "props.image",
-                      "srcSet": "props.srcset",
+                      "srcset": "props.srcset",
                     },
                     "children": Array [],
                     "code": Object {
@@ -447,7 +447,7 @@ Object {
                 "@type": "@builder.io/sdk:Element",
                 "actions": Object {},
                 "bindings": Object {
-                  "srcSet": "props.srcset",
+                  "srcset": "props.srcset",
                 },
                 "children": Array [],
                 "code": Object {
@@ -637,12 +637,12 @@ export default function MyComponent(props) {
         <Show when={!state.useLazyLoading() || state.load}>
           <img
             alt={props.altText}
-            role={props.altText ? \\"presentation\\" : undefined}
-            className={
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            class={
               \\"builder-image\\" + (props.className ? \\" \\" + props.className : \\"\\")
             }
             src={props.image}
-            srcSet={props.srcset}
+            srcset={props.srcset}
             sizes={props.sizes}
             onLoad={(event) => state.setLoaded}
             css={{
@@ -653,7 +653,7 @@ export default function MyComponent(props) {
             }}
           />
         </Show>
-        <source srcSet={props.srcset} />
+        <source srcset={props.srcset} />
       </picture>
       <div>{props.children}</div>
     </Fragment>
