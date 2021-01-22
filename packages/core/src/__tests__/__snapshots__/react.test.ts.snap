@@ -502,6 +502,97 @@ export default function FormComponent(props) {
 "
 `;
 
+exports[`React Image 1`] = `
+"import { useRef } from \\"react\\";
+/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Image(props) {
+  const state = useLocalObservable(() => ({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  }));
+
+  const pictureRef = useRef();
+
+  useEffect(() => {
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            setScrollListener(null);
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      setScrollListener(listener);
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  return (
+    <>
+      <>
+        <picture ref={pictureRef}>
+          {Boolean(!state.useLazyLoading() || state.load) && (
+            <>
+              <img
+                alt={props.altText}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
+                css={{
+                  opacity: 1,
+                  transition: \\"opacity 0.2s ease-in-out\\",
+                  objectFit: \\"cover\\",
+                  objectPosition: \\"center\\",
+                }}
+                class={
+                  \\"builder-image\\" +
+                  (props.className ? \\" \\" + props.className : \\"\\")
+                }
+                src={props.image}
+                onLoad={(event) => state.setLoaded}
+                srcset={props.srcset}
+                sizes={props.sizes}
+              />
+            </>
+          )}
+
+          <source srcset={props.srcset} />
+        </picture>
+
+        {props.children}
+      </>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 

@@ -6,6 +6,7 @@ import { parseJsx } from '../parsers/jsx';
 const stamped = require('./data/blocks/stamped-io.raw');
 const customCode = require('./data/blocks/custom-code.raw');
 const embed = require('./data/blocks/embed.raw');
+const image = require('./data/blocks/image.raw');
 
 describe('Builder', () => {
   test('Stamped', () => {
@@ -30,6 +31,16 @@ describe('Builder', () => {
 
   test('Embed', () => {
     const json = parseJsx(embed);
+    const builderJson = componentToBuilder(json);
+    expect(builderJson).toMatchSnapshot();
+
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite).toMatchSnapshot();
+  });
+
+  test('Image', () => {
+    const json = parseJsx(image);
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 

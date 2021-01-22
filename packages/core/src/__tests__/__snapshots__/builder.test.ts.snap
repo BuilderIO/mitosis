@@ -387,6 +387,281 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder Image 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {},
+            "bindings": Object {
+              "ref": "pictureRef",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": Object {
+                  "show": "!state.useLazyLoading() || state.load",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "actions": Object {
+                      "load": "state.setLoaded",
+                    },
+                    "bindings": Object {
+                      "alt": "props.altText",
+                      "aria-role": "props.altText ? 'presentation' : undefined",
+                      "class": "'builder-image' + (props.className ? ' ' + props.className : '')",
+                      "sizes": "props.sizes",
+                      "src": "props.image",
+                      "srcset": "props.srcset",
+                    },
+                    "children": Array [],
+                    "code": Object {
+                      "actions": Object {
+                        "load": "state.setLoaded",
+                      },
+                    },
+                    "properties": Object {},
+                    "responsiveStyles": Object {
+                      "large": Object {
+                        "objectFit": "cover",
+                        "objectPosition": "center",
+                        "opacity": 1,
+                        "transition": "opacity 0.2s ease-in-out",
+                      },
+                    },
+                    "tagName": "img",
+                  },
+                ],
+                "component": Object {
+                  "name": "Fragment",
+                },
+              },
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "srcset": "props.srcset",
+                },
+                "children": Array [],
+                "code": Object {
+                  "actions": Object {},
+                },
+                "properties": Object {},
+                "tagName": "source",
+              },
+            ],
+            "code": Object {
+              "actions": Object {},
+            },
+            "properties": Object {},
+            "tagName": "picture",
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "component.options.text": "props.children",
+            },
+            "component": Object {
+              "name": "Text",
+              "options": Object {},
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+        },
+        "component": Object {
+          "name": "Fragment",
+          "options": Object {},
+        },
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  scrollListener: null,
+  imageLoaded: false,
+  load: false,
+  setLoaded() {
+    state.imageLoaded = true;
+  },
+  isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  },
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && state.isBrowser();
+  },
+});
+
+if (state.useLazyLoading()) {
+  // throttled scroll capture listener
+  const listener = () => {
+    if (pictureRef) {
+      const rect = pictureRef.getBoundingClientRect();
+      const buffer = window.innerHeight / 2;
+
+      if (rect.top < window.innerHeight + buffer) {
+        state.load = true;
+        state.scrollListener = null;
+        window.removeEventListener(\\"scroll\\", listener);
+      }
+    }
+  };
+
+  state.scrollListener = listener;
+  window.addEventListener(\\"scroll\\", listener, {
+    capture: true,
+    passive: true,
+  });
+  listener();
+}
+",
+    "tsCode": "var props = state;
+
+useState({
+  scrollListener: null,
+  imageLoaded: false,
+  load: false,
+  setLoaded() {
+    state.imageLoaded = true;
+  },
+  isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  },
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && state.isBrowser();
+  },
+});
+
+onMount(() => {
+  if (state.useLazyLoading()) {
+    // throttled scroll capture listener
+    const listener = () => {
+      if (pictureRef) {
+        const rect = pictureRef.getBoundingClientRect();
+        const buffer = window.innerHeight / 2;
+
+        if (rect.top < window.innerHeight + buffer) {
+          state.load = true;
+          state.scrollListener = null;
+          window.removeEventListener(\\"scroll\\", listener);
+        }
+      }
+    };
+
+    state.scrollListener = listener;
+    window.addEventListener(\\"scroll\\", listener, {
+      capture: true,
+      passive: true,
+    });
+    listener();
+  }
+});
+",
+  },
+}
+`;
+
+exports[`Builder Image 2`] = `
+"import { useRef, Show } from \\"@jsx-lite/core\\";
+import { Fragment } from \\"@builder.io/components\\";
+
+export default function MyComponent(props) {
+  const pictureRef = useRef();
+
+  onMount(() => {
+    useState({
+      scrollListener: null,
+      imageLoaded: false,
+      load: false,
+
+      setLoaded() {
+        state.imageLoaded = true;
+      },
+
+      isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && state.isBrowser();
+      },
+    });
+    onMount(() => {
+      if (state.useLazyLoading()) {
+        // throttled scroll capture listener
+        const listener = () => {
+          if (pictureRef.current) {
+            const rect = pictureRef.current.getBoundingClientRect();
+            const buffer = window.innerHeight / 2;
+
+            if (rect.top < window.innerHeight + buffer) {
+              state.load = true;
+              state.scrollListener = null;
+              window.removeEventListener(\\"scroll\\", listener);
+            }
+          }
+        };
+
+        state.scrollListener = listener;
+        window.addEventListener(\\"scroll\\", listener, {
+          capture: true,
+          passive: true,
+        });
+        listener();
+      }
+    });
+  });
+
+  return (
+    <Fragment>
+      <picture ref={pictureRef}>
+        <Show when={!state.useLazyLoading() || state.load}>
+          <img
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            class={
+              \\"builder-image\\" + (props.className ? \\" \\" + props.className : \\"\\")
+            }
+            src={props.image}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            onLoad={(event) => state.setLoaded}
+            css={{
+              opacity: 1,
+              transition: \\"opacity 0.2s ease-in-out\\",
+              objectFit: \\"cover\\",
+              objectPosition: \\"center\\",
+            }}
+          />
+        </Show>
+        <source srcset={props.srcset} />
+      </picture>
+      <div>{props.children}</div>
+    </Fragment>
+  );
+}
+"
+`;
+
 exports[`Builder Stamped 1`] = `
 Object {
   "data": Object {

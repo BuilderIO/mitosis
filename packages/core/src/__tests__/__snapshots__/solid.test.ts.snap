@@ -475,6 +475,67 @@ export default function FormComponent() {
 "
 `;
 
+exports[`Solid Image 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+export default function Image() {
+  const state = createMutable({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  });
+
+  const pictureRef = useRef();
+
+  return (
+    <Fragment>
+      <picture ref={pictureRef}>
+        <Show when={!state.useLazyLoading() || state.load}>
+          <img
+            class={
+              \\"builder-image\\" +
+              (props.className ? \\" \\" + props.className : \\"\\") +
+              \\" \\" +
+              css({
+                opacity: 1,
+                transition: \\"opacity 0.2s ease-in-out\\",
+                objectFit: \\"cover\\",
+                objectPosition: \\"center\\",
+              })
+            }
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            src={props.image}
+            onLoad={(event) => state.setLoaded}
+            srcset={props.srcset}
+            sizes={props.sizes}
+          />
+        </Show>
+
+        <source srcset={props.srcset} />
+      </picture>
+
+      {props.children}
+    </Fragment>
+  );
+}
+"
+`;
+
 exports[`Solid Img 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 

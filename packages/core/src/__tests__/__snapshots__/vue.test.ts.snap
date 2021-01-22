@@ -494,6 +494,86 @@ export default {
 "
 `;
 
+exports[`Vue Image 1`] = `
+"<template>
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          class=\\"img-1\\"
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"'builder-image' + (className ? ' ' + className : '')\\"
+          :src=\\"image\\"
+          @load=\\"setLoaded\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
+      <source :srcset=\\"srcset\\" />
+    </picture>
+
+    <slot></slot>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"lazy\\", \\"altText\\", \\"className\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+
+  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
+
+  mounted() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.$refs.pictureRef) {
+          const rect = this.$refs.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            this.load = true;
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  },
+
+  methods: {
+    setLoaded() {
+      this.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && this.isBrowser();
+    },
+  },
+};
+</script>
+<style>
+.img-1 {
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+</style>
+"
+`;
+
 exports[`Vue Img 1`] = `
 "<template>
   <img
