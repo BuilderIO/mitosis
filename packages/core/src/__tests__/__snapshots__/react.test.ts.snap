@@ -59,7 +59,7 @@ import { useLocalObservable } from \\"mobx-react-lite\\";
 
 export default function Column(props) {
   const state = useLocalObservable(() => ({
-    // TODO: This methods are not used right now, but they will be when
+    // TODO: These methods are not used right now, but they will be when
     // support for dynamic CSS lands
     getColumns() {
       return props.columns || [];
@@ -83,7 +83,7 @@ export default function Column(props) {
   return (
     <>
       <div
-        className=\\"builder-columns\\"
+        class=\\"builder-columns\\"
         css={{
           display: \\"flex\\",
           flexDirection: \\"column\\",
@@ -94,7 +94,7 @@ export default function Column(props) {
         {props.columns.map((column) => (
           <>
             <div
-              className=\\"builder-column\\"
+              class=\\"builder-column\\"
               key={index}
               css={{
                 flexGrow: 1,
@@ -172,7 +172,7 @@ export default function CustomCode(props) {
     <>
       <div
         ref={elem}
-        class={
+        className={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
@@ -244,7 +244,7 @@ export default function CustomCode(props) {
     <>
       <div
         ref={elem}
-        class={
+        className={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
@@ -629,9 +629,8 @@ export default function Image(props) {
                   objectFit: \\"cover\\",
                   objectPosition: \\"center\\",
                 }}
-                class={
-                  \\"builder-image\\" +
-                  (props.className ? \\" \\" + props.className : \\"\\")
+                className={
+                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
                 }
                 src={props.image}
                 onLoad={(event) => state.setLoaded}
@@ -705,7 +704,7 @@ exports[`React RawText 1`] = `
   return (
     <>
       <span
-        class={props.attributes?.class || props.attributes?.className}
+        className={props.attributes?.class || props.attributes?.className}
         dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
       ></span>
     </>

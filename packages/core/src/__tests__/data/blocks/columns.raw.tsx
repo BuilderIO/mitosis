@@ -19,7 +19,7 @@ export interface ColumnProps {
 
 export default function Column(props: ColumnProps) {
   const state = useState({
-    // TODO: This methods are not used right now, but they will be when
+    // TODO: These methods are not used right now, but they will be when
     // support for dynamic CSS lands
     getColumns(): Column[] {
       return props.columns || [];
@@ -42,7 +42,7 @@ export default function Column(props: ColumnProps) {
 
   return (
     <div
-      className="builder-columns"
+      class="builder-columns"
       css={{
         display: 'flex',
         flexDirection: 'column',
@@ -52,7 +52,7 @@ export default function Column(props: ColumnProps) {
     >
       <For each={props.columns}>
         {(column, index) => (
-          <div key={index} className="builder-column" css={{ flexGrow: 1 }}>
+          <div key={index} class="builder-column" css={{ flexGrow: 1 }}>
             {column.content}
           </div>
         )}
