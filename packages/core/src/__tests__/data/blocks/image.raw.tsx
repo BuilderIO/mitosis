@@ -3,7 +3,7 @@ import { useState, useRef, onMount, onUnMount, Show } from '@jsx-lite/core';
 // TODO: AMP Support?
 
 export interface ImageProps {
-  className?: string;
+  class?: string;
   image: string;
   sizes?: string;
   lazy?: boolean;
@@ -84,9 +84,7 @@ export default function Image(props: ImageProps) {
               objectFit: 'cover',
               objectPosition: 'center',
             }}
-            class={
-              'builder-image' + (props.className ? ' ' + props.className : '')
-            }
+            class={'builder-image' + (props.class ? ' ' + props.class : '')}
             src={props.image}
             onLoad={state.setLoaded}
             // TODO: memoize on image on client

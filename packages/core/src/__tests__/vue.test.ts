@@ -16,6 +16,7 @@ const stamped = require('./data/blocks/stamped-io.raw');
 const customCode = require('./data/blocks/custom-code.raw');
 const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
+const columns = require('./data/blocks/columns.raw');
 
 describe('Vue', () => {
   test('Basic', () => {
@@ -110,6 +111,12 @@ describe('Vue', () => {
 
   test('Image', () => {
     const json = parseJsx(image);
+    const output = componentToVue(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Columns', () => {
+    const json = parseJsx(columns);
     const output = componentToVue(json);
     expect(output).toMatchSnapshot();
   });

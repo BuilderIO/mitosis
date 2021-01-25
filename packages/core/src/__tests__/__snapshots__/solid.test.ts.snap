@@ -48,6 +48,57 @@ export default function Button() {
 "
 `;
 
+exports[`Solid Columns 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+export default function Column() {
+  const state = createMutable({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index: number) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index: number) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  });
+
+  return (
+    <div
+      class={css({
+        display: \\"flex\\",
+        flexDirection: \\"column\\",
+        alignItems: \\"stretch\\",
+        lineHeight: \\"normal\\",
+      })}
+    >
+      <For each={props.columns}>
+        <div
+          class={css({
+            flexGrow: 1,
+          })}
+        >
+          {column.content}
+        </div>
+      </For>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Solid CustomCode 1`] = `
 "import { createMutable, Show, For } from \\"solid-js\\";
 
@@ -508,7 +559,7 @@ export default function Image() {
           <img
             class={
               \\"builder-image\\" +
-              (props.className ? \\" \\" + props.className : \\"\\") +
+              (props.class ? \\" \\" + props.class : \\"\\") +
               \\" \\" +
               css({
                 opacity: 1,

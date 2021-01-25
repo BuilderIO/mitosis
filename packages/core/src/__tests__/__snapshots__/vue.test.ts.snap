@@ -43,6 +43,56 @@ export default {
 "
 `;
 
+exports[`Vue Columns 1`] = `
+"<template>
+  <div class=\\"builder-columns div-1\\">
+    <template v-for=\\"column in columns\\">
+      <div class=\\"builder-column div-2\\">
+        {{ column.content }}
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"columns\\", \\"space\\"],
+
+  methods: {
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return this.columns || [];
+    },
+    getGutterSize() {
+      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  },
+};
+</script>
+<style>
+.div-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}
+.div-2 {
+}
+</style>
+"
+`;
+
 exports[`Vue CustomCode 1`] = `
 "<template>
   <div
@@ -503,7 +553,7 @@ exports[`Vue Image 1`] = `
           class=\\"img-1\\"
           :alt=\\"altText\\"
           :aria-role=\\"altText ? 'presentation' : undefined\\"
-          :class=\\"'builder-image' + (className ? ' ' + className : '')\\"
+          :class=\\"'builder-image' + (class ? ' ' + class : '')\\"
           :src=\\"image\\"
           @load=\\"setLoaded\\"
           :srcset=\\"srcset\\"
@@ -518,7 +568,7 @@ exports[`Vue Image 1`] = `
 </template>
 <script>
 export default {
-  props: [\\"lazy\\", \\"altText\\", \\"className\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+  props: [\\"lazy\\", \\"altText\\", \\"class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
 
   data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
 

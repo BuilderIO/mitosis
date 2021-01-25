@@ -1,5 +1,183 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Builder Columns 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "column.content",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                },
+                "properties": Object {
+                  "class": "builder-column",
+                },
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "flexGrow": 1,
+                  },
+                },
+                "tagName": "div",
+              },
+            ],
+            "component": Object {
+              "name": "Fragment",
+            },
+            "repeat": Object {
+              "collection": "props.columns",
+              "itemName": "column",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+        },
+        "properties": Object {
+          "class": "builder-columns",
+        },
+        "responsiveStyles": Object {
+          "large": Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "column",
+            "lineHeight": "normal",
+          },
+        },
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  },
+  getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  },
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  },
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  },
+});
+",
+    "tsCode": "var props = state;
+
+useState({
+  // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  },
+  getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  },
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  },
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  },
+});
+",
+  },
+}
+`;
+
+exports[`Builder Columns 2`] = `
+"import { For } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  onMount(() => {
+    useState({
+      // TODO: These methods are not used right now, but they will be when
+      // support for dynamic CSS lands
+      getColumns() {
+        return props.columns || [];
+      },
+
+      getGutterSize() {
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      },
+
+      getWidth(index) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+
+      getColumnCssWidth(index) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    });
+  });
+
+  return (
+    <div
+      class=\\"builder-columns\\"
+      css={{
+        display: \\"flex\\",
+        flexDirection: \\"column\\",
+        alignItems: \\"stretch\\",
+        lineHeight: \\"normal\\",
+      }}
+    >
+      <For each={props.columns}>
+        {(column, index) => (
+          <div
+            class=\\"builder-column\\"
+            css={{
+              flexGrow: 1,
+            }}
+          >
+            <div>{column.content}</div>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Builder CustomCode 1`] = `
 Object {
   "data": Object {
@@ -416,7 +594,7 @@ Object {
                     "bindings": Object {
                       "alt": "props.altText",
                       "aria-role": "props.altText ? 'presentation' : undefined",
-                      "class": "'builder-image' + (props.className ? ' ' + props.className : '')",
+                      "class": "'builder-image' + (props.class ? ' ' + props.class : '')",
                       "sizes": "props.sizes",
                       "src": "props.image",
                       "srcset": "props.srcset",
@@ -638,9 +816,7 @@ export default function MyComponent(props) {
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={
-              \\"builder-image\\" + (props.className ? \\" \\" + props.className : \\"\\")
-            }
+            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
             src={props.image}
             srcset={props.srcset}
             sizes={props.sizes}

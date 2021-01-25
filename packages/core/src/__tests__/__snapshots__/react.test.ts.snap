@@ -52,6 +52,64 @@ exports[`React Button 1`] = `
 "
 `;
 
+exports[`React Columns 1`] = `
+"/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Column(props) {
+  const state = useLocalObservable(() => ({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  }));
+
+  return (
+    <>
+      <div
+        class=\\"builder-columns\\"
+        css={{
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+          lineHeight: \\"normal\\",
+        }}
+      >
+        {props.columns.map((column) => (
+          <>
+            <div
+              class=\\"builder-column\\"
+              css={{
+                flexGrow: 1,
+              }}
+            >
+              {column.content}
+            </div>
+          </>
+        ))}
+      </div>
+    </>
+  );
+}
+"
+`;
+
 exports[`React CustomCode 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
@@ -113,7 +171,7 @@ export default function CustomCode(props) {
     <>
       <div
         ref={elem}
-        class={
+        className={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
@@ -185,7 +243,7 @@ export default function CustomCode(props) {
     <>
       <div
         ref={elem}
-        class={
+        className={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
         dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
@@ -570,9 +628,8 @@ export default function Image(props) {
                   objectFit: \\"cover\\",
                   objectPosition: \\"center\\",
                 }}
-                class={
-                  \\"builder-image\\" +
-                  (props.className ? \\" \\" + props.className : \\"\\")
+                className={
+                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
                 }
                 src={props.image}
                 onLoad={(event) => state.setLoaded}
@@ -646,7 +703,7 @@ exports[`React RawText 1`] = `
   return (
     <>
       <span
-        class={props.attributes?.class || props.attributes?.className}
+        className={props.attributes?.class || props.attributes?.className}
         dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
       ></span>
     </>

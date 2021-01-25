@@ -119,6 +119,8 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
       str += ` ${key}={event => (${useBindingValue})} `;
+    } else if (key === 'class') {
+      str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
@@ -288,8 +290,7 @@ export const componentToReact = (
   }
 
   const css =
-    stylesType === 'styled-jsx' &&
-    collectCss(json, { classProperty: 'className' });
+    stylesType === 'styled-jsx' && collectCss(json, { classProperty: 'class' });
 
   const styledComponentsCode =
     stylesType === 'styled-components' &&
