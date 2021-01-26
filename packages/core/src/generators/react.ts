@@ -209,7 +209,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -276,12 +276,19 @@ export const componentToReact = (
     updateStateSetters(json);
   }
 
+
   const refs = getRefs(componentJson);
-  const hasState = Boolean(Object.keys(json.state).length);
+  const hasRefs = Boolean(getRefs(componentJson).size);
+  let hasState = Boolean(Object.keys(json.state).length);
+
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
+  if (stateType === 'builder') {
+    // Always use state if we are generate Builder react code
+    hasState = true;
+  }
 
   const useStateCode =
     stateType === 'useState' && getUseStateCode(json, options);
@@ -335,7 +342,8 @@ export const componentToReact = (
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
 
-    export default function ${json.name}(props) {
+
+    export default function MyComponent(props) {
       ${
         hasState
           ? stateType === 'mobx'
@@ -344,8 +352,6 @@ export const componentToReact = (
               )}))`
             : stateType === 'useState'
             ? useStateCode
-            : stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectString(json)})`
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectString(json)});`
             : `const state = useLocalProxy(${getStateObjectString(json)});`

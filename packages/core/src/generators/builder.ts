@@ -90,11 +90,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -162,7 +158,7 @@ export const blockToBuilder = (
 
   const thisIsComponent = isComponent(json);
 
-  const bindings = thisIsComponent ? {} : json.bindings;
+  let bindings = thisIsComponent ? {} : json.bindings;
   const actions: { [key: string]: string } = {};
 
   for (const key in bindings) {
@@ -214,6 +210,14 @@ export const blockToBuilder = (
           [ruleKey]: cssRules[ruleKey],
         };
       }
+    }
+
+    delete json.bindings.css;
+  }
+
+  if (thisIsComponent) {
+    for (const key in json.bindings) {
+      bindings[`component.options.${key}`] = json.bindings[key];
     }
   }
 
