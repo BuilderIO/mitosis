@@ -86,7 +86,7 @@ export default function Image(props: ImageProps) {
             }}
             class={'builder-image' + (props.class ? ' ' + props.class : '')}
             src={props.image}
-            onLoad={state.setLoaded}
+            onLoad={() => state.setLoaded()}
             // TODO: memoize on image on client
             srcset={props.srcset}
             sizes={props.sizes}

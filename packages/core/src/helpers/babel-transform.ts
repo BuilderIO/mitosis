@@ -1,5 +1,5 @@
 import * as babel from '@babel/core';
-import { isError } from 'lodash';
+import { attempt, isError } from 'lodash';
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
@@ -39,19 +39,27 @@ export const babelTransformExpression = <VisitorContextType = any>(
   if (type === 'unknown' && code.trim().startsWith('{')) {
     type = 'expression';
   }
+  let useCode = code;
+
+  // Allow partial functions (with return)
+  // TODO: what about nested functions, will this mess up the mutations?
+  // TODO: read this from an argument, only used tempoerarily when doing
+  // partial function parsing
+  useCode = useCode.replace(/(\s|;)return(\s)/g, '$1/*__return__*/$2');
 
   let result =
     type === 'expression'
       ? null
-      : (babelTransform(code, visitor)?.code || '')
-          // Babel addes trailing semicolons, but for expressions we need those gone
-          // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
-          // of appending several fragements
-          .replace(/;$/, '');
+      : attempt(() =>
+          (babelTransform(useCode, visitor)?.code || '')
+            // Babel addes trailing semicolons, but for expressions we need those gone
+            // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
+            // of appending several fragements
+            .replace(/;$/, ''),
+        );
 
   if (isError(result) || type === 'expression') {
     // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
-    let useCode = code;
 
     // Detect method fragments. These get passed sometimes and otherwise
     // generate compile errors. They are of the form `foo() { ... }`
@@ -73,8 +81,9 @@ export const babelTransformExpression = <VisitorContextType = any>(
       // Remove our fake variable assignment
       .replace(/let _ =\s/, '');
 
-    return isMethod ? result.replace('function', '') : result;
-  } else {
-    return result!;
+    if (isMethod) {
+      result = result.replace('function', '');
+    }
   }
+  return (result || '').replace(/\/\*__return__\*\//g, 'return');
 };
