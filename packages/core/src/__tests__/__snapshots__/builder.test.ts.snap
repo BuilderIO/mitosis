@@ -168,7 +168,9 @@ export default function MyComponent(props) {
               flexGrow: 1,
             }}
           >
-            <div>{column.content}</div>
+            <div>
+              <div></div>
+            </div>
           </div>
         )}
       </For>
@@ -369,6 +371,7 @@ export default function MyComponent(props) {
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
+      css={{}}
     ></div>
   );
 }
@@ -560,7 +563,14 @@ export default function MyComponent(props) {
     });
   });
 
-  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>;
+  return (
+    <div
+      class=\\"builder-embed\\"
+      ref={elem}
+      innerHTML={props.content}
+      css={{}}
+    ></div>
+  );
 }
 "
 `;
@@ -810,8 +820,8 @@ export default function MyComponent(props) {
   });
 
   return (
-    <Fragment>
-      <picture ref={pictureRef}>
+    <Fragment css={{}}>
+      <picture ref={pictureRef} css={{}}>
         <Show when={!state.useLazyLoading() || state.load}>
           <img
             alt={props.altText}
@@ -829,9 +839,11 @@ export default function MyComponent(props) {
             }}
           />
         </Show>
-        <source srcset={props.srcset} />
+        <source srcset={props.srcset} css={{}} />
       </picture>
-      <div>{props.children}</div>
+      <div>
+        <div></div>
+      </div>
     </Fragment>
   );
 }
@@ -1147,12 +1159,12 @@ export default function MyComponent(props) {
   });
 
   return (
-    <div>
-      <button onClick={(event) => (state.showReviewPrompt = true)}>
+    <div css={{}}>
+      <button onClick={(event) => (state.showReviewPrompt = true)} css={{}}>
         <div>Write a review</div>
       </button>
       <Show when={state.showReviewPrompt}>
-        <input placeholder=\\"Email\\" />
+        <input placeholder=\\"Email\\" css={{}} />
         <input
           placeholder=\\"Title\\"
           css={{
@@ -1194,12 +1206,16 @@ export default function MyComponent(props) {
                 marginRight: \\"10px\\",
               }}
             />
-            <div>
-              <div>
-                <div>{review.author}</div>
+            <div css={{}}>
+              <div css={{}}>
+                <div>
+                  <div></div>
+                </div>
               </div>
-              <div>
-                <div>{review.reviewMessage}</div>
+              <div css={{}}>
+                <div>
+                  <div></div>
+                </div>
               </div>
             </div>
           </div>

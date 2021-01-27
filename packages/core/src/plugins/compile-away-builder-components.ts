@@ -144,10 +144,10 @@ const components: {
       <picture>
         ${
           srcSet && srcSet.match(/builder\.io/)
-            ? `<source srcSet=${srcSet.replace(
+            ? `<source srcSet="${srcSet.replace(
                 /\?/g,
                 '?format=webp&',
-              )} type="image/webp" />`
+              )}" type="image/webp" />`
             : ''
         }
         ${

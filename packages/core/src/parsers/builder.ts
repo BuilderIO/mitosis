@@ -62,7 +62,7 @@ const getActionBindingsFromBlock = (block: BuilderElement) => {
   if (actionKeys.length) {
     for (const key of actionKeys) {
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = `(event) => {${actions[key]}}`;
+      bindings[useKey] = `${actions[key]}`;
     }
   }
 
@@ -136,6 +136,9 @@ const getBlockBindings = (block: BuilderElement) => ({
   ...getBlockActionsAsBindings(block),
 });
 
+// add back if this direction (blocks as children not prop) is desired
+export const symbolBlocksAsChildren = false;
+
 const componentMappers: {
   [key: string]: (
     block: BuilderElement,
@@ -151,7 +154,7 @@ const componentMappers: {
       name: 'Symbol',
       bindings: {
         symbol: JSON.stringify({
-          data: block.component?.options.symbol.content.data,
+          data: block.component?.options.symbol.data,
           content: block.component?.options.symbol.content,
         }),
         ...actionBindings,
@@ -164,6 +167,49 @@ const componentMappers: {
       },
     });
   },
+  ...(!symbolBlocksAsChildren
+    ? {}
+    : {
+        Symbol(block, options) {
+          let css = getCssFromBlock(block);
+          const styleString = getStyleStringFromBlock(block);
+          const actionBindings = getActionBindingsFromBlock(block);
+
+          const content = block.component?.options.symbol.content;
+          const blocks = content?.data?.blocks;
+          if (blocks) {
+            content.data.blocks = null;
+          }
+
+          return createJSXLiteNode({
+            name: 'Symbol',
+            bindings: {
+              symbol: JSON.stringify({
+                data: block.component?.options.symbol.content.data,
+                content: content, // TODO: convert to <SymbolInternal>...</SymbolInternal> so can be parsed
+              }),
+              ...actionBindings,
+              ...(styleString && {
+                style: styleString,
+              }),
+              ...(Object.keys(css).length && {
+                css: JSON.stringify(css),
+              }),
+            },
+            children: !blocks
+              ? []
+              : [
+                  createJSXLiteNode({
+                    // TODO: the Builder generator side of this converting to blocks
+                    name: 'BuilderSymbolContents',
+                    children: blocks.map((item: any) =>
+                      builderElementToJsxLiteNode(item, options),
+                    ),
+                  }),
+                ],
+          });
+        },
+      }),
   Columns(block, options) {
     const node = builderElementToJsxLiteNode(block, options, {
       skipMapper: true,
@@ -232,11 +278,30 @@ const componentMappers: {
     const properties = { ...block.properties };
 
     const innerBindings = {
-      _text: blockBindings['component.options.text'],
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: bindings[
+        'component.options.text'
+      ],
     };
     const innerProperties = {
-      _text: block.component!.options.text,
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!
+        .options.text,
     };
+
+    if (options.preserveTextBlocks) {
+      return createJSXLiteNode({
+        bindings,
+        properties,
+        children: [
+          createJSXLiteNode({
+            bindings: innerBindings,
+            properties: {
+              ...innerProperties,
+              class: 'builder-text',
+            },
+          }),
+        ],
+      });
+    }
 
     if ((block.tagName && block.tagName !== 'div') || hasStyles(block)) {
       return createJSXLiteNode({
@@ -268,6 +333,7 @@ const componentMappers: {
 export type BuilderToJSXLiteOptions = {
   context?: { [key: string]: any };
   includeBuilderExtras?: boolean;
+  preserveTextBlocks?: boolean;
 };
 export type InternalBuilderToJSXLiteOptions = BuilderToJSXLiteOptions & {
   context: { [key: string]: any };
@@ -359,8 +425,9 @@ export const builderElementToJsxLiteNode = (
         bindings[useKey] = blockBindings[key];
       } else if (useKey.includes('style') && useKey.includes('.')) {
         const styleProperty = useKey.split('.')[1];
-        styleBindings[styleProperty] =
-          block.code?.bindings?.[key] || blockBindings[key];
+        // TODO: add me in
+        // styleBindings[styleProperty] =
+        //   block.code?.bindings?.[key] || blockBindings[key];
       }
     }
   }

@@ -3,7 +3,7 @@
 exports[`React Basic 1`] = `
 "import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function MyBasicComponent(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
 
   return (
@@ -11,7 +11,9 @@ export default function MyBasicComponent(props) {
       <div>
         <input
           value={state.name}
-          onChange={(event) => (state.name = event.target.value)}
+          onChange={(event) => {
+            state.name = event.target.value;
+          }}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -22,7 +24,7 @@ export default function MyBasicComponent(props) {
 `;
 
 exports[`React Button 1`] = `
-"export default function Button(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <>
@@ -57,7 +59,7 @@ exports[`React Columns 1`] = `
 import { jsx } from \\"@emotion/react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function Column(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({
     // TODO: These methods are not used right now, but they will be when
     // support for dynamic CSS lands
@@ -83,7 +85,7 @@ export default function Column(props) {
   return (
     <>
       <div
-        class=\\"builder-columns\\"
+        className=\\"builder-columns\\"
         css={{
           display: \\"flex\\",
           flexDirection: \\"column\\",
@@ -94,7 +96,7 @@ export default function Column(props) {
         {props.columns.map((column) => (
           <>
             <div
-              class=\\"builder-column\\"
+              className=\\"builder-column\\"
               css={{
                 flexGrow: 1,
               }}
@@ -114,7 +116,7 @@ exports[`React CustomCode 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function CustomCode(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({
     scriptsInserted: [],
     scriptsRun: [],
@@ -186,7 +188,7 @@ exports[`React Embed 1`] = `
 "import { useRef } from \\"react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function CustomCode(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({
     scriptsInserted: [],
     scriptsRun: [],
@@ -265,7 +267,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default function FormComponent(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({
     state: \\"unsubmitted\\",
     responseData: null,
@@ -497,7 +499,9 @@ export default function FormComponent(props) {
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
-        onSubmit={(event) => state.onSubmit(event)}
+        onSubmit={(event) => {
+          state.onSubmit(event);
+        }}
       >
         {Boolean(props.builderBlock && props.builderBlock.children) && (
           <>
@@ -533,7 +537,7 @@ export default function FormComponent(props) {
         {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
           <>
             <pre
-              class=\\"builder-form-error-text\\"
+              className=\\"builder-form-error-text\\"
               css={{
                 padding: \\"10px\\",
                 color: \\"red\\",
@@ -566,7 +570,7 @@ exports[`React Image 1`] = `
 import { jsx } from \\"@emotion/react\\";
 import { useLocalObservable } from \\"mobx-react-lite\\";
 
-export default function Image(props) {
+export default function MyComponent(props) {
   const state = useLocalObservable(() => ({
     scrollListener: null,
     imageLoaded: false,
@@ -597,14 +601,14 @@ export default function Image(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            setScrollListener(null);
+            state.load = true;
+            state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      setScrollListener(listener);
+      state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -632,7 +636,9 @@ export default function Image(props) {
                   \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
                 }
                 src={props.image}
-                onLoad={(event) => state.setLoaded}
+                onLoad={(event) => {
+                  state.setLoaded;
+                }}
                 srcset={props.srcset}
                 sizes={props.sizes}
               />
@@ -653,7 +659,7 @@ export default function Image(props) {
 exports[`React Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props) {
+export default function MyComponent(props) {
   return (
     <>
       <img
@@ -675,7 +681,7 @@ export default function ImgComponent(props) {
 exports[`React Input block 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props) {
+export default function MyComponent(props) {
   return (
     <>
       <input
@@ -699,7 +705,7 @@ export default function FormInputComponent(props) {
 `;
 
 exports[`React RawText 1`] = `
-"export default function RawText(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <span
@@ -713,7 +719,7 @@ exports[`React RawText 1`] = `
 `;
 
 exports[`React Section 1`] = `
-"export default function SectionComponent(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <section
@@ -737,7 +743,7 @@ exports[`React Section 1`] = `
 exports[`React Select block 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props) {
+export default function MyComponent(props) {
   return (
     <>
       <select
@@ -794,7 +800,7 @@ const Img1 = styled.img\`
   margin-right: 10px;
 \`;
 
-export default function SmileReviews(props) {
+export default function MyComponent(props) {
   const [reviews, setReviews] = useState(() => []);
   const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
 
@@ -813,7 +819,11 @@ export default function SmileReviews(props) {
   return (
     <>
       <div>
-        <button onClick={(event) => setShowReviewPrompt(true)}>
+        <button
+          onClick={(event) => {
+            setShowReviewPrompt(true);
+          }}
+        >
           Write a review
         </button>
 
@@ -822,7 +832,11 @@ export default function SmileReviews(props) {
             <input placeholder=\\"Email\\" />
             <Input1 placeholder=\\"Title\\"></Input1>
             <Textarea1 placeholder=\\"How was your experience?\\"></Textarea1>
-            <Button1 onClick={(event) => setShowReviewPrompt(false)}>
+            <Button1
+              onClick={(event) => {
+                setShowReviewPrompt(false);
+              }}
+            >
               Submit
             </Button1>
           </>
@@ -849,7 +863,7 @@ export default function SmileReviews(props) {
 `;
 
 exports[`React Submit button block 1`] = `
-"export default function SubmitButton(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <button {...props.attributes} type=\\"submit\\">
@@ -864,7 +878,7 @@ exports[`React Submit button block 1`] = `
 exports[`React Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props) {
+export default function MyComponent(props) {
   return (
     <>
       <div
@@ -880,7 +894,7 @@ export default function Text(props) {
 `;
 
 exports[`React Textarea 1`] = `
-"export default function Textarea(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <textarea
@@ -897,7 +911,7 @@ exports[`React Textarea 1`] = `
 `;
 
 exports[`React Video 1`] = `
-"export default function Video(props) {
+"export default function MyComponent(props) {
   return (
     <>
       <video
