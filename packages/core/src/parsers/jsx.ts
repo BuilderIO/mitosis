@@ -437,8 +437,8 @@ export function parseJsx(jsx: string): JSXLiteComponent {
   try {
     return JSON5.parse(toParse);
   } catch (err) {
-    console.error('Could not parse code', output && output.code);
-    require('fs').writeFileSync(process.cwd() + '/output.json', toParse);
+    console.error('Could not parse code', toParse);
+    // require('fs').writeFileSync(process.cwd() + '/output.json', toParse);
     throw err;
   }
 }

@@ -55,6 +55,7 @@ type FlatClassStyleMap = { [key: string]: CSS.Properties };
 
 type CollectStyleOptions = {
   classProperty?: 'class' | 'className';
+  prefix?: string;
 };
 
 export const collectStyledComponents = (json: JSXLiteComponent): string => {
@@ -122,7 +123,10 @@ export const collectStyles = (
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}-${index}`;
+        const className = `${componentName}${
+          options.prefix ? `-${options.prefix}` : ''
+        }-${index}`;
+
         item.properties[classProperty] = `${item.properties[classProperty] ||
           ''} ${className}`
           .trim()

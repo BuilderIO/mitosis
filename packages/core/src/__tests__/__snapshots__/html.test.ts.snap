@@ -55,100 +55,102 @@ exports[`Html Stamped 1`] = `
   }
 </style>
 <script>
-  let state = { reviews: [], showReviewPrompt: false };
-  let props = {};
+  (() => {
+    let state = { reviews: [], showReviewPrompt: false };
+    let props = {};
 
-  // Function to update data bindings and loops
-  // call update() when you mutate state and need the updates to reflect
-  // in the dom
-  function update() {
-    document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", onButton1Click);
-      el.addEventListener(\\"click\\", onButton1Click);
-    });
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
 
-    document.querySelectorAll(\\"[data-name='show-1']\\").forEach((el) => {
-      el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
-    });
+      document.querySelectorAll(\\"[data-name='show-1']\\").forEach((el) => {
+        el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+      });
 
-    document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", onButton2Click);
-      el.addEventListener(\\"click\\", onButton2Click);
-    });
+      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
 
-    document.querySelectorAll(\\"[data-name='for-1']\\").forEach((el) => {
-      let array = state.reviews;
-      let template = document.querySelector('[data-template-for=\\"for-1\\"]');
-      renderLoop(el, array, template, \\"review\\");
-    });
+      document.querySelectorAll(\\"[data-name='for-1']\\").forEach((el) => {
+        let array = state.reviews;
+        let template = document.querySelector('[data-template-for=\\"for-1\\"]');
+        renderLoop(el, array, template, \\"review\\");
+      });
 
-    document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-      el.src = getContext(el, \\"review\\").avatar;
-    });
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        el.src = getContext(el, \\"review\\").avatar;
+      });
 
-    document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      el.innerText = getContext(el, \\"review\\").author;
-    });
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").author;
+      });
 
-    document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-      el.innerText = getContext(el, \\"review\\").reviewMessage;
-    });
-  }
-
-  // Event handler for 'click' event on button-1
-  function onButton1Click(event) {
-    state.showReviewPrompt = true;
-    update();
-  }
-
-  // Event handler for 'click' event on button-2
-  function onButton2Click(event) {
-    state.showReviewPrompt = false;
-    update();
-  }
-
-  // Update with initial state on first load
-  update();
-
-  // onMount
-  fetch(
-    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-    }&productId=\${props.productId || \\"2410511106127\\"}\`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      state.reviews = data.data;
-      update();
-    });
-
-  // Helper to render loops
-  function renderLoop(el, array, template, itemName) {
-    el.innerHTML = \\"\\";
-    for (let value of array) {
-      let tmp = document.createElement(\\"span\\");
-      tmp.innerHTML = template.innerHTML;
-      Array.from(tmp.children).forEach(function (child) {
-        contextMap.set(child, {
-          ...contextMap.get(child),
-          [itemName]: value,
-        });
-        el.appendChild(child);
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }
-  }
 
-  // Helper to pass context down for loops
-  let contextMap = new WeakMap();
-  function getContext(el, name) {
-    let parent = el;
-    do {
-      let context = contextMap.get(parent);
-      if (context && name in context) {
-        return context[name];
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.showReviewPrompt = true;
+      update();
+    }
+
+    // Event handler for 'click' event on button-2
+    function onButton2Click(event) {
+      state.showReviewPrompt = false;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+        update();
+      });
+
+    // Helper to render loops
+    function renderLoop(el, array, template, itemName) {
+      el.innerHTML = \\"\\";
+      for (let value of array) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach(function (child) {
+          contextMap.set(child, {
+            ...contextMap.get(child),
+            [itemName]: value,
+          });
+          el.appendChild(child);
+        });
       }
-    } while ((parent = parent.parentNode));
-  }
+    }
+
+    // Helper to pass context down for loops
+    let contextMap = new WeakMap();
+    function getContext(el, name) {
+      let parent = el;
+      do {
+        let context = contextMap.get(parent);
+        if (context && name in context) {
+          return context[name];
+        }
+      } while ((parent = parent.parentNode));
+    }
+  })();
 </script>
 "
 `;

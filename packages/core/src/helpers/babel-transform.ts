@@ -85,5 +85,5 @@ export const babelTransformExpression = <VisitorContextType = any>(
       result = result.replace('function', '');
     }
   }
-  return (result || '').replace(/\/\*__return__\*\//g, 'return');
+  return (result || '').replace(/\/\*__return__\*\/\s*;?\s*/g, 'return ');
 };

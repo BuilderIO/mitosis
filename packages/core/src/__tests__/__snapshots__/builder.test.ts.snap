@@ -128,20 +128,16 @@ export default function MyComponent(props) {
       // TODO: These methods are not used right now, but they will be when
       // support for dynamic CSS lands
       getColumns() {
-        return;
-        props.columns || [];
+        return props.columns || [];
       },
 
       getGutterSize() {
-        return;
-        typeof props.space === \\"number\\" ? props.space || 0 : 20;
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
 
       getWidth(index) {
         const columns = this.getColumns();
-        return;
-
-        (columns[index] && columns[index].width) || 100 / columns.length;
+        return (columns[index] && columns[index].width) || 100 / columns.length;
       },
 
       getColumnCssWidth(index) {
@@ -149,9 +145,7 @@ export default function MyComponent(props) {
         const gutterSize = this.getGutterSize();
         const subtractWidth =
           (gutterSize * (columns.length - 1)) / columns.length;
-        return;
-
-        \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
       },
     });
   });
@@ -788,16 +782,16 @@ export default function MyComponent(props) {
       },
 
       isBrowser() {
-        return;
-        typeof window !== \\"undefined\\" &&
-          window.navigator.product != \\"ReactNative\\";
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
       },
 
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
 
-        return;
-        !!props.lazy && state.isBrowser();
+        return !!props.lazy && state.isBrowser();
       },
     });
     onMount(() => {

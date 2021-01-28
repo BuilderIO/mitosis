@@ -463,6 +463,10 @@ export const builderElementToJsxLiteNode = (
     }),
   };
 
+  if ((block as any).linkUrl) {
+    properties.href = (block as any).linkUrl;
+  }
+
   if (block.component?.options) {
     for (const key in block.component.options) {
       const value = block.component.options[key];
@@ -486,7 +490,9 @@ export const builderElementToJsxLiteNode = (
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
       block.tagName ||
-      'div',
+      (block as any).linkUrl
+        ? 'a'
+        : 'div',
     properties,
     bindings: {
       ...bindings,
