@@ -273,8 +273,7 @@ export default function MyComponent(props) {
     responseData: null,
     formErrorMessage: \\"\\",
     get submissionState() {
-      return;
-      (Builder.isEditing && props.previewState) || state.state;
+      return (Builder.isEditing && props.previewState) || state.state;
     },
     onSubmit(event) {
       const sendWithJs =
@@ -306,11 +305,10 @@ export default function MyComponent(props) {
               if (el.type === \\"radio\\") {
                 if (el.checked) {
                   value = el.name;
-                  return;
-
-                  {
-                    key, value;
-                  }
+                  return {
+                    key,
+                    value,
+                  };
                 }
               } else if (el.type === \\"checkbox\\") {
                 value = el.checked;
@@ -329,11 +327,11 @@ export default function MyComponent(props) {
             } else {
               value = el.value;
             }
-            return;
 
-            {
-              key, value;
-            }
+            return {
+              key,
+              value,
+            };
           });
         let contentType = props.contentType;
 
@@ -366,27 +364,22 @@ export default function MyComponent(props) {
 
         if (contentType && contentType !== \\"multipart/form-data\\") {
           if (
-            // Zapier doesn't allow content-type header to be sent from browsers
-            !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+            /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+              sendWithJs && props.action?.includes(\\"zapier.com\\")
+            )
           ) {
             headers[\\"content-type\\"] = contentType;
           }
         }
-
         const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: {
-            body,
-          },
+          detail: { body },
         });
-
         if (formRef.current) {
           formRef.current.dispatchEvent(presubmitEvent);
-
           if (presubmitEvent.defaultPrevented) {
             return;
           }
         }
-
         state.state = \\"sending\\";
         const formUrl = \`\${
           builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
@@ -394,70 +387,58 @@ export default function MyComponent(props) {
           props.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
         fetch(
-          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action, // TODO: throw error if no action URL
-          {
-            body,
-            headers,
-            method: props.method || \\"post\\",
-          }
+          props.sendSubmissionsTo === \\"email\\"
+            ? formUrl
+            : props.action /* TODO: throw error if no action URL */,
+          { body, headers, method: props.method || \\"post\\" }
         ).then(
           async (res) => {
             let body;
             const contentType = res.headers.get(\\"content-type\\");
-
             if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
               body = await res.json();
             } else {
               body = await res.text();
             }
-
             if (!res.ok && props.errorMessagePath) {
-              // TODO: allow supplying an error formatter function
-              let message = get(body, props.errorMessagePath);
-
+              /* TODO: allow supplying an error formatter function */ let message = get(
+                body,
+                props.errorMessagePath
+              );
               if (message) {
                 if (typeof message !== \\"string\\") {
-                  // TODO: ideally convert json to yaml so it woul dbe like
-                  // error: - email has been taken
-                  message = JSON.stringify(message);
+                  /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message = JSON.stringify(
+                    message
+                  );
                 }
-
                 state.formErrorMessage = message;
               }
             }
-
             state.responseData = body;
             state.state = res.ok ? \\"success\\" : \\"error\\";
-
             if (res.ok) {
               const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: {
-                  res,
-                  body,
-                },
+                detail: { res, body },
               });
-
               if (formRef.current) {
                 formRef.current.dispatchEvent(submitSuccessEvent);
-
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
-                } // TODO: option to turn this on/off?
-
-                if (props.resetFormOnSubmit !== false) {
+                }
+                /* TODO: option to turn this on/off? */ if (
+                  props.resetFormOnSubmit !== false
+                ) {
                   formRef.current.reset();
                 }
-              } // TODO: client side route event first that can be preventDefaulted
-
-              if (props.successUrl) {
+              }
+              /* TODO: client side route event first that can be preventDefaulted */ if (
+                props.successUrl
+              ) {
                 if (formRef.current) {
                   const event = new CustomEvent(\\"route\\", {
-                    detail: {
-                      url: props.successUrl,
-                    },
+                    detail: { url: props.successUrl },
                   });
                   formRef.current.dispatchEvent(event);
-
                   if (!event.defaultPrevented) {
                     location.href = props.successUrl;
                   }
@@ -469,19 +450,14 @@ export default function MyComponent(props) {
           },
           (err) => {
             const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-              detail: {
-                error: err,
-              },
+              detail: { error: err },
             });
-
             if (formRef.current) {
               formRef.current.dispatchEvent(submitErrorEvent);
-
               if (submitErrorEvent.defaultPrevented) {
                 return;
               }
             }
-
             state.responseData = err;
             state.state = \\"error\\";
           }
@@ -489,11 +465,10 @@ export default function MyComponent(props) {
       }
     },
   }));
-
   const formRef = useRef();
-
   return (
     <>
+      {\\" \\"}
       <form
         {...props.attributes}
         validate={props.validate}
@@ -505,6 +480,7 @@ export default function MyComponent(props) {
           state.onSubmit(event);
         }}
       >
+        {\\" \\"}
         {Boolean(props.builderBlock && props.builderBlock.children) && (
           <>
             {props.builderBlock?.children.map((block) => (
@@ -516,8 +492,7 @@ export default function MyComponent(props) {
               </>
             ))}
           </>
-        )}
-
+        )}{\\" \\"}
         {Boolean(state.submissionState === \\"error\\") && (
           <>
             <BuilderBlocks
@@ -525,8 +500,7 @@ export default function MyComponent(props) {
               blocks={props.errorMessage}
             ></BuilderBlocks>
           </>
-        )}
-
+        )}{\\" \\"}
         {Boolean(state.submissionState === \\"sending\\") && (
           <>
             <BuilderBlocks
@@ -534,23 +508,18 @@ export default function MyComponent(props) {
               blocks={props.sendingMessage}
             ></BuilderBlocks>
           </>
-        )}
-
+        )}{\\" \\"}
         {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
           <>
             <pre
               className=\\"builder-form-error-text\\"
-              css={{
-                padding: \\"10px\\",
-                color: \\"red\\",
-                textAlign: \\"center\\",
-              }}
+              css={{ padding: \\"10px\\", color: \\"red\\", textAlign: \\"center\\" }}
             >
-              {JSON.stringify(state.responseData, null, 2)}
+              {\\" \\"}
+              {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
           </>
-        )}
-
+        )}{\\" \\"}
         {Boolean(state.submissionState === \\"success\\") && (
           <>
             <BuilderBlocks
@@ -558,8 +527,8 @@ export default function MyComponent(props) {
               blocks={props.successMessage}
             ></BuilderBlocks>
           </>
-        )}
-      </form>
+        )}{\\" \\"}
+      </form>{\\" \\"}
     </>
   );
 }
@@ -588,7 +557,6 @@ export default function MyComponent(props) {
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-
       return !!props.lazy && state.isBrowser();
     },
   }));

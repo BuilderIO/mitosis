@@ -33,7 +33,7 @@ export const babelTransformCode = <VisitorContextType = any>(
 export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
-  type: 'expression' | 'unknown' | 'block' = 'unknown',
+  type: 'expression' | 'unknown' | 'block' | 'functionBody' = 'unknown',
 ): string => {
   // TODO: maybe match more strictly { foo: ... }
   if (type === 'unknown' && code.trim().startsWith('{')) {
@@ -41,22 +41,24 @@ export const babelTransformExpression = <VisitorContextType = any>(
   }
   let useCode = code;
 
-  // Allow partial functions (with return)
-  // TODO: what about nested functions, will this mess up the mutations?
-  // TODO: read this from an argument, only used tempoerarily when doing
-  // partial function parsing
-  useCode = useCode.replace(/(\s|;)return(\s)/g, '$1/*__return__*/$2');
+  if (type === 'functionBody') {
+    useCode = `function(){${useCode}}`;
+  }
 
   let result =
     type === 'expression'
       ? null
-      : attempt(() =>
-          (babelTransform(useCode, visitor)?.code || '')
+      : attempt(() => {
+          let result = babelTransform(useCode, visitor)?.code || '';
+          if (type === 'functionBody') {
+            return result.replace(/^function\(\)\{/, '').replace(/\};$/, '');
+          } else {
             // Babel addes trailing semicolons, but for expressions we need those gone
             // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
             // of appending several fragements
-            .replace(/;$/, ''),
-        );
+            return result.replace(/;$/, '');
+          }
+        });
 
   if (isError(result) || type === 'expression') {
     // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
@@ -85,5 +87,12 @@ export const babelTransformExpression = <VisitorContextType = any>(
       result = result.replace('function', '');
     }
   }
-  return (result || '').replace(/\/\*__return__\*\/\s*;?\s*/g, 'return ');
+  if (type === 'functionBody') {
+    return result!.replace(/^function\(\)\{/, '').replace(/\};?$/, '');
+  } else {
+    // Babel addes trailing semicolons, but for expressions we need those gone
+    // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
+    // of appending several fragements
+    return result!.replace(/;$/, '');
+  }
 };

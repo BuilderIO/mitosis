@@ -376,7 +376,7 @@ export const componentToReact = (
           ? stateType === 'mobx'
             ? `const state = useLocalObservable(() => (${getStateObjectString(
                 json,
-              )}))`
+              )}));`
             : stateType === 'useState'
             ? useStateCode
             : stateType === 'solid'
