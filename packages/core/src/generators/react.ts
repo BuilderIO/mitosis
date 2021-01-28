@@ -31,6 +31,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { capitalize } from '../helpers/capitalize';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -75,7 +76,10 @@ const BINDING_MAPPERS: {
   [key: string]: string | ((key: string, value: string) => [string, string]);
 } = {
   innerHTML(_key, value) {
-    return ['dangerouslySetInnerHTML', JSON.stringify({ __html: value })];
+    return [
+      'dangerouslySetInnerHTML',
+      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+    ];
   },
 };
 
@@ -103,8 +107,23 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   }
 
   for (const key in json.properties) {
-    const value = json.properties[key];
-    str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+    const value = (json.properties[key] || '')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '\\n');
+
+    if (key === 'class') {
+      str += ` className="${value}" `;
+    } else if (BINDING_MAPPERS[key]) {
+      const mapper = BINDING_MAPPERS[key];
+      if (typeof mapper === 'function') {
+        const [newKey, newValue] = mapper(key, value);
+        str += ` ${newKey}={${newValue}} `;
+      } else {
+        str += ` ${BINDING_MAPPERS[key]}="${value}" `;
+      }
+    } else {
+      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+    }
   }
 
   for (const key in json.bindings) {
@@ -118,7 +137,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => (${useBindingValue})} `;
+      str += ` ${key}={event => { ${useBindingValue} }} `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -208,12 +227,18 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
   return str;
 };
 
-const updateStateSetters = (json: JSXLiteComponent) => {
+const updateStateSetters = (
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+) => {
+  if (options.stateType !== 'useState') {
+    return;
+  }
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
-        const newValue = updateStateSettersInCode(value);
+        const newValue = updateStateSettersInCode(value, options);
         if (newValue !== value) {
           item.bindings[key] = newValue;
         }
@@ -222,7 +247,10 @@ const updateStateSetters = (json: JSXLiteComponent) => {
   });
 };
 
-const updateStateSettersInCode = (value: string) => {
+const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
+  if (options.stateType !== 'useState') {
+    return value;
+  }
   return babelTransformExpression(value, {
     AssignmentExpression(
       path: babel.NodePath<babel.types.AssignmentExpression>,
@@ -273,15 +301,21 @@ export const componentToReact = (
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
-    updateStateSetters(json);
+    updateStateSetters(json, options);
   }
 
   const refs = getRefs(componentJson);
-  const hasState = Boolean(Object.keys(json.state).length);
+  const hasRefs = Boolean(getRefs(componentJson).size);
+  let hasState = Boolean(Object.keys(json.state).length);
+
   mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
+  if (stateType === 'builder') {
+    // Always use state if we are generate Builder react code
+    hasState = true;
+  }
 
   const useStateCode =
     stateType === 'useState' && getUseStateCode(json, options);
@@ -335,19 +369,20 @@ export const componentToReact = (
     ${renderPreComponent(json)}
     ${styledComponentsCode ? styledComponentsCode : ''}
 
-    export default function ${json.name}(props) {
+
+    export default function MyComponent(props) {
       ${
         hasState
           ? stateType === 'mobx'
             ? `const state = useLocalObservable(() => (${getStateObjectString(
                 json,
-              )}))`
+              )}));`
             : stateType === 'useState'
             ? useStateCode
-            : stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectString(json)})`
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectString(json)});`
+            : stateType === 'builder'
+            ? `var state = useBuilderState(${getStateObjectString(json)});`
             : `const state = useLocalProxy(${getStateObjectString(json)});`
           : ''
       }
@@ -358,7 +393,7 @@ export const componentToReact = (
         json.hooks.onMount
           ? `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onMount),
+              updateStateSettersInCode(json.hooks.onMount, options),
               options,
             )}
           }, [])`
@@ -369,7 +404,7 @@ export const componentToReact = (
         json.hooks.onUnMount
           ? `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onUnMount),
+              updateStateSettersInCode(json.hooks.onUnMount, options),
               options,
             )}
           }, [])`
@@ -389,6 +424,8 @@ export const componentToReact = (
     }
 
   `;
+
+  str = stripNewlinesInStrings(str);
 
   if (options.plugins) {
     str = runPreCodePlugins(str, options.plugins);

@@ -29,5 +29,10 @@ export * from './generators/template';
 export * from './generators/swift-ui';
 export * from './generators/react-native';
 export * from './helpers/parse-reactive-script';
+export * from './helpers/is-jsx-lite-node';
+
+export * from './types/jsx-lite-node';
+export * from './types/jsx-lite-component';
+
 export * from './plugins/compile-away-builder-components';
 export * from './plugins/map-styles';

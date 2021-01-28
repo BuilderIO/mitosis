@@ -128,7 +128,7 @@ export default function FormComponent(props: FormProps) {
 
         if (contentType && contentType !== 'multipart/form-data') {
           if (
-            // Zapier doesn't allow content-type header to be sent from browsers
+            /* Zapier doesn't allow content-type header to be sent from browsers */
             !(sendWithJs && props.action?.includes('zapier.com'))
           ) {
             headers['content-type'] = contentType;
@@ -156,7 +156,9 @@ export default function FormComponent(props: FormProps) {
         )}&name=${encodeURIComponent(props.name || '')}`;
 
         fetch(
-          props.sendSubmissionsTo === 'email' ? formUrl : props.action!, // TODO: throw error if no action URL
+          props.sendSubmissionsTo === 'email'
+            ? formUrl
+            : props.action! /* TODO: throw error if no action URL */,
           {
             body,
             headers,
@@ -173,13 +175,13 @@ export default function FormComponent(props: FormProps) {
             }
 
             if (!res.ok && props.errorMessagePath) {
-              // TODO: allow supplying an error formatter function
+              /* TODO: allow supplying an error formatter function */
               let message = get(body, props.errorMessagePath);
 
               if (message) {
                 if (typeof message !== 'string') {
-                  // TODO: ideally convert json to yaml so it woul dbe like
-                  // error: - email has been taken
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+                   error: - email has been taken */
                   message = JSON.stringify(message);
                 }
                 state.formErrorMessage = message;
@@ -201,13 +203,13 @@ export default function FormComponent(props: FormProps) {
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
                 }
-                // TODO: option to turn this on/off?
+                /* TODO: option to turn this on/off? */
                 if (props.resetFormOnSubmit !== false) {
                   formRef.reset();
                 }
               }
 
-              // TODO: client side route event first that can be preventDefaulted
+              /* TODO: client side route event first that can be preventDefaulted */
               if (props.successUrl) {
                 if (formRef) {
                   const event = new CustomEvent('route', {

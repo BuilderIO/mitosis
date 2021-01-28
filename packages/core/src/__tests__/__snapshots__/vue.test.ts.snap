@@ -409,7 +409,7 @@ export default {
 
         if (contentType && contentType !== \\"multipart/form-data\\") {
           if (
-            // Zapier doesn't allow content-type header to be sent from browsers
+            /* Zapier doesn't allow content-type header to be sent from browsers */
             !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
           ) {
             headers[\\"content-type\\"] = contentType;
@@ -437,7 +437,8 @@ export default {
           this.sendSubmissionsToEmail || \\"\\"
         )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
         fetch(
-          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action, // TODO: throw error if no action URL
+          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+          /* TODO: throw error if no action URL */
           {
             body,
             headers,
@@ -455,13 +456,13 @@ export default {
             }
 
             if (!res.ok && this.errorMessagePath) {
-              // TODO: allow supplying an error formatter function
+              /* TODO: allow supplying an error formatter function */
               let message = get(body, this.errorMessagePath);
 
               if (message) {
                 if (typeof message !== \\"string\\") {
-                  // TODO: ideally convert json to yaml so it woul dbe like
-                  // error: - email has been taken
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
                   message = JSON.stringify(message);
                 }
 
@@ -485,12 +486,14 @@ export default {
 
                 if (submitSuccessEvent.defaultPrevented) {
                   return;
-                } // TODO: option to turn this on/off?
+                }
+                /* TODO: option to turn this on/off? */
 
                 if (this.resetFormOnSubmit !== false) {
                   this.$refs.formRef.reset();
                 }
-              } // TODO: client side route event first that can be preventDefaulted
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
 
               if (this.successUrl) {
                 if (this.$refs.formRef) {
@@ -555,7 +558,7 @@ exports[`Vue Image 1`] = `
           :aria-role=\\"altText ? 'presentation' : undefined\\"
           :class=\\"'builder-image' + (class ? ' ' + class : '')\\"
           :src=\\"image\\"
-          @load=\\"setLoaded\\"
+          @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
           :sizes=\\"sizes\\"
         />

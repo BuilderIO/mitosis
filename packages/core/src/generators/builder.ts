@@ -11,7 +11,8 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { kebabCase, omit } from 'lodash';
+import { kebabCase, omit, set } from 'lodash';
+import { symbolBlocksAsChildren } from '../parsers/builder';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -35,6 +36,39 @@ const componentMappers: {
     options: ToBuilderOptions,
   ) => BuilderElement;
 } = {
+  // TODO: add back if this direction (blocks as children not prop) is desired
+  ...(!symbolBlocksAsChildren
+    ? {}
+    : {
+        Symbol(node, options) {
+          const child = node.children[0];
+          const symbolOptions =
+            (node.bindings.symbol &&
+              json5.parse(node.bindings.symbol as string)) ||
+            {};
+
+          if (child) {
+            set(
+              symbolOptions,
+              'content.data.blocks',
+              child.children.map((item) => blockToBuilder(item, options)),
+            );
+          }
+
+          return el(
+            {
+              component: {
+                name: 'Symbol',
+                options: {
+                  // TODO: forward other symbol options
+                  symbol: symbolOptions,
+                },
+              },
+            },
+            options,
+          );
+        },
+      }),
   Columns(node, options) {
     const block = blockToBuilder(node, options, { skipMapper: true });
 
@@ -162,7 +196,7 @@ export const blockToBuilder = (
 
   const thisIsComponent = isComponent(json);
 
-  const bindings = thisIsComponent ? {} : json.bindings;
+  let bindings = thisIsComponent ? {} : json.bindings;
   const actions: { [key: string]: string } = {};
 
   for (const key in bindings) {
@@ -214,6 +248,14 @@ export const blockToBuilder = (
           [ruleKey]: cssRules[ruleKey],
         };
       }
+    }
+
+    delete json.bindings.css;
+  }
+
+  if (thisIsComponent) {
+    for (const key in json.bindings) {
+      bindings[`component.options.${key}`] = json.bindings[key];
     }
   }
 

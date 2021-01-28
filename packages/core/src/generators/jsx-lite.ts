@@ -44,7 +44,10 @@ export const blockToJsxLite = (
   }
 
   for (const key in json.properties) {
-    const value = json.properties[key];
+    const value = (json.properties[key] || '')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '\\n');
+
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {

@@ -1,5 +1,5 @@
 import * as babel from '@babel/core';
-import { isError } from 'lodash';
+import { attempt, isError } from 'lodash';
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
@@ -33,25 +33,35 @@ export const babelTransformCode = <VisitorContextType = any>(
 export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
-  type: 'expression' | 'unknown' | 'block' = 'unknown',
+  type: 'expression' | 'unknown' | 'block' | 'functionBody' = 'unknown',
 ): string => {
   // TODO: maybe match more strictly { foo: ... }
   if (type === 'unknown' && code.trim().startsWith('{')) {
     type = 'expression';
   }
+  let useCode = code;
+
+  if (type === 'functionBody') {
+    useCode = `function(){${useCode}}`;
+  }
 
   let result =
     type === 'expression'
       ? null
-      : (babelTransform(code, visitor)?.code || '')
-          // Babel addes trailing semicolons, but for expressions we need those gone
-          // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
-          // of appending several fragements
-          .replace(/;$/, '');
+      : attempt(() => {
+          let result = babelTransform(useCode, visitor)?.code || '';
+          if (type === 'functionBody') {
+            return result.replace(/^function\(\)\{/, '').replace(/\};$/, '');
+          } else {
+            // Babel addes trailing semicolons, but for expressions we need those gone
+            // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
+            // of appending several fragements
+            return result.replace(/;$/, '');
+          }
+        });
 
   if (isError(result) || type === 'expression') {
     // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
-    let useCode = code;
 
     // Detect method fragments. These get passed sometimes and otherwise
     // generate compile errors. They are of the form `foo() { ... }`
@@ -73,8 +83,16 @@ export const babelTransformExpression = <VisitorContextType = any>(
       // Remove our fake variable assignment
       .replace(/let _ =\s/, '');
 
-    return isMethod ? result.replace('function', '') : result;
+    if (isMethod) {
+      result = result.replace('function', '');
+    }
+  }
+  if (type === 'functionBody') {
+    return result!.replace(/^function\(\)\{/, '').replace(/\};?$/, '');
   } else {
-    return result!;
+    // Babel addes trailing semicolons, but for expressions we need those gone
+    // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
+    // of appending several fragements
+    return result!.replace(/;$/, '');
   }
 };

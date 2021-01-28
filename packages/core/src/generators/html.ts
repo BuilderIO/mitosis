@@ -24,12 +24,12 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
-import generate from '@babel/generator';
 
 type ToHtmlOptions = {
   prettier?: boolean;
   format?: 'class' | 'script';
   plugins?: Plugin[];
+  prefix?: string;
 };
 
 type StringRecord = { [key: string]: string };
@@ -114,7 +114,7 @@ const getId = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
 
   const newNameNum = (options.namesMap[name] || 0) + 1;
   options.namesMap[name] = newNameNum;
-  return `${name}-${newNameNum}`;
+  return `${name}${options.prefix ? `-${options.prefix}` : ''}-${newNameNum}`;
 };
 
 const updateReferencesInCode = (
@@ -232,7 +232,12 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     // }
 
     for (const key in json.properties) {
-      const value = json.properties[key];
+      if (key === 'innerHTML') {
+        continue;
+      }
+      const value = (json.properties[key] || '')
+        .replace(/"/g, '&quot;')
+        .replace(/\n/g, '\\n');
       str += ` ${key}="${value}" `;
     }
 
@@ -267,19 +272,27 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
           elId,
           options,
           `
-            el.removeEventListener('${event}', ${fnIdentifier});
-            el.addEventListener('${event}', ${fnIdentifier});
+            ;el.removeEventListener('${event}', ${fnIdentifier});
+            ;el.addEventListener('${event}', ${fnIdentifier});
           `,
         );
       } else {
-        const useAttribute = key.includes('-');
-        addOnChangeJs(
-          elId,
-          options,
-          useAttribute
-            ? `el.setAttribute(${key}, ${useValue})`
-            : `el.${key} = ${useValue}`,
-        );
+        if (key === 'style') {
+          addOnChangeJs(
+            elId,
+            options,
+            `;Object.assign(el.style, ${useValue});`,
+          );
+        } else {
+          const useAttribute = key.includes('-');
+          addOnChangeJs(
+            elId,
+            options,
+            useAttribute
+              ? `;el.setAttribute(${key}, ${useValue});`
+              : `;el.${key} = ${useValue}`,
+          );
+        }
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -288,6 +301,10 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     str += '>';
     if (json.children) {
       str += json.children.map((item) => blockToHtml(item, options)).join('\n');
+    }
+    if (json.properties.innerHTML) {
+      // Maybe put some kind of safety here for broken HTML such as no close tag
+      str += json.properties.innerHTML;
     }
 
     str += `</${json.name}>`;
@@ -370,7 +387,9 @@ export const componentToHtml = (
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
-  const css = collectCss(json);
+  const css = collectCss(json, {
+    prefix: options.prefix,
+  });
   let str = json.children
     .map((item) => blockToHtml(item, useOptions))
     .join('\n');
@@ -383,6 +402,7 @@ export const componentToHtml = (
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
+      (() => {
         let state = ${getStateObjectString(json, {
           valueMapper: (value) =>
             addUpdateAfterSetInCode(
@@ -463,6 +483,7 @@ export const componentToHtml = (
           }
         `
         }
+      })()
       </script>
     `;
   }
@@ -518,7 +539,9 @@ export const componentToCustomElement = (
     json = runPostJsonPlugins(json, options.plugins);
   }
 
-  const css = collectCss(json);
+  const css = collectCss(json, {
+    prefix: options.prefix,
+  });
 
   let html = json.children
     .map((item) => blockToHtml(item, useOptions))

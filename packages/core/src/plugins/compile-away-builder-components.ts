@@ -5,6 +5,7 @@ import { JSXLiteNode } from '../types/jsx-lite-node';
 import { compileAwayComponents } from './compile-away-components';
 import { blockToJsxLite } from '../generators/jsx-lite';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 
 const getRenderOptions = (node: JSXLiteNode) => {
   return {
@@ -23,12 +24,80 @@ function updateQueryParam(uri = '', key: string, value: string) {
   return uri + separator + key + '=' + encodeURIComponent(value);
 }
 
+const wrapOutput = (node: JSXLiteNode, child: JSXLiteNode) => {
+  return createJSXLiteNode({
+    ...node,
+    name: 'div',
+    // TODO: other custom attributes
+    properties: pick(
+      node.properties,
+      'style',
+      'styles',
+      'css',
+      'className',
+      'class',
+    ),
+    bindings: pick(
+      node.bindings,
+      'style',
+      'styles',
+      'css',
+      'className',
+      'class',
+    ),
+    children: [child],
+  });
+};
+
 const components: {
   [key: string]: (
     node: JSXLiteNode,
     context: TraverseContext,
   ) => JSXLiteNode | void;
 } = {
+  // TODO: this should be noWrap
+  CoreButton(node: JSXLiteNode) {
+    const options = getRenderOptions(node);
+    return wrapOutput(
+      node,
+      parseNode(`
+        <a
+          href=${options.link}
+          target="${options.openLinkInNewTab ? '_blank' : '_self'}"
+          >
+          ${options.text.replace(/"/g, '')}
+        </a>
+      `),
+    );
+  },
+  CoreSection(node: JSXLiteNode) {
+    const options = getRenderOptions(node);
+    return wrapOutput(
+      node,
+      parseNode(`<div
+      css={{
+        width: '100%',
+        alignSelf: 'stretch',
+        flexGrow: '1',
+        boxSizing: 'border-box',
+        maxWidth: '${node.properties.maxWidth || 1200}px',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'stretch',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      }}
+    >
+    ${node.children
+      .map((block) =>
+        blockToJsxLite(block, {
+          prettier: false,
+        }),
+      )
+      .join('\n')}
+    </div>`),
+    );
+  },
   Columns(node: JSXLiteNode, context) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
       width: parseFloat(item.properties.width) || 0,
@@ -49,7 +118,9 @@ const components: {
     }
     const { properties } = node;
 
-    return parseNode(`
+    return wrapOutput(
+      node,
+      parseNode(`
         <div
           class="builder-columns"
           css={{
@@ -100,13 +171,20 @@ const components: {
                 }
               }}
             >
-              ${col.children.map((block) => blockToJsxLite(block)).join('\n')}
+              ${col.children
+                .map((block) =>
+                  blockToJsxLite(block, {
+                    prettier: false,
+                  }),
+                )
+                .join('\n')}
             </div>
           `;
             })
             .join('\n')}
         </div>
-  `);
+  `),
+    );
   },
   Image(node: JSXLiteNode, context) {
     const options = getRenderOptions(node);
@@ -123,7 +201,7 @@ const components: {
 
     const srcSet =
       srcset ||
-      `"${
+      `${
         (node.properties.image || '').match(/builder\.io/)
           ? widths
               .map(
@@ -137,42 +215,41 @@ const components: {
               .concat([node.properties.image])
               .join(', ')
           : ''
-      }"`;
+      }`;
 
-    return parseNode(`
+    return wrapOutput(
+      node,
+      parseNode(`
     <div css={{ position: 'relative' }}>
       <picture>
         ${
           srcSet && srcSet.match(/builder\.io/)
-            ? `<source srcSet=${srcSet.replace(
+            ? `<source srcSet="${srcSet.replace(
                 /\?/g,
                 '?format=webp&',
-              )} type="image/webp" />`
+              )}" type="image/webp" />`
             : ''
         }
-        ${
-          lazy
-            ? ''
-            : `<img
-            src=${image} 
-            ${!sizes ? '' : `sizes=${sizes}`} 
-            ${!srcSet ? '' : `srcSet=${srcSet}`}
-            css={{
-            objectFit: ${backgroundSize || '"cover"'},
-            objectPosition: ${backgroundPosition || '"cover"'},
-            ${
-              !aspectRatio
-                ? ''
-                : `
-            position: 'absolute',
-            height: '100%',
-            width: '100%',
-            top: '0',
-            left: '0',
-            `
-            }
-          }} />`
-        }
+        <img
+          ${lazy ? ` loading="lazy" ` : ''}
+          src=${image} 
+          ${!sizes ? '' : `sizes=${sizes}`} 
+          ${!srcSet ? '' : `srcSet="${srcSet}"`}
+          css={{
+          objectFit: ${backgroundSize || '"cover"'},
+          objectPosition: ${backgroundPosition || '"cover"'},
+          ${
+            !aspectRatio
+              ? ''
+              : `
+          position: 'absolute',
+          height: '100%',
+          width: '100%',
+          top: '0',
+          left: '0',
+          `
+          }
+        }} />
       </picture>
       ${
         aspectRatio
@@ -201,12 +278,19 @@ const components: {
               height: '100%',
             }}
           >
-            ${node.children.map((block) => blockToJsxLite(block)).join('\n')}
+            ${node.children
+              .map((block) =>
+                blockToJsxLite(block, {
+                  prettier: false,
+                }),
+              )
+              .join('\n')}
           </div>`
             : ''
         }
     </div>
-  `);
+  `),
+    );
   },
 };
 
