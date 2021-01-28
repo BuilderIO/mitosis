@@ -114,47 +114,72 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
-const getBlockActions = (block: BuilderElement) => ({
-  ...block.actions,
-  ...block.code?.actions,
-});
+const getBlockActions = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
+  const obj = {
+    ...block.actions,
+    ...block.code?.actions,
+  };
+  if (options.includeBuilderExtras) {
+    for (const key in obj) {
+      const value = obj[key];
+      // TODO: plugin/option for for this
+      obj[key] = wrapBinding(value);
+    }
+  }
+  return obj;
+};
 
-const getBlockActionsAsBindings = (block: BuilderElement) => {
+const getBlockActionsAsBindings = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
   return mapKeys(
-    getBlockActions(block),
+    getBlockActions(block, options),
     (value, key) => `on${capitalize(key)}`,
   );
 };
 
-const getBlockNonActionBindings = (block: BuilderElement) => ({
-  ...block.bindings,
-  ...block.code?.bindings,
-});
+const getBlockNonActionBindings = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
+  const obj = {
+    ...block.bindings,
+    ...block.code?.bindings,
+  };
+  if (options.includeBuilderExtras) {
+    for (const key in obj) {
+      const value = obj[key];
+      // TODO: plugin/option for for this
+      obj[key] = wrapBinding(value);
+    }
+  }
+  return obj;
+};
+
+const wrapBinding = (value: string) => {
+  if (!(value.includes(';') || value.match(/(^|\s|;)return[^a-z0-9A-Z]/))) {
+    return value;
+  }
+  return `(() => { 
+    try { ${value} } 
+    catch (err) { 
+      console.warn('Builder code error', err);
+    }
+  })()`;
+};
 
 const getBlockBindings = (
   block: BuilderElement,
   options: BuilderToJSXLiteOptions,
 ) => {
   const obj = {
-    ...getBlockNonActionBindings(block),
-    ...getBlockActionsAsBindings(block),
+    ...getBlockNonActionBindings(block, options),
+    ...getBlockActionsAsBindings(block, options),
   };
-  if (options.includeBuilderExtras) {
-    for (const key in obj) {
-      const value = obj[key];
-      // TODO: do for all bindings with same logic builder has around returns
-      if (!key.startsWith('on') && value.includes(';')) {
-        // TODO: plugin/option for for this
-        obj[key] = `
-        (() => { 
-          try { ${value} } 
-          catch (err) { 
-            console.warn('Builder code error', err);
-          }
-        })()`;
-      }
-    }
-  }
 
   return obj;
 };
