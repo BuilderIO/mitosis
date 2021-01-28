@@ -131,10 +131,33 @@ const getBlockNonActionBindings = (block: BuilderElement) => ({
   ...block.code?.bindings,
 });
 
-const getBlockBindings = (block: BuilderElement) => ({
-  ...getBlockNonActionBindings(block),
-  ...getBlockActionsAsBindings(block),
-});
+const getBlockBindings = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
+  const obj = {
+    ...getBlockNonActionBindings(block),
+    ...getBlockActionsAsBindings(block),
+  };
+  if (options.includeBuilderExtras) {
+    for (const key in obj) {
+      const value = obj[key];
+      // TODO: do for all bindings with same logic builder has around returns
+      if (!key.startsWith('on') && value.includes(';')) {
+        // TODO: plugin/option for for this
+        obj[key] = `
+        (() => { 
+          try { ${value} } 
+          catch (err) { 
+            console.warn('Builder code error', err);
+          }
+        })()`;
+      }
+    }
+  }
+
+  return obj;
+};
 
 // add back if this direction (blocks as children not prop) is desired
 export const symbolBlocksAsChildren = false;
@@ -346,7 +369,7 @@ export const builderElementToJsxLiteNode = (
 ): JSXLiteNode => {
   // Special builder properties
   // TODO: support hide and repeat
-  const blockBindings = getBlockBindings(block);
+  const blockBindings = getBlockBindings(block, options);
   const showBinding = blockBindings.show;
   if (showBinding) {
     const isFragment = block.component?.name === 'Fragment';

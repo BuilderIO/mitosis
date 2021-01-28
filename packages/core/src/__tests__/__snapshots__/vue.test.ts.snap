@@ -61,21 +61,27 @@ export default {
     // TODO: These methods are not used right now, but they will be when
     // support for dynamic CSS lands
     getColumns() {
-      return this.columns || [];
+      return;
+      this.columns || [];
     },
     getGutterSize() {
-      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+      return;
+      typeof this.space === \\"number\\" ? this.space || 0 : 20;
     },
     getWidth(index) {
       const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
+      return;
+
+      (columns[index] && columns[index].width) || 100 / columns.length;
     },
     getColumnCssWidth(index) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
       const subtractWidth =
         (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      return;
+
+      \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   },
 };
@@ -316,7 +322,8 @@ export default {
 
   computed: {
     submissionState() {
-      return (Builder.isEditing && this.previewState) || this.state;
+      return;
+      (Builder.isEditing && this.previewState) || this.state;
     },
   },
 
@@ -350,10 +357,11 @@ export default {
               if (el.type === \\"radio\\") {
                 if (el.checked) {
                   value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
+                  return;
+
+                  {
+                    key, value;
+                  }
                 }
               } else if (el.type === \\"checkbox\\") {
                 value = el.checked;
@@ -372,11 +380,11 @@ export default {
             } else {
               value = el.value;
             }
+            return;
 
-            return {
-              key,
-              value,
-            };
+            {
+              key, value;
+            }
           });
         let contentType = this.contentType;
 
@@ -555,7 +563,7 @@ exports[`Vue Image 1`] = `
           :aria-role=\\"altText ? 'presentation' : undefined\\"
           :class=\\"'builder-image' + (class ? ' ' + class : '')\\"
           :src=\\"image\\"
-          @load=\\"setLoaded\\"
+          @load=\\"setLoaded()\\"
           :srcset=\\"srcset\\"
           :sizes=\\"sizes\\"
         />
@@ -602,14 +610,15 @@ export default {
       this.imageLoaded = true;
     },
     isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
+      return;
+      typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\";
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && this.isBrowser();
+
+      return;
+      !!this.lazy && this.isBrowser();
     },
   },
 };

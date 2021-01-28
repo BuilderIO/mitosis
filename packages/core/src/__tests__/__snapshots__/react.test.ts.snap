@@ -64,21 +64,27 @@ export default function MyComponent(props) {
     // TODO: These methods are not used right now, but they will be when
     // support for dynamic CSS lands
     getColumns() {
-      return props.columns || [];
+      return;
+      props.columns || [];
     },
     getGutterSize() {
-      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      return;
+      typeof props.space === \\"number\\" ? props.space || 0 : 20;
     },
     getWidth(index) {
       const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
+      return;
+
+      (columns[index] && columns[index].width) || 100 / columns.length;
     },
     getColumnCssWidth(index) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
       const subtractWidth =
         (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      return;
+
+      \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   }));
 
@@ -273,7 +279,8 @@ export default function MyComponent(props) {
     responseData: null,
     formErrorMessage: \\"\\",
     get submissionState() {
-      return (Builder.isEditing && props.previewState) || state.state;
+      return;
+      (Builder.isEditing && props.previewState) || state.state;
     },
     onSubmit(event) {
       const sendWithJs =
@@ -305,10 +312,11 @@ export default function MyComponent(props) {
               if (el.type === \\"radio\\") {
                 if (el.checked) {
                   value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
+                  return;
+
+                  {
+                    key, value;
+                  }
                 }
               } else if (el.type === \\"checkbox\\") {
                 value = el.checked;
@@ -327,11 +335,11 @@ export default function MyComponent(props) {
             } else {
               value = el.value;
             }
+            return;
 
-            return {
-              key,
-              value,
-            };
+            {
+              key, value;
+            }
           });
         let contentType = props.contentType;
 
@@ -579,14 +587,15 @@ export default function MyComponent(props) {
       state.imageLoaded = true;
     },
     isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
+      return;
+      typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\";
     },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
+
+      return;
+      !!props.lazy && state.isBrowser();
     },
   }));
 
@@ -637,7 +646,7 @@ export default function MyComponent(props) {
                 }
                 src={props.image}
                 onLoad={(event) => {
-                  state.setLoaded;
+                  state.setLoaded();
                 }}
                 srcset={props.srcset}
                 sizes={props.sizes}

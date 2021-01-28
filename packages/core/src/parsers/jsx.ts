@@ -8,6 +8,7 @@ import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -424,15 +425,20 @@ export function parseJsx(jsx: string): JSXLiteComponent {
     ],
   });
 
+  const toParse = stripNewlinesInStrings(
+    output!
+      .code!.trim()
+      // Weird bug with adding a newline in a normal at end of a normal string that can't have one
+      // If not one-off find full solve and cause
+      .replace(/\n"/g, '"')
+      .replace(/^\({/, '{')
+      .replace(/}\);$/, '}'),
+  );
   try {
-    return JSON5.parse(
-      output!
-        .code!.trim()
-        .replace(/^\({/, '{')
-        .replace(/}\);$/, '}'),
-    );
+    return JSON5.parse(toParse);
   } catch (err) {
     console.error('Could not parse code', output && output.code);
+    require('fs').writeFileSync(process.cwd() + '/output.json', toParse);
     throw err;
   }
 }

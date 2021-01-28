@@ -31,7 +31,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { capitalize } from '../helpers/capitalize';
-import { ToBuilderOptions } from './builder';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -76,7 +76,10 @@ const BINDING_MAPPERS: {
   [key: string]: string | ((key: string, value: string) => [string, string]);
 } = {
   innerHTML(_key, value) {
-    return ['dangerouslySetInnerHTML', JSON.stringify({ __html: value })];
+    return [
+      'dangerouslySetInnerHTML',
+      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+    ];
   },
 };
 
@@ -104,7 +107,10 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   }
 
   for (const key in json.properties) {
-    const value = (json.properties[key] || '').replace(/"/g, '&quot;');
+    const value = (json.properties[key] || '')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '\\n');
+
     if (key === 'class') {
       str += ` className="${value}" `;
     } else if (BINDING_MAPPERS[key]) {
@@ -228,7 +234,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -418,6 +424,8 @@ export const componentToReact = (
     }
 
   `;
+
+  str = stripNewlinesInStrings(str);
 
   if (options.plugins) {
     str = runPreCodePlugins(str, options.plugins);
