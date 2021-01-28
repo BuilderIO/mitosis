@@ -490,9 +490,7 @@ export const builderElementToJsxLiteNode = (
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
       block.tagName ||
-      (block as any).linkUrl
-        ? 'a'
-        : 'div',
+      ((block as any).linkUrl ? 'a' : 'div'),
     properties,
     bindings: {
       ...bindings,
@@ -500,9 +498,10 @@ export const builderElementToJsxLiteNode = (
       ...(styleString && {
         style: styleString,
       }),
-      ...(css && {
-        css: JSON.stringify(css),
-      }),
+      ...(css &&
+        Object.keys(css).length && {
+          css: JSON.stringify(css),
+        }),
     },
     children: (block.children || []).map((item) =>
       builderElementToJsxLiteNode(item, options),

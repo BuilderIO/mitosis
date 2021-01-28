@@ -371,7 +371,6 @@ export default function MyComponent(props) {
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-      css={{}}
     ></div>
   );
 }
@@ -563,14 +562,7 @@ export default function MyComponent(props) {
     });
   });
 
-  return (
-    <div
-      class=\\"builder-embed\\"
-      ref={elem}
-      innerHTML={props.content}
-      css={{}}
-    ></div>
-  );
+  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>;
 }
 "
 `;
@@ -821,8 +813,8 @@ export default function MyComponent(props) {
   });
 
   return (
-    <Fragment css={{}}>
-      <picture ref={pictureRef} css={{}}>
+    <Fragment>
+      <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
           <img
             alt={props.altText}
@@ -840,7 +832,7 @@ export default function MyComponent(props) {
             }}
           />
         </Show>
-        <source srcset={props.srcset} css={{}} />
+        <source srcset={props.srcset} />
       </picture>
       <div>
         <div></div>
@@ -1160,12 +1152,12 @@ export default function MyComponent(props) {
   });
 
   return (
-    <div css={{}}>
-      <button onClick={(event) => (state.showReviewPrompt = true)} css={{}}>
+    <div>
+      <button onClick={(event) => (state.showReviewPrompt = true)}>
         <div>Write a review</div>
       </button>
       <Show when={state.showReviewPrompt}>
-        <input placeholder=\\"Email\\" css={{}} />
+        <input placeholder=\\"Email\\" />
         <input
           placeholder=\\"Title\\"
           css={{
@@ -1207,13 +1199,13 @@ export default function MyComponent(props) {
                 marginRight: \\"10px\\",
               }}
             />
-            <div css={{}}>
-              <div css={{}}>
+            <div>
+              <div>
                 <div>
                   <div></div>
                 </div>
               </div>
-              <div css={{}}>
+              <div>
                 <div>
                   <div></div>
                 </div>
