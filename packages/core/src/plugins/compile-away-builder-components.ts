@@ -70,6 +70,18 @@ const components: {
       `),
     );
   },
+  CustomCode(node: JSXLiteNode) {
+    const options = getRenderOptions(node);
+    return wrapOutput(
+      node,
+      createJSXLiteNode({
+        name: (node.properties.builderTag as string) || 'div',
+        properties: {
+          innerHTML: node.properties.code,
+        },
+      }),
+    );
+  },
   CoreSection(node: JSXLiteNode) {
     return wrapOutput(
       node,

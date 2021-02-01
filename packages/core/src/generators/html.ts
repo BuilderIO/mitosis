@@ -304,7 +304,7 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
     }
     if (json.properties.innerHTML) {
       // Maybe put some kind of safety here for broken HTML such as no close tag
-      str += json.properties.innerHTML;
+      str += htmlDecode(json.properties.innerHTML);
     }
 
     str += `</${json.name}>`;
@@ -360,6 +360,8 @@ function addUpdateAfterSetInCode(
   });
 }
 
+const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
+
 // TODO: props support via custom elements
 export const componentToHtml = (
   componentJson: JSXLiteComponent,
@@ -403,7 +405,7 @@ export const componentToHtml = (
     str += `
       <script>
       (() => {
-        let state = ${getStateObjectString(json, {
+        const state = ${getStateObjectString(json, {
           valueMapper: (value) =>
             addUpdateAfterSetInCode(
               updateReferencesInCode(value, useOptions),
@@ -445,9 +447,7 @@ export const componentToHtml = (
               ${updateReferencesInCode(
                 addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
                 useOptions,
-              )
-                // TODO: where is this coming from? remove it earlier in the pipeline when added erroroneously
-                .replace(/&quot;/gi, '"')}}
+              )} 
               `
         }
 
@@ -643,9 +643,7 @@ export const componentToCustomElement = (
                 ${updateReferencesInCode(
                   addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
                   useOptions,
-                )
-                  // TODO: where is this coming from? remove it earlier in the pipeline when added erroroneously
-                  .replace(/&quot;/gi, '"')}
+                )}
                 `
           }
         }
