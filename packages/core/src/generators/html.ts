@@ -44,7 +44,7 @@ const addUpdateAfterSet = (
   json: JSXLiteComponent,
   options: InternalToHtmlOptions,
 ) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -60,7 +60,7 @@ const addUpdateAfterSet = (
 
 const getForNames = (json: JSXLiteComponent) => {
   const names: string[] = [];
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (item.name === 'For') {
         names.push(item.bindings._forName as string);
@@ -445,7 +445,9 @@ export const componentToHtml = (
               ${updateReferencesInCode(
                 addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
                 useOptions,
-              )}
+              )
+                // TODO: where is this coming from? remove it earlier in the pipeline when added erroroneously
+                .replace(/&quot;/gi, '"')}}
               `
         }
 
@@ -641,7 +643,9 @@ export const componentToCustomElement = (
                 ${updateReferencesInCode(
                   addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
                   useOptions,
-                )}
+                )
+                  // TODO: where is this coming from? remove it earlier in the pipeline when added erroroneously
+                  .replace(/&quot;/gi, '"')}
                 `
           }
         }
