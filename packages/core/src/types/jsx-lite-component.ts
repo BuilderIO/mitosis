@@ -1,4 +1,4 @@
-import { JSON } from './json';
+import { JSON, JSONObject } from './json';
 import { JSXLiteNode } from './jsx-lite-node';
 
 /**
@@ -33,7 +33,10 @@ export type JSXLiteComponent = {
   '@type': '@jsx-lite/component';
   name: string;
   imports: JSXLiteImport[];
-  meta: { [key: string]: JSON | undefined };
+  meta: {
+    metadataHook?: JSONObject;
+    [key: string]: JSON | undefined;
+  };
   state: { [key: string]: JSON | undefined };
   hooks: {
     init?: string;

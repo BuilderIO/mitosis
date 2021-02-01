@@ -336,6 +336,54 @@ const jsxElementToJson = (
   });
 };
 
+const getHook = (node: babel.Node) => {
+  const item = node;
+  if (types.isExpressionStatement(item)) {
+    const expression = item.expression;
+    if (types.isCallExpression(expression)) {
+      if (types.isIdentifier(expression.callee)) {
+        if (expression.callee.name.match(/^use[A-Z0-9]/)) {
+          return expression;
+        }
+      }
+    }
+  }
+  return null;
+};
+
+const isHook = (node: babel.Node) => Boolean(getHook(node));
+
+const METADATA_HOOK_NAME = 'useMetadata';
+
+/**
+ * Transform useMetadata({...}) onto the component JSON as
+ * meta: { metadataHook: { ... }}
+ *
+ * This function collects metadata and removes the statement from
+ * the returned nodes array
+ */
+const collectMetadata = (
+  nodes: babel.types.Statement[],
+  component: JSXLiteComponent,
+) => {
+  return nodes.filter((node) => {
+    const hook = getHook(node);
+    if (!hook) {
+      return true;
+    }
+    if (
+      types.isIdentifier(hook.callee) &&
+      hook.callee.name === METADATA_HOOK_NAME
+    ) {
+      component.meta.metadataHook = JSON5.parse(
+        generate(hook.arguments[0]).code,
+      );
+      return false;
+    }
+    return true;
+  });
+};
+
 export function parseJsx(jsx: string): JSXLiteComponent {
   const output = babel.transform(jsx, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
@@ -358,8 +406,13 @@ export function parseJsx(jsx: string): JSXLiteComponent {
             const keepStatements = path.node.body.filter((statement) =>
               isImportOrDefaultExport(statement),
             );
-            const cutStatements = path.node.body.filter(
+            let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
+            );
+
+            cutStatements = collectMetadata(
+              cutStatements,
+              context.builder.component,
             );
 
             // TODO: support multiple? e.g. for others to add imports?

@@ -12,6 +12,7 @@ export const onUnMount = (fn: () => any) => null as any;
 export const afterUnmount = (fn: () => any) => null as any;
 export const useDynamicTag = (fn: () => any) => null as any;
 export const onError = (fn: () => any) => null as any;
+export const useMetadata = (obj: object) => null;
 
 export * from './parsers/jsx';
 export * from './parsers/builder';
