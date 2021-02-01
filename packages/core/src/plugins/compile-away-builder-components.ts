@@ -62,7 +62,7 @@ const components: {
       node,
       parseNode(`
         <a
-          href=${options.link}
+          href=${options.link || '""'}
           target="${options.openLinkInNewTab ? '_blank' : '_self'}"
           >
           ${options.text.replace(/"/g, '')}
