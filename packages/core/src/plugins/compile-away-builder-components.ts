@@ -71,7 +71,6 @@ const components: {
     );
   },
   CoreSection(node: JSXLiteNode) {
-    const options = getRenderOptions(node);
     return wrapOutput(
       node,
       parseNode(`<div

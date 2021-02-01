@@ -39,6 +39,16 @@ export const babelTransformExpression = <VisitorContextType = any>(
   if (type === 'unknown' && code.trim().startsWith('{')) {
     type = 'expression';
   }
+
+  // For Builder content
+  if (
+    type === 'unknown' &&
+    code.includes('return _virtual_index') &&
+    !code.trim().startsWith('function')
+  ) {
+    type = 'functionBody';
+  }
+
   let useCode = code;
 
   if (type === 'functionBody') {
@@ -88,7 +98,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
     }
   }
   if (type === 'functionBody') {
-    return result!.replace(/^function\(\)\{/, '').replace(/\};?$/, '');
+    return result!.replace(/^function\s*\(\)\s*\{/, '').replace(/\};?$/, '');
   } else {
     // Babel addes trailing semicolons, but for expressions we need those gone
     // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
