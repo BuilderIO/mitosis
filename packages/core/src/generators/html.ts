@@ -384,8 +384,6 @@ export const componentToHtml = (
 
   const hasLoop = hasComponent('For', json);
 
-  const hasState = Boolean(Object.keys(json.state).length);
-
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
@@ -400,7 +398,12 @@ export const componentToHtml = (
     str += `<style>${css}</style>`;
   }
 
-  if (hasState) {
+  const hasChangeListeners = Boolean(
+    Object.keys(useOptions.onChangeJsById).length,
+  );
+  const hasGeneratedJs = Boolean(useOptions.js.trim().length);
+
+  if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount || hasLoop) {
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
@@ -414,6 +417,11 @@ export const componentToHtml = (
         })};
         ${componentHasProps ? `let props = {};` : ''}
 
+        ${
+          !hasChangeListeners
+            ? ''
+            : `
+        
         // Function to update data bindings and loops
         // call update() when you mutate state and need the updates to reflect
         // in the dom
@@ -437,6 +445,8 @@ export const componentToHtml = (
 
         // Update with initial state on first load
         update();
+        `
+        }
 
         ${
           !json.hooks.onMount
