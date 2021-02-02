@@ -540,7 +540,12 @@ const getHooks = (content: BuilderContent) => {
   try {
     return parseJsx(`
     export default function TemporaryComponent() {
-      ${code}
+      ${
+        // JSX Lite parser looks for useState to be a variable assignment,
+        // but in Builder that's not how it works. For now do a replace to
+        // easily resuse the same parsing code as this is the only difference
+        code.replace(`useState(`, `var state = useState(`)
+      }
     }`);
   } catch (err) {
     console.warn(
@@ -585,6 +590,8 @@ export const builderContentToJsxLiteComponent = (
     .trim();
 
   const parsed = getHooks(builderContent);
+
+  console.log({ parsed });
 
   return createJSXLiteComponent({
     state: parsed?.state || {

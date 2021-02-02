@@ -120,9 +120,31 @@ useState({
 `;
 
 exports[`Builder Columns 2`] = `
-"import { For } from \\"@jsx-lite/core\\";
+"import { useState, For } from \\"@jsx-lite/core\\";
 
 export default function MyComponent(props) {
+  const state = useState({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  });
+
   onMount(() => {
     useState({
       // TODO: These methods are not used right now, but they will be when
@@ -307,61 +329,59 @@ onMount(() => {
 `;
 
 exports[`Builder CustomCode 2`] = `
-"import { useRef } from \\"@jsx-lite/core\\";
+"import { useState, useRef } from \\"@jsx-lite/core\\";
 
 export default function MyComponent(props) {
-  const elem = useRef();
+  const state = useState({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-  onMount(() => {
-    useState({
-      scriptsInserted: [],
-      scriptsRun: [],
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
 
-      findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
-        if (elem.current && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
-          const scripts = elem.current.getElementsByTagName(\\"script\\");
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
 
-          for (let i = 0; i < scripts.length; i++) {
-            const script = scripts[i];
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
 
-            if (script.src) {
-              if (state.scriptsInserted.includes(script.src)) {
-                continue;
-              }
-
-              state.scriptsInserted.push(script.src);
-              const newScript = document.createElement(\\"script\\");
-              newScript.async = true;
-              newScript.src = script.src;
-              document.head.appendChild(newScript);
-            } else if (
-              !script.type ||
-              [
-                \\"text/javascript\\",
-                \\"application/javascript\\",
-                \\"application/ecmascript\\",
-              ].includes(script.type)
-            ) {
-              if (state.scriptsRun.includes(script.innerText)) {
-                continue;
-              }
-
-              try {
-                state.scriptsRun.push(script.innerText);
-                new Function(script.innerText)();
-              } catch (error) {
-                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-              }
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
             }
           }
         }
-      },
-    });
-    onMount(() => {
-      state.findAndRunScripts();
-    });
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  onMount(() => {
+    state.findAndRunScripts();
   });
 
   return (
@@ -505,61 +525,59 @@ onMount(() => {
 `;
 
 exports[`Builder Embed 2`] = `
-"import { useRef } from \\"@jsx-lite/core\\";
+"import { useState, useRef } from \\"@jsx-lite/core\\";
 
 export default function MyComponent(props) {
-  const elem = useRef();
+  const state = useState({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-  onMount(() => {
-    useState({
-      scriptsInserted: [],
-      scriptsRun: [],
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
 
-      findAndRunScripts() {
-        // TODO: Move this function to standalone one in '@builder.io/utils'
-        if (elem.current && typeof window !== \\"undefined\\") {
-          /** @type {HTMLScriptElement[]} */
-          const scripts = elem.current.getElementsByTagName(\\"script\\");
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
 
-          for (let i = 0; i < scripts.length; i++) {
-            const script = scripts[i];
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
 
-            if (script.src) {
-              if (state.scriptsInserted.includes(script.src)) {
-                continue;
-              }
-
-              state.scriptsInserted.push(script.src);
-              const newScript = document.createElement(\\"script\\");
-              newScript.async = true;
-              newScript.src = script.src;
-              document.head.appendChild(newScript);
-            } else if (
-              !script.type ||
-              [
-                \\"text/javascript\\",
-                \\"application/javascript\\",
-                \\"application/ecmascript\\",
-              ].includes(script.type)
-            ) {
-              if (state.scriptsRun.includes(script.innerText)) {
-                continue;
-              }
-
-              try {
-                state.scriptsRun.push(script.innerText);
-                new Function(script.innerText)();
-              } catch (error) {
-                console.warn(\\"\`Embed\`: Error running script:\\", error);
-              }
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`Embed\`: Error running script:\\", error);
             }
           }
         }
-      },
-    });
-    onMount(() => {
-      state.findAndRunScripts();
-    });
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  onMount(() => {
+    state.findAndRunScripts();
   });
 
   return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>;
@@ -757,58 +775,54 @@ onMount(() => {
 `;
 
 exports[`Builder Image 2`] = `
-"import { useRef, Show } from \\"@jsx-lite/core\\";
+"import { useState, useRef, Show } from \\"@jsx-lite/core\\";
 import { Fragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
+  const state = useState({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  });
+
   const pictureRef = useRef();
 
   onMount(() => {
-    useState({
-      scrollListener: null,
-      imageLoaded: false,
-      load: false,
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
 
-      setLoaded() {
-        state.imageLoaded = true;
-      },
-
-      isBrowser() {
-        return (
-          typeof window !== \\"undefined\\" &&
-          window.navigator.product != \\"ReactNative\\"
-        );
-      },
-
-      useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && state.isBrowser();
-      },
-    });
-    onMount(() => {
-      if (state.useLazyLoading()) {
-        // throttled scroll capture listener
-        const listener = () => {
-          if (pictureRef.current) {
-            const rect = pictureRef.current.getBoundingClientRect();
-            const buffer = window.innerHeight / 2;
-
-            if (rect.top < window.innerHeight + buffer) {
-              state.load = true;
-              state.scrollListener = null;
-              window.removeEventListener(\\"scroll\\", listener);
-            }
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
           }
-        };
+        }
+      };
 
-        state.scrollListener = listener;
-        window.addEventListener(\\"scroll\\", listener, {
-          capture: true,
-          passive: true,
-        });
-        listener();
-      }
-    });
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
   });
 
   return (
@@ -1129,25 +1143,21 @@ onMount(() => {
 `;
 
 exports[`Builder Stamped 2`] = `
-"import { Show, For } from \\"@jsx-lite/core\\";
+"import { useState, Show, For } from \\"@jsx-lite/core\\";
 
 export default function MyComponent(props) {
+  const state = useState({ reviews: [], showReviewPrompt: false });
+
   onMount(() => {
-    useState({
-      reviews: [],
-      showReviewPrompt: false,
-    });
-    onMount(() => {
-      fetch(
-        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-          props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-        }&productId=\${props.productId || \\"2410511106127\\"}\`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          state.reviews = data.data;
-        });
-    });
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
   });
 
   return (
