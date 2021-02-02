@@ -114,6 +114,12 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 <img src="https://i.imgur.com/vsAKt7f.gif" >
 
+## Formatting options
+
+JSX Lite supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon too
+
+<img src="https://imgur.com/hWXfNF3.gif "/>
+
 ## Who uses it
 
 - [Builder.io](https://github.com/builderio/builder)
