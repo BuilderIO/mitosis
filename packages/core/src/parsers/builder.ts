@@ -6,6 +6,7 @@ import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { sizes, Size, sizeNames } from '../constants/media-sizes';
 import { capitalize } from '../helpers/capitalize';
+import { parseJsx } from './jsx';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -534,6 +535,23 @@ export const builderElementToJsxLiteNode = (
   });
 };
 
+const getHooks = (content: BuilderContent) => {
+  const code = content.data?.tsCode || content.data?.jsCode || '';
+  try {
+    return parseJsx(`
+    export default function TemporaryComponent() {
+      ${code}
+    }`);
+  } catch (err) {
+    console.warn(
+      'Could not parse js code as a JSX Lite component body',
+      err,
+      code,
+    );
+    return null;
+  }
+};
+
 export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilderToJSXLiteOptions = {},
@@ -566,14 +584,16 @@ export const builderContentToJsxLiteComponent = (
     .replace(/(let|const|var)\s+props\s*=\s*state;?/, '')
     .trim();
 
+  const parsed = getHooks(builderContent);
+
   return createJSXLiteComponent({
-    state: {
+    state: parsed?.state || {
       ...state,
       ...builderContent.data?.state,
     },
     hooks: {
-      ...(customCode && {
-        onMount: customCode,
+      ...((parsed?.hooks.onMount || customCode) && {
+        onMount: parsed?.hooks.onMount || customCode,
       }),
     },
     children: (builderContent.data?.blocks || [])
