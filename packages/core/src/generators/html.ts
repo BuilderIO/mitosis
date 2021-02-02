@@ -173,7 +173,11 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   if (json.bindings._text) {
     addOnChangeJs(elId, options, `el.innerText = ${json.bindings._text};`);
 
-    return `<span data-name="${elId}"></span>`;
+    return `<span data-name="${elId}"><!-- ${(json.bindings
+      ._text as string).replace(
+      /getContext\(el, "([^"]+)"\)/g,
+      '$1',
+    )} --></span>`;
   }
 
   let str = '';
@@ -580,7 +584,17 @@ export const componentToCustomElement = (
     }
   }
 
+  const kebabName = componentJson.name
+        .replace(/([a-z])([A-Z])/g, '$1-$2')
+        .toLowerCase()
+
   let str = `
+      /**
+       * Usage:
+       * 
+       *  <${kebabName}></${kebabName}>
+       * 
+       */
       class ${componentJson.name} extends HTMLElement {
         constructor() {
           super();
@@ -708,9 +722,7 @@ export const componentToCustomElement = (
         }
       }
 
-      customElements.define('${componentJson.name
-        .replace(/([a-z])([A-Z])/g, '$1-$2')
-        .toLowerCase()}', ${componentJson.name});
+      customElements.define('${kebabName}', ${componentJson.name});
     `;
 
   if (options.plugins) {
