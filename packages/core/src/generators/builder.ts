@@ -86,7 +86,7 @@ const componentMappers: {
     return el(
       {
         component: {
-          name: 'Fragment',
+          name: 'Core:Fragment',
         },
         repeat: {
           collection: node.bindings.each as string,
@@ -104,7 +104,7 @@ const componentMappers: {
       {
         // TODO: the reverse mapping for this
         component: {
-          name: 'Fragment',
+          name: 'Core:Fragment',
         },
         bindings: {
           show: node.bindings.when as string,

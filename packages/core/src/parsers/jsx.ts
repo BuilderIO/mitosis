@@ -241,7 +241,7 @@ const jsxElementToJson = (
 
   if (types.isJSXFragment(node)) {
     return createJSXLiteNode({
-      name: 'Fragment',
+      name: 'Core:Fragment',
       children: node.children.map((item) =>
         jsxElementToJson(item as any),
       ) as any,
