@@ -70,6 +70,17 @@ const components: {
       `),
     );
   },
+  Embed(node: JSXLiteNode) {
+    return wrapOutput(
+      node,
+      createJSXLiteNode({
+        name: (node.properties.builderTag as string) || 'div',
+        properties: {
+          innerHTML: node.properties.content,
+        },
+      }),
+    );
+  },
   CustomCode(node: JSXLiteNode) {
     const options = getRenderOptions(node);
     return wrapOutput(
