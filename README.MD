@@ -39,7 +39,7 @@ JSX lite allows you to incrementally adopt modern and familiar workflows for man
 If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
 
 <p align="center">
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F3c0dc574aa8c4b06adff6f91e01cda3d" />
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
 </p>
 
 ## How does it work
