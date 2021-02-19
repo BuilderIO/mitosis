@@ -26,10 +26,6 @@ Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please 
 
 Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere with full compatibilty
 
-### No-code tools
-
-With JSX lite, you can import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
-
 ### Modern workflows for all platforms
 
 JSX lite allows you to incrementally adopt modern and familiar workflows for many different platforms, for for Shopify instance you can server side render to liquid and hydrate with React
@@ -37,6 +33,10 @@ JSX lite allows you to incrementally adopt modern and familiar workflows for man
 ### JS framework fatigue
 
 If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
+
+### No-code tools
+
+With JSX lite, you can import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
 
 <p align="center">
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
