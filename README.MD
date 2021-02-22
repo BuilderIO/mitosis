@@ -1,7 +1,9 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F873aa9bf5d8d4960abbee6d913862e1c"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. Import code from Figma and Builder.io
+  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. 
+  
+  Convert Figma and Builder.io designs to code.
 </p>
 
 <p align="center">
@@ -34,9 +36,9 @@ JSX lite allows you to incrementally adopt modern and familiar workflows for man
 
 If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
 
-### No-code tools
+### Design to code
 
-With JSX lite, you can import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
+With JSX lite, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
 
 <p align="center">
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
