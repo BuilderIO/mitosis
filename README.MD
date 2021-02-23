@@ -33,7 +33,7 @@
       </td>
       <td>
         <p>
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbb9c1438dfac476884962c18ae8c0d0e" />
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F467c9b604d4e486abfc39d27a2fddc12" />
         </p>
         Try our  <a href="https://jsx-lite.builder.io/"><b>interactive fiddle</b></a>
       </td>
