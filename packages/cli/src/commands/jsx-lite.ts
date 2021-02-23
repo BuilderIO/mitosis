@@ -5,24 +5,34 @@ import * as core from '@jsx-lite/core'
 const command: GluegunCommand = {
   name: 'jsx-lite',
   run: async toolbox => {
-    const { parameters, strings } = toolbox
+    const { parameters, strings, filesystem, print } = toolbox
 
-    const chunks = []
+    let buffer: string
 
-    await new Promise(res =>
-      process.stdin
-        .on('data', data => {
-          return chunks.push(data)
-        })
-        .on('end', () => {
-          return res(true)
-        })
-    )
+    const path = parameters.first
 
-    const buffer = Buffer.concat(chunks).toString('utf-8')
+    if (path === '-' || !path) {
+      const chunks = []
 
-    if (typeof buffer !== 'string') {
-      console.log('error: expected string')
+      await new Promise(res =>
+        process.stdin
+          .on('data', data => {
+            return chunks.push(data)
+          })
+          .on('end', () => {
+            return res(true)
+          })
+      )
+
+      buffer = Buffer.concat(chunks).toString('utf-8')
+    } else if (path) {
+      if (filesystem.exists(path) !== 'file') {
+        print.error(`"${path}" is not a file`)
+        process.exit(1)
+      }
+      buffer = filesystem.read(path)
+    } else {
+      print.printHelp(toolbox)
       process.exit(1)
     }
 

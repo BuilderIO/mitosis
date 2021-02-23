@@ -1,21 +1,22 @@
 import { build } from 'gluegun'
 import { Toolbox } from 'gluegun/build/types/domain/toolbox'
 
-
 const help = (toolbox: Toolbox) =>
   toolbox.print.info(
     `
 jsx-lite command line component processor [version ${toolbox.meta.version()}]
 
 USAGE
-	jsx-lite --to=<format>
-	jsx-lite -t=<format>
+	jsx-lite --to=<format> [input-file]
+	jsx-lite -t=<format> [input-file]
 
-	Input is read from standard in.
+	If no [input-file] is is specified or when [input-file] is "-", input
+	is read from standard input.
 
 EXAMPLES
+	jsx-lite -t react component.tsx
 	jsx-lite -t react < component.tsx
-	cat component.tsx | jsx-lite -t html
+	cat component.tsx | jsx-lite -t html -
 
 OPTIONS
 	--to=<format>,	-t=<format>

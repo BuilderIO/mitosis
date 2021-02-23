@@ -16,11 +16,30 @@ npm link
 ## Usage
 
 ```bash
-jsx-lite --to=<format> < my-file.tsx
-cat my-file.tsx | jsx-lite
+jsx-lite --to=<format> < <input-file>
+cat my-file.tsx | jsx-lite -t=<format>
+jsx-lite -t=<format> <input-file>
 ```
 
 Check the output from `jsx-lite --help`.
+
+## Options
+
+Supported formats for `--to` are:
+
+- `reactNative`
+- `solid`
+- `vue`
+- `react`
+- `template`
+- `html`
+- `customElement`
+- `jsxLite`
+- `builder`
+- `swift`
+- `svelte`
+- `liquid`
+- `angular`
 
 ## Customizing your CLI
 
