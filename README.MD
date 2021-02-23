@@ -14,10 +14,11 @@
 
 ## Try it out
 
-| Fiddle                                                                | VS Code                                                                                                                                             | Figma                                                                                       |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Try our early our [fiddle](https://jsx-lite.builder.io/)              | Try our [VS Code extension](https://github.com/BuilderIO/vscode) for in-IDE visual coding                                                           | Use our [Figma plugin](https://github.com/builderio/figma-html) to turn desigtns into code! |
-| <img height="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /> | <img height="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1d59909e2a214c79ad2b1e8ad3fb8245" /> | <img height="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" />               |
+|                                                                                                                                                     |                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| <img height="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" />                                                                       | Use our [Figma plugin](https://github.com/builderio/figma-html) to turn designs into code! |
+| <img height="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />                                                                               | Try our our [fiddle](https://jsx-lite.builder.io/)                                         |
+| <img height="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1d59909e2a214c79ad2b1e8ad3fb8245" /> | Try our [VS Code extension](https://github.com/BuilderIO/vscode) for in-IDE visual coding  |
 
 ## Why
 
