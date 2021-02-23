@@ -2,44 +2,21 @@ import { GluegunCommand } from 'gluegun'
 
 import * as core from '@jsx-lite/core'
 
-import {
-  parseJsx
-  // componentToVue,
-  // componentToReact,
-  // componentToSwift,
-  // componentToLiquid,
-  // componentToHtml,
-  // componentToBuilder,
-  // componentToSvelte,
-  // componentToAngular,
-  // componentToSolid,
-  // componentToReactNative,
-  // componentToJsxLite,
-  // builderContentToJsxLiteComponent,
-  // liquidToBuilder,
-  // reactiveScriptRe,
-  // parseReactiveScript,
-  // componentToCustomElement,
-  // compileAwayBuilderComponents,
-  // mapStyles,
-  // componentToTemplate,
-} from '@jsx-lite/core'
-
 const command: GluegunCommand = {
   name: 'jsx-lite',
   run: async toolbox => {
-    const { print, filesystem, parameters, strings } = toolbox
+    const { parameters, strings } = toolbox
 
     const chunks = []
 
     await new Promise(res =>
       process.stdin
-      .on('data', (data) => {
-        return chunks.push(data)
-      })
-      .on('end', () => {
-        return res(true)
-      })
+        .on('data', data => {
+          return chunks.push(data)
+        })
+        .on('end', () => {
+          return res(true)
+        })
     )
 
     const buffer = Buffer.concat(chunks).toString('utf-8')
@@ -63,11 +40,11 @@ const command: GluegunCommand = {
     }
 
     try {
-    const json = parseJsx(buffer)
+      const json = core.parseJsx(buffer)
 
-    const output = fn(json)
-    console.log(output)
-    } catch(e) {
+      const output = fn(json)
+      console.log(output)
+    } catch (e) {
       console.log(e)
     }
   }
