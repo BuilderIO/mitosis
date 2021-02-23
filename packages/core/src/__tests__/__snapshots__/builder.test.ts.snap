@@ -44,7 +44,7 @@ Object {
               },
             ],
             "component": Object {
-              "name": "Fragment",
+              "name": "Core:Fragment",
             },
             "repeat": Object {
               "collection": "props.columns",
@@ -121,6 +121,7 @@ useState({
 
 exports[`Builder Columns 2`] = `
 "import { useState, For } from \\"@jsx-lite/core\\";
+import { CoreFragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
   const state = useState({
@@ -184,16 +185,18 @@ export default function MyComponent(props) {
     >
       <For each={props.columns}>
         {(column, index) => (
-          <div
-            class=\\"builder-column\\"
-            css={{
-              flexGrow: 1,
-            }}
-          >
-            <div>
-              <div></div>
+          <CoreFragment>
+            <div
+              class=\\"builder-column\\"
+              css={{
+                flexGrow: 1,
+              }}
+            >
+              <div>
+                <div></div>
+              </div>
             </div>
-          </div>
+          </CoreFragment>
         )}
       </For>
     </div>
@@ -638,7 +641,7 @@ Object {
                   },
                 ],
                 "component": Object {
-                  "name": "Fragment",
+                  "name": "Core:Fragment",
                 },
               },
               Object {
@@ -776,7 +779,7 @@ onMount(() => {
 
 exports[`Builder Image 2`] = `
 "import { useState, useRef, Show } from \\"@jsx-lite/core\\";
-import { Fragment } from \\"@builder.io/components\\";
+import { Fragment, CoreFragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
   const state = useState({
@@ -829,21 +832,23 @@ export default function MyComponent(props) {
     <Fragment>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
-          <img
-            alt={props.altText}
-            aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
-            src={props.image}
-            srcset={props.srcset}
-            sizes={props.sizes}
-            onLoad={(event) => state.setLoaded()}
-            css={{
-              opacity: 1,
-              transition: \\"opacity 0.2s ease-in-out\\",
-              objectFit: \\"cover\\",
-              objectPosition: \\"center\\",
-            }}
-          />
+          <CoreFragment>
+            <img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+              src={props.image}
+              srcset={props.srcset}
+              sizes={props.sizes}
+              onLoad={(event) => state.setLoaded()}
+              css={{
+                opacity: 1,
+                transition: \\"opacity 0.2s ease-in-out\\",
+                objectFit: \\"cover\\",
+                objectPosition: \\"center\\",
+              }}
+            />
+          </CoreFragment>
         </Show>
         <source srcset={props.srcset} />
       </picture>
@@ -985,7 +990,7 @@ Object {
               },
             ],
             "component": Object {
-              "name": "Fragment",
+              "name": "Core:Fragment",
             },
           },
           Object {
@@ -1093,7 +1098,7 @@ Object {
               },
             ],
             "component": Object {
-              "name": "Fragment",
+              "name": "Core:Fragment",
             },
             "repeat": Object {
               "collection": "state.reviews",
@@ -1144,6 +1149,7 @@ onMount(() => {
 
 exports[`Builder Stamped 2`] = `
 "import { useState, Show, For } from \\"@jsx-lite/core\\";
+import { CoreFragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
   const state = useState({ reviews: [], showReviewPrompt: false });
@@ -1166,61 +1172,65 @@ export default function MyComponent(props) {
         <div>Write a review</div>
       </button>
       <Show when={state.showReviewPrompt}>
-        <input placeholder=\\"Email\\" />
-        <input
-          placeholder=\\"Title\\"
-          css={{
-            display: \\"block\\",
-          }}
-        />
-        <textarea
-          placeholder=\\"How was your experience?\\"
-          css={{
-            display: \\"block\\",
-          }}
-        ></textarea>
-        <button
-          onClick={(event) => (state.showReviewPrompt = false)}
-          css={{
-            display: \\"block\\",
-          }}
-        >
-          <div>Submit</div>
-        </button>
+        <CoreFragment>
+          <input placeholder=\\"Email\\" />
+          <input
+            placeholder=\\"Title\\"
+            css={{
+              display: \\"block\\",
+            }}
+          />
+          <textarea
+            placeholder=\\"How was your experience?\\"
+            css={{
+              display: \\"block\\",
+            }}
+          ></textarea>
+          <button
+            onClick={(event) => (state.showReviewPrompt = false)}
+            css={{
+              display: \\"block\\",
+            }}
+          >
+            <div>Submit</div>
+          </button>
+        </CoreFragment>
       </Show>
       <For each={state.reviews}>
         {(review, index) => (
-          <div
-            css={{
-              margin: \\"10px\\",
-              padding: \\"10px\\",
-              background: \\"white\\",
-              display: \\"flex\\",
-              borderRadius: \\"5px\\",
-              boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
-            }}
-          >
-            <img
-              src={review.avatar}
+          <CoreFragment>
+            <div
               css={{
-                height: \\"30px\\",
-                width: \\"30px\\",
-                marginRight: \\"10px\\",
+                margin: \\"10px\\",
+                padding: \\"10px\\",
+                background: \\"white\\",
+                display: \\"flex\\",
+                borderRadius: \\"5px\\",
+                boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
               }}
-            />
-            <div>
+            >
+              <img
+                src={review.avatar}
+                css={{
+                  height: \\"30px\\",
+                  width: \\"30px\\",
+                  marginRight: \\"10px\\",
+                }}
+              />
               <div>
                 <div>
-                  <div></div>
+                  <div>
+                    <div></div>
+                  </div>
                 </div>
-              </div>
-              <div>
                 <div>
-                  <div></div>
+                  <div>
+                    <div></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </CoreFragment>
         )}
       </For>
     </div>
