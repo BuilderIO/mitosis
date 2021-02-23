@@ -379,8 +379,9 @@ export default function Fiddle() {
     const outputMonacoEditorSize = device.small
       ? `calc(${state.outputsTabHeight}vh - 50px)`
       : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -453,7 +454,9 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/figma-html"
             >
-              Figma plugin
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
+                Figma plugin
+              </span>
               <img
                 width={20}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
@@ -471,7 +474,9 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/vscode"
             >
-              VS Code plugin
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
+                VS Code plugin
+              </span>
               <img
                 width={30}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
@@ -489,7 +494,9 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/jsx-lite"
             >
-              Source
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
+                Source
+              </span>
               <img
                 width={30}
                 src={githubLogo}
