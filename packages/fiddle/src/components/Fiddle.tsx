@@ -455,7 +455,7 @@ export default function Fiddle() {
               href="https://github.com/builderio/figma-html"
             >
               <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                Figma plugin
+                Figma
               </span>
               <img
                 width={20}
@@ -475,7 +475,7 @@ export default function Fiddle() {
               href="https://github.com/builderio/vscode"
             >
               <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                VS Code plugin
+                VS Code
               </span>
               <img
                 width={30}
