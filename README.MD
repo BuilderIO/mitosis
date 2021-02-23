@@ -14,11 +14,10 @@
 
 ## Try it out
 
-Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please [report bugs and share feedback](https://github.com/BuilderIO/jsx-lite/issues)!
-
-<a href="https://jsx-lite.builder.io" target="_blank" rel="noopenner">
-<img src="https://imgur.com/H1WTtGe.gif" />
-</a>
+| Fiddle                                                                | VS Code                                                                                                                                             | Figma                                                                                       |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Try our early our [fiddle](https://jsx-lite.builder.io/)              | Try our [VS Code extension](https://github.com/BuilderIO/vscode) for in-IDE visual coding                                                           | Use our [Figma plugin](https://github.com/builderio/figma-html) to turn desigtns into code! |
+| <img height="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /> | <img height="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1d59909e2a214c79ad2b1e8ad3fb8245" /> | <img height="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" />               |
 
 ## Why
 
