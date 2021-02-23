@@ -1,7 +1,7 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F873aa9bf5d8d4960abbee6d913862e1c"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. Import code from Figma and Builder.io
+  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. 
 </p>
 
 <p align="center">
@@ -14,21 +14,71 @@
 
 ## Try it out
 
-Try our early our [alpha preview here](https://jsx-lite.builder.io/) and please [report bugs and share feedback](https://github.com/BuilderIO/jsx-lite/issues)!
-
-<a href="https://jsx-lite.builder.io" target="_blank" rel="noopenner">
-<img src="https://imgur.com/H1WTtGe.gif" />
-</a>
+<table>
+  <tbody>
+    <tr>
+      <td>
+        <a href="https://github.com/builderio/figma-html"><img width="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" /></a>
+      </td>
+      <td>
+        <p>
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf" />
+        </p>
+        Use our <a href="https://github.com/builderio/figma-html"><b>Figma plugin</b></a> to turn designs into code!
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://github.com/builderio/figma-html"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
+      </td>
+      <td>
+        <p>
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbb9c1438dfac476884962c18ae8c0d0e" />
+        </p>
+        Try our  <a href="https://github.com/builderio/figma-html"><b>interactive fiddle</b></a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://github.com/BuilderIO/vscode"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1d59909e2a214c79ad2b1e8ad3fb8245" /></a>
+      </td>
+      <td>
+        <p>
+        <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3" />
+        </p>
+        Try our <a href="https://github.com/BuilderIO/vscode"><b>VS Code extension</b></a> for in-IDE visual coding
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://apps.shopify.com/builder-2"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F97c87a29d88e463b9c1ad22b0329b2f7" /></a>
+      </td>
+      <td>
+        <p>
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0f577e84eb4e4aa4a69d602dd376aa11" />
+        </p>
+        Try our <a href="https://apps.shopify.com/builder-2"><b>Shopify app</b></a> for visual Shopify store building
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <a href="https://github.com/builderio/builder"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2F444142b2cae54a19aeb8b5ba245feffe%2F8c2699f47fea48b296b43dbb422336e8" /></a>
+      </td>
+      <td>
+      <p>
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F084b1ebc3de4422185f9d36a409f3a24" />
+        </p>
+        Try our <a href="https://github.com/builderio/builder"><b>headless CMS</b></a> for no-code APIs for all sites and apps
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
 ## Why
 
 ### Component libraries
 
 Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere with full compatibilty
-
-### No-code tools
-
-With JSX lite, you can import designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
 
 ### Modern workflows for all platforms
 
@@ -38,8 +88,12 @@ JSX lite allows you to incrementally adopt modern and familiar workflows for man
 
 If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
 
+### Design to code
+
+With JSX lite, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
+
 <p align="center">
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F3c0dc574aa8c4b06adff6f91e01cda3d" />
+<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
 </p>
 
 ## How does it work
