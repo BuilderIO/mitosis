@@ -40,7 +40,7 @@ const command: GluegunCommand = {
 
     let to = opts.t ?? opts.to
 
-    to = strings.startCase(to)
+    to = strings.pascalCase(to)
 
     const fn = core[`componentTo${to}`]
 
