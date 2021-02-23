@@ -33,7 +33,7 @@
       </td>
       <td>
         <p>
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F873aa9bf5d8d4960abbee6d913862e1c" />
+          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbb9c1438dfac476884962c18ae8c0d0e" />
         </p>
         Try our  <a href="https://github.com/builderio/figma-html"><b>interactive fiddle</b></a>
       </td>
