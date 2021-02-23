@@ -42,6 +42,11 @@ Supported formats for `--to` are:
 - `liquid`
 - `angular`
 
+## Known issues
+
+- Running `jsx-lite` from the root of this repository breaks due to some
+  dynamic babel configuration look up
+
 ## Customizing your CLI
 
 Check out the documentation at https://github.com/infinitered/gluegun/tree/master/docs.
