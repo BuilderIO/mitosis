@@ -29,13 +29,13 @@
     </tr>
     <tr>
       <td>
-        <a href="https://github.com/builderio/figma-html"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
+        <a href="https://jsx-lite.builder.io/"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
       </td>
       <td>
         <p>
           <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbb9c1438dfac476884962c18ae8c0d0e" />
         </p>
-        Try our  <a href="https://github.com/builderio/figma-html"><b>interactive fiddle</b></a>
+        Try our  <a href="https://jsx-lite.builder.io/"><b>interactive fiddle</b></a>
       </td>
     </tr>
     <tr>
