@@ -4,7 +4,7 @@ import * as core from '@jsx-lite/core'
 
 const command: GluegunCommand = {
   name: 'jsx-lite',
-  run: async toolbox => {
+  run: async (toolbox) => {
     const { parameters, strings, filesystem, print } = toolbox
 
     let buffer: string
@@ -14,9 +14,9 @@ const command: GluegunCommand = {
     if (path === '-' || !path) {
       const chunks = []
 
-      await new Promise(res =>
+      await new Promise((res) =>
         process.stdin
-          .on('data', data => {
+          .on('data', (data) => {
             return chunks.push(data)
           })
           .on('end', () => {
@@ -57,7 +57,7 @@ const command: GluegunCommand = {
     } catch (e) {
       console.log(e)
     }
-  }
+  },
 }
 
 module.exports = command

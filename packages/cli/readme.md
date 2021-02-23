@@ -5,6 +5,7 @@ A CLI for jsx-lite.
 ## Installation
 
 **Manual installation**
+
 ```bash
 git clone git@github.com:BuilderIO/jsx-lite.git
 cd jsx-lite/packages/cli
@@ -61,4 +62,3 @@ $ npm publish
 # License
 
 MIT - see LICENSE
-
