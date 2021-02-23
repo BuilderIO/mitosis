@@ -451,6 +451,42 @@ export default function Fiddle() {
                 display: 'flex',
                 alignItems: 'center',
               }}
+              href="https://github.com/builderio/figma-html"
+            >
+              Figma plugin
+              <img
+                width={20}
+                src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
+                css={{ marginLeft: 10, ...lightColorInvert }}
+                alt="Figma Logo"
+              />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              css={{
+                marginRight: 25,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              href="https://github.com/builderio/vscode"
+            >
+              VS Code plugin
+              <img
+                width={30}
+                src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
+                css={{ marginLeft: 10, ...lightColorInvert }}
+                alt="VS Code Logo"
+              />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              css={{
+                marginRight: 25,
+                display: 'flex',
+                alignItems: 'center',
+              }}
               href="https://github.com/builderio/jsx-lite"
             >
               Source
