@@ -13,7 +13,7 @@
 </p>
 
 <br />
-<h2 align="center">Try it out</h2>
+<h3 align="center">Try it out</h2>
 
 <table>
   <tbody>
