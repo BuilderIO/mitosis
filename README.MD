@@ -2,8 +2,6 @@
 
 <p align="center">
   Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. 
-  
-  Convert Figma and Builder.io designs to code.
 </p>
 
 <p align="center">
