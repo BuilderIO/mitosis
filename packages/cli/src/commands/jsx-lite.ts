@@ -6,25 +6,18 @@ const command: GluegunCommand = {
   name: 'jsx-lite',
   run: async (toolbox) => {
     const { parameters, strings, filesystem, print } = toolbox
+    const opts = parameters.options
+
+    // Flags
+    let to = opts.t ?? opts.to
+
+    // Positional Args
+    const path = parameters.first
 
     let buffer: string
 
-    const path = parameters.first
-
     if (path === '-' || !path) {
-      const chunks = []
-
-      await new Promise((res) =>
-        process.stdin
-          .on('data', (data) => {
-            return chunks.push(data)
-          })
-          .on('end', () => {
-            return res(true)
-          })
-      )
-
-      buffer = Buffer.concat(chunks).toString('utf-8')
+      buffer = await readStdin()
     } else if (path) {
       if (filesystem.exists(path) !== 'file') {
         print.error(`"${path}" is not a file`)
@@ -35,10 +28,6 @@ const command: GluegunCommand = {
       print.printHelp(toolbox)
       process.exit(1)
     }
-
-    const opts = parameters.options
-
-    let to = opts.t ?? opts.to
 
     to = strings.pascalCase(to)
 
@@ -61,3 +50,18 @@ const command: GluegunCommand = {
 }
 
 module.exports = command
+
+async function readStdin() {
+  const chunks = []
+
+  await new Promise((res) => process.stdin
+    .on('data', (data) => {
+      return chunks.push(data)
+    })
+    .on('end', () => {
+      return res(true)
+    })
+  )
+
+  return Buffer.concat(chunks).toString('utf-8')
+}
