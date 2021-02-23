@@ -88,7 +88,7 @@
           <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F2025f53be0ab472ca8fbb87381bfbc00" />
         </p>
         <p align="center">
-          View our upcoming ecommerce integrations
+          View our upcoming ecommerce <a href="https://headlessapp.store">integrations</a>
         </p>
       </td>
     </tr>
