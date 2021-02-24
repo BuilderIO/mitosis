@@ -91,7 +91,7 @@ async function run(argv: any) {
       'http',
       'template',
       'patching',
-      'package-manager',
+      'package-manager'
     ])
     .create()
   // and run it

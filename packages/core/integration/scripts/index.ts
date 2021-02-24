@@ -1,3 +1,1 @@
-export const generateFiles = async () => {
-  
-}
+export const generateFiles = async () => {};
