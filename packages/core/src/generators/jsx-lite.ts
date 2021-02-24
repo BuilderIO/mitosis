@@ -99,7 +99,7 @@ export const componentToJsxLite = (
 
   mapRefs(json, (refName) => `${refName}.current`);
 
-  const addWrapper = json.children.length > 1;
+  const addWrapper = json.children.length !== 1;
 
   const components = Array.from(getComponents(json));
 
@@ -150,9 +150,9 @@ export const componentToJsxLite = (
           : `onUnMount(() => { ${json.hooks.onUnMount} })`
       }
 
-      return (${addWrapper ? '<div>' : ''}
+      return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
-        ${addWrapper ? '</div>' : ''})
+        ${addWrapper ? '</>' : ''})
     }
 
   `;
