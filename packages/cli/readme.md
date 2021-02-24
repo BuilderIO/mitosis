@@ -24,6 +24,16 @@ jsx-lite -t=<format> <input-file>
 
 Check the output from `jsx-lite --help`.
 
+**Examples**
+
+```bash
+jsx-lite -t react component.tsx
+jsx-lite -t react < component.tsx
+cat component.tsx | jsx-lite -t html -
+jsx-lite -t react --out-dir build -- src/**/*.tsx
+```
+
+
 ## Options
 
 Supported formats for `--to` are:
