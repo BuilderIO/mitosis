@@ -27,7 +27,7 @@ export const generateFiles = async () => {
         angularCode,
       );
 
-      // Next
+      // React
       const reactCode = componentToReact(json, {
         stylesType: 'styled-jsx',
         stateType: 'useState',

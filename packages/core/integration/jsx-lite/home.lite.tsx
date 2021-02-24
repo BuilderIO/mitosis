@@ -6,7 +6,7 @@ export default function Home() {
   });
 
   return (
-    <div css={{ textAlign: 'center' }}>
+    <div css={{ textAlign: 'center', color: 'steelblue' }}>
       <h2>Hello, {state.name}!</h2>
       <input
         value={state.name}

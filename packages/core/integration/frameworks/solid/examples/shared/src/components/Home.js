@@ -8,6 +8,7 @@ export default function Home() {
     <div
       class={css({
         textAlign: "center",
+        color: "steelblue",
       })}
     >
       <h2>

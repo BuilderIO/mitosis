@@ -12,5 +12,6 @@ export default {
 <style>
 .div-1 {
   text-align: center;
+  color: steelblue;
 }
 </style>

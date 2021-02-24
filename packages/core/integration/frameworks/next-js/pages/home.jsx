@@ -8,6 +8,7 @@ export default function Home(props) {
       <style jsx>{`
         .div-1 {
           text-align: center;
+          color: steelblue;
         }
       `}</style>
       <div className="div-1">
