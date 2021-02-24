@@ -18,6 +18,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
+import json5 from 'json5';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -109,7 +110,10 @@ export const blockToVue = (
     const useValue = stripStateAndPropsRefs(value);
 
     if (key.startsWith('on')) {
-      const event = key.replace('on', '').toLowerCase();
+      let event = key.replace('on', '').toLowerCase();
+      if (event === 'change' && node.name === 'input') {
+        event = 'input';
+      }
       // TODO: proper babel transform to replace. Util for this
       str += ` @${event}="${useValue.replace(/event\./g, '$event.')}" `;
     } else if (key === 'ref') {

@@ -97,7 +97,13 @@ export const blockToAngular = (
       const useValue = stripStateAndPropsRefs(value);
 
       if (key.startsWith('on')) {
-        const event = key.replace('on', '').toLowerCase();
+        let event = key.replace('on', '').toLowerCase();
+        if (
+          event === 'change' &&
+          json.name === 'input' /* todo: other tags */
+        ) {
+          event = 'input';
+        }
         // TODO: proper babel transform to replace. Util for this
         const finalValue = useValue.replace(/event\./g, '$event.');
         str += ` (${event})="${finalValue}" `;

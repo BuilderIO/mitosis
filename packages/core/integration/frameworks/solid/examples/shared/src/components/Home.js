@@ -17,7 +17,7 @@ export default function Home() {
 
       <input
         value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
+        onInput={(event) => (state.name = event.target.value)}
       />
     </div>
   );

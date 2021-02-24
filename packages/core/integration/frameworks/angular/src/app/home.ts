@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     <div class="div-1">
       <h2>Hello, {{ name }} !</h2>
 
-      <input [value]="name" (change)="name = $event.target.value" />
+      <input [value]="name" (input)="name = $event.target.value" />
     </div>
   `,
   styles: [

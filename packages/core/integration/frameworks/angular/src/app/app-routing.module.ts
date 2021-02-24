@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import Home from './home';
 
-const routes: Routes = [{ path: 'dashboard', component: Home }];
+const routes: Routes = [{ path: '', component: Home }];
 
 @NgModule({
   imports: [
