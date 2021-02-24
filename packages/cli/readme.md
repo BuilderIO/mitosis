@@ -4,14 +4,8 @@ A CLI for jsx-lite.
 
 ## Installation
 
-**Manual installation**
-
 ```bash
-git clone git@github.com:BuilderIO/jsx-lite.git
-cd jsx-lite/packages/cli
-npm install
-npm run build
-npm link
+npm install -g @jsx-lite/cli
 ```
 
 ## Usage
@@ -32,7 +26,6 @@ jsx-lite -t react < component.tsx
 cat component.tsx | jsx-lite -t html -
 jsx-lite -t react --out-dir build -- src/**/*.tsx
 ```
-
 
 ## Options
 
@@ -61,23 +54,15 @@ Supported formats for `--to` are:
   an html output.
 - `--out=<file>` does not support concatenating multiple files together.
 
-## Customizing your CLI
+## Manual installation
 
-Check out the documentation at https://github.com/infinitered/gluegun/tree/master/docs.
-
-## Publishing to NPM
-
-To package your CLI up for NPM, do this:
-
-```shell
-$ npm login
-$ npm whoami
-$ npm lint
-$ npm test
-(if typescript, run `npm run build` here)
-$ npm publish
+```bash
+git clone git@github.com:BuilderIO/jsx-lite.git
+cd jsx-lite/packages/cli
+npm install
+npm run build
+npm link
 ```
-
 # License
 
 MIT - see LICENSE
