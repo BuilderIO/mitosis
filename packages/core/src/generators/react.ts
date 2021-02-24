@@ -234,7 +234,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
