@@ -7,34 +7,65 @@ const help = (toolbox: Toolbox) =>
 jsx-lite command line component processor [version ${toolbox.meta.version()}]
 
 USAGE
-	jsx-lite --to=<format> [input-file]
-	jsx-lite -t=<format> [input-file]
+	jsx-lite --to=<format> [options] [files]
+	jsx-lite -t=<format> [options] [files]
 
-	If no [input-file] is is specified or when [input-file] is "-", input
+	If no [input-files] are specified or when [files] is "-", input
 	is read from standard input.
 
 EXAMPLES
 	jsx-lite -t react component.tsx
 	jsx-lite -t react < component.tsx
 	cat component.tsx | jsx-lite -t html -
+	jsx-lite -t react --out-dir build -- src/**/*.tsx
 
 OPTIONS
-	--to=<format>,	-t=<format>
-			Specify output format. <format> can be one of:
+	--to=<format>, -t=<format>
+		Specify output format. <format> can be one of:
+		
+		- reactNative
+		- solid
+		- vue
+		- react
+		- template
+		- html
+		- customElement
+		- jsxLite
+		- builder
+		- swift
+		- svelte
+		- liquid
+		- angular
+	--out=<file>, -o=<file>
+		Emit output to a single file
+	--out-dir=<dir>
+		Redirect output structure to <dir>. Files written to <dir> preserve
+		their structure relative to the current directory.
 
-			- reactNative
-			- solid
-			- vue
-			- react
-			- template
-			- html
-			- customElement
-			- jsxLite
-			- builder
-			- swift
-			- svelte
-			- liquid
-			- angular
+		For example, given a directory structure like
+
+		└── src
+		   ├── a.tsx
+		   ├── b.tsx
+		   └── c.tsx
+
+		The command "jsx-lite -t react --out-dir lib -- src/*.tsx" would
+		produce a structure like:
+
+		├── src
+		│  ├── a.tsx
+		│  ├── b.tsx
+		│  └── c.tsx
+		└── lib
+		   └── src
+		      ├── a.tsx
+		      ├── b.tsx
+		      └── c.tsx
+
+	--dry-run, -n
+		Perform a trial run with no changes made.
+	--force
+		Overwrite existing files.
 `.trim()
   )
 
