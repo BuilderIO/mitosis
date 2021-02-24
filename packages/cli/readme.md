@@ -56,6 +56,10 @@ Supported formats for `--to` are:
 
 - Running `jsx-lite` from the root of this repository breaks due to some
   dynamic babel configuration look up
+- Files that are created as the result of `--out-dir=<dir>` maintain the original
+  file extension of the input file, which doesn't make any sense in the case of
+  an html output.
+- `--out=<file>` does not support concatenating multiple files together.
 
 ## Customizing your CLI
 
