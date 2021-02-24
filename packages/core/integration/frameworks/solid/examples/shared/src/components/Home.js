@@ -1,15 +1,24 @@
-import { createSignal, onCleanup } from "solid-js";
-const Home = () => {
-  const [s, set] = createSignal(0);
-  const t = setInterval(() => set(s() + 1), 100);
-  onCleanup(() => clearInterval(t));
-  return (
-    <>
-      <h1>Welcome to this Simple Routing Example</h1>
-      <p>Click the links in the Navigation above to load different routes.</p>
-      <span>{s()}</span>
-    </>
-  );
-};
+import { createMutable, Show, For } from "solid-js";
+import { css } from "solid-styled-components";
 
-export default Home;
+export default function Home() {
+  const state = createMutable({ name: "Steve" });
+
+  return (
+    <div
+      class={css({
+        textAlign: "center",
+      })}
+    >
+      <h2>
+        Hello,
+        {state.name}!
+      </h2>
+
+      <input
+        value={state.name}
+        onChange={(event) => (state.name = event.target.value)}
+      />
+    </div>
+  );
+}

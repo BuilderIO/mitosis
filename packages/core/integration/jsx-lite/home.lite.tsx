@@ -1,3 +1,17 @@
+import { useState } from '@jsx-lite/core';
+
 export default function Home() {
-  return <h1 css={{ textAlign: 'center' }}>Hello world!</h1>;
+  const state = useState({
+    name: 'Steve',
+  });
+  
+  return (
+    <div css={{ textAlign: 'center' }}>
+      <h2>Hello, {state.name}!</h2>
+      <input
+        value={state.name}
+        onChange={(event) => (state.name = event.target.value)}
+      />
+    </div>
+  );
 }

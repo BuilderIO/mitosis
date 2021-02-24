@@ -1,0 +1,43 @@
+<div class="div-1">
+  <h2>
+    Hello,
+    <span data-name="div-1"><!-- state.name --></span>
+    !
+  </h2>
+
+  <input data-name="input-1" />
+</div>
+<style>
+  .div-1 {
+    text-align: center;
+  }
+</style>
+<script>
+  (() => {
+    const state = { name: "Steve" };
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll("[data-name='div-1']").forEach((el) => {
+        el.innerText = state.name;
+      });
+
+      document.querySelectorAll("[data-name='input-1']").forEach((el) => {
+        el.value = state.name;
+        el.removeEventListener("input", onInput1Input);
+        el.addEventListener("input", onInput1Input);
+      });
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>

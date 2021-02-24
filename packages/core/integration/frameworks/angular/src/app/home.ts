@@ -3,14 +3,20 @@ import { Component } from "@angular/core";
 @Component({
   selector: "home",
   template: `
-    <h1 class="h1-1">Hello world!</h1>
+    <div class="div-1">
+      <h2>Hello, {{name}} !</h2>
+
+      <input [value]="name" (change)="name = $event.target.value" />
+    </div>
   `,
   styles: [
     `
-      .h1-1 {
+      .div-1 {
         text-align: center;
       }
     `,
   ],
 })
-export default class Home {}
+export default class Home {
+  name = "Steve";
+}

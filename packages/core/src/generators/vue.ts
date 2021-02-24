@@ -270,5 +270,18 @@ export const componentToVue = (
   if (options.plugins) {
     str = runPostCodePlugins(str, options.plugins);
   }
+
+  for (const pattern of removePatterns) {
+    str = str.replace(pattern, '');
+  }
   return str;
 };
+
+// Remove unused artifacts like empty script or style tags
+const removePatterns = [
+  `<script>
+export default {};
+</script>`,
+  `<style>
+</style>`,
+];
