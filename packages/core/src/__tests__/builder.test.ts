@@ -1,6 +1,6 @@
 import { componentToBuilder } from '../generators/builder';
 import { componentToJsxLite } from '../generators/jsx-lite';
-import { builderContentToJsxLiteComponent } from '../parsers/builder';
+import { builderContentToJsxLiteComponent, extractStateHook } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 
 const stamped = require('./data/blocks/stamped-io.raw');
@@ -10,6 +10,20 @@ const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
 
 describe('Builder', () => {
+  test('extractStateHook', () => {
+    const code = `useState({ foo: 'bar' }); alert('hi');`;
+    expect(extractStateHook(code)).toEqual({
+      code: `alert('hi');`,
+      state: { foo: 'bar' },
+    });
+
+    const code2 = `Object.assign(state, { foo: 'bar' }); alert('hi');`;
+    expect(extractStateHook(code)).toEqual({
+      code: `alert('hi');`,
+      state: { foo: 'bar' },
+    });
+  });
+
   test('Stamped', () => {
     const json = parseJsx(stamped);
     const builderJson = componentToBuilder(json);

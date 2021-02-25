@@ -124,11 +124,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -289,19 +285,25 @@ export const componentToBuilder = (
   componentJson: JSXLiteComponent,
   options: ToBuilderOptions = {},
 ) => {
+  const hasState = Boolean(Object.keys(componentJson).length);
+
   return fastClone({
     data: {
       jsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
 
-        Object.assign(state, ${getStateObjectString(componentJson)});
+        ${
+          !hasState
+            ? ''
+            : `Object.assign(state, ${getStateObjectString(componentJson)});`
+        }
 
         ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
       `),
       tsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
 
-        useState(${getStateObjectString(componentJson)});
+        ${!hasState ? '' : `useState(${getStateObjectString(componentJson)});`}
 
         ${
           !componentJson.hooks.onMount

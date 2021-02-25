@@ -592,13 +592,10 @@ export function extractStateHook(code: string) {
           expression.callee.name === 'useState'
         ) {
           const arg = expression.arguments[0];
-          const argCode = generate(arg).code || '';
-          try {
-            state = json5.parse(argCode);
-          } catch (err) {
-            console.warn('Could not parse useState argument', argCode);
+          if (types.isObjectExpression(arg)) {
+            state = parseStateObject(arg);
+            newBody.splice(i, 1);
           }
-          newBody.splice(i, 1);
         }
 
         if (types.isMemberExpression(expression.callee)) {
@@ -612,15 +609,9 @@ export function extractStateHook(code: string) {
             ) {
               const arg = expression.arguments[1];
               if (types.isObjectExpression(arg)) {
-                state = parseStateObject(arg)
+                state = parseStateObject(arg);
+                newBody.splice(i, 1);
               }
-              const argCode = generate(arg).code || '';
-              try {
-                state = json5.parse(argCode || '');
-              } catch (err) {
-                console.warn('Could not parse Object.assign argument', argCode);
-              }
-              newBody.splice(i, 1);
             }
           }
         }

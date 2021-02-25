@@ -147,30 +147,7 @@ export default function MyComponent(props) {
   });
 
   onMount(() => {
-    useState({
-      // TODO: These methods are not used right now, but they will be when
-      // support for dynamic CSS lands
-      getColumns() {
-        return props.columns || [];
-      },
-
-      getGutterSize() {
-        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-      },
-
-      getWidth(index) {
-        const columns = this.getColumns();
-        return (columns[index] && columns[index].width) || 100 / columns.length;
-      },
-
-      getColumnCssWidth(index) {
-        const columns = this.getColumns();
-        const gutterSize = this.getGutterSize();
-        const subtractWidth =
-          (gutterSize * (columns.length - 1)) / columns.length;
-        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-      },
-    });
+    var props = state;
   });
 
   return (
