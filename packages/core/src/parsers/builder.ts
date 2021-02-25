@@ -1,3 +1,5 @@
+import * as babel from '@babel/core';
+import generate from '@babel/generator';
 import { Builder, BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, omitBy, omit, upperFirst } from 'lodash';
@@ -6,7 +8,11 @@ import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { sizes, Size, sizeNames } from '../constants/media-sizes';
 import { capitalize } from '../helpers/capitalize';
-import { parseJsx } from './jsx';
+import { parseJsx, parseStateObject } from './jsx';
+
+const jsxPlugin = require('@babel/plugin-syntax-jsx');
+const tsPreset = require('@babel/preset-typescript');
+const decorators = require('@babel/plugin-syntax-decorators');
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -557,41 +563,85 @@ const getHooks = (content: BuilderContent) => {
   }
 };
 
+/**
+ * Take Builder custom jsCode and extract the contents of the useState hook
+ * and return it as a JS object along with the inputted code with the hook
+ * code extracted
+ */
+export function extractStateHook(code: string) {
+  const { types } = babel;
+  let state: any = {};
+  const ast = babel.parse(code, {
+    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    plugins: [[decorators, { legacy: true }], jsxPlugin],
+  });
+  const body = types.isFile(ast)
+    ? ast.program.body
+    : types.isProgram(ast)
+    ? ast.body
+    : [];
+  const newBody = body.slice();
+  for (let i = 0; i < body.length; i++) {
+    const statement = body[i];
+    if (types.isExpressionStatement(statement)) {
+      const { expression } = statement;
+      // Check for useState
+      if (types.isCallExpression(expression)) {
+        if (
+          types.isIdentifier(expression.callee) &&
+          expression.callee.name === 'useState'
+        ) {
+          const arg = expression.arguments[0];
+          const argCode = generate(arg).code || '';
+          try {
+            state = json5.parse(argCode);
+          } catch (err) {
+            console.warn('Could not parse useState argument', argCode);
+          }
+          newBody.splice(i, 1);
+        }
+
+        if (types.isMemberExpression(expression.callee)) {
+          if (
+            types.isIdentifier(expression.callee.object) &&
+            expression.callee.object.name === 'Object'
+          ) {
+            if (
+              types.isIdentifier(expression.callee.property) &&
+              expression.callee.property.name === 'assign'
+            ) {
+              const arg = expression.arguments[1];
+              if (types.isObjectExpression(arg)) {
+                state = parseStateObject(arg)
+              }
+              const argCode = generate(arg).code || '';
+              try {
+                state = json5.parse(argCode || '');
+              } catch (err) {
+                console.warn('Could not parse Object.assign argument', argCode);
+              }
+              newBody.splice(i, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const newCode = generate(types.program(newBody)).code || '';
+
+  return { code: newCode, state };
+}
+
 export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilderToJSXLiteOptions = {},
 ) => {
-  // TODO: properly parse this out
-  const stateAssignRegex = /Object\.assign\(state\s*,\s*(\{[\s\S]+\n\})\s*\)/i;
-  const generatedStateMatch = (
-    builderContent?.data?.tsCode ||
-    builderContent?.data?.jsCode ||
-    ''
-  )
-    .trim()
-    .match(stateAssignRegex);
-
-  let state = {};
-  if (generatedStateMatch?.[1]) {
-    try {
-      state = json5.parse(generatedStateMatch[1]);
-    } catch (err) {
-      console.warn('Error parsing state');
-    }
-  }
-
-  const customCode = (
-    builderContent.data?.tsCode ||
-    builderContent.data?.jsCode ||
-    ''
-  )
-    .replace(stateAssignRegex, '')
-    .replace(/(let|const|var)\s+props\s*=\s*state;?/, '')
-    .trim();
+  const { state, code: customCode } = extractStateHook(
+    builderContent?.data?.tsCode || builderContent?.data?.jsCode || '',
+  );
 
   const parsed = getHooks(builderContent);
-
-  console.log({ parsed });
 
   return createJSXLiteComponent({
     state: parsed?.state || {
