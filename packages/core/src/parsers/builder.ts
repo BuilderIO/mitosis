@@ -1,13 +1,13 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { Builder, BuilderContent, BuilderElement } from '@builder.io/sdk';
+import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { mapKeys, omitBy, omit, upperFirst } from 'lodash';
+import { mapKeys, omit, omitBy, upperFirst } from 'lodash';
+import { Size, sizeNames, sizes } from '../constants/media-sizes';
+import { capitalize } from '../helpers/capitalize';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { sizes, Size, sizeNames } from '../constants/media-sizes';
-import { capitalize } from '../helpers/capitalize';
 import { parseJsx, parseStateObject } from './jsx';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
@@ -562,6 +562,8 @@ const getHooks = (content: BuilderContent) => {
     return null;
   }
 };
+
+console.log('\n\n\nUMWHAT\n\n\n\n\n');
 
 /**
  * Take Builder custom jsCode and extract the contents of the useState hook

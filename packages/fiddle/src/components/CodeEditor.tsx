@@ -2,7 +2,7 @@ import MonacoEditor, { MonacoEditorProps } from 'react-monaco-editor';
 import { Linter as ESLinter } from 'eslint';
 import * as monaco from 'monaco-editor';
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import types from 'raw-loader!@jsx-lite/core/dist/jsx';
+import types from 'raw-loader!@jsx-lite/core/dist/src/jsx';
 import React, { useState } from 'react';
 import { useDebounce } from 'react-use';
 import { rules } from '@jsx-lite/eslint-plugin';
