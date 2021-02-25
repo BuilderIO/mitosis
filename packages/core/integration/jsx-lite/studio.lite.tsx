@@ -1005,7 +1005,6 @@ export default function MyComponent(props) {
                   '@media (max-width: 999px)': { width: '100%', marginLeft: 0 },
                 }}
               >
-                
                 <div
                   css={{
                     display: 'flex',
@@ -1040,9 +1039,7 @@ export default function MyComponent(props) {
                   }}
                 >
                   <div css={{ position: 'relative' }}>
-                    
                     <picture>
-                      
                       <source
                         srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=1020 1020w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=558 558w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F7d626c4de12b4ca4a80e191551b60c44?format=webp&width=917 917w"
                         type="image/webp"
@@ -1118,7 +1115,6 @@ export default function MyComponent(props) {
             marginRight: 'auto',
           }}
         >
-          
           <div
             css={{
               display: 'flex',
@@ -1177,7 +1173,6 @@ export default function MyComponent(props) {
                 marginRight: 'auto',
               }}
             >
-              
               <div
                 css={{
                   display: 'flex',
@@ -1206,7 +1201,6 @@ export default function MyComponent(props) {
                     },
                   }}
                 >
-                  
                   <div
                     className="builder-column"
                     css={{
@@ -1221,7 +1215,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -1361,9 +1354,7 @@ export default function MyComponent(props) {
                           }}
                         >
                           <div css={{ position: 'relative' }}>
-                            
                             <picture>
-                              
                               <source
                                 srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=36 36w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F4d4d8dd8ab274d28b694cbb3e802f3d8?format=webp&width=24 24w"
                                 type="image/webp"
@@ -1412,7 +1403,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -1426,9 +1416,7 @@ export default function MyComponent(props) {
                       }}
                     >
                       <div css={{ position: 'relative' }}>
-                        
                         <picture>
-                          
                           <source
                             srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=918 918w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=598 598w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fff632f82f24249678e1c4ad44ba2fd71?format=webp&width=817 817w"
                             type="image/webp"
@@ -1489,7 +1477,6 @@ export default function MyComponent(props) {
                     marginRight: 'auto',
                   }}
                 >
-                  
                   <div
                     css={{
                       display: 'flex',
@@ -1521,7 +1508,6 @@ export default function MyComponent(props) {
                         },
                       }}
                     >
-                      
                       <div
                         className="builder-column"
                         css={{
@@ -1536,7 +1522,6 @@ export default function MyComponent(props) {
                           },
                         }}
                       >
-                        
                         <div
                           css={{
                             display: 'flex',
@@ -1554,9 +1539,7 @@ export default function MyComponent(props) {
                           }}
                         >
                           <div css={{ position: 'relative' }}>
-                            
                             <picture>
-                              
                               <source
                                 srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=918 918w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=558 558w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Faa5d8ab04b724171bf54fdc7018b3ea5?format=webp&width=675 675w"
                                 type="image/webp"
@@ -1603,7 +1586,6 @@ export default function MyComponent(props) {
                           },
                         }}
                       >
-                        
                         <div
                           css={{
                             display: 'flex',
@@ -1719,7 +1701,6 @@ export default function MyComponent(props) {
                 marginRight: 'auto',
               }}
             >
-              
               <div
                 css={{
                   display: 'flex',
@@ -1749,7 +1730,6 @@ export default function MyComponent(props) {
                     },
                   }}
                 >
-                  
                   <div
                     className="builder-column"
                     css={{
@@ -1764,7 +1744,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -1858,7 +1837,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -1872,9 +1850,7 @@ export default function MyComponent(props) {
                       }}
                     >
                       <div css={{ position: 'relative' }}>
-                        
                         <picture>
-                          
                           <source
                             srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=918 918w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=598 598w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F30c350c0c9fe4578aa7ade21796aa1b8?format=webp&width=817 817w"
                             type="image/webp"
@@ -1941,7 +1917,6 @@ export default function MyComponent(props) {
                 marginRight: 'auto',
               }}
             >
-              
               <div
                 css={{
                   position: 'relative',
@@ -1976,7 +1951,6 @@ export default function MyComponent(props) {
                     },
                   }}
                 >
-                  
                   <div
                     className="builder-column"
                     css={{
@@ -1991,7 +1965,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -2022,9 +1995,7 @@ export default function MyComponent(props) {
                         }}
                       >
                         <div css={{ position: 'relative' }}>
-                          
                           <picture>
-                            
                             <source
                               srcSet="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=100 100w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=200 200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=400 400w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=800 800w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=918 918w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=598 598w, https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28cf67e4fb5e4ada8391c5bb4d18694e?format=webp&width=690 690w"
                               type="image/webp"
@@ -2072,7 +2043,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -2213,7 +2183,6 @@ export default function MyComponent(props) {
                 marginRight: 'auto',
               }}
             >
-              
               <a
                 href="https://apps.shopify.com/builder-2"
                 css={{
@@ -2273,7 +2242,6 @@ export default function MyComponent(props) {
                   }}
                 >
                   <a href="" target="_self">
-                    
                     Try for free
                   </a>
                 </div>
@@ -2312,7 +2280,6 @@ export default function MyComponent(props) {
                     },
                   }}
                 >
-                  
                   <div
                     className="builder-column"
                     css={{
@@ -2327,7 +2294,6 @@ export default function MyComponent(props) {
                       },
                     }}
                   >
-                    
                     <div
                       css={{
                         display: 'flex',
@@ -2945,7 +2911,6 @@ export default function MyComponent(props) {
                     marginRight: 'auto',
                   }}
                 >
-                  
                   <div
                     css={{
                       display: 'flex',
@@ -2970,7 +2935,6 @@ export default function MyComponent(props) {
                         },
                       }}
                     >
-                      
                       <div
                         className="builder-column"
                         css={{
@@ -2985,7 +2949,6 @@ export default function MyComponent(props) {
                           },
                         }}
                       >
-                        
                         <div
                           css={{
                             display: 'flex',

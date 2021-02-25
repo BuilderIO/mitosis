@@ -1,6 +1,9 @@
 import { componentToBuilder } from '../generators/builder';
 import { componentToJsxLite } from '../generators/jsx-lite';
-import { builderContentToJsxLiteComponent, extractStateHook } from '../parsers/builder';
+import {
+  builderContentToJsxLiteComponent,
+  extractStateHook,
+} from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 
 const stamped = require('./data/blocks/stamped-io.raw');

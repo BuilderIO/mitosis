@@ -1,10 +1,10 @@
-import { Component } from "@angular/core";
+import { Component } from '@angular/core';
 
 @Component({
-  selector: "home",
+  selector: 'home',
   template: `
     <div class="div-1">
-      <h2>Hello, {{name}} !</h2>
+      <h2>Hello, {{ name }} !</h2>
 
       <input [value]="name" (input)="name = $event.target.value" />
     </div>
@@ -19,5 +19,5 @@ import { Component } from "@angular/core";
   ],
 })
 export default class Home {
-  name = "Steve";
+  name = 'Steve';
 }

@@ -1,13 +1,13 @@
-import { useState } from "@jsx-lite/core";
+import { useState } from '@jsx-lite/core';
 
 export default function MyComponent(props) {
-  const state = useState({ name: "Steve" });
+  const state = useState({ name: 'Steve' });
 
   return (
     <div
       css={{
-        textAlign: "center",
-        color: "steelblue",
+        textAlign: 'center',
+        color: 'steelblue',
       }}
     >
       <h2>
