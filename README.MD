@@ -66,7 +66,7 @@
     </tr>
     <tr>
     <td>
-        <a href="https://github.com/BuilderIO/vscode"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F1d59909e2a214c79ad2b1e8ad3fb8245" /></a>
+        <a href="https://github.com/BuilderIO/vscode"><img width="400" alt="Vscode plugin" src="https://i.imgur.com/UlWMkRx.gif" /></a>
       </td>
       <td>
         <a href="https://apps.shopify.com/builder-2"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F97c87a29d88e463b9c1ad22b0329b2f7" /></a>
