@@ -31,14 +31,16 @@ const command: GluegunCommand = {
     const dryRun = opts.dryRun ?? opts.n ?? false
     const outDir = opts.outDir
 
-    const generatorOpts: {[K in AllGeneratorOptionKeys]: any} = {
+    const header = opts.header
+
+    const generatorOpts: { [K in AllGeneratorOptionKeys]: any } = {
       prettier: true,
       plugins: [],
       format: opts.format,
       prefix: opts.prefix,
       includeIds: opts.includeIds,
       stylesType: opts.styles,
-      stateType: opts.state,
+      stateType: opts.state
     }
 
     // Positional Args
@@ -69,7 +71,8 @@ const command: GluegunCommand = {
 
     async function* readFiles() {
       if (isStdin) {
-        return { data: readStdin() }
+        const data = await readStdin()
+        return { data }
       }
       for (const path of paths) {
         if (filesystem.exists(path) !== 'file') {
@@ -111,8 +114,14 @@ const command: GluegunCommand = {
         print.info(inspect(data, true, 10, true))
       }
 
+      const isJSON = typeof output === 'object'
+
+      if (!isJSON) {
+        output = header ? `${header}\n${output}` : output
+      }
+
       if (!out) {
-        if (typeof output === 'object') {
+        if (isJSON) {
           console.log(JSON.stringify(output, null, 2))
           return
         }
