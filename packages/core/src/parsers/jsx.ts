@@ -13,10 +13,6 @@ import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings'
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 
-// `semver` is being lazily loaded later by some of the Babel plugins we use
-// we need to `require` it here or otherwise Webpack will tree-shake it out
-require('semver');
-
 export const selfClosingTags = new Set([
   'area',
   'base',
