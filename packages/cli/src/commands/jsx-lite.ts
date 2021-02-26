@@ -17,9 +17,9 @@ const command: GluegunCommand = {
     // Flags and aliases
     let to = opts.t ?? opts.to
     let out = opts.o ?? opts.out
-    let force = opts.force ?? false
-    let dryRun = opts.dryRun ?? opts.n ?? false
-    let outDir = opts.outDir
+    const force = opts.force ?? false
+    const dryRun = opts.dryRun ?? opts.n ?? false
+    const outDir = opts.outDir
 
     // Positional Args
     const paths = parameters.array
@@ -90,8 +90,12 @@ const command: GluegunCommand = {
       }
 
       if (!out) {
+        if (typeof output === 'object') {
+          console.log(JSON.stringify(output, null, 2))
+          return
+        }
         console.log(output)
-        continue
+        return
       }
 
       print.info(out)
