@@ -1,5 +1,6 @@
 import * as core from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
+import { Toolbox } from 'gluegun/build/types/domain/toolbox'
 import { join } from 'path'
 import { inspect } from 'util'
 
@@ -8,6 +9,10 @@ const command: GluegunCommand = {
   run: async toolbox => {
     const { parameters, strings, filesystem, print } = toolbox
     const opts = parameters.options
+
+    if (opts.l ?? opts.list ?? false) {
+      return listTargets(toolbox)
+    }
 
     // Flags and aliases
     let to = opts.t ?? opts.to
@@ -99,6 +104,21 @@ const command: GluegunCommand = {
 }
 
 module.exports = command
+
+/**
+ * List all targets (args to --to). This could be moved to it's own command at
+ * some point depending on the desired API.
+ */
+function listTargets({ strings }: Toolbox) {
+  for (const prop of Object.getOwnPropertyNames(core)) {
+    const match = prop.match('^componentTo(.+)$')
+    if (match) {
+      const name = match[1]
+      console.log(strings.camelCase(name))
+    }
+  }
+  return
+}
 
 async function readStdin() {
   const chunks = []

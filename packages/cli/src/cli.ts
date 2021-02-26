@@ -66,6 +66,8 @@ OPTIONS
 		Perform a trial run with no changes made.
 	--force
 		Overwrite existing files.
+	--list, -l
+		List available output formats.
 `.trim()
   )
 
