@@ -1,8 +1,12 @@
 import * as core from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
-import { Toolbox } from 'gluegun/build/types/domain/toolbox'
 import { join } from 'path'
 import { inspect } from 'util'
+import * as targets from '../targets'
+
+type Targets = typeof targets
+type Target = keyof Targets
+type GeneratorOpts = Parameters<Targets[Target]>[1]
 
 const command: GluegunCommand = {
   name: 'jsx-lite',
@@ -11,7 +15,7 @@ const command: GluegunCommand = {
     const opts = parameters.options
 
     if (opts.l ?? opts.list ?? false) {
-      return listTargets(toolbox)
+      return listTargets()
     }
 
     // Flags and aliases
@@ -25,7 +29,7 @@ const command: GluegunCommand = {
     const paths = parameters.array
 
     // Flag pre-processing
-    to = strings.pascalCase(to)
+    to = strings.camelCase(to)
 
     // Flag configuration state
     const isStdin = parameters.first === '-' || paths.length === 0
@@ -33,11 +37,12 @@ const command: GluegunCommand = {
     // Input validations
 
     // Validate that "--to" is supported
-    const transformFunc = core[`componentTo${to}`]
-    if (!transformFunc) {
+    if (!isTarget(to)) {
       console.error(`no matching output target for "${to}"`)
       process.exit(1)
     }
+
+    const generator = targets[to]
 
     if (out && paths.length > 1) {
       console.error(
@@ -113,13 +118,9 @@ module.exports = command
  * List all targets (args to --to). This could be moved to it's own command at
  * some point depending on the desired API.
  */
-function listTargets({ strings }: Toolbox) {
-  for (const prop of Object.getOwnPropertyNames(core)) {
-    const match = prop.match('^componentTo(.+)$')
-    if (match) {
-      const name = match[1]
-      console.log(strings.camelCase(name))
-    }
+function listTargets() {
+  for (const prop of Object.keys(targets)) {
+    console.log(prop)
   }
   return
 }
