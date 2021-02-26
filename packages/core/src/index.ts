@@ -1,5 +1,3 @@
-// import './jsx';
-
 export * from './flow';
 
 // These compile away
