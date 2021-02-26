@@ -3,10 +3,16 @@ import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import { inspect } from 'util'
 import * as targets from '../targets'
+import { UnionToIntersection } from '../types'
 
 type Targets = typeof targets
 type Target = keyof Targets
 type GeneratorOpts = Parameters<Targets[Target]>[1]
+
+type AllGeneratorOption = UnionToIntersection<GeneratorOpts>
+// The only purpose this really serves is to ensure I provide a flag API
+// for ever generators options.
+type AllGeneratorOptionKeys = keyof AllGeneratorOption
 
 const command: GluegunCommand = {
   name: 'jsx-lite',
@@ -24,6 +30,16 @@ const command: GluegunCommand = {
     const force = opts.force ?? false
     const dryRun = opts.dryRun ?? opts.n ?? false
     const outDir = opts.outDir
+
+    const generatorOpts: {[K in AllGeneratorOptionKeys]: any} = {
+      prettier: true,
+      plugins: [],
+      format: opts.format,
+      prefix: opts.prefix,
+      includeIds: opts.includeIds,
+      stylesType: opts.styles,
+      stateType: opts.state,
+    }
 
     // Positional Args
     const paths = parameters.array
@@ -66,7 +82,7 @@ const command: GluegunCommand = {
     }
 
     for await (const { data, path } of readFiles()) {
-      let output: string
+      let output: any
 
       if (outDir) {
         out = join(outDir, path)
@@ -82,7 +98,8 @@ const command: GluegunCommand = {
 
       try {
         const json = core.parseJsx(data)
-        output = transformFunc(json)
+        // TODO validate generator options
+        output = generator(json, generatorOpts as any)
       } catch (e) {
         print.divider()
         print.info('Error:')
@@ -123,6 +140,10 @@ function listTargets() {
     console.log(prop)
   }
   return
+}
+
+function isTarget(term: string): term is Target {
+  return typeof targets[term] !== 'undefined'
 }
 
 async function readStdin() {

@@ -68,6 +68,12 @@ OPTIONS
 		Overwrite existing files.
 	--list, -l
 		List available output formats.
+GENERATOR OPTIONS
+	--format=<format>
+	--prefix=<prefix>
+	--includeIds=<include_ids>
+	--styles=<library_or_method>
+	--state=<library_or_method>
 `.trim()
   )
 
