@@ -1,4 +1,4 @@
-import * as core from '@jsx-lite/core'
+import { parseJsx } from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import { inspect } from 'util'
@@ -100,7 +100,7 @@ const command: GluegunCommand = {
       }
 
       try {
-        const json = core.parseJsx(data)
+        const json = parseJsx(data)
         // TODO validate generator options
         output = generator(json, generatorOpts as any)
       } catch (e) {
