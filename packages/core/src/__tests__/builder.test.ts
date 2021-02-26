@@ -1,3 +1,4 @@
+import dedent from 'dedent';
 import { componentToBuilder } from '../generators/builder';
 import { componentToJsxLite } from '../generators/jsx-lite';
 import {
@@ -75,5 +76,52 @@ describe('Builder', () => {
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
     const jsxLite = componentToJsxLite(backToJsxLite);
     expect(jsxLite).toMatchSnapshot();
+  });
+
+  test.skip('Regen', () => {
+    const code = dedent`
+      export default function MyComponent(props) {
+        const state = useState({
+          people: ["Steve", "Sewell"],
+        });
+      
+        return (
+          <div
+            css={{
+              padding: "20px",
+            }}
+          >
+            <script src="..."></script>
+            <h2 
+              css={{ 
+                marginBottom: "20px" 
+              }}>
+              Hellooo!
+            </h2>
+            <For each={state.people}>
+              {(person, index) => (
+                <div
+                  css={{
+                    padding: "10px 0",
+                  }}
+                >
+                  {person}
+                </div>
+              )}
+            </For>
+            <Image css={{ display: 'block' }} image="hi" />
+          </div>
+        );
+      }
+    `;
+
+    const json = parseJsx(code);
+    const builderJson = componentToBuilder(json);
+    expect(builderJson).toMatchSnapshot();
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    expect(backToJsxLite).toMatchSnapshot();
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite).toMatchSnapshot();
+    expect(jsxLite).toEqual(code);
   });
 });

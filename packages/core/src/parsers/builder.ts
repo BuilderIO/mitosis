@@ -563,8 +563,6 @@ const getHooks = (content: BuilderContent) => {
   }
 };
 
-console.log('\n\n\nUMWHAT\n\n\n\n\n');
-
 /**
  * Take Builder custom jsCode and extract the contents of the useState hook
  * and return it as a JS object along with the inputted code with the hook
