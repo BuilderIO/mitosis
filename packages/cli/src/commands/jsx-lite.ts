@@ -11,7 +11,7 @@ type GeneratorOpts = Parameters<Targets[Target]>[1]
 
 type AllGeneratorOption = UnionToIntersection<GeneratorOpts>
 // The only purpose this really serves is to ensure I provide a flag API
-// for ever generators options.
+// for ever generator's option.
 type AllGeneratorOptionKeys = keyof AllGeneratorOption
 
 const command: GluegunCommand = {
