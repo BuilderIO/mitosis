@@ -36,6 +36,10 @@ OPTIONS
 		- svelte
 		- liquid
 		- angular
+	--list, -l
+		List available output formats.
+
+OUTPUT OPTIONS
 	--out=<file>, -o=<file>
 		Emit output to a single file
 	--out-dir=<dir>
@@ -66,8 +70,17 @@ OPTIONS
 		Perform a trial run with no changes made.
 	--force
 		Overwrite existing files.
-	--list, -l
-		List available output formats.
+	--header=<string>
+		Add a preamble to the document. Useful if you want to include a
+		license or an import statement. Header will be ignored if the
+		output is JSON.
+
+GENERATOR OPTIONS
+	--format=<format>
+	--prefix=<prefix>
+	--includeIds=<include_ids>
+	--styles=<library_or_method>
+	--state=<library_or_method>
 `.trim()
   )
 
