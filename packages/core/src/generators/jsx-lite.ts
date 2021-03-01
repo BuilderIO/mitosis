@@ -1,4 +1,5 @@
 import dedent from 'dedent';
+import { stubArray } from 'lodash';
 import { format } from 'prettier/standalone';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
@@ -64,6 +65,12 @@ export const blockToJsxLite = (
   }
   if (selfClosingTags.has(json.name)) {
     return str + ' />';
+  }
+
+  // Self close by default if no children
+  if (!json.children.length) {
+    str += ' />';
+    return str;
   }
   str += '>';
   if (json.children) {

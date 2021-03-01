@@ -78,6 +78,42 @@ describe('Builder', () => {
     expect(jsxLite).toMatchSnapshot();
   });
 
+  test('Regenerate Image', () => {
+    const code = dedent`
+      import { useState } from "@jsx-lite/core";
+      import { Image } from "@builder.io/components";
+
+      export default function MyComponent(props) {
+        const state = useState({ people: ["Steve", "Sewell"] });
+      
+        return (
+          <div
+            css={{
+              padding: "20px",
+            }}
+          >
+            <Image
+              image="hi"
+              css={{
+                display: "block",
+              }}
+            />
+          </div>
+        );
+      }
+    `;
+
+    const json = parseJsx(code);
+    expect(json).toMatchSnapshot();
+    const builderJson = componentToBuilder(json);
+    expect(builderJson).toMatchSnapshot();
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    expect(backToJsxLite).toMatchSnapshot();
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite).toMatchSnapshot();
+    expect(jsxLite.trim()).toEqual(code.trim());
+  });
+
   test.skip('Regen', () => {
     const code = dedent`
       export default function MyComponent(props) {
@@ -91,7 +127,6 @@ describe('Builder', () => {
               padding: "20px",
             }}
           >
-            <script src="..."></script>
             <h2 
               css={{ 
                 marginBottom: "20px" 

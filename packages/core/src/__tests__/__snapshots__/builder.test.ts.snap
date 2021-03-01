@@ -170,7 +170,7 @@ export default function MyComponent(props) {
               }}
             >
               <div>
-                <div></div>
+                <div />
               </div>
             </div>
           </CoreFragment>
@@ -371,7 +371,7 @@ export default function MyComponent(props) {
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       innerHTML={props.code}
-    ></div>
+    />
   );
 }
 "
@@ -560,7 +560,7 @@ export default function MyComponent(props) {
     state.findAndRunScripts();
   });
 
-  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content}></div>;
+  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content} />;
 }
 "
 `;
@@ -830,7 +830,7 @@ export default function MyComponent(props) {
         <source srcset={props.srcset} />
       </picture>
       <div>
-        <div></div>
+        <div />
       </div>
     </Fragment>
   );
@@ -1089,6 +1089,195 @@ export default function MyComponent(props) {
           </CoreFragment>
         )}
       </For>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder Regenerate Image 1`] = `
+Object {
+  "@type": "@jsx-lite/component",
+  "children": Array [
+    Object {
+      "@type": "@jsx-lite/node",
+      "bindings": Object {
+        "css": "{
+  padding: \\"20px\\"
+}",
+      },
+      "children": Array [
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {
+            "css": "{
+  display: \\"block\\"
+}",
+          },
+          "children": Array [],
+          "meta": Object {},
+          "name": "Image",
+          "properties": Object {
+            "image": "hi",
+          },
+        },
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "div",
+      "properties": Object {},
+    },
+  ],
+  "hooks": Object {},
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "Image": "Image",
+      },
+      "path": "@builder.io/components",
+    },
+  ],
+  "meta": Object {},
+  "name": "MyComponent",
+  "state": Object {
+    "people": Array [
+      "Steve",
+      "Sewell",
+    ],
+  },
+}
+`;
+
+exports[`Builder Regenerate Image 2`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {},
+            "children": Array [],
+            "code": Object {
+              "actions": Object {},
+            },
+            "component": Object {
+              "name": "Image",
+              "options": Object {
+                "image": "hi",
+              },
+            },
+            "responsiveStyles": Object {
+              "large": Object {
+                "display": "block",
+              },
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+        },
+        "properties": Object {},
+        "responsiveStyles": Object {
+          "large": Object {
+            "padding": "20px",
+          },
+        },
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "Object.assign(state, { people: [\\"Steve\\", \\"Sewell\\"] });
+",
+    "tsCode": "useState({ people: [\\"Steve\\", \\"Sewell\\"] });
+",
+  },
+}
+`;
+
+exports[`Builder Regenerate Image 3`] = `
+Object {
+  "@type": "@jsx-lite/component",
+  "children": Array [
+    Object {
+      "@type": "@jsx-lite/node",
+      "bindings": Object {
+        "css": "{\\"padding\\":\\"20px\\"}",
+      },
+      "children": Array [
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {
+            "css": "{\\"display\\":\\"block\\"}",
+          },
+          "children": Array [],
+          "meta": Object {},
+          "name": "Image",
+          "properties": Object {
+            "image": "hi",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "div",
+      "properties": Object {},
+    },
+  ],
+  "hooks": Object {},
+  "imports": Array [],
+  "meta": Object {},
+  "name": "MyComponent",
+  "state": Object {
+    "people": Array [
+      "Steve",
+      "Sewell",
+    ],
+  },
+}
+`;
+
+exports[`Builder Regenerate Image 4`] = `
+"import { useState } from \\"@jsx-lite/core\\";
+import { Image } from \\"@builder.io/components\\";
+
+export default function MyComponent(props) {
+  const state = useState({ people: [\\"Steve\\", \\"Sewell\\"] });
+
+  return (
+    <div
+      css={{
+        padding: \\"20px\\",
+      }}
+    >
+      <Image
+        image=\\"hi\\"
+        css={{
+          display: \\"block\\",
+        }}
+      />
     </div>
   );
 }
@@ -1419,7 +1608,7 @@ export default function MyComponent(props) {
             css={{
               display: \\"block\\",
             }}
-          ></textarea>
+          />
           <button
             onClick={(event) => (state.showReviewPrompt = false)}
             css={{
@@ -1454,12 +1643,12 @@ export default function MyComponent(props) {
               <div>
                 <div>
                   <div>
-                    <div></div>
+                    <div />
                   </div>
                 </div>
                 <div>
                   <div>
-                    <div></div>
+                    <div />
                   </div>
                 </div>
               </div>

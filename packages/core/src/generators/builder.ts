@@ -124,11 +124,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -170,12 +166,7 @@ export const blockToBuilder = (
     return el(
       {
         tagName: 'span',
-        // responsiveStyles: {
-        //   large: json.properties.css as any,
-        // },
         bindings: {
-          // TODO: css to responsiveStyles and back
-          // ...(json.bindings as any),
           ...(json.bindings._text
             ? {
                 'component.options.text': json.bindings._text as string,
@@ -196,7 +187,7 @@ export const blockToBuilder = (
 
   const thisIsComponent = isComponent(json);
 
-  let bindings = thisIsComponent ? {} : json.bindings;
+  let bindings = json.bindings;
   const actions: { [key: string]: string } = {};
 
   for (const key in bindings) {
@@ -222,6 +213,7 @@ export const blockToBuilder = (
   }
 
   const hasCss = !!bindings.css;
+  console.log('hasCss', hasCss);
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
     medium?: Partial<CSSStyleDeclaration>;
