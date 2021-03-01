@@ -556,7 +556,17 @@ export const builderElementToJsxLiteNode = (
       block.children[0],
       options,
     );
-    return merge({}, textProperties, node);
+    const mergedCss = merge(
+      json5.parse((textProperties.bindings.css as string) || '{}'),
+      json5.parse((node.bindings.css as string) || '{}'),
+    );
+    return merge({}, textProperties, node, {
+      bindings: {
+        css: Object.keys(mergedCss).length
+          ? json5.stringify(mergedCss)
+          : undefined,
+      },
+    });
   }
 
   node.children = (block.children || []).map((item) =>
