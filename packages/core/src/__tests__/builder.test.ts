@@ -104,6 +104,38 @@ describe('Builder', () => {
     `;
 
     const json = parseJsx(code);
+    const builderJson = componentToBuilder(json);
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite.trim()).toEqual(code.trim());
+  });
+
+  test('Regenerate Text', () => {
+    const code = dedent`
+      import { useState } from "@jsx-lite/core";
+
+      export default function MyComponent(props) {
+        const state = useState({ people: ["Steve", "Sewell"] });
+      
+        return (
+          <div
+            css={{
+              padding: "20px",
+            }}
+          >
+            <h2
+              css={{
+                marginBottom: "20px",
+              }}
+            >
+              Hello!
+            </h2>
+          </div>
+        );
+      }
+    `;
+
+    const json = parseJsx(code);
     expect(json).toMatchSnapshot();
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();

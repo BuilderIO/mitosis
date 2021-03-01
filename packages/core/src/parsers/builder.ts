@@ -2,7 +2,7 @@ import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { mapKeys, omit, omitBy, upperFirst } from 'lodash';
+import { mapKeys, merge, omit, omitBy, upperFirst } from 'lodash';
 import { Size, sizeNames, sizes } from '../constants/media-sizes';
 import { capitalize } from '../helpers/capitalize';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
@@ -518,7 +518,7 @@ export const builderElementToJsxLiteNode = (
   let styleString = getStyleStringFromBlock(block);
   const actionBindings = getActionBindingsFromBlock(block);
 
-  return createJSXLiteNode({
+  const node = createJSXLiteNode({
     name:
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
       block.tagName ||
@@ -535,10 +535,25 @@ export const builderElementToJsxLiteNode = (
           css: JSON.stringify(css),
         }),
     },
-    children: (block.children || []).map((item) =>
-      builderElementToJsxLiteNode(item, options),
-    ),
   });
+
+  // Has single text node child
+  if (
+    block.children?.length === 1 &&
+    block.children[0].component?.name === 'Text'
+  ) {
+    const textProperties = builderElementToJsxLiteNode(
+      block.children[0],
+      options,
+    );
+    return merge({}, textProperties, node);
+  }
+
+  node.children = (block.children || []).map((item) =>
+    builderElementToJsxLiteNode(item, options),
+  );
+
+  return node;
 };
 
 const getHooks = (content: BuilderContent) => {

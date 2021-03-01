@@ -213,7 +213,7 @@ export const blockToBuilder = (
   }
 
   const hasCss = !!bindings.css;
-  console.log('hasCss', hasCss);
+
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
     medium?: Partial<CSSStyleDeclaration>;
@@ -221,6 +221,7 @@ export const blockToBuilder = (
   } = {
     large: {},
   };
+  
   if (hasCss) {
     const cssRules = json5.parse(bindings.css as string);
     const cssRuleKeys = Object.keys(cssRules);
