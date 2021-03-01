@@ -124,7 +124,11 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id: 'builder-' + Math.random().toString(36).split('.')[1],
+    id:
+      'builder-' +
+      Math.random()
+        .toString(36)
+        .split('.')[1],
   }),
   ...options,
 });
@@ -221,7 +225,7 @@ export const blockToBuilder = (
   } = {
     large: {},
   };
-  
+
   if (hasCss) {
     const cssRules = json5.parse(bindings.css as string);
     const cssRuleKeys = Object.keys(cssRules);
