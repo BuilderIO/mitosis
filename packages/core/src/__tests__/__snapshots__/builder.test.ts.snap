@@ -1310,6 +1310,215 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Builder Regenerate loop 1`] = `
+Object {
+  "@type": "@jsx-lite/component",
+  "children": Array [
+    Object {
+      "@type": "@jsx-lite/node",
+      "bindings": Object {
+        "_forName": "person",
+        "each": "state.people",
+      },
+      "children": Array [
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {
+            "css": "{
+  padding: \\"10px 0\\"
+}",
+            "key": "person",
+          },
+          "children": Array [
+            Object {
+              "@type": "@jsx-lite/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+          ",
+              },
+            },
+            Object {
+              "@type": "@jsx-lite/node",
+              "bindings": Object {
+                "_text": "person",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@jsx-lite/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+          ],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {},
+        },
+      ],
+      "meta": Object {},
+      "name": "For",
+      "properties": Object {},
+    },
+  ],
+  "hooks": Object {},
+  "imports": Array [],
+  "meta": Object {},
+  "name": "MyComponent",
+  "state": Object {
+    "people": Array [
+      "Steve",
+      "Sewell",
+    ],
+  },
+}
+`;
+
+exports[`Builder Regenerate loop 2`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {},
+            "bindings": Object {
+              "key": "person",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": Object {
+                  "component.options.text": "person",
+                },
+                "component": Object {
+                  "name": "Text",
+                  "options": Object {},
+                },
+                "tagName": "span",
+              },
+            ],
+            "code": Object {
+              "actions": Object {},
+            },
+            "properties": Object {},
+            "responsiveStyles": Object {
+              "large": Object {
+                "padding": "10px 0",
+              },
+            },
+            "tagName": "div",
+          },
+        ],
+        "component": Object {
+          "name": "Core:Fragment",
+        },
+        "repeat": Object {
+          "collection": "state.people",
+          "itemName": "person",
+        },
+      },
+    ],
+    "jsCode": "Object.assign(state, { people: [\\"Steve\\", \\"Sewell\\"] });
+",
+    "tsCode": "useState({ people: [\\"Steve\\", \\"Sewell\\"] });
+",
+  },
+}
+`;
+
+exports[`Builder Regenerate loop 3`] = `
+Object {
+  "@type": "@jsx-lite/component",
+  "children": Array [
+    Object {
+      "@type": "@jsx-lite/node",
+      "bindings": Object {
+        "_forName": "person",
+        "each": "state.people",
+      },
+      "children": Array [
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {
+            "css": "{\\"padding\\":\\"10px 0\\"}",
+            "key": "person",
+          },
+          "children": Array [
+            Object {
+              "@type": "@jsx-lite/node",
+              "bindings": Object {
+                "_text": "person",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": undefined,
+              },
+            },
+          ],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {},
+        },
+      ],
+      "meta": Object {},
+      "name": "For",
+      "properties": Object {},
+    },
+  ],
+  "hooks": Object {},
+  "imports": Array [],
+  "meta": Object {},
+  "name": "MyComponent",
+  "state": Object {
+    "people": Array [
+      "Steve",
+      "Sewell",
+    ],
+  },
+}
+`;
+
+exports[`Builder Regenerate loop 4`] = `
+"import { useState, For } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({ people: [\\"Steve\\", \\"Sewell\\"] });
+
+  return (
+    <For each={state.people}>
+      {(person, index) => (
+        <div
+          key={person}
+          css={{
+            padding: \\"10px 0\\",
+          }}
+        >
+          {person}
+        </div>
+      )}
+    </For>
+  );
+}
+"
+`;
+
 exports[`Builder Stamped 1`] = `
 Object {
   "data": Object {

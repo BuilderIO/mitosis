@@ -136,59 +136,40 @@ describe('Builder', () => {
     `;
 
     const json = parseJsx(code);
-    expect(json).toMatchSnapshot();
     const builderJson = componentToBuilder(json);
-    expect(builderJson).toMatchSnapshot();
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    expect(backToJsxLite).toMatchSnapshot();
     const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
-  test.skip('Regen', () => {
+  test('Regenerate loop', () => {
     const code = dedent`
+      import { useState, For } from "@jsx-lite/core";
+
       export default function MyComponent(props) {
-        const state = useState({
-          people: ["Steve", "Sewell"],
-        });
+        const state = useState({ people: ["Steve", "Sewell"] });
       
         return (
-          <div
-            css={{
-              padding: "20px",
-            }}
-          >
-            <h2 
-              css={{ 
-                marginBottom: "20px" 
-              }}>
-              Hellooo!
-            </h2>
-            <For each={state.people}>
-              {(person, index) => (
-                <div
-                  css={{
-                    padding: "10px 0",
-                  }}
-                >
-                  {person}
-                </div>
-              )}
-            </For>
-            <Image css={{ display: 'block' }} image="hi" />
-          </div>
+          <For each={state.people}>
+            {(person, index) => (
+              <div
+                key={person}
+                css={{
+                  padding: "10px 0",
+                }}
+              >
+                {person}
+              </div>
+            )}
+          </For>
         );
       }
     `;
 
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
-    expect(builderJson).toMatchSnapshot();
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    expect(backToJsxLite).toMatchSnapshot();
     const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
-    expect(jsxLite).toEqual(code);
+    expect(jsxLite.trim()).toEqual(code.trim());
   });
 });

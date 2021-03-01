@@ -310,8 +310,13 @@ const componentMappers: {
     const styleString = getStyleStringFromBlock(block);
     const actionBindings = getActionBindingsFromBlock(block);
 
+    const blockBindings = {
+      ...block.code?.bindings,
+      ...block.bindings,
+    };
+
     const bindings: any = {
-      ...omitBy(block.bindings, (value, key) => {
+      ...omitBy(blockBindings, (value, key) => {
         if (key === 'component.options.text') {
           return true;
         }
@@ -333,7 +338,7 @@ const componentMappers: {
     const properties = { ...block.properties };
 
     const innerBindings = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']: bindings[
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: blockBindings[
         'component.options.text'
       ],
     };
@@ -449,13 +454,18 @@ export const builderElementToJsxLiteNode = (
           ) || [],
       });
     } else {
+      const useBlock =
+        block.component?.name === 'Core:Fragment' &&
+        block.children?.length === 1
+          ? block.children[0]
+          : block;
       return createJSXLiteNode({
         name: 'For',
         bindings: {
           each: block.repeat?.collection,
           _forName: block.repeat?.itemName || 'item',
         },
-        children: [builderElementToJsxLiteNode(omit(block, 'repeat'))],
+        children: [builderElementToJsxLiteNode(omit(useBlock, 'repeat'))],
       });
     }
   }
