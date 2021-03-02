@@ -4,6 +4,21 @@ import { types } from '@babel/core';
 export const staticControlFlow = {
   create: (context: Readonly<Rule.RuleContext>): Rule.RuleListener => {
     return {
+      VariableDeclarator(node: any) {
+        if (types.isVariableDeclarator(node)) {
+          if (
+            types.isObjectPattern(node.id) &&
+            types.isIdentifier(node.init) &&
+            node.init.name === 'state'
+          ) {
+            context.report({
+              node: node as any,
+              message: 'You cannot destructure state asshole',
+            });
+          }
+        }
+      },
+
       JSXExpressionContainer(node: any) {
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {

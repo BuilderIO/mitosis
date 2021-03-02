@@ -341,6 +341,9 @@ export const componentToReact = (
   if (refs.size) {
     reactLibImports.add('useRef');
   }
+  if (json.hooks.onMount || json.hooks.onUnMount) {
+    reactLibImports.add('useEffect');
+  }
 
   let str = dedent`
   ${
