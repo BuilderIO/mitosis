@@ -11,7 +11,7 @@ An example JSX Lite component showing several features:
 ```javascript
 import { useState, Show, For } from '@jsx-lite/core';
 
-export default function MyComponent() {
+export default function MyComponent(props) {
   const state = useState({
     newItemName: 'New item',
     list: ['hello', 'world'],
