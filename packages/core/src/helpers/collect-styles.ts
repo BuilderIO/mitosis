@@ -1,5 +1,4 @@
 import * as CSS from 'csstype';
-import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase, pickBy } from 'lodash';
 import { JSXLiteNode } from 'src/types/jsx-lite-node';
@@ -20,7 +19,7 @@ export const nodeHasStyles = (node: JSXLiteNode) => {
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         hasStyles = true;
@@ -63,18 +62,22 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
         delete item.bindings.css;
-        const componentName = /^h\d$/.test(item.name || '')
+        const componentName = item.properties.$name
+          ? capitalize(camelCase(item.properties.$name))
+          : /^h\d$/.test(item.name || '')
           ? item.name
           : capitalize(camelCase(item.name || 'div'));
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${index}`;
+        const className = `${componentName}${
+          componentName !== item.name && index === 1 ? '' : index
+        }`;
 
         let str = '';
         const styles = getStylesOnly(value);
@@ -112,12 +115,14 @@ export const collectStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
         delete item.bindings.css;
-        const componentName = /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
+        const componentName = item.properties.$name
+          ? dashCase(item.properties.$name)
+          : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
           : dashCase(item.name || 'div');
 
@@ -125,10 +130,11 @@ export const collectStyles = (
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}${
           options.prefix ? `-${options.prefix}` : ''
-        }-${index}`;
+        }${componentName !== item.name && index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${item.properties[classProperty] ||
-          ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 

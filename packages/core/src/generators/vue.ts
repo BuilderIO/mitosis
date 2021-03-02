@@ -19,6 +19,7 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import json5 from 'json5';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -189,6 +190,7 @@ export const componentToVue = (
   );
 
   const elementProps = getProps(component);
+  stripMetaProperties(component);
 
   let str = dedent`
     <template>

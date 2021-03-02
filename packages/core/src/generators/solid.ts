@@ -15,6 +15,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { fastClone } from '../helpers/fast-clone';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
@@ -148,6 +149,7 @@ export const componentToSolid = (
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
+  stripMetaProperties(json);
   let str = dedent`
     import { createMutable, Show, For } from 'solid-js';
     ${

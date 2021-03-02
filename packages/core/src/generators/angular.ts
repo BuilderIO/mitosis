@@ -20,6 +20,7 @@ import {
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { kebabCase } from 'lodash';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 export type ToAngularOptions = {
   prettier?: boolean;
@@ -158,6 +159,8 @@ export const componentToAngular = (
   if (options.prettier !== false) {
     template = tryFormat(template, 'html');
   }
+
+  stripMetaProperties(json);
 
   const dataString = getStateObjectString(json, {
     format: 'class',

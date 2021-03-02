@@ -337,6 +337,10 @@ const componentMappers: {
     };
     const properties = { ...block.properties };
 
+    if (block.layerName) {
+      properties.$name = block.layerName;
+    }
+
     const innerBindings = {
       [options.preserveTextBlocks ? 'innerHTML' : '_text']: blockBindings[
         'component.options.text'

@@ -24,6 +24,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 type ToHtmlOptions = {
   prettier?: boolean;
@@ -394,6 +395,7 @@ export const componentToHtml = (
   const css = collectCss(json, {
     prefix: options.prefix,
   });
+  stripMetaProperties(json);
   let str = json.children
     .map((item) => blockToHtml(item, useOptions))
     .join('\n');
@@ -558,6 +560,7 @@ export const componentToCustomElement = (
   const css = collectCss(json, {
     prefix: options.prefix,
   });
+  stripMetaProperties(json);
 
   let html = json.children
     .map((item) => blockToHtml(item, useOptions))

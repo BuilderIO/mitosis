@@ -20,6 +20,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
@@ -167,6 +168,7 @@ export const componentToSvelte = (
     json = runPostJsonPlugins(json, useOptions.plugins);
   }
   const css = collectCss(json);
+  stripMetaProperties(json);
 
   let dataString = getStateObjectString(json, {
     data: true,

@@ -12,6 +12,7 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 /**
  * Test if the binding expression would be likely to generate
@@ -161,6 +162,7 @@ export const componentToLiquid = (
     json = runPreJsonPlugins(json, options.plugins);
   }
   const css = collectCss(json);
+  stripMetaProperties(json);
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }

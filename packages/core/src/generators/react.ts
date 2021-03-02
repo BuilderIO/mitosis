@@ -32,6 +32,7 @@ import {
 } from '../modules/plugins';
 import { capitalize } from '../helpers/capitalize';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -330,6 +331,8 @@ export const componentToReact = (
     stylesType === 'styled-components' &&
     componentHasStyles &&
     collectStyledComponents(json);
+
+  stripMetaProperties(json);
 
   const reactLibImports: Set<ReactExports> = new Set();
   if (useStateCode && useStateCode.length > 4) {

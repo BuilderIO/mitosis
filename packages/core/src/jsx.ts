@@ -64,6 +64,9 @@ declare global {
       classList?: { [k: string]: boolean | undefined };
       on?: { [key: string]: EventHandler<T, CustomEvent> };
       onCapture?: { [key: string]: EventHandler<T, CustomEvent> };
+
+      $name?: string;
+      $id?: string;
     }
 
     // https://github.com/ryansolid/babel-plugin-jsx-dom-expressions#oneventname
@@ -1201,8 +1204,9 @@ declare global {
           'color-interpolation' | 'color-rendering'
         > {}
 
-    interface AnimateMotionSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateMotionSVGAttributes<
+      T
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationTimingSVGAttributes,
         AnimationValueSVGAttributes,
@@ -1213,8 +1217,9 @@ declare global {
       origin?: 'default';
     }
 
-    interface AnimateTransformSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateTransformSVGAttributes<
+      T
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationAttributeTargetSVGAttributes,
         AnimationTimingSVGAttributes,
@@ -1364,8 +1369,9 @@ declare global {
       stdDeviation?: number | string;
     }
 
-    interface FeImageSVGAttributes<T>
-      extends FilterPrimitiveElementSVGAttributes<T>,
+    interface FeImageSVGAttributes<
+      T
+    > extends FilterPrimitiveElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         ExternalResourceSVGAttributes,
         StylableSVGAttributes {
