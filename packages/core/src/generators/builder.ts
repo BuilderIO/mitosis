@@ -124,11 +124,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -210,9 +206,11 @@ export const blockToBuilder = (
     }
   }
 
+  const builderBindings: Record<string, any> = {};
+
   if (thisIsComponent) {
     for (const key in bindings) {
-      bindings[`component.options.${key}`] = bindings[key];
+      builderBindings[`component.options.${key}`] = bindings[key];
     }
   }
 
@@ -269,10 +267,13 @@ export const blockToBuilder = (
         },
       }),
       code: {
+        bindings: builderBindings,
         actions,
       },
       properties: thisIsComponent ? undefined : (json.properties as any),
-      bindings: thisIsComponent ? undefined : omit(bindings as any, 'css'),
+      bindings: thisIsComponent
+        ? builderBindings
+        : omit(bindings as any, 'css'),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)
