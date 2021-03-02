@@ -103,6 +103,10 @@
     </tbody>
   </table>
 
+## Docs
+
+Check out the [overview](docs/overview.md) for an intro to writing JSX Lite components
+
 ## CLI
 
 Try JSX Lite out locally with our [CLI](packages/cli)
