@@ -11,7 +11,7 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { kebabCase, omit, set } from 'lodash';
+import { attempt, kebabCase, omit, set } from 'lodash';
 import { symbolBlocksAsChildren } from '../parsers/builder';
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
@@ -124,11 +124,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -211,10 +207,21 @@ export const blockToBuilder = (
   }
 
   const builderBindings: Record<string, any> = {};
+  const componentOptions: Record<string, any> = json.properties;
 
   if (thisIsComponent) {
     for (const key in bindings) {
-      builderBindings[`component.options.${key}`] = bindings[key];
+      if (key === 'css') {
+        continue;
+      }
+      const value = bindings[key];
+      const parsed = attempt(() => json5.parse(value as string));
+
+      if (!(parsed instanceof Error)) {
+        componentOptions[key] = parsed;
+      } else {
+        builderBindings[`component.options.${key}`] = bindings[key];
+      }
     }
   }
 
@@ -268,7 +275,7 @@ export const blockToBuilder = (
       ...(thisIsComponent && {
         component: {
           name: mapComponentName(json.name),
-          options: json.properties,
+          options: componentOptions,
         },
       }),
       code: {

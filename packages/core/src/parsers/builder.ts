@@ -531,6 +531,16 @@ export const builderElementToJsxLiteNode = (
   const css = getCssFromBlock(block);
   let styleString = getStyleStringFromBlock(block);
   const actionBindings = getActionBindingsFromBlock(block);
+  for (const binding in blockBindings) {
+    if (
+      binding.startsWith('component.options') ||
+      binding.startsWith('options')
+    ) {
+      const value = blockBindings[binding];
+      const useKey = binding.replace(/^(component\.options\.|options\.)/, '');
+      bindings[useKey] = value;
+    }
+  }
 
   const node = createJSXLiteNode({
     name:
