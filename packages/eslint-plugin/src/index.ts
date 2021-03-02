@@ -13,7 +13,8 @@ export const staticControlFlow = {
           ) {
             context.report({
               node: node as any,
-              message: 'You cannot destructure state asshole',
+              message:
+                'Destructuring the state object is currently not supported',
             });
           }
         }
