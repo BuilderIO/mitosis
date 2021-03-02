@@ -109,13 +109,17 @@ const mappers: {
 };
 
 const getId = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
-  const name = /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
+  const name = json.properties.$name
+    ? dashCase(json.properties.$name)
+    : /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
     ? json.name
     : dashCase(json.name || 'div');
 
   const newNameNum = (options.namesMap[name] || 0) + 1;
   options.namesMap[name] = newNameNum;
-  return `${name}${options.prefix ? `-${options.prefix}` : ''}-${newNameNum}`;
+  return `${name}${options.prefix ? `-${options.prefix}` : ''}${
+    name !== json.name && newNameNum === 1 ? '' : `-${newNameNum}`
+  }`;
 };
 
 const updateReferencesInCode = (
