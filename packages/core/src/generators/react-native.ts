@@ -2,7 +2,7 @@ import { types } from '@babel/core';
 import * as CSS from 'csstype';
 import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase } from 'lodash';
+import { camelCase, size } from 'lodash';
 import { format } from 'prettier/standalone';
 import { capitalize } from '../helpers/capitalize';
 import traverse from 'traverse';
@@ -36,11 +36,14 @@ export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
         delete item.bindings.css;
+        if (!size(value)) {
+          return;
+        }
         const componentName = camelCase(item.name || 'view');
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
@@ -163,6 +166,9 @@ const blockToReactNative = (
     }
 
     for (const key in json.properties) {
+      if (key.startsWith('$')) {
+        continue;
+      }
       const value = json.properties[key];
       str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
     }
@@ -262,7 +268,7 @@ const getUseStateCode = (
 };
 
 const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
