@@ -379,8 +379,9 @@ export default function Fiddle() {
     const outputMonacoEditorSize = device.small
       ? `calc(${state.outputsTabHeight}vh - 50px)`
       : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -706,11 +707,11 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
                 />
-                {/* <Tab
+                <Tab
                   label={<TabLabelWithIcon label="React Native" />}
                   value="reactNative"
                 />
-                <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" /> */}
+                {/* <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" /> */}
                 <Tab
                   label={
                     <TabLabelWithIcon
