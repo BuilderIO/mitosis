@@ -8,6 +8,7 @@ import { capitalize } from './capitalize';
 import { dashCase } from './dash-case';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 import { isUpperCase } from './is-upper-case';
+import hash from 'object-hash';
 
 export const nodeHasStyles = (node: JSXLiteNode) => {
   return Boolean(
@@ -50,8 +51,6 @@ export type StyleMap = {
  */
 export type ClassStyleMap = { [key: string]: StyleMap };
 
-type FlatClassStyleMap = { [key: string]: CSS.Properties };
-
 type CollectStyleOptions = {
   classProperty?: 'class' | 'className';
   prefix?: string;
@@ -61,6 +60,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
   let styledComponentsCode = `import styled from 'styled-components';\n`;
 
   const componentIndexes: { [className: string]: number | undefined } = {};
+  const componentHashes: { [className: string]: string | undefined } = {};
 
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
@@ -81,6 +81,14 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
         let str = '';
         const styles = getStylesOnly(value);
+
+        const stylesHash = hash(styles);
+        if (stylesHash === componentHashes[componentName]) {
+          return;
+        }
+        if (!componentHashes[componentName]) {
+          componentHashes[componentName] = stylesHash;
+        }
         str += `${styleMapToCss(styles)}\n`;
         const nestedSelectors = getNestedSelectors(value);
         for (const nestedSelector in nestedSelectors) {
@@ -114,6 +122,7 @@ export const collectStyles = (
   const classProperty = options.classProperty || 'class';
 
   const componentIndexes: { [className: string]: number | undefined } = {};
+  const componentHashes: { [className: string]: string | undefined } = {};
 
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
@@ -125,6 +134,20 @@ export const collectStyles = (
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
           : dashCase(item.name || 'div');
+
+        const stylesHash = hash(value);
+        if (componentHashes[componentName] === stylesHash) {
+          const className = `${componentName}${
+            options.prefix ? `-${options.prefix}` : ''
+          }`;
+          item.properties[classProperty] = `${item.properties[classProperty] ||
+            ''} ${className}`
+            .trim()
+            .replace(/\s{2,}/g, ' ');
+          return;
+        }
+
+        componentHashes[componentName] = stylesHash;
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);

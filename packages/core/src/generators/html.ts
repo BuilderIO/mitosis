@@ -244,6 +244,9 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
       if (key === 'innerHTML') {
         continue;
       }
+      if (key.startsWith('$')) {
+        continue;
+      }
       const value = (json.properties[key] || '')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '\\n');
@@ -399,7 +402,7 @@ export const componentToHtml = (
   const css = collectCss(json, {
     prefix: options.prefix,
   });
-  stripMetaProperties(json);
+
   let str = json.children
     .map((item) => blockToHtml(item, useOptions))
     .join('\n');

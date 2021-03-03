@@ -97,6 +97,7 @@ const components: {
     return wrapOutput(
       node,
       parseNode(`<div
+      $name="section"
       css={{
         width: '100%',
         alignSelf: 'stretch',
@@ -145,6 +146,7 @@ const components: {
       parseNode(`
         <div
           class="builder-columns"
+          $name="columns"
           css={{
             display: 'flex',
             ${
@@ -170,6 +172,7 @@ const components: {
               // TODO: pass size down in context
 
               return `<div
+              $name="column"
               class="builder-column"
               css={{
                 display: 'flex',
@@ -242,7 +245,7 @@ const components: {
     return wrapOutput(
       node,
       parseNode(`
-    <div css={{ position: 'relative' }}>
+    <div $name="image-wrap" css={{ position: 'relative' }}>
       <picture>
         ${
           srcSet && srcSet.match(/builder\.io/)
@@ -253,6 +256,7 @@ const components: {
             : ''
         }
         <img
+          $name="image"
           ${lazy ? ` loading="lazy" ` : ''}
           src=${image} 
           ${!sizes ? '' : `sizes=${sizes}`} 
@@ -277,6 +281,7 @@ const components: {
         aspectRatio
           ? `<div
           class="builder-image-sizer"
+          $name="image-sizer"
           css={{
             width: '100%',
             paddingTop: "${aspectRatio * 100 + '%'}",
@@ -289,6 +294,7 @@ const components: {
           node.children && node.children.length
             ? `
           <div
+            $name="image-contents"
             css={{
               display: 'flex',
               flexDirection: 'column',
