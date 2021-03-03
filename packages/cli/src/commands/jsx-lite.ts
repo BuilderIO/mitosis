@@ -72,7 +72,7 @@ const command: GluegunCommand = {
     async function* readFiles() {
       if (isStdin) {
         const data = await readStdin()
-        return { data }
+        yield { data }
       }
       for (const path of paths) {
         if (filesystem.exists(path) !== 'file') {
@@ -105,13 +105,11 @@ const command: GluegunCommand = {
         output = generator(json, generatorOpts as any)
       } catch (e) {
         print.divider()
-        print.info('Error:')
-        print.error(e)
-        print.divider()
         print.info(`Path: ${path}`)
         print.divider()
-        print.info('Input text:')
-        print.info(inspect(data, true, 10, true))
+        print.info('Error:')
+        print.error(e)
+        process.exit(1)
       }
 
       const isJSON = typeof output === 'object'
