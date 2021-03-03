@@ -468,46 +468,121 @@ export default function MyComponent(props) {
     <>
       <input
         onClick={(event) => {
-          myCallback(event);# JSX Lite Overview
+          myCallback(event);
+        }}
+      />
+    </>
+  );
+}
+```
 
-JSX Lite is a subset of [JSX](https://github.com/facebook/jsx). It supports generating code for a number of frontend frameworks, including React, Vue, Angular, Svelte, and Solid.
+### Can't assign to "params" to "state"
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+JSX lite parsing fails on referencing `props` in a call to `useState`.
 
-**Table of contents**
+_JSX Lite input_
 
-- [At a glance](#at-a-glance)
-- [Components](#components)
-- [Styling](#styling)
-- [State](#state)
-- [Methods](#methods)
-- [Control flow](#control-flow)
-  - [Show](#show)
-  - [For](#for)
-- [Refs](#refs)
-- [onMount](#onmount)
-- [onUnMount](#onunmount)
-- [Gotchas and limitations](#gotchas-and-limitations)
-  - [Defining variables with the same name as a state property will shadow it](#defining-variables-with-the-same-name-as-a-state-property-will-shadow-it)
-  - [Async methods can't be defined on "state"](#async-methods-cant-be-defined-on-state)
-  - [Callback implicitly have an "event" arg](#callback-implicitly-have-an-event-arg)
-  - [Functions can't be passed by reference to JSX callbacks](#functions-cant-be-passed-by-reference-to-jsx-callbacks)
-  - [Can't assign to "params" to "state"](#cant-assign-to-params-to-state)
-  - [Can't destructure assignment from state](#cant-destructure-assignment-from-state)
+```typescript
+export default function MyComponent(props) {
+  const state = useState({ text: props.text });
+  //                             ^^^^^^^^^^
+  //                             Could not JSON5 parse object
+}
+```
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+**Work around**
 
-## At a glance
+Use _onMount_:
 
-JSX Lite is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
+_JSX Lite input_
 
-An example JSX Lite component showing several features:
+```typescript
+export default function MyComponent(props) {
+  const state = useState({ text: null });
 
-```javascript
-import { For, Show, useState } from '@jsx-lite/core';
+  onMount(() => {
+    state.text = props.text;
+  });
+}
+```
+
+_JSX Lite output_
+
+```typescript
+import { useState } from 'react';
 
 export default function MyComponent(props) {
-    return <></>;
+  const [text, setText] = useState(() => null);
+
+  useEffect(() => {
+    setText(props.text);
+  }, []);
+
+  return <></>;
+}
+```
+
+### Can't destructure assignment from state
+
+Destructuring assignment from `state` isn't currently supported, and is
+ignored by the compiler.
+
+_JSX Lite input_
+
+```typescript
+export default function MyComponent() {
+  const state = useState({ foo: '1' });
+
+  onMount(() => {
+    const { foo } = state;
+  });
+}
+```
+
+_JSX Lite output_
+
+```typescript
+import { useState } from 'react';
+
+export default function MyComponent(props) {
+  const [foo, setFoo] = useState(() => '1');
+
+  useEffect(() => {
+    const { foo } = state;
+  }, []);
+
+  return <></>;
+}
+```
+
+**Work around**
+
+Use standard assignment instead for now.
+
+_JSX Lite input_
+
+```typescript
+export default function MyComponent() {
+  const state = useState({ foo: '1' });
+
+  onMount(() => {
+    const foo = state.foo;
+  });
+}
+```
+
+_JSX Lite output_
+
+```typescript
+import { useState } from 'react';
+
+export default function MyComponent(props) {
+  const [foo, setFoo] = useState(() => '1');
+
+  useEffect(() => {
+    const foo = foo;
+  }, []);
+
+  return <></>;
 }
 ```
