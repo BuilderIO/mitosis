@@ -45,6 +45,32 @@ Supported formats for `--to` are:
 - `liquid`
 - `angular`
 
+Supported formats for `--from` are:
+
+- `jsxLite`
+- `builder`
+- `liquid`
+
+## Cook book
+
+Here are some recipes for standard tasks
+
+### Validate how Builder will transform JSX Lite
+
+```bash
+cat components/postscript.lite.tsx |
+  jsx-lite -t builder - |
+  jsx-lite -f builder -t jsxLite
+```
+
+### Run jsx-lite on file system change
+
+Use a tool like [entr](https://github.com/eradman/entr) or [guard](https://github.com/guard/guard)
+
+```
+find . -name '*lite.tsx' | entr make /_
+```
+
 ## Known issues
 
 - Running `jsx-lite` from the root of this repository breaks due to some
