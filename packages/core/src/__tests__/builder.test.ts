@@ -234,4 +234,34 @@ describe('Builder', () => {
     const jsxLite = componentToJsxLite(backToJsxLite);
     expect(jsxLite.trim()).toEqual(code.trim());
   });
+
+  // TODO: get passing, don't add extra divs. or at least use spans instead so don't break layout
+  test.skip('Regenerate span text', () => {
+    const code = dedent`
+      export default function MyComponent(props) {
+        return (
+          <div
+            css={{
+              display: "block",
+            }}
+          >
+            Hi there
+            <span
+              css={{
+                color: "red",
+              }}
+            >
+              Hello world
+            </span>
+          </div>
+        );
+      }    
+    `;
+
+    const json = parseJsx(code);
+    const builderJson = componentToBuilder(json);
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite.trim()).toEqual(code.trim());
+  });
 });
