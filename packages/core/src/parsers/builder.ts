@@ -239,6 +239,7 @@ const componentMappers: {
           return createJSXLiteNode({
             name: 'Symbol',
             bindings: {
+              // TODO: this doesn't use all attrs
               symbol: JSON.stringify({
                 data: block.component?.options.symbol.content.data,
                 content: content, // TODO: convert to <SymbolInternal>...</SymbolInternal> so can be parsed
@@ -408,6 +409,9 @@ export const builderElementToJsxLiteNode = (
   options: BuilderToJSXLiteOptions = {},
   _internalOptions: InternalOptions = {},
 ): JSXLiteNode => {
+  if (block.component?.name === 'Core:Fragment') {
+    block.component.name = 'Fragment';
+  }
   // Special builder properties
   // TODO: support hide and repeat
   const blockBindings = getBlockBindings(block, options);
@@ -508,6 +512,10 @@ export const builderElementToJsxLiteNode = (
       // class: `builder-block ${block.id} ${block.properties?.class || ''}`,
     }),
   };
+
+  if (block.layerName) {
+    properties.$name = block.layerName;
+  }
 
   if ((block as any).linkUrl) {
     properties.href = (block as any).linkUrl;

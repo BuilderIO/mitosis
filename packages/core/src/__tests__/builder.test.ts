@@ -208,4 +208,30 @@ describe('Builder', () => {
     const jsxLite = componentToJsxLite(backToJsxLite);
     expect(jsxLite.trim()).toEqual(code.trim());
   });
+
+  // TODO: fix divs and CoreFragment - need to find way to reproduce
+  test.skip('Regenerate fragments', () => {
+    const code = dedent`
+      export default function MyComponent(props) {
+        return (
+          <>
+            Hello world
+
+            <>
+              <Fragment>Hi</Fragment>
+            </>
+          </>
+        );
+      }    
+    `;
+
+    const json = parseJsx(code);
+    expect(json).toMatchSnapshot();
+    const builderJson = componentToBuilder(json);
+    expect(builderJson).toMatchSnapshot();
+    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
+    expect(backToJsxLite).toMatchSnapshot();
+    const jsxLite = componentToJsxLite(backToJsxLite);
+    expect(jsxLite.trim()).toEqual(code.trim());
+  });
 });
