@@ -41,7 +41,7 @@ const command: GluegunCommand = {
     const header = opts.header
 
     const generatorOpts: { [K in AllGeneratorOptionKeys]: any } = {
-      prettier: true,
+      prettier: opts.prettier ?? true,
       plugins: [],
       format: opts.format,
       prefix: opts.prefix,
