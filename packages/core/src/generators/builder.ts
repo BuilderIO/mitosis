@@ -11,8 +11,11 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { attempt, kebabCase, omit, set } from 'lodash';
+import { attempt, omit, omitBy, set } from 'lodash';
 import { symbolBlocksAsChildren } from '../parsers/builder';
+
+const omitMetaProperties = (obj: Record<string, any>) =>
+  omitBy(obj, (_value, key) => key.startsWith('$'));
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {
@@ -211,7 +214,9 @@ export const blockToBuilder = (
   }
 
   const builderBindings: Record<string, any> = {};
-  const componentOptions: Record<string, any> = json.properties;
+  const componentOptions: Record<string, any> = omitMetaProperties(
+    json.properties,
+  );
 
   if (thisIsComponent) {
     for (const key in bindings) {
@@ -286,7 +291,9 @@ export const blockToBuilder = (
         bindings: builderBindings,
         actions,
       },
-      properties: thisIsComponent ? undefined : (json.properties as any),
+      properties: thisIsComponent
+        ? undefined
+        : omitMetaProperties(json.properties as any),
       bindings: thisIsComponent
         ? builderBindings
         : omit(bindings as any, 'css'),
