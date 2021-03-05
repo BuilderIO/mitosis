@@ -1,4 +1,10 @@
-import { parseJsx } from '@jsx-lite/core'
+import {
+  builderContentToJsxLiteComponent,
+  liquidToBuilder,
+  parseJsx,
+  parseReactiveScript,
+  reactiveScriptRe
+} from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import { inspect } from 'util'
@@ -25,7 +31,8 @@ const command: GluegunCommand = {
     }
 
     // Flags and aliases
-    let to = opts.t ?? opts.to
+    const from_ = strings.camelCase(opts.f ?? opts.from ?? 'jsxLite')
+    const to = strings.camelCase(opts.t ?? opts.to)
     let out = opts.o ?? opts.out
     const force = opts.force ?? false
     const dryRun = opts.dryRun ?? opts.n ?? false
@@ -45,9 +52,6 @@ const command: GluegunCommand = {
 
     // Positional Args
     const paths = parameters.array
-
-    // Flag pre-processing
-    to = strings.camelCase(to)
 
     // Flag configuration state
     const isStdin = parameters.first === '-' || paths.length === 0
@@ -100,7 +104,38 @@ const command: GluegunCommand = {
       }
 
       try {
-        const json = parseJsx(data)
+        let json
+
+        switch (from_) {
+          case 'jsxLite':
+            json = parseJsx(data)
+            break
+
+          case 'builder':
+            json = builderContentToJsxLiteComponent(JSON.parse(data))
+            break
+
+          case 'liquid':
+            const jsxState = parseReactiveScript(data, {
+              format: 'html'
+            }).state
+
+            const builderJson = await liquidToBuilder(
+              data.replace(reactiveScriptRe, '')
+            )
+
+            json = builderContentToJsxLiteComponent({
+              data: { blocks: builderJson }
+            })
+
+            json = { ...json, state: jsxState }
+            break
+
+          default:
+            print.error(`${from_} is not a valid input type`)
+            process.exit(1)
+        }
+
         // TODO validate generator options
         output = generator(json, generatorOpts as any)
       } catch (e) {

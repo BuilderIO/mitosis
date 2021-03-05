@@ -36,6 +36,12 @@ OPTIONS
 		- svelte
 		- liquid
 		- angular
+	--from=<format>, -f=<format>
+		Specify input format. <format> can be one of:
+		
+		- jsxLite
+		- builder
+		- liquid
 	--list, -l
 		List available output formats.
 
