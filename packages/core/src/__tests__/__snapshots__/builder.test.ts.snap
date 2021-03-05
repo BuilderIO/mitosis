@@ -760,7 +760,7 @@ onMount(() => {
 
 exports[`Builder Image 2`] = `
 "import { useState, useRef, Show } from \\"@jsx-lite/core\\";
-import { Fragment, CoreFragment } from \\"@builder.io/components\\";
+import { Fragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
   const state = useState({
@@ -813,23 +813,21 @@ export default function MyComponent(props) {
     <Fragment>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
-          <CoreFragment>
-            <img
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
-              src={props.image}
-              srcset={props.srcset}
-              sizes={props.sizes}
-              onLoad={(event) => state.setLoaded()}
-              css={{
-                opacity: 1,
-                transition: \\"opacity 0.2s ease-in-out\\",
-                objectFit: \\"cover\\",
-                objectPosition: \\"center\\",
-              }}
-            />
-          </CoreFragment>
+          <img
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+            src={props.image}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            onLoad={(event) => state.setLoaded()}
+            css={{
+              opacity: 1,
+              transition: \\"opacity 0.2s ease-in-out\\",
+              objectFit: \\"cover\\",
+              objectPosition: \\"center\\",
+            }}
+          />
         </Show>
         <source srcset={props.srcset} />
       </picture>
@@ -1514,7 +1512,6 @@ onMount(() => {
 
 exports[`Builder Stamped 2`] = `
 "import { useState, Show, For } from \\"@jsx-lite/core\\";
-import { CoreFragment } from \\"@builder.io/components\\";
 
 export default function MyComponent(props) {
   const state = useState({ reviews: [], showReviewPrompt: false });
@@ -1537,33 +1534,32 @@ export default function MyComponent(props) {
         Write a review
       </button>
       <Show when={state.showReviewPrompt}>
-        <CoreFragment>
-          <input placeholder=\\"Email\\" />
-          <input
-            placeholder=\\"Title\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <textarea
-            placeholder=\\"How was your experience?\\"
-            css={{
-              display: \\"block\\",
-            }}
-          />
-          <button
-            onClick={(event) => (state.showReviewPrompt = false)}
-            css={{
-              display: \\"block\\",
-            }}
-          >
-            Submit
-          </button>
-        </CoreFragment>
+        <input placeholder=\\"Email\\" />
+        <input
+          placeholder=\\"Title\\"
+          css={{
+            display: \\"block\\",
+          }}
+        />
+        <textarea
+          placeholder=\\"How was your experience?\\"
+          css={{
+            display: \\"block\\",
+          }}
+        />
+        <button
+          onClick={(event) => (state.showReviewPrompt = false)}
+          css={{
+            display: \\"block\\",
+          }}
+        >
+          Submit
+        </button>
       </Show>
       <For each={state.reviews}>
         {(review, index) => (
           <div
+            $name=\\"Review\\"
             css={{
               margin: \\"10px\\",
               padding: \\"10px\\",
