@@ -1,3 +1,5 @@
+import './jsx';
+
 /**
  * Flow control based on Solid
  *
