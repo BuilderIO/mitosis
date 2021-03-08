@@ -52,7 +52,7 @@ export default function Column(props: ColumnProps) {
     >
       <For each={props.columns}>
         {(column) => (
-          <div class="builder-column" css={{ flexGrow: 1 }}>
+          <div class="builder-column" css={{ flexGrow: '1' }}>
             {column.content}
           </div>
         )}

@@ -79,7 +79,7 @@ export default function Image(props: ImageProps) {
             alt={props.altText}
             aria-role={props.altText ? 'presentation' : undefined}
             css={{
-              opacity: 1,
+              opacity: '1',
               transition: 'opacity 0.2s ease-in-out',
               objectFit: 'cover',
               objectPosition: 'center',
