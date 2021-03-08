@@ -1,4 +1,4 @@
-import * as CSS from 'csstype';
+type CSS = Partial<CSSStyleDeclaration>;
 
 declare global {
   /**
@@ -266,8 +266,8 @@ declare global {
       id?: string;
       lang?: string;
       spellcheck?: boolean;
-      style?: CSS.Properties;
-      css?: CSS.Properties | { [key: string]: CSS.Properties | undefined };
+      style?: CSS;
+      css?: CSS | { [key: string]: CSS | undefined };
       tabindex?: number | string;
       title?: string;
       translate?: 'yes' | 'no';
@@ -862,7 +862,7 @@ declare global {
 
     interface StylableSVGAttributes {
       class?: string;
-      style?: CSS.Properties;
+      style?: CSS;
     }
 
     interface TransformableSVGAttributes {
@@ -1204,8 +1204,9 @@ declare global {
           'color-interpolation' | 'color-rendering'
         > {}
 
-    interface AnimateMotionSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateMotionSVGAttributes<
+      T
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationTimingSVGAttributes,
         AnimationValueSVGAttributes,
@@ -1216,8 +1217,9 @@ declare global {
       origin?: 'default';
     }
 
-    interface AnimateTransformSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateTransformSVGAttributes<
+      T
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationAttributeTargetSVGAttributes,
         AnimationTimingSVGAttributes,
@@ -1367,8 +1369,9 @@ declare global {
       stdDeviation?: number | string;
     }
 
-    interface FeImageSVGAttributes<T>
-      extends FilterPrimitiveElementSVGAttributes<T>,
+    interface FeImageSVGAttributes<
+      T
+    > extends FilterPrimitiveElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         ExternalResourceSVGAttributes,
         StylableSVGAttributes {
