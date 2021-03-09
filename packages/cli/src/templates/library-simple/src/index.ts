@@ -1,1 +1,1 @@
-export { default as RecommendedProducts } from './components/recommendations.lite'
+export { default as RecommendedProducts } from './components/my-component.lite'
