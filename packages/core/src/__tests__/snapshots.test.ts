@@ -9,7 +9,7 @@ import { componentToSolid } from '../generators/solid';
 import { componentToVue } from '../generators/vue';
 import { TestDataLoader, TestData } from './loaders/test-data-loader';
 
-const path = require("path")
+const path = require('path');
 
 const dataLoader = new TestDataLoader({ subdirectories: true });
 const testCases = dataLoader.load(path.resolve(__dirname, './data'));
@@ -21,12 +21,12 @@ describe('Builder', () => {
       const json = parseJsx(jsx);
       const builderJson = componentToBuilder(json);
       expect(builderJson).toMatchSnapshot();
-  
+
       const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
       const jsxLite = componentToJsxLite(backToJsxLite);
       expect(jsxLite).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
 
 describe('Html', () => {
@@ -37,8 +37,8 @@ describe('Html', () => {
       const output = componentToHtml(json);
 
       expect(output).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
 
 describe('Liquid', () => {
@@ -49,8 +49,8 @@ describe('Liquid', () => {
       const output = componentToLiquid(json);
 
       expect(output).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
 
 describe('React', () => {
@@ -61,8 +61,8 @@ describe('React', () => {
       const output = componentToReact(json);
 
       expect(output).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
 
 describe('Solid', () => {
@@ -73,8 +73,8 @@ describe('Solid', () => {
       const output = componentToSolid(json);
 
       expect(output).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
 
 describe('Vue', () => {
@@ -85,6 +85,6 @@ describe('Vue', () => {
       const output = componentToVue(json);
 
       expect(output).toMatchSnapshot();
-    })
-  })
+    });
+  });
 });
