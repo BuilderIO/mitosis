@@ -1,0 +1,6018 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Builder basic 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {
+              "change": "state.name = event.target.value",
+            },
+            "bindings": Object {
+              "value": "state.name",
+            },
+            "children": Array [],
+            "code": Object {
+              "actions": Object {
+                "change": "state.name = event.target.value",
+              },
+              "bindings": Object {},
+            },
+            "properties": Object {},
+            "tagName": "input",
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {},
+            "component": Object {
+              "name": "Text",
+              "options": Object {
+                "text": "
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    ",
+              },
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "Object.assign(state, { name: \\"Steve\\" });
+",
+    "tsCode": "useState({ name: \\"Steve\\" });
+",
+  },
+}
+`;
+
+exports[`Builder basic 2`] = `
+"import { useState } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <input
+        value={state.name}
+        onChange={(event) => (state.name = event.target.value)}
+      />
+      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder button 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "show": "props.link",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "_spread": "props.attributes",
+                  "href": "props.link",
+                  "target": "props.openLinkInNewTab ? '_blank' : undefined",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "props.text",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {},
+                "tagName": "a",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "show": "!props.link",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "_spread": "props.attributes",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "props.text",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "type": "button",
+                },
+                "tagName": "button",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "component": Object {
+          "name": "Fragment",
+          "options": Object {},
+        },
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder button 2`] = `
+"import { Show } from \\"@jsx-lite/core\\";
+import { Fragment } from \\"@builder.io/components\\";
+
+export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <Fragment>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
+      </Show>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Builder button-with-metadata 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "show": "props.link",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "_spread": "props.attributes",
+                  "href": "props.link",
+                  "target": "props.openLinkInNewTab ? '_blank' : undefined",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "props.text",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {},
+                "tagName": "a",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "show": "!props.link",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "_spread": "props.attributes",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "props.text",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "type": "button",
+                },
+                "tagName": "button",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "component": Object {
+          "name": "Fragment",
+          "options": Object {},
+        },
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder button-with-metadata 2`] = `
+"import { Show } from \\"@jsx-lite/core\\";
+import { Fragment } from \\"@builder.io/components\\";
+
+export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <Fragment>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
+      </Show>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Builder columns 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "column.content",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "class": "builder-column",
+                },
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "flexGrow": "1",
+                  },
+                },
+                "tagName": "div",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+            "repeat": Object {
+              "collection": "props.columns",
+              "itemName": "column",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {
+          "class": "builder-columns",
+        },
+        "responsiveStyles": Object {
+          "large": Object {
+            "alignItems": "stretch",
+            "display": "flex",
+            "flexDirection": "column",
+            "lineHeight": "normal",
+          },
+        },
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  },
+  getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  },
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  },
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  },
+});
+",
+    "tsCode": "var props = state;
+
+useState({
+  // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  },
+  getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  },
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  },
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  },
+});
+",
+  },
+}
+`;
+
+exports[`Builder columns 2`] = `
+"import { useState, For } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  });
+
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <div
+      class=\\"builder-columns\\"
+      css={{
+        display: \\"flex\\",
+        flexDirection: \\"column\\",
+        alignItems: \\"stretch\\",
+        lineHeight: \\"normal\\",
+      }}
+    >
+      <For each={props.columns}>
+        {(column, index) => (
+          <div
+            class=\\"builder-column\\"
+            css={{
+              flexGrow: \\"1\\",
+            }}
+          >
+            {column.content}
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder custom-code 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "class": "'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')",
+          "innerHTML": "props.code",
+          "ref": "elem",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+state.findAndRunScripts();
+",
+    "tsCode": "var props = state;
+
+useState({
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+onMount(() => {
+  state.findAndRunScripts();
+});
+",
+  },
+}
+`;
+
+exports[`Builder custom-code 2`] = `
+"import { useState, useRef } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  onMount(() => {
+    state.findAndRunScripts();
+  });
+
+  return (
+    <div
+      ref={elem}
+      class={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      innerHTML={props.code}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder embed 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "innerHTML": "props.content",
+          "ref": "elem",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {
+          "class": "builder-embed",
+        },
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`Embed\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+state.findAndRunScripts();
+",
+    "tsCode": "var props = state;
+
+useState({
+  scriptsInserted: [],
+  scriptsRun: [],
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`Embed\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  },
+});
+
+onMount(() => {
+  state.findAndRunScripts();
+});
+",
+  },
+}
+`;
+
+exports[`Builder embed 2`] = `
+"import { useState, useRef } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`Embed\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  onMount(() => {
+    state.findAndRunScripts();
+  });
+
+  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content} />;
+}
+"
+`;
+
+exports[`Builder image 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {},
+            "bindings": Object {
+              "ref": "pictureRef",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": Object {
+                  "show": "!state.useLazyLoading() || state.load",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "actions": Object {
+                      "load": "state.setLoaded()",
+                    },
+                    "bindings": Object {
+                      "alt": "props.altText",
+                      "aria-role": "props.altText ? 'presentation' : undefined",
+                      "class": "'builder-image' + (props.class ? ' ' + props.class : '')",
+                      "sizes": "props.sizes",
+                      "src": "props.image",
+                      "srcset": "props.srcset",
+                    },
+                    "children": Array [],
+                    "code": Object {
+                      "actions": Object {
+                        "load": "state.setLoaded()",
+                      },
+                      "bindings": Object {},
+                    },
+                    "properties": Object {},
+                    "responsiveStyles": Object {
+                      "large": Object {
+                        "objectFit": "cover",
+                        "objectPosition": "center",
+                        "opacity": "1",
+                        "transition": "opacity 0.2s ease-in-out",
+                      },
+                    },
+                    "tagName": "img",
+                  },
+                ],
+                "component": Object {
+                  "name": "Core:Fragment",
+                },
+              },
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "srcset": "props.srcset",
+                },
+                "children": Array [],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {},
+                "tagName": "source",
+              },
+            ],
+            "code": Object {
+              "actions": Object {},
+              "bindings": Object {},
+            },
+            "properties": Object {},
+            "tagName": "picture",
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "component.options.text": "props.children",
+            },
+            "component": Object {
+              "name": "Text",
+              "options": Object {},
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "component": Object {
+          "name": "Fragment",
+          "options": Object {},
+        },
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {
+  scrollListener: null,
+  imageLoaded: false,
+  load: false,
+  setLoaded() {
+    state.imageLoaded = true;
+  },
+  isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  },
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && state.isBrowser();
+  },
+});
+
+if (state.useLazyLoading()) {
+  // throttled scroll capture listener
+  const listener = () => {
+    if (pictureRef) {
+      const rect = pictureRef.getBoundingClientRect();
+      const buffer = window.innerHeight / 2;
+
+      if (rect.top < window.innerHeight + buffer) {
+        state.load = true;
+        state.scrollListener = null;
+        window.removeEventListener(\\"scroll\\", listener);
+      }
+    }
+  };
+
+  state.scrollListener = listener;
+  window.addEventListener(\\"scroll\\", listener, {
+    capture: true,
+    passive: true,
+  });
+  listener();
+}
+",
+    "tsCode": "var props = state;
+
+useState({
+  scrollListener: null,
+  imageLoaded: false,
+  load: false,
+  setLoaded() {
+    state.imageLoaded = true;
+  },
+  isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  },
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && state.isBrowser();
+  },
+});
+
+onMount(() => {
+  if (state.useLazyLoading()) {
+    // throttled scroll capture listener
+    const listener = () => {
+      if (pictureRef) {
+        const rect = pictureRef.getBoundingClientRect();
+        const buffer = window.innerHeight / 2;
+
+        if (rect.top < window.innerHeight + buffer) {
+          state.load = true;
+          state.scrollListener = null;
+          window.removeEventListener(\\"scroll\\", listener);
+        }
+      }
+    };
+
+    state.scrollListener = listener;
+    window.addEventListener(\\"scroll\\", listener, {
+      capture: true,
+      passive: true,
+    });
+    listener();
+  }
+});
+",
+  },
+}
+`;
+
+exports[`Builder image 2`] = `
+"import { useState, useRef, Show } from \\"@jsx-lite/core\\";
+import { Fragment } from \\"@builder.io/components\\";
+
+export default function MyComponent(props) {
+  const state = useState({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  });
+
+  const pictureRef = useRef();
+
+  onMount(() => {
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  });
+
+  return (
+    <Fragment>
+      <picture ref={pictureRef}>
+        <Show when={!state.useLazyLoading() || state.load}>
+          <img
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+            src={props.image}
+            srcset={props.srcset}
+            sizes={props.sizes}
+            onLoad={(event) => state.setLoaded()}
+            css={{
+              opacity: \\"1\\",
+              transition: \\"opacity 0.2s ease-in-out\\",
+              objectFit: \\"cover\\",
+              objectPosition: \\"center\\",
+            }}
+          />
+        </Show>
+        <source srcset={props.srcset} />
+      </picture>
+      <div>{props.children}</div>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Builder img 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "alt": "props.altText",
+          "key": "Builder.isEditing && props.imgSrc || 'default-key'",
+          "src": "props.imgSrc",
+          "style": "{
+  objectFit: props.backgroundSize || 'cover',
+  objectPosition: props.backgroundPosition || 'center'
+}",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "img",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder img 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <img
+      {...props.attributes}
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder input 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "defaultValue": "props.defaultValue",
+          "key": "Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'",
+          "name": "props.name",
+          "placeholder": "props.placeholder",
+          "required": "props.required",
+          "type": "props.type",
+          "value": "props.value",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "input",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder input 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder raw-text 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "class": "props.attributes?.class || props.attributes?.className",
+          "innerHTML": "props.text || ''",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "span",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder raw-text 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <span
+      class={props.attributes?.class || props.attributes?.className}
+      innerHTML={props.text || \\"\\"}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder section 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "style": "props.maxWidth && typeof props.maxWidth === 'number' ? {
+  maxWidth: props.maxWidth
+} : undefined",
+        },
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "component.options.text": "props.children",
+            },
+            "component": Object {
+              "name": "Text",
+              "options": Object {},
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "section",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder section 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+"
+`;
+
+exports[`Builder select 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "defaultValue": "props.defaultValue",
+          "key": "Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'",
+          "name": "props.name",
+          "value": "props.value",
+        },
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {
+                  "value": "option.value",
+                },
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "option.name || option.value",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {},
+                "tagName": "option",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+            "repeat": Object {
+              "collection": "props.options",
+              "itemName": "option",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "select",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder select 2`] = `
+"import { For } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      <For each={props.options}>
+        {(option, index) => (
+          <option value={option.value}>{option.name || option.value}</option>
+        )}
+      </For>
+    </select>
+  );
+}
+"
+`;
+
+exports[`Builder stamped-io 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {},
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "actions": Object {
+              "click": "state.showReviewPrompt = true",
+            },
+            "bindings": Object {},
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "bindings": Object {},
+                "component": Object {
+                  "name": "Text",
+                  "options": Object {
+                    "text": "
+        Write a review
+      ",
+                  },
+                },
+                "tagName": "span",
+              },
+            ],
+            "code": Object {
+              "actions": Object {
+                "click": "state.showReviewPrompt = true",
+              },
+              "bindings": Object {},
+            },
+            "properties": Object {},
+            "tagName": "button",
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "show": "state.showReviewPrompt",
+            },
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "placeholder": "Email",
+                },
+                "tagName": "input",
+              },
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "placeholder": "Title",
+                },
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "display": "block",
+                  },
+                },
+                "tagName": "input",
+              },
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "properties": Object {
+                  "placeholder": "How was your experience?",
+                },
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "display": "block",
+                  },
+                },
+                "tagName": "textarea",
+              },
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {
+                  "click": "state.showReviewPrompt = false",
+                },
+                "bindings": Object {},
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {},
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {
+                        "text": "
+          Submit
+        ",
+                      },
+                    },
+                    "tagName": "span",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {
+                    "click": "state.showReviewPrompt = false",
+                  },
+                  "bindings": Object {},
+                },
+                "properties": Object {},
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "display": "block",
+                  },
+                },
+                "tagName": "button",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+          },
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "children": Array [
+              Object {
+                "@type": "@builder.io/sdk:Element",
+                "actions": Object {},
+                "bindings": Object {},
+                "children": Array [
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "actions": Object {},
+                    "bindings": Object {
+                      "src": "review.avatar",
+                    },
+                    "children": Array [],
+                    "code": Object {
+                      "actions": Object {},
+                      "bindings": Object {},
+                    },
+                    "properties": Object {},
+                    "responsiveStyles": Object {
+                      "large": Object {
+                        "height": "30px",
+                        "marginRight": "10px",
+                        "width": "30px",
+                      },
+                    },
+                    "tagName": "img",
+                  },
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "actions": Object {},
+                    "bindings": Object {},
+                    "children": Array [
+                      Object {
+                        "@type": "@builder.io/sdk:Element",
+                        "actions": Object {},
+                        "bindings": Object {},
+                        "children": Array [
+                          Object {
+                            "@type": "@builder.io/sdk:Element",
+                            "bindings": Object {
+                              "component.options.text": "review.author",
+                            },
+                            "component": Object {
+                              "name": "Text",
+                              "options": Object {},
+                            },
+                            "tagName": "span",
+                          },
+                        ],
+                        "code": Object {
+                          "actions": Object {},
+                          "bindings": Object {},
+                        },
+                        "properties": Object {},
+                        "tagName": "div",
+                      },
+                      Object {
+                        "@type": "@builder.io/sdk:Element",
+                        "actions": Object {},
+                        "bindings": Object {},
+                        "children": Array [
+                          Object {
+                            "@type": "@builder.io/sdk:Element",
+                            "bindings": Object {
+                              "component.options.text": "review.reviewMessage",
+                            },
+                            "component": Object {
+                              "name": "Text",
+                              "options": Object {},
+                            },
+                            "tagName": "span",
+                          },
+                        ],
+                        "code": Object {
+                          "actions": Object {},
+                          "bindings": Object {},
+                        },
+                        "properties": Object {},
+                        "tagName": "div",
+                      },
+                    ],
+                    "code": Object {
+                      "actions": Object {},
+                      "bindings": Object {},
+                    },
+                    "properties": Object {},
+                    "tagName": "div",
+                  },
+                ],
+                "code": Object {
+                  "actions": Object {},
+                  "bindings": Object {},
+                },
+                "layerName": "Review",
+                "properties": Object {},
+                "responsiveStyles": Object {
+                  "large": Object {
+                    "background": "white",
+                    "borderRadius": "5px",
+                    "boxShadow": "0 2px 5px rgba(0, 0, 0, 0.1)",
+                    "display": "flex",
+                    "margin": "10px",
+                    "padding": "10px",
+                  },
+                },
+                "tagName": "div",
+              },
+            ],
+            "component": Object {
+              "name": "Core:Fragment",
+            },
+            "repeat": Object {
+              "collection": "state.reviews",
+              "itemName": "review",
+            },
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, { reviews: [], showReviewPrompt: false });
+
+fetch(
+  \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+    props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+  }&productId=\${props.productId || \\"2410511106127\\"}\`
+)
+  .then((res) => res.json())
+  .then((data) => {
+    state.reviews = data.data;
+  });
+",
+    "tsCode": "var props = state;
+
+useState({ reviews: [], showReviewPrompt: false });
+
+onMount(() => {
+  fetch(
+    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+    }&productId=\${props.productId || \\"2410511106127\\"}\`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      state.reviews = data.data;
+    });
+});
+",
+  },
+}
+`;
+
+exports[`Builder stamped-io 2`] = `
+"import { useState, Show, For } from \\"@jsx-lite/core\\";
+
+export default function MyComponent(props) {
+  const state = useState({ reviews: [], showReviewPrompt: false });
+
+  onMount(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
+  });
+
+  return (
+    <div>
+      <button onClick={(event) => (state.showReviewPrompt = true)}>
+        Write a review
+      </button>
+      <Show when={state.showReviewPrompt}>
+        <input placeholder=\\"Email\\" />
+        <input
+          placeholder=\\"Title\\"
+          css={{
+            display: \\"block\\",
+          }}
+        />
+        <textarea
+          placeholder=\\"How was your experience?\\"
+          css={{
+            display: \\"block\\",
+          }}
+        />
+        <button
+          onClick={(event) => (state.showReviewPrompt = false)}
+          css={{
+            display: \\"block\\",
+          }}
+        >
+          Submit
+        </button>
+      </Show>
+      <For each={state.reviews}>
+        {(review, index) => (
+          <div
+            $name=\\"Review\\"
+            css={{
+              margin: \\"10px\\",
+              padding: \\"10px\\",
+              background: \\"white\\",
+              display: \\"flex\\",
+              borderRadius: \\"5px\\",
+              boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
+            }}
+          >
+            <img
+              src={review.avatar}
+              css={{
+                height: \\"30px\\",
+                width: \\"30px\\",
+                marginRight: \\"10px\\",
+              }}
+            />
+            <div>
+              <div>{review.author}</div>
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        )}
+      </For>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Builder submit-button 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+        },
+        "children": Array [
+          Object {
+            "@type": "@builder.io/sdk:Element",
+            "bindings": Object {
+              "component.options.text": "props.text",
+            },
+            "component": Object {
+              "name": "Text",
+              "options": Object {},
+            },
+            "tagName": "span",
+          },
+        ],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {
+          "type": "submit",
+        },
+        "tagName": "button",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder submit-button 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
+  );
+}
+"
+`;
+
+exports[`Builder text 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "contentEditable": "allowEditingText || undefined",
+          "innerHTML": "props.text || props.content || ''",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "div",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder text 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      innerHTML={props.text || props.content || \\"\\"}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder textarea 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "defaultValue": "props.defaultValue",
+          "name": "props.name",
+          "placeholder": "props.placeholder",
+          "value": "props.value",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {},
+        "tagName": "textarea",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder textarea 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    />
+  );
+}
+"
+`;
+
+exports[`Builder video 1`] = `
+Object {
+  "data": Object {
+    "blocks": Array [
+      Object {
+        "@type": "@builder.io/sdk:Element",
+        "actions": Object {},
+        "bindings": Object {
+          "_spread": "props.attributes",
+          "autoPlay": "props.autoPlay",
+          "controls": "props.controls",
+          "key": "props.video || 'no-src'",
+          "loop": "props.loop",
+          "muted": "props.muted",
+          "poster": "props.posterImage",
+          "style": "{
+  width: '100%',
+  height: '100%',
+  ...props.attributes?.style,
+  objectFit: props.fit,
+  objectPosition: props.position,
+  // Hack to get object fit to work as expected and
+  // not have the video overflow
+  borderRadius: 1
+}",
+        },
+        "children": Array [],
+        "code": Object {
+          "actions": Object {},
+          "bindings": Object {},
+        },
+        "properties": Object {
+          "preload": "none",
+        },
+        "tagName": "video",
+      },
+    ],
+    "jsCode": "var props = state;
+
+Object.assign(state, {});
+",
+    "tsCode": "var props = state;
+
+useState({});
+",
+  },
+}
+`;
+
+exports[`Builder video 2`] = `
+"export default function MyComponent(props) {
+  onMount(() => {
+    var props = state;
+  });
+
+  return (
+    <video
+      {...props.attributes}
+      preload=\\"none\\"
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoPlay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    />
+  );
+}
+"
+`;
+
+exports[`Html basic 1`] = `
+"<div>
+  <input data-name=\\"input-1\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  (() => {
+    const state = { name: \\"Steve\\" };
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+        el.value = state.name;
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html button 1`] = `
+"<span data-name=\\"show\\">
+  <a data-name=\\"a-1\\">
+    <span data-name=\\"div-1\\"><!-- props.text --></span>
+  </a>
+</span>
+
+<span data-name=\\"show-2\\">
+  <button type=\\"button\\" data-name=\\"button-1\\">
+    <span data-name=\\"div-2\\"><!-- props.text --></span>
+  </button>
+</span>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+        el.style.display = props.link ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
+        el.href = props.link;
+        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText = props.text;
+      });
+
+      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
+        el.style.display = !props.link ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+        el.innerText = props.text;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html button-with-metadata 1`] = `
+"<span data-name=\\"show\\">
+  <a data-name=\\"a-1\\">
+    <span data-name=\\"div-1\\"><!-- props.text --></span>
+  </a>
+</span>
+
+<span data-name=\\"show-2\\">
+  <button type=\\"button\\" data-name=\\"button-1\\">
+    <span data-name=\\"div-2\\"><!-- props.text --></span>
+  </button>
+</span>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+        el.style.display = props.link ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
+        el.href = props.link;
+        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText = props.text;
+      });
+
+      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
+        el.style.display = !props.link ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+        el.innerText = props.text;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html custom-code 1`] = `
+"<div data-name=\\"div-1\\"></div>
+<script>
+  (() => {
+    const state = {
+      scriptsInserted: [],
+      scriptsRun: [],
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (state.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              state.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (state.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                state.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+    };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.class =
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\");
+        el.innerHTML = props.code;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    state.findAndRunScripts();
+  })();
+</script>
+"
+`;
+
+exports[`Html embed 1`] = `
+"<div class=\\"builder-embed\\" data-name=\\"div-1\\"></div>
+<script>
+  (() => {
+    const state = {
+      scriptsInserted: [],
+      scriptsRun: [],
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = elem.getElementsByTagName(\\"script\\");
+
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
+
+            if (script.src) {
+              if (state.scriptsInserted.includes(script.src)) {
+                continue;
+              }
+
+              state.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (state.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
+
+              try {
+                state.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`Embed\`: Error running script:\\", error);
+              }
+            }
+          }
+        }
+      },
+    };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerHTML = props.content;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    state.findAndRunScripts();
+  })();
+</script>
+"
+`;
+
+exports[`Html image 1`] = `
+"<picture data-name=\\"picture-1\\">
+  <span data-name=\\"show\\">
+    <img class=\\"img-1\\" data-name=\\"img-1\\" />
+  </span>
+
+  <source data-name=\\"source-1\\" />
+</picture>
+
+<slot></slot>
+
+<style>
+  .img-1 {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      scrollListener: null,
+      imageLoaded: false,
+      load: false,
+      setLoaded() {
+        state.imageLoaded = true;
+        update();
+      },
+      isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && state.isBrowser();
+      },
+    };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+        el.style.display =
+          !state.useLazyLoading() || state.load ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        el.alt = props.altText;
+        el.setAttribute(
+          aria - role,
+          props.altText ? \\"presentation\\" : undefined
+        );
+        el.class = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+        el.src = props.image;
+        el.removeEventListener(\\"load\\", onImg1Load);
+        el.addEventListener(\\"load\\", onImg1Load);
+        el.srcset = props.srcset;
+        el.sizes = props.sizes;
+      });
+
+      document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
+        el.srcset = props.srcset;
+      });
+    }
+
+    // Event handler for 'load' event on img-1
+    function onImg1Load(event) {
+      state.setLoaded();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            update();
+            state.scrollListener = null;
+            update();
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      update();
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html img 1`] = `
+"<img data-name=\\"img-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        Object.assign(el.style, {
+          objectFit: props.backgroundSize || \\"cover\\",
+          objectPosition: props.backgroundPosition || \\"center\\",
+        });
+        el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
+        el.alt = props.altText;
+        el.src = props.imgSrc;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html input 1`] = `
+"<input data-name=\\"input-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+        el.key =
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\";
+        el.placeholder = props.placeholder;
+        el.type = props.type;
+        el.name = props.name;
+        el.value = props.value;
+        el.defaultValue = props.defaultValue;
+        el.required = props.required;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html raw-text 1`] = `
+"<span data-name=\\"span-1\\"></span>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='span-1']\\").forEach((el) => {
+        el.class = props.attributes?.class || props.attributes?.className;
+        el.innerHTML = props.text || \\"\\";
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html section 1`] = `
+"<section data-name=\\"section-1\\">
+  <slot></slot>
+</section>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+        Object.assign(
+          el.style,
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                maxWidth: props.maxWidth,
+              }
+            : undefined
+        );
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html select 1`] = `
+"<select data-name=\\"select-1\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <option data-name=\\"option-1\\">
+      <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+    </option>
+  </template>
+</select>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
+        el.value = props.value;
+        el.key =
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\";
+        el.defaultValue = props.defaultValue;
+        el.name = props.name;
+      });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+        let array = props.options;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"option\\");
+      });
+
+      document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
+        el.value = getContext(el, \\"option\\").value;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText =
+          getContext(el, \\"option\\").name || getContext(el, \\"option\\").value;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(el, array, template, itemName) {
+      el.innerHTML = \\"\\";
+      for (let value of array) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach(function (child) {
+          contextMap.set(child, {
+            ...contextMap.get(child),
+            [itemName]: value,
+          });
+          el.appendChild(child);
+        });
+      }
+    }
+
+    // Helper to pass context down for loops
+    let contextMap = new WeakMap();
+    function getContext(el, name) {
+      let parent = el;
+      do {
+        let context = contextMap.get(parent);
+        if (context && name in context) {
+          return context[name];
+        }
+      } while ((parent = parent.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html stamped-io 1`] = `
+"<div>
+  <button data-name=\\"button-1\\">Write a review</button>
+
+  <span data-name=\\"show\\">
+    <input placeholder=\\"Email\\" />
+
+    <input placeholder=\\"Title\\" class=\\"input-1\\" />
+
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea-1\\"
+    ></textarea>
+
+    <button class=\\"button-1\\" data-name=\\"button-2\\">Submit</button>
+  </span>
+
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <div class=\\"review\\">
+      <img class=\\"img-1\\" data-name=\\"img-1\\" />
+
+      <div>
+        <div>
+          <span data-name=\\"div-1\\"><!-- review.author --></span>
+        </div>
+
+        <div>
+          <span data-name=\\"div-2\\"><!-- review.reviewMessage --></span>
+        </div>
+      </div>
+    </div>
+  </template>
+</div>
+<style>
+  .input-1 {
+    display: block;
+  }
+  .textarea-1 {
+    display: block;
+  }
+  .button-1 {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img-1 {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>
+<script>
+  (() => {
+    const state = { reviews: [], showReviewPrompt: false };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
+
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+        el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+      });
+
+      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+        let array = state.reviews;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"review\\");
+      });
+
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        el.src = getContext(el, \\"review\\").avatar;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").author;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").reviewMessage;
+      });
+    }
+
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.showReviewPrompt = true;
+      update();
+    }
+
+    // Event handler for 'click' event on button-2
+    function onButton2Click(event) {
+      state.showReviewPrompt = false;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+        update();
+      });
+
+    // Helper to render loops
+    function renderLoop(el, array, template, itemName) {
+      el.innerHTML = \\"\\";
+      for (let value of array) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach(function (child) {
+          contextMap.set(child, {
+            ...contextMap.get(child),
+            [itemName]: value,
+          });
+          el.appendChild(child);
+        });
+      }
+    }
+
+    // Helper to pass context down for loops
+    let contextMap = new WeakMap();
+    function getContext(el, name) {
+      let parent = el;
+      do {
+        let context = contextMap.get(parent);
+        if (context && name in context) {
+          return context[name];
+        }
+      } while ((parent = parent.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html submit-button 1`] = `
+"<button type=\\"submit\\" data-name=\\"button-1\\">
+  <span data-name=\\"div-1\\"><!-- props.text --></span>
+</button>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.innerText = props.text;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html text 1`] = `
+"<div data-name=\\"div-1\\"></div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.contentEditable = allowEditingText || undefined;
+        el.innerHTML = props.text || props.content || \\"\\";
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html textarea 1`] = `
+"<textarea data-name=\\"textarea-1\\"></textarea>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
+        el.placeholder = props.placeholder;
+        el.name = props.name;
+        el.value = props.value;
+        el.defaultValue = props.defaultValue;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html video 1`] = `
+"<video preload=\\"none\\" data-name=\\"video-1\\"></video>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='video-1']\\").forEach((el) => {
+        Object.assign(el.style, {
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          objectFit: props.fit,
+          objectPosition: props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          borderRadius: 1,
+        });
+        el.key = props.video || \\"no-src\\";
+        el.poster = props.posterImage;
+        el.autoPlay = props.autoPlay;
+        el.muted = props.muted;
+        el.controls = props.controls;
+        el.loop = props.loop;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Liquid basic 1`] = `
+"<div>
+  <input value=\\"{{name}}\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+"
+`;
+
+exports[`Liquid button 1`] = `
+"<div>
+  {% if link %}
+
+  <a href=\\"{{link}}\\">{{text}}</a>
+
+  {% endif %}
+</div>
+"
+`;
+
+exports[`Liquid button-with-metadata 1`] = `
+"<div>
+  {% if link %}
+
+  <a href=\\"{{link}}\\">{{text}}</a>
+
+  {% endif %}
+</div>
+"
+`;
+
+exports[`Liquid columns 1`] = `
+"<div class=\\"builder-columns div-1\\">
+  {% for column in columns %}
+  <div class=\\"builder-column div-2\\">{{column.content}}</div>
+  {% endfor %}
+</div>
+<style>
+  .div-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  .div-2 {
+    flex-grow: 1;
+  }
+</style>
+"
+`;
+
+exports[`Liquid custom-code 1`] = `
+"<div innerHTML=\\"{{code}}\\"></div>
+"
+`;
+
+exports[`Liquid embed 1`] = `
+"<div class=\\"builder-embed\\" innerHTML=\\"{{content}}\\"></div>
+"
+`;
+
+exports[`Liquid form 1`] = `
+"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
+<style>
+  .pre-1 {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>
+"
+`;
+
+exports[`Liquid image 1`] = `
+"<div>
+  <picture>
+    <source srcset=\\"{{srcset}}\\" />
+  </picture>
+
+  {{children}}
+</div>
+<style>
+  .img-1 {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+"
+`;
+
+exports[`Liquid img 1`] = `
+"<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
+"
+`;
+
+exports[`Liquid input 1`] = `
+"<input
+  placeholder=\\"{{placeholder}}\\"
+  type=\\"{{type}}\\"
+  name=\\"{{name}}\\"
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+  required=\\"{{required}}\\"
+/>
+"
+`;
+
+exports[`Liquid raw-text 1`] = `
+"<span></span>
+"
+`;
+
+exports[`Liquid section 1`] = `
+"<section>{{children}}</section>
+"
+`;
+
+exports[`Liquid select 1`] = `
+"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+  {% for option in options %}
+  <option value=\\"{{option.value}}\\"></option>
+  {% endfor %}
+</select>
+"
+`;
+
+exports[`Liquid stamped-io 1`] = `
+"<div>
+  <button>Write a review</button>
+
+  {% if showReviewPrompt %}
+
+  <input placeholder=\\"Email\\" />
+
+  <input placeholder=\\"Title\\" class=\\"input-1\\" />
+
+  <textarea
+    placeholder=\\"How was your experience?\\"
+    class=\\"textarea-1\\"
+  ></textarea>
+
+  <button class=\\"button-1\\">Submit</button>
+
+  {% endif %} {% for review in reviews %}
+  <div class=\\"review\\">
+    <img class=\\"img-1\\" src=\\"{{review.avatar}}\\" />
+
+    <div>
+      <div>{{review.author}}</div>
+
+      <div>{{review.reviewMessage}}</div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<style>
+  .input-1 {
+    display: block;
+  }
+  .textarea-1 {
+    display: block;
+  }
+  .button-1 {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img-1 {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>
+"
+`;
+
+exports[`Liquid submit-button 1`] = `
+"<button type=\\"submit\\">{{text}}</button>
+"
+`;
+
+exports[`Liquid text 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid textarea 1`] = `
+"<textarea
+  placeholder=\\"{{placeholder}}\\"
+  name=\\"{{name}}\\"
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+></textarea>
+"
+`;
+
+exports[`Liquid video 1`] = `
+"<video
+  preload=\\"none\\"
+  poster=\\"{{posterImage}}\\"
+  autoplay=\\"{{autoPlay}}\\"
+  muted=\\"{{muted}}\\"
+  controls=\\"{{controls}}\\"
+  loop=\\"{{loop}}\\"
+></video>
+"
+`;
+
+exports[`React basic 1`] = `
+"import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function MyBasicComponent(props) {
+  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
+
+  return (
+    <>
+      <div>
+        <input
+          value={state.name}
+          onChange={(event) => {
+            state.name = event.target.value;
+          }}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React button 1`] = `
+"export default function Button(props) {
+  return (
+    <>
+      <>
+        {Boolean(props.link) && (
+          <>
+            <a
+              {...props.attributes}
+              href={props.link}
+              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {props.text}
+            </a>
+          </>
+        )}
+
+        {Boolean(!props.link) && (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {props.text}
+            </button>
+          </>
+        )}
+      </>
+    </>
+  );
+}
+"
+`;
+
+exports[`React button-with-metadata 1`] = `
+"export default function Button(props) {
+  return (
+    <>
+      <>
+        {Boolean(props.link) && (
+          <>
+            <a
+              {...props.attributes}
+              href={props.link}
+              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {props.text}
+            </a>
+          </>
+        )}
+
+        {Boolean(!props.link) && (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {props.text}
+            </button>
+          </>
+        )}
+      </>
+    </>
+  );
+}
+"
+`;
+
+exports[`React columns 1`] = `
+"/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Column(props) {
+  const state = useLocalObservable(() => ({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  }));
+
+  return (
+    <>
+      <div
+        className=\\"builder-columns\\"
+        css={{
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+          lineHeight: \\"normal\\",
+        }}
+      >
+        {props.columns.map((column) => (
+          <>
+            <div
+              className=\\"builder-column\\"
+              css={{
+                flexGrow: \\"1\\",
+              }}
+            >
+              {column.content}
+            </div>
+          </>
+        ))}
+      </div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React custom-code 1`] = `
+"import { useRef, useEffect } from \\"react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function CustomCode(props) {
+  const state = useLocalObservable(() => ({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  }));
+
+  const elem = useRef();
+
+  useEffect(() => {
+    state.findAndRunScripts();
+  }, []);
+
+  return (
+    <>
+      <div
+        ref={elem}
+        className={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+      ></div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React embed 1`] = `
+"import { useRef, useEffect } from \\"react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Embed(props) {
+  const state = useLocalObservable(() => ({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem.current && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`Embed\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  }));
+
+  const elem = useRef();
+
+  useEffect(() => {
+    state.findAndRunScripts();
+  }, []);
+
+  return (
+    <>
+      <div
+        className=\\"builder-embed\\"
+        ref={elem}
+        dangerouslySetInnerHTML={{ __html: \\"props.content\\" }}
+      ></div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React form 1`] = `
+"import { useRef } from \\"react\\";
+/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+export default function FormComponent(props) {
+  const state = useLocalObservable(() => ({
+    state: \\"unsubmitted\\",
+    responseData: null,
+    formErrorMessage: \\"\\",
+    get submissionState() {
+      return (Builder.isEditing && props.previewState) || state.state;
+    },
+    onSubmit(event) {
+      const sendWithJs =
+        props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+      if (props.sendSubmissionsTo === \\"zapier\\") {
+        event.preventDefault();
+      } else if (sendWithJs) {
+        if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+          event.preventDefault();
+          return;
+        }
+
+        event.preventDefault();
+        const el = event.currentTarget;
+        const headers = props.customHeaders || {};
+        let body;
+        const formData = new FormData(el); // TODO: maybe support null
+
+        const formPairs = Array.from(
+          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+        )
+          .filter((el) => !!el.name)
+          .map((el) => {
+            let value;
+            const key = el.name;
+
+            if (el instanceof HTMLInputElement) {
+              if (el.type === \\"radio\\") {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value,
+                  };
+                }
+              } else if (el.type === \\"checkbox\\") {
+                value = el.checked;
+              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                const num = el.valueAsNumber;
+
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === \\"file\\") {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = el.value;
+            }
+
+            return {
+              key,
+              value,
+            };
+          });
+        let contentType = props.contentType;
+
+        if (props.sendSubmissionsTo === \\"email\\") {
+          contentType = \\"multipart/form-data\\";
+        }
+
+        Array.from(formPairs).forEach(({ value }) => {
+          if (
+            value instanceof File ||
+            (Array.isArray(value) && value[0] instanceof File) ||
+            value instanceof FileList
+          ) {
+            contentType = \\"multipart/form-data\\";
+          }
+        }); // TODO: send as urlEncoded or multipart by default
+        // because of ease of use and reliability in browser API
+        // for encoding the form?
+
+        if (contentType !== \\"application/json\\") {
+          body = formData;
+        } else {
+          // Json
+          const json = {};
+          Array.from(formPairs).forEach(({ value, key }) => {
+            set(json, key, value);
+          });
+          body = JSON.stringify(json);
+        }
+
+        if (contentType && contentType !== \\"multipart/form-data\\") {
+          if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+              sendWithJs && props.action?.includes(\\"zapier.com\\")
+            )
+          ) {
+            headers[\\"content-type\\"] = contentType;
+          }
+        }
+        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+          detail: { body },
+        });
+        if (formRef.current) {
+          formRef.current.dispatchEvent(presubmitEvent);
+          if (presubmitEvent.defaultPrevented) {
+            return;
+          }
+        }
+        state.state = \\"sending\\";
+        const formUrl = \`\${
+          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+          props.sendSubmissionsToEmail || \\"\\"
+        )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+        fetch(
+          props.sendSubmissionsTo === \\"email\\"
+            ? formUrl
+            : props.action /* TODO: throw error if no action URL */,
+          { body, headers, method: props.method || \\"post\\" }
+        ).then(
+          async (res) => {
+            let body;
+            const contentType = res.headers.get(\\"content-type\\");
+            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+            if (!res.ok && props.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */ let message = get(
+                body,
+                props.errorMessagePath
+              );
+              if (message) {
+                if (typeof message !== \\"string\\") {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */ message = JSON.stringify(
+                    message
+                  );
+                }
+                state.formErrorMessage = message;
+              }
+            }
+            state.responseData = body;
+            state.state = res.ok ? \\"success\\" : \\"error\\";
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                detail: { res, body },
+              });
+              if (formRef.current) {
+                formRef.current.dispatchEvent(submitSuccessEvent);
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */ if (
+                  props.resetFormOnSubmit !== false
+                ) {
+                  formRef.current.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */ if (
+                props.successUrl
+              ) {
+                if (formRef.current) {
+                  const event = new CustomEvent(\\"route\\", {
+                    detail: { url: props.successUrl },
+                  });
+                  formRef.current.dispatchEvent(event);
+                  if (!event.defaultPrevented) {
+                    location.href = props.successUrl;
+                  }
+                } else {
+                  location.href = props.successUrl;
+                }
+              }
+            }
+          },
+          (err) => {
+            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+              detail: { error: err },
+            });
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitErrorEvent);
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+            state.responseData = err;
+            state.state = \\"error\\";
+          }
+        );
+      }
+    },
+  }));
+  const formRef = useRef();
+  return (
+    <>
+      {\\" \\"}
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => {
+          state.onSubmit(event);
+        }}
+      >
+        {\\" \\"}
+        {Boolean(props.builderBlock && props.builderBlock.children) && (
+          <>
+            {props.builderBlock?.children.map((block) => (
+              <>
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                ></BuilderBlockComponent>
+              </>
+            ))}
+          </>
+        )}{\\" \\"}
+        {Boolean(state.submissionState === \\"error\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={props.errorMessage}
+            ></BuilderBlocks>
+          </>
+        )}{\\" \\"}
+        {Boolean(state.submissionState === \\"sending\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={props.sendingMessage}
+            ></BuilderBlocks>
+          </>
+        )}{\\" \\"}
+        {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
+          <>
+            <pre
+              className=\\"builder-form-error-text\\"
+              css={{ padding: \\"10px\\", color: \\"red\\", textAlign: \\"center\\" }}
+            >
+              {\\" \\"}
+              {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
+            </pre>
+          </>
+        )}{\\" \\"}
+        {Boolean(state.submissionState === \\"success\\") && (
+          <>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={props.successMessage}
+            ></BuilderBlocks>
+          </>
+        )}{\\" \\"}
+      </form>{\\" \\"}
+    </>
+  );
+}
+"
+`;
+
+exports[`React image 1`] = `
+"import { useRef, useEffect } from \\"react\\";
+/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function Image(props) {
+  const state = useLocalObservable(() => ({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  }));
+
+  const pictureRef = useRef();
+
+  useEffect(() => {
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  return (
+    <>
+      <>
+        <picture ref={pictureRef}>
+          {Boolean(!state.useLazyLoading() || state.load) && (
+            <>
+              <img
+                alt={props.altText}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
+                css={{
+                  opacity: \\"1\\",
+                  transition: \\"opacity 0.2s ease-in-out\\",
+                  objectFit: \\"cover\\",
+                  objectPosition: \\"center\\",
+                }}
+                className={
+                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+                }
+                src={props.image}
+                onLoad={(event) => {
+                  state.setLoaded();
+                }}
+                srcset={props.srcset}
+                sizes={props.sizes}
+              />
+            </>
+          )}
+
+          <source srcset={props.srcset} />
+        </picture>
+
+        {props.children}
+      </>
+    </>
+  );
+}
+"
+`;
+
+exports[`React img 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+export default function ImgComponent(props) {
+  return (
+    <>
+      <img
+        {...props.attributes}
+        style={{
+          objectFit: props.backgroundSize || \\"cover\\",
+          objectPosition: props.backgroundPosition || \\"center\\",
+        }}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
+  );
+}
+"
+`;
+
+exports[`React input 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+export default function FormInputComponent(props) {
+  return (
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+      />
+    </>
+  );
+}
+"
+`;
+
+exports[`React raw-text 1`] = `
+"export default function RawText(props) {
+  return (
+    <>
+      <span
+        className={props.attributes?.class || props.attributes?.className}
+        dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
+      ></span>
+    </>
+  );
+}
+"
+`;
+
+exports[`React section 1`] = `
+"export default function SectionComponent(props) {
+  return (
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                maxWidth: props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
+  );
+}
+"
+`;
+
+exports[`React select 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+export default function SelectComponent(props) {
+  return (
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        {props.options.map((option) => (
+          <>
+            <option value={option.value}>{option.name || option.value}</option>
+          </>
+        ))}
+      </select>
+    </>
+  );
+}
+"
+`;
+
+exports[`React stamped-io 1`] = `
+"import { useEffect } from \\"react\\";
+/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+import { useLocalObservable } from \\"mobx-react-lite\\";
+
+export default function SmileReviews(props) {
+  const state = useLocalObservable(() => ({
+    reviews: [],
+    showReviewPrompt: false,
+  }));
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
+  }, []);
+
+  return (
+    <>
+      <div>
+        <button
+          onClick={(event) => {
+            state.showReviewPrompt = true;
+          }}
+        >
+          Write a review
+        </button>
+
+        {Boolean(state.showReviewPrompt) && (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input
+              placeholder=\\"Title\\"
+              css={{
+                display: \\"block\\",
+              }}
+            />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              css={{
+                display: \\"block\\",
+              }}
+            ></textarea>
+            <button
+              css={{
+                display: \\"block\\",
+              }}
+              onClick={(event) => {
+                state.showReviewPrompt = false;
+              }}
+            >
+              Submit
+            </button>
+          </>
+        )}
+
+        {state.reviews.map((review) => (
+          <>
+            <div
+              css={{
+                margin: \\"10px\\",
+                padding: \\"10px\\",
+                background: \\"white\\",
+                display: \\"flex\\",
+                borderRadius: \\"5px\\",
+                boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
+              }}
+            >
+              <img
+                css={{
+                  height: \\"30px\\",
+                  width: \\"30px\\",
+                  marginRight: \\"10px\\",
+                }}
+                src={review.avatar}
+              />
+
+              <div>
+                <div>{review.author}</div>
+
+                <div>{review.reviewMessage}</div>
+              </div>
+            </div>
+          </>
+        ))}
+      </div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React submit-button 1`] = `
+"export default function SubmitButton(props) {
+  return (
+    <>
+      <button {...props.attributes} type=\\"submit\\">
+        {props.text}
+      </button>
+    </>
+  );
+}
+"
+`;
+
+exports[`React text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+export default function Text(props) {
+  return (
+    <>
+      <div
+        contentEditable={allowEditingText || undefined}
+        dangerouslySetInnerHTML={{
+          __html: \\"props.text || props.content || ''\\",
+        }}
+      ></div>
+    </>
+  );
+}
+"
+`;
+
+exports[`React textarea 1`] = `
+"export default function Textarea(props) {
+  return (
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
+  );
+}
+"
+`;
+
+exports[`React video 1`] = `
+"export default function Video(props) {
+  return (
+    <>
+      <video
+        {...props.attributes}
+        preload=\\"none\\"
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          objectFit: props.fit,
+          objectPosition: props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          borderRadius: 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoPlay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
+  );
+}
+"
+`;
+
+exports[`Solid basic 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function MyBasicComponent() {
+  const state = createMutable({ name: \\"Steve\\" });
+
+  return (
+    <div>
+      <input
+        value={state.name}
+        onInput={(event) => (state.name = event.target.value)}
+      />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`Solid button 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Button() {
+  const state = createMutable({});
+
+  return (
+    <Fragment>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+
+      <Show when={!props.link}>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
+      </Show>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Solid button-with-metadata 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Button() {
+  const state = createMutable({});
+
+  return (
+    <Fragment>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+
+      <Show when={!props.link}>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
+      </Show>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Solid columns 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+export default function Column() {
+  const state = createMutable({
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index: number) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index: number) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  });
+
+  return (
+    <div
+      class={css({
+        display: \\"flex\\",
+        flexDirection: \\"column\\",
+        alignItems: \\"stretch\\",
+        lineHeight: \\"normal\\",
+      })}
+    >
+      <For each={props.columns}>
+        <div
+          class={css({
+            flexGrow: \\"1\\",
+          })}
+        >
+          {column.content}
+        </div>
+      </For>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Solid custom-code 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function CustomCode() {
+  const state = createMutable({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  return (
+    <div
+      class={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      ref={elem}
+      innerHTML={props.code}
+    ></div>
+  );
+}
+"
+`;
+
+exports[`Solid embed 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Embed() {
+  const state = createMutable({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`Embed\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  const elem = useRef();
+
+  return <div ref={elem} innerHTML={props.content}></div>;
+}
+"
+`;
+
+exports[`Solid form 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+export default function FormComponent() {
+  const state = createMutable({
+    state: \\"unsubmitted\\",
+    responseData: null,
+    formErrorMessage: \\"\\",
+    get submissionState() {
+      return (Builder.isEditing && props.previewState) || state.state;
+    },
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
+      const sendWithJs =
+        props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+      if (props.sendSubmissionsTo === \\"zapier\\") {
+        event.preventDefault();
+      } else if (sendWithJs) {
+        if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+          event.preventDefault();
+          return;
+        }
+
+        event.preventDefault();
+        const el = event.currentTarget;
+        const headers = props.customHeaders || {};
+        let body: any;
+        const formData = new FormData(el); // TODO: maybe support null
+
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
+          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+        )
+          .filter((el) => !!(el as HTMLInputElement).name)
+          .map((el) => {
+            let value: any;
+            const key = (el as HTMLImageElement).name;
+
+            if (el instanceof HTMLInputElement) {
+              if (el.type === \\"radio\\") {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value,
+                  };
+                }
+              } else if (el.type === \\"checkbox\\") {
+                value = el.checked;
+              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                const num = el.valueAsNumber;
+
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === \\"file\\") {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = (el as HTMLInputElement).value;
+            }
+
+            return {
+              key,
+              value,
+            };
+          });
+        let contentType = props.contentType;
+
+        if (props.sendSubmissionsTo === \\"email\\") {
+          contentType = \\"multipart/form-data\\";
+        }
+
+        Array.from(formPairs).forEach(({ value }) => {
+          if (
+            value instanceof File ||
+            (Array.isArray(value) && value[0] instanceof File) ||
+            value instanceof FileList
+          ) {
+            contentType = \\"multipart/form-data\\";
+          }
+        }); // TODO: send as urlEncoded or multipart by default
+        // because of ease of use and reliability in browser API
+        // for encoding the form?
+
+        if (contentType !== \\"application/json\\") {
+          body = formData;
+        } else {
+          // Json
+          const json = {};
+          Array.from(formPairs).forEach(({ value, key }) => {
+            set(json, key, value);
+          });
+          body = JSON.stringify(json);
+        }
+
+        if (contentType && contentType !== \\"multipart/form-data\\") {
+          if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */
+            !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+          ) {
+            headers[\\"content-type\\"] = contentType;
+          }
+        }
+
+        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+          detail: {
+            body,
+          },
+        });
+
+        if (formRef) {
+          formRef.dispatchEvent(presubmitEvent);
+
+          if (presubmitEvent.defaultPrevented) {
+            return;
+          }
+        }
+
+        state.state = \\"sending\\";
+        const formUrl = \`\${
+          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+          props.sendSubmissionsToEmail || \\"\\"
+        )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+        fetch(
+          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
+          /* TODO: throw error if no action URL */
+          {
+            body,
+            headers,
+            method: props.method || \\"post\\",
+          }
+        ).then(
+          async (res) => {
+            let body;
+            const contentType = res.headers.get(\\"content-type\\");
+
+            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+
+            if (!res.ok && props.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */
+              let message = get(body, props.errorMessagePath);
+
+              if (message) {
+                if (typeof message !== \\"string\\") {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                  message = JSON.stringify(message);
+                }
+
+                state.formErrorMessage = message;
+              }
+            }
+
+            state.responseData = body;
+            state.state = res.ok ? \\"success\\" : \\"error\\";
+
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                detail: {
+                  res,
+                  body,
+                },
+              });
+
+              if (formRef) {
+                formRef.dispatchEvent(submitSuccessEvent);
+
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */
+
+                if (props.resetFormOnSubmit !== false) {
+                  formRef.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
+
+              if (props.successUrl) {
+                if (formRef) {
+                  const event = new CustomEvent(\\"route\\", {
+                    detail: {
+                      url: props.successUrl,
+                    },
+                  });
+                  formRef.dispatchEvent(event);
+
+                  if (!event.defaultPrevented) {
+                    location.href = props.successUrl;
+                  }
+                } else {
+                  location.href = props.successUrl;
+                }
+              }
+            }
+          },
+          (err) => {
+            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+              detail: {
+                error: err,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitErrorEvent);
+
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+
+            state.responseData = err;
+            state.state = \\"error\\";
+          }
+        );
+      }
+    },
+  });
+
+  const formRef = useRef();
+
+  return (
+    <form
+      {...props.attributes}
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => state.onSubmit(event)}
+    >
+      <Show when={props.builderBlock && props.builderBlock.children}>
+        <For each={props.builderBlock?.children}>
+          <BuilderBlockComponent
+            key={block.id}
+            block={block}
+          ></BuilderBlockComponent>
+        </For>
+      </Show>
+
+      <Show when={state.submissionState === \\"error\\"}>
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          blocks={props.errorMessage!}
+        ></BuilderBlocks>
+      </Show>
+
+      <Show when={state.submissionState === \\"sending\\"}>
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage!}
+        ></BuilderBlocks>
+      </Show>
+
+      <Show when={state.submissionState === \\"error\\" && state.responseData}>
+        <pre
+          class={css({
+            padding: \\"10px\\",
+            color: \\"red\\",
+            textAlign: \\"center\\",
+          })}
+        >
+          {JSON.stringify(state.responseData, null, 2)}
+        </pre>
+      </Show>
+
+      <Show when={state.submissionState === \\"success\\"}>
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage!}
+        ></BuilderBlocks>
+      </Show>
+    </form>
+  );
+}
+"
+`;
+
+exports[`Solid image 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+export default function Image() {
+  const state = createMutable({
+    scrollListener: null,
+    imageLoaded: false,
+    load: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && state.isBrowser();
+    },
+  });
+
+  const pictureRef = useRef();
+
+  return (
+    <Fragment>
+      <picture ref={pictureRef}>
+        <Show when={!state.useLazyLoading() || state.load}>
+          <img
+            class={
+              \\"builder-image\\" +
+              (props.class ? \\" \\" + props.class : \\"\\") +
+              \\" \\" +
+              css({
+                opacity: \\"1\\",
+                transition: \\"opacity 0.2s ease-in-out\\",
+                objectFit: \\"cover\\",
+                objectPosition: \\"center\\",
+              })
+            }
+            alt={props.altText}
+            aria-role={props.altText ? \\"presentation\\" : undefined}
+            src={props.image}
+            onLoad={(event) => state.setLoaded()}
+            srcset={props.srcset}
+            sizes={props.sizes}
+          />
+        </Show>
+
+        <source srcset={props.srcset} />
+      </picture>
+
+      {props.children}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Solid img 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function ImgComponent() {
+  const state = createMutable({});
+
+  return (
+    <img
+      {...props.attributes}
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+"
+`;
+
+exports[`Solid input 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function FormInputComponent() {
+  const state = createMutable({});
+
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+"
+`;
+
+exports[`Solid raw-text 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function RawText() {
+  const state = createMutable({});
+
+  return (
+    <span
+      class={props.attributes?.class || props.attributes?.className}
+      innerHTML={props.text || \\"\\"}
+    ></span>
+  );
+}
+"
+`;
+
+exports[`Solid section 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function SectionComponent() {
+  const state = createMutable({});
+
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+"
+`;
+
+exports[`Solid select 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function SelectComponent() {
+  const state = createMutable({});
+
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      <For each={props.options}>
+        <option value={option.value}>{option.name || option.value}</option>
+      </For>
+    </select>
+  );
+}
+"
+`;
+
+exports[`Solid stamped-io 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+import { css } from \\"solid-styled-components\\";
+
+export default function SmileReviews() {
+  const state = createMutable({ reviews: [], showReviewPrompt: false });
+
+  return (
+    <div>
+      <button onClick={(event) => (state.showReviewPrompt = true)}>
+        Write a review
+      </button>
+
+      <Show when={state.showReviewPrompt}>
+        <input placeholder=\\"Email\\" />
+
+        <input
+          class={css({
+            display: \\"block\\",
+          })}
+          placeholder=\\"Title\\"
+        />
+
+        <textarea
+          class={css({
+            display: \\"block\\",
+          })}
+          placeholder=\\"How was your experience?\\"
+        ></textarea>
+
+        <button
+          class={css({
+            display: \\"block\\",
+          })}
+          onClick={(event) => (state.showReviewPrompt = false)}
+        >
+          Submit
+        </button>
+      </Show>
+
+      <For each={state.reviews}>
+        <div
+          class={css({
+            margin: \\"10px\\",
+            padding: \\"10px\\",
+            background: \\"white\\",
+            display: \\"flex\\",
+            borderRadius: \\"5px\\",
+            boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
+          })}
+        >
+          <img
+            class={css({
+              height: \\"30px\\",
+              width: \\"30px\\",
+              marginRight: \\"10px\\",
+            })}
+            src={review.avatar}
+          />
+
+          <div>
+            <div>{review.author}</div>
+
+            <div>{review.reviewMessage}</div>
+          </div>
+        </div>
+      </For>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Solid submit-button 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function SubmitButton() {
+  const state = createMutable({});
+
+  return (
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
+  );
+}
+"
+`;
+
+exports[`Solid text 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function Text() {
+  const state = createMutable({});
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      innerHTML={props.text || props.content || \\"\\"}
+    ></div>
+  );
+}
+"
+`;
+
+exports[`Solid textarea 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Textarea() {
+  const state = createMutable({});
+
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    ></textarea>
+  );
+}
+"
+`;
+
+exports[`Solid video 1`] = `
+"import { createMutable, Show, For } from \\"solid-js\\";
+
+export default function Video() {
+  const state = createMutable({});
+
+  return (
+    <video
+      {...props.attributes}
+      preload=\\"none\\"
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoPlay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    ></video>
+  );
+}
+"
+`;
+
+exports[`Vue basic 1`] = `
+"<template>
+  <div>
+    <input :value=\\"name\\" @input=\\"name = $event.target.value\\" />
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</template>
+<script>
+export default {
+  data: () => ({ name: \\"Steve\\" }),
+};
+</script>
+"
+`;
+
+exports[`Vue button 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue button-with-metadata 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue columns 1`] = `
+"<template>
+  <div class=\\"builder-columns div-1\\">
+    <template v-for=\\"column in columns\\">
+      <div class=\\"builder-column div-2\\">
+        {{ column.content }}
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"columns\\", \\"space\\"],
+
+  methods: {
+    // TODO: These methods are not used right now, but they will be when
+    // support for dynamic CSS lands
+    getColumns() {
+      return this.columns || [];
+    },
+    getGutterSize() {
+      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  },
+};
+</script>
+<style>
+.div-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+}
+.div-2 {
+  flex-grow: 1;
+}
+</style>
+"
+`;
+
+exports[`Vue custom-code 1`] = `
+"<template>
+  <div
+    ref=\\"elem\\"
+    :class=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+    :v-html=\\"code\\"
+  ></div>
+</template>
+<script>
+export default {
+  props: [\\"replaceNodes\\", \\"code\\"],
+
+  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
+
+  mounted() {
+    this.findAndRunScripts();
+  },
+
+  methods: {
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (this.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            this.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (this.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              this.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue embed 1`] = `
+"<template>
+  <div class=\\"builder-embed\\" ref=\\"elem\\" :v-html=\\"content\\"></div>
+</template>
+<script>
+export default {
+  props: [\\"content\\"],
+
+  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
+
+  mounted() {
+    this.findAndRunScripts();
+  },
+
+  methods: {
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (this.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            this.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (this.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              this.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`Embed\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue form 1`] = `
+"<template>
+  <form
+    v-bind=\\"attributes\\"
+    :validate=\\"validate\\"
+    ref=\\"formRef\\"
+    :action=\\"!sendWithJs && action\\"
+    :method=\\"method\\"
+    :name=\\"name\\"
+    @submit=\\"onSubmit(event)\\"
+  >
+    <template v-if=\\"builderBlock && builderBlock.children\\">
+      <template v-for=\\"block in builderBlock?.children\\">
+        <BuilderBlockComponent
+          :key=\\"block.id\\"
+          :block=\\"block\\"
+        ></BuilderBlockComponent>
+      </template>
+    </template>
+
+    <template v-if=\\"submissionState === 'error'\\">
+      <BuilderBlocks
+        dataPath=\\"errorMessage\\"
+        :blocks=\\"errorMessage\\"
+      ></BuilderBlocks>
+    </template>
+
+    <template v-if=\\"submissionState === 'sending'\\">
+      <BuilderBlocks
+        dataPath=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage\\"
+      ></BuilderBlocks>
+    </template>
+
+    <template v-if=\\"submissionState === 'error' && responseData\\">
+      <pre class=\\"builder-form-error-text pre-1\\">
+        {{ JSON.stringify(responseData, null, 2) }}
+      </pre>
+    </template>
+
+    <template v-if=\\"submissionState === 'success'\\">
+      <BuilderBlocks
+        dataPath=\\"successMessage\\"
+        :blocks=\\"successMessage\\"
+      ></BuilderBlocks>
+    </template>
+  </form>
+</template>
+<script>
+import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+export default {
+  props: [
+    \\"previewState\\",
+    \\"sendWithJs\\",
+    \\"sendSubmissionsTo\\",
+    \\"action\\",
+    \\"customHeaders\\",
+    \\"contentType\\",
+    \\"sendSubmissionsToEmail\\",
+    \\"name\\",
+    \\"method\\",
+    \\"errorMessagePath\\",
+    \\"resetFormOnSubmit\\",
+    \\"successUrl\\",
+    \\"validate\\",
+    \\"attributes\\",
+    \\"builderBlock\\",
+    \\"errorMessage\\",
+    \\"sendingMessage\\",
+    \\"successMessage\\",
+  ],
+
+  data: () => ({
+    state: \\"unsubmitted\\",
+    responseData: null,
+    formErrorMessage: \\"\\",
+    BuilderBlock,
+    Builder,
+    builder,
+    BuilderBlocks,
+    set,
+    get,
+  }),
+
+  computed: {
+    submissionState() {
+      return (Builder.isEditing && this.previewState) || this.state;
+    },
+  },
+
+  methods: {
+    onSubmit(event) {
+      const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+
+      if (this.sendSubmissionsTo === \\"zapier\\") {
+        event.preventDefault();
+      } else if (sendWithJs) {
+        if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
+          event.preventDefault();
+          return;
+        }
+
+        event.preventDefault();
+        const el = event.currentTarget;
+        const headers = this.customHeaders || {};
+        let body;
+        const formData = new FormData(el); // TODO: maybe support null
+
+        const formPairs = Array.from(
+          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+        )
+          .filter((el) => !!el.name)
+          .map((el) => {
+            let value;
+            const key = el.name;
+
+            if (el instanceof HTMLInputElement) {
+              if (el.type === \\"radio\\") {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value,
+                  };
+                }
+              } else if (el.type === \\"checkbox\\") {
+                value = el.checked;
+              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                const num = el.valueAsNumber;
+
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === \\"file\\") {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = el.value;
+            }
+
+            return {
+              key,
+              value,
+            };
+          });
+        let contentType = this.contentType;
+
+        if (this.sendSubmissionsTo === \\"email\\") {
+          contentType = \\"multipart/form-data\\";
+        }
+
+        Array.from(formPairs).forEach(({ value }) => {
+          if (
+            value instanceof File ||
+            (Array.isArray(value) && value[0] instanceof File) ||
+            value instanceof FileList
+          ) {
+            contentType = \\"multipart/form-data\\";
+          }
+        }); // TODO: send as urlEncoded or multipart by default
+        // because of ease of use and reliability in browser API
+        // for encoding the form?
+
+        if (contentType !== \\"application/json\\") {
+          body = formData;
+        } else {
+          // Json
+          const json = {};
+          Array.from(formPairs).forEach(({ value, key }) => {
+            set(json, key, value);
+          });
+          body = JSON.stringify(json);
+        }
+
+        if (contentType && contentType !== \\"multipart/form-data\\") {
+          if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */
+            !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+          ) {
+            headers[\\"content-type\\"] = contentType;
+          }
+        }
+
+        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+          detail: {
+            body,
+          },
+        });
+
+        if (this.$refs.formRef) {
+          this.$refs.formRef.dispatchEvent(presubmitEvent);
+
+          if (presubmitEvent.defaultPrevented) {
+            return;
+          }
+        }
+
+        this.state = \\"sending\\";
+        const formUrl = \`\${
+          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+          this.sendSubmissionsToEmail || \\"\\"
+        )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+        fetch(
+          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+          /* TODO: throw error if no action URL */
+          {
+            body,
+            headers,
+            method: this.method || \\"post\\",
+          }
+        ).then(
+          async (res) => {
+            let body;
+            const contentType = res.headers.get(\\"content-type\\");
+
+            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+
+            if (!res.ok && this.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */
+              let message = get(body, this.errorMessagePath);
+
+              if (message) {
+                if (typeof message !== \\"string\\") {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                  message = JSON.stringify(message);
+                }
+
+                this.formErrorMessage = message;
+              }
+            }
+
+            this.responseData = body;
+            this.state = res.ok ? \\"success\\" : \\"error\\";
+
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                detail: {
+                  res,
+                  body,
+                },
+              });
+
+              if (this.$refs.formRef) {
+                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
+
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */
+
+                if (this.resetFormOnSubmit !== false) {
+                  this.$refs.formRef.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
+
+              if (this.successUrl) {
+                if (this.$refs.formRef) {
+                  const event = new CustomEvent(\\"route\\", {
+                    detail: {
+                      url: this.successUrl,
+                    },
+                  });
+                  this.$refs.formRef.dispatchEvent(event);
+
+                  if (!event.defaultPrevented) {
+                    location.href = this.successUrl;
+                  }
+                } else {
+                  location.href = this.successUrl;
+                }
+              }
+            }
+          },
+          (err) => {
+            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+              detail: {
+                error: err,
+              },
+            });
+
+            if (this.$refs.formRef) {
+              this.$refs.formRef.dispatchEvent(submitErrorEvent);
+
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+
+            this.responseData = err;
+            this.state = \\"error\\";
+          }
+        );
+      }
+    },
+  },
+};
+</script>
+<style>
+.pre-1 {
+  padding: 10px;
+  color: red;
+  text-align: center;
+}
+</style>
+"
+`;
+
+exports[`Vue image 1`] = `
+"<template>
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          class=\\"img-1\\"
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"'builder-image' + (class ? ' ' + class : '')\\"
+          :src=\\"image\\"
+          @load=\\"setLoaded()\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
+      <source :srcset=\\"srcset\\" />
+    </picture>
+
+    <slot></slot>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"lazy\\", \\"altText\\", \\"class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+
+  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
+
+  mounted() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.$refs.pictureRef) {
+          const rect = this.$refs.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            this.load = true;
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  },
+
+  methods: {
+    setLoaded() {
+      this.imageLoaded = true;
+    },
+    isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && this.isBrowser();
+    },
+  },
+};
+</script>
+<style>
+.img-1 {
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+}
+</style>
+"
+`;
+
+exports[`Vue img 1`] = `
+"<template>
+  <img
+    v-bind=\\"attributes\\"
+    :style=\\"{
+      objectFit: backgroundSize || 'cover',
+      objectPosition: backgroundPosition || 'center',
+    }\\"
+    :key=\\"(Builder.isEditing && imgSrc) || 'default-key'\\"
+    :alt=\\"altText\\"
+    :src=\\"imgSrc\\"
+  />
+</template>
+<script>
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default {
+  props: [
+    \\"backgroundSize\\",
+    \\"backgroundPosition\\",
+    \\"attributes\\",
+    \\"imgSrc\\",
+    \\"altText\\",
+  ],
+
+  data: () => ({ Builder }),
+};
+</script>
+"
+`;
+
+exports[`Vue input 1`] = `
+"<template>
+  <input
+    v-bind=\\"attributes\\"
+    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+    :placeholder=\\"placeholder\\"
+    :type=\\"type\\"
+    :name=\\"name\\"
+    :value=\\"value\\"
+    :defaultValue=\\"defaultValue\\"
+    :required=\\"required\\"
+  />
+</template>
+<script>
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default {
+  props: [
+    \\"attributes\\",
+    \\"defaultValue\\",
+    \\"placeholder\\",
+    \\"type\\",
+    \\"name\\",
+    \\"value\\",
+    \\"required\\",
+  ],
+
+  data: () => ({ Builder }),
+};
+</script>
+"
+`;
+
+exports[`Vue raw-text 1`] = `
+"<template>
+  <span
+    :class=\\"attributes?.class || attributes?.className\\"
+    :v-html=\\"text || ''\\"
+  ></span>
+</template>
+<script>
+export default {
+  props: [\\"attributes\\", \\"text\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue section 1`] = `
+"<template>
+  <section
+    v-bind=\\"attributes\\"
+    :style=\\"
+      maxWidth && typeof maxWidth === 'number'
+        ? {
+            maxWidth: maxWidth,
+          }
+        : undefined
+    \\"
+  >
+    <slot></slot>
+  </section>
+</template>
+<script>
+export default {
+  props: [\\"attributes\\", \\"maxWidth\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue select 1`] = `
+"<template>
+  <select
+    v-bind=\\"attributes\\"
+    :value=\\"value\\"
+    :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+    :defaultValue=\\"defaultValue\\"
+    :name=\\"name\\"
+  >
+    <template v-for=\\"option in options\\">
+      <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
+    </template>
+  </select>
+</template>
+<script>
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default {
+  props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
+
+  data: () => ({ Builder }),
+};
+</script>
+"
+`;
+
+exports[`Vue stamped-io 1`] = `
+"<template>
+  <div>
+    <button @click=\\"showReviewPrompt = true\\">Write a review</button>
+    <template v-if=\\"showReviewPrompt\\">
+      <input placeholder=\\"Email\\" />
+
+      <input placeholder=\\"Title\\" class=\\"input-1\\" />
+
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea-1\\"
+      ></textarea>
+
+      <button class=\\"button-1\\" @click=\\"showReviewPrompt = false\\">Submit</button>
+    </template>
+    <template v-for=\\"review in reviews\\">
+      <div class=\\"review\\">
+        <img class=\\"img-1\\" :src=\\"review.avatar\\" />
+        <div>
+          <div>{{ review.author }}</div>
+          <div>{{ review.reviewMessage }}</div>
+        </div>
+      </div>
+    </template>
+  </div>
+</template>
+<script>
+export default {
+  props: [\\"apiKey\\", \\"productId\\"],
+
+  data: () => ({ reviews: [], showReviewPrompt: false }),
+
+  mounted() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  },
+};
+</script>
+<style>
+.input-1 {
+  display: block;
+}
+.textarea-1 {
+  display: block;
+}
+.button-1 {
+  display: block;
+}
+.review {
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.img-1 {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}
+</style>
+"
+`;
+
+exports[`Vue submit-button 1`] = `
+"<template>
+  <button v-bind=\\"attributes\\" type=\\"submit\\">
+    {{ text }}
+  </button>
+</template>
+<script>
+export default {
+  props: [\\"attributes\\", \\"text\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue text 1`] = `
+"<template>
+  <div
+    :contentEditable=\\"allowEditingText || undefined\\"
+    :v-html=\\"text || content || ''\\"
+  ></div>
+</template>
+<script>
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default {
+  props: [\\"text\\", \\"content\\"],
+
+  data: () => ({ Builder }),
+};
+</script>
+"
+`;
+
+exports[`Vue textarea 1`] = `
+"<template>
+  <textarea
+    v-bind=\\"attributes\\"
+    :placeholder=\\"placeholder\\"
+    :name=\\"name\\"
+    :value=\\"value\\"
+    :defaultValue=\\"defaultValue\\"
+  ></textarea>
+</template>
+<script>
+export default {
+  props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue video 1`] = `
+"<template>
+  <video
+    v-bind=\\"attributes\\"
+    preload=\\"none\\"
+    :style=\\"{
+      width: '100%',
+      height: '100%',
+      ...attributes?.style,
+      objectFit: fit,
+      objectPosition: position,
+      // Hack to get object fit to work as expected and
+      // not have the video overflow
+      borderRadius: 1,
+    }\\"
+    :key=\\"video || 'no-src'\\"
+    :poster=\\"posterImage\\"
+    :autoPlay=\\"autoPlay\\"
+    :muted=\\"muted\\"
+    :controls=\\"controls\\"
+    :loop=\\"loop\\"
+  ></video>
+</template>
+<script>
+export default {
+  props: [
+    \\"attributes\\",
+    \\"fit\\",
+    \\"position\\",
+    \\"video\\",
+    \\"posterImage\\",
+    \\"autoPlay\\",
+    \\"muted\\",
+    \\"controls\\",
+    \\"loop\\",
+  ],
+};
+</script>
+"
+`;
