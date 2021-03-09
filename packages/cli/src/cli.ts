@@ -8,17 +8,17 @@ const help = (toolbox: Toolbox) =>
 jsx-lite command line component processor [version ${toolbox.meta.version()}]
 
 USAGE
-	jsx-lite generate --to=<format> [options] [files]
-	jsx-lite generate -t=<format> [options] [files]
+	jsx-lite compile --to=<format> [options] [files]
+	jsx-lite compile -t=<format> [options] [files]
 
 	If no [input-files] are specified or when [files] is "-", input
 	is read from standard input.
 
 EXAMPLES
-	jsx-lite generate -t react component.tsx
-	jsx-lite generate -t react < component.tsx
-	cat component.tsx | jsx-lite generate -t html -
-	jsx-lite generate -t react --out-dir build -- src/**/*.tsx
+	jsx-lite compile -t react component.tsx
+	jsx-lite compile -t react < component.tsx
+	cat component.tsx | jsx-lite compile -t html -
+	jsx-lite compile -t react --out-dir build -- src/**/*.tsx
 
 OPTIONS
 	--to=<format>, -t=<format>
@@ -60,7 +60,7 @@ OUTPUT OPTIONS
 		   ├── b.tsx
 		   └── c.tsx
 
-		The command "jsx-lite generate -t react --out-dir lib -- src/*.tsx" would
+		The command "jsx-lite compile -t react --out-dir lib -- src/*.tsx" would
 		produce a structure like:
 
 		├── src

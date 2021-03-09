@@ -14,8 +14,8 @@ type AllGeneratorOption = UnionToIntersection<GeneratorOpts>
 type AllGeneratorOptionKeys = keyof AllGeneratorOption
 
 const command: GluegunCommand = {
-  name: 'generate',
-  alias: 'g',
+  name: 'compile',
+  alias: 'c',
   run: async toolbox => {
     const { parameters, strings, filesystem, print } = toolbox
     const opts = parameters.options
