@@ -32,12 +32,7 @@ const command: GluegunCommand = {
       config.targets.map(async target => {
         await Promise.all(
           tree.map(async filePath => {
-            const outPath = path.resolve(
-              process.cwd(),
-              config.dest,
-              target,
-              filePath
-            )
+            const outPath = path.resolve(cwd, config.dest, target, filePath)
             if (
               filePath.endsWith('.lite.jsx') ||
               filePath.endsWith('.lite.tsx')
@@ -76,7 +71,7 @@ const command: GluegunCommand = {
               }
               await fs.outputFile(outPath, output)
             } else {
-              await fs.copy(process.cwd() + '/' + filePath, outPath)
+              await fs.copy(cwd + '/' + filePath, outPath)
             }
           })
         )
