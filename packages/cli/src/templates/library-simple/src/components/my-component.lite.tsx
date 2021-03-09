@@ -1,3 +1,4 @@
+import '@jsx-lite/core/jsx'
 import { useState, Show } from '@jsx-lite/core'
 
 type MyProps = {
