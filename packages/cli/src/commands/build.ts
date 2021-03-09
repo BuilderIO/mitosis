@@ -38,30 +38,37 @@ const command: GluegunCommand = {
               filePath.endsWith('.lite.tsx')
             ) {
               // TODO: nicer error handling
+              let extension = '.ts'
               const fileContents = await fs.readFile(filePath, 'utf8')
               const parsed = parseJsx(fileContents)
               let output
               switch (target) {
                 case 'react':
                   output = componentToReact(parsed)
+                  extension = '.tsx'
                   break
                 case 'vue':
                   output = componentToVue(parsed)
+                  extension = '.vue'
                   break
                 case 'angular':
                   output = componentToAngular(parsed)
                   break
                 case 'svelte':
                   output = componentToSvelte(parsed)
+                  extension = '.svelte'
                   break
                 case 'builder':
                   output = JSON.stringify(componentToBuilder(parsed), null, 2)
+                  extension = '.json'
                   break
                 case 'solid':
                   output = componentToSolid(parsed)
+                  extension = '.tsx'
                   break
                 case 'html':
                   output = componentToHtml(parsed)
+                  extension = '.html'
                   break
                 case 'webcomponents':
                   output = componentToCustomElement(parsed)
@@ -69,7 +76,10 @@ const command: GluegunCommand = {
                 default:
                   throw new Error(`Unknown output target: "${target}:`)
               }
-              await fs.outputFile(outPath, output)
+              await fs.outputFile(
+                outPath.replace(/\.lite\.(j|t)sx$/, extension),
+                output
+              )
             } else {
               await fs.copy(cwd + '/' + filePath, outPath)
             }
