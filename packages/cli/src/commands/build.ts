@@ -32,7 +32,12 @@ const command: GluegunCommand = {
       config.targets.map(async target => {
         await Promise.all(
           tree.map(async filePath => {
-            const outPath = path.resolve(process.cwd(), config.dest, filePath)
+            const outPath = path.resolve(
+              process.cwd(),
+              config.dest,
+              target,
+              filePath
+            )
             if (
               filePath.endsWith('.lite.jsx') ||
               filePath.endsWith('.lite.tsx')
@@ -55,7 +60,7 @@ const command: GluegunCommand = {
                   output = componentToSvelte(parsed)
                   break
                 case 'builder':
-                  output = componentToBuilder(parsed)
+                  output = JSON.stringify(componentToBuilder(parsed), null, 2)
                   break
                 case 'solid':
                   output = componentToSolid(parsed)
@@ -69,9 +74,9 @@ const command: GluegunCommand = {
                 default:
                   throw new Error(`Unknown output target: "${target}:`)
               }
-              await fs.writeFile(outPath, output)
+              await fs.outputFile(outPath, output)
             } else {
-              await fs.copyFile(process.cwd() + '/' + filePath, outPath)
+              await fs.copy(process.cwd() + '/' + filePath, outPath)
             }
           })
         )

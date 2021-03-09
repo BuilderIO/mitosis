@@ -152,7 +152,7 @@ export const componentToAngular = (
   }
   let css = collectCss(json);
   if (options.prettier !== false) {
-    css = tryFormat(css, 'postcss');
+    css = tryFormat(css, 'css');
   }
 
   let template = json.children.map((item) => blockToAngular(item)).join('\n');
