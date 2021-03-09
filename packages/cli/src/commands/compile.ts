@@ -1,13 +1,6 @@
-import {
-  builderContentToJsxLiteComponent,
-  liquidToBuilder,
-  parseJsx,
-  parseReactiveScript,
-  reactiveScriptRe
-} from '@jsx-lite/core'
+import { builderContentToJsxLiteComponent, parseJsx } from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
-import { inspect } from 'util'
 import * as targets from '../targets'
 import { UnionToIntersection } from '../types'
 
@@ -21,7 +14,8 @@ type AllGeneratorOption = UnionToIntersection<GeneratorOpts>
 type AllGeneratorOptionKeys = keyof AllGeneratorOption
 
 const command: GluegunCommand = {
-  name: 'jsx-lite',
+  name: 'compile',
+  alias: 'c',
   run: async toolbox => {
     const { parameters, strings, filesystem, print } = toolbox
     const opts = parameters.options
@@ -113,22 +107,6 @@ const command: GluegunCommand = {
 
           case 'builder':
             json = builderContentToJsxLiteComponent(JSON.parse(data))
-            break
-
-          case 'liquid':
-            const jsxState = parseReactiveScript(data, {
-              format: 'html'
-            }).state
-
-            const builderJson = await liquidToBuilder(
-              data.replace(reactiveScriptRe, '')
-            )
-
-            json = builderContentToJsxLiteComponent({
-              data: { blocks: builderJson }
-            })
-
-            json = { ...json, state: jsxState }
             break
 
           default:
