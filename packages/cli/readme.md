@@ -11,20 +11,20 @@ npm install -g @jsx-lite/cli
 ## Usage
 
 ```bash
-jsx-lite --to=<format> < <input-file>
-cat my-file.tsx | jsx-lite -t=<format>
-jsx-lite -t=<format> <input-file>
+jsx-lite generate --to=<format> < <input-file>
+cat my-file.tsx | jsx-lite generate -t=<format>
+jsx-lite generate -t=<format> <input-file>
 ```
 
-Check the output from `jsx-lite --help`.
+Check the output from `jsx-lite generate --help`.
 
 **Examples**
 
 ```bash
-jsx-lite -t react component.tsx
-jsx-lite -t react < component.tsx
-cat component.tsx | jsx-lite -t html -
-jsx-lite -t react --out-dir build -- src/**/*.tsx
+jsx-lite generate -t react component.tsx
+jsx-lite generate -t react < component.tsx
+cat component.tsx | jsx-lite generate -t html -
+jsx-lite generate -t react --out-dir build -- src/**/*.tsx
 ```
 
 ## Options
@@ -59,8 +59,8 @@ Here are some recipes for standard tasks
 
 ```bash
 cat components/postscript.lite.tsx |
-  jsx-lite -t builder - |
-  jsx-lite -f builder -t jsxLite
+  jsx-lite generate -t builder - |
+  jsx-lite generate -f builder -t jsxLite
 ```
 
 ### Run jsx-lite on file system change

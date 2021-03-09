@@ -3,21 +3,22 @@ import { Toolbox } from 'gluegun/build/types/domain/toolbox'
 
 const help = (toolbox: Toolbox) =>
   toolbox.print.info(
+    // TODO: break docs up by command
     `
 jsx-lite command line component processor [version ${toolbox.meta.version()}]
 
 USAGE
-	jsx-lite --to=<format> [options] [files]
-	jsx-lite -t=<format> [options] [files]
+	jsx-lite generate --to=<format> [options] [files]
+	jsx-lite generate -t=<format> [options] [files]
 
 	If no [input-files] are specified or when [files] is "-", input
 	is read from standard input.
 
 EXAMPLES
-	jsx-lite -t react component.tsx
-	jsx-lite -t react < component.tsx
-	cat component.tsx | jsx-lite -t html -
-	jsx-lite -t react --out-dir build -- src/**/*.tsx
+	jsx-lite generate -t react component.tsx
+	jsx-lite generate -t react < component.tsx
+	cat component.tsx | jsx-lite generate -t html -
+	jsx-lite generate -t react --out-dir build -- src/**/*.tsx
 
 OPTIONS
 	--to=<format>, -t=<format>
@@ -59,7 +60,7 @@ OUTPUT OPTIONS
 		   ├── b.tsx
 		   └── c.tsx
 
-		The command "jsx-lite -t react --out-dir lib -- src/*.tsx" would
+		The command "jsx-lite generate -t react --out-dir lib -- src/*.tsx" would
 		produce a structure like:
 
 		├── src

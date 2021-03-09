@@ -149,7 +149,7 @@ Try JSX Lite out locally with our [CLI](packages/cli)
 ```bash
 npm install -g @jsx-lite/cli
 
-jsx-lite --to=vue my-file.lite.jsx
+jsx-lite generate --to=vue my-file.lite.jsx
 ```
 
 ## Why
