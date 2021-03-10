@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { stubArray } from 'lodash';
+import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
@@ -7,7 +7,7 @@ import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parsers/jsx';
+import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 
@@ -140,6 +140,14 @@ export const componentToJsxLite = (
           )} } from '@builder.io/components';`
     }
     ${renderPreComponent(json)}
+
+    ${
+      !componentJson.meta.metadataHook
+        ? ''
+        : `${METADATA_HOOK_NAME}(${json5.stringify(
+            componentJson.meta.metadataHook,
+          )})`
+    }
 
     export default function ${componentJson.name}(props) {
       ${

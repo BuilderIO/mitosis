@@ -352,9 +352,7 @@ const getHook = (node: babel.Node) => {
   return null;
 };
 
-const isHook = (node: babel.Node) => Boolean(getHook(node));
-
-const METADATA_HOOK_NAME = 'useMetadata';
+export const METADATA_HOOK_NAME = 'useMetadata';
 
 /**
  * Transform useMetadata({...}) onto the component JSON as
