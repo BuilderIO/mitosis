@@ -347,13 +347,6 @@ export default function Fiddle() {
     },
     { delay: 1000 },
   );
-  // useReaction(
-  //   () => state.inputCode,
-  //   (code) => {
-  //     state.parseInputCode();
-  //   },
-  //   { delay: 1000, fireImmediately: false },
-  // );
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
