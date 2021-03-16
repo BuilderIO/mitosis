@@ -1,34 +1,21 @@
-import { Alert } from '@material-ui/lab';
-import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useState } from 'react';
-import { getQueryParam } from '../functions/get-query-param';
-import MonacoEditor from 'react-monaco-editor';
-import { useReaction } from '../hooks/use-reaction';
-import { setQueryParam } from '../functions/set-query-param';
-
-import logo from '../assets/jsx-lite-logo-white.png';
-import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
 import {
-  parseJsx,
-  componentToVue,
-  componentToReact,
-  componentToSwift,
-  componentToLiquid,
-  componentToHtml,
-  componentToBuilder,
-  componentToSvelte,
-  componentToAngular,
-  componentToSolid,
-  componentToReactNative,
   builderContentToJsxLiteComponent,
-  componentToJsxLite,
-  liquidToBuilder,
-  reactiveScriptRe,
-  parseReactiveScript,
-  componentToCustomElement,
   compileAwayBuilderComponents,
-  mapStyles,
+  componentToAngular,
+  componentToBuilder,
+  componentToCustomElement,
+  componentToHtml,
+  componentToJsxLite,
+  componentToLiquid,
+  componentToReact,
+  componentToReactNative,
+  componentToSolid,
+  componentToSvelte,
+  componentToSwift,
   componentToTemplate,
+  componentToVue,
+  mapStyles,
+  parseJsx,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -46,20 +33,29 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import { deleteQueryParam } from '../functions/delete-query-param';
-import { defaultCode, templates } from '../constants/templates';
-import { colors } from '../constants/colors';
-import { useEventListener } from '../hooks/use-event-listener';
+import { Alert } from '@material-ui/lab';
+import { useLocalObservable, useObserver } from 'mobx-react-lite';
+import React, { useState } from 'react';
+import MonacoEditor from 'react-monaco-editor';
 import { adapt } from 'webcomponents-in-react';
-import { theme } from '../constants/theme';
+import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
+import logo from '../assets/jsx-lite-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
+import { colors } from '../constants/colors';
 import { device } from '../constants/device';
-import { Show } from './Show';
-import { TextLink } from './TextLink';
-import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
+import { defaultCode, templates } from '../constants/templates';
+import { theme } from '../constants/theme';
+import { deleteQueryParam } from '../functions/delete-query-param';
+import { getQueryParam } from '../functions/get-query-param';
 import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
+import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
+import { setQueryParam } from '../functions/set-query-param';
+import { useEventListener } from '../hooks/use-event-listener';
+import { useReaction } from '../hooks/use-reaction';
 import { CodeEditor } from './CodeEditor';
+import { Show } from './Show';
+import { TextLink } from './TextLink';
 
 const debug = getQueryParam('debug') === 'true';
 const lite = getQueryParam('lite') === 'true';
@@ -202,23 +198,7 @@ export default function Fiddle() {
       state.code = componentToJsxLite(jsxJson);
       state.pendingBuilderChange = null;
     },
-    async parseInputCode() {
-      const jsxState = parseReactiveScript(state.inputCode, {
-        format: 'html',
-      }).state;
 
-      const builderJson = await liquidToBuilder(
-        state.inputCode.replace(reactiveScriptRe, ''),
-      );
-
-      const jsx = builderContentToJsxLiteComponent({
-        data: { blocks: builderJson },
-      });
-      state.code = componentToJsxLite({
-        ...jsx,
-        state: jsxState,
-      });
-    },
     updateOutput() {
       const plugins = [
         compileAwayBuilderComponents(),
@@ -367,20 +347,21 @@ export default function Fiddle() {
     },
     { delay: 1000 },
   );
-  useReaction(
-    () => state.inputCode,
-    (code) => {
-      state.parseInputCode();
-    },
-    { delay: 1000, fireImmediately: false },
-  );
+  // useReaction(
+  //   () => state.inputCode,
+  //   (code) => {
+  //     state.parseInputCode();
+  //   },
+  //   { delay: 1000, fireImmediately: false },
+  // );
 
   return useObserver(() => {
     const outputMonacoEditorSize = device.small
       ? `calc(${state.outputsTabHeight}vh - 50px)`
       : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
+    const inputMonacoEditorSize = `calc(${
+      100 - state.outputsTabHeight
+    }vh - 100px)`;
     const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
@@ -1055,15 +1036,6 @@ export default function Fiddle() {
                       />
                     }
                     value="figma"
-                  />
-                  <Tab
-                    label={
-                      <TabLabelWithIcon
-                        label="Liquid"
-                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff98433f5a2b747f094bf01e2e88bde08"
-                      />
-                    }
-                    value="liquid"
                   />
                 </Tabs>
               </div>
