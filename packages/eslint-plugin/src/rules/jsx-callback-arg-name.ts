@@ -29,9 +29,11 @@ const rule: Rule.RuleModule = {
     // Public
     // ----------------------------------------------------------------------
 
-    return {
+    const listener: Rule.RuleListener = {
       // give me methods
     }
+
+    return listener
   },
 }
 
