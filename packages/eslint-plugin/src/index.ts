@@ -1,8 +1,8 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
 
-export const staticControlFlow = {
-  create: (context: Readonly<Rule.RuleContext>): Rule.RuleListener => {
+export const staticControlFlow: Rule.RuleModule = {
+  create(context) {
     return {
       VariableDeclarator(node: any) {
         if (types.isVariableDeclarator(node)) {
