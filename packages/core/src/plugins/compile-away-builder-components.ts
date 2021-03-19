@@ -1,5 +1,5 @@
 import { mapValues, omit, pick } from 'lodash';
-import { parseNode } from '../helpers/parse-node';
+import { parseNode, parseNodes } from '../helpers/parse-node';
 import { TraverseContext } from 'traverse';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { compileAwayComponents } from './compile-away-components';
@@ -24,7 +24,7 @@ function updateQueryParam(uri = '', key: string, value: string) {
   return uri + separator + key + '=' + encodeURIComponent(value);
 }
 
-const wrapOutput = (node: JSXLiteNode, child: JSXLiteNode) => {
+const wrapOutput = (node: JSXLiteNode, child: JSXLiteNode | JSXLiteNode[]) => {
   return createJSXLiteNode({
     ...node,
     name: 'div',
@@ -45,7 +45,7 @@ const wrapOutput = (node: JSXLiteNode, child: JSXLiteNode) => {
       'className',
       'class',
     ),
-    children: [child],
+    children: Array.isArray(child) ? child : [child],
   });
 };
 
@@ -244,7 +244,7 @@ const components: {
 
     return wrapOutput(
       node,
-      parseNode(`
+      parseNodes(`
       <picture>
         ${
           srcSet && srcSet.match(/builder\.io/)
