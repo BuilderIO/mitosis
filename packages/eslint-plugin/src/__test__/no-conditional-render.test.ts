@@ -6,13 +6,13 @@ const ruleTester = new RuleTester();
 
 const options = {
   parserOptions: {
-    ecmaVersion: 2018 as 2018, // Allows for the parsing of modern ECMAScript features
-    sourceType: 'module' as 'module', // Allows for the use of imports
+    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
     ecmaFeatures: {
       jsx: true, // Allows for the parsing of JSX
     },
   },
-};
+} as const;
 
 ruleTester.run('static-control-flow', staticControlFlow, {
   valid: [
