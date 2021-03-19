@@ -245,7 +245,6 @@ const components: {
     return wrapOutput(
       node,
       parseNode(`
-    <div $name="image-wrap" css={{ position: 'relative' }}>
       <picture>
         ${
           srcSet && srcSet.match(/builder\.io/)
@@ -316,8 +315,7 @@ const components: {
           </div>`
             : ''
         }
-    </div>
-  `),
+      `),
     );
   },
 };
