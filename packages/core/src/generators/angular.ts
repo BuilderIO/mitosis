@@ -86,11 +86,17 @@ export const blockToAngular = (
     // }
 
     for (const key in json.properties) {
+      if (key.startsWith('$')) {
+        continue;
+      }
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
       if (key === '_spread') {
+        continue;
+      }
+      if (key.startsWith('$')) {
         continue;
       }
       const value = json.bindings[key] as string;
