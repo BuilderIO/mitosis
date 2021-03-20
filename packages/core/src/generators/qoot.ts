@@ -1,10 +1,10 @@
 import dedent from 'dedent';
+import { camelCase, kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { getRefs } from '../helpers/get-refs';
+import { capitalize } from '../helpers/capitalize';
+import { fastClone } from '../helpers/fast-clone';
 import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import {
   Plugin,
   runPostCodePlugins,
@@ -12,10 +12,9 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { fastClone } from '../helpers/fast-clone';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { camelCase, kebabCase } from 'lodash';
-import { capitalize } from 'src/helpers/capitalize';
+import { selfClosingTags } from '../parsers/jsx';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
