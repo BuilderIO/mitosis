@@ -1,10 +1,13 @@
 import dedent from 'dedent';
 import { camelCase, kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import traverse from 'traverse';
 import { capitalize } from '../helpers/capitalize';
 import { fastClone } from '../helpers/fast-clone';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import {
   Plugin,
   runPostCodePlugins,
@@ -15,6 +18,54 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+
+const processBinding = (binding: string, options: InternalToQootOptions) =>
+  binding;
+
+const NODE_MAPPERS: {
+  [key: string]: (json: JSXLiteNode, options: InternalToQootOptions) => string;
+} = {
+  Fragment(json, options) {
+    return `<>${json.children
+      .map((item) => blockToQoot(item, options))
+      .join('\n')}</>`;
+  },
+  For(json, options) {
+    return `{${processBinding(json.bindings.each as string, options)}.map(${
+      json.bindings._forName
+    } => (
+      <>${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToQoot(item, options))
+        .join('\n')}</>
+    ))}`;
+  },
+  Show(json, options) {
+    return `{Boolean(${processBinding(
+      json.bindings.when as string,
+      options,
+    )}) && (
+      <>${json.children
+        .filter(filterEmptyTextNodes)
+        .map((item) => blockToQoot(item, options))
+        .join('\n')}</>
+    )}`;
+  },
+};
+
+const getId = (json: JSXLiteNode, options: InternalToQootOptions) => {
+  const name = json.properties.$name
+    ? camelCase(json.properties.$name)
+    : /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
+    ? json.name
+    : camelCase(json.name || 'div');
+
+  const newNameNum = (options.namesMap[name] || 0) + 1;
+  options.namesMap[name] = newNameNum;
+  return capitalize(
+    `${name}${newNameNum === 1 ? '' : `${newNameNum}`}`,
+  );
+};
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
@@ -69,6 +120,7 @@ const collectClassString = (json: JSXLiteNode): string | null => {
   return null;
 };
 
+type NumberRecord = { [key: string]: number };
 type ToQootOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
@@ -77,8 +129,12 @@ type InternalToQootOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
   componentJson: JSXLiteComponent;
+  namesMap: NumberRecord;
 };
 const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
+  if (NODE_MAPPERS[json.name]) {
+    return NODE_MAPPERS[json.name](json, options);
+  }
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -87,6 +143,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   }
 
   let str = '';
+
+  const id = getId(json, options);
+  json.meta.id = id;
 
   str += `<${json.name} `;
 
@@ -100,23 +159,28 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_') || key.startsWith('$')) {
+      continue;
+    }
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
-    if (key === '_spread' || key === '_forName') {
+    if (key.startsWith('_') || key.startsWith('$')) {
       continue;
     }
 
     if (key.startsWith('on')) {
       // TODO: this transformation can be a IR transform middleware for rendering
       // through any framework
-      const useKey = key.replace('on', 'on:').toLowerCase();
+      // TODO: for now use _ instead of : until I find what voodoo magic allows
+      // colons in attribute names in TSX
+      const useKey = key.replace('on', 'on_').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
-      // TODO: fn name and args
+      // TODO: args
       // on:click={QRL`ui:/Item/toggle?toggleState=.target.checked`}
-      str += ` ${useKey}={QRL\`ui:/${componentName}/\`}`;
+      str += ` ${useKey}={QRL\`ui:/${componentName}/on${id}${key.slice(2)}\`}`;
     } else {
       str += ` ${key}={${value}} `;
     }
@@ -144,7 +208,7 @@ const getComponentName = (
 // TODO
 const getProvidersString = (
   componentJson: JSXLiteComponent,
-  options: ToQootOptions = {},
+  options: InternalToQootOptions,
 ): string => {
   return 'null';
 };
@@ -152,9 +216,47 @@ const getProvidersString = (
 // TODO
 const getEventHandlerFiles = (
   componentJson: JSXLiteComponent,
-  options: ToQootOptions = {},
+  options: InternalToQootOptions,
 ): File[] => {
   const files: File[] = [];
+
+  traverse(componentJson).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      for (const binding in item.bindings) {
+        if (binding.startsWith('on')) {
+          let str = dedent`
+            import {
+              injectEventHandler,
+              provideComponentProp,
+              provideQrlExp,
+              provideService,
+            } from 'qoot';
+            
+            export default injectEventHandler(
+              // TODO: providers
+              null,
+              // Handler
+              // TODO: replace refs
+              async function (event) 
+                ${item.bindings[binding]}
+              
+            )
+          `;
+
+          str = format(str, {
+            parser: 'typescript',
+            plugins: [require('prettier/parser-typescript')],
+          });
+          files.push({
+            path: `${getComponentName(componentJson, options)}/on${
+              item.meta.id
+            }${binding.slice(2)}.ts`,
+            contents: str,
+          });
+        }
+      }
+    }
+  });
 
   return files;
 };
@@ -171,6 +273,7 @@ export const componentToQoot = (
   let json = fastClone(componentJson);
   const options = {
     ...toQootOptions,
+    namesMap: {},
     componentJson: json,
   };
   if (options.plugins) {
@@ -188,11 +291,11 @@ export const componentToQoot = (
     import { inject, QRL } from 'qoot';
     ${renderPreComponent(json)}
 
-    export default inject(${getProvidersString(json)}, () => {
+    export default inject(${getProvidersString(json, options)}, () => {
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToQoot(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
-    }
+    })
   `;
 
   if (options.plugins) {
@@ -214,7 +317,7 @@ export const componentToQoot = (
         contents: str,
       },
       {
-        path: `${componentName}`,
+        path: `${componentName}/public.ts`,
         contents: dedent`
           import { jsxDeclareComponent, QRL } from 'qoot';
           export const ${componentName} = jsxDeclareComponent('${kebabCase(

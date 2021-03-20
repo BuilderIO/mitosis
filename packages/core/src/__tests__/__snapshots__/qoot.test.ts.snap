@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Qoot Todo 1`] = `
+Object {
+  "files": Array [
+    Object {
+      "contents": "import { inject, QRL } from \\"qoot\\";
+
+import { todosState } from \\"../shared/todos-state\\";
+
+export default inject(null, () => {
+  return (
+    <li
+      class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
+        state.editing ? \\"editing\\" : \\"\\"
+      }\`}
+    >
+      <div>
+        <input
+          type=\\"checkbox\\"
+          checked={props.todo.completed}
+          on_click={QRL\`ui:/Todo/onInputClick\`}
+        />
+
+        <label on_dblclick={QRL\`ui:/Todo/onLabelDblClick\`}>
+          {props.todo.text}
+        </label>
+
+        <button on_click={QRL\`ui:/Todo/onButtonClick\`}></button>
+      </div>
+
+      {state.editing ? (
+        <input
+          class=\\"edit\\"
+          value={props.todo.text}
+          onBlur={() => {
+            state.editing = false;
+          }}
+          onKeyUp={(event) => {
+            props.todo.text = event.target.value;
+          }}
+        />
+      ) : null}
+    </li>
+  );
+});
+",
+      "path": "Todo/template.tsx",
+    },
+    Object {
+      "contents": "import { jsxDeclareComponent, QRL } from 'qoot';
+export const Todo = jsxDeclareComponent('todo', QRL\`ui:/Todo/template\`);",
+      "path": "Todo/public.ts",
+    },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    state.toggle();
+  }
+);
+",
+      "path": "Todo/onInputClick.ts",
+    },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    state.editing = true;
+  }
+);
+",
+      "path": "Todo/onLabelDblClick.ts",
+    },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    todosState.todos.splice(todosState.todos.indexOf(props.todo));
+  }
+);
+",
+      "path": "Todo/onButtonClick.ts",
+    },
+  ],
+}
+`;
+
+exports[`Qoot Todos 1`] = `
+Object {
+  "files": Array [
+    Object {
+      "contents": "import { inject, QRL } from \\"qoot\\";
+
+import { todosState } from \\"../shared/todos-state\\";
+import * as Todo from \\"./todo.lite\\";
+
+export default inject(null, () => {
+  return (
+    <section>
+      {Boolean(todosState.todos.length) && (
+        <>
+          <input
+            type=\\"checkbox\\"
+            checked={todosState.allCompleted}
+            on_click={QRL\`ui:/Todos/onInputClick\`}
+          />
+        </>
+      )}
+
+      <ul>
+        {todosState.todos.map((todo) => (
+          <>
+            <Todo todo={todo}></Todo>
+          </>
+        ))}
+      </ul>
+    </section>
+  );
+});
+",
+      "path": "Todos/template.tsx",
+    },
+    Object {
+      "contents": "import { jsxDeclareComponent, QRL } from 'qoot';
+export const Todos = jsxDeclareComponent('todos', QRL\`ui:/Todos/template\`);",
+      "path": "Todos/public.ts",
+    },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    const newValue = !todosState.allCompleted;
+
+    for (const todo of todosState.todos) {
+      todo.completed = newValue;
+    }
+  }
+);
+",
+      "path": "Todos/onInputClick.ts",
+    },
+  ],
+}
+`;

@@ -1,10 +1,10 @@
 import '@jsx-lite/core/dist/src/jsx-types';
 import { todosState } from '../shared/todos-state';
 import { useState } from '@jsx-lite/core';
-import { Todo } from '../shared/todos-state';
+import { Todo as TodoType } from '../shared/todos-state';
 
 export type TodoProps = {
-  todo: Todo;
+  todo: TodoType;
 };
 
 export default function Todo(props: TodoProps) {
