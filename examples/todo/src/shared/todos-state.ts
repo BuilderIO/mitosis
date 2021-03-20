@@ -4,6 +4,8 @@ export type Todo = {
 };
 
 // Becomes context, service, etc
+// make this .lite.ts and export default as a standard
+// shared state/service/logic structure?
 export const todosState = {
   todos: [] as Todo[],
   addTodo(text: string) {

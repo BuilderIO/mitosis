@@ -1,13 +1,14 @@
 module.exports = {
-  files: "src/**",
+  files: 'src/**',
   targets: [
-    "react",
-    "vue",
-    "html",
-    "svelte",
-    "solid",
-    "angular",
-    "builder",
-    "webcomponents",
+    'react',
+    'qoot',
+    'vue',
+    'html',
+    'svelte',
+    'solid',
+    'angular',
+    'builder',
+    'webcomponents',
   ],
 };

@@ -9,7 +9,6 @@ export default function Todos(props: TodosProps) {
     <section class="main">
       <Show when={todosState.todos.length}>
         <input
-          id="toggle-all"
           class="toggle-all"
           type="checkbox"
           checked={todosState.allCompleted}
