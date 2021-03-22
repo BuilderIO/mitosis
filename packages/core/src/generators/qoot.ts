@@ -62,9 +62,7 @@ const getId = (json: JSXLiteNode, options: InternalToQootOptions) => {
 
   const newNameNum = (options.namesMap[name] || 0) + 1;
   options.namesMap[name] = newNameNum;
-  return capitalize(
-    `${name}${newNameNum === 1 ? '' : `${newNameNum}`}`,
-  );
+  return capitalize(`${name}${newNameNum === 1 ? '' : `${newNameNum}`}`);
 };
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
@@ -220,7 +218,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function (item) {
+  traverse(componentJson).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
