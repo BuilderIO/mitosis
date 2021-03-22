@@ -8,6 +8,7 @@ import {
   componentToBuilder,
   componentToCustomElement,
   componentToHtml,
+  componentToQoot,
   componentToReact,
   componentToSolid,
   componentToSvelte,
@@ -72,6 +73,9 @@ const command: GluegunCommand = {
                   break
                 case 'webcomponents':
                   output = componentToCustomElement(parsed)
+                  break
+                case 'qoot':
+                  output = componentToQoot(parsed)
                   break
                 default:
                   throw new Error(`Unknown output target: "${target}:`)

@@ -1,7 +1,7 @@
 import * as targets from '../targets'
 
 type Targets = typeof targets
-type Target = keyof Targets | 'webcomponents'
+type Target = keyof Targets | 'webcomponents' | 'qoot'
 
 type FileInfo = {
   path: string

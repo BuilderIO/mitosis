@@ -21,6 +21,7 @@ export * from './generators/react';
 export * from './generators/solid';
 export * from './generators/liquid';
 export * from './generators/builder';
+export * from './generators/qoot';
 export * from './generators/html';
 export * from './generators/svelte';
 export * from './generators/jsx-lite';

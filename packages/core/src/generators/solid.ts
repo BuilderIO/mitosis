@@ -108,7 +108,7 @@ const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
     if (key.startsWith('on')) {
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={event => (${value})} `;
+      str += ` ${useKey}={event => ${value}} `;
     } else {
       str += ` ${key}={${value}} `;
     }

@@ -16,8 +16,8 @@ export default function Todos(props: TodosProps) {
           checked={todosState.allCompleted}
           onClick={() => {
             const newValue = !todosState.allCompleted;
-            for (const todo of todosState.todos) {
-              todo.completed = newValue;
+            for (const todoItem of todosState.todos) {
+              todoItem.completed = newValue;
             }
           }}
         />

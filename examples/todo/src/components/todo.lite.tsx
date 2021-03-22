@@ -1,6 +1,6 @@
 import '@jsx-lite/core/dist/src/jsx-types';
 import todosState from '../shared/todos-state.lite';
-import { useState } from '@jsx-lite/core';
+import { Show, useState } from '@jsx-lite/core';
 import { Todo as TodoType } from '../shared/todos-state.lite';
 
 export type TodoProps = {
@@ -13,7 +13,7 @@ export default function Todo(props: TodoProps) {
     toggle() {
       props.todo.completed = !props.todo.completed;
     },
-  }); 
+  });
 
   return (
     <li
@@ -44,7 +44,7 @@ export default function Todo(props: TodoProps) {
           }}
         ></button>
       </div>
-      {state.editing ? (
+      <Show when={state.editing}>
         <input
           class="edit"
           value={props.todo.text}
@@ -55,7 +55,7 @@ export default function Todo(props: TodoProps) {
             props.todo.text = event.target.value;
           }}
         />
-      ) : null}
+      </Show>
     </li>
   );
 }

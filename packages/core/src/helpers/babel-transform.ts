@@ -15,13 +15,7 @@ export const babelTransform = <VisitorContextType = any>(
   return babel.transform(code, {
     sourceFileName: 'file.tsx',
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [
-      [decorators, { legacy: true }],
-      jsxPlugin,
-      () => ({
-        visitor,
-      }),
-    ],
+    plugins: [[decorators, { legacy: true }], jsxPlugin, () => ({ visitor })],
   });
 };
 export const babelTransformCode = <VisitorContextType = any>(
@@ -35,8 +29,8 @@ export const babelTransformExpression = <VisitorContextType = any>(
   visitor: Visitor<VisitorContextType>,
   type: 'expression' | 'unknown' | 'block' | 'functionBody' = 'unknown',
 ): string => {
-  // TODO: maybe match more strictly { foo: ... }
-  if (type === 'unknown' && code.trim().startsWith('{')) {
+  // match for object literal like { foo: ... }
+  if (type === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
     type = 'expression';
   }
 

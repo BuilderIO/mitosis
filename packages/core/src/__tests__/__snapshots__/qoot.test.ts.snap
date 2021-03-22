@@ -29,18 +29,15 @@ export default inject(null, () => {
         <button on_click={QRL\`ui:/Todo/onButtonClick\`}></button>
       </div>
 
-      {state.editing ? (
-        <input
-          class=\\"edit\\"
-          value={props.todo.text}
-          onBlur={() => {
-            state.editing = false;
-          }}
-          onKeyUp={(event) => {
-            props.todo.text = event.target.value;
-          }}
-        />
-      ) : null}
+      {Boolean(state.editing) && (
+        <>
+          <input
+            value={props.todo.text}
+            on_blur={QRL\`ui:/Todo/onInput2Blur\`}
+            on_keyup={QRL\`ui:/Todo/onInput2KeyUp\`}
+          />
+        </>
+      )}
     </li>
   );
 });
@@ -112,6 +109,46 @@ export default injectEventHandler(
 ",
       "path": "Todo/onButtonClick.ts",
     },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    state.editing = false;
+  }
+);
+",
+      "path": "Todo/onInput2Blur.ts",
+    },
+    Object {
+      "contents": "import {
+  injectEventHandler,
+  provideComponentProp,
+  provideQrlExp,
+  provideService,
+} from \\"qoot\\";
+
+export default injectEventHandler(
+  // TODO: providers
+  null,
+  // Handler
+  // TODO: replace refs
+  async function (event) {
+    props.todo.text = event.target.value;
+  }
+);
+",
+      "path": "Todo/onInput2KeyUp.ts",
+    },
   ],
 }
 `;
@@ -172,8 +209,8 @@ export default injectEventHandler(
   async function (event) {
     const newValue = !todosState.allCompleted;
 
-    for (const todo of todosState.todos) {
-      todo.completed = newValue;
+    for (const todoItem of todosState.todos) {
+      todoItem.completed = newValue;
     }
   }
 );
