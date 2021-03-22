@@ -66,6 +66,10 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
     if (theImport.path === '@builder.io/components') {
       continue;
     }
+    // TODO: JSX Lite output needs this
+    if (theImport.path.startsWith('@jsx-lite/core')) {
+      continue;
+    }
     importString += renderImport(theImport) + '\n';
   }
 

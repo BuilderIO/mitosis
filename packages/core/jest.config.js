@@ -27,6 +27,7 @@ module.exports = {
   testMatch: ['**/__tests__/*.+(ts|tsx|js)', '**/*.test.+(ts|tsx|js)'],
   transform: {
     '^.+\\.raw\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
+    '^.+\\.lite\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
 };
