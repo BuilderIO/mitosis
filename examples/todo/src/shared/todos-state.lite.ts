@@ -1,12 +1,15 @@
+import { useMetadata } from '@jsx-lite/core';
+
 export type Todo = {
   completed: boolean;
   text: string;
 };
 
-// Becomes context, service, etc
-// make this .lite.ts and export default as a standard
-// shared state/service/logic structure?
-export const todosState = {
+useMetadata({
+  type: 'service',
+});
+
+export default {
   todos: [] as Todo[],
   addTodo(text: string) {
     this.todos.push({

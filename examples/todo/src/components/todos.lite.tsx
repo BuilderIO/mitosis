@@ -1,10 +1,12 @@
-import { For, Show } from '@jsx-lite/core';
-import { todosState } from '../shared/todos-state';
+import { For, Show, createContext } from '@jsx-lite/core';
+import todosState from '../shared/todos-state.lite';
 import Todo from './todo.lite';
 
 export type TodosProps = {};
 
 export default function Todos(props: TodosProps) {
+  createContext(todosState);
+
   return (
     <section class="main">
       <Show when={todosState.todos.length}>

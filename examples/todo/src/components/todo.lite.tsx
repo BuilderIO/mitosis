@@ -1,7 +1,7 @@
 import '@jsx-lite/core/dist/src/jsx-types';
-import { todosState } from '../shared/todos-state';
+import todosState from '../shared/todos-state.lite';
 import { useState } from '@jsx-lite/core';
-import { Todo as TodoType } from '../shared/todos-state';
+import { Todo as TodoType } from '../shared/todos-state.lite';
 
 export type TodoProps = {
   todo: TodoType;
