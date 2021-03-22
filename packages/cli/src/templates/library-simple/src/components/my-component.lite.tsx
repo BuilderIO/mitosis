@@ -1,4 +1,5 @@
-import '@jsx-lite/core/jsx'
+// TODO: get the exports alias working here so this is just `import '@jsx-lite/core/jsx'
+import '@jsx-lite/core/dist/src/jsx-types'
 import { useState, Show } from '@jsx-lite/core'
 
 type MyProps = {
