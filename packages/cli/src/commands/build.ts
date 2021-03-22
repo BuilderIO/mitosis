@@ -76,10 +76,21 @@ const command: GluegunCommand = {
                 default:
                   throw new Error(`Unknown output target: "${target}:`)
               }
-              await fs.outputFile(
-                outPath.replace(/\.lite\.(j|t)sx$/, extension),
-                output
-              )
+
+              let path = outPath
+              if (config.mapFile) {
+                const info = await config.mapFile({
+                  content: output,
+                  target,
+                  path: outPath
+                })
+                output = info.content
+                path = info.path
+              } else {
+                path = outPath.replace(/\.lite\.(j|t)sx$/, extension)
+              }
+
+              await fs.outputFile(path, output)
             } else {
               await fs.copy(cwd + '/' + filePath, outPath)
             }
