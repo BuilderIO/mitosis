@@ -11,4 +11,11 @@ module.exports = {
     'builder',
     'webcomponents',
   ],
+  mapFile(info) {
+    if (info.target === 'react') {
+      info.path = 'outputs/next/components/' + info.path;
+    }
+
+    return info;
+  },
 };

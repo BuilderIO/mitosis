@@ -1,0 +1,44 @@
+{
+  "name": "solid-ssr",
+  "description": "Patches node to work with Solid's SSR",
+  "version": "0.24.7",
+  "author": "Ryan Carniato",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryansolid/solid/solid-ssr"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "static"
+  ],
+  "scripts": {
+    "build:example:async": "rollup -c examples/async/rollup.config.js",
+    "start:example:async": "node examples/async/lib/index.js",
+    "build:example:ssg": "rollup -c examples/ssg/rollup.config.js && node --trace-warnings examples/ssg/export.js",
+    "start:example:ssg": "npx serve examples/ssg/public -l 8080",
+    "build:example:ssr": "rollup -c examples/ssr/rollup.config.js",
+    "start:example:ssr": "node examples/ssr/lib/index.js",
+    "build:example:stream": "rollup -c examples/stream/rollup.config.js",
+    "start:example:stream": "node examples/stream/lib/index.js"
+  },
+  "devDependencies": {
+    "babel-preset-solid": "^0.24.2",
+    "express": "^4.17.1",
+    "solid-js": "^0.24.7",
+    "solid-styled-components": "^0.24.7"
+  },
+  "peerDependencies": {
+    "solid-js": "*"
+  },
+  "dependencies": {
+    "@babel/core": "^7.13.1",
+    "@babel/preset-env": "^7.13.5",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-commonjs": "^17.1.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
+    "rollup": "^2.39.1",
+    "rollup-plugin-copy": "^3.4.0"
+  }
+}
