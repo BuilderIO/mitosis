@@ -50,4 +50,5 @@ export const staticControlFlow: Rule.RuleModule = {
 
 export const rules = {
   'static-control-flow': staticControlFlow,
+  'jsx-callback-arg-name': import('./rules/jsx-callback-arg-name'),
 };
