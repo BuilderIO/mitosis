@@ -1,4 +1,5 @@
 import path from 'path'
+import chalk from 'chalk'
 import { GluegunCommand } from 'gluegun'
 import { getJsxLiteConfig } from '../helpers/get-jsx-lite-config'
 import globby from 'globby'
@@ -75,27 +76,73 @@ const command: GluegunCommand = {
                   output = componentToCustomElement(parsed)
                   break
                 case 'qoot':
-                  output = componentToQoot(parsed)
+                  const info = componentToQoot(parsed)
+                  for (const file of info.files) {
+                    let path = file.path
+                    if (config.mapFile) {
+                      const info = await config.mapFile({
+                        content: output,
+                        target,
+                        path: path
+                      })
+                      output = info.content
+                      if (info.path !== filePath) {
+                        path = info.path
+                      } else {
+                        path = outPath
+                      }
+                    } else {
+                      path = outPath.replace(/\.lite\.(j|t)sx$/, extension)
+                    }
+
+                    console.info(chalk.green('Generated:', path))
+                    await fs.outputFile(path, output)
+                    return
+                  }
                   break
                 default:
                   throw new Error(`Unknown output target: "${target}:`)
               }
 
-              let path = outPath
+              let path = filePath
               if (config.mapFile) {
                 const info = await config.mapFile({
                   content: output,
                   target,
-                  path: outPath
+                  path: filePath
                 })
                 output = info.content
-                path = info.path
+                if (info.path !== filePath) {
+                  path = info.path
+                } else {
+                  path = outPath
+                }
               } else {
                 path = outPath.replace(/\.lite\.(j|t)sx$/, extension)
               }
 
+              console.info(chalk.green('Generated:', path))
               await fs.outputFile(path, output)
             } else {
+              let path = filePath
+              let output = await fs.readFile(filePath, 'utf8')
+              if (config.mapFile) {
+                const info = await config.mapFile({
+                  content: output,
+                  target,
+                  path: filePath
+                })
+                output = info.content
+                if (info.path !== filePath) {
+                  path = info.path
+                } else {
+                  path = outPath
+                }
+                await fs.outputFile(path, output)
+                return
+              }
+
+              console.info(chalk.green('Generated:', path))
               await fs.copy(cwd + '/' + filePath, outPath)
             }
           })

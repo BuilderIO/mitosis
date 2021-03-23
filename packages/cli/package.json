@@ -10,6 +10,7 @@
     "format": "prettier --write **/*.{js,ts,tsx,json}",
     "clean-build": "rm -rf ./build",
     "compile": "tsc --build .",
+    "start": "npm run compile -- --watch",
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./build/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
@@ -30,6 +31,7 @@
   "dependencies": {
     "@jsx-lite/core": "0.0.27",
     "@types/fs-extra": "^9.0.8",
+    "chalk": "^4.1.0",
     "fs-extra": "^9.1.0",
     "globby": "^11.0.2",
     "gluegun": "latest"

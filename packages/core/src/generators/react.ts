@@ -293,9 +293,14 @@ type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
 
 export const componentToReact = (
   componentJson: JSXLiteComponent,
-  options: ToReactOptions = {},
+  reactOptions: ToReactOptions = {},
 ) => {
   let json = fastClone(componentJson);
+  const options: ToReactOptions = {
+    stateType: 'useState',
+    stylesType: 'styled-components',
+    ...reactOptions,
+  };
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
