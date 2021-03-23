@@ -81,7 +81,7 @@ const command: GluegunCommand = {
                     let path = file.path
                     if (config.mapFile) {
                       const info = await config.mapFile({
-                        content: output,
+                        content: file.contents,
                         target,
                         path: path
                       })
@@ -93,13 +93,13 @@ const command: GluegunCommand = {
                       }
                     } else {
                       path = outPath.replace(/\.lite\.(j|t)sx$/, extension)
+                      output = file.contents
                     }
 
                     console.info(chalk.green('Generated:', path))
                     await fs.outputFile(path, output)
-                    return
                   }
-                  break
+                  return
                 default:
                   throw new Error(`Unknown output target: "${target}:`)
               }

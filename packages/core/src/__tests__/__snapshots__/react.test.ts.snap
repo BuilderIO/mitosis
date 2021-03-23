@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState } from \\"react\\";
 
 export default function MyBasicComponent(props) {
-  const state = useLocalObservable(() => ({ name: \\"Steve\\" }));
+  const [name, setName] = useState(() => \\"Steve\\");
 
   return (
     <>
       <div>
         <input
-          value={state.name}
+          value={name}
           onChange={(event) => {
-            state.name = event.target.value;
+            setName(event.target.value);
           }}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -55,57 +55,49 @@ exports[`React Button 1`] = `
 `;
 
 exports[`React Columns 1`] = `
-"/** @jsx jsx */
-import { jsx } from \\"@emotion/react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState } from \\"react\\";
+import styled from \\"styled-components\\";
+
+const Div = styled.div\`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  line-height: normal;
+\`;
+
+const Div2 = styled.div\`
+  flex-grow: 1;
+\`;
 
 export default function Column(props) {
-  const state = useLocalObservable(() => ({
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
-    getColumns() {
-      return props.columns || [];
-    },
-    getGutterSize() {
-      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-    },
-    getWidth(index) {
-      const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
-    },
-    getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-    },
-  }));
+  function // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  }
+  function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  }
+  function getWidth(index) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+  function getColumnCssWidth(index) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
 
   return (
     <>
-      <div
-        className=\\"builder-columns\\"
-        css={{
-          display: \\"flex\\",
-          flexDirection: \\"column\\",
-          alignItems: \\"stretch\\",
-          lineHeight: \\"normal\\",
-        }}
-      >
+      <Div className=\\"builder-columns\\">
         {props.columns.map((column) => (
           <>
-            <div
-              className=\\"builder-column\\"
-              css={{
-                flexGrow: \\"1\\",
-              }}
-            >
-              {column.content}
-            </div>
+            <Div2 className=\\"builder-column\\">{column.content}</Div2>
           </>
         ))}
-      </div>
+      </Div>
     </>
   );
 }
@@ -113,60 +105,57 @@ export default function Column(props) {
 `;
 
 exports[`React CustomCode 1`] = `
-"import { useRef, useEffect } from \\"react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
-  const state = useLocalObservable(() => ({
-    scriptsInserted: [],
-    scriptsRun: [],
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (elem.current && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = elem.current.getElementsByTagName(\\"script\\");
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
 
-          if (script.src) {
-            if (state.scriptsInserted.includes(script.src)) {
-              continue;
-            }
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
 
-            state.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (state.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
 
-            try {
-              state.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
           }
         }
       }
-    },
-  }));
+    }
+  }
 
   const elem = useRef();
 
   useEffect(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   }, []);
 
   return (
@@ -185,60 +174,57 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Embed 1`] = `
-"import { useRef, useEffect } from \\"react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
-  const state = useLocalObservable(() => ({
-    scriptsInserted: [],
-    scriptsRun: [],
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (elem.current && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = elem.current.getElementsByTagName(\\"script\\");
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
 
-          if (script.src) {
-            if (state.scriptsInserted.includes(script.src)) {
-              continue;
-            }
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
 
-            state.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (state.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
 
-            try {
-              state.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
           }
         }
       }
-    },
-  }));
+    }
+  }
 
   const elem = useRef();
 
   useEffect(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   }, []);
 
   return (
@@ -257,214 +243,213 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Form block 1`] = `
-"import { useRef } from \\"react\\";
-/** @jsx jsx */
-import { jsx } from \\"@emotion/react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState, useRef } from \\"react\\";
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
+import styled from \\"styled-components\\";
+
+const Pre = styled.pre\`
+  padding: 10px;
+  color: red;
+  text-align: center;
+\`;
 
 export default function FormComponent(props) {
-  const state = useLocalObservable(() => ({
-    state: \\"unsubmitted\\",
-    responseData: null,
-    formErrorMessage: \\"\\",
-    get submissionState() {
-      return (Builder.isEditing && props.previewState) || state.state;
-    },
-    onSubmit(event) {
-      const sendWithJs =
-        props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+  const [state, setState] = useState(() => \\"unsubmitted\\");
+  const [responseData, setResponseData] = useState(() => null);
+  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || state;
+  }
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
-      if (props.sendSubmissionsTo === \\"zapier\\") {
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
         event.preventDefault();
-      } else if (sendWithJs) {
-        if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
-          event.preventDefault();
-          return;
-        }
+        return;
+      }
 
-        event.preventDefault();
-        const el = event.currentTarget;
-        const headers = props.customHeaders || {};
-        let body;
-        const formData = new FormData(el); // TODO: maybe support null
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs = Array.from(
-          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-        )
-          .filter((el) => !!el.name)
-          .map((el) => {
-            let value;
-            const key = el.name;
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
 
-            if (el instanceof HTMLInputElement) {
-              if (el.type === \\"radio\\") {
-                if (el.checked) {
-                  value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
-                }
-              } else if (el.type === \\"checkbox\\") {
-                value = el.checked;
-              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-                const num = el.valueAsNumber;
-
-                if (!isNaN(num)) {
-                  value = num;
-                }
-              } else if (el.type === \\"file\\") {
-                // TODO: one vs multiple files
-                value = el.files;
-              } else {
-                value = el.value;
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
               }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
             } else {
               value = el.value;
             }
+          } else {
+            value = el.value;
+          }
 
-            return {
-              key,
-              value,
-            };
-          });
-        let contentType = props.contentType;
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
 
-        if (props.sendSubmissionsTo === \\"email\\") {
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
           contentType = \\"multipart/form-data\\";
         }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
 
-        Array.from(formPairs).forEach(({ value }) => {
-          if (
-            value instanceof File ||
-            (Array.isArray(value) && value[0] instanceof File) ||
-            value instanceof FileList
-          ) {
-            contentType = \\"multipart/form-data\\";
-          }
-        }); // TODO: send as urlEncoded or multipart by default
-        // because of ease of use and reliability in browser API
-        // for encoding the form?
-
-        if (contentType !== \\"application/json\\") {
-          body = formData;
-        } else {
-          // Json
-          const json = {};
-          Array.from(formPairs).forEach(({ value, key }) => {
-            set(json, key, value);
-          });
-          body = JSON.stringify(json);
-        }
-
-        if (contentType && contentType !== \\"multipart/form-data\\") {
-          if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */ !(
-              sendWithJs && props.action?.includes(\\"zapier.com\\")
-            )
-          ) {
-            headers[\\"content-type\\"] = contentType;
-          }
-        }
-        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: { body },
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
         });
-        if (formRef.current) {
-          formRef.current.dispatchEvent(presubmitEvent);
-          if (presubmitEvent.defaultPrevented) {
-            return;
-          }
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
+        ) {
+          headers[\\"content-type\\"] = contentType;
         }
-        state.state = \\"sending\\";
-        const formUrl = \`\${
-          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-          props.sendSubmissionsToEmail || \\"\\"
-        )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-        fetch(
-          props.sendSubmissionsTo === \\"email\\"
-            ? formUrl
-            : props.action /* TODO: throw error if no action URL */,
-          { body, headers, method: props.method || \\"post\\" }
-        ).then(
-          async (res) => {
-            let body;
-            const contentType = res.headers.get(\\"content-type\\");
-            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-              body = await res.json();
-            } else {
-              body = await res.text();
-            }
-            if (!res.ok && props.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */ let message = get(
-                body,
-                props.errorMessagePath
-              );
-              if (message) {
-                if (typeof message !== \\"string\\") {
-                  /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message = JSON.stringify(
-                    message
-                  );
-                }
-                state.formErrorMessage = message;
+      }
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+      state = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */ let message = get(
+              body,
+              props.errorMessagePath
+            );
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like             error: - email has been taken */ message = JSON.stringify(
+                  message
+                );
               }
+              formErrorMessage = message;
             }
-            state.responseData = body;
-            state.state = res.ok ? \\"success\\" : \\"error\\";
-            if (res.ok) {
-              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: { res, body },
-              });
-              if (formRef.current) {
-                formRef.current.dispatchEvent(submitSuccessEvent);
-                if (submitSuccessEvent.defaultPrevented) {
-                  return;
-                }
-                /* TODO: option to turn this on/off? */ if (
-                  props.resetFormOnSubmit !== false
-                ) {
-                  formRef.current.reset();
-                }
-              }
-              /* TODO: client side route event first that can be preventDefaulted */ if (
-                props.successUrl
-              ) {
-                if (formRef.current) {
-                  const event = new CustomEvent(\\"route\\", {
-                    detail: { url: props.successUrl },
-                  });
-                  formRef.current.dispatchEvent(event);
-                  if (!event.defaultPrevented) {
-                    location.href = props.successUrl;
-                  }
-                } else {
-                  location.href = props.successUrl;
-                }
-              }
-            }
-          },
-          (err) => {
-            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-              detail: { error: err },
+          }
+          responseData = body;
+          state = res.ok ? \\"success\\" : \\"error\\";
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: { res, body },
             });
             if (formRef.current) {
-              formRef.current.dispatchEvent(submitErrorEvent);
-              if (submitErrorEvent.defaultPrevented) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
+              if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
+                formRef.current.reset();
+              }
             }
-            state.responseData = err;
-            state.state = \\"error\\";
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
+              if (formRef.current) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: { url: props.successUrl },
+                });
+                formRef.current.dispatchEvent(event);
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
           }
-        );
-      }
-    },
-  }));
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: { error: err },
+          });
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+          responseData = err;
+          state = \\"error\\";
+        }
+      );
+    }
+  }
   const formRef = useRef();
   return (
     <>
@@ -477,7 +462,7 @@ export default function FormComponent(props) {
         method={props.method}
         name={props.name}
         onSubmit={(event) => {
-          state.onSubmit(event);
+          onSubmit(event);
         }}
       >
         {\\" \\"}
@@ -493,7 +478,7 @@ export default function FormComponent(props) {
             ))}
           </>
         )}{\\" \\"}
-        {Boolean(state.submissionState === \\"error\\") && (
+        {Boolean(submissionState() === \\"error\\") && (
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
@@ -501,7 +486,7 @@ export default function FormComponent(props) {
             ></BuilderBlocks>
           </>
         )}{\\" \\"}
-        {Boolean(state.submissionState === \\"sending\\") && (
+        {Boolean(submissionState() === \\"sending\\") && (
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
@@ -509,18 +494,15 @@ export default function FormComponent(props) {
             ></BuilderBlocks>
           </>
         )}{\\" \\"}
-        {Boolean(state.submissionState === \\"error\\" && state.responseData) && (
+        {Boolean(submissionState() === \\"error\\" && responseData) && (
           <>
-            <pre
-              className=\\"builder-form-error-text\\"
-              css={{ padding: \\"10px\\", color: \\"red\\", textAlign: \\"center\\" }}
-            >
+            <Pre className=\\"builder-form-error-text\\">
               {\\" \\"}
-              {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
-            </pre>
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
+            </Pre>
           </>
         )}{\\" \\"}
-        {Boolean(state.submissionState === \\"success\\") && (
+        {Boolean(submissionState() === \\"success\\") && (
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
@@ -536,35 +518,37 @@ export default function FormComponent(props) {
 `;
 
 exports[`React Image 1`] = `
-"import { useRef, useEffect } from \\"react\\";
-/** @jsx jsx */
-import { jsx } from \\"@emotion/react\\";
-import { useLocalObservable } from \\"mobx-react-lite\\";
+"import { useState, useRef, useEffect } from \\"react\\";
+import styled from \\"styled-components\\";
+
+const Img = styled.img\`
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+  object-fit: cover;
+  object-position: center;
+\`;
 
 export default function Image(props) {
-  const state = useLocalObservable(() => ({
-    scrollListener: null,
-    imageLoaded: false,
-    load: false,
-    setLoaded() {
-      state.imageLoaded = true;
-    },
-    isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
-    },
-  }));
+  const [scrollListener, setScrollListener] = useState(() => null);
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+  const [load, setLoad] = useState(() => false);
+  function setLoaded() {
+    imageLoaded = true;
+  }
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
 
   const pictureRef = useRef();
 
   useEffect(() => {
-    if (state.useLazyLoading()) {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.current) {
@@ -572,14 +556,14 @@ export default function Image(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
-            state.scrollListener = null;
+            setLoad(true);
+            setScrollListener(null);
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      state.scrollListener = listener;
+      setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -592,27 +576,21 @@ export default function Image(props) {
     <>
       <>
         <picture ref={pictureRef}>
-          {Boolean(!state.useLazyLoading() || state.load) && (
+          {Boolean(!useLazyLoading() || load) && (
             <>
-              <img
+              <Img
                 alt={props.altText}
                 aria-role={props.altText ? \\"presentation\\" : undefined}
-                css={{
-                  opacity: \\"1\\",
-                  transition: \\"opacity 0.2s ease-in-out\\",
-                  objectFit: \\"cover\\",
-                  objectPosition: \\"center\\",
-                }}
                 className={
                   \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
                 }
                 src={props.image}
                 onLoad={(event) => {
-                  state.setLoaded();
+                  setLoaded();
                 }}
                 srcset={props.srcset}
                 sizes={props.sizes}
-              />
+              ></Img>
             </>
           )}
 

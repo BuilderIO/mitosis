@@ -18,7 +18,6 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
-import json5 from 'json5';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 
 export type ToVueOptions = {

@@ -1,19 +1,17 @@
-import { useLocalObservable } from "mobx-react-lite";
-import * as todosState from "../shared/todos-state.lite";
+import { useState } from "react";
+import todosState from "../shared/todos-state";
 
 export default function Todo(props) {
-  const state = useLocalObservable(() => ({
-    editing: false,
-    toggle() {
-      props.todo.completed = !props.todo.completed;
-    },
-  }));
+  const [editing, setEditing] = useState(() => false);
+  function toggle() {
+    props.todo.completed = !props.todo.completed;
+  }
 
   return (
     <>
       <li
         className={`${props.todo.completed ? "completed" : ""} ${
-          state.editing ? "editing" : ""
+          editing ? "editing" : ""
         }`}
       >
         <div className="view">
@@ -23,7 +21,7 @@ export default function Todo(props) {
             checked={props.todo.completed}
             onClick={(event) => {
               {
-                state.toggle();
+                toggle();
               }
             }}
           />
@@ -31,7 +29,7 @@ export default function Todo(props) {
           <label
             onDblClick={(event) => {
               {
-                state.editing = true;
+                setEditing(true);
               }
             }}
           >
@@ -48,14 +46,14 @@ export default function Todo(props) {
           ></button>
         </div>
 
-        {Boolean(state.editing) && (
+        {Boolean(editing) && (
           <>
             <input
               className="edit"
               value={props.todo.text}
               onBlur={(event) => {
                 {
-                  state.editing = false;
+                  setEditing(false);
                 }
               }}
               onKeyUp={(event) => {
