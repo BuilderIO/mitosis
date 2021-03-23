@@ -19,6 +19,7 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -115,7 +116,11 @@ export const blockToVue = (
         event = 'input';
       }
       // TODO: proper babel transform to replace. Util for this
-      str += ` @${event}="${useValue.replace(/event\./g, '$event.')}" `;
+      str += ` @${event}="${removeSurroundingBlock(
+        useValue
+          // TODO: proper reference parse and replacing
+          .replace(/event\./g, '$event.'),
+      )}" `;
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
     } else if (BINDING_MAPPERS[key]) {

@@ -3,7 +3,7 @@ import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
 const getStarImport = (theImport: JSXLiteImport): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
-    if (value === 'default') {
+    if (value === '*') {
       return key;
     }
   }

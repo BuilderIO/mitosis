@@ -21,6 +21,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { kebabCase } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 
 export type ToAngularOptions = {
   prettier?: boolean;
@@ -112,7 +113,9 @@ export const blockToAngular = (
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
-        const finalValue = useValue.replace(/event\./g, '$event.');
+        const finalValue = removeSurroundingBlock(
+          useValue.replace(/event\./g, '$event.'),
+        );
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;
@@ -183,9 +186,7 @@ export const componentToAngular = (
     @Component({
       selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
-        ${indent(template, 8)
-          .replace(/`/g, '\\`')
-          .replace(/\$\{/g, '\\${')}
+        ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
       \`,
       ${
         css.length

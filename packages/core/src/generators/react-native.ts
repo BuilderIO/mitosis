@@ -179,7 +179,7 @@ const blockToReactNative = (
       }
 
       if (key.startsWith('on')) {
-        str += ` ${key}={event => (${processBinding(value, options)})} `;
+        str += ` ${key}={event => ${processBinding(value, options)}} `;
       } else {
         str += ` ${key}={${processBinding(value, options)}} `;
       }

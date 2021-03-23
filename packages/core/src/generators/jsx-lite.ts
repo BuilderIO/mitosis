@@ -58,7 +58,7 @@ export const blockToJsxLite = (
     }
 
     if (key.startsWith('on')) {
-      str += ` ${key}={event => (${value})} `;
+      str += ` ${key}={event => ${value}} `;
     } else {
       str += ` ${key}={${value}} `;
     }

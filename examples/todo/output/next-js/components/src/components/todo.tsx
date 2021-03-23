@@ -1,5 +1,5 @@
 import { useState } from "react";
-import todosState from "../shared/todos-state";
+import todosState from "../shared/todos-state.lite";
 
 export default function Todo(props) {
   const [editing, setEditing] = useState(() => false);
@@ -20,17 +20,13 @@ export default function Todo(props) {
             type="checkbox"
             checked={props.todo.completed}
             onClick={(event) => {
-              {
-                toggle();
-              }
+              toggle();
             }}
           />
 
           <label
             onDblClick={(event) => {
-              {
-                setEditing(true);
-              }
+              setEditing(true);
             }}
           >
             {props.todo.text}
@@ -39,9 +35,7 @@ export default function Todo(props) {
           <button
             className="destroy"
             onClick={(event) => {
-              {
-                todosState.todos.splice(todosState.todos.indexOf(props.todo));
-              }
+              todosState.todos.splice(todosState.todos.indexOf(props.todo));
             }}
           ></button>
         </div>
@@ -52,14 +46,10 @@ export default function Todo(props) {
               className="edit"
               value={props.todo.text}
               onBlur={(event) => {
-                {
-                  setEditing(false);
-                }
+                setEditing(false);
               }}
               onKeyUp={(event) => {
-                {
-                  props.todo.text = event.target.value;
-                }
+                props.todo.text = event.target.value;
               }}
             />
           </>

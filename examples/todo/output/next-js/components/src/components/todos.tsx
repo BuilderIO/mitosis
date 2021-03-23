@@ -1,5 +1,5 @@
-import todosState from "../shared/todos-state";
-import Todo from "./todo";
+import todosState from "../shared/todos-state.lite";
+import Todo from "./todo.lite";
 
 export default function Todos(props) {
   return (
@@ -12,12 +12,10 @@ export default function Todos(props) {
               type="checkbox"
               checked={todosState.allCompleted}
               onClick={(event) => {
-                {
-                  const newValue = !todosState.allCompleted;
+                const newValue = !todosState.allCompleted;
 
-                  for (const todoItem of todosState.todos) {
-                    todoItem.completed = newValue;
-                  }
+                for (const todoItem of todosState.todos) {
+                  todoItem.completed = newValue;
                 }
               }}
             />

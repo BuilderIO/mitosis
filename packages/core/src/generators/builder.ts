@@ -13,6 +13,7 @@ import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
 import { attempt, omit, omitBy, set } from 'lodash';
 import { symbolBlocksAsChildren } from '../parsers/builder';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -127,11 +128,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -208,7 +205,7 @@ export const blockToBuilder = (
           eventBindingKeyRegex,
           firstCharMatchForEventBindingKey.toLowerCase(),
         )
-      ] = bindings[key] as string;
+      ] = removeSurroundingBlock(bindings[key] as string) as string;
       delete bindings[key];
     }
   }

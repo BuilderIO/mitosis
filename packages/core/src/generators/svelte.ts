@@ -21,6 +21,7 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 
 export type ToSvelteOptions = {
   prettier?: boolean;
@@ -100,7 +101,7 @@ export const blockToSvelte = (
       if (key.startsWith('on')) {
         const event = key.replace('on', '').toLowerCase();
         // TODO: handle quotes in event handler values
-        str += ` on:${event}="{event => ${useValue}}" `;
+        str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
       } else if (key === 'ref') {
         str += ` bind:this={${useValue}} `;
       } else {
@@ -130,7 +131,7 @@ export const blockToSvelte = (
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {

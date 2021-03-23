@@ -138,7 +138,7 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => { ${useBindingValue} }} `;
+      str += ` ${key}={event => ${useBindingValue} } `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
