@@ -45,7 +45,10 @@ const collectClassString = (json: JSXLiteNode): string | null => {
     dynamicClasses.push(json.bindings.className as any);
     delete json.bindings.className;
   }
-  if (typeof json.bindings.css === 'string') {
+  if (
+    typeof json.bindings.css === 'string' &&
+    json.bindings.css.trim().length > 4
+  ) {
     dynamicClasses.push(`css(${json.bindings.css})`);
     delete json.bindings.css;
   }
