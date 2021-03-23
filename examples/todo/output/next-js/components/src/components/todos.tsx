@@ -1,5 +1,5 @@
 import todosState from "../shared/todos-state.lite";
-import Todo from "./todo.lite";
+import Todo from "./todo";
 
 export default function Todos(props) {
   return (
