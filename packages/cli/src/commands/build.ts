@@ -1,4 +1,4 @@
-import path from 'path'
+import pathModule from 'path'
 import chalk from 'chalk'
 import { GluegunCommand } from 'gluegun'
 import { getJsxLiteConfig } from '../helpers/get-jsx-lite-config'
@@ -34,7 +34,7 @@ const command: GluegunCommand = {
       config.targets.map(async target => {
         await Promise.all(
           tree.map(async filePath => {
-            const outPath = path.resolve(cwd, config.dest, target, filePath)
+            const outPath = pathModule.resolve(cwd, config.dest, target, filePath)
             if (
               filePath.endsWith('.lite.jsx') ||
               filePath.endsWith('.lite.tsx')
@@ -78,26 +78,27 @@ const command: GluegunCommand = {
                 case 'qoot':
                   const info = componentToQoot(parsed)
                   for (const file of info.files) {
-                    let path = file.path
+                    let filePath = file.path
                     if (config.mapFile) {
                       const info = await config.mapFile({
                         content: file.contents,
                         target,
-                        path: path
+                        path: filePath
                       })
                       output = info.content
                       if (info.path !== filePath) {
-                        path = info.path
+                        filePath = info.path
                       } else {
-                        path = outPath
+                        filePath = outPath
                       }
                     } else {
-                      path = outPath.replace(/\.lite\.(j|t)sx$/, extension)
+                      const outPath = pathModule.resolve(cwd, config.dest, target, filePath)
+                      filePath = outPath.replace(/\.lite\.(j|t)sx$/, extension)
                       output = file.contents
                     }
 
-                    console.info(chalk.green('Generated:', path))
-                    await fs.outputFile(path, output)
+                    console.info(chalk.green('Generated:', filePath))
+                    await fs.outputFile(filePath, output)
                   }
                   return
                 default:

@@ -278,7 +278,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -379,6 +379,7 @@ export const componentToQoot = (
         contents: formatCode(
           `
           import { jsxDeclareComponent, QRL } from 'qoot';
+          
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
             componentName,
           )}', QRL\`ui:/${componentName}/template\`);
@@ -389,19 +390,21 @@ export const componentToQoot = (
       {
         path: `${componentName}/component.ts`,
         contents: formatCode(
-          `
-          import { Component } from 'qoot';
+          `import { Component } from 'qoot';
+
           export class ${componentName}Component extends Component {
             ${dataString}
 
-            constructor(...args) {
-              super(...args)
+            ${
+              !json.hooks.onMount
+                ? ''
+                : `
+                  constructor(...args) {
+                    super(...args);
 
-              ${
-                !json.hooks.onMount
-                  ? ''
-                  : processBinding(json.hooks.onMount, options)
-              }
+                    ${processBinding(json.hooks.onMount, options)}
+                    }
+                  `
             }
           }
         `,
