@@ -18,9 +18,60 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
+import { getStateObjectString } from 'src/helpers/get-state-object-string';
+import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
+import { babelTransformExpression } from 'src/helpers/babel-transform';
+import { NodePath, types } from '@babel/core';
+
+function addMarkDirtyAfterSetInCode(
+  code: string,
+  options: InternalToQootOptions,
+  useString = 'markDirty(this)',
+) {
+  return babelTransformExpression(code, {
+    AssignmentExpression(
+      path: babel.NodePath<babel.types.AssignmentExpression>,
+    ) {
+      const { node } = path;
+      if (types.isMemberExpression(node.left)) {
+        if (types.isIdentifier(node.left.object)) {
+          // TODO: utillity to properly trace this reference to the beginning
+          if (node.left.object.name === 'state') {
+            // TODO: ultimately do updates by property, e.g. updateName()
+            // that updates any attributes dependent on name, etcç
+            let parent: NodePath<any> = path;
+
+            // `_temp = ` assignments are created sometimes when we insertAfter
+            // for simple expressions. this causes us to re-process the same expression
+            // in an infinite loop
+            while ((parent = parent.parentPath)) {
+              if (
+                types.isAssignmentExpression(parent.node) &&
+                types.isIdentifier(parent.node.left) &&
+                parent.node.left.name.startsWith('_temp')
+              ) {
+                return;
+              }
+            }
+
+            path.insertAfter(
+              types.callExpression(types.identifier(useString), []),
+            );
+          }
+        }
+      }
+    },
+  });
+}
 
 const processBinding = (binding: string, options: InternalToQootOptions) =>
-  binding;
+  addMarkDirtyAfterSetInCode(
+    stripStateAndPropsRefs(binding, {
+      replaceWith: 'this.',
+    }),
+    options,
+  );
 
 const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: InternalToQootOptions) => string;
@@ -211,33 +262,33 @@ const getProvidersString = (
   return 'null';
 };
 
-// TODO
 const getEventHandlerFiles = (
   componentJson: JSXLiteComponent,
   options: InternalToQootOptions,
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
+          const componentName = getComponentName(componentJson, options);
           let str = dedent`
             import {
               injectEventHandler,
-              provideComponentProp,
               provideQrlExp,
-              provideService,
             } from 'qoot';
+            import { ${componentName}Component } from './component'
             
             export default injectEventHandler(
-              // TODO: providers
-              null,
-              // Handler
-              // TODO: replace refs
-              async function (event) 
-                ${item.bindings[binding]}
-              
+              ${componentName}Component,
+              provideQrlExp('event')
+              async function (event) {
+                ${removeSurroundingBlock(
+                  processBinding(item.bindings[binding] as string, options),
+                )}
+                markDirty(this);
+              }
             )
           `;
 
@@ -246,9 +297,7 @@ const getEventHandlerFiles = (
             plugins: [require('prettier/parser-typescript')],
           });
           files.push({
-            path: `${getComponentName(componentJson, options)}/on${
-              item.meta.id
-            }${binding.slice(2)}.ts`,
+            path: `${componentName}/on${item.meta.id}${binding.slice(2)}.ts`,
             contents: str,
           });
         }
@@ -287,9 +336,10 @@ export const componentToQoot = (
   stripMetaProperties(json);
   let str = dedent`
     import { inject, QRL } from 'qoot';
+    import { ${componentName}Component } from './component'
     ${renderPreComponent(json)}
 
-    export default inject(${getProvidersString(json, options)}, () => {
+    export default inject(${componentName}Component, function () {
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToQoot(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
@@ -308,6 +358,12 @@ export const componentToQoot = (
   if (options.plugins) {
     str = runPostCodePlugins(str, options.plugins);
   }
+
+  const dataString = getStateObjectString(json, {
+    format: 'class',
+    valueMapper: (code) => processBinding(code, options),
+  });
+
   return {
     files: [
       {
@@ -321,6 +377,15 @@ export const componentToQoot = (
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
           componentName,
         )}', QRL\`ui:/${componentName}/template\`);
+        `,
+      },
+      {
+        path: `${componentName}/component.ts`,
+        contents: dedent`
+          import { Component } from 'qoot';
+          export class ${componentName}Component extends Component {
+            ${dataString}
+          }
         `,
       },
       ...getEventHandlerFiles(json, options),
