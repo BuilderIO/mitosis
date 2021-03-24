@@ -1,5 +1,5 @@
-import { RuleTester } from 'eslint'
-import rule from '../jsx-callback-arg-name'
+import { RuleTester } from 'eslint';
+import rule from '../jsx-callback-arg-name';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -10,9 +10,9 @@ const opts = {
       jsx: true, // Allows for the parsing of JSX
     },
   },
-} as const
+} as const;
 
-var ruleTester = new RuleTester()
+var ruleTester = new RuleTester();
 
 ruleTester.run('jsx-callback-arg-name', rule, {
   valid: [
@@ -54,4 +54,4 @@ ruleTester.run('jsx-callback-arg-name', rule, {
       errors: ['Callback parameter must be called `event`'],
     },
   ],
-})
+});
