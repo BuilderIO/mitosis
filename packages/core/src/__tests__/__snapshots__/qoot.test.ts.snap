@@ -5,10 +5,11 @@ Object {
   "files": Array [
     Object {
       "contents": "import { inject, QRL } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 import todosState from \\"../shared/todos-state.lite\\";
 
-export default inject(null, () => {
+export default inject(TodoComponent, function () {
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
@@ -29,7 +30,7 @@ export default inject(null, () => {
         <button on_click={QRL\`ui:/Todo/onButtonClick\`}></button>
       </div>
 
-      {Boolean(state.editing) && (
+      {Boolean(this.editing) && (
         <>
           <input
             value={props.todo.text}
@@ -45,105 +46,101 @@ export default inject(null, () => {
       "path": "Todo/template.tsx",
     },
     Object {
-      "contents": "import { jsxDeclareComponent, QRL } from 'qoot';
-export const Todo = jsxDeclareComponent('todo', QRL\`ui:/Todo/template\`);",
+      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+export const Todo = jsxDeclareComponent(\\"todo\\", QRL\`ui:/Todo/template\`);
+",
       "path": "Todo/public.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { Component } from \\"qoot\\";
+export class TodoComponent extends Component {
+  editing = false;
+  toggle() {
+    this.todo.completed = !this.todo.completed;
+  }
+
+  constructor(...args) {
+    super(...args);
+  }
+}
+",
+      "path": "Todo/component.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodoComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
-    state.toggle();
+    this.toggle();
+
+    markDirty(this);
   }
 );
 ",
       "path": "Todo/onInputClick.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodoComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
-    state.editing = true;
+    this.editing = true;
+
+    markDirty(this);
   }
 );
 ",
       "path": "Todo/onLabelDblClick.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodoComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
-    todosState.todos.splice(todosState.todos.indexOf(props.todo));
+    todosState.todos.splice(todosState.todos.indexOf(this.todo));
+
+    markDirty(this);
   }
 );
 ",
       "path": "Todo/onButtonClick.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodoComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
-    state.editing = false;
+    this.editing = false;
+
+    markDirty(this);
   }
 );
 ",
       "path": "Todo/onInput2Blur.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodoComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
-    props.todo.text = event.target.value;
+    this.todo.text = event.target.value;
+
+    markDirty(this);
   }
 );
 ",
@@ -158,11 +155,12 @@ Object {
   "files": Array [
     Object {
       "contents": "import { inject, QRL } from \\"qoot\\";
+import { TodosComponent } from \\"./component\\";
 
 import todosState from \\"../shared/todos-state.lite\\";
 import Todo from \\"./todo.lite\\";
 
-export default inject(null, () => {
+export default inject(TodosComponent, function () {
   return (
     <section>
       {Boolean(todosState.todos.length) && (
@@ -189,29 +187,36 @@ export default inject(null, () => {
       "path": "Todos/template.tsx",
     },
     Object {
-      "contents": "import { jsxDeclareComponent, QRL } from 'qoot';
-export const Todos = jsxDeclareComponent('todos', QRL\`ui:/Todos/template\`);",
+      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+export const Todos = jsxDeclareComponent(\\"todos\\", QRL\`ui:/Todos/template\`);
+",
       "path": "Todos/public.ts",
     },
     Object {
-      "contents": "import {
-  injectEventHandler,
-  provideComponentProp,
-  provideQrlExp,
-  provideService,
-} from \\"qoot\\";
+      "contents": "import { Component } from \\"qoot\\";
+export class TodosComponent extends Component {
+  constructor(...args) {
+    super(...args);
+  }
+}
+",
+      "path": "Todos/component.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+import { TodosComponent } from \\"./component\\";
 
 export default injectEventHandler(
-  // TODO: providers
-  null,
-  // Handler
-  // TODO: replace refs
+  TodosComponent,
+  provideQrlExp(\\"event\\"),
   async function (event) {
     const newValue = !todosState.allCompleted;
 
     for (const todoItem of todosState.todos) {
       todoItem.completed = newValue;
     }
+
+    markDirty(this);
   }
 );
 ",

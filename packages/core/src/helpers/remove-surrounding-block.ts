@@ -1,6 +1,6 @@
-/** 
+/**
  * Remove the surrounding block for a function, for instance
- * 
+ *
  * `{ const foo = "bar" }` -> `const foo = "bar"`
  */
 export function removeSurroundingBlock(code: string) {

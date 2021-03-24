@@ -186,7 +186,9 @@ export const componentToAngular = (
     @Component({
       selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
-        ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
+        ${indent(template, 8)
+          .replace(/`/g, '\\`')
+          .replace(/\$\{/g, '\\${')}
       \`,
       ${
         css.length

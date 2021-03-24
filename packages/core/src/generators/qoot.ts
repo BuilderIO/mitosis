@@ -18,10 +18,10 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { removeSurroundingBlock } from 'src/helpers/remove-surrounding-block';
-import { getStateObjectString } from 'src/helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
-import { babelTransformExpression } from 'src/helpers/babel-transform';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { getStateObjectString } from '../helpers/get-state-object-string';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import { babelTransformExpression } from '../helpers/babel-transform';
 import { NodePath, types } from '@babel/core';
 
 function addMarkDirtyAfterSetInCode(
@@ -262,19 +262,29 @@ const getProvidersString = (
   return 'null';
 };
 
+const formatCode = (str: string, options: InternalToQootOptions) => {
+  if (options.prettier !== false) {
+    str = format(str, {
+      parser: 'typescript',
+      plugins: [require('prettier/parser-typescript')],
+    });
+  }
+  return str;
+};
+
 const getEventHandlerFiles = (
   componentJson: JSXLiteComponent,
   options: InternalToQootOptions,
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function (item) {
+  traverse(componentJson).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
           const componentName = getComponentName(componentJson, options);
-          let str = dedent`
-            import {
+          let str = formatCode(
+            `import {
               injectEventHandler,
               provideQrlExp,
             } from 'qoot';
@@ -282,7 +292,7 @@ const getEventHandlerFiles = (
             
             export default injectEventHandler(
               ${componentName}Component,
-              provideQrlExp('event')
+              provideQrlExp('event'),
               async function (event) {
                 ${removeSurroundingBlock(
                   processBinding(item.bindings[binding] as string, options),
@@ -290,12 +300,11 @@ const getEventHandlerFiles = (
                 markDirty(this);
               }
             )
-          `;
+          `,
+            options,
+          );
 
-          str = format(str, {
-            parser: 'typescript',
-            plugins: [require('prettier/parser-typescript')],
-          });
+          str = formatCode(str, options);
           files.push({
             path: `${componentName}/on${item.meta.id}${binding.slice(2)}.ts`,
             contents: str,
@@ -349,12 +358,7 @@ export const componentToQoot = (
   if (options.plugins) {
     str = runPreCodePlugins(str, options.plugins);
   }
-  if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'typescript',
-      plugins: [require('prettier/parser-typescript')],
-    });
-  }
+  str = formatCode(str, options);
   if (options.plugins) {
     str = runPostCodePlugins(str, options.plugins);
   }
@@ -372,16 +376,20 @@ export const componentToQoot = (
       },
       {
         path: `${componentName}/public.ts`,
-        contents: dedent`
+        contents: formatCode(
+          `
           import { jsxDeclareComponent, QRL } from 'qoot';
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
-          componentName,
-        )}', QRL\`ui:/${componentName}/template\`);
+            componentName,
+          )}', QRL\`ui:/${componentName}/template\`);
         `,
+          options,
+        ),
       },
       {
         path: `${componentName}/component.ts`,
-        contents: dedent`
+        contents: formatCode(
+          `
           import { Component } from 'qoot';
           export class ${componentName}Component extends Component {
             ${dataString}
@@ -397,6 +405,8 @@ export const componentToQoot = (
             }
           }
         `,
+          options,
+        ),
       },
       ...getEventHandlerFiles(json, options),
     ],

@@ -265,7 +265,7 @@ const jsxElementToJson = (
     return createJSXLiteNode({
       name: 'Show',
       bindings: {
-        when: whenValue,
+        when: whenValue || undefined,
       },
       children: node.children.map((item) =>
         jsxElementToJson(item as any),

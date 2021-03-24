@@ -453,7 +453,7 @@ export const builderElementToJsxLiteNode = (
       return createJSXLiteNode({
         name: 'For',
         bindings: {
-          each: block.repeat?.collection,
+          each: block.repeat?.collection!,
           _forName: block.repeat?.itemName || 'item',
         },
         children:

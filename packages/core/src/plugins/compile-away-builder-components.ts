@@ -123,7 +123,7 @@ const components: {
   },
   Columns(node: JSXLiteNode, context) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
-      width: parseFloat(item.properties.width) || 0,
+      width: parseFloat(item.properties.width!) || 0,
       children: item.children,
     }));
     const gutterSize =
@@ -237,7 +237,7 @@ const components: {
                     String(size),
                   )} ${size}w`,
               )
-              .concat([node.properties.image])
+              .concat([node.properties.image!])
               .join(', ')
           : ''
       }`;
