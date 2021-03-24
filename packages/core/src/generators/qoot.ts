@@ -24,6 +24,9 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { NodePath, types } from '@babel/core';
 
+const qootImport = (options: InternalToQootOptions) =>
+  options.qootLib || 'qoot';
+
 function addMarkDirtyAfterSetInCode(
   code: string,
   options: InternalToQootOptions,
@@ -55,9 +58,7 @@ function addMarkDirtyAfterSetInCode(
               }
             }
 
-            path.insertAfter(
-              types.callExpression(types.identifier(useString), []),
-            );
+            path.insertAfter(types.identifier(useString));
           }
         }
       }
@@ -66,12 +67,9 @@ function addMarkDirtyAfterSetInCode(
 }
 
 const processBinding = (binding: string, options: InternalToQootOptions) =>
-  addMarkDirtyAfterSetInCode(
-    stripStateAndPropsRefs(binding, {
-      replaceWith: 'this.',
-    }),
-    options,
-  );
+  stripStateAndPropsRefs(addMarkDirtyAfterSetInCode(binding, options), {
+    replaceWith: 'this.',
+  });
 
 const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: InternalToQootOptions) => string;
@@ -169,14 +167,22 @@ const collectClassString = (json: JSXLiteNode): string | null => {
   return null;
 };
 
+const elId = (node: JSXLiteNode, options: InternalToQootOptions) => {
+  if (node.meta.id) {
+    return node.meta.id;
+  }
+  const id = getId(node, options);
+  node.meta.id = id;
+  return id;
+};
+
 type NumberRecord = { [key: string]: number };
 type ToQootOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
+  qootLib?: string;
 };
-type InternalToQootOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
+type InternalToQootOptions = ToQootOptions & {
   componentJson: JSXLiteComponent;
   namesMap: NumberRecord;
 };
@@ -192,9 +198,6 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   }
 
   let str = '';
-
-  const id = getId(json, options);
-  json.meta.id = id;
 
   str += `<${json.name} `;
 
@@ -230,9 +233,10 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       const useKey = key.replace('on', 'on:').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
 
-      eventBindings[useKey] = `QRL\`ui:/${componentName}/on${id}${key.slice(
-        2,
-      )}?event=.\``;
+      eventBindings[useKey] = `QRL\`ui:/${componentName}/on${elId(
+        json,
+        options,
+      )}${key.slice(2)}?event=.\``;
     } else {
       str += ` ${key}={${value}} `;
     }
@@ -302,17 +306,16 @@ const getEventHandlerFiles = (
               injectEventHandler,
               provideQrlExp,
               markDirty
-            } from 'qoot';
+            } from '${qootImport(options)}';
             import { ${componentName}Component } from './component'
             
             export default injectEventHandler(
               ${componentName}Component,
-              provideQrlExp('event'),
-              async function (event) {
+              provideQrlExp<Event>('event'),
+              async function (this: ${componentName}Component, event: Event) {
                 ${removeSurroundingBlock(
                   processBinding(item.bindings[binding] as string, options),
                 )}
-                markDirty(this);
               }
             )
           `,
@@ -321,7 +324,9 @@ const getEventHandlerFiles = (
 
           str = formatCode(str, options);
           files.push({
-            path: `${componentName}/on${item.meta.id}${binding.slice(2)}.ts`,
+            path: `${componentName}/on${elId(item, options)}${binding.slice(
+              2,
+            )}.ts`,
             contents: str,
           });
         }
@@ -359,9 +364,31 @@ export const componentToQoot = (
   );
   stripMetaProperties(json);
   let str = dedent`
-    import { inject, QRL } from 'qoot';
+    import { inject, QRL, jsxFactory } from '${qootImport(options)}';
     import { ${componentName}Component } from './component'
-    ${renderPreComponent(json)}
+    ${renderPreComponent({
+      ...json,
+      imports: json.imports.map((item) => {
+        if (item.path.endsWith('.lite')) {
+          const clone = fastClone(item);
+          const name = clone.path
+            .split(/[\.\/]/)
+            // Get the -1 index of array
+            .slice(-2, -1)
+            .pop();
+          const pascalName = capitalize(camelCase(name));
+          clone.path = `../${pascalName}/public.js`;
+          for (const key in clone.imports) {
+            const value = clone.imports[key]
+            if (value === 'default') {
+              clone.imports[key] = pascalName
+            }
+          }
+          return clone;
+        }
+        return item;
+      }),
+    })}
 
     export default inject(${componentName}Component, function () {
       return (${addWrapper ? '<>' : ''}
@@ -393,7 +420,7 @@ export const componentToQoot = (
         path: `${componentName}/public.ts`,
         contents: formatCode(
           `
-          import { jsxDeclareComponent, QRL } from 'qoot';
+          import { jsxDeclareComponent, QRL } from '${qootImport(options)}';
           
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
             componentName,
@@ -405,24 +432,34 @@ export const componentToQoot = (
       {
         path: `${componentName}/component.ts`,
         contents: formatCode(
-          `import { Component } from 'qoot';
+          (() => {
+            let str = `
+              export class ${componentName}Component extends Component<any, any> {
+                ${dataString}
 
-          export class ${componentName}Component extends Component {
-            ${dataString}
+                ${
+                  !json.hooks.onMount
+                    ? ''
+                    : `
+                      constructor(...args) {
+                        super(...args);
 
-            ${
-              !json.hooks.onMount
-                ? ''
-                : `
-                  constructor(...args) {
-                    super(...args);
+                        ${processBinding(json.hooks.onMount, options)}
+                        }
+                      `
+                }
+              }
+            `;
 
-                    ${processBinding(json.hooks.onMount, options)}
-                    }
-                  `
-            }
-          }
-        `,
+            str = `
+              import { Component ${
+                str.includes('markDirty(') ? ', markDirty' : ''
+              } } from '${qootImport(options)}';
+              ${str}
+            `;
+
+            return str;
+          })(),
           options,
         ),
       },

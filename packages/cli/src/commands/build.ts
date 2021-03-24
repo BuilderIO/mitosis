@@ -34,7 +34,12 @@ const command: GluegunCommand = {
       config.targets.map(async target => {
         await Promise.all(
           tree.map(async filePath => {
-            const outPath = pathModule.resolve(cwd, config.dest, target, filePath)
+            const outPath = pathModule.resolve(
+              cwd,
+              config.dest,
+              target,
+              filePath
+            )
             if (
               filePath.endsWith('.lite.jsx') ||
               filePath.endsWith('.lite.tsx')
@@ -76,7 +81,10 @@ const command: GluegunCommand = {
                   output = componentToCustomElement(parsed)
                   break
                 case 'qoot':
-                  const info = componentToQoot(parsed)
+                  const info = componentToQoot(
+                    parsed,
+                    (config as any)?.options?.qoot || undefined
+                  )
                   for (const file of info.files) {
                     let filePath = file.path
                     if (config.mapFile) {
@@ -92,7 +100,12 @@ const command: GluegunCommand = {
                         filePath = outPath
                       }
                     } else {
-                      const outPath = pathModule.resolve(cwd, config.dest, target, filePath)
+                      const outPath = pathModule.resolve(
+                        cwd,
+                        config.dest,
+                        target,
+                        filePath
+                      )
                       filePath = outPath.replace(/\.lite\.(j|t)sx$/, extension)
                       output = file.contents
                     }

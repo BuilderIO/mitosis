@@ -4,10 +4,10 @@ exports[`Qoot Todo 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { inject, QRL } from \\"qoot\\";
+      "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
-import todosState from \\"../shared/todos-state.lite\\";
+import todosState from \\"../TodosState/public.js\\";
 
 export default inject(TodoComponent, function () {
   return (
@@ -59,7 +59,7 @@ export const Todo = jsxDeclareComponent(\\"todo\\", QRL\`ui:/Todo/template\`);
     Object {
       "contents": "import { Component } from \\"qoot\\";
 
-export class TodoComponent extends Component {
+export class TodoComponent extends Component<any, any> {
   editing = false;
   toggle() {
     this.todo.completed = !this.todo.completed;
@@ -74,11 +74,9 @@ import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
     this.toggle();
-
-    markDirty(this);
   }
 );
 ",
@@ -90,10 +88,9 @@ import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
     this.editing = true;
-
     markDirty(this);
   }
 );
@@ -106,11 +103,9 @@ import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
     todosState.todos.splice(todosState.todos.indexOf(this.todo));
-
-    markDirty(this);
   }
 );
 ",
@@ -122,10 +117,9 @@ import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
     this.editing = false;
-
     markDirty(this);
   }
 );
@@ -138,11 +132,9 @@ import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
     this.todo.text = event.target.value;
-
-    markDirty(this);
   }
 );
 ",
@@ -156,11 +148,11 @@ exports[`Qoot Todos 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { inject, QRL } from \\"qoot\\";
+      "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
 import { TodosComponent } from \\"./component\\";
 
-import todosState from \\"../shared/todos-state.lite\\";
-import Todo from \\"./todo.lite\\";
+import todosState from \\"../TodosState/public.js\\";
+import Todo from \\"../Todo/public.js\\";
 
 export default inject(TodosComponent, function () {
   return (
@@ -198,7 +190,7 @@ export const Todos = jsxDeclareComponent(\\"todos\\", QRL\`ui:/Todos/template\`)
     Object {
       "contents": "import { Component } from \\"qoot\\";
 
-export class TodosComponent extends Component {}
+export class TodosComponent extends Component<any, any> {}
 ",
       "path": "Todos/component.ts",
     },
@@ -208,15 +200,13 @@ import { TodosComponent } from \\"./component\\";
 
 export default injectEventHandler(
   TodosComponent,
-  provideQrlExp(\\"event\\"),
-  async function (event) {
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodosComponent, event: Event) {
     const newValue = !todosState.allCompleted;
 
     for (const todoItem of todosState.todos) {
       todoItem.completed = newValue;
     }
-
-    markDirty(this);
   }
 );
 ",
