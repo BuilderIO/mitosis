@@ -1,5 +1,6 @@
 import type { Rule } from 'eslint'
 import type * as ESTree from 'estree'
+import * as path from 'path'
 
 interface NodeWithParent extends ESTree.BaseNode {
   parent: NodeWithParent
@@ -60,6 +61,28 @@ const isFunction = defguard((term: NodeExt) => {
   return false
 })
 
+/**
+ * Restrict rule to only files that have a '.lite' ext, multiple exts is fine
+ * (like file.lite.jsx).
+ *
+ * @example
+ * ```typescript
+ * isJSXLitePath('file.jsx')
+ * // false
+ *
+ * isJSXLitePath('file.lite.jsx')
+ * // true
+ * ```
+ */
+function isJSXLitePath(filename: string) {
+  filename = path.basename(filename)
+
+  const tokens = filename.split('.')
+  const exts = tokens.splice(1)
+
+  return exts.includes('lite')
+}
+
 // ------------------------------------------------------------------------------
 // Rule Definition
 // ------------------------------------------------------------------------------
@@ -74,12 +97,16 @@ const rule: Rule.RuleModule = {
     },
     fixable: 'code',
     schema: [
+      {}
       // fill in your schema
     ],
   },
 
   create(context) {
     // variables should be defined here
+    const filename = context.getFilename()
+
+    if (!isJSXLitePath(filename)) return {};
 
     // ----------------------------------------------------------------------
     // Helpers
