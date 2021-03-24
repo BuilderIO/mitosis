@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { camelCase, kebabCase } from 'lodash';
+import { camelCase, kebabCase, size } from 'lodash';
 import { format } from 'prettier/standalone';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import traverse from 'traverse';
@@ -214,6 +214,8 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
+
+  const eventBindings: Record<string, string> = {};
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;
     if (key.startsWith('_') || key.startsWith('$')) {
@@ -225,15 +227,27 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       // through any framework
       // TODO: for now use _ instead of : until I find what voodoo magic allows
       // colons in attribute names in TSX
-      const useKey = key.replace('on', 'on_').toLowerCase();
+      const useKey = key.replace('on', 'on:').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
-      // TODO: args
-      // on:click={QRL`ui:/Item/toggle?toggleState=.target.checked`}
-      str += ` ${useKey}={QRL\`ui:/${componentName}/on${id}${key.slice(2)}\`}`;
+
+      eventBindings[useKey] = `QRL\`ui:/${componentName}/on${id}${key.slice(
+        2,
+      )}?event=.\``;
     } else {
       str += ` ${key}={${value}} `;
     }
   }
+
+  if (size(eventBindings)) {
+    str += ` $={{ `;
+
+    for (const event in eventBindings) {
+      str += `'${event}': ${eventBindings[event]},`;
+    }
+
+    str += '}} ';
+  }
+
   if (selfClosingTags.has(json.name)) {
     return str + ' />';
   }
@@ -287,6 +301,7 @@ const getEventHandlerFiles = (
             `import {
               injectEventHandler,
               provideQrlExp,
+              markDirty
             } from 'qoot';
             import { ${componentName}Component } from './component'
             

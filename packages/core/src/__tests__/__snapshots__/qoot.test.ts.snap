@@ -20,22 +20,26 @@ export default inject(TodoComponent, function () {
         <input
           type=\\"checkbox\\"
           checked={props.todo.completed}
-          on_click={QRL\`ui:/Todo/onInputClick\`}
+          $={{ \\"on:click\\": QRL\`ui:/Todo/onInputClick?event=.\` }}
         />
 
-        <label on_dblclick={QRL\`ui:/Todo/onLabelDblClick\`}>
+        <label $={{ \\"on:dblclick\\": QRL\`ui:/Todo/onLabelDblClick?event=.\` }}>
           {props.todo.text}
         </label>
 
-        <button on_click={QRL\`ui:/Todo/onButtonClick\`}></button>
+        <button
+          $={{ \\"on:click\\": QRL\`ui:/Todo/onButtonClick?event=.\` }}
+        ></button>
       </div>
 
       {Boolean(this.editing) && (
         <>
           <input
             value={props.todo.text}
-            on_blur={QRL\`ui:/Todo/onInput2Blur\`}
-            on_keyup={QRL\`ui:/Todo/onInput2KeyUp\`}
+            $={{
+              \\"on:blur\\": QRL\`ui:/Todo/onInput2Blur?event=.\`,
+              \\"on:keyup\\": QRL\`ui:/Todo/onInput2KeyUp?event=.\`,
+            }}
           />
         </>
       )}
@@ -47,27 +51,25 @@ export default inject(TodoComponent, function () {
     },
     Object {
       "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+
 export const Todo = jsxDeclareComponent(\\"todo\\", QRL\`ui:/Todo/template\`);
 ",
       "path": "Todo/public.ts",
     },
     Object {
       "contents": "import { Component } from \\"qoot\\";
+
 export class TodoComponent extends Component {
   editing = false;
   toggle() {
     this.todo.completed = !this.todo.completed;
-  }
-
-  constructor(...args) {
-    super(...args);
   }
 }
 ",
       "path": "Todo/component.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
@@ -83,7 +85,7 @@ export default injectEventHandler(
       "path": "Todo/onInputClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
@@ -99,7 +101,7 @@ export default injectEventHandler(
       "path": "Todo/onLabelDblClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
@@ -115,7 +117,7 @@ export default injectEventHandler(
       "path": "Todo/onButtonClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
@@ -131,7 +133,7 @@ export default injectEventHandler(
       "path": "Todo/onInput2Blur.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodoComponent } from \\"./component\\";
 
 export default injectEventHandler(
@@ -168,7 +170,7 @@ export default inject(TodosComponent, function () {
           <input
             type=\\"checkbox\\"
             checked={todosState.allCompleted}
-            on_click={QRL\`ui:/Todos/onInputClick\`}
+            $={{ \\"on:click\\": QRL\`ui:/Todos/onInputClick?event=.\` }}
           />
         </>
       )}
@@ -188,22 +190,20 @@ export default inject(TodosComponent, function () {
     },
     Object {
       "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+
 export const Todos = jsxDeclareComponent(\\"todos\\", QRL\`ui:/Todos/template\`);
 ",
       "path": "Todos/public.ts",
     },
     Object {
       "contents": "import { Component } from \\"qoot\\";
-export class TodosComponent extends Component {
-  constructor(...args) {
-    super(...args);
-  }
-}
+
+export class TodosComponent extends Component {}
 ",
       "path": "Todos/component.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
 import { TodosComponent } from \\"./component\\";
 
 export default injectEventHandler(
