@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <Header />
 
-      {/* Page contents */}
+      <div style={{ padding: '20px' }}>I am the page body</div>
 
       <Footer />
     </div>

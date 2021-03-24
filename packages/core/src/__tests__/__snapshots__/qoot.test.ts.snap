@@ -5,11 +5,11 @@ Object {
   "files": Array [
     Object {
       "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
-import todosState from \\"../TodosState/public.js\\";
+import { TodosState as todosState } from \\"../TodosState/public.js\\";
 
-export default inject(TodoComponent, function () {
+export default inject(TodoComponent, function (this: TodoComponent) {
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
@@ -32,7 +32,7 @@ export default inject(TodoComponent, function () {
         ></button>
       </div>
 
-      {Boolean(this.editing) && (
+      {this.editing ? (
         <>
           <input
             value={props.todo.text}
@@ -42,7 +42,7 @@ export default inject(TodoComponent, function () {
             }}
           />
         </>
-      )}
+      ) : undefined}
     </li>
   );
 });
@@ -70,7 +70,7 @@ export class TodoComponent extends Component<any, any> {
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
@@ -84,7 +84,7 @@ export default injectEventHandler(
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
@@ -99,7 +99,7 @@ export default injectEventHandler(
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
@@ -113,7 +113,7 @@ export default injectEventHandler(
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
@@ -128,7 +128,7 @@ export default injectEventHandler(
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodoComponent } from \\"./component\\";
+import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
@@ -149,15 +149,15 @@ Object {
   "files": Array [
     Object {
       "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
-import { TodosComponent } from \\"./component\\";
+import { TodosComponent } from \\"./component.js\\";
 
-import todosState from \\"../TodosState/public.js\\";
-import Todo from \\"../Todo/public.js\\";
+import { TodosState as todosState } from \\"../TodosState/public.js\\";
+import { Todo } from \\"../Todo/public.js\\";
 
-export default inject(TodosComponent, function () {
+export default inject(TodosComponent, function (this: TodosComponent) {
   return (
     <section>
-      {Boolean(todosState.todos.length) && (
+      {todosState.todos.length ? (
         <>
           <input
             type=\\"checkbox\\"
@@ -165,7 +165,7 @@ export default inject(TodosComponent, function () {
             $={{ \\"on:click\\": QRL\`ui:/Todos/onInputClick?event=.\` }}
           />
         </>
-      )}
+      ) : undefined}
 
       <ul>
         {todosState.todos.map((todo) => (
@@ -196,7 +196,7 @@ export class TodosComponent extends Component<any, any> {}
     },
     Object {
       "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
-import { TodosComponent } from \\"./component\\";
+import { TodosComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodosComponent,

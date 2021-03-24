@@ -90,15 +90,12 @@ const NODE_MAPPERS: {
     ))}`;
   },
   Show(json, options) {
-    return `{Boolean(${processBinding(
-      json.bindings.when as string,
-      options,
-    )}) && (
+    return `{${processBinding(json.bindings.when as string, options)} ? (
       <>${json.children
         .filter(filterEmptyTextNodes)
         .map((item) => blockToQoot(item, options))
         .join('\n')}</>
-    )}`;
+    ) : undefined}`;
   },
 };
 
@@ -296,7 +293,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function (item) {
+  traverse(componentJson).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -307,7 +304,7 @@ const getEventHandlerFiles = (
               provideQrlExp,
               markDirty
             } from '${qootImport(options)}';
-            import { ${componentName}Component } from './component'
+            import { ${componentName}Component } from './component.js'
             
             export default injectEventHandler(
               ${componentName}Component,
@@ -365,7 +362,7 @@ export const componentToQoot = (
   stripMetaProperties(json);
   let str = dedent`
     import { inject, QRL, jsxFactory } from '${qootImport(options)}';
-    import { ${componentName}Component } from './component'
+    import { ${componentName}Component } from './component.js'
     ${renderPreComponent({
       ...json,
       imports: json.imports.map((item) => {
@@ -379,9 +376,9 @@ export const componentToQoot = (
           const pascalName = capitalize(camelCase(name));
           clone.path = `../${pascalName}/public.js`;
           for (const key in clone.imports) {
-            const value = clone.imports[key]
+            const value = clone.imports[key];
             if (value === 'default') {
-              clone.imports[key] = pascalName
+              clone.imports[key] = pascalName;
             }
           }
           return clone;
@@ -390,7 +387,7 @@ export const componentToQoot = (
       }),
     })}
 
-    export default inject(${componentName}Component, function () {
+    export default inject(${componentName}Component, function (this: ${componentName}Component) {
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToQoot(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})

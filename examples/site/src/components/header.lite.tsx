@@ -11,15 +11,15 @@ export default function Header() {
   return (
     <div>
       {/* Header links */}
-      <div
+      <button
         onClick={() => {
-          state.hamburgerMenuOpen = false;
+          state.hamburgerMenuOpen = !state.hamburgerMenuOpen;
         }}
       >
-        {/* Hamburger menu  button */}
-      </div>
+        Toggle hamburger
+      </button>
       <Show when={state.hamburgerMenuOpen}>
-        {/* Hamburger menu contents */}
+        <div>I am hamburger menu</div>
       </Show>
     </div>
   );
