@@ -385,6 +385,16 @@ export const componentToQoot = (
           import { Component } from 'qoot';
           export class ${componentName}Component extends Component {
             ${dataString}
+
+            constructor(...args) {
+              super(...args)
+
+              ${
+                !json.hooks.onMount
+                  ? ''
+                  : processBinding(json.hooks.onMount, options)
+              }
+            }
           }
         `,
       },
