@@ -1,6 +1,7 @@
 import type { Rule } from 'eslint'
 import type * as ESTree from 'estree'
 import * as path from 'path'
+import {types} from '@babel/core'
 
 interface NodeWithParent extends ESTree.BaseNode {
   parent: NodeWithParent
@@ -32,34 +33,11 @@ declare module 'eslint' {
   }
 }
 
+// There's some issues with babel's types and eslint's types cooperating so
+// this is a stop gap solution.
 type NodeJSX = JSXExpressionContainer | JSXAttribute | JSXOpeningElement
 type NodeExt = ESTree.Node | NodeJSX
 type NodeType = NodeExt['type']
-
-/**
- * Helper function to make defining type guards more sane.
- * Supply a function that returns a value or false, will infer the guard's type
- * from the union of types returned.
- */
-function defguard<B extends A, A>(fn: (term: A) => B | false) {
-  return function(term: A): term is B {
-    return fn(term) !== false
-  }
-}
-
-const isFunction = defguard((term: NodeExt) => {
-  const members = [
-    'FunctionDeclaration',
-    'FunctionExpression',
-    'ArrowFunctionExpression',
-  ] as const
-
-  for (const value of members) {
-    if (term.type === value) return term
-  }
-
-  return false
-})
 
 /**
  * Restrict rule to only files that have a '.lite' ext, multiple exts is fine
@@ -121,9 +99,9 @@ const rule: Rule.RuleModule = {
     const listener: Rule.RuleListener = {
       JSXExpressionContainer(node) {
         // Only focus on expressions that are attribute's values.
-        if (!(node.parent.type === 'JSXAttribute')) return
+        if (!(types.isJSXAttribute(node.parent))) return
 
-        if (!isFunction(node.expression)) return
+        if (!types.isFunction(node.expression)) return
 
         const params = node.expression.params
 
@@ -132,7 +110,7 @@ const rule: Rule.RuleModule = {
 
         const [arg1] = params
 
-        if (arg1.type !== 'Identifier') {
+        if (!types.isIdentifier(arg1)) {
           return context.report({
             node: arg1,
             message: 'Must be a function parameter',
