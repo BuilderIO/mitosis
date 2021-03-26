@@ -9,16 +9,16 @@
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
     "clean-build": "rm -rf ./build",
-    "compile": "tsc --build .",
+    "compile": "npx tsc --build .",
     "start": "npm run compile -- --watch",
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./build/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
     "release:patch": "npm version patch && npm publish",
-    "test": "jest",
-    "watch": "jest --watch",
-    "snapupdate": "jest --updateSnapshot",
-    "coverage": "jest --coverage"
+    "test": "npx jest",
+    "watch": "npx jest --watch",
+    "snapupdate": "npx jest --updateSnapshot",
+    "coverage": "npx jest --coverage"
   },
   "files": [
     "tsconfig.json",
