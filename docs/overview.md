@@ -51,9 +51,7 @@ export default function MyComponent(props) {
       <Show when={props.showInput}>
         <input
           value={state.newItemName}
-          onChange={(
-            event,
-          ) => (state.newItemName = event.target.value)}
+          onChange={(event) => (state.newItemName = event.target.value)}
         />
       </Show>
       <div css={{ padding: '10px' }}>
@@ -345,9 +343,9 @@ _JSX Lite input_
 export default function MyComponent() {
   const state = useState({
     doSomethingAsync(event) {
-      void async function() {
+      void (async function() {
         const response = await fetch(); /* ... */
-      }();
+      })();
     },
   });
 }

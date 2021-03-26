@@ -89,6 +89,7 @@ npm install
 npm run build
 npm link
 ```
+
 # License
 
 MIT - see LICENSE
