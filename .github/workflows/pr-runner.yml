@@ -72,7 +72,9 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run tests
-        run: npx lerna run test --stream --scope='@jsx-lite/{core,cli}'
+        run:
+          npx lerna bootstrap
+          npx lerna run test --stream --scope='@jsx-lite/{core,cli}'
 
   build:
     needs: install-dependencies
