@@ -23,6 +23,7 @@ import { getStateObjectString } from '../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { NodePath, types } from '@babel/core';
+import { collectCss } from '../helpers/collect-styles';
 
 const qootImport = (options: InternalToQootOptions) =>
   options.qootLib || 'qoot';
@@ -111,59 +112,6 @@ const getId = (json: JSXLiteNode, options: InternalToQootOptions) => {
   return capitalize(`${name}${newNameNum === 1 ? '' : `${newNameNum}`}`);
 };
 
-// This should really be a preprocessor mapping the `class` attribute binding based on what other values have
-// to make this more pluggable
-const collectClassString = (json: JSXLiteNode): string | null => {
-  const staticClasses: string[] = [];
-
-  const hasStaticClasses = Boolean(staticClasses.length);
-  if (json.properties.class) {
-    staticClasses.push(json.properties.class);
-    delete json.properties.class;
-  }
-  if (json.properties.className) {
-    staticClasses.push(json.properties.className);
-    delete json.properties.className;
-  }
-
-  const dynamicClasses: string[] = [];
-  if (typeof json.bindings.class === 'string') {
-    dynamicClasses.push(json.bindings.class as any);
-    delete json.bindings.class;
-  }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
-    delete json.bindings.className;
-  }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
-    delete json.bindings.className;
-  }
-  if (typeof json.bindings.css === 'string') {
-    dynamicClasses.push(`css(${json.bindings.css})`);
-    delete json.bindings.css;
-  }
-  const staticClassesString = staticClasses.join(' ');
-
-  const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
-
-  const hasDynamicClasses = Boolean(dynamicClasses.length);
-
-  if (hasStaticClasses && !hasDynamicClasses) {
-    return `"${staticClassesString}"`;
-  }
-
-  if (hasDynamicClasses && !hasStaticClasses) {
-    return `{${dynamicClassesString}}`;
-  }
-
-  if (hasDynamicClasses && hasStaticClasses) {
-    return `{"${staticClassesString} " + ${dynamicClassesString}}`;
-  }
-
-  return null;
-};
-
 const elId = (node: JSXLiteNode, options: InternalToQootOptions) => {
   if (node.meta.id) {
     return node.meta.id;
@@ -197,11 +145,6 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   let str = '';
 
   str += `<${json.name} `;
-
-  const classString = collectClassString(json);
-  if (classString) {
-    str += ` class=${classString} `;
-  }
 
   if (json.bindings._spread) {
     str += ` {...(${json.bindings._spread})} `;
@@ -277,12 +220,23 @@ const getProvidersString = (
   return 'null';
 };
 
-const formatCode = (str: string, options: InternalToQootOptions) => {
+const formatCode = (
+  str: string,
+  options: InternalToQootOptions,
+  type: 'typescript' | 'css' = 'typescript',
+) => {
   if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'typescript',
-      plugins: [require('prettier/parser-typescript')],
-    });
+    try {
+      str = format(str, {
+        parser: type,
+        plugins: [
+          require('prettier/parser-typescript'),
+          require('prettier/parser-postcss'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Error formatting code', err);
+    }
   }
   return str;
 };
@@ -352,7 +306,12 @@ export const componentToQoot = (
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
-  const addWrapper = json.children.length > 1;
+
+  let css = collectCss(json, { classProperty: 'class' });
+  css = formatCode(css, options, 'css');
+  const hasCss = Boolean(css.trim().length);
+
+  const addWrapper = json.children.length > 1 || hasCss;
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
   }
@@ -361,7 +320,7 @@ export const componentToQoot = (
   );
   stripMetaProperties(json);
   let str = dedent`
-    import { inject, QRL, jsxFactory } from '${qootImport(options)}';
+    import { injectMethod, QRL, jsxFactory } from '${qootImport(options)}';
     import { ${componentName}Component } from './component.js'
     ${renderPreComponent({
       ...json,
@@ -387,8 +346,14 @@ export const componentToQoot = (
       }),
     })}
 
-    export default inject(${componentName}Component, function (this: ${componentName}Component) {
+    export default injectMethod(${componentName}Component, function (this: ${componentName}Component) {
       return (${addWrapper ? '<>' : ''}
+        ${
+          !hasCss
+            ? ''
+            : `<style>{\`
+    ${css}\`}</style>`
+        }
         ${json.children.map((item) => blockToQoot(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
     })
@@ -432,6 +397,8 @@ export const componentToQoot = (
           (() => {
             let str = `
               export class ${componentName}Component extends Component<any, any> {
+                static $templateQRL = QRL\`ui:/${componentName}/template\`;
+
                 ${dataString}
 
                 ${
@@ -449,7 +416,7 @@ export const componentToQoot = (
             `;
 
             str = `
-              import { Component ${
+              import { Component, QRL ${
                 str.includes('markDirty(') ? ', markDirty' : ''
               } } from '${qootImport(options)}';
               ${str}

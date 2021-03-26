@@ -4,20 +4,21 @@ exports[`Qoot Todo 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
 import { TodoComponent } from \\"./component.js\\";
 
 import { TodosState as todosState } from \\"../TodosState/public.js\\";
 
-export default inject(TodoComponent, function (this: TodoComponent) {
+export default injectMethod(TodoComponent, function (this: TodoComponent) {
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
         state.editing ? \\"editing\\" : \\"\\"
       }\`}
     >
-      <div>
+      <div class=\\"view\\">
         <input
+          class=\\"toggle\\"
           type=\\"checkbox\\"
           checked={props.todo.completed}
           $={{ \\"on:click\\": QRL\`ui:/Todo/onInputClick?event=.\` }}
@@ -28,6 +29,7 @@ export default inject(TodoComponent, function (this: TodoComponent) {
         </label>
 
         <button
+          class=\\"destroy\\"
           $={{ \\"on:click\\": QRL\`ui:/Todo/onButtonClick?event=.\` }}
         ></button>
       </div>
@@ -35,6 +37,7 @@ export default inject(TodoComponent, function (this: TodoComponent) {
       {this.editing ? (
         <>
           <input
+            class=\\"edit\\"
             value={props.todo.text}
             $={{
               \\"on:blur\\": QRL\`ui:/Todo/onInput2Blur?event=.\`,
@@ -57,9 +60,11 @@ export const Todo = jsxDeclareComponent(\\"todo\\", QRL\`ui:/Todo/template\`);
       "path": "Todo/public.ts",
     },
     Object {
-      "contents": "import { Component } from \\"qoot\\";
+      "contents": "import { Component, QRL } from \\"qoot\\";
 
 export class TodoComponent extends Component<any, any> {
+  static $templateQRL = QRL\`ui:/Todo/template\`;
+
   editing = false;
   toggle() {
     this.todo.completed = !this.todo.completed;
@@ -148,18 +153,19 @@ exports[`Qoot Todos 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { inject, QRL, jsxFactory } from \\"qoot\\";
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
 import { TodosComponent } from \\"./component.js\\";
 
 import { TodosState as todosState } from \\"../TodosState/public.js\\";
 import { Todo } from \\"../Todo/public.js\\";
 
-export default inject(TodosComponent, function (this: TodosComponent) {
+export default injectMethod(TodosComponent, function (this: TodosComponent) {
   return (
-    <section>
+    <section class=\\"main\\">
       {todosState.todos.length ? (
         <>
           <input
+            class=\\"toggle-all\\"
             type=\\"checkbox\\"
             checked={todosState.allCompleted}
             $={{ \\"on:click\\": QRL\`ui:/Todos/onInputClick?event=.\` }}
@@ -167,7 +173,7 @@ export default inject(TodosComponent, function (this: TodosComponent) {
         </>
       ) : undefined}
 
-      <ul>
+      <ul class=\\"todo-list\\">
         {todosState.todos.map((todo) => (
           <>
             <Todo todo={todo}></Todo>
@@ -188,9 +194,11 @@ export const Todos = jsxDeclareComponent(\\"todos\\", QRL\`ui:/Todos/template\`)
       "path": "Todos/public.ts",
     },
     Object {
-      "contents": "import { Component } from \\"qoot\\";
+      "contents": "import { Component, QRL } from \\"qoot\\";
 
-export class TodosComponent extends Component<any, any> {}
+export class TodosComponent extends Component<any, any> {
+  static $templateQRL = QRL\`ui:/Todos/template\`;
+}
 ",
       "path": "Todos/component.ts",
     },

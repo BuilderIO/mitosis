@@ -12,6 +12,9 @@ export default function Header() {
     <div>
       {/* Header links */}
       <button
+        css={{
+          color: 'steelblue',
+        }}
         onClick={() => {
           state.hamburgerMenuOpen = !state.hamburgerMenuOpen;
         }}
