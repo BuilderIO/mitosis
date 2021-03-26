@@ -13,10 +13,8 @@ jobs:
         with:
           node-version: '12.x'
 
-      - name: Install and run prettier
-        run: |
-          npm install
-          npm run prettier -- --check .
+      - name: Run prettier
+        run: npx prettier -- --check .
 
   tests:
     runs-on: ubuntu-latest
@@ -29,12 +27,23 @@ jobs:
         with:
           node-version: '12.x'
 
-      - run: npm --version
+      - name: Restore node_modules
+        id: restore-node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install and run tests
-        run: |
-          npm --version
-          npm install
-          cd packages/core
-          npm install
-          npm run test
+      - name: Install dependencies
+        if: steps.restore-node_modules.outputs.cache-hit != 'true'
+        run: npx lerna bootstrap
+
+      - name: Type check
+        run:
+          npx tsc --verbose --build .
+
+      - name: Run tests
+        run:
+          npx lerna run test --stream --scope='@jsx-lite/{core,cli}'
