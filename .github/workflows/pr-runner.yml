@@ -13,6 +13,19 @@ jobs:
         with:
           node-version: '12.x'
 
+      - name: Restore node_modules
+        id: restore-node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        if: steps.restore-node_modules.outputs.cache-hit != 'true'
+        run: npx lerna bootstrap
+
       - name: Run prettier
         run: npm run lint:prettier
 
