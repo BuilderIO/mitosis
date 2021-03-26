@@ -50,7 +50,7 @@ jobs:
       - name: Run prettier
         run: npm run lint:prettier
 
-  tests:
+  typecheck:
     needs: install-dependencies
     runs-on: ubuntu-latest
     steps:
@@ -74,6 +74,27 @@ jobs:
       - name: Type check
         run:
           npx tsc --build --verbose .
+
+  tests:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Restore node_modules
+        id: restore-node_modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Run tests
         run:
