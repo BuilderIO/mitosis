@@ -8,8 +8,8 @@
   },
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
-    "clean-build": "rm -rf ./build",
-    "compile": "npx tsc --build .",
+    "clean-build": "npx tsc --build --clean && rm -rf ./build",
+    "compile": "npx tsc --build --verbose --pretty",
     "start": "npm run compile -- --watch",
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./build/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
