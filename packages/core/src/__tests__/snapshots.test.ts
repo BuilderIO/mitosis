@@ -9,14 +9,14 @@ import { componentToSolid } from '../generators/solid';
 import { componentToVue } from '../generators/vue';
 import { TestDataLoader, TestData } from './loaders/test-data-loader';
 
-const path = require('path');
+import path from 'path';
+describe('Snapshot tests', () => {
+  const dataLoader = new TestDataLoader({ subdirectories: true });
+  const testCases = dataLoader.load(path.resolve(__dirname, './data'));
 
-const dataLoader = new TestDataLoader({ subdirectories: true });
-const testCases = dataLoader.load(path.resolve(__dirname, './data'));
-
-describe('Builder', () => {
-  testCases.forEach((data: TestData) => {
-    test(data.name, () => {
+  describe('Builder', () => {
+    testCases.forEach((data: TestData) => {
+      test(data.name, () => {
       const jsx: string = require(data.file);
       const json = parseJsx(jsx);
       const builderJson = componentToBuilder(json);
@@ -32,7 +32,7 @@ describe('Builder', () => {
 describe('Html', () => {
   testCases.forEach((data: TestData) => {
     test(data.name, () => {
-      const jsx: string = require(data.file);
+      const jsx = fs.readFileSync(data.file, 'utf8');
       const json = parseJsx(jsx);
       const output = componentToHtml(json);
 
