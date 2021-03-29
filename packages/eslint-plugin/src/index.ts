@@ -1,8 +1,8 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
 
-export const staticControlFlow = {
-  create: (context: Readonly<Rule.RuleContext>): Rule.RuleListener => {
+export const staticControlFlow: Rule.RuleModule = {
+  create(context) {
     return {
       VariableDeclarator(node: any) {
         if (types.isVariableDeclarator(node)) {
@@ -50,4 +50,5 @@ export const staticControlFlow = {
 
 export const rules = {
   'static-control-flow': staticControlFlow,
+  'jsx-callback-arg-name': import('./rules/jsx-callback-arg-name'),
 };
