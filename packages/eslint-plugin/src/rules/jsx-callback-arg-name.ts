@@ -1,6 +1,6 @@
 import { types } from '@babel/core';
-import type { Rule } from 'eslint';
-import type * as ESTree from 'estree';
+import { Rule } from 'eslint';
+import * as ESTree from 'estree';
 import * as path from 'path';
 import { match, not, when } from 'ts-pattern';
 
