@@ -1,0 +1,25 @@
+import '@jsx-lite/core/dist/jsx'
+import { useState, Show } from '@jsx-lite/core';
+
+interface Props {
+  showInput?: boolean
+}
+
+export default function MyComponent(props: Props) {
+  const state = useState({
+    name: 'Steve'
+  });
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <input
+          css={{ color: 'red' }}
+          value={state.name}
+          onChange={(event) => (state.name = event.target.value)}
+        />
+      </Show>
+      Hello {state.name}! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
