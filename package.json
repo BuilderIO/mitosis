@@ -6,9 +6,10 @@
   ],
   "private": true,
   "scripts": {
-    "postinstall": "lerna link",
-    "prettier": "prettier --parser=typescript 'packages/**/*.ts{,x}'",
     "build": "lerna run --parallel 'build'",
+    "ci:build": "npx tsc --build --verbose .",
+    "ci:lint": "npm run lint:prettier",
+    "ci:test": "npx lerna run test --stream --scope='@jsx-lite/{core,cli,eslint-plugin}'",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
     "fmt": "npm run fmt:prettier",
@@ -17,7 +18,9 @@
     "lint:css": "stylelint 'packages/**/*.ts{,x}'",
     "lint:eslint": "eslint 'packages/**/*.ts{,x}'",
     "lint:prettier": "npx prettier --check '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
+    "postinstall": "lerna link",
     "prerelease": "npm run build",
+    "prettier": "prettier --parser=typescript 'packages/**/*.ts{,x}'",
     "release": "lerna publish"
   },
   "repository": {
