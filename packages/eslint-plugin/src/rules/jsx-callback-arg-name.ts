@@ -1,7 +1,8 @@
+import { types } from '@babel/core';
 import type { Rule } from 'eslint';
 import type * as ESTree from 'estree';
 import * as path from 'path';
-import { types } from '@babel/core';
+import { match, not, when } from 'ts-pattern';
 
 interface NodeWithParent extends ESTree.BaseNode {
   parent: NodeWithParent;
@@ -95,37 +96,43 @@ const rule: Rule.RuleModule = {
     // ----------------------------------------------------------------------
     // Public
     // ----------------------------------------------------------------------
+    //
+    const noOp = () => {};
 
     const listener: Rule.RuleListener = {
       JSXExpressionContainer(node) {
-        // Only focus on expressions that are attribute's values.
-        if (!types.isJSXAttribute(node.parent)) return;
-
-        if (!types.isFunction(node.expression)) return;
-
-        const params = node.expression.params;
-
-        // No arguments is fine
-        if (params && params.length < 1) return;
-
-        const [arg1] = params;
-
-        if (!types.isIdentifier(arg1)) {
-          return context.report({
-            node: arg1,
-            message: 'Must be a function parameter',
-          });
-        }
-
-        if (arg1.name !== 'event') {
-          return context.report({
-            node: arg1,
-            message: 'Callback parameter must be called `event`',
-            fix(fixer) {
-              return fixer.replaceText(arg1, 'event');
+        match(node)
+          // Ignore zero length array's
+          .with({ expression: { params: [] } }, noOp)
+          // Ignore anything that doesn't have a function expression
+          .with({ expression: not(when(types.isFunction)) }, noOp)
+          // The actual match case
+          .with(
+            {
+              parent: when(types.isJSXAttribute),
+              expression: {
+                // WARN: This is a list, not a 1-length tuple, this might not
+                // work on cases that have multiple args - I don't know if there
+                // is anything in the web api that expects multiple args for the
+                // callback.
+                params: [{ type: 'Identifier', name: not('event') }],
+              },
             },
-          });
-        }
+            ({
+              expression: {
+                params: [arg1],
+              },
+            }) => {
+              context.report({
+                node: arg1,
+                message: 'Callback parameter must be called `event`',
+                fix(fixer) {
+                  return fixer.replaceText(arg1, 'event');
+                },
+              });
+            },
+          )
+          .otherwise(noOp);
       },
     };
 
