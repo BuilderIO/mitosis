@@ -26,76 +26,11 @@ jobs:
         if: steps.restore-node_modules.outputs.cache-hit != 'true'
         run: npx lerna bootstrap
 
-  prettier:
-    needs: install-dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup
-        uses: actions/checkout@v2
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-
-      - name: Restore node_modules
-        id: restore-node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-
       - name: Run prettier
         run: npm run lint:prettier
 
-  test:
-    needs: install-dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup
-        uses: actions/checkout@v2
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-
-      - name: Restore node_modules
-        id: restore-node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-
       - name: Run tests
-        run:
-          npx lerna bootstrap
-          npx lerna run test --stream --scope='@jsx-lite/{core,cli}'
-
-  build:
-    needs: install-dependencies
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup
-        uses: actions/checkout@v2
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
-
-      - name: Restore node_modules
-        id: restore-node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+        run: npx lerna run test --stream --scope='@jsx-lite/{core,cli}'
 
       - name: Build
         run: npx tsc --build --verbose .
