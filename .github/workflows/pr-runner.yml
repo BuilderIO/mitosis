@@ -2,28 +2,36 @@ name: PR Runner
 on: pull_request
 
 jobs:
-  prettier:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - name: Setup
         uses: actions/checkout@v2
+
       - name: Use Node.js
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
 
-      - name: Install and run prettier
-        run: npm install && npm run prettier -- --check .
-
-  tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup
-        uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - name: Restore node_modules
+        id: restore-node_modules
+        uses: actions/cache@v2
         with:
-          node-version: '12.x'
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-      - name: Install and run prettier
-        run: npm install && cd packages/core && npm install && npm run test
+      - name: Install dependencies
+        run: |
+          npm install
+          npx lerna bootstrap
+
+      - name: Run prettier
+        run: npm run ci:lint
+
+      - name: Run tests
+        run: npm run ci:test
+
+      - name: Build
+        run: npm run ci:build

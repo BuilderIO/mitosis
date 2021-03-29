@@ -6,15 +6,21 @@
   ],
   "private": true,
   "scripts": {
-    "postinstall": "lerna link",
-    "prettier": "prettier --parser=typescript 'packages/**/*.ts{,x}'",
     "build": "lerna run --parallel 'build'",
+    "ci:build": "npx tsc --build --verbose .",
+    "ci:lint": "npm run lint:prettier",
+    "ci:test": "npx lerna run test --stream --scope='@jsx-lite/{core,cli,eslint-plugin}'",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
-    "lint:css": "stylelint 'packages/**/*.ts{,x}'",
-    "lint:ts": "eslint 'packages/**/*.ts{,x}'",
+    "fmt": "npm run fmt:prettier",
+    "fmt:prettier": "npm run lint:prettier -- --write",
     "lint": "run-p -c lint:*",
+    "lint:css": "stylelint 'packages/**/*.ts{,x}'",
+    "lint:eslint": "eslint 'packages/**/*.ts{,x}'",
+    "lint:prettier": "npx prettier --check '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
+    "postinstall": "lerna link",
     "prerelease": "npm run build",
+    "prettier": "prettier --parser=typescript 'packages/**/*.ts{,x}'",
     "release": "lerna publish"
   },
   "repository": {
@@ -24,6 +30,7 @@
   "devDependencies": {
     "commitizen": "^3.0.2",
     "lerna": "^3.4.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "typescript": "^4.2.3"
   }
 }

@@ -17,7 +17,7 @@ A command is a file that looks something like this:
 // commands/foo.js
 
 module.exports = {
-  run: (toolbox) => {
+  run: toolbox => {
     const { print, filesystem } = toolbox
 
     const desktopDirectories = filesystem.subdirectories(`~/Desktop`)
@@ -31,10 +31,12 @@ An extension lets you add additional features to the `toolbox`.
 ```js
 // extensions/bar-extension.js
 
-module.exports = (toolbox) => {
+module.exports = toolbox => {
   const { print } = toolbox
 
-  toolbox.bar = () => { print.info('Bar!') }
+  toolbox.bar = () => {
+    print.info('Bar!')
+  }
 }
 ```
 
