@@ -126,10 +126,12 @@ type ToQootOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
   qootLib?: string;
+  qrlPrefix?: string;
 };
 type InternalToQootOptions = ToQootOptions & {
   componentJson: JSXLiteComponent;
   namesMap: NumberRecord;
+  qrlPrefix: string;
 };
 const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   if (NODE_MAPPERS[json.name]) {
@@ -173,10 +175,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       const useKey = key.replace('on', 'on:').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
 
-      eventBindings[useKey] = `QRL\`ui:/${componentName}/on${elId(
-        json,
-        options,
-      )}${key.slice(2)}?event=.\``;
+      eventBindings[useKey] = `QRL\`${
+        options.qrlPrefix
+      }/${componentName}/on${elId(json, options)}${key.slice(2)}?event=.\``;
     } else {
       str += ` ${key}={${value}} `;
     }
@@ -247,7 +248,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -299,6 +300,7 @@ export const componentToQoot = (
 ) => {
   let json = fastClone(componentJson);
   const options = {
+    qrlPrefix: 'ui:',
     ...toQootOptions,
     namesMap: {},
     componentJson: json,
@@ -386,7 +388,7 @@ export const componentToQoot = (
           
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
             componentName,
-          )}', QRL\`ui:/${componentName}/template\`);
+          )}', QRL\`${options.qrlPrefix}/${componentName}/template\`);
         `,
           options,
         ),
@@ -397,7 +399,9 @@ export const componentToQoot = (
           (() => {
             let str = `
               export class ${componentName}Component extends Component<any, any> {
-                static $templateQRL = QRL\`ui:/${componentName}/template\`;
+                static $templateQRL = QRL\`${
+                  options.qrlPrefix
+                }/${componentName}/template\`;
 
                 ${dataString}
 
