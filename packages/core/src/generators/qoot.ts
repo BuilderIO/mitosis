@@ -127,6 +127,7 @@ type ToQootOptions = {
   plugins?: Plugin[];
   qootLib?: string;
   qrlPrefix?: string;
+  format?: 'builder' | 'default';
 };
 type InternalToQootOptions = ToQootOptions & {
   componentJson: JSXLiteComponent;
@@ -398,10 +399,10 @@ export const componentToQoot = (
         contents: formatCode(
           (() => {
             let str = `
-              export class ${componentName}Component extends Component<any, any> {
-                static $templateQRL = QRL\`${
-                  options.qrlPrefix
-                }/${componentName}/template\`;
+              ${options.format === 'builder' ? '' : 'export '}class ${
+              options.format === 'builder' ? '_' : ''
+            }${componentName}Component extends Component<any, any> {
+                
 
                 ${dataString}
 
@@ -416,6 +417,20 @@ export const componentToQoot = (
                         }
                       `
                 }
+              }
+              ${
+                options.format !== 'builder'
+                  ? ''
+                  : `
+              export const ${componentName}Component = new Proxy(_${componentName}Component, {
+                get(target, prop) {
+                  if (prop === '$templateQRL') {
+                    return '${options.qrlPrefix}/${componentName}/template'
+                  }
+                  return Reflect.get(...arguments)
+                }
+              })
+              `
               }
             `;
 
