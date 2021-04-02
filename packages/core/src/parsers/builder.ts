@@ -59,6 +59,19 @@ const getCssFromBlock = (block: BuilderElement) => {
   return css;
 };
 
+const verifyIsValid = (
+  code: string,
+): { valid: boolean; error: null | Error } => {
+  try {
+    if (babel.parse(code)) {
+      return { valid: true, error: null };
+    }
+  } catch (err) {
+    return { valid: false, error: null };
+  }
+  return { valid: false, error: null };
+};
+
 const getActionBindingsFromBlock = (block: BuilderElement) => {
   const actions = {
     ...block.actions,
@@ -68,8 +81,13 @@ const getActionBindingsFromBlock = (block: BuilderElement) => {
   const actionKeys = Object.keys(actions);
   if (actionKeys.length) {
     for (const key of actionKeys) {
+      const { error, valid } = verifyIsValid(actions[key]);
+      if (!valid) {
+        console.warn('Skipping invalid binding', error);
+        continue;
+      }
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = `${actions[key]}`;
+      bindings[useKey] = `${wrapBinding(actions[key])}`;
     }
   }
 
@@ -121,6 +139,16 @@ type InternalOptions = {
   skipMapper?: boolean;
 };
 
+const wrapBindingIfNeeded = (
+  value: string,
+  options: BuilderToJSXLiteOptions,
+) => {
+  if (options.includeBuilderExtras) {
+    return wrapBinding(value);
+  }
+  return value;
+};
+
 const getBlockActions = (
   block: BuilderElement,
   options: BuilderToJSXLiteOptions,
@@ -160,14 +188,27 @@ const getBlockNonActionBindings = (
   if (options.includeBuilderExtras) {
     for (const key in obj) {
       const value = obj[key];
-      // TODO: plugin/option for for this
-      obj[key] = wrapBinding(value);
+      // TODO: verify the bindings are valid
+
+      let { valid, error } = verifyIsValid(value);
+      if (!valid) {
+        ({ valid, error } = verifyIsValid(`function () {  ${value} }`));
+      }
+      if (valid) {
+        obj[key] = wrapBinding(value);
+      } else {
+        console.warn('Skipping invalid code:', error);
+        delete obj[key];
+      }
     }
   }
   return obj;
 };
 
 const wrapBinding = (value: string) => {
+  if (!value) {
+    return value;
+  }
   if (!(value.includes(';') || value.match(/(^|\s|;)return[^a-z0-9A-Z]/))) {
     return value;
   }
@@ -343,9 +384,10 @@ const componentMappers: {
     }
 
     const innerBindings = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']: blockBindings[
-        'component.options.text'
-      ],
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: wrapBindingIfNeeded(
+        blockBindings['component.options.text'],
+        options,
+      ),
     };
     const innerProperties = {
       [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!

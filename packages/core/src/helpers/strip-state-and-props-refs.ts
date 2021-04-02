@@ -1,5 +1,5 @@
 export type StripStateAndPropsRefsOptions = {
-  replaceWith?: string;
+  replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
   includeState?: boolean;
 };
@@ -17,13 +17,25 @@ export const stripStateAndPropsRefs = (
   options: StripStateAndPropsRefsOptions = {},
 ): string => {
   let newCode = code || '';
-  const replaceStr = options.replaceWith || '';
+  const replacer = options.replaceWith || '';
 
   if (options.includeProps !== false) {
-    newCode = newCode.replace(/props\./g, replaceStr);
+    if (typeof replacer === 'string') {
+      newCode = newCode.replace(/props\./g, replacer);
+    } else {
+      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) =>
+        replacer(name),
+      );
+    }
   }
   if (options.includeState !== false) {
-    newCode = newCode.replace(/state\./g, replaceStr);
+    if (typeof replacer === 'string') {
+      newCode = newCode.replace(/state\./g, replacer);
+    } else {
+      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) =>
+        replacer(name),
+      );
+    }
   }
 
   return newCode;

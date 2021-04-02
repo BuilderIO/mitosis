@@ -1,5 +1,5 @@
 import dedent from 'dedent';
-import { camelCase, kebabCase, size } from 'lodash';
+import { camelCase, kebabCase, size, trim } from 'lodash';
 import { format } from 'prettier/standalone';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import traverse from 'traverse';
@@ -34,6 +34,34 @@ function addMarkDirtyAfterSetInCode(
   useString = 'markDirty(this)',
 ) {
   return babelTransformExpression(code, {
+    UpdateExpression(path: babel.NodePath<babel.types.UpdateExpression>) {
+      const { node } = path;
+      if (types.isMemberExpression(node.argument)) {
+        if (types.isIdentifier(node.argument.object)) {
+          // TODO: utillity to properly trace this reference to the beginning
+          if (node.argument.object.name === 'state') {
+            // TODO: ultimately do updates by property, e.g. updateName()
+            // that updates any attributes dependent on name, etcç
+            let parent: NodePath<any> = path;
+
+            // `_temp = ` assignments are created sometimes when we insertAfter
+            // for simple expressions. this causes us to re-process the same expression
+            // in an infinite loop
+            while ((parent = parent.parentPath)) {
+              if (
+                types.isAssignmentExpression(parent.node) &&
+                types.isIdentifier(parent.node.left) &&
+                parent.node.left.name.startsWith('_temp')
+              ) {
+                return;
+              }
+            }
+
+            path.insertAfter(types.identifier(useString));
+          }
+        }
+      }
+    },
     AssignmentExpression(
       path: babel.NodePath<babel.types.AssignmentExpression>,
     ) {
@@ -70,7 +98,10 @@ function addMarkDirtyAfterSetInCode(
 const processBinding = (binding: string, options: InternalToQootOptions) =>
   stripStateAndPropsRefs(addMarkDirtyAfterSetInCode(binding, options), {
     replaceWith: 'this.',
-  });
+  })
+    // Remove trailing semicolon
+    .trim()
+    .replace(/;$/, '');
 
 const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: InternalToQootOptions) => string;
@@ -138,11 +169,11 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
   }
+  if (json.bindings._text) {
+    return `{${processBinding(json.bindings._text, options)}}`;
+  }
   if (json.properties._text) {
     return json.properties._text;
-  }
-  if (json.bindings._text) {
-    return `{${json.bindings._text}}`;
   }
 
   let str = '';
@@ -169,10 +200,6 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
     }
 
     if (key.startsWith('on')) {
-      // TODO: this transformation can be a IR transform middleware for rendering
-      // through any framework
-      // TODO: for now use _ instead of : until I find what voodoo magic allows
-      // colons in attribute names in TSX
       const useKey = key.replace('on', 'on:').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
 
@@ -298,7 +325,7 @@ export type File = {
 export const componentToQoot = (
   componentJson: JSXLiteComponent,
   toQootOptions: ToQootOptions = {},
-) => {
+): { files: File[] } => {
   let json = fastClone(componentJson);
   const options = {
     qrlPrefix: 'ui:',
@@ -402,7 +429,11 @@ export const componentToQoot = (
               ${options.format === 'builder' ? '' : 'export '}class ${
               options.format === 'builder' ? '_' : ''
             }${componentName}Component extends Component<any, any> {
-                
+                ${
+                  options.format === 'builder'
+                    ? ''
+                    : `static $templateQRL = '${options.qrlPrefix}/${componentName}/template'`
+                }
 
                 ${dataString}
 
@@ -416,6 +447,10 @@ export const componentToQoot = (
                         ${processBinding(json.hooks.onMount, options)}
                         }
                       `
+                }
+
+                $newState() {
+                  return {} // TODO
                 }
               }
               ${
