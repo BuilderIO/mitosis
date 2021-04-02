@@ -24,6 +24,7 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { NodePath, types } from '@babel/core';
 import { collectCss } from '../helpers/collect-styles';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 
 const qootImport = (options: InternalToQootOptions) =>
   options.qootLib || 'qoot';
@@ -165,6 +166,7 @@ type InternalToQootOptions = ToQootOptions & {
   namesMap: NumberRecord;
   qrlPrefix: string;
 };
+
 const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
@@ -207,7 +209,11 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
         options.qrlPrefix
       }/${componentName}/on${elId(json, options)}${key.slice(2)}?event=.\``;
     } else {
-      str += ` ${key}={${value}} `;
+      if (!isValidAttributeName(key)) {
+        console.warn('Skipping invalid attribute name:', key);
+      } else {
+        str += ` ${key}={${value}} `;
+      }
     }
   }
 

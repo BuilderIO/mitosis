@@ -1,6 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
@@ -60,7 +61,11 @@ export const blockToJsxLite = (
     if (key.startsWith('on')) {
       str += ` ${key}={event => ${value}} `;
     } else {
-      str += ` ${key}={${value}} `;
+      if (!isValidAttributeName(key)) {
+        console.warn('Skipping invalid attribute name:', key);
+      } else {
+        str += ` ${key}={${value}} `;
+      }
     }
   }
   if (selfClosingTags.has(json.name)) {

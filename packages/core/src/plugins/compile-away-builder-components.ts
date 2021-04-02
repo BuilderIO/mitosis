@@ -1,11 +1,12 @@
 import { mapValues, omit, pick } from 'lodash';
 import { parseNode, parseNodes } from '../helpers/parse-node';
-import { TraverseContext } from 'traverse';
+import traverse, { TraverseContext } from 'traverse';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { compileAwayComponents } from './compile-away-components';
 import { blockToJsxLite } from '../generators/jsx-lite';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
 
 const getRenderOptions = (node: JSXLiteNode) => {
   return {
@@ -24,39 +25,31 @@ function updateQueryParam(uri = '', key: string, value: string) {
   return uri + separator + key + '=' + encodeURIComponent(value);
 }
 
-const wrapOutput = (node: JSXLiteNode, child: JSXLiteNode | JSXLiteNode[]) => {
+const wrapOutput = (
+  node: JSXLiteNode,
+  child: JSXLiteNode | JSXLiteNode[],
+  components: CompileAwayComponentsMap,
+) => {
+  compileAwayBuilderComponentsFromTree(child as any, components);
   return createJSXLiteNode({
     ...node,
-    name: 'div',
-    // TODO: other custom attributes
-    properties: pick(
-      node.properties,
-      'style',
-      'styles',
-      'css',
-      'className',
-      'class',
-    ),
-    bindings: pick(
-      node.bindings,
-      'style',
-      'styles',
-      'css',
-      'className',
-      'class',
-    ),
+    // TODO: forward tagName as a $tagName="..."
+    name: node.properties._tagName || node.properties.$tagName || 'div',
     children: Array.isArray(child) ? child : [child],
   });
 };
 
-const components: {
+type CompileAwayComponentsMap = {
   [key: string]: (
     node: JSXLiteNode,
     context: TraverseContext,
+    components: CompileAwayComponentsMap,
   ) => JSXLiteNode | void;
-} = {
+};
+
+export const components: CompileAwayComponentsMap = {
   // TODO: this should be noWrap
-  CoreButton(node: JSXLiteNode) {
+  CoreButton(node: JSXLiteNode, context, components) {
     const options = getRenderOptions(node);
     return wrapOutput(
       node,
@@ -68,9 +61,10 @@ const components: {
           ${options.text.replace(/"/g, '')}
         </a>
       `),
+      components,
     );
   },
-  Embed(node: JSXLiteNode) {
+  Embed(node: JSXLiteNode, context, components) {
     return wrapOutput(
       node,
       createJSXLiteNode({
@@ -79,9 +73,10 @@ const components: {
           innerHTML: node.properties.content,
         },
       }),
+      components,
     );
   },
-  CustomCode(node: JSXLiteNode) {
+  CustomCode(node: JSXLiteNode, context, components) {
     const options = getRenderOptions(node);
     return wrapOutput(
       node,
@@ -91,9 +86,10 @@ const components: {
           innerHTML: node.properties.code,
         },
       }),
+      components,
     );
   },
-  CoreSection(node: JSXLiteNode) {
+  CoreSection(node: JSXLiteNode, context, components) {
     return wrapOutput(
       node,
       parseNode(`<div
@@ -119,9 +115,10 @@ const components: {
       )
       .join('\n')}
     </div>`),
+      components,
     );
   },
-  Columns(node: JSXLiteNode, context) {
+  Columns(node: JSXLiteNode, context, components) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
       width: parseFloat(item.properties.width!) || 0,
       children: item.children,
@@ -209,9 +206,10 @@ const components: {
             .join('\n')}
         </div>
   `),
+      components,
     );
   },
-  Image(node: JSXLiteNode, context) {
+  Image(node: JSXLiteNode, context, components) {
     const options = getRenderOptions(node);
     const { backgroundSize, backgroundPosition, sizes, lazy, image } = options;
     const { srcset } = node.properties;
@@ -316,13 +314,109 @@ const components: {
             : ''
         }
       `),
+      components,
     );
+  },
+  Video(node: JSXLiteNode, context, components) {
+    const options = getRenderOptions(node);
+    let aspectRatio = node.bindings.aspectRatio
+      ? parseFloat(node.bindings.aspectRatio as string)
+      : null;
+    if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
+      aspectRatio = null;
+    }
+
+    const str = `
+    <div $name="video-container" css={{ position: 'relative' }}>
+      <video
+        ${options.posterImage ? `poster=${options.posterImage}` : ''}
+        ${options.autoPlay ? `autoPlay=${options.autoPlay}` : ''}
+        ${options.muted ? `muted=${options.muted}` : ''}
+        ${options.controls ? `controls=${options.controls}` : ''}
+        ${options.loop ? `loop=${options.loop}` : ''}
+        ${options.lazy ? 'preload="none"' : ''}
+        $name="builder-video"
+        css={{
+          width: '100%',
+          height: '100%',
+          ${options.fit ? `objectFit: ${options.fit},` : ''}
+          ${options.position ? `objectPosition: ${options.position},` : ''}
+          borderRadius: '1',
+          ${aspectRatio ? `position: "absolute",` : ''}
+        }}
+      >
+        <source type="video/mp4" src=${options.video} />
+      </video>
+      ${
+        !aspectRatio
+          ? ''
+          : `
+        <div
+          $name="builder-video-sizer"
+          css={{
+            width: '100%',
+            paddingTop: '${aspectRatio * 100 + '%'}',
+            pointerEvents: 'none',
+            fontSize: '0'
+          }}
+        />
+      `
+      }
+      ${
+        node.children && node.children.length
+          ? `
+        <div
+          $name="video-contents"
+          css={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          ${node.children
+            .map((block) =>
+              blockToJsxLite(block, {
+                prettier: false,
+              }),
+            )
+            .join('\n')}
+        </div>`
+          : ''
+      }
+    </div>
+    `;
+
+    const output = wrapOutput(node, parseNodes(str), components);
+
+    return output;
   },
 };
 
 type CompileAwayBuilderComponentsOptions = {
   only?: string[];
   omit?: string[];
+};
+
+export const compileAwayBuilderComponentsFromTree = (
+  tree: JSXLiteNode | JSXLiteComponent,
+  components: CompileAwayComponentsMap,
+) => {
+  traverse(tree).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      const mapper = components[item.name];
+      if (mapper) {
+        const result = mapper(item, this, components);
+        if (result) {
+          this.update(result);
+        }
+      }
+    }
+  });
 };
 
 export const compileAwayBuilderComponents = (
@@ -335,5 +429,12 @@ export const compileAwayBuilderComponents = (
   if (pluginOptions.only) {
     obj = pick(obj, pluginOptions.only);
   }
-  return compileAwayComponents({ components: obj });
+
+  return (options?: any) => ({
+    json: {
+      pre: (json: JSXLiteComponent) => {
+        compileAwayBuilderComponentsFromTree(json, components);
+      },
+    },
+  });
 };

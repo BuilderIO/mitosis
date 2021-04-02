@@ -177,6 +177,10 @@ const getBlockActionsAsBindings = (
   );
 };
 
+const isValidBindingKey = (str: string) => {
+  return Boolean(str && /^[a-z0-9_\.]$/i.test(str));
+};
+
 const getBlockNonActionBindings = (
   block: BuilderElement,
   options: BuilderToJSXLiteOptions,
@@ -187,6 +191,10 @@ const getBlockNonActionBindings = (
   };
   if (options.includeBuilderExtras) {
     for (const key in obj) {
+      if (!isValidBindingKey(key)) {
+        console.warn('Skipping invalid biding key:', key);
+        continue;
+      }
       const value = obj[key];
       // TODO: verify the bindings are valid
 
@@ -597,7 +605,10 @@ export const builderElementToJsxLiteNode = (
       block.component?.name?.replace(/[^a-z0-9]/gi, '') ||
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
-    properties,
+    properties: {
+      _tagName: block.tagName,
+      ...properties,
+    },
     bindings: {
       ...bindings,
       ...actionBindings,
