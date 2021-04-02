@@ -940,6 +940,7 @@ Object {
       "meta": Object {},
       "name": "Hero",
       "properties": Object {
+        "$tagName": undefined,
         "buttonLink": "https://example.com",
         "buttonText": "Click",
         "image": "https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F52dcecf48f9c48cc8ddd8f81fec63236",
@@ -1736,7 +1737,15 @@ export default function MyComponent(props) {
           }}
         />
         <button
-          onClick={(event) => (state.showReviewPrompt = false)}
+          onClick={(event) =>
+            (() => {
+              try {
+                state.showReviewPrompt = false;
+              } catch (err) {
+                console.warn(\\"Builder code error\\", err);
+              }
+            })()
+          }
           css={{
             display: \\"block\\",
           }}

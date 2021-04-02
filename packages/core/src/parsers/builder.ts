@@ -606,7 +606,11 @@ export const builderElementToJsxLiteNode = (
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
-      _tagName: block.tagName,
+      ...(block.component
+        ? {
+            $tagName: block.tagName,
+          }
+        : null),
       ...properties,
     },
     bindings: {
