@@ -73,7 +73,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: (node.properties.content || '').replace(/"/g, '&quot;'),
+          innerHTML: node.properties.content || '', //.replace(/"/g, '&quot;'),
         },
       }),
       components,
@@ -86,7 +86,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: (node.properties.code || '').replace(/"/g, '&quot;'),
+          innerHTML: node.properties.code || '', //.replace(/"/g, '&quot;'),
         },
       }),
       components,
@@ -410,7 +410,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: JSXLiteNode | JSXLiteComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function(item) {
+  traverse(tree).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       const mapper = components[item.name];
       if (mapper) {

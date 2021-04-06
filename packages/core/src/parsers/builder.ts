@@ -72,7 +72,10 @@ const verifyIsValid = (
   return { valid: false, error: null };
 };
 
-const getActionBindingsFromBlock = (block: BuilderElement) => {
+const getActionBindingsFromBlock = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
   const actions = {
     ...block.actions,
     ...block.code?.actions,
@@ -87,14 +90,17 @@ const getActionBindingsFromBlock = (block: BuilderElement) => {
         continue;
       }
       const useKey = `on${upperFirst(key)}`;
-      bindings[useKey] = `${wrapBinding(actions[key])}`;
+      bindings[useKey] = `${wrapBindingIfNeeded(actions[key], options)}`;
     }
   }
 
   return bindings;
 };
 
-const getStyleStringFromBlock = (block: BuilderElement) => {
+const getStyleStringFromBlock = (
+  block: BuilderElement,
+  options: BuilderToJSXLiteOptions,
+) => {
   const styleBindings: any = {};
   let styleString = '';
 
@@ -114,9 +120,13 @@ const getStyleStringFromBlock = (block: BuilderElement) => {
     styleKeys.forEach((key) => {
       // TODO: figure out how to have multiline style bindings here
       // I tried (function{binding code})() and that did not work
-      styleString += ` ${key}: ${styleBindings[key]
-        .replace(/var _virtual_index\s*=\s*/g, '')
-        .replace(/;*\s*return _virtual_index;*/, '')},`;
+      styleString += ` ${key}: ${
+        options.includeBuilderExtras
+          ? wrapBinding(styleBindings[key])
+          : styleBindings[key]
+              .replace(/var _virtual_index\s*=\s*/g, '')
+              .replace(/;*\s*return _virtual_index;*/, '')
+      },`;
     });
     styleString += ' }';
   }
@@ -251,8 +261,8 @@ const componentMappers: {
 } = {
   Symbol(block, options) {
     let css = getCssFromBlock(block);
-    const styleString = getStyleStringFromBlock(block);
-    const actionBindings = getActionBindingsFromBlock(block);
+    const styleString = getStyleStringFromBlock(block, options);
+    const actionBindings = getActionBindingsFromBlock(block, options);
 
     return createJSXLiteNode({
       name: 'Symbol',
@@ -276,8 +286,8 @@ const componentMappers: {
     : {
         Symbol(block, options) {
           let css = getCssFromBlock(block);
-          const styleString = getStyleStringFromBlock(block);
-          const actionBindings = getActionBindingsFromBlock(block);
+          const styleString = getStyleStringFromBlock(block, options);
+          const actionBindings = getActionBindingsFromBlock(block, options);
 
           const content = block.component?.options.symbol.content;
           const blocks = content?.data?.blocks;
@@ -357,8 +367,8 @@ const componentMappers: {
   },
   Text: (block, options) => {
     let css = getCssFromBlock(block);
-    const styleString = getStyleStringFromBlock(block);
-    const actionBindings = getActionBindingsFromBlock(block);
+    const styleString = getStyleStringFromBlock(block, options);
+    const actionBindings = getActionBindingsFromBlock(block, options);
 
     const blockBindings = {
       ...block.code?.bindings,
@@ -593,8 +603,8 @@ export const builderElementToJsxLiteNode = (
   }
 
   const css = getCssFromBlock(block);
-  let styleString = getStyleStringFromBlock(block);
-  const actionBindings = getActionBindingsFromBlock(block);
+  let styleString = getStyleStringFromBlock(block, options);
+  const actionBindings = getActionBindingsFromBlock(block, options);
   for (const binding in blockBindings) {
     if (
       binding.startsWith('component.options') ||
