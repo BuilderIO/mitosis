@@ -404,6 +404,7 @@ const componentMappers: {
 
     if (options.preserveTextBlocks) {
       return createJSXLiteNode({
+        name: block.tagName || 'div',
         bindings,
         properties,
         children: [
@@ -420,6 +421,7 @@ const componentMappers: {
 
     if ((block.tagName && block.tagName !== 'div') || hasStyles(block)) {
       return createJSXLiteNode({
+        name: block.tagName || 'div',
         bindings,
         properties,
         children: [

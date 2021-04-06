@@ -1,7 +1,7 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { camelCase, pickBy } from 'lodash';
-import { JSXLiteNode } from 'src/types/jsx-lite-node';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 import traverse from 'traverse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { capitalize } from './capitalize';
@@ -20,7 +20,7 @@ export const nodeHasStyles = (node: JSXLiteNode) => {
 export const hasStyles = (component: JSXLiteComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         hasStyles = true;
@@ -62,7 +62,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -124,7 +124,7 @@ export const collectStyles = (
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
         const value = json5.parse(item.bindings.css as string);
@@ -140,23 +140,27 @@ export const collectStyles = (
           const className = `${componentName}${
             options.prefix ? `-${options.prefix}` : ''
           }`;
-          item.properties[classProperty] = `${item.properties[classProperty] ||
-            ''} ${className}`
+          item.properties[classProperty] = `${
+            item.properties[classProperty] || ''
+          } ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
           return;
         }
 
-        componentHashes[componentName] = stylesHash;
+        if (!componentHashes[componentName]) {
+          componentHashes[componentName] = stylesHash;
+        }
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
         const className = `${componentName}${
           options.prefix ? `-${options.prefix}` : ''
-        }${componentName !== item.name && index === 1 ? '' : `-${index}`}`;
+        }${index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${item.properties[classProperty] ||
-          ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
