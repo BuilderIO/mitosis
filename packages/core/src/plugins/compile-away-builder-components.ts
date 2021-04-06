@@ -120,7 +120,8 @@ export const components: CompileAwayComponentsMap = {
   },
   Columns(node: JSXLiteNode, context, components) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
-      width: parseFloat(item.properties.width!) || 0,
+      width:
+        parseFloat(item.properties.width || item.bindings.width || '0') || 0,
       children: item.children,
     }));
     const gutterSize =
