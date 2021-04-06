@@ -120,13 +120,12 @@ const getStyleStringFromBlock = (
     styleKeys.forEach((key) => {
       // TODO: figure out how to have multiline style bindings here
       // I tried (function{binding code})() and that did not work
-      styleString += ` ${key}: ${
-        options.includeBuilderExtras
-          ? wrapBinding(styleBindings[key])
-          : styleBindings[key]
-              .replace(/var _virtual_index\s*=\s*/g, '')
-              .replace(/;*\s*return _virtual_index;*/, '')
-      },`;
+      styleString += ` ${key}: ${(options.includeBuilderExtras
+        ? wrapBinding(styleBindings[key])
+        : styleBindings[key]
+            .replace(/var _virtual_index\s*=\s*/g, '')
+            .replace(/;*\s*return _virtual_index;*/, '')
+      ).replace(/;$/, '')},`;
     });
     styleString += ' }';
   }

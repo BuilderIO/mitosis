@@ -34,7 +34,7 @@ const wrapOutput = (
   return createJSXLiteNode({
     ...node,
     properties: {
-      ...omit(node.properties, 'content'),
+      ...omit(node.properties, 'content', 'innerHTML'),
     },
     // TODO: forward tagName as a $tagName="..."
     name: node.properties._tagName || node.properties.$tagName || 'div',
@@ -73,7 +73,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: node.properties.content || '', //.replace(/"/g, '&quot;'),
+          innerHTML: (node.properties.content || '').replace(/"/g, '&quot;'),
         },
       }),
       components,
@@ -86,7 +86,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: node.properties.code || '', //.replace(/"/g, '&quot;'),
+          innerHTML: (node.properties.code || '').replace(/"/g, '&quot;'),
         },
       }),
       components,

@@ -159,6 +159,8 @@ type ToQootOptions = {
   plugins?: Plugin[];
   qootLib?: string;
   qrlPrefix?: string;
+  cssNamespace?: string;
+  minifyStyles?: boolean;
   format?: 'builder' | 'default';
 };
 type InternalToQootOptions = ToQootOptions & {
@@ -212,7 +214,7 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
       } else {
-        str += ` ${key}={${value}} `;
+        str += ` ${key}={${processBinding(value, options)}} `;
       }
     }
   }
@@ -282,7 +284,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -343,8 +345,15 @@ export const componentToQoot = (
     json = runPreJsonPlugins(json, options.plugins);
   }
 
-  let css = collectCss(json, { classProperty: 'class' });
-  css = formatCode(css, options, 'css');
+  let css = collectCss(json, {
+    classProperty: 'class',
+    prefix: options.cssNamespace,
+  });
+  if (options.minifyStyles) {
+    css = css.trim().replace(/\s+/g, ' ');
+  } else {
+    css = formatCode(css, options, 'css');
+  }
   const hasCss = Boolean(css.trim().length);
 
   const addWrapper = json.children.length > 1 || hasCss;
