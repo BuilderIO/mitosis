@@ -491,6 +491,10 @@ export const builderElementToJsxLiteNode = (
         children: [
           builderElementToJsxLiteNode({
             ...block,
+            code: {
+              ...block.code,
+              bindings: omit(blockBindings, 'show'),
+            },
             bindings: omit(blockBindings, 'show'),
           }),
         ],

@@ -33,6 +33,9 @@ const wrapOutput = (
   compileAwayBuilderComponentsFromTree(child as any, components);
   return createJSXLiteNode({
     ...node,
+    properties: {
+      ...omit(node.properties, 'content'),
+    },
     // TODO: forward tagName as a $tagName="..."
     name: node.properties._tagName || node.properties.$tagName || 'div',
     children: Array.isArray(child) ? child : [child],
@@ -70,7 +73,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: node.properties.content,
+          innerHTML: (node.properties.content || '').replace(/"/g, '&quot;'),
         },
       }),
       components,
@@ -83,7 +86,7 @@ export const components: CompileAwayComponentsMap = {
       createJSXLiteNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: node.properties.code,
+          innerHTML: (node.properties.code || '').replace(/"/g, '&quot;'),
         },
       }),
       components,
