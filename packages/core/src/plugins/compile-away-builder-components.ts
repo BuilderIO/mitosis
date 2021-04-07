@@ -34,7 +34,7 @@ const wrapOutput = (
   return createJSXLiteNode({
     ...node,
     properties: {
-      ...omit(node.properties, 'content', 'innerHTML'),
+      ...omit(node.properties, 'content', 'innerHTML', 'text', 'code'),
     },
     // TODO: forward tagName as a $tagName="..."
     name: node.properties._tagName || node.properties.$tagName || 'div',
