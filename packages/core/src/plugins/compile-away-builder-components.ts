@@ -410,7 +410,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: JSXLiteNode | JSXLiteComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function (item) {
+  traverse(tree).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       const mapper = components[item.name];
       if (mapper) {

@@ -284,7 +284,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function (item) {
+  traverse(componentJson).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
