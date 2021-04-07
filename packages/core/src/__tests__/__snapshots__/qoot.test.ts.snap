@@ -12,15 +12,15 @@ import { TodosState as todosState } from \\"../TodosState/public.js\\";
 export default injectMethod(TodoComponent, function (this: TodoComponent) {
   return (
     <li
-      class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
-        state.editing ? \\"editing\\" : \\"\\"
+      class={\`\${this.todo.completed ? \\"completed\\" : \\"\\"} \${
+        this.editing ? \\"editing\\" : \\"\\"
       }\`}
     >
       <div class=\\"view\\">
         <input
           class=\\"toggle\\"
           type=\\"checkbox\\"
-          checked={props.todo.completed}
+          checked={this.todo.completed}
           $={{ \\"on:click\\": QRL\`ui:/Todo/onInputClick?event=.\` }}
         />
 
@@ -38,7 +38,7 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
         <>
           <input
             class=\\"edit\\"
-            value={props.todo.text}
+            value={this.todo.text}
             $={{
               \\"on:blur\\": QRL\`ui:/Todo/onInput2Blur?event=.\`,
               \\"on:keyup\\": QRL\`ui:/Todo/onInput2KeyUp?event=.\`,
