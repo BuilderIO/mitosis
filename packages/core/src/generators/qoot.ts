@@ -161,6 +161,7 @@ type ToQootOptions = {
   qrlPrefix?: string;
   cssNamespace?: string;
   minifyStyles?: boolean;
+  qrlSuffix?: string;
   format?: 'builder' | 'default';
 };
 type InternalToQootOptions = ToQootOptions & {
@@ -209,7 +210,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
 
       eventBindings[useKey] = `QRL\`${
         options.qrlPrefix
-      }/${componentName}/on${elId(json, options)}${key.slice(2)}?event=.\``;
+      }/${componentName}/on${elId(json, options)}${key.slice(
+        2,
+      )}${options.qrlSuffix || ''}?event=.\``;
     } else {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
@@ -431,7 +434,9 @@ export const componentToQoot = (
           
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
             componentName,
-          )}', QRL\`${options.qrlPrefix}/${componentName}/template\`);
+          )}', QRL\`${
+            options.qrlPrefix
+          }/${componentName}/template${options.qrlSuffix || ''}\`);
         `,
           options,
         ),
@@ -447,7 +452,9 @@ export const componentToQoot = (
                 ${
                   options.format === 'builder'
                     ? ''
-                    : `static $templateQRL = '${options.qrlPrefix}/${componentName}/template'`
+                    : `static $templateQRL = '${
+                        options.qrlPrefix
+                      }/${componentName}/template${options.qrlSuffix || ''}'`
                 }
 
                 ${dataString}
@@ -475,7 +482,9 @@ export const componentToQoot = (
               export const ${componentName}Component = new Proxy(_${componentName}Component, {
                 get(target, prop) {
                   if (prop === '$templateQRL') {
-                    return '${options.qrlPrefix}/${componentName}/template'
+                    return '${
+                      options.qrlPrefix
+                    }/${componentName}/template${options.qrlSuffix || ''}'
                   }
                   return Reflect.get(...arguments)
                 }

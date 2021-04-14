@@ -59,7 +59,7 @@ export const blockToJsxLite = (
     }
 
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${value}} `;
+      str += ` ${key}={event => ${value.replace(/\s*;$/, '')}} `;
     } else {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
