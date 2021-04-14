@@ -51,21 +51,42 @@ type CompileAwayComponentsMap = {
 };
 
 export const components: CompileAwayComponentsMap = {
-  // TODO: this should be noWrap
   CoreButton(node: JSXLiteNode, context, components) {
-    const options = getRenderOptions(node);
-    return wrapOutput(
-      node,
-      parseNode(`
-        <a
-          href=${options.link || '""'}
-          target="${options.openLinkInNewTab ? '_blank' : '_self'}"
-          >
-          ${options.text.replace(/"/g, '')}
-        </a>
-      `),
-      components,
-    );
+    const properties: Record<string, string> = {};
+    const bindings: Record<string, string> = {};
+
+    if ('link' in node.properties) {
+      properties.href = node.properties.link!;
+    }
+    if ('link' in node.bindings) {
+      bindings.href = node.properties.link!;
+    }
+    if ('text' in node.properties) {
+      properties.innerHTML = node.properties.text!;
+    }
+    if ('text' in node.bindings) {
+      bindings.innerHTML = node.properties.text!;
+    }
+    if ('openInNewTab' in node.bindings) {
+      bindings.target = `${node.bindings.openInNewTab} ? '_blank' : '_self'`;
+    }
+
+    const omitFields = ['link', 'openInNewTab', 'text'];
+
+    const hasLink = node.properties.link || node.bindings.link;
+
+    return createJSXLiteNode({
+      ...node,
+      name: hasLink ? 'a' : node.properties.$tagName || 'span',
+      properties: {
+        ...omit(node.properties, omitFields),
+        ...properties,
+      },
+      bindings: {
+        ...omit(node.bindings, omitFields),
+        ...bindings,
+      },
+    });
   },
   Embed(node: JSXLiteNode, context, components) {
     return wrapOutput(

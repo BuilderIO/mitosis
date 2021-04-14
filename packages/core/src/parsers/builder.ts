@@ -644,15 +644,16 @@ export const builderElementToJsxLiteNode = (
   // Has single text node child
   if (
     block.children?.length === 1 &&
-    block.children[0].component?.name === 'Text'
+    block.children[0].component?.name === 'Text' &&
+    !options.preserveTextBlocks
   ) {
     const textProperties = builderElementToJsxLiteNode(
       block.children[0],
       options,
     );
     const mergedCss = merge(
-      json5.parse((textProperties.bindings.css as string) || '{}'),
       json5.parse((node.bindings.css as string) || '{}'),
+      json5.parse((textProperties.bindings.css as string) || '{}'),
     );
     return merge({}, textProperties, node, {
       bindings: {
