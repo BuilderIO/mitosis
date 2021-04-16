@@ -484,7 +484,7 @@ export const builderElementToJsxLiteNode = (
       return createJSXLiteNode({
         name: 'Show',
         bindings: {
-          when: showBinding,
+          when: wrapBindingIfNeeded(showBinding, options),
         },
         children:
           block.children?.map((child) =>
@@ -495,7 +495,7 @@ export const builderElementToJsxLiteNode = (
       return createJSXLiteNode({
         name: 'Show',
         bindings: {
-          when: showBinding,
+          when: wrapBindingIfNeeded(showBinding, options),
         },
         children: [
           builderElementToJsxLiteNode({
@@ -518,7 +518,7 @@ export const builderElementToJsxLiteNode = (
       return createJSXLiteNode({
         name: 'For',
         bindings: {
-          each: block.repeat?.collection!,
+          each: wrapBindingIfNeeded(block.repeat?.collection!, options),
           _forName: block.repeat?.itemName || 'item',
         },
         children:
@@ -535,7 +535,7 @@ export const builderElementToJsxLiteNode = (
       return createJSXLiteNode({
         name: 'For',
         bindings: {
-          each: block.repeat?.collection,
+          each: wrapBindingIfNeeded(block.repeat?.collection!, options),
           _forName: block.repeat?.itemName || 'item',
         },
         children: [builderElementToJsxLiteNode(omit(useBlock, 'repeat'))],
