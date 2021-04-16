@@ -153,6 +153,264 @@ export default injectEventHandler(
 }
 `;
 
+exports[`Qoot Todo bundle 1`] = `
+Object {
+  "files": Array [
+    Object {
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+import { TodosState as todosState } from \\"../TodosState/public.js\\";
+
+export const template = injectMethod(
+  TodoComponent,
+  function (this: TodoComponent) {
+    return (
+      <li
+        class={\`\${this.todo.completed ? \\"completed\\" : \\"\\"} \${
+          this.editing ? \\"editing\\" : \\"\\"
+        }\`}
+      >
+        <div class=\\"view\\">
+          <input
+            class=\\"toggle\\"
+            type=\\"checkbox\\"
+            checked={this.todo.completed}
+            $={{ \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\` }}
+          />
+
+          <label
+            $={{ \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\` }}
+          >
+            {this.todo.text}
+          </label>
+
+          <button
+            class=\\"destroy\\"
+            $={{ \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\` }}
+          ></button>
+        </div>
+
+        {this.editing ? (
+          <>
+            <input
+              class=\\"edit\\"
+              value={this.todo.text}
+              $={{
+                \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
+                \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`,
+              }}
+            />
+          </>
+        ) : undefined}
+      </li>
+    );
+  }
+);
+",
+      "path": "Todo/template.tsx",
+    },
+    Object {
+      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+
+export const Todo = jsxDeclareComponent(\\"todo\\", QRL\`ui:/Todo/bundle.template\`);
+",
+      "path": "Todo/public.ts",
+    },
+    Object {
+      "contents": "import { Component, QRL } from \\"qoot\\";
+
+export class TodoComponent extends Component<any, any> {
+  static $templateQRL = \\"ui:/Todo/bundle.template\\";
+
+  editing = false;
+  toggle() {
+    this.todo.completed = !this.todo.completed;
+  }
+
+  $newState() {
+    return {}; // TODO
+  }
+}
+",
+      "path": "Todo/component.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+export const onInputClick = injectEventHandler(
+  TodoComponent,
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
+    this.toggle();
+  }
+);
+",
+      "path": "Todo/onInputClick.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+export const onLabelDblClick = injectEventHandler(
+  TodoComponent,
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
+    this.editing = true;
+    markDirty(this);
+  }
+);
+",
+      "path": "Todo/onLabelDblClick.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+export const onButtonClick = injectEventHandler(
+  TodoComponent,
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
+    todosState.todos.splice(todosState.todos.indexOf(this.todo));
+  }
+);
+",
+      "path": "Todo/onButtonClick.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+export const onInput2Blur = injectEventHandler(
+  TodoComponent,
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
+    this.editing = false;
+    markDirty(this);
+  }
+);
+",
+      "path": "Todo/onInput2Blur.ts",
+    },
+    Object {
+      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+import { TodoComponent } from \\"./component.js\\";
+
+export const onInput2KeyUp = injectEventHandler(
+  TodoComponent,
+  provideQrlExp<Event>(\\"event\\"),
+  async function (this: TodoComponent, event: Event) {
+    this.todo.text = event.target.value;
+  }
+);
+",
+      "path": "Todo/onInput2KeyUp.ts",
+    },
+    Object {
+      "contents": "import { Component, injectMethod, jsxFactory, QRL, injectEventHandler, provideQrlExp, markDirty } from 'qoot';
+
+function _defineProperty$1(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+class TodoComponent$1 extends Component {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty$1(this, \\"editing\\", false);
+  }
+
+  toggle() {
+    this.todo.completed = !this.todo.completed;
+  }
+
+  $newState() {
+    return {}; // TODO
+  }
+
+}
+
+_defineProperty$1(TodoComponent$1, \\"$templateQRL\\", \\"ui:/Todo/bundle.template\\");
+
+const template = injectMethod(TodoComponent$1, function () {
+  return jsxFactory(\\"li\\", {
+    class: \`\${this.todo.completed ? \\"completed\\" : \\"\\"} \${this.editing ? \\"editing\\" : \\"\\"}\`
+  }, jsxFactory(\\"div\\", {
+    class: \\"view\\"
+  }, jsxFactory(\\"input\\", {
+    class: \\"toggle\\",
+    type: \\"checkbox\\",
+    checked: this.todo.completed,
+    $: {
+      \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\`
+    }
+  }), jsxFactory(\\"label\\", {
+    $: {
+      \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`
+    }
+  }, this.todo.text), jsxFactory(\\"button\\", {
+    class: \\"destroy\\",
+    $: {
+      \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\`
+    }
+  })), this.editing ? jsxFactory(null, null, jsxFactory(\\"input\\", {
+    class: \\"edit\\",
+    value: this.todo.text,
+    $: {
+      \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
+      \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`
+    }
+  })) : undefined);
+});
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+class TodoComponent extends Component {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, \\"editing\\", false);
+  }
+
+  toggle() {
+    this.todo.completed = !this.todo.completed;
+  }
+
+  $newState() {
+    return {}; // TODO
+  }
+
+}
+
+_defineProperty(TodoComponent, \\"$templateQRL\\", \\"ui:/Todo/bundle.template\\");
+
+const onInputClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+  this.toggle();
+});
+
+const onLabelDblClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+  this.editing = true;
+  markDirty(this);
+});
+
+const onButtonClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+  todosState.todos.splice(todosState.todos.indexOf(this.todo));
+});
+
+const onInput2Blur = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+  this.editing = false;
+  markDirty(this);
+});
+
+const onInput2KeyUp = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+  this.todo.text = event.target.value;
+});
+
+export { TodoComponent, onButtonClick, onInput2Blur, onInput2KeyUp, onInputClick, onLabelDblClick, template };
+",
+      "path": "Todo/bundle.js",
+    },
+  ],
+}
+`;
+
 exports[`Qoot Todos 1`] = `
 Object {
   "files": Array [

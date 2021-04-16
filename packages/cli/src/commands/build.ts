@@ -81,7 +81,7 @@ const command: GluegunCommand = {
                   output = componentToCustomElement(parsed)
                   break
                 case 'qoot':
-                  const info = componentToQoot(
+                  const info = await componentToQoot(
                     parsed,
                     (config as any)?.options?.qoot || undefined
                   )

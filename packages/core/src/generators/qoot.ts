@@ -22,9 +22,11 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { NodePath, types } from '@babel/core';
+import { NodePath, transform, types } from '@babel/core';
 import { collectCss } from '../helpers/collect-styles';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
+import { rollup } from 'rollup';
+import virtual from '@rollup/plugin-virtual';
 
 const qootImport = (options: InternalToQootOptions) =>
   options.qootLib || 'qoot';
@@ -162,6 +164,7 @@ type ToQootOptions = {
   cssNamespace?: string;
   minifyStyles?: boolean;
   qrlSuffix?: string;
+  bundle?: boolean;
   format?: 'builder' | 'default';
 };
 type InternalToQootOptions = ToQootOptions & {
@@ -207,12 +210,20 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
     if (key.startsWith('on')) {
       const useKey = key.replace('on', 'on:').toLowerCase();
       const componentName = getComponentName(options.componentJson, options);
-
-      eventBindings[useKey] = `QRL\`${
-        options.qrlPrefix
-      }/${componentName}/on${elId(json, options)}${key.slice(
-        2,
-      )}${options.qrlSuffix || ''}?event=.\``;
+      if (options.bundle) {
+        eventBindings[useKey] = `QRL\`${
+          options.qrlPrefix
+        }/${componentName}/bundle${options.qrlSuffix || ''}.on${elId(
+          json,
+          options,
+        )}${key.slice(2)}?event=.\``;
+      } else {
+        eventBindings[useKey] = `QRL\`${
+          options.qrlPrefix
+        }/${componentName}/on${elId(json, options)}${key.slice(
+          2,
+        )}${options.qrlSuffix || ''}?event=.\``;
+      }
     } else {
       if (!isValidAttributeName(key)) {
         console.warn('Skipping invalid attribute name:', key);
@@ -291,6 +302,7 @@ const getEventHandlerFiles = (
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
+          const eventHandlerName = elId(item, options) + binding.slice(2);
           const componentName = getComponentName(componentJson, options);
           let str = formatCode(
             `import {
@@ -300,7 +312,9 @@ const getEventHandlerFiles = (
             } from '${qootImport(options)}';
             import { ${componentName}Component } from './component.js'
             
-            export default injectEventHandler(
+            export ${
+              options.bundle ? `const on${eventHandlerName} =` : 'default'
+            } injectEventHandler(
               ${componentName}Component,
               provideQrlExp<Event>('event'),
               async function (this: ${componentName}Component, event: Event) {
@@ -315,9 +329,7 @@ const getEventHandlerFiles = (
 
           str = formatCode(str, options);
           files.push({
-            path: `${componentName}/on${elId(item, options)}${binding.slice(
-              2,
-            )}.ts`,
+            path: `${componentName}/on${eventHandlerName}.ts`,
             contents: str,
           });
         }
@@ -333,10 +345,10 @@ export type File = {
   contents: string;
 };
 
-export const componentToQoot = (
+export const componentToQoot = async (
   componentJson: JSXLiteComponent,
   toQootOptions: ToQootOptions = {},
-): { files: File[] } => {
+): Promise<{ files: File[] }> => {
   let json = fastClone(componentJson);
   const options = {
     qrlPrefix: 'ui:',
@@ -394,7 +406,9 @@ export const componentToQoot = (
       }),
     })}
 
-    export default injectMethod(${componentName}Component, function (this: ${componentName}Component) {
+    export ${
+      options.bundle ? `const template = ` : 'default'
+    } injectMethod(${componentName}Component, function (this: ${componentName}Component) {
       return (${addWrapper ? '<>' : ''}
         ${
           !hasCss
@@ -420,7 +434,7 @@ export const componentToQoot = (
     valueMapper: (code) => processBinding(code, options),
   });
 
-  return {
+  const output = {
     files: [
       {
         path: `${componentName}/template.tsx`,
@@ -434,9 +448,9 @@ export const componentToQoot = (
           
           export const ${componentName} = jsxDeclareComponent('${kebabCase(
             componentName,
-          )}', QRL\`${
-            options.qrlPrefix
-          }/${componentName}/template${options.qrlSuffix || ''}\`);
+          )}', QRL\`${options.qrlPrefix}/${componentName}/${
+            options.bundle ? 'bundle' : 'template'
+          }${options.qrlSuffix || ''}${options.bundle ? '.template' : ''}\`);
         `,
           options,
         ),
@@ -454,7 +468,11 @@ export const componentToQoot = (
                     ? ''
                     : `static $templateQRL = '${
                         options.qrlPrefix
-                      }/${componentName}/template${options.qrlSuffix || ''}'`
+                      }/${componentName}/${
+                        options.bundle ? 'bundle' : 'template'
+                      }${options.qrlSuffix || ''}${
+                        options.bundle ? '.template' : ''
+                      }'`
                 }
 
                 ${dataString}
@@ -482,9 +500,11 @@ export const componentToQoot = (
               export const ${componentName}Component = new Proxy(_${componentName}Component, {
                 get(target, prop) {
                   if (prop === '$templateQRL') {
-                    return '${
-                      options.qrlPrefix
-                    }/${componentName}/template${options.qrlSuffix || ''}'
+                    return '${options.qrlPrefix}/${componentName}/${
+                      options.bundle ? 'bundle' : 'template'
+                    }${options.qrlSuffix || ''}${
+                      options.bundle ? '.template' : ''
+                    }'
                   }
                   return Reflect.get(...arguments)
                 }
@@ -508,4 +528,60 @@ export const componentToQoot = (
       ...getEventHandlerFiles(json, options),
     ],
   };
+
+  if (options.bundle) {
+    const moduleMap = {
+      entry: output.files
+        .filter((file) => !file.path.endsWith('/public.ts'))
+        .map(
+          (file) => `export * from './${file.path.replace(/\.tsx?$/, '.js')}';`,
+        )
+        .join('\n'),
+      ...output.files.reduce((memo, arg) => {
+        const transformed = transform(arg.contents, {
+          sourceFileName: arg.path,
+          plugins: [
+            [
+              '@babel/plugin-transform-typescript',
+              {
+                jsx: 'react',
+                isTSX: true,
+                allExtensions: true,
+                jsxFactory: 'jsxFactory',
+                jsxPragma: 'jsxFactory',
+              },
+            ],
+            [
+              '@babel/plugin-transform-react-jsx',
+              {
+                pragma: 'jsxFactory',
+                pragmaFrag: 'null',
+              },
+            ],
+            '@babel/plugin-proposal-class-properties',
+          ],
+        });
+        memo['./' + arg.path.replace(/\.tsx?$/, '.js')] = transformed!.code!;
+        return memo;
+      }, {} as Record<string, string>),
+    };
+
+    const bundle = await rollup({
+      input: 'entry',
+      external: [options.qootLib || 'qoot'],
+      plugins: [virtual(moduleMap) as any],
+    });
+
+    const { output: bundleOutput } = await bundle.generate({
+      file: 'bundle.js',
+      format: 'esm',
+    });
+
+    output.files.push({
+      path: `${componentName}/bundle.js`,
+      contents: bundleOutput[0].code,
+    });
+  }
+
+  return output;
 };

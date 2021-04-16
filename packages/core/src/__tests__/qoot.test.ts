@@ -18,14 +18,23 @@ const debugOutput = async (output: { files: File[] }) => {
 describe('Qoot', () => {
   test('Todo', async () => {
     const json = parseJsx(todo);
-    const output = componentToQoot(json);
+    const output = await componentToQoot(json);
     expect(output).toMatchSnapshot();
     debugOutput(output);
   });
 
-  test('Todos', () => {
+  test('Todo bundle', async () => {
+    const json = parseJsx(todo);
+    const output = await componentToQoot(json, {
+      bundle: true,
+    });
+    expect(output).toMatchSnapshot();
+    debugOutput(output);
+  });
+
+  test('Todos', async () => {
     const json = parseJsx(todos);
-    const output = componentToQoot(json);
+    const output = await componentToQoot(json);
     expect(output).toMatchSnapshot();
     debugOutput(output);
   });
