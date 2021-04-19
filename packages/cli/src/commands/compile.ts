@@ -1,4 +1,4 @@
-import { builderContentToJsxLiteComponent, parseJsx } from '@jsx-lite/core'
+import { builderContentToJsxLiteComponent, JSXLiteComponent, parseJsx } from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import * as targets from '../targets'
@@ -98,7 +98,7 @@ const command: GluegunCommand = {
       }
 
       try {
-        let json
+        let json: JSXLiteComponent
 
         switch (from_) {
           case 'jsxLite':
