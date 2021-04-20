@@ -1,4 +1,5 @@
 import dedent from 'dedent';
+import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
 import { componentToJsxLite } from '../generators/jsx-lite';
 import {
@@ -7,11 +8,19 @@ import {
 } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 
-const stamped = require('./data/blocks/stamped-io.raw');
-const customCode = require('./data/blocks/custom-code.raw');
-const embed = require('./data/blocks/embed.raw');
-const image = require('./data/blocks/image.raw');
-const columns = require('./data/blocks/columns.raw');
+/**
+ * Load a file using nodejs resolution as a string.
+ */
+function fixture(path: string): string {
+  const localpath = require.resolve(path);
+  return fs.readFileSync(localpath, { encoding: 'utf-8' });
+}
+
+const stamped = fixture('./data/blocks/stamped-io.raw');
+const customCode = fixture('./data/blocks/custom-code.raw');
+const embed = fixture('./data/blocks/embed.raw');
+const image = fixture('./data/blocks/image.raw');
+const columns = fixture('./data/blocks/columns.raw');
 
 describe('Builder', () => {
   test('extractStateHook', () => {
@@ -85,7 +94,7 @@ describe('Builder', () => {
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });
-      
+
         return (
           <div
             css={{
@@ -116,7 +125,7 @@ describe('Builder', () => {
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });
-      
+
         return (
           <div
             css={{
@@ -148,7 +157,7 @@ describe('Builder', () => {
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });
-      
+
         return (
           <For each={state.people}>
             {(person, index) => (
@@ -196,7 +205,7 @@ describe('Builder', () => {
             }}
           />
         );
-      }    
+      }
     `;
 
     const json = parseJsx(code);
@@ -222,7 +231,7 @@ describe('Builder', () => {
             </>
           </>
         );
-      }    
+      }
     `;
 
     const json = parseJsx(code);
@@ -255,7 +264,7 @@ describe('Builder', () => {
             </span>
           </div>
         );
-      }    
+      }
     `;
 
     const json = parseJsx(code);
