@@ -220,9 +220,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       } else {
         eventBindings[useKey] = `QRL\`${
           options.qrlPrefix
-        }/${componentName}/on${elId(json, options)}${key.slice(
-          2,
-        )}${options.qrlSuffix || ''}?event=.\``;
+        }/${componentName}/on${elId(json, options)}${key.slice(2)}${
+          options.qrlSuffix || ''
+        }?event=.\``;
       }
     } else {
       if (!isValidAttributeName(key)) {
@@ -298,7 +298,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -349,6 +349,7 @@ export const componentToQoot = async (
   componentJson: JSXLiteComponent,
   toQootOptions: ToQootOptions = {},
 ): Promise<{ files: File[] }> => {
+  console.log('v2-1');
   let json = fastClone(componentJson);
   const options = {
     qrlPrefix: 'ui:',

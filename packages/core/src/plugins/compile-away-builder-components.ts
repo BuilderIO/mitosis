@@ -34,7 +34,22 @@ const wrapOutput = (
   return createJSXLiteNode({
     ...node,
     properties: {
-      ...omit(node.properties, 'content', 'innerHTML', 'text', 'code'),
+      ...omit(
+        node.properties,
+        // TODO: need actual component schemas to do this right
+        // We should be able to get this from the Builder SDKs but can
+        // harcode for now
+        'content',
+        'innerHTML',
+        'text',
+        'code',
+        'lazy',
+        'srcset',
+        'sizes',
+        'aspectRatio',
+        'columns',
+        'code',
+      ),
     },
     // TODO: forward tagName as a $tagName="..."
     name: node.properties._tagName || node.properties.$tagName || 'div',
@@ -123,9 +138,9 @@ export const components: CompileAwayComponentsMap = {
         alignSelf: 'stretch',
         flexGrow: '1',
         boxSizing: 'border-box',
-        maxWidth: '${(node.bindings.maxWidth &&
-          Number(node.bindings.maxWidth)) ||
-          1200}px',
+        maxWidth: '${
+          (node.bindings.maxWidth && Number(node.bindings.maxWidth)) || 1200
+        }px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
@@ -433,7 +448,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: JSXLiteNode | JSXLiteComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function(item) {
+  traverse(tree).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       const mapper = components[item.name];
       if (mapper) {
