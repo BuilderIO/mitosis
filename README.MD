@@ -107,7 +107,7 @@
 
 JSX Lite is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
 
-An example JSX Lite component showing several features:
+This is what a basic JSX Lite component that manages some state looks like:
 
 ```javascript
 import { useState, Show, For } from '@jsx-lite/core';
@@ -156,19 +156,19 @@ jsx-lite compile --to=vue my-file.lite.jsx
 
 ### Component libraries
 
-Managing support for libraries that provide UI components across frameworks is a _pain_, esp when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere with full compatibilty
+Managing support for libraries that provide UI components across frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere while maintaining full compatibilty with the target framework.
 
 ### Modern workflows for all platforms
 
-JSX lite allows you to incrementally adopt modern and familiar workflows for many different platforms, for for Shopify instance you can server side render to liquid and hydrate with React
+JSX Lite allows you to incrementally adopt modern and familiar workflows for many different platforms. For instance, when working with Shopify, you can server side render to liquid and hydrate with React.
 
 ### JS framework fatigue
 
-If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing at a higher level of abstraction allows you to move from one to another with ease
+If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing components at a higher level of abstraction allows you to move from one to another with ease.
 
 ### Design to code
 
-With JSX lite, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert it to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_
+With JSX Lite, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
 
 <p align="center">
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
@@ -176,7 +176,7 @@ With JSX lite, you can convert designs from [Figma](https://github.com/BuilderIO
 
 ## How does it work
 
-JSX Lite uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure that it is easy easy to build stringifers off of for various frameworks and implementations
+JSX Lite uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
 
 ```tsx
 export function MyComponent() {
@@ -221,7 +221,7 @@ becomes:
 }
 ```
 
-Which can be reserialized into many languges and framworks. For instance, to support angular, we just make a serializer that loops over the json and produces:
+Which can be reserialized into many languges and framworks. For example, to support angular, we just make a serializer that loops over the json and produces:
 
 ```ts
 @Component({
@@ -236,11 +236,11 @@ class MyComponent {
 }
 ```
 
-Adding framework support is surprisingly easy with our plugins (docs coming soon!)
+Adding framework support is surprisingly easy with the plugin system (docs coming soon).
 
 ## No-code tooling
 
-JSX Lite's static JSON format also enables no-code tooling for visual code editing and importing, for instance with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma)
+JSX Lite's static JSON format also enables no-code tooling for visual code editing and importing. You can see this with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma).
 
 <img src="https://i.imgur.com/BoKsLFs.gif" >
 
@@ -248,7 +248,7 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 ## Formatting options
 
-JSX Lite supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon too
+JSX Lite supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon.
 
 <img src="https://imgur.com/hWXfNF3.gif "/>
 
