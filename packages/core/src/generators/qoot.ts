@@ -25,7 +25,7 @@ import { babelTransformExpression } from '../helpers/babel-transform';
 import { NodePath, transform, types } from '@babel/core';
 import { collectCss } from '../helpers/collect-styles';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { rollup } from 'rollup';
+import { rollup } from 'rollup/dist/rollup.browser.es';
 import virtual from '@rollup/plugin-virtual';
 
 const qootImport = (options: InternalToQootOptions) =>
