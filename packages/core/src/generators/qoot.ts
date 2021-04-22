@@ -543,7 +543,7 @@ export const componentToQoot = async (
           sourceFileName: arg.path,
           plugins: [
             [
-              '@babel/plugin-transform-typescript',
+              require('@babel/plugin-transform-typescript'),
               {
                 jsx: 'react',
                 isTSX: true,
@@ -553,13 +553,13 @@ export const componentToQoot = async (
               },
             ],
             [
-              '@babel/plugin-transform-react-jsx',
+              require('@babel/plugin-transform-react-jsx'),
               {
                 pragma: 'jsxFactory',
                 pragmaFrag: 'null',
               },
             ],
-            '@babel/plugin-proposal-class-properties',
+            require('@babel/plugin-proposal-class-properties'),
           ],
         });
         memo['./' + arg.path.replace(/\.tsx?$/, '.js')] = transformed!.code!;
