@@ -38,7 +38,6 @@ const transformBinding = (
         return;
       }
 
-      // TODO: ignore object property keys
       if (
         !(name.startsWith('state.') || name === 'event' || name === '$event')
       ) {
