@@ -7,6 +7,7 @@ import {
   componentToHtml,
   componentToJsxLite,
   componentToLiquid,
+  componentToQoot,
   componentToReact,
   componentToReactNative,
   componentToSolid,
@@ -14,8 +15,12 @@ import {
   componentToSwift,
   componentToTemplate,
   componentToVue,
+  liquidToBuilder,
+  angularToJsxLiteComponent,
   mapStyles,
   parseJsx,
+  parseReactiveScript,
+  reactiveScriptRe,
 } from '@jsx-lite/core';
 import {
   Button,
@@ -23,7 +28,6 @@ import {
   Divider,
   FormControlLabel,
   MenuItem,
-  Paper,
   Radio,
   RadioGroup,
   Select,
@@ -42,14 +46,12 @@ import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
 import logo from '../assets/jsx-lite-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
-import { device } from '../constants/device';
 import { defaultCode, templates } from '../constants/templates';
 import { theme } from '../constants/theme';
 import { deleteQueryParam } from '../functions/delete-query-param';
 import { getQueryParam } from '../functions/get-query-param';
 import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
-import { promptUploadFigmaJsonFile } from '../functions/prompt-upload-figma-file';
 import { setQueryParam } from '../functions/set-query-param';
 import { useEventListener } from '../hooks/use-event-listener';
 import { useReaction } from '../hooks/use-reaction';
@@ -58,7 +60,6 @@ import { Show } from './Show';
 import { TextLink } from './TextLink';
 
 const debug = getQueryParam('debug') === 'true';
-const lite = getQueryParam('lite') === 'true';
 
 const AlphaPreviewMessage = () => (
   <ThemeProvider
@@ -160,6 +161,19 @@ const defaultLiquidCode = `
 </script>
 `;
 
+const plugins = [
+  compileAwayBuilderComponents(),
+  mapStyles({
+    map: (styles) => ({
+      ...styles,
+      boxSizing: undefined,
+      flexShrink: undefined,
+      alignItems:
+        styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+    }),
+  }),
+];
+
 // TODO: Build this Fiddle app with JSX Lite :)
 export default function Fiddle() {
   const [staticState] = useState(() => ({
@@ -172,7 +186,7 @@ export default function Fiddle() {
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    inputTab: getQueryParam('inputTab') || 'builder',
+    inputTab: getQueryParam('inputTab') || 'jsx lite',
     builderData: {} as any,
     isDraggingOutputsCodeBar: false,
     isDraggingJSXCodeBar: false,
@@ -198,24 +212,34 @@ export default function Fiddle() {
       state.code = componentToJsxLite(jsxJson);
       state.pendingBuilderChange = null;
     },
+    async parseLiquidInputCode() {
+      const jsxState = parseReactiveScript(state.inputCode, {
+        format: 'html',
+      }).state;
 
-    updateOutput() {
-      const plugins = [
-        compileAwayBuilderComponents(),
-        mapStyles({
-          map: (styles) => ({
-            ...styles,
-            boxSizing: undefined,
-            flexShrink: undefined,
-            alignItems:
-              styles.alignItems === 'stretch' ? undefined : styles.alignItems,
-          }),
-        }),
-      ];
+      const builderJson = await liquidToBuilder(
+        state.inputCode.replace(reactiveScriptRe, ''),
+      );
+
+      const jsx = builderContentToJsxLiteComponent({
+        data: { blocks: builderJson },
+      });
+      jsx.state = jsxState;
+      return jsx;
+    },
+
+    async updateOutput() {
       try {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
-        const json = parseJsx(state.code);
+        const json =
+          state.inputTab === 'angular'
+            ? angularToJsxLiteComponent(state.inputCode)
+            : state.inputTab === 'liquid'
+            ? await this.parseLiquidInputCode()
+            : parseJsx(state.code);
+
+        console.log('json', json);
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid(json, { plugins })
@@ -249,6 +273,13 @@ export default function Fiddle() {
                 stateType: state.options.svelteStateType,
                 plugins,
               })
+            : state.outputTab === 'qoot'
+            ? (
+                await componentToQoot(json, {
+                  plugins,
+                })
+              ).files.find((file) => file.path.endsWith('template.tsx'))!
+                ?.contents
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
@@ -339,6 +370,19 @@ export default function Fiddle() {
       state.updateOutput();
     },
   );
+  useReaction(
+    () => state.inputTab,
+    (tab) => {
+      const json = parseJsx(state.code);
+      state.inputCode =
+        state.inputTab === 'liquid'
+          ? // TODO: generate reactive script
+            componentToLiquid(json, { plugins })
+          : componentToAngular(json, { plugins });
+      setQueryParam('inputTab', tab);
+    },
+    { fireImmediately: false },
+  );
 
   useReaction(
     () => state.code,
@@ -348,13 +392,16 @@ export default function Fiddle() {
     { delay: 1000 },
   );
 
+  useReaction(
+    () => state.inputCode,
+    (code) => {
+      state.updateOutput();
+    },
+    { delay: 1000 },
+  );
+
   return useObserver(() => {
-    const outputMonacoEditorSize = device.small
-      ? `calc(${state.outputsTabHeight}vh - 50px)`
-      : `calc(${state.outputsTabHeight}vh - 100px)`;
-    const inputMonacoEditorSize = `calc(${100 -
-      state.outputsTabHeight}vh - 100px)`;
-    const lightColorInvert = {}; // theme.darkMode ? null : { filter: 'invert(1) ' };
+    const lightColorInvert = {};
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
       overflow: 'auto',
@@ -511,73 +558,210 @@ export default function Fiddle() {
           >
             <div
               css={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '0 20px',
-                flexShrink: 0,
-                height: 40,
                 borderBottom: `1px solid ${colors.contrast}`,
+                borderTop: `1px solid ${colors.contrast}`,
+                alignItems: 'center',
+                display: 'flex',
                 ...barStyle,
               }}
             >
               <Typography
                 variant="body2"
-                css={{ flexGrow: 1, textAlign: 'left', opacity: 0.7 }}
-              >
-                JSX Lite code:
-              </Typography>
-              <Select
-                disableUnderline
                 css={{
-                  marginLeft: 'auto',
-                  marginRight: 10,
+                  flexGrow: 1,
+                  textAlign: 'left',
+                  padding: '10px 15px',
+                  color: theme.darkMode
+                    ? 'rgba(255, 255, 255, 0.7)'
+                    : 'rgba(0, 0, 0, 0.7)',
                 }}
-                renderValue={(value) => (
-                  <span css={{ textTransform: 'capitalize' }}>
-                    {value === '_none' ? 'Choose template' : (value as string)}
-                  </span>
-                )}
-                defaultValue="_none"
-                onChange={(e) => {
-                  const template = templates[e.target.value as string];
-                  if (template) {
-                    state.code = template;
+              >
+                Inputs:
+              </Typography>
+              {state.pendingBuilderChange && (
+                <Button
+                  css={{ marginRight: 30 }}
+                  onClick={() => state.applyPendingBuilderChange()}
+                  color="primary"
+                  variant="contained"
+                  size="small"
+                >
+                  Update JSX
+                </Button>
+              )}
+              <Tabs
+                css={{
+                  minHeight: 0,
+                  marginLeft: 'auto',
+                  // borderBottom: `1px solid ${colors.contrast}`,
+                  '& button': {
+                    minHeight: 0,
+                    minWidth: 100,
+                  },
+                }}
+                value={state.inputTab}
+                onChange={(e, value) => (state.inputTab = value)}
+                indicatorColor="primary"
+                textColor="primary"
+              >
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="JSX Lite"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="jsx lite"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Builder"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="builder"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Angular Lite"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="angular"
+                />
+                {/* <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Liquid Lite"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="liquid"
+                /> */}
+              </Tabs>
+            </div>
+            <Show when={state.inputTab === 'jsx lite'}>
+              <div css={{ paddingTop: 15, flexGrow: 1, position: 'relative' }}>
+                <Select
+                  disableUnderline
+                  css={{
+                    top: 10,
+                    position: 'absolute',
+                    right: 10,
+                    zIndex: 10,
+                  }}
+                  renderValue={(value) => (
+                    <span css={{ textTransform: 'capitalize' }}>
+                      {value === '_none'
+                        ? 'Choose template'
+                        : (value as string)}
+                    </span>
+                  )}
+                  defaultValue="_none"
+                  onChange={(e) => {
+                    const template = templates[e.target.value as string];
+                    if (template) {
+                      state.code = template;
+                    }
+                  }}
+                >
+                  <MenuItem value="_none" disabled>
+                    Choose template
+                  </MenuItem>
+                  {Object.keys(templates).map((key) => (
+                    <MenuItem
+                      key={key}
+                      value={key}
+                      css={{
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {key}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <CodeEditor
+                  options={{
+                    renderLineHighlightOnlyWhenFocus: true,
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    automaticLayout: true,
+                    minimap: { enabled: false },
+                    scrollbar: { vertical: 'hidden' },
+                  }}
+                  theme={monacoTheme}
+                  height="calc(100vh - 105px)"
+                  language="typescript"
+                  value={state.code}
+                  onChange={(val) => (state.code = val)}
+                />
+              </div>
+            </Show>
+            <Show when={state.inputTab === 'builder'}>
+              <style>{`builder-editor { height: 100% }`}</style>
+              <BuilderEditor
+                onChange={(e: CustomEvent) => {
+                  if (useSaveButton) {
+                    if (document.activeElement?.tagName === 'IFRAME') {
+                      state.pendingBuilderChange = e.detail;
+                    }
+                  } else {
+                    state.applyPendingBuilderChange(e.detail);
                   }
                 }}
-              >
-                <MenuItem value="_none" disabled>
-                  Choose template
-                </MenuItem>
-                {Object.keys(templates).map((key) => (
-                  <MenuItem
-                    key={key}
-                    value={key}
-                    css={{
-                      textTransform: 'capitalize',
-                    }}
-                  >
-                    {key}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <div css={{ paddingTop: 15, flexGrow: 1 }}>
-              <CodeEditor
+                data={builderData}
+                options={builderOptions}
+                env={builderEnvParam || undefined}
+              />
+            </Show>
+            <Show when={state.inputTab === 'liquid'}>
+              <MonacoEditor
+                height="100%"
                 options={{
-                  renderLineHighlightOnlyWhenFocus: true,
-                  overviewRulerBorder: false,
-                  hideCursorInOverviewRuler: true,
                   automaticLayout: true,
+                  overviewRulerBorder: false,
+                  highlightActiveIndentGuide: false,
+                  foldingHighlight: false,
+                  renderLineHighlightOnlyWhenFocus: true,
+                  occurrencesHighlight: false,
                   minimap: { enabled: false },
+                  renderLineHighlight: 'none',
+                  selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
+                onChange={(value) => {
+                  state.inputCode = value;
+                }}
                 theme={monacoTheme}
-                height="calc(100vh - 105px)"
-                language="typescript"
-                value={state.code}
-                onChange={(val) => (state.code = val)}
+                language="html"
+                value={state.inputCode}
               />
-            </div>
+            </Show>
+            <Show when={state.inputTab === 'angular'}>
+              <MonacoEditor
+                height="100%"
+                options={{
+                  automaticLayout: true,
+                  overviewRulerBorder: false,
+                  highlightActiveIndentGuide: false,
+                  foldingHighlight: false,
+                  renderLineHighlightOnlyWhenFocus: true,
+                  occurrencesHighlight: false,
+                  minimap: { enabled: false },
+                  renderLineHighlight: 'none',
+                  selectionHighlight: false,
+                  scrollbar: { vertical: 'hidden' },
+                }}
+                onChange={(value) => {
+                  state.inputCode = value;
+                }}
+                theme={monacoTheme}
+                language="typescript"
+                value={state.inputCode}
+              />
+            </Show>
           </div>
           <div
             css={{
@@ -613,6 +797,7 @@ export default function Fiddle() {
           >
             <div
               css={{
+                flexGrow: 1,
                 display: 'flex',
                 alignItems: 'center',
                 padding: 5,
@@ -675,6 +860,7 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Angular" />}
                   value="angular"
                 />
+                <Tab label={<TabLabelWithIcon label="Qoot" />} value="qoot" />
                 <Tab
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
@@ -906,10 +1092,10 @@ export default function Fiddle() {
               </div>
               <Divider />
             </Show>
-            <div>
-              <div css={{ paddingTop: 15 }}>
+            <div css={{ flexGrow: 1 }}>
+              <div css={{ paddingTop: 15, height: '100%' }}>
                 <MonacoEditor
-                  height={outputMonacoEditorSize}
+                  height="100%"
                   options={{
                     automaticLayout: true,
                     overviewRulerBorder: false,
@@ -935,6 +1121,7 @@ export default function Fiddle() {
                         state.outputTab === 'template' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||
+                        state.outputTab === 'qoot' ||
                         state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'
@@ -943,248 +1130,6 @@ export default function Fiddle() {
                 />
               </div>
             </div>
-            <Show when={!device.small}>
-              <div
-                css={{
-                  cursor: 'row-resize',
-                  position: 'relative',
-                  zIndex: 100,
-                  '&::before': {
-                    content: '""',
-                    position: 'absolute',
-                    top: -5,
-                    bottom: -5,
-                    left: 0,
-                    right: 0,
-                  },
-                }}
-                onMouseDown={(event) => {
-                  event.preventDefault();
-                  state.isDraggingOutputsCodeBar = true;
-                }}
-              ></div>
-              <div
-                css={{
-                  borderBottom: `1px solid ${colors.contrast}`,
-                  borderTop: `1px solid ${colors.contrast}`,
-                  alignItems: 'center',
-                  display: 'flex',
-                  ...barStyle,
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  css={{
-                    flexGrow: 1,
-                    textAlign: 'left',
-                    padding: '10px 15px',
-                    color: theme.darkMode
-                      ? 'rgba(255, 255, 255, 0.7)'
-                      : 'rgba(0, 0, 0, 0.7)',
-                  }}
-                >
-                  Inputs:
-                </Typography>
-                {state.pendingBuilderChange && (
-                  <Button
-                    css={{ marginRight: 30 }}
-                    onClick={() => state.applyPendingBuilderChange()}
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                  >
-                    Update JSX
-                  </Button>
-                )}
-                <Tabs
-                  css={{
-                    minHeight: 0,
-                    marginLeft: 'auto',
-                    // borderBottom: `1px solid ${colors.contrast}`,
-                    '& button': {
-                      minHeight: 0,
-                      minWidth: 100,
-                    },
-                  }}
-                  value={state.inputTab}
-                  onChange={(e, value) => (state.inputTab = value)}
-                  indicatorColor="primary"
-                  textColor="primary"
-                >
-                  <Tab
-                    label={
-                      <TabLabelWithIcon
-                        label="Builder.io"
-                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-                      />
-                    }
-                    value="builder"
-                  />
-                  <Tab
-                    label={
-                      <TabLabelWithIcon
-                        label="Figma"
-                        icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F2bc3a4ef83644b0a88bc88b4d173d5b0"
-                      />
-                    }
-                    value="figma"
-                  />
-                </Tabs>
-              </div>
-              <div
-                css={{
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  '& builder-editor': {
-                    width: '100%',
-                    filter: theme.darkMode ? 'invert(0.89)' : '',
-                    transition: 'filter 0.2s ease-in-out',
-                    height: '100%',
-                    display: state.inputTab === 'builder' ? undefined : 'none ',
-
-                    '&:hover': {
-                      ...(theme.darkMode && {
-                        filter: 'invert(0)',
-                      }),
-                    },
-                  },
-                }}
-              >
-                {!lite && (
-                  <BuilderEditor
-                    onChange={(e: CustomEvent) => {
-                      if (useSaveButton) {
-                        if (document.activeElement?.tagName === 'IFRAME') {
-                          state.pendingBuilderChange = e.detail;
-                        }
-                      } else {
-                        state.applyPendingBuilderChange(e.detail);
-                      }
-                    }}
-                    data={builderData}
-                    options={builderOptions}
-                    env={builderEnvParam || undefined}
-                  />
-                )}
-                <Show when={state.inputTab === 'figma'}>
-                  <div
-                    css={{
-                      background: colors.background,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      flexGrow: 1,
-                      overflow: 'auto',
-                      flexShrink: 1,
-                    }}
-                  >
-                    <Paper
-                      elevation={0}
-                      css={{
-                        background: 'transparent',
-                        margin: 'auto',
-                        maxWidth: 600,
-                        padding: 20,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'stretch',
-                      }}
-                    >
-                      <Typography
-                        variant="body1"
-                        css={{ marginBottom: 15, textAlign: 'center' }}
-                      >
-                        Import from Figma
-                      </Typography>
-                      <Paper
-                        css={{
-                          margin: '0 auto 20px',
-                          minHeight: 300,
-                          height: '20vh',
-                          maxHeight: 400,
-                        }}
-                      >
-                        <video
-                          autoPlay
-                          muted
-                          loop
-                          css={{ maxWidth: '100%', maxHeight: '100%' }}
-                        >
-                          <source
-                            src="https://cdn.builder.io/o/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fab055052473c4817b0eae1e92933acc1?alt=media&token=45f450c1-8815-440a-84da-a352644524ad&amp;apiKey=YJIGb4i01jvw0SRdL5Bt"
-                            type="video/mp4"
-                          />
-                        </video>
-                      </Paper>
-                      <Button
-                        css={{ marginBottom: 10 }}
-                        fullWidth
-                        color="primary"
-                        variant="contained"
-                        size="large"
-                        onClick={async () => {
-                          const json = await promptUploadFigmaJsonFile();
-                          state.code = componentToJsxLite(
-                            await builderContentToJsxLiteComponent(json),
-                          );
-                          state.inputTab = 'builder';
-                        }}
-                      >
-                        Upload Figma JSON
-                      </Button>
-                      <ul>
-                        <li>
-                          Download the{' '}
-                          <TextLink
-                            target="_blank"
-                            href="https://www.figma.com/community/plugin/747985167520967365/HTML-To-Figma"
-                          >
-                            HTML Figma plugin
-                          </TextLink>
-                        </li>
-                        <li>
-                          Open the plugin (e.g.{' '}
-                          <code>
-                            {navigator.appVersion.includes('Mac')
-                              ? 'cmd'
-                              : 'ctrl'}
-                            +/
-                          </code>{' '}
-                          and search "HTML Figma")
-                        </li>
-                        <li>
-                          From the plugin window, choose "download as JSON"
-                        </li>
-                        <li>Upload the downloaded JSON above</li>
-                      </ul>
-                    </Paper>
-                  </div>
-                </Show>
-                <Show when={state.inputTab === 'liquid'}>
-                  <MonacoEditor
-                    height={inputMonacoEditorSize}
-                    options={{
-                      automaticLayout: true,
-                      overviewRulerBorder: false,
-                      highlightActiveIndentGuide: false,
-                      foldingHighlight: false,
-                      renderLineHighlightOnlyWhenFocus: true,
-                      occurrencesHighlight: false,
-                      minimap: { enabled: false },
-                      renderLineHighlight: 'none',
-                      selectionHighlight: false,
-                      scrollbar: { vertical: 'hidden' },
-                    }}
-                    onChange={(value) => {
-                      state.inputCode = value;
-                    }}
-                    theme={monacoTheme}
-                    language="html"
-                    value={state.inputCode}
-                  />
-                </Show>
-              </div>
-            </Show>
           </div>
         </div>
       </div>
