@@ -136,29 +136,25 @@ const TabLabelWithIcon = (props: { icon?: string; label: string }) => {
   );
 };
 
-const defaultLiquidCode = `
-<!-- Edit this code to see it update the JSX Lite -->
-<div>
-  <h2>
-    Welcome, {{name}}
-  </h2>
-  {% for product in products %}
-    <div>
-        {{product.title}}
-    </div>
-  {% endfor %}
-</div>
+const defaultInputCode = `
+import { Component, Input } from "@angular/core";
 
-<!-- Optionally add a reactive script for browser-only reactive state -->
-<script reactive>
-  export default {
-    state: {
-      name: 'Steve',
-      // This could also be passed from liquid, e.g. {{ products | json }}
-      products: [{ title: 'Blue suede shoes' }] 
-    }
-  }
-</script>
+@Component({
+  selector: "foo-component",
+  template: \`
+    <div>
+      <input
+        class="input"
+        [value]="name"
+        (input)="name = $event.target.value"
+      />
+      Hello {{name}} ! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export default class FooComponent {
+  name = "Steve";
+}
 `;
 
 const plugins = [
@@ -182,7 +178,7 @@ export default function Fiddle() {
   const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalObservable(() => ({
     code: getQueryParam('code') || defaultCode,
-    inputCode: defaultLiquidCode,
+    inputCode: defaultInputCode,
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
