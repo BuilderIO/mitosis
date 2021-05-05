@@ -22,10 +22,10 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { NodePath, transform, types } from '@babel/core';
+import { NodePath, transform, types, parse } from '@babel/core';
 import { collectCss } from '../helpers/collect-styles';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { rollup } from 'rollup/dist/rollup.browser.es';
+import { rollup } from 'rollup';
 import virtual from '@rollup/plugin-virtual';
 
 const qootImport = (options: InternalToQootOptions) =>
@@ -220,9 +220,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       } else {
         eventBindings[useKey] = `QRL\`${
           options.qrlPrefix
-        }/${componentName}/on${elId(json, options)}${key.slice(
-          2,
-        )}${options.qrlSuffix || ''}?event=.\``;
+        }/${componentName}/on${elId(json, options)}${key.slice(2)}${
+          options.qrlSuffix || ''
+        }?event=.\``;
       }
     } else {
       if (!isValidAttributeName(key)) {
@@ -234,13 +234,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   }
 
   if (size(eventBindings)) {
-    str += ` $={{ `;
-
     for (const event in eventBindings) {
-      str += `'${event}': ${eventBindings[event]},`;
+      str += `${event}={${eventBindings[event]}}`;
     }
-
-    str += '}} ';
   }
 
   if (selfClosingTags.has(json.name)) {
@@ -279,9 +275,10 @@ const formatCode = (
   if (options.prettier !== false) {
     try {
       str = format(str, {
-        parser: type,
+        parser: type === 'typescript' ? 'babel-ts' : type,
         plugins: [
           require('prettier/parser-typescript'),
+          require('prettier/parser-babel'),
           require('prettier/parser-postcss'),
         ],
       });
@@ -298,7 +295,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function(item) {
+  traverse(componentJson).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
@@ -349,7 +346,6 @@ export const componentToQoot = async (
   componentJson: JSXLiteComponent,
   toQootOptions: ToQootOptions = {},
 ): Promise<{ files: File[] }> => {
-  console.log('v2-1');
   let json = fastClone(componentJson);
   const options = {
     qrlPrefix: 'ui:',
@@ -558,6 +554,7 @@ export const componentToQoot = async (
               {
                 pragma: 'jsxFactory',
                 pragmaFrag: 'null',
+                throwIfNamespace: false,
               },
             ],
             require('@babel/plugin-proposal-class-properties'),

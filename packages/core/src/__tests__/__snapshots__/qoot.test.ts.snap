@@ -21,16 +21,16 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
           class=\\"toggle\\"
           type=\\"checkbox\\"
           checked={this.todo.completed}
-          $={{ \\"on:click\\": QRL\`ui:/Todo/onInputClick?event=.\` }}
+          on:click={QRL\`ui:/Todo/onInputClick?event=.\`}
         />
 
-        <label $={{ \\"on:dblclick\\": QRL\`ui:/Todo/onLabelDblClick?event=.\` }}>
+        <label on:dblclick={QRL\`ui:/Todo/onLabelDblClick?event=.\`}>
           {this.todo.text}
         </label>
 
         <button
           class=\\"destroy\\"
-          $={{ \\"on:click\\": QRL\`ui:/Todo/onButtonClick?event=.\` }}
+          on:click={QRL\`ui:/Todo/onButtonClick?event=.\`}
         ></button>
       </div>
 
@@ -39,10 +39,8 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
           <input
             class=\\"edit\\"
             value={this.todo.text}
-            $={{
-              \\"on:blur\\": QRL\`ui:/Todo/onInput2Blur?event=.\`,
-              \\"on:keyup\\": QRL\`ui:/Todo/onInput2KeyUp?event=.\`,
-            }}
+            on:blur={QRL\`ui:/Todo/onInput2Blur?event=.\`}
+            on:keyup={QRL\`ui:/Todo/onInput2KeyUp?event=.\`}
           />
         </>
       ) : undefined}
@@ -176,18 +174,16 @@ export const template = injectMethod(
             class=\\"toggle\\"
             type=\\"checkbox\\"
             checked={this.todo.completed}
-            $={{ \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\` }}
+            on:click={QRL\`ui:/Todo/bundle.onInputClick?event=.\`}
           />
 
-          <label
-            $={{ \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\` }}
-          >
+          <label on:dblclick={QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`}>
             {this.todo.text}
           </label>
 
           <button
             class=\\"destroy\\"
-            $={{ \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\` }}
+            on:click={QRL\`ui:/Todo/bundle.onButtonClick?event=.\`}
           ></button>
         </div>
 
@@ -196,10 +192,8 @@ export const template = injectMethod(
             <input
               class=\\"edit\\"
               value={this.todo.text}
-              $={{
-                \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
-                \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`,
-              }}
+              on:blur={QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`}
+              on:keyup={QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`}
             />
           </>
         ) : undefined}
@@ -339,25 +333,17 @@ const template = injectMethod(TodoComponent$1, function () {
     class: \\"toggle\\",
     type: \\"checkbox\\",
     checked: this.todo.completed,
-    $: {
-      \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\`
-    }
+    \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\`
   }), jsxFactory(\\"label\\", {
-    $: {
-      \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`
-    }
+    \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`
   }, this.todo.text), jsxFactory(\\"button\\", {
     class: \\"destroy\\",
-    $: {
-      \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\`
-    }
+    \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\`
   })), this.editing ? jsxFactory(null, null, jsxFactory(\\"input\\", {
     class: \\"edit\\",
     value: this.todo.text,
-    $: {
-      \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
-      \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`
-    }
+    \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
+    \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`
   })) : undefined);
 });
 
@@ -430,7 +416,7 @@ export default injectMethod(TodosComponent, function (this: TodosComponent) {
             class=\\"toggle-all\\"
             type=\\"checkbox\\"
             checked={todosState.allCompleted}
-            $={{ \\"on:click\\": QRL\`ui:/Todos/onInputClick?event=.\` }}
+            on:click={QRL\`ui:/Todos/onInputClick?event=.\`}
           />
         </>
       ) : undefined}
