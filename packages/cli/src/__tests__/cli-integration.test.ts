@@ -1,11 +1,15 @@
 import { filesystem, system } from 'gluegun'
 
-const { version } = require('../package.json')
+const { version } = require('../../package.json')
 
-const root = filesystem.path(__dirname, '..')
+const root = filesystem.path(__dirname, '..', '..')
 const script = filesystem.path(root, 'bin', 'jsx-lite')
 
-const cli = async (cmd: string) => system.run(`node ${script} ${cmd}`)
+const cli = async (cmd: string) => {
+  const shcmd = `node ${script} ${cmd}`
+  console.debug(`Running: ${shcmd}`)
+  return system.run(shcmd)
+}
 
 test('outputs version', async () => {
   const output = await cli('--version')
