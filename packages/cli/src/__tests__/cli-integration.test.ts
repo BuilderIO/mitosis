@@ -20,3 +20,29 @@ test('outputs help', async () => {
   const output = await cli('--help')
   expect(output).toContain(version)
 })
+
+// TODO refactor commands/compile.ts to not have side effects (like calling
+// process.exit) so that this can be unit tested instead.
+test('strips out builder components by default', async () => {
+  const filepath = require.resolve('./data/triptych.builder.json')
+
+  const output = await cli(`compile --from=builder --to=react ${filepath}`)
+
+  expect(output).toContain('export default function MyComponent(props) {')
+  expect(output).not.toContain('<Columns')
+  expect(output).not.toContain('<Column')
+  expect(output).not.toContain('<Image')
+  expect(output).toContain('<img')
+})
+
+test('--builder-components keeps builder components', async () => {
+  const filepath = require.resolve('./data/triptych.builder.json')
+
+  const output = await cli(`compile --builder-components --from=builder --to=react ${filepath}`)
+
+  expect(output).toContain('export default function MyComponent(props) {')
+  expect(output).toContain('<Columns')
+  expect(output).toContain('<Column')
+  expect(output).toContain('<Image')
+  expect(output).not.toContain('<img')
+})

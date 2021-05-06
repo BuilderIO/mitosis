@@ -81,6 +81,10 @@ OUTPUT OPTIONS
 		Add a preamble to the document. Useful if you want to include a
 		license or an import statement. Header will be ignored if the
 		output is JSON.
+	--builder-components
+		Compiled output should will include builder components where
+		available. Useful if you're outputing jsx-lite that will run
+		in Builder.
 
 GENERATOR OPTIONS
 	--format=<format>
