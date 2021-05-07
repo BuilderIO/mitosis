@@ -1,4 +1,9 @@
-import { builderContentToJsxLiteComponent, compileAwayBuilderComponents, JSXLiteComponent, parseJsx } from '@jsx-lite/core'
+import {
+  builderContentToJsxLiteComponent,
+  compileAwayBuilderComponents,
+  JSXLiteComponent,
+  parseJsx
+} from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import * as targets from '../targets'
@@ -34,7 +39,7 @@ const command: GluegunCommand = {
 
     const header = opts.header
 
-    const plugins = [];
+    const plugins = []
 
     if (!opts.builderComponents) {
       plugins.push(compileAwayBuilderComponents())
