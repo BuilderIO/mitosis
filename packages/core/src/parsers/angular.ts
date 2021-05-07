@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 import { parseTemplate } from '@angular/compiler';
 import {
   Node,
@@ -21,9 +21,11 @@ const getTsAST = (code: string) => {
   return ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);
 };
 
+interface AngularToJsxLiteOptions {}
+
 const transformBinding = (
   binding: string,
-  options: AngularToJsxLiteOptions,
+  _options: AngularToJsxLiteOptions,
 ) => {
   return babelTransformCode(binding, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
@@ -185,7 +187,7 @@ const parseTypescript = (code: string, options: AngularToJsxLiteOptions) => {
             ) {
               const firstArg = decorator.expression.arguments[0];
               if (ts.isObjectLiteralExpression(firstArg)) {
-                const templateProperty = firstArg.properties.find((item) => {
+                firstArg.properties.find((item) => {
                   if (ts.isPropertyAssignment(item)) {
                     if (
                       ts.isIdentifier(item.name) &&
@@ -213,8 +215,6 @@ const parseTypescript = (code: string, options: AngularToJsxLiteOptions) => {
 
   return component;
 };
-
-type AngularToJsxLiteOptions = {};
 
 export function angularToJsxLiteComponent(
   code: string,
