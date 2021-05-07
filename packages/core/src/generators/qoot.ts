@@ -220,9 +220,9 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
       } else {
         eventBindings[useKey] = `QRL\`${
           options.qrlPrefix
-        }/${componentName}/on${elId(json, options)}${key.slice(2)}${
-          options.qrlSuffix || ''
-        }?event=.\``;
+        }/${componentName}/on${elId(json, options)}${key.slice(
+          2,
+        )}${options.qrlSuffix || ''}?event=.\``;
       }
     } else {
       if (!isValidAttributeName(key)) {
@@ -295,7 +295,7 @@ const getEventHandlerFiles = (
 ): File[] => {
   const files: File[] = [];
 
-  traverse(componentJson).forEach(function (item) {
+  traverse(componentJson).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {

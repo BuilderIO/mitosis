@@ -1,4 +1,9 @@
-import { builderContentToJsxLiteComponent, parseJsx } from '@jsx-lite/core'
+import {
+  builderContentToJsxLiteComponent,
+  compileAwayBuilderComponents,
+  JSXLiteComponent,
+  parseJsx
+} from '@jsx-lite/core'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
 import * as targets from '../targets'
@@ -34,9 +39,15 @@ const command: GluegunCommand = {
 
     const header = opts.header
 
+    const plugins = []
+
+    if (!opts.builderComponents) {
+      plugins.push(compileAwayBuilderComponents())
+    }
+
     const generatorOpts: { [K in AllGeneratorOptionKeys]: any } = {
       prettier: opts.prettier ?? true,
-      plugins: [],
+      plugins: plugins,
       format: opts.format,
       prefix: opts.prefix,
       includeIds: opts.includeIds,
@@ -98,7 +109,7 @@ const command: GluegunCommand = {
       }
 
       try {
-        let json
+        let json: JSXLiteComponent
 
         switch (from_) {
           case 'jsxLite':
