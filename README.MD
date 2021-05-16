@@ -13,6 +13,14 @@
 </p>
 
 <br />
+
+<p align="center">
+  <a href="https://jsx-lite.builder.io/">
+    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
+  </a>
+</p>
+
+<br />
 <h3 align="center">Try it out</h2>
 
 <table>
