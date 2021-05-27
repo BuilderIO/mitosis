@@ -444,11 +444,13 @@ export const componentToQoot = async (
           `
           import { jsxDeclareComponent, QRL } from '${qootImport(options)}';
           
-          export const ${componentName} = jsxDeclareComponent('${kebabCase(
-            componentName,
-          )}', QRL\`${options.qrlPrefix}/${componentName}/${
+          export const ${componentName} = jsxDeclareComponent(QRL\`${
+            options.qrlPrefix
+          }/${componentName}/${
             options.bundle ? 'bundle' : 'template'
-          }${options.qrlSuffix || ''}${options.bundle ? '.template' : ''}\`);
+          }${options.qrlSuffix || ''}${
+            options.bundle ? '.template' : ''
+          }\`, '${kebabCase(componentName)}');
         `,
           options,
         ),
