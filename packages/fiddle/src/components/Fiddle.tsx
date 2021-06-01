@@ -743,11 +743,6 @@ export default function Fiddle() {
                   }
                   value="jsx lite"
                 />
-                {/* Removing for now */}
-                {/* <Tab
-                  label={<TabLabelWithIcon label="Liquid" />}
-                  value="liquid"
-                /> */}
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -756,6 +751,10 @@ export default function Fiddle() {
                     />
                   }
                   value="angular"
+                />
+                <Tab
+                  label={<TabLabelWithIcon label="Liquid Lite" />}
+                  value="liquid"
                 />
               </Tabs>
             </div>
