@@ -636,10 +636,14 @@ const liquidBindingTemplate = (str: string) =>
     : `liquid.get("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const liquidRenderTemplate = (str: string) =>
-  `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
+  isSimpleLiquidBinding(str)
+    ? str
+    : `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const liquidConditionTemplate = (str: string) =>
-  `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
+  isSimpleLiquidBinding(str)
+    ? str
+    : `liquid("${str.replace(/\n+/g, ' ').replace(/"/g, '\\"')}")`;
 
 const isIfTemplate = (template: ITemplate): template is IfTemplate =>
   template.token.type === 'tag' && (template.token as any).name === 'if';

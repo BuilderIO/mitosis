@@ -96,7 +96,7 @@ export function CodeEditor(props: MonacoEditorProps) {
   const [editor, setEditor] = useState(
     null as null | monaco.editor.IStandaloneCodeEditor,
   );
-  const [] = useDebounce(
+  useDebounce(
     () => {
       if (typeof props.value !== 'string') {
         return;
@@ -120,8 +120,9 @@ export function CodeEditor(props: MonacoEditorProps) {
 
   return (
     <MonacoEditor
-      editorDidMount={(editor) => {
+      editorDidMount={(editor, monaco) => {
         setEditor(editor);
+        props.editorDidMount?.(editor, monaco);
       }}
       options={{
         renderLineHighlightOnlyWhenFocus: true,

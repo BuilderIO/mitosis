@@ -155,6 +155,17 @@ const wrapBindingIfNeeded = (
   if (options.includeBuilderExtras) {
     return wrapBinding(value);
   }
+
+  if (value?.includes(';') && !value?.trim().startsWith('{')) {
+    // TODO: for bindings wrap this way if have return statement top level
+    // if (value.match(/\nreturn\W/)) {
+    //   return `() => {
+    //     ${value}
+    //   }`;
+    // }
+    return `{ ${value} }`;
+  }
+
   return value;
 };
 
