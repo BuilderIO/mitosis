@@ -1,3 +1,4 @@
+import * as path from 'path'
 import { filesystem, system } from 'gluegun'
 
 const { version } = require('../../package.json')
@@ -24,7 +25,7 @@ test('outputs help', async () => {
 // TODO refactor commands/compile.ts to not have side effects (like calling
 // process.exit) so that this can be unit tested instead.
 test('strips out builder components by default', async () => {
-  const filepath = require.resolve('./data/triptych.builder.json')
+  const filepath = path.resolve(__dirname, 'data/triptych.builder.json')
 
   const output = await cli(`compile --from=builder --to=react ${filepath}`)
 
@@ -36,7 +37,7 @@ test('strips out builder components by default', async () => {
 })
 
 test('--builder-components keeps builder components', async () => {
-  const filepath = require.resolve('./data/triptych.builder.json')
+  const filepath = path.resolve(__dirname, 'data/triptych.builder.json')
 
   const output = await cli(
     `compile --builder-components --from=builder --to=react ${filepath}`
