@@ -39,7 +39,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import { adapt } from 'webcomponents-in-react';
 import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
@@ -58,6 +58,58 @@ import { useReaction } from '../hooks/use-reaction';
 import { CodeEditor } from './CodeEditor';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
+import stringify from 'fast-json-stable-stringify';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+type Position = { row: number; column: number };
+
+const openTagRe = /(<[a-z]+[^>]*)/gi;
+
+const indexToRowAndColumn = (str: string, index: number): Position => {
+  const rows = str.split('\n');
+  let row = 0;
+  let column = 0;
+  let cursor = 0;
+  while (cursor < index) {
+    const rowText = rows[row];
+    column++;
+    if (column > rowText.length) {
+      column = 0;
+      row++;
+      // cursor++;
+    }
+
+    if (cursor === index) {
+      return { row, column };
+    }
+    cursor++;
+  }
+  return { row, column };
+};
+
+const rowColumnToIndex = (str: string, position: Position): number => {
+  const rows = str.split('\n');
+  let row = 0;
+  let column = 0;
+  let cursor = 0;
+  while (true) {
+    const rowText = rows[row];
+    if (typeof rowText === undefined) {
+      return cursor;
+    }
+    column++;
+    if (column > rowText.length) {
+      column = 0;
+      row++;
+      cursor++;
+    }
+
+    if (row === position.row && column === position.column) {
+      return cursor;
+    }
+    cursor++;
+  }
+};
 
 const debug = getQueryParam('debug') === 'true';
 
@@ -102,7 +154,7 @@ const responsiveColHeight = 'calc(50vh - 30px)';
 
 const builderEnvParam = getQueryParam('builderEnv');
 
-const useSaveButton = true;
+const useSaveButton = getQueryParam('realTime') !== 'true';
 
 const TabLogo = (props: { src: string }) => {
   const size = 12;
@@ -184,10 +236,49 @@ export default function Fiddle() {
     pendingBuilderChange: null as any,
     inputTab: getQueryParam('inputTab') || 'jsx lite',
     builderData: {} as any,
-    isDraggingOutputsCodeBar: false,
+    isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
     jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
-    outputsTabHeight: Number(localStorageGet('outputsTabHeight')) || 45,
+    builderPaneHeight: Number(localStorageGet('builderPaneHeight')) || 35,
+    setEditorRef(editor: monaco.editor.IStandaloneCodeEditor | void) {
+      monacoEditorRef.current = editor || null;
+      if (editor) {
+        editor.onDidChangeCursorPosition((event) => {
+          const { position, reason } = event;
+
+          if (reason !== monaco.editor.CursorChangeReason.Explicit) {
+            return;
+          }
+
+          const index = rowColumnToIndex(state.code, {
+            column: position.column - 1,
+            row: position.lineNumber - 1,
+          });
+
+          debugger;
+
+          const elementIndex =
+            Array.from(state.code.substring(0, index).matchAll(openTagRe))
+              .length - 1;
+
+          if (elementIndex === -1) {
+            return;
+          }
+
+          (document.querySelector(
+            'builder-editor iframe',
+          ) as HTMLIFrameElement)?.contentWindow?.postMessage(
+            {
+              type: 'builder.changeSelection',
+              data: {
+                index: elementIndex,
+              },
+            },
+            '*',
+          );
+        });
+      }
+    },
     options: {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
@@ -309,22 +400,72 @@ export default function Fiddle() {
       const pointerRelativeXpos = e.clientX;
       const newWidth = Math.max((pointerRelativeXpos / windowWidth) * 100, 5);
       state.jsxCodeTabWidth = Math.min(newWidth, 95);
-    } else if (state.isDraggingOutputsCodeBar) {
+    } else if (state.isDraggingBuilderCodeBar) {
       const bannerHeight = 0;
       const windowHeight = window.innerHeight;
       const pointerRelativeYPos = e.clientY;
       const newHeight = Math.max(
-        ((pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
+        (1 - (pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
         5,
       );
-      state.outputsTabHeight = Math.min(newHeight, 95);
+      state.builderPaneHeight = Math.min(newHeight, 95);
     }
   });
 
   useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
     state.isDraggingJSXCodeBar = false;
-    state.isDraggingOutputsCodeBar = false;
+    state.isDraggingBuilderCodeBar = false;
   });
+  useEventListener<MessageEvent>(window, 'message', (e) => {
+    if (e.data?.type === 'builder.saveCommand') {
+      if (e.data.data || state.pendingBuilderChange) {
+        state.applyPendingBuilderChange(
+          e.data.data || state.pendingBuilderChange,
+        );
+      }
+    } else if (e.data?.type === 'builder.selectionChange') {
+      const { selectionIndices } = e.data.data;
+      if (Array.isArray(selectionIndices)) {
+        const index = selectionIndices[0];
+        if (typeof index === 'number') {
+          const code = state.code;
+          let match: RegExpExecArray | null;
+
+          let i = 0;
+          while ((match = openTagRe.exec(code)) != null) {
+            if (!match) {
+              break;
+            }
+            if (i++ === index) {
+              const index = match.index;
+              const length = match[1].length;
+              if (monacoEditorRef) {
+                const start = indexToRowAndColumn(code, index - 1);
+                const end = indexToRowAndColumn(code, index + length + 1);
+                const startPosition = new monaco.Position(
+                  start.row + 1,
+                  start.column + 1,
+                );
+                const endPosition = new monaco.Position(
+                  end.row + 1,
+                  end.column + 1,
+                );
+
+                monacoEditorRef.current?.setSelection(
+                  monaco.Selection.fromPositions(startPosition, endPosition),
+                );
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  const monacoEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(
+    null,
+  );
 
   useReaction(
     () => state.jsxCodeTabWidth,
@@ -333,8 +474,8 @@ export default function Fiddle() {
   );
 
   useReaction(
-    () => state.outputsTabHeight,
-    (width) => localStorageSet('outputsTabHeight', width),
+    () => state.builderPaneHeight,
+    (width) => localStorageSet('builderPaneHeight', width),
     { fireImmediately: false, delay: 1000 },
   );
 
@@ -373,7 +514,7 @@ export default function Fiddle() {
       state.inputCode =
         state.inputTab === 'liquid'
           ? // TODO: generate reactive script
-            componentToLiquid(json, { plugins })
+            componentToLiquid(json, { plugins, reactive: true })
           : componentToAngular(json, { plugins });
       setQueryParam('inputTab', tab);
     },
@@ -535,6 +676,7 @@ export default function Fiddle() {
           css={{
             display: 'flex',
             flexGrow: 1,
+            overflow: 'hidden',
             [smallBreakpoint]: { flexDirection: 'column' },
           }}
         >
@@ -555,9 +697,10 @@ export default function Fiddle() {
             <div
               css={{
                 borderBottom: `1px solid ${colors.contrast}`,
-                borderTop: `1px solid ${colors.contrast}`,
                 alignItems: 'center',
                 display: 'flex',
+                flexShrink: 0,
+                height: 40,
                 ...barStyle,
               }}
             >
@@ -566,7 +709,9 @@ export default function Fiddle() {
                 css={{
                   flexGrow: 1,
                   textAlign: 'left',
-                  padding: '10px 15px',
+                  padding: '0 15px',
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
                   color: theme.darkMode
                     ? 'rgba(255, 255, 255, 0.7)'
                     : 'rgba(0, 0, 0, 0.7)',
@@ -574,17 +719,6 @@ export default function Fiddle() {
               >
                 Inputs:
               </Typography>
-              {state.pendingBuilderChange && (
-                <Button
-                  css={{ marginRight: 30 }}
-                  onClick={() => state.applyPendingBuilderChange()}
-                  color="primary"
-                  variant="contained"
-                  size="small"
-                >
-                  Update JSX
-                </Button>
-              )}
               <Tabs
                 css={{
                   minHeight: 0,
@@ -612,30 +746,16 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="Builder"
-                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-                    />
-                  }
-                  value="builder"
-                />
-                <Tab
-                  label={
-                    <TabLabelWithIcon
                       label="Angular Lite"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
                     />
                   }
                   value="angular"
                 />
-                {/* <Tab
-                  label={
-                    <TabLabelWithIcon
-                      label="Liquid Lite"
-                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-                    />
-                  }
+                <Tab
+                  label={<TabLabelWithIcon label="Liquid Lite" />}
                   value="liquid"
-                /> */}
+                />
               </Tabs>
             </div>
             <Show when={state.inputTab === 'jsx lite'}>
@@ -687,6 +807,7 @@ export default function Fiddle() {
                     minimap: { enabled: false },
                     scrollbar: { vertical: 'hidden' },
                   }}
+                  editorDidMount={(editor) => state.setEditorRef(editor)}
                   theme={monacoTheme}
                   height="calc(100vh - 105px)"
                   language="typescript"
@@ -695,23 +816,7 @@ export default function Fiddle() {
                 />
               </div>
             </Show>
-            <Show when={state.inputTab === 'builder'}>
-              <style>{`builder-editor { height: 100% }`}</style>
-              <BuilderEditor
-                onChange={(e: CustomEvent) => {
-                  if (useSaveButton) {
-                    if (document.activeElement?.tagName === 'IFRAME') {
-                      state.pendingBuilderChange = e.detail;
-                    }
-                  } else {
-                    state.applyPendingBuilderChange(e.detail);
-                  }
-                }}
-                data={builderData}
-                options={builderOptions}
-                env={builderEnvParam || undefined}
-              />
-            </Show>
+
             <Show when={state.inputTab === 'liquid'}>
               <MonacoEditor
                 height="100%"
@@ -793,7 +898,6 @@ export default function Fiddle() {
           >
             <div
               css={{
-                flexGrow: 1,
                 display: 'flex',
                 alignItems: 'center',
                 padding: 5,
@@ -856,7 +960,7 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Angular" />}
                   value="angular"
                 />
-                <Tab label={<TabLabelWithIcon label="Qoot" />} value="qoot" />
+                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qoot" />
                 <Tab
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
@@ -1127,6 +1231,96 @@ export default function Fiddle() {
               </div>
             </div>
           </div>
+        </div>
+
+        <div
+          css={{
+            flexShrink: 0,
+            height: `${state.builderPaneHeight}vh`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+          }}
+        >
+          <div
+            css={{
+              borderBottom: `1px solid ${colors.contrast}`,
+              borderTop: `1px solid ${colors.contrast}`,
+              alignItems: 'center',
+              display: 'flex',
+              ...barStyle,
+              cursor: 'row-resize',
+            }}
+            onMouseDown={(event) => {
+              event.preventDefault();
+              state.isDraggingBuilderCodeBar = true;
+            }}
+          >
+            <Typography
+              variant="body2"
+              css={{
+                flexGrow: 1,
+                textAlign: 'left',
+                padding: '10px 15px',
+                color: theme.darkMode
+                  ? 'rgba(255, 255, 255, 0.7)'
+                  : 'rgba(0, 0, 0, 0.7)',
+              }}
+            >
+              Builder.io
+            </Typography>
+            {state.pendingBuilderChange && (
+              <Button
+                size="small"
+                variant="contained"
+                color="primary"
+                css={{
+                  marginLeft: 'auto',
+                  marginTop: 'auto',
+                  marginBottom: 'auto',
+                  marginRight: 10,
+                  flexShrink: 0,
+                }}
+                onMouseDown={(e) => {
+                  // Don't trigger the drag listeners on the parent element
+                  e.stopPropagation();
+                }}
+                onClick={() => {
+                  state.applyPendingBuilderChange(state.pendingBuilderChange);
+                }}
+              >
+                Save
+              </Button>
+            )}
+          </div>
+          <style>
+            {`
+            builder-editor { 
+              flex-grow: 1; 
+              pointer-events: ${
+                state.isDraggingBuilderCodeBar ? 'none' : 'auto'
+              }; 
+            }`}
+          </style>
+          <BuilderEditor
+            onChange={(e: CustomEvent) => {
+              if (useSaveButton) {
+                // Only run this when the iframe is focused - aka is being actively used
+                if (document.activeElement?.tagName === 'IFRAME') {
+                  if (stringify(e.detail) !== stringify(builderData)) {
+                    state.pendingBuilderChange = e.detail;
+                  } else {
+                    state.pendingBuilderChange = null;
+                  }
+                }
+              } else {
+                state.applyPendingBuilderChange(e.detail);
+              }
+            }}
+            data={builderData}
+            options={builderOptions}
+            env={builderEnvParam || undefined}
+          />
         </div>
       </div>
     );

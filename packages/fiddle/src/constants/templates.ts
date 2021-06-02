@@ -10,13 +10,11 @@ export const defaultCode = dedent`
 
     return (
       <div>
-        <Show when={props.showInput}>
-          <input
-            css={{ color: 'red' }}
-            value={state.name}
-            onChange={(event) => (state.name = event.target.value)}
-          />
-        </Show>
+        <input
+          css={{ color: 'red' }}
+          value={state.name}
+          onChange={(event) => (state.name = event.target.value)}
+        />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
     );
@@ -34,13 +32,11 @@ export const templates: { [key: string]: string } = {
     
       return (
         <div>
-          <Show when={props.showInput}>
-            <input
-              css={{ color: 'red' }}
-              value={state.name}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
+          <input
+            css={{ color: 'red' }}
+            value={state.name}
+            onChange={(event) => (state.name = event.target.value)}
+          />
           Hello {state.name}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
