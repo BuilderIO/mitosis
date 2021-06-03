@@ -3,6 +3,8 @@ import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, upperFirst } from 'lodash';
+import { fastClone } from '../helpers/fast-clone';
+import traverse from 'traverse';
 import { Size, sizeNames, sizes } from '../constants/media-sizes';
 import { capitalize } from '../helpers/capitalize';
 import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
@@ -240,9 +242,9 @@ const wrapBinding = (value: string) => {
   if (!(value.includes(';') || value.match(/(^|\s|;)return[^a-z0-9A-Z]/))) {
     return value;
   }
-  return `(() => { 
-    try { ${value} } 
-    catch (err) { 
+  return `(() => {
+    try { ${value} }
+    catch (err) {
       console.warn('Builder code error', err);
     }
   })()`;
@@ -769,6 +771,39 @@ export const builderContentToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilderToJSXLiteOptions = {},
 ) => {
+  builderContent = fastClone(builderContent);
+  traverse(builderContent).forEach(function(elem) {
+    if (elem && elem['@type'] === '@builder.io/sdk:Element') {
+      // Try adding self-closing tags to void elements, since Builder Text
+      // blocks can contain arbitrary HTML
+      // List taken from https://developer.mozilla.org/en-US/docs/Glossary/Empty_element
+      // TODO: Maybe this should be using something more robust than a regular expression
+      const voidElemRegex = /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
+
+      try {
+        if (elem.component?.name === 'Text') {
+          elem.component.options.text = elem.component.options.text.replace(
+            voidElemRegex,
+            '$1 />',
+          );
+        }
+      } catch (_error) {
+        // pass
+      }
+
+      try {
+        if (elem.component?.name === 'Custom Code') {
+          elem.component.options.code = elem.component.options.code.replace(
+            voidElemRegex,
+            '$1 />',
+          );
+        }
+      } catch (_error) {
+        // pass
+      }
+    }
+  });
+
   const { state, code: customCode } = extractStateHook(
     builderContent?.data?.tsCode || builderContent?.data?.jsCode || '',
   );
