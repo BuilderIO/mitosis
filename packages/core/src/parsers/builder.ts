@@ -781,19 +781,23 @@ export const builderContentToJsxLiteComponent = (
       const voidElemRegex = /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
 
       try {
-        elem.component.options.text = elem.component.options.text.replace(
-          voidElemRegex,
-          '$1 />',
-        );
+        if (elem.component?.name === 'Text') {
+          elem.component.options.text = elem.component.options.text.replace(
+            voidElemRegex,
+            '$1 />',
+          );
+        }
       } catch (_error) {
         // pass
       }
 
       try {
-        elem.component.options.code = elem.component.options.code.replace(
-          voidElemRegex,
-          '$1 />',
-        );
+        if (elem.component?.name === 'Custom Code') {
+          elem.component.options.code = elem.component.options.code.replace(
+            voidElemRegex,
+            '$1 />',
+          );
+        }
       } catch (_error) {
         // pass
       }
