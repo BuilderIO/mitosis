@@ -11,6 +11,24 @@ on:
       - main
 
 jobs:
+  bazel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bazelbuild/setup-bazelisk@v1
+      # Adding Bazel cache seems to cause issues. Disabling for now, until we can investigate
+      # - name: Mount bazel cache
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: '~/.cache/bazel'
+      #     key: bazel
+
+      - name: Build all targets
+        run: bazel build //...
+
+      - name: Run all tests
+        run: echo No Tests to run yet # bazel test //...
+
   checks:
     runs-on: ubuntu-latest
     steps:
