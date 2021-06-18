@@ -128,11 +128,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -200,9 +196,8 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey = key.match(
-      eventBindingKeyRegex,
-    )?.[1];
+    const firstCharMatchForEventBindingKey =
+      key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
       actions[
         key.replace(
@@ -311,7 +306,7 @@ export const componentToBuilder = (
   componentJson: JSXLiteComponent,
   options: ToBuilderOptions = {},
 ) => {
-  const hasState = Boolean(Object.keys(componentJson).length);
+  const hasState = Boolean(Object.keys(componentJson.state).length);
 
   return fastClone({
     data: {
