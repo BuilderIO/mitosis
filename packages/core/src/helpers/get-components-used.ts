@@ -1,4 +1,4 @@
-import { JSXLiteComponent } from 'src/types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
 import traverse from 'traverse';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 
