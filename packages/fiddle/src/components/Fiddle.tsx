@@ -65,6 +65,9 @@ type Position = { row: number; column: number };
 
 const openTagRe = /(<[a-z]+[^>]*)/gi;
 
+// Sync selections between the Builder editor and the fiddle
+const SYNC_SELECTIONS = false;
+
 const indexToRowAndColumn = (str: string, index: number): Position => {
   const rows = str.split('\n');
   let row = 0;
@@ -243,40 +246,40 @@ export default function Fiddle() {
     setEditorRef(editor: monaco.editor.IStandaloneCodeEditor | void) {
       monacoEditorRef.current = editor || null;
       if (editor) {
-        editor.onDidChangeCursorPosition((event) => {
-          const { position, reason } = event;
+        if (SYNC_SELECTIONS) {
+          editor.onDidChangeCursorPosition((event) => {
+            const { position, reason } = event;
 
-          if (reason !== monaco.editor.CursorChangeReason.Explicit) {
-            return;
-          }
+            if (reason !== monaco.editor.CursorChangeReason.Explicit) {
+              return;
+            }
 
-          const index = rowColumnToIndex(state.code, {
-            column: position.column - 1,
-            row: position.lineNumber - 1,
-          });
+            const index = rowColumnToIndex(state.code, {
+              column: position.column - 1,
+              row: position.lineNumber - 1,
+            });
 
-          debugger;
+            const elementIndex =
+              Array.from(state.code.substring(0, index).matchAll(openTagRe))
+                .length - 1;
 
-          const elementIndex =
-            Array.from(state.code.substring(0, index).matchAll(openTagRe))
-              .length - 1;
+            if (elementIndex === -1) {
+              return;
+            }
 
-          if (elementIndex === -1) {
-            return;
-          }
-
-          (document.querySelector(
-            'builder-editor iframe',
-          ) as HTMLIFrameElement)?.contentWindow?.postMessage(
-            {
-              type: 'builder.changeSelection',
-              data: {
-                index: elementIndex,
+            (document.querySelector(
+              'builder-editor iframe',
+            ) as HTMLIFrameElement)?.contentWindow?.postMessage(
+              {
+                type: 'builder.changeSelection',
+                data: {
+                  index: elementIndex,
+                },
               },
-            },
-            '*',
-          );
-        });
+              '*',
+            );
+          });
+        }
       }
     },
     options: {
@@ -424,38 +427,41 @@ export default function Fiddle() {
         );
       }
     } else if (e.data?.type === 'builder.selectionChange') {
-      const { selectionIndices } = e.data.data;
-      if (Array.isArray(selectionIndices)) {
-        const index = selectionIndices[0];
-        if (typeof index === 'number') {
-          const code = state.code;
-          let match: RegExpExecArray | null;
+      if (SYNC_SELECTIONS) {
+        // TODO: only do this when this editor does *not* have focus
+        const { selectionIndices } = e.data.data;
+        if (Array.isArray(selectionIndices)) {
+          const index = selectionIndices[0];
+          if (typeof index === 'number') {
+            const code = state.code;
+            let match: RegExpExecArray | null;
 
-          let i = 0;
-          while ((match = openTagRe.exec(code)) != null) {
-            if (!match) {
-              break;
-            }
-            if (i++ === index) {
-              const index = match.index;
-              const length = match[1].length;
-              if (monacoEditorRef) {
-                const start = indexToRowAndColumn(code, index - 1);
-                const end = indexToRowAndColumn(code, index + length + 1);
-                const startPosition = new monaco.Position(
-                  start.row + 1,
-                  start.column + 1,
-                );
-                const endPosition = new monaco.Position(
-                  end.row + 1,
-                  end.column + 1,
-                );
-
-                monacoEditorRef.current?.setSelection(
-                  monaco.Selection.fromPositions(startPosition, endPosition),
-                );
+            let i = 0;
+            while ((match = openTagRe.exec(code)) != null) {
+              if (!match) {
+                break;
               }
-              break;
+              if (i++ === index) {
+                const index = match.index;
+                const length = match[1].length;
+                if (monacoEditorRef) {
+                  const start = indexToRowAndColumn(code, index - 1);
+                  const end = indexToRowAndColumn(code, index + length + 1);
+                  const startPosition = new monaco.Position(
+                    start.row + 1,
+                    start.column + 1,
+                  );
+                  const endPosition = new monaco.Position(
+                    end.row + 1,
+                    end.column + 1,
+                  );
+
+                  monacoEditorRef.current?.setSelection(
+                    monaco.Selection.fromPositions(startPosition, endPosition),
+                  );
+                }
+                break;
+              }
             }
           }
         }

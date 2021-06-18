@@ -311,7 +311,7 @@ export const componentToBuilder = (
   componentJson: JSXLiteComponent,
   options: ToBuilderOptions = {},
 ) => {
-  const hasState = Boolean(Object.keys(componentJson).length);
+  const hasState = Boolean(Object.keys(componentJson.state).length);
 
   return fastClone({
     data: {

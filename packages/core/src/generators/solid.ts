@@ -16,6 +16,7 @@ import {
 } from '../modules/plugins';
 import { fastClone } from '../helpers/fast-clone';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { getComponentsUsed } from '../helpers/get-components-used';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
@@ -50,8 +51,8 @@ const collectClassString = (json: JSXLiteNode): string | null => {
     json.bindings.css.trim().length > 4
   ) {
     dynamicClasses.push(`css(${json.bindings.css})`);
-    delete json.bindings.css;
   }
+  delete json.bindings.css;
   const staticClassesString = staticClasses.join(' ');
 
   const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
@@ -153,8 +154,22 @@ export const componentToSolid = (
     json = runPostJsonPlugins(json, options.plugins);
   }
   stripMetaProperties(json);
+
+  const stateString = getStateObjectString(json);
+  const hasState = Boolean(Object.keys(componentJson.state).length);
+  const componentsUsed = getComponentsUsed(json);
+
+  const hasShowComponent = componentsUsed.has('Show');
+  const hasForComponent = componentsUsed.has('For');
+
   let str = dedent`
-    import { createMutable, Show, For } from 'solid-js';
+    ${
+      !(hasState || hasShowComponent || hasForComponent)
+        ? ''
+        : `import { ${!hasState ? '' : 'createMutable, '} 
+          ${!hasShowComponent ? '' : 'Show, '}
+          ${!hasForComponent ? '' : 'For, '} } from 'solid-js';`
+    }
     ${
       !componentHasStyles
         ? ''
@@ -162,8 +177,9 @@ export const componentToSolid = (
     }
     ${renderPreComponent(json)}
 
-    export default function ${componentJson.name}() {
-      const state = createMutable(${getStateObjectString(json)});
+    export default function ${componentJson.name}(props) {
+      ${!hasState ? '' : `const state = createMutable(${stateString});`}
+      
       ${getRefsString(json)}
 
       return (${addWrapper ? '<>' : ''}
