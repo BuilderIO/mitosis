@@ -4,7 +4,7 @@ exports[`Qoot Todo 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 import { TodosState as todosState } from \\"../TodosState/public.js\\";
@@ -21,17 +21,14 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
           class=\\"toggle\\"
           type=\\"checkbox\\"
           checked={this.todo.completed}
-          on:click={QRL\`ui:/Todo/onInputClick?event=.\`}
+          on:click={QRL\`ui:/Todo/onInputClick\`}
         />
 
-        <label on:dblclick={QRL\`ui:/Todo/onLabelDblClick?event=.\`}>
+        <label on:dblclick={QRL\`ui:/Todo/onLabelDblClick\`}>
           {this.todo.text}
         </label>
 
-        <button
-          class=\\"destroy\\"
-          on:click={QRL\`ui:/Todo/onButtonClick?event=.\`}
-        ></button>
+        <button class=\\"destroy\\" on:click={QRL\`ui:/Todo/onButtonClick\`}></button>
       </div>
 
       {this.editing ? (
@@ -39,8 +36,8 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
           <input
             class=\\"edit\\"
             value={this.todo.text}
-            on:blur={QRL\`ui:/Todo/onInput2Blur?event=.\`}
-            on:keyup={QRL\`ui:/Todo/onInput2KeyUp?event=.\`}
+            on:blur={QRL\`ui:/Todo/onInput2Blur\`}
+            on:keyup={QRL\`ui:/Todo/onInput2KeyUp\`}
           />
         </>
       ) : undefined}
@@ -51,14 +48,14 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
       "path": "Todo/template.tsx",
     },
     Object {
-      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+      "contents": "import { jsxDeclareComponent, QRL } from \\"@builder.io/qwik\\";
 
 export const Todo = jsxDeclareComponent(QRL\`ui:/Todo/template\`, \\"todo\\");
 ",
       "path": "Todo/public.ts",
     },
     Object {
-      "contents": "import { Component, QRL } from \\"qoot\\";
+      "contents": "import { Component, QRL } from \\"@builder.io/qwik\\";
 
 export class TodoComponent extends Component<any, any> {
   static $templateQRL = \\"ui:/Todo/template\\";
@@ -76,12 +73,12 @@ export class TodoComponent extends Component<any, any> {
       "path": "Todo/component.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.toggle();
   }
@@ -90,12 +87,12 @@ export default injectEventHandler(
       "path": "Todo/onInputClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.editing = true;
     markDirty(this);
@@ -105,12 +102,12 @@ export default injectEventHandler(
       "path": "Todo/onLabelDblClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     todosState.todos.splice(todosState.todos.indexOf(this.todo));
   }
@@ -119,12 +116,12 @@ export default injectEventHandler(
       "path": "Todo/onButtonClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.editing = false;
     markDirty(this);
@@ -134,12 +131,12 @@ export default injectEventHandler(
       "path": "Todo/onInput2Blur.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.todo.text = event.target.value;
   }
@@ -155,7 +152,7 @@ exports[`Qoot Todo bundle 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 import { TodosState as todosState } from \\"../TodosState/public.js\\";
@@ -174,16 +171,16 @@ export const template = injectMethod(
             class=\\"toggle\\"
             type=\\"checkbox\\"
             checked={this.todo.completed}
-            on:click={QRL\`ui:/Todo/bundle.onInputClick?event=.\`}
+            on:click={QRL\`ui:/Todo/bundle.onInputClick\`}
           />
 
-          <label on:dblclick={QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`}>
+          <label on:dblclick={QRL\`ui:/Todo/bundle.onLabelDblClick\`}>
             {this.todo.text}
           </label>
 
           <button
             class=\\"destroy\\"
-            on:click={QRL\`ui:/Todo/bundle.onButtonClick?event=.\`}
+            on:click={QRL\`ui:/Todo/bundle.onButtonClick\`}
           ></button>
         </div>
 
@@ -192,8 +189,8 @@ export const template = injectMethod(
             <input
               class=\\"edit\\"
               value={this.todo.text}
-              on:blur={QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`}
-              on:keyup={QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`}
+              on:blur={QRL\`ui:/Todo/bundle.onInput2Blur\`}
+              on:keyup={QRL\`ui:/Todo/bundle.onInput2KeyUp\`}
             />
           </>
         ) : undefined}
@@ -205,14 +202,14 @@ export const template = injectMethod(
       "path": "Todo/template.tsx",
     },
     Object {
-      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+      "contents": "import { jsxDeclareComponent, QRL } from \\"@builder.io/qwik\\";
 
 export const Todo = jsxDeclareComponent(QRL\`ui:/Todo/bundle.template\`, \\"todo\\");
 ",
       "path": "Todo/public.ts",
     },
     Object {
-      "contents": "import { Component, QRL } from \\"qoot\\";
+      "contents": "import { Component, QRL } from \\"@builder.io/qwik\\";
 
 export class TodoComponent extends Component<any, any> {
   static $templateQRL = \\"ui:/Todo/bundle.template\\";
@@ -230,12 +227,12 @@ export class TodoComponent extends Component<any, any> {
       "path": "Todo/component.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export const onInputClick = injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.toggle();
   }
@@ -244,12 +241,12 @@ export const onInputClick = injectEventHandler(
       "path": "Todo/onInputClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export const onLabelDblClick = injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.editing = true;
     markDirty(this);
@@ -259,12 +256,12 @@ export const onLabelDblClick = injectEventHandler(
       "path": "Todo/onLabelDblClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export const onButtonClick = injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     todosState.todos.splice(todosState.todos.indexOf(this.todo));
   }
@@ -273,12 +270,12 @@ export const onButtonClick = injectEventHandler(
       "path": "Todo/onButtonClick.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export const onInput2Blur = injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.editing = false;
     markDirty(this);
@@ -288,12 +285,12 @@ export const onInput2Blur = injectEventHandler(
       "path": "Todo/onInput2Blur.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodoComponent } from \\"./component.js\\";
 
 export const onInput2KeyUp = injectEventHandler(
   TodoComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodoComponent, event: Event) {
     this.todo.text = event.target.value;
   }
@@ -302,7 +299,7 @@ export const onInput2KeyUp = injectEventHandler(
       "path": "Todo/onInput2KeyUp.ts",
     },
     Object {
-      "contents": "import { Component, injectMethod, jsxFactory, QRL, injectEventHandler, provideQrlExp, markDirty } from 'qoot';
+      "contents": "import { Component, injectMethod, jsxFactory, QRL, injectEventHandler, provideEvent, markDirty } from '@builder.io/qwik';
 
 function _defineProperty$1(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 class TodoComponent$1 extends Component {
@@ -333,17 +330,17 @@ const template = injectMethod(TodoComponent$1, function () {
     class: \\"toggle\\",
     type: \\"checkbox\\",
     checked: this.todo.completed,
-    \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick?event=.\`
+    \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick\`
   }), jsxFactory(\\"label\\", {
-    \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick?event=.\`
+    \\"on:dblclick\\": QRL\`ui:/Todo/bundle.onLabelDblClick\`
   }, this.todo.text), jsxFactory(\\"button\\", {
     class: \\"destroy\\",
-    \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick?event=.\`
+    \\"on:click\\": QRL\`ui:/Todo/bundle.onButtonClick\`
   })), this.editing ? jsxFactory(null, null, jsxFactory(\\"input\\", {
     class: \\"edit\\",
     value: this.todo.text,
-    \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur?event=.\`,
-    \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp?event=.\`
+    \\"on:blur\\": QRL\`ui:/Todo/bundle.onInput2Blur\`,
+    \\"on:keyup\\": QRL\`ui:/Todo/bundle.onInput2KeyUp\`
   })) : undefined);
 });
 
@@ -367,25 +364,25 @@ class TodoComponent extends Component {
 
 _defineProperty(TodoComponent, \\"$templateQRL\\", \\"ui:/Todo/bundle.template\\");
 
-const onInputClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+const onInputClick = injectEventHandler(TodoComponent$1, provideEvent(), async function (event) {
   this.toggle();
 });
 
-const onLabelDblClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+const onLabelDblClick = injectEventHandler(TodoComponent$1, provideEvent(), async function (event) {
   this.editing = true;
   markDirty(this);
 });
 
-const onButtonClick = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+const onButtonClick = injectEventHandler(TodoComponent$1, provideEvent(), async function (event) {
   todosState.todos.splice(todosState.todos.indexOf(this.todo));
 });
 
-const onInput2Blur = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+const onInput2Blur = injectEventHandler(TodoComponent$1, provideEvent(), async function (event) {
   this.editing = false;
   markDirty(this);
 });
 
-const onInput2KeyUp = injectEventHandler(TodoComponent$1, provideQrlExp(\\"event\\"), async function (event) {
+const onInput2KeyUp = injectEventHandler(TodoComponent$1, provideEvent(), async function (event) {
   this.todo.text = event.target.value;
 });
 
@@ -401,7 +398,7 @@ exports[`Qoot Todos 1`] = `
 Object {
   "files": Array [
     Object {
-      "contents": "import { injectMethod, QRL, jsxFactory } from \\"qoot\\";
+      "contents": "import { injectMethod, QRL, jsxFactory } from \\"@builder.io/qwik\\";
 import { TodosComponent } from \\"./component.js\\";
 
 import { TodosState as todosState } from \\"../TodosState/public.js\\";
@@ -416,7 +413,7 @@ export default injectMethod(TodosComponent, function (this: TodosComponent) {
             class=\\"toggle-all\\"
             type=\\"checkbox\\"
             checked={todosState.allCompleted}
-            on:click={QRL\`ui:/Todos/onInputClick?event=.\`}
+            on:click={QRL\`ui:/Todos/onInputClick\`}
           />
         </>
       ) : undefined}
@@ -435,14 +432,14 @@ export default injectMethod(TodosComponent, function (this: TodosComponent) {
       "path": "Todos/template.tsx",
     },
     Object {
-      "contents": "import { jsxDeclareComponent, QRL } from \\"qoot\\";
+      "contents": "import { jsxDeclareComponent, QRL } from \\"@builder.io/qwik\\";
 
 export const Todos = jsxDeclareComponent(QRL\`ui:/Todos/template\`, \\"todos\\");
 ",
       "path": "Todos/public.ts",
     },
     Object {
-      "contents": "import { Component, QRL } from \\"qoot\\";
+      "contents": "import { Component, QRL } from \\"@builder.io/qwik\\";
 
 export class TodosComponent extends Component<any, any> {
   static $templateQRL = \\"ui:/Todos/template\\";
@@ -455,12 +452,12 @@ export class TodosComponent extends Component<any, any> {
       "path": "Todos/component.ts",
     },
     Object {
-      "contents": "import { injectEventHandler, provideQrlExp, markDirty } from \\"qoot\\";
+      "contents": "import { injectEventHandler, provideEvent, markDirty } from \\"@builder.io/qwik\\";
 import { TodosComponent } from \\"./component.js\\";
 
 export default injectEventHandler(
   TodosComponent,
-  provideQrlExp<Event>(\\"event\\"),
+  provideEvent(),
   async function (this: TodosComponent, event: Event) {
     const newValue = !todosState.allCompleted;
 

@@ -29,7 +29,7 @@ import { rollup } from 'rollup';
 import virtual from '@rollup/plugin-virtual';
 
 const qootImport = (options: InternalToQootOptions) =>
-  options.qootLib || 'qoot';
+  options.qootLib || '@builder.io/qwik';
 
 function addMarkDirtyAfterSetInCode(
   code: string,
@@ -216,13 +216,13 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
         }/${componentName}/bundle${options.qrlSuffix || ''}.on${elId(
           json,
           options,
-        )}${key.slice(2)}?event=.\``;
+        )}${key.slice(2)}\``;
       } else {
         eventBindings[useKey] = `QRL\`${
           options.qrlPrefix
         }/${componentName}/on${elId(json, options)}${key.slice(
           2,
-        )}${options.qrlSuffix || ''}?event=.\``;
+        )}${options.qrlSuffix || ''}\``;
       }
     } else {
       if (!isValidAttributeName(key)) {
@@ -304,7 +304,7 @@ const getEventHandlerFiles = (
           let str = formatCode(
             `import {
               injectEventHandler,
-              provideQrlExp,
+              provideEvent,
               markDirty
             } from '${qootImport(options)}';
             import { ${componentName}Component } from './component.js'
@@ -313,7 +313,7 @@ const getEventHandlerFiles = (
               options.bundle ? `const on${eventHandlerName} =` : 'default'
             } injectEventHandler(
               ${componentName}Component,
-              provideQrlExp<Event>('event'),
+              provideEvent(),
               async function (this: ${componentName}Component, event: Event) {
                 ${removeSurroundingBlock(
                   processBinding(item.bindings[binding] as string, options),
@@ -569,7 +569,7 @@ export const componentToQoot = async (
 
     const bundle = await rollup({
       input: 'entry',
-      external: [options.qootLib || 'qoot'],
+      external: [options.qootLib || '@builder.io/qwik'],
       plugins: [virtual(moduleMap) as any],
     });
 
