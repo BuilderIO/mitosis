@@ -28,12 +28,12 @@ import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { rollup } from 'rollup';
 import virtual from '@rollup/plugin-virtual';
 
-const qootImport = (options: InternalToQootOptions) =>
-  options.qootLib || '@builder.io/qwik';
+const qwikImport = (options: InternalToQwikOptions) =>
+  options.qwikLib || '@builder.io/qwik';
 
 function addMarkDirtyAfterSetInCode(
   code: string,
-  options: InternalToQootOptions,
+  options: InternalToQwikOptions,
   useString = 'markDirty(this)',
 ) {
   return babelTransformExpression(code, {
@@ -98,7 +98,7 @@ function addMarkDirtyAfterSetInCode(
   });
 }
 
-const processBinding = (binding: string, options: InternalToQootOptions) =>
+const processBinding = (binding: string, options: InternalToQwikOptions) =>
   stripStateAndPropsRefs(addMarkDirtyAfterSetInCode(binding, options), {
     replaceWith: 'this.',
   })
@@ -107,11 +107,11 @@ const processBinding = (binding: string, options: InternalToQootOptions) =>
     .replace(/;$/, '');
 
 const NODE_MAPPERS: {
-  [key: string]: (json: JSXLiteNode, options: InternalToQootOptions) => string;
+  [key: string]: (json: JSXLiteNode, options: InternalToQwikOptions) => string;
 } = {
   Fragment(json, options) {
     return `<>${json.children
-      .map((item) => blockToQoot(item, options))
+      .map((item) => blockToQwik(item, options))
       .join('\n')}</>`;
   },
   For(json, options) {
@@ -120,7 +120,7 @@ const NODE_MAPPERS: {
     } => (
       <>${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToQoot(item, options))
+        .map((item) => blockToQwik(item, options))
         .join('\n')}</>
     ))}`;
   },
@@ -128,13 +128,13 @@ const NODE_MAPPERS: {
     return `{${processBinding(json.bindings.when as string, options)} ? (
       <>${json.children
         .filter(filterEmptyTextNodes)
-        .map((item) => blockToQoot(item, options))
+        .map((item) => blockToQwik(item, options))
         .join('\n')}</>
     ) : undefined}`;
   },
 };
 
-const getId = (json: JSXLiteNode, options: InternalToQootOptions) => {
+const getId = (json: JSXLiteNode, options: InternalToQwikOptions) => {
   const name = json.properties.$name
     ? camelCase(json.properties.$name)
     : /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
@@ -146,7 +146,7 @@ const getId = (json: JSXLiteNode, options: InternalToQootOptions) => {
   return capitalize(`${name}${newNameNum === 1 ? '' : `${newNameNum}`}`);
 };
 
-const elId = (node: JSXLiteNode, options: InternalToQootOptions) => {
+const elId = (node: JSXLiteNode, options: InternalToQwikOptions) => {
   if (node.meta.id) {
     return node.meta.id;
   }
@@ -156,10 +156,10 @@ const elId = (node: JSXLiteNode, options: InternalToQootOptions) => {
 };
 
 type NumberRecord = { [key: string]: number };
-type ToQootOptions = {
+type ToQwikOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
-  qootLib?: string;
+  qwikLib?: string;
   qrlPrefix?: string;
   cssNamespace?: string;
   minifyStyles?: boolean;
@@ -167,13 +167,13 @@ type ToQootOptions = {
   bundle?: boolean;
   format?: 'builder' | 'default';
 };
-type InternalToQootOptions = ToQootOptions & {
+type InternalToQwikOptions = ToQwikOptions & {
   componentJson: JSXLiteComponent;
   namesMap: NumberRecord;
   qrlPrefix: string;
 };
 
-const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
+const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
   }
@@ -244,7 +244,7 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToQoot(item, options)).join('\n');
+    str += json.children.map((item) => blockToQwik(item, options)).join('\n');
   }
 
   str += `</${json.name}>`;
@@ -254,7 +254,7 @@ const blockToQoot = (json: JSXLiteNode, options: InternalToQootOptions) => {
 
 const getComponentName = (
   json: JSXLiteComponent,
-  options: InternalToQootOptions,
+  options: InternalToQwikOptions,
 ) => {
   return capitalize(camelCase(json.name || 'my-component'));
 };
@@ -262,14 +262,14 @@ const getComponentName = (
 // TODO
 const getProvidersString = (
   componentJson: JSXLiteComponent,
-  options: InternalToQootOptions,
+  options: InternalToQwikOptions,
 ): string => {
   return 'null';
 };
 
 const formatCode = (
   str: string,
-  options: InternalToQootOptions,
+  options: InternalToQwikOptions,
   type: 'typescript' | 'css' = 'typescript',
 ) => {
   if (options.prettier !== false) {
@@ -291,7 +291,7 @@ const formatCode = (
 
 const getEventHandlerFiles = (
   componentJson: JSXLiteComponent,
-  options: InternalToQootOptions,
+  options: InternalToQwikOptions,
 ): File[] => {
   const files: File[] = [];
 
@@ -306,7 +306,7 @@ const getEventHandlerFiles = (
               injectEventHandler,
               provideEvent,
               markDirty
-            } from '${qootImport(options)}';
+            } from '${qwikImport(options)}';
             import { ${componentName}Component } from './component.js'
             
             export ${
@@ -342,14 +342,14 @@ export type File = {
   contents: string;
 };
 
-export const componentToQoot = async (
+export const componentToQwik = async (
   componentJson: JSXLiteComponent,
-  toQootOptions: ToQootOptions = {},
+  toQwikOptions: ToQwikOptions = {},
 ): Promise<{ files: File[] }> => {
   let json = fastClone(componentJson);
   const options = {
     qrlPrefix: 'ui:',
-    ...toQootOptions,
+    ...toQwikOptions,
     namesMap: {},
     componentJson: json,
   };
@@ -377,7 +377,7 @@ export const componentToQoot = async (
   );
   stripMetaProperties(json);
   let str = dedent`
-    import { injectMethod, QRL, jsxFactory } from '${qootImport(options)}';
+    import { injectMethod, QRL, jsxFactory } from '${qwikImport(options)}';
     import { ${componentName}Component } from './component.js'
     ${renderPreComponent({
       ...json,
@@ -414,7 +414,7 @@ export const componentToQoot = async (
                 .trim()
                 .replace(/^|\n/g, '\n' + ' '.repeat(12))}\`}</style>`
         }
-        ${json.children.map((item) => blockToQoot(item, options)).join('\n')}
+        ${json.children.map((item) => blockToQwik(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
     })
   `;
@@ -442,7 +442,7 @@ export const componentToQoot = async (
         path: `${componentName}/public.ts`,
         contents: formatCode(
           `
-          import { jsxDeclareComponent, QRL } from '${qootImport(options)}';
+          import { jsxDeclareComponent, QRL } from '${qwikImport(options)}';
           
           export const ${componentName} = jsxDeclareComponent(QRL\`${
             options.qrlPrefix
@@ -516,7 +516,7 @@ export const componentToQoot = async (
             str = `
               import { Component, QRL ${
                 str.includes('markDirty(') ? ', markDirty' : ''
-              } } from '${qootImport(options)}';
+              } } from '${qwikImport(options)}';
               ${str}
             `;
 
@@ -569,7 +569,7 @@ export const componentToQoot = async (
 
     const bundle = await rollup({
       input: 'entry',
-      external: [options.qootLib || '@builder.io/qwik'],
+      external: [options.qwikLib || '@builder.io/qwik'],
       plugins: [virtual(moduleMap) as any],
     });
 

@@ -7,7 +7,7 @@ import {
   componentToHtml,
   componentToJsxLite,
   componentToLiquid,
-  componentToQoot,
+  componentToQwik,
   componentToReact,
   componentToReactNative,
   componentToSolid,
@@ -363,9 +363,9 @@ export default function Fiddle() {
                 stateType: state.options.svelteStateType,
                 plugins,
               })
-            : state.outputTab === 'qoot'
+            : state.outputTab === 'qwik'
             ? (
-                await componentToQoot(json, {
+                await componentToQwik(json, {
                   plugins,
                 })
               ).files.find((file) => file.path.endsWith('template.tsx'))!
@@ -966,7 +966,7 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Angular" />}
                   value="angular"
                 />
-                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qoot" />
+                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
@@ -1227,7 +1227,7 @@ export default function Fiddle() {
                         state.outputTab === 'template' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||
-                        state.outputTab === 'qoot' ||
+                        state.outputTab === 'qwik' ||
                         state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'

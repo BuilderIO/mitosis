@@ -9,7 +9,7 @@ import {
   componentToBuilder,
   componentToCustomElement,
   componentToHtml,
-  componentToQoot,
+  componentToQwik,
   componentToReact,
   componentToSolid,
   componentToSvelte,
@@ -80,10 +80,10 @@ const command: GluegunCommand = {
                 case 'webcomponents':
                   output = componentToCustomElement(parsed)
                   break
-                case 'qoot':
-                  const info = await componentToQoot(
+                case 'qwik':
+                  const info = await componentToQwik(
                     parsed,
-                    (config as any)?.options?.qoot || undefined
+                    (config as any)?.options?.qwik || undefined
                   )
                   for (const file of info.files) {
                     let filePath = file.path

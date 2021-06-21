@@ -2,7 +2,7 @@ module.exports = {
   files: 'src/**',
   targets: [
     'react',
-    'qoot',
+    'qwik',
     'vue',
     'html',
     'svelte',
@@ -17,7 +17,7 @@ module.exports = {
         'output/next-js/components/' + info.path.replace('.lite.tsx', '.tsx');
     }
 
-    if (info.target === 'qoot') {
+    if (info.target === 'qwik') {
       // info.path = 
     }
 
