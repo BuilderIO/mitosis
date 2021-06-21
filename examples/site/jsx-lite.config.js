@@ -1,9 +1,9 @@
 module.exports = {
   files: 'src/**',
-  targets: ['qoot'],
+  targets: ['qwik'],
   options: {
-    qoot: {
-      qootLib: '../../qoot.js',
+    qwik: {
+      qwikLib: '../../qwik.js',
     },
   },
   mapFile(info) {
@@ -12,9 +12,9 @@ module.exports = {
         'output/next-js/components/' + info.path.replace('.lite.tsx', '.tsx');
     }
 
-    if (info.target === 'qoot') {
+    if (info.target === 'qwik') {
       info.path =
-        '../../../../forks/qoot/integration/site/ui/' +
+        '../../../../forks/qwik/integration/site/ui/' +
         info.path.replace('.lite.tsx', '.ts');
     }
 
