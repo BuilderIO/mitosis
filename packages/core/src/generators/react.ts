@@ -38,36 +38,43 @@ type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  format?: 'lite' | 'safe';
   plugins?: Plugin[];
 };
+
+const wrapInFragment = (json: JSXLiteComponent | JSXLiteNode) =>
+  json.children.length !== 1;
 
 const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToReactOptions) => string;
 } = {
   Fragment(json, options) {
-    return `<>${json.children
+    const wrap = wrapInFragment(json);
+    return `${wrap ? '<>' : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}</>`;
+      .join('\n')}${wrap ? '</>' : ''}`;
   },
   For(json, options) {
+    const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      <>${json.children
-        .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options))
-        .join('\n')}</>
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReact(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
     ))}`;
   },
   Show(json, options) {
-    return `{Boolean(${processBinding(
+    const wrap = wrapInFragment(json);
+    return `{${options.format === 'safe' ? 'Boolean' : ''}(${processBinding(
       json.bindings.when as string,
       options,
     )}) && (
-      <>${json.children
-        .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options))
-        .join('\n')}</>
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReact(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
     )}`;
   },
 };
@@ -84,7 +91,7 @@ const BINDING_MAPPERS: {
   },
 };
 
-const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
+export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
   }
@@ -337,7 +344,9 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
-  stripMetaProperties(json);
+  if (options.format !== 'lite') {
+    stripMetaProperties(json);
+  }
 
   const reactLibImports: Set<ReactExports> = new Set();
   if (useStateCode && useStateCode.length > 4) {
@@ -350,6 +359,8 @@ export const componentToReact = (
     reactLibImports.add('useEffect');
   }
 
+  const wrap = wrapInFragment(json);
+
   let str = dedent`
   ${
     reactLibImports.size
@@ -357,7 +368,7 @@ export const componentToReact = (
       : ''
   }
   ${
-    componentHasStyles && stylesType === 'emotion'
+    componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
       : ''
@@ -423,14 +434,14 @@ export const componentToReact = (
       }
 
       return (
-        <>
+        ${wrap ? '<>' : ''}
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-        </>
+        ${wrap ? '</>' : ''}
       );
     }
 

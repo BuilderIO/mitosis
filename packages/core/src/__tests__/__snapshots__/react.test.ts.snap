@@ -7,12 +7,10 @@ export default function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
-    <>
-      <div>
-        <input value={name} onChange={(event) => setName(event.target.value)} />
-        Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>
-    </>
+    <div>
+      <input value={name} onChange={(event) => setName(event.target.value)} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   );
 }
 "
@@ -22,27 +20,25 @@ exports[`React Button 1`] = `
 "export default function Button(props) {
   return (
     <>
-      <>
-        {Boolean(props.link) && (
-          <>
-            <a
-              {...props.attributes}
-              href={props.link}
-              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-            >
-              {props.text}
-            </a>
-          </>
-        )}
+      {props.link && (
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
+      )}
 
-        {Boolean(!props.link) && (
-          <>
-            <button {...props.attributes} type=\\"button\\">
-              {props.text}
-            </button>
-          </>
-        )}
-      </>
+      {!props.link && (
+        <>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </>
+      )}
     </>
   );
 }
@@ -85,15 +81,11 @@ export default function Column(props) {
   }
 
   return (
-    <>
-      <Div className=\\"builder-columns\\">
-        {props.columns.map((column) => (
-          <>
-            <Div2 className=\\"builder-column\\">{column.content}</Div2>
-          </>
-        ))}
-      </Div>
-    </>
+    <Div className=\\"builder-columns\\">
+      {props.columns.map((column) => (
+        <Div2 className=\\"builder-column\\">{column.content}</Div2>
+      ))}
+    </Div>
   );
 }
 "
@@ -154,15 +146,13 @@ export default function CustomCode(props) {
   }, []);
 
   return (
-    <>
-      <div
-        ref={elem}
-        className={
-          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-        }
-        dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-      ></div>
-    </>
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+    ></div>
   );
 }
 "
@@ -223,15 +213,13 @@ export default function CustomCode(props) {
   }, []);
 
   return (
-    <>
-      <div
-        ref={elem}
-        className={
-          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-        }
-        dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-      ></div>
-    </>
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+    ></div>
   );
 }
 "
@@ -444,64 +432,59 @@ export default function FormComponent(props) {
   }
   const formRef = useRef();
   return (
-    <>
+    <form
+      {...props.attributes}
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => onSubmit(event)}
+    >
       {\\" \\"}
-      <form
-        {...props.attributes}
-        validate={props.validate}
-        ref={formRef}
-        action={!props.sendWithJs && props.action}
-        method={props.method}
-        name={props.name}
-        onSubmit={(event) => onSubmit(event)}
-      >
-        {\\" \\"}
-        {Boolean(props.builderBlock && props.builderBlock.children) && (
-          <>
-            {props.builderBlock?.children.map((block) => (
-              <>
-                <BuilderBlockComponent
-                  key={block.id}
-                  block={block}
-                ></BuilderBlockComponent>
-              </>
-            ))}
-          </>
-        )}{\\" \\"}
-        {Boolean(submissionState() === \\"error\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            ></BuilderBlocks>
-          </>
-        )}{\\" \\"}
-        {Boolean(submissionState() === \\"sending\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            ></BuilderBlocks>
-          </>
-        )}{\\" \\"}
-        {Boolean(submissionState() === \\"error\\" && responseData) && (
-          <>
-            <Pre className=\\"builder-form-error-text\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </Pre>
-          </>
-        )}{\\" \\"}
-        {Boolean(submissionState() === \\"success\\") && (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            ></BuilderBlocks>
-          </>
-        )}{\\" \\"}
-      </form>{\\" \\"}
-    </>
+      {props.builderBlock && props.builderBlock.children && (
+        <>
+          {props.builderBlock?.children.map((block) => (
+            <BuilderBlockComponent
+              key={block.id}
+              block={block}
+            ></BuilderBlockComponent>
+          ))}
+        </>
+      )}{\\" \\"}
+      {submissionState() === \\"error\\" && (
+        <>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+        </>
+      )}{\\" \\"}
+      {submissionState() === \\"sending\\" && (
+        <>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+        </>
+      )}{\\" \\"}
+      {submissionState() === \\"error\\" && responseData && (
+        <>
+          <Pre className=\\"builder-form-error-text\\">
+            {\\" \\"}
+            {JSON.stringify(responseData, null, 2)}{\\" \\"}
+          </Pre>
+        </>
+      )}{\\" \\"}
+      {submissionState() === \\"success\\" && (
+        <>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+        </>
+      )}{\\" \\"}
+    </form>
   );
 }
 "
@@ -564,29 +547,27 @@ export default function Image(props) {
 
   return (
     <>
-      <>
-        <picture ref={pictureRef}>
-          {Boolean(!useLazyLoading() || load) && (
-            <>
-              <Img
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              ></Img>
-            </>
-          )}
+      <picture ref={pictureRef}>
+        {(!useLazyLoading() || load) && (
+          <>
+            <Img
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              className={
+                \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+              }
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            ></Img>
+          </>
+        )}
 
-          <source srcset={props.srcset} />
-        </picture>
+        <source srcset={props.srcset} />
+      </picture>
 
-        {props.children}
-      </>
+      {props.children}
     </>
   );
 }
@@ -598,18 +579,16 @@ exports[`React Img 1`] = `
 
 export default function ImgComponent(props) {
   return (
-    <>
-      <img
-        {...props.attributes}
-        style={{
-          objectFit: props.backgroundSize || \\"cover\\",
-          objectPosition: props.backgroundPosition || \\"center\\",
-        }}
-        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-        alt={props.altText}
-        src={props.imgSrc}
-      />
-    </>
+    <img
+      {...props.attributes}
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
   );
 }
 "
@@ -620,22 +599,20 @@ exports[`React Input block 1`] = `
 
 export default function FormInputComponent(props) {
   return (
-    <>
-      <input
-        {...props.attributes}
-        key={
-          Builder.isEditing && props.defaultValue
-            ? props.defaultValue
-            : \\"default-key\\"
-        }
-        placeholder={props.placeholder}
-        type={props.type}
-        name={props.name}
-        value={props.value}
-        defaultValue={props.defaultValue}
-        required={props.required}
-      />
-    </>
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
   );
 }
 "
@@ -644,12 +621,10 @@ export default function FormInputComponent(props) {
 exports[`React RawText 1`] = `
 "export default function RawText(props) {
   return (
-    <>
-      <span
-        className={props.attributes?.class || props.attributes?.className}
-        dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
-      ></span>
-    </>
+    <span
+      className={props.attributes?.class || props.attributes?.className}
+      dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
+    ></span>
   );
 }
 "
@@ -658,20 +633,18 @@ exports[`React RawText 1`] = `
 exports[`React Section 1`] = `
 "export default function SectionComponent(props) {
   return (
-    <>
-      <section
-        {...props.attributes}
-        style={
-          props.maxWidth && typeof props.maxWidth === \\"number\\"
-            ? {
-                maxWidth: props.maxWidth,
-              }
-            : undefined
-        }
-      >
-        {props.children}
-      </section>
-    </>
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
   );
 }
 "
@@ -682,25 +655,21 @@ exports[`React Select block 1`] = `
 
 export default function SelectComponent(props) {
   return (
-    <>
-      <select
-        {...props.attributes}
-        value={props.value}
-        key={
-          Builder.isEditing && props.defaultValue
-            ? props.defaultValue
-            : \\"default-key\\"
-        }
-        defaultValue={props.defaultValue}
-        name={props.name}
-      >
-        {props.options.map((option) => (
-          <>
-            <option value={option.value}>{option.name || option.value}</option>
-          </>
-        ))}
-      </select>
-    </>
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      {props.options.map((option) => (
+        <option value={option.value}>{option.name || option.value}</option>
+      ))}
+    </select>
   );
 }
 "
@@ -754,42 +723,38 @@ export default function SmileReviews(props) {
   }, []);
 
   return (
-    <>
-      <div>
-        <button onClick={(event) => setShowReviewPrompt(true)}>
-          Write a review
-        </button>
+    <div>
+      <button onClick={(event) => setShowReviewPrompt(true)}>
+        Write a review
+      </button>
 
-        {Boolean(showReviewPrompt) && (
-          <>
-            <input placeholder=\\"Email\\" />
-            <Input placeholder=\\"Title\\"></Input>
-            <Textarea placeholder=\\"How was your experience?\\"></Textarea>
-            <Button
-              onClick={(event) => {
-                setShowReviewPrompt(false);
-              }}
-            >
-              Submit
-            </Button>
-          </>
-        )}
+      {showReviewPrompt && (
+        <>
+          <input placeholder=\\"Email\\" />
+          <Input placeholder=\\"Title\\"></Input>
+          <Textarea placeholder=\\"How was your experience?\\"></Textarea>
+          <Button
+            onClick={(event) => {
+              setShowReviewPrompt(false);
+            }}
+          >
+            Submit
+          </Button>
+        </>
+      )}
 
-        {reviews.map((review) => (
-          <>
-            <Review>
-              <Img src={review.avatar}></Img>
+      {reviews.map((review) => (
+        <Review>
+          <Img src={review.avatar}></Img>
 
-              <div>
-                <div>{review.author}</div>
+          <div>
+            <div>{review.author}</div>
 
-                <div>{review.reviewMessage}</div>
-              </div>
-            </Review>
-          </>
-        ))}
-      </div>
-    </>
+            <div>{review.reviewMessage}</div>
+          </div>
+        </Review>
+      ))}
+    </div>
   );
 }
 "
@@ -798,11 +763,9 @@ export default function SmileReviews(props) {
 exports[`React Submit button block 1`] = `
 "export default function SubmitButton(props) {
   return (
-    <>
-      <button {...props.attributes} type=\\"submit\\">
-        {props.text}
-      </button>
-    </>
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
   );
 }
 "
@@ -813,14 +776,10 @@ exports[`React Text 1`] = `
 
 export default function Text(props) {
   return (
-    <>
-      <div
-        contentEditable={allowEditingText || undefined}
-        dangerouslySetInnerHTML={{
-          __html: \\"props.text || props.content || ''\\",
-        }}
-      ></div>
-    </>
+    <div
+      contentEditable={allowEditingText || undefined}
+      dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
+    ></div>
   );
 }
 "
@@ -829,15 +788,13 @@ export default function Text(props) {
 exports[`React Textarea 1`] = `
 "export default function Textarea(props) {
   return (
-    <>
-      <textarea
-        {...props.attributes}
-        placeholder={props.placeholder}
-        name={props.name}
-        value={props.value}
-        defaultValue={props.defaultValue}
-      ></textarea>
-    </>
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    ></textarea>
   );
 }
 "
@@ -846,28 +803,26 @@ exports[`React Textarea 1`] = `
 exports[`React Video 1`] = `
 "export default function Video(props) {
   return (
-    <>
-      <video
-        {...props.attributes}
-        preload=\\"none\\"
-        style={{
-          width: \\"100%\\",
-          height: \\"100%\\",
-          ...props.attributes?.style,
-          objectFit: props.fit,
-          objectPosition: props.position,
-          // Hack to get object fit to work as expected and
-          // not have the video overflow
-          borderRadius: 1,
-        }}
-        key={props.video || \\"no-src\\"}
-        poster={props.posterImage}
-        autoPlay={props.autoPlay}
-        muted={props.muted}
-        controls={props.controls}
-        loop={props.loop}
-      ></video>
-    </>
+    <video
+      {...props.attributes}
+      preload=\\"none\\"
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoPlay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    ></video>
   );
 }
 "

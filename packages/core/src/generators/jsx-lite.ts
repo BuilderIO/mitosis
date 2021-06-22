@@ -11,14 +11,33 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { blockToReact, componentToReact } from './react';
 
-type ToJsxLiteOptions = {
+export const DEFAULT_FORMAT = 'react';
+
+export type JsxLiteFormat = 'react' | 'legacy';
+
+export type ToJsxLiteOptions = {
   prettier?: boolean;
+  format: JsxLiteFormat;
 };
 export const blockToJsxLite = (
   json: JSXLiteNode,
-  options: ToJsxLiteOptions = {},
+  toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
 ): string => {
+  const options: ToJsxLiteOptions = {
+    ...toJsxLiteOptions,
+    format: DEFAULT_FORMAT,
+  };
+  if (options.format === 'react') {
+    return blockToReact(json, {
+      format: 'lite',
+      stateType: 'useState',
+      stylesType: 'emotion',
+      prettier: options.prettier,
+    });
+  }
+
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each}}>
@@ -107,8 +126,22 @@ const jsxLiteCoreComponents = ['Show', 'For'];
 
 export const componentToJsxLite = (
   componentJson: JSXLiteComponent,
-  options: ToJsxLiteOptions = {},
+  toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
 ) => {
+  const options: ToJsxLiteOptions = {
+    ...toJsxLiteOptions,
+    format: DEFAULT_FORMAT,
+  };
+
+  if (options.format === 'react') {
+    return componentToReact(componentJson, {
+      format: 'lite',
+      stateType: 'useState',
+      stylesType: 'emotion',
+      prettier: options.prettier,
+    });
+  }
+
   const json = fastClone(componentJson);
 
   const refs = getRefs(json);
@@ -139,14 +172,12 @@ export const componentToJsxLite = (
         ? ''
         : `import { ${!hasState ? '' : 'useState, '} ${
             !refs.size ? '' : 'useRef, '
-          } ${jsxLiteComponents.join(', ')} } from '@jsx-lite/core';`
+          } ${jsxLiteComponents.join(', ')} } from 'react';`
     }
     ${
       !otherComponents.length
         ? ''
-        : `import { ${otherComponents.join(
-            ',',
-          )} } from '@builder.io/components';`
+        : `import { ${otherComponents.join(',')} } from '@components';`
     }
     ${renderPreComponent(json)}
 

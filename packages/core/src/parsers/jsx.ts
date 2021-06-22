@@ -153,18 +153,32 @@ export const parseStateObject = (object: babel.types.ObjectExpression) => {
   return obj;
 };
 
+const parseJson = (node: babel.types.Node) => {
+  let code: string | undefined;
+  try {
+    code = generate(node).code!;
+    return JSON5.parse(code);
+  } catch (err) {
+    console.error('Could not JSON5 parse object:\n', code);
+    throw err;
+  }
+};
+
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
   const hooks: JSXLiteComponent['hooks'] = {};
-  let state = {};
+  let state: JSONObject = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
       if (types.isCallExpression(expression)) {
         if (types.isIdentifier(expression.callee)) {
-          if (expression.callee.name === 'onMount') {
+          if (
+            expression.callee.name === 'onMount' ||
+            expression.callee.name === 'useEffect'
+          ) {
             const firstArg = expression.arguments[0];
             if (
               types.isFunctionExpression(firstArg) ||
@@ -183,10 +197,40 @@ const componentFunctionToJson = (
       }
     }
 
+    if (types.isFunctionDeclaration(item)) {
+      if (types.isIdentifier(item.id)) {
+        state[item.id.name] = `${methodLiteralPrefix}${generate(
+          item,
+        ).code!.replace(/^\s*function\s*/, '')}`;
+      }
+    }
+
     if (types.isVariableDeclaration(item)) {
-      const init = item.declarations[0].init;
+      const declaration = item.declarations[0];
+      const init = declaration.init;
       if (types.isCallExpression(init)) {
-        if (types.isIdentifier(init.callee)) {
+        // React format, like:
+        // const [foo, setFoo] = useState(...)
+        if (types.isArrayPattern(declaration.id)) {
+          const varName =
+            types.isIdentifier(declaration.id.elements[0]) &&
+            declaration.id.elements[0].name;
+          if (varName) {
+            const value = init.arguments[0];
+            // Function as init, like:
+            // useState(() => true)
+            if (types.isArrowFunctionExpression(value)) {
+              state[varName] = parseJson(value.body);
+            } else {
+              // Value as init, like:
+              // useState(true)
+              state[varName] = parseJson(value);
+            }
+          }
+        }
+        // Legacy format, like:
+        // const state = useState({...})
+        else if (types.isIdentifier(init.callee)) {
           if (init.callee.name === 'useState') {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
@@ -233,6 +277,42 @@ const jsxElementToJson = (
     });
   }
   if (types.isJSXExpressionContainer(node)) {
+    // foo.map -> <For each={foo}>...</For>
+    if (types.isCallExpression(node.expression)) {
+      const callback = node.expression.arguments[0];
+      if (types.isArrowFunctionExpression(callback)) {
+        if (types.isIdentifier(callback.params[0])) {
+          const forName = callback.params[0].name;
+
+          return createJSXLiteNode({
+            name: 'For',
+            bindings: {
+              each: generate(node.expression.callee).code,
+              _forName: forName,
+            },
+            children: [jsxElementToJson(callback.body as any)],
+          });
+        }
+      }
+    }
+
+    // {foo && <div />} -> <Show when={foo}>...</Show>
+    if (types.isLogicalExpression(node.expression)) {
+      if (node.expression.operator === '&&') {
+        return createJSXLiteNode({
+          name: 'Show',
+          bindings: {
+            when: generate(node.expression.left).code!,
+          },
+          children: [jsxElementToJson(node.expression.right as any)],
+        });
+      } else {
+        // TODO: good warning system for unsupported operators
+      }
+    }
+
+    // TODO: support {foo ? bar : baz}
+
     return createJSXLiteNode({
       bindings: {
         _text: generate(node.expression).code,
@@ -252,11 +332,10 @@ const jsxElementToJson = (
   const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -287,8 +366,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -383,7 +464,19 @@ const collectMetadata = (
   });
 };
 
-export function parseJsx(jsx: string): JSXLiteComponent {
+type ParseJSXLiteOptions = {
+  format: 'react' | 'simple';
+};
+
+export function parseJsx(
+  jsx: string,
+  options: Partial<ParseJSXLiteOptions> = {},
+): JSXLiteComponent {
+  const useOptions: ParseJSXLiteOptions = {
+    format: 'react',
+    ...options,
+  };
+
   const output = babel.transform(jsx, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
@@ -439,8 +532,12 @@ export function parseJsx(jsx: string): JSXLiteComponent {
             path: babel.NodePath<babel.types.ImportDeclaration>,
             context: Context,
           ) {
-            // @jsx-lite/core imports compile away. yeehaw
-            if (path.node.source.value == '@jsx-lite/core') {
+            // @jsx-lite/core or React imports compile away
+            if (
+              ['react', '@jsx-lite/core', '@emotion/react'].includes(
+                path.node.source.value,
+              )
+            ) {
               path.remove();
               return;
             }
@@ -480,6 +577,8 @@ export function parseJsx(jsx: string): JSXLiteComponent {
   const toParse = stripNewlinesInStrings(
     output!
       .code!.trim()
+      // Occasional issues where comments get kicked to the top. Full fix should strip these sooner
+      .replace(/^\/\*[\s\S]*?\*\/\s*/, '')
       // Weird bug with adding a newline in a normal at end of a normal string that can't have one
       // If not one-off find full solve and cause
       .replace(/\n"/g, '"')
@@ -489,8 +588,8 @@ export function parseJsx(jsx: string): JSXLiteComponent {
   try {
     return JSON5.parse(toParse);
   } catch (err) {
+    debugger;
     console.error('Could not parse code', toParse);
-    // require('fs').writeFileSync(process.cwd() + '/output.json', toParse);
     throw err;
   }
 }

@@ -370,6 +370,8 @@ export default function Fiddle() {
                 })
               ).files.find((file) => file.path.endsWith('template.tsx'))!
                 ?.contents
+            : state.outputTab === 'jsx lite'
+            ? componentToJsxLite(json)
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
@@ -750,15 +752,6 @@ export default function Fiddle() {
                   value="jsx lite"
                 />
                 <Tab
-                  label={
-                    <TabLabelWithIcon
-                      label="Angular Lite"
-                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-                    />
-                  }
-                  value="angular"
-                />
-                <Tab
                   label={<TabLabelWithIcon label="Liquid Lite" />}
                   value="liquid"
                 />
@@ -1004,6 +997,10 @@ export default function Fiddle() {
                   value="template"
                 />
                 <Tab
+                  label={<TabLabelWithIcon label="JSX Lite" />}
+                  value="jsx lite"
+                />
+                <Tab
                   label={
                     <TabLabelWithIcon
                       label="JSON"
@@ -1224,6 +1221,7 @@ export default function Fiddle() {
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
+                        state.outputTab === 'jsx lite' ||
                         state.outputTab === 'template' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||
