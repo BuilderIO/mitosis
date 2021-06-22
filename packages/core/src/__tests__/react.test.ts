@@ -17,6 +17,7 @@ const customCode = require('./data/blocks/custom-code.raw');
 const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
+const tabs = require('./data/blocks/tabs.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -121,6 +122,14 @@ describe('React', () => {
   test('Columns', () => {
     const json = parseJsx(columns);
     const output = componentToReact(json);
+    expect(output).toMatchSnapshot();
+  });
+
+  test.only('Tabs', () => {
+    const json = parseJsx(tabs);
+    const output = componentToReact(json, {
+      stylesType: 'emotion',
+    });
     expect(output).toMatchSnapshot();
   });
 });

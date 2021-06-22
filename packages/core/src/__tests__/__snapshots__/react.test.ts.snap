@@ -808,6 +808,42 @@ exports[`React Submit button block 1`] = `
 "
 `;
 
+exports[`React Tabs 1`] = `
+"import { useState, useEffect } from \\"react\\";
+/** @jsx jsx */
+import { jsx } from \\"@emotion/react\\";
+
+export default function Tabs(props) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  useEffect(() => {
+    if (props.defaultActiveTab) {
+      setActiveTab(props.defaultActiveTab);
+    }
+  }, []);
+
+  return (
+    <span
+      className=\\"builder-tabs-wrap\\"
+      css={{
+        display: \\"flex\\",
+        flexDirection: \\"row\\",
+        overflow: \\"auto\\",
+        overflowScrolling: \\"touch\\",
+      }}
+      style={{
+        justifyContent: props.tabHeaderLayout,
+      }}
+    >
+      {props.tabs.map((child) => (
+        <div>{child.content}</div>
+      ))}
+    </span>
+  );
+}
+"
+`;
+
 exports[`React Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
