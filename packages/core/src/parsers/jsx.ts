@@ -287,7 +287,7 @@ const jsxElementToJson = (
           return createJSXLiteNode({
             name: 'For',
             bindings: {
-              each: generate(node.expression.callee).code,
+              each: generate(node.expression.callee).code.slice(0, -4),
               _forName: forName,
             },
             children: [jsxElementToJson(callback.body as any)],
@@ -353,6 +353,7 @@ const jsxElementToJson = (
     });
   }
 
+  // <For ...> control flow component
   if (nodeName === 'For') {
     const child = node.children.find((item) =>
       types.isJSXExpressionContainer(item),
