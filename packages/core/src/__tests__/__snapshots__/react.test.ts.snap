@@ -152,7 +152,7 @@ export default function CustomCode(props) {
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-    ></div>
+    />
   );
 }
 "
@@ -219,7 +219,7 @@ export default function CustomCode(props) {
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
       dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-    ></div>
+    />
   );
 }
 "
@@ -445,19 +445,13 @@ export default function FormComponent(props) {
       {props.builderBlock && props.builderBlock.children && (
         <>
           {props.builderBlock?.children.map((block) => (
-            <BuilderBlockComponent
-              key={block.id}
-              block={block}
-            ></BuilderBlockComponent>
+            <BuilderBlockComponent key={block.id} block={block} />
           ))}
         </>
       )}{\\" \\"}
       {submissionState() === \\"error\\" && (
         <>
-          <BuilderBlocks
-            dataPath=\\"errorMessage\\"
-            blocks={props.errorMessage}
-          ></BuilderBlocks>
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
         </>
       )}{\\" \\"}
       {submissionState() === \\"sending\\" && (
@@ -465,7 +459,7 @@ export default function FormComponent(props) {
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
             blocks={props.sendingMessage}
-          ></BuilderBlocks>
+          />
         </>
       )}{\\" \\"}
       {submissionState() === \\"error\\" && responseData && (
@@ -481,7 +475,7 @@ export default function FormComponent(props) {
           <BuilderBlocks
             dataPath=\\"successMessage\\"
             blocks={props.successMessage}
-          ></BuilderBlocks>
+          />
         </>
       )}{\\" \\"}
     </form>
@@ -560,7 +554,7 @@ export default function Image(props) {
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
-            ></Img>
+            />
           </>
         )}
 
@@ -624,7 +618,7 @@ exports[`React RawText 1`] = `
     <span
       className={props.attributes?.class || props.attributes?.className}
       dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
-    ></span>
+    />
   );
 }
 "
@@ -731,8 +725,8 @@ export default function SmileReviews(props) {
       {showReviewPrompt && (
         <>
           <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\"></Input>
-          <Textarea placeholder=\\"How was your experience?\\"></Textarea>
+          <Input placeholder=\\"Title\\" />
+          <Textarea placeholder=\\"How was your experience?\\" />
           <Button
             onClick={(event) => {
               setShowReviewPrompt(false);
@@ -745,7 +739,7 @@ export default function SmileReviews(props) {
 
       {reviews.map((review) => (
         <Review>
-          <Img src={review.avatar}></Img>
+          <Img src={review.avatar} />
 
           <div>
             <div>{review.author}</div>
@@ -779,7 +773,7 @@ export default function Text(props) {
     <div
       contentEditable={allowEditingText || undefined}
       dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
-    ></div>
+    />
   );
 }
 "
@@ -794,7 +788,7 @@ exports[`React Textarea 1`] = `
       name={props.name}
       value={props.value}
       defaultValue={props.defaultValue}
-    ></textarea>
+    />
   );
 }
 "
@@ -822,7 +816,7 @@ exports[`React Video 1`] = `
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}
-    ></video>
+    />
   );
 }
 "

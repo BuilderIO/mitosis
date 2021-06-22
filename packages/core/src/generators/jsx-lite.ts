@@ -26,8 +26,8 @@ export const blockToJsxLite = (
   toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
 ): string => {
   const options: ToJsxLiteOptions = {
-    ...toJsxLiteOptions,
     format: DEFAULT_FORMAT,
+    ...toJsxLiteOptions,
   };
   if (options.format === 'react') {
     return blockToReact(json, {
@@ -129,8 +129,8 @@ export const componentToJsxLite = (
   toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
 ) => {
   const options: ToJsxLiteOptions = {
-    ...toJsxLiteOptions,
     format: DEFAULT_FORMAT,
+    ...toJsxLiteOptions,
   };
 
   if (options.format === 'react') {
@@ -172,7 +172,7 @@ export const componentToJsxLite = (
         ? ''
         : `import { ${!hasState ? '' : 'useState, '} ${
             !refs.size ? '' : 'useRef, '
-          } ${jsxLiteComponents.join(', ')} } from 'react';`
+          } ${jsxLiteComponents.join(', ')} } from '@jsx-lite/core';`
     }
     ${
       !otherComponents.length
@@ -206,7 +206,7 @@ export const componentToJsxLite = (
       }
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToJsxLite(item)).join('\n')}
+        ${json.children.map((item) => blockToJsxLite(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
     }
 

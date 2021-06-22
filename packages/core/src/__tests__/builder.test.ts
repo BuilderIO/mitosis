@@ -89,7 +89,7 @@ describe('Builder', () => {
   test('Regenerate Image', () => {
     const code = dedent`
       import { useState } from "@jsx-lite/core";
-      import { Image } from "@builder.io/components";
+      import { Image } from "@components";
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });
@@ -114,7 +114,9 @@ describe('Builder', () => {
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
@@ -146,7 +148,9 @@ describe('Builder', () => {
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
@@ -177,13 +181,15 @@ describe('Builder', () => {
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
   test('Regenerate custom Hero', () => {
     const code = dedent`
-      import { Hero } from "@builder.io/components";
+      import { Hero } from "@components";
 
       export default function MyComponent(props) {
         return (
@@ -213,7 +219,9 @@ describe('Builder', () => {
     expect(builderJson).toMatchSnapshot();
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
     expect(backToJsxLite).toMatchSnapshot();
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
@@ -239,7 +247,9 @@ describe('Builder', () => {
     expect(builderJson).toMatchSnapshot();
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
     expect(backToJsxLite).toMatchSnapshot();
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 
@@ -269,7 +279,9 @@ describe('Builder', () => {
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
     const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
+    const jsxLite = componentToJsxLite(backToJsxLite, {
+      format: 'legacy',
+    });
     expect(jsxLite.trim()).toEqual(code.trim());
   });
 });

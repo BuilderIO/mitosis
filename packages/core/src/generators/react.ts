@@ -160,10 +160,19 @@ export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
       str += ` ${key}={${useBindingValue}} `;
     }
   }
+
   if (selfClosingTags.has(json.name)) {
     return str + ' />';
   }
+
+  // Self close by default if no children
+  if (!json.children.length) {
+    str += ' />';
+    return str;
+  }
+
   str += '>';
+
   if (json.children) {
     str += json.children.map((item) => blockToReact(item, options)).join('\n');
   }
