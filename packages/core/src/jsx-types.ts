@@ -1,4 +1,4 @@
-type CSS = Partial<CSSStyleDeclaration>;
+type CSS = Partial<CSSStyleDeclaration> & { [key: string]: string };
 
 declare global {
   /**
@@ -1204,8 +1204,9 @@ declare global {
           'color-interpolation' | 'color-rendering'
         > {}
 
-    interface AnimateMotionSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateMotionSVGAttributes<
+      T,
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationTimingSVGAttributes,
         AnimationValueSVGAttributes,
@@ -1216,8 +1217,9 @@ declare global {
       origin?: 'default';
     }
 
-    interface AnimateTransformSVGAttributes<T>
-      extends AnimationElementSVGAttributes<T>,
+    interface AnimateTransformSVGAttributes<
+      T,
+    > extends AnimationElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         AnimationAttributeTargetSVGAttributes,
         AnimationTimingSVGAttributes,
@@ -1367,8 +1369,9 @@ declare global {
       stdDeviation?: number | string;
     }
 
-    interface FeImageSVGAttributes<T>
-      extends FilterPrimitiveElementSVGAttributes<T>,
+    interface FeImageSVGAttributes<
+      T,
+    > extends FilterPrimitiveElementSVGAttributes<T>,
         // XLinkSVGAttributes,
         ExternalResourceSVGAttributes,
         StylableSVGAttributes {
@@ -1693,8 +1696,9 @@ declare global {
       lengthAdjust?: 'spacing' | 'spacingAndGlyphs';
     }
 
-    interface TextPathSVGAttributes<T>
-      extends TextContentElementSVGAttributes<T>,
+    interface TextPathSVGAttributes<
+      T,
+    > extends TextContentElementSVGAttributes<T>,
         ConditionalProcessingSVGAttributes,
         // XLinkSVGAttributes,
         ExternalResourceSVGAttributes,
@@ -1870,9 +1874,7 @@ declare global {
 
       animate: AnimateSVGAttributes<SVGAnimateElement>;
       animateMotion: AnimateMotionSVGAttributes<SVGAnimateMotionElement>;
-      animateTransform: AnimateTransformSVGAttributes<
-        SVGAnimateTransformElement
-      >;
+      animateTransform: AnimateTransformSVGAttributes<SVGAnimateTransformElement>;
       circle: CircleSVGAttributes<SVGCircleElement>;
       clipPath: ClipPathSVGAttributes<SVGClipPathElement>;
       defs: DefsSVGAttributes<SVGDefsElement>;
@@ -1880,19 +1882,11 @@ declare global {
       ellipse: EllipseSVGAttributes<SVGEllipseElement>;
       feBlend: FeBlendSVGAttributes<SVGFEBlendElement>;
       feColorMatrix: FeColorMatrixSVGAttributes<SVGFEColorMatrixElement>;
-      feComponentTransfer: FeComponentTransferSVGAttributes<
-        SVGFEComponentTransferElement
-      >;
+      feComponentTransfer: FeComponentTransferSVGAttributes<SVGFEComponentTransferElement>;
       feComposite: FeCompositeSVGAttributes<SVGFECompositeElement>;
-      feConvolveMatrix: FeConvolveMatrixSVGAttributes<
-        SVGFEConvolveMatrixElement
-      >;
-      feDiffuseLighting: FeDiffuseLightingSVGAttributes<
-        SVGFEDiffuseLightingElement
-      >;
-      feDisplacementMap: FeDisplacementMapSVGAttributes<
-        SVGFEDisplacementMapElement
-      >;
+      feConvolveMatrix: FeConvolveMatrixSVGAttributes<SVGFEConvolveMatrixElement>;
+      feDiffuseLighting: FeDiffuseLightingSVGAttributes<SVGFEDiffuseLightingElement>;
+      feDisplacementMap: FeDisplacementMapSVGAttributes<SVGFEDisplacementMapElement>;
       feDistantLight: FeDistantLightSVGAttributes<SVGFEDistantLightElement>;
       feFlood: FeFloodSVGAttributes<SVGFEFloodElement>;
       feFuncA: FeFuncSVGAttributes<SVGFEFuncAElement>;
@@ -1906,9 +1900,7 @@ declare global {
       feMorphology: FeMorphologySVGAttributes<SVGFEMorphologyElement>;
       feOffset: FeOffsetSVGAttributes<SVGFEOffsetElement>;
       fePointLight: FePointLightSVGAttributes<SVGFEPointLightElement>;
-      feSpecularLighting: FeSpecularLightingSVGAttributes<
-        SVGFESpecularLightingElement
-      >;
+      feSpecularLighting: FeSpecularLightingSVGAttributes<SVGFESpecularLightingElement>;
       feSpotLight: FeSpotLightSVGAttributes<SVGFESpotLightElement>;
       feTile: FeTileSVGAttributes<SVGFETileElement>;
       feTurbulence: FeTurbulanceSVGAttributes<SVGFETurbulenceElement>;

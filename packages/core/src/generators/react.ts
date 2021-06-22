@@ -209,7 +209,7 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
   const valueMapper = (val: string) => processBinding(val, options);
 
   const keyValueDelimiter = '=';
-  const lineItemDelimiter = '\n';
+  const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
     const value = state[key];

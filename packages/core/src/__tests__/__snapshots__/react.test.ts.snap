@@ -66,13 +66,16 @@ export default function Column(props) {
   getColumns() {
     return props.columns || [];
   }
+
   function getGutterSize() {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
+
   function getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
+
   function getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
@@ -96,7 +99,9 @@ exports[`React CustomCode 1`] = `
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
   const [scriptsRun, setScriptsRun] = useState(() => []);
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem.current && typeof window !== \\"undefined\\") {
@@ -163,7 +168,9 @@ exports[`React Embed 1`] = `
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
   const [scriptsRun, setScriptsRun] = useState(() => []);
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem.current && typeof window !== \\"undefined\\") {
@@ -242,11 +249,15 @@ const Pre = styled.pre\`
 
 export default function FormComponent(props) {
   const [state, setState] = useState(() => \\"unsubmitted\\");
+
   const [responseData, setResponseData] = useState(() => null);
+
   const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+
   function submissionState() {
     return (Builder.isEditing && props.previewState) || state;
   }
+
   function onSubmit(event) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
@@ -497,16 +508,21 @@ const Img = styled.img\`
 
 export default function Image(props) {
   const [scrollListener, setScrollListener] = useState(() => null);
+
   const [imageLoaded, setImageLoaded] = useState(() => false);
+
   const [load, setLoad] = useState(() => false);
+
   function setLoaded() {
     imageLoaded = true;
   }
+
   function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
   }
+
   function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
@@ -702,6 +718,7 @@ const Img = styled.img\`
 
 export default function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
+
   const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
 
   useEffect(() => {
