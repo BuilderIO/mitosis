@@ -50,7 +50,11 @@ export const blockToJsxLite = (
       .replace(/"/g, '&quot;')
       .replace(/\n/g, '\\n');
 
-    str += ` ${key}="${value}" `;
+    if (!isValidAttributeName(key)) {
+      console.warn('Skipping invalid attribute name:', key);
+    } else {
+      str += ` ${key}="${value}" `;
+    }
   }
   for (const key in json.bindings) {
     const value = json.bindings[key] as string;

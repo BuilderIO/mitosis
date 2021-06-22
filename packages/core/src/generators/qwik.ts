@@ -1,13 +1,22 @@
+import { NodePath, transform, types } from '@babel/core';
+import virtual from '@rollup/plugin-virtual';
 import dedent from 'dedent';
-import { camelCase, kebabCase, size, trim } from 'lodash';
+import { camelCase, kebabCase, size } from 'lodash';
 import { format } from 'prettier/standalone';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { rollup } from 'rollup';
 import traverse from 'traverse';
+import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
+import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { getStateObjectString } from '../helpers/get-state-object-string';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
+import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   Plugin,
   runPostCodePlugins,
@@ -18,15 +27,6 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { getStateObjectString } from '../helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { NodePath, transform, types, parse } from '@babel/core';
-import { collectCss } from '../helpers/collect-styles';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { rollup } from 'rollup';
-import virtual from '@rollup/plugin-virtual';
 
 const qwikImport = (options: InternalToQwikOptions) =>
   options.qwikLib || '@builder.io/qwik';
@@ -41,10 +41,10 @@ function addMarkDirtyAfterSetInCode(
       const { node } = path;
       if (types.isMemberExpression(node.argument)) {
         if (types.isIdentifier(node.argument.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
+          // TODO: utility to properly trace this reference to the beginning
           if (node.argument.object.name === 'state') {
             // TODO: ultimately do updates by property, e.g. updateName()
-            // that updates any attributes dependent on name, etcç
+            // that updates any attributes dependent on name, etc
             let parent: NodePath<any> = path;
 
             // `_temp = ` assignments are created sometimes when we insertAfter
@@ -71,10 +71,10 @@ function addMarkDirtyAfterSetInCode(
       const { node } = path;
       if (types.isMemberExpression(node.left)) {
         if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
+          // TODO: utility to properly trace this reference to the beginning
           if (node.left.object.name === 'state') {
             // TODO: ultimately do updates by property, e.g. updateName()
-            // that updates any attributes dependent on name, etcç
+            // that updates any attributes dependent on name, etc
             let parent: NodePath<any> = path;
 
             // `_temp = ` assignments are created sometimes when we insertAfter
