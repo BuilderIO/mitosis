@@ -9,6 +9,11 @@ import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import traverse from 'traverse';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { babelTransformExpression } from '../helpers/babel-transform';
+import { capitalize } from '../helpers/capitalize';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -91,12 +96,6 @@ const jsonObjectToAst = (
   return newNode;
 };
 
-// For simple single string templates = aka
-// createSimpleTemplateLiteral('string') -> `string`
-const createSimpleTemplateLiteral = (str: string) => {
-  return types.templateLiteral([types.templateElement({ raw: str })], []);
-};
-
 export const createFunctionStringLiteral = (node: babel.types.Node) => {
   return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
 };
@@ -105,6 +104,14 @@ export const createFunctionStringLiteralObjectProperty = (
   node: babel.types.Node,
 ) => {
   return types.objectProperty(key, createFunctionStringLiteral(node));
+};
+
+const uncapitalize = (str: string) => {
+  if (!str) {
+    return str;
+  }
+
+  return str[0].toLowerCase() + str.slice(1);
 };
 
 export const parseStateObject = (object: babel.types.ObjectExpression) => {
@@ -468,6 +475,57 @@ type ParseJSXLiteOptions = {
   format: 'react' | 'simple';
 };
 
+/**
+ * Convert state identifiers from React hooks format to the state.* format JSX Lite needs
+ * e.g.
+ *   text -> state.text
+ *   setText(...) -> state.text = ...
+ */
+function mapReactIdentifiers(json: JSXLiteComponent) {
+  const stateProperties = Object.keys(json.state);
+  const setExpressions = stateProperties.map(
+    (propertyName) => `set${capitalize(propertyName)}`,
+  );
+  traverse(json).forEach(function(item) {
+    if (isJsxLiteNode(item)) {
+      for (const key in item.bindings) {
+        const value = item.bindings[key];
+        if (value) {
+          item.bindings[key] = babelTransformExpression(
+            // foo -> state.foo
+            replaceIdentifiers(
+              value,
+              stateProperties,
+              (name) => `state.${name}`,
+            ),
+            {
+              CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
+                if (types.isIdentifier(path.node.callee)) {
+                  if (setExpressions.includes(path.node.callee.name)) {
+                    // setFoo -> foo
+                    const statePropertyName = uncapitalize(
+                      path.node.callee.name.slice(3),
+                    );
+
+                    // setFoo(...) -> state.foo = ...
+                    path.replaceWith(
+                      types.assignmentExpression(
+                        '=',
+                        types.identifier(`state.${statePropertyName}`),
+                        path.node.arguments[0] as any,
+                      ),
+                    );
+                  }
+                }
+              },
+            },
+          );
+        }
+      }
+    }
+  });
+}
+
 export function parseJsx(
   jsx: string,
   options: Partial<ParseJSXLiteOptions> = {},
@@ -585,11 +643,16 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
+  let parsed: JSXLiteComponent;
   try {
-    return JSON5.parse(toParse);
+    parsed = JSON5.parse(toParse);
   } catch (err) {
     debugger;
     console.error('Could not parse code', toParse);
     throw err;
   }
+
+  mapReactIdentifiers(parsed);
+
+  return parsed;
 }
