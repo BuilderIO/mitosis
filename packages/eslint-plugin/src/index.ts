@@ -1,8 +1,11 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
+import { isJSXLitePath } from './rules/jsx-callback-arg-name';
 
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
+    if (!isJSXLitePath(context.getFilename())) return {};
+
     return {
       VariableDeclarator(node: any) {
         if (types.isVariableDeclarator(node)) {
@@ -23,22 +26,14 @@ export const staticControlFlow: Rule.RuleModule = {
       JSXExpressionContainer(node: any) {
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {
-            context.report({
-              node: node as any,
-              message:
-                'Static rendering is required. E.g. {foo ? bar : baz} should be <Show when={foo}>{bar}</Show>',
-            });
-          }
-          if (types.isCallExpression(node.expression)) {
-            const firstArg = node.expression.arguments[0];
             if (
-              types.isArrowFunctionExpression(firstArg) ||
-              types.isFunctionExpression(firstArg)
+              types.isJSXElement(node.expression.consequent) ||
+              types.isJSXElement(node.expression.alternate)
             ) {
               context.report({
                 node: node as any,
                 message:
-                  'Static rendering is required. E.g. {foo.map(...)} should be <For each={foo}>{...}</For>',
+                  'Ternaries around JSX Elements are not currently supported. Instead use binary expressions - e.g. {foo ? <bar /> : <baz />} should be {foo && <bar />}{!foo && <baz />}',
               });
             }
           }
