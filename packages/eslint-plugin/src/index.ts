@@ -1,6 +1,8 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
-import { isJSXLitePath } from './rules/jsx-callback-arg-name';
+import jsxCallbackArgNameRule, {
+  isJSXLitePath,
+} from './rules/jsx-callback-arg-name';
 
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
@@ -45,5 +47,5 @@ export const staticControlFlow: Rule.RuleModule = {
 
 export const rules = {
   'static-control-flow': staticControlFlow,
-  'jsx-callback-arg-name': import('./rules/jsx-callback-arg-name'),
+  'jsx-callback-arg-name': jsxCallbackArgNameRule,
 };
