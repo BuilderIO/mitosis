@@ -548,10 +548,13 @@ export function parseJsx(
   jsx: string,
   options: Partial<ParseJSXLiteOptions> = {},
 ): JSXLiteComponent {
+  console.log('jsx', jsx);
   const useOptions: ParseJSXLiteOptions = {
     format: 'react',
     ...options,
   };
+
+  let subComponentFunctions: string[] = [];
 
   const output = babel.transform(jsx, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
@@ -577,6 +580,14 @@ export function parseJsx(
             let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
             );
+
+            subComponentFunctions = path.node.body
+              .filter(
+                (node) =>
+                  !types.isExportDefaultDeclaration(node) &&
+                  types.isFunctionDeclaration(node),
+              )
+              .map((node) => `export default ${generate(node).code!}`);
 
             cutStatements = collectMetadata(
               cutStatements,
@@ -671,6 +682,10 @@ export function parseJsx(
   }
 
   mapReactIdentifiers(parsed);
+
+  parsed.subComponents = subComponentFunctions.map((item) =>
+    parseJsx(item, useOptions),
+  );
 
   return parsed;
 }

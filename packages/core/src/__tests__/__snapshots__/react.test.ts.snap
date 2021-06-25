@@ -360,7 +360,7 @@ export default function FormComponent(props) {
           return;
         }
       }
-      state = \\"sending\\";
+      setState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -388,11 +388,11 @@ export default function FormComponent(props) {
                 /* TODO: ideally convert json to yaml so it woul dbe like             error: - email has been taken */ message =
                   JSON.stringify(message);
               }
-              formErrorMessage = message;
+              setFormErrorMessage(message);
             }
           }
-          responseData = body;
-          state = res.ok ? \\"success\\" : \\"error\\";
+          setResponseData(body);
+          setState(res.ok ? \\"success\\" : \\"error\\");
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
@@ -435,8 +435,8 @@ export default function FormComponent(props) {
               return;
             }
           }
-          responseData = err;
-          state = \\"error\\";
+          setResponseData(err);
+          setState(\\"error\\");
         }
       );
     }
@@ -514,7 +514,7 @@ export default function Image(props) {
   const [load, setLoad] = useState(() => false);
 
   function setLoaded() {
-    imageLoaded = true;
+    setImageLoaded(true);
   }
 
   function isBrowser() {

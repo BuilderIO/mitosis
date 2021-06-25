@@ -145,7 +145,10 @@ export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${useBindingValue} } `;
+      str += ` ${key}={event => ${updateStateSettersInCode(
+        useBindingValue,
+        options,
+      )} } `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -206,7 +209,8 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 
   const { state } = json;
 
-  const valueMapper = (val: string) => processBinding(val, options);
+  const valueMapper = (val: string) =>
+    processBinding(updateStateSettersInCode(val, options), options);
 
   const keyValueDelimiter = '=';
   const lineItemDelimiter = '\n\n\n';

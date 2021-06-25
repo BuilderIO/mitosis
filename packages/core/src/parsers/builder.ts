@@ -814,7 +814,7 @@ function extractSymbols(json: BuilderContent) {
   };
 }
 
-const isBuilderElement = (el: unknown): el is BuilderElement =>
+export const isBuilderElement = (el: unknown): el is BuilderElement =>
   (el as any)?.['@type'] === '@builder.io/sdk:Element';
 
 const builderContentPartToJsxLiteComponent = (

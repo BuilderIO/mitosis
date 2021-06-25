@@ -1,6 +1,6 @@
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
-import { BuilderElement } from '@builder.io/sdk';
+import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { fastClone } from '../helpers/fast-clone';
 import dedent from 'dedent';
@@ -12,8 +12,9 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
 import { attempt, omit, omitBy, set } from 'lodash';
-import { symbolBlocksAsChildren } from '../parsers/builder';
+import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import traverse from 'traverse';
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -313,7 +314,7 @@ export const componentToBuilder = (
 ) => {
   const hasState = Boolean(Object.keys(componentJson.state).length);
 
-  return fastClone({
+  const result = fastClone({
     data: {
       jsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
@@ -344,4 +345,23 @@ export const componentToBuilder = (
         .map((child) => blockToBuilder(child, options)),
     },
   });
+
+  const subComponentMap: Record<string, BuilderContent> = {};
+
+  for (const subComponent of componentJson.subComponents) {
+    const name = subComponent.name;
+    subComponentMap[name] = componentToBuilder(subComponent, options);
+  }
+
+  traverse([result, subComponentMap]).forEach(function(el) {
+    if (isBuilderElement(el)) {
+      const value = subComponentMap[el.component?.name!];
+      if (value) {
+        console.log('applied?');
+        set(el, 'component.options.symbol.content', value);
+      }
+    }
+  });
+
+  return result;
 };
