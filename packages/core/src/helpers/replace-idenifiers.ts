@@ -9,10 +9,15 @@ export const replaceIdentifiers = (
   return babelTransformExpression(code, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       if (
-        // TODO: other exclusions
+        // This is not a property access - like `foo` in `this.foo`
         !(
           types.isMemberExpression(path.parent) &&
           path.parent.property === path.node
+        ) &&
+        // This is no the function name - like `foo` in `function foo() {}`
+        !(
+          types.isFunctionDeclaration(path.parent) &&
+          path.parent.id === path.node
         ) &&
         (Array.isArray(from)
           ? from.includes(path.node.name)

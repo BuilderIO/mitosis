@@ -215,12 +215,8 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
     const value = state[key];
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
-        const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `const [${key}, set${capitalize(
-          key,
-        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-          functionValue,
-        )}))${lineItemDelimiter} `;
+        const useValue = value.replace(functionLiteralPrefix, '');
+        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');

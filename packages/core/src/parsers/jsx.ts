@@ -206,9 +206,7 @@ const componentFunctionToJson = (
 
     if (types.isFunctionDeclaration(item)) {
       if (types.isIdentifier(item.id)) {
-        state[item.id.name] = `${methodLiteralPrefix}${generate(
-          item,
-        ).code!.replace(/^\s*function\s*/, '')}`;
+        state[item.id.name] = `${functionLiteralPrefix}${generate(item).code!}`;
       }
     }
 
@@ -475,6 +473,41 @@ type ParseJSXLiteOptions = {
   format: 'react' | 'simple';
 };
 
+function mapReactIdentifiersInExpression(
+  expression: string,
+  stateProperties: string[],
+) {
+  const setExpressions = stateProperties.map(
+    (propertyName) => `set${capitalize(propertyName)}`,
+  );
+
+  return babelTransformExpression(
+    // foo -> state.foo
+    replaceIdentifiers(expression, stateProperties, (name) => `state.${name}`),
+    {
+      CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
+        if (types.isIdentifier(path.node.callee)) {
+          if (setExpressions.includes(path.node.callee.name)) {
+            // setFoo -> foo
+            const statePropertyName = uncapitalize(
+              path.node.callee.name.slice(3),
+            );
+
+            // setFoo(...) -> state.foo = ...
+            path.replaceWith(
+              types.assignmentExpression(
+                '=',
+                types.identifier(`state.${statePropertyName}`),
+                path.node.arguments[0] as any,
+              ),
+            );
+          }
+        }
+      },
+    },
+  );
+}
+
 /**
  * Convert state identifiers from React hooks format to the state.* format JSX Lite needs
  * e.g.
@@ -483,42 +516,27 @@ type ParseJSXLiteOptions = {
  */
 function mapReactIdentifiers(json: JSXLiteComponent) {
   const stateProperties = Object.keys(json.state);
-  const setExpressions = stateProperties.map(
-    (propertyName) => `set${capitalize(propertyName)}`,
-  );
+
+  for (const key in json.state) {
+    const value = json.state[key];
+    if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
+      json.state[key] =
+        functionLiteralPrefix +
+        mapReactIdentifiersInExpression(
+          value.replace(functionLiteralPrefix, ''),
+          stateProperties,
+        );
+    }
+  }
+
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
         if (value) {
-          item.bindings[key] = babelTransformExpression(
-            // foo -> state.foo
-            replaceIdentifiers(
-              value,
-              stateProperties,
-              (name) => `state.${name}`,
-            ),
-            {
-              CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-                if (types.isIdentifier(path.node.callee)) {
-                  if (setExpressions.includes(path.node.callee.name)) {
-                    // setFoo -> foo
-                    const statePropertyName = uncapitalize(
-                      path.node.callee.name.slice(3),
-                    );
-
-                    // setFoo(...) -> state.foo = ...
-                    path.replaceWith(
-                      types.assignmentExpression(
-                        '=',
-                        types.identifier(`state.${statePropertyName}`),
-                        path.node.arguments[0] as any,
-                      ),
-                    );
-                  }
-                }
-              },
-            },
+          item.bindings[key] = mapReactIdentifiersInExpression(
+            value,
+            stateProperties,
           );
         }
       }
