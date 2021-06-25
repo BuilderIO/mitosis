@@ -337,11 +337,10 @@ const jsxElementToJson = (
   const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -373,8 +372,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -469,6 +470,19 @@ const collectMetadata = (
   });
 };
 
+// TODO: maybe this should be part of the builder -> JSX Lite part
+function extractSymbols(json: JSXLiteComponent) {
+  json.subComponents ??= [];
+
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      if (item.name === 'Symbol') {
+        
+      }
+    }
+  });
+}
+
 type ParseJSXLiteOptions = {
   format: 'react' | 'simple';
 };
@@ -529,7 +543,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
