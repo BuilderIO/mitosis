@@ -316,14 +316,56 @@ export const componentToReact = (
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
+
+  let str = _componentToReact(componentJson, options);
+
+  str +=
+    '\n\n\n' +
+    componentJson.subComponents
+      .map((item) => _componentToReact(item, options, true))
+      .join('\n\n\n');
+
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
+  if (options.prettier !== false) {
+    try {
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [
+          require('prettier/parser-typescript'), // To support running in browsers
+          require('prettier/parser-postcss'),
+        ],
+      })
+        // Remove spaces between imports
+        .replace(/;\n\nimport\s/g, ';\nimport ');
+    } catch (err) {
+      console.error(
+        'Format error for file:',
+        str,
+        JSON.stringify(json, null, 2),
+      );
+      throw err;
+    }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
+  }
+  return str;
+};
+
+const _componentToReact = (
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+  isSubComponent = false,
+) => {
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
   }
 
-  const refs = getRefs(componentJson);
-  const hasRefs = Boolean(getRefs(componentJson).size);
+  const refs = getRefs(json);
   let hasState = Boolean(Object.keys(json.state).length);
 
   mapRefs(json, (refName) => `${refName}.current`);
@@ -397,7 +439,8 @@ export const componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    export default function ${componentJson.name || 'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${json.name ||
+    'MyComponent'}(props) {
       ${
         hasState
           ? stateType === 'mobx'
@@ -454,31 +497,5 @@ export const componentToReact = (
 
   str = stripNewlinesInStrings(str);
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-          require('prettier/parser-postcss'),
-        ],
-      })
-        // Remove spaces between imports
-        .replace(/;\n\nimport\s/g, ';\nimport ');
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        str,
-        JSON.stringify(json, null, 2),
-      );
-      throw err;
-    }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
   return str;
 };

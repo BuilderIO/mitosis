@@ -10,5 +10,6 @@ export const createJSXLiteComponent = (
   children: [],
   hooks: {},
   name: options?.name || 'MyComponent',
+  subComponents: [],
   ...options,
 });

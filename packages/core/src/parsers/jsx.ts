@@ -470,19 +470,6 @@ const collectMetadata = (
   });
 };
 
-// TODO: maybe this should be part of the builder -> JSX Lite part
-function extractSymbols(json: JSXLiteComponent) {
-  json.subComponents ??= [];
-
-  traverse(json).forEach(function (item) {
-    if (isJsxLiteNode(item)) {
-      if (item.name === 'Symbol') {
-        
-      }
-    }
-  });
-}
-
 type ParseJSXLiteOptions = {
   format: 'react' | 'simple';
 };

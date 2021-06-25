@@ -29,6 +29,10 @@ export const babelTransformExpression = <VisitorContextType = any>(
   visitor: Visitor<VisitorContextType>,
   type: 'expression' | 'unknown' | 'block' | 'functionBody' = 'unknown',
 ): string => {
+  if (!code) {
+    return '';
+  }
+
   // match for object literal like { foo: ... }
   if (type === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
     type = 'expression';
@@ -37,7 +41,8 @@ export const babelTransformExpression = <VisitorContextType = any>(
   // For Builder content
   if (
     type === 'unknown' &&
-    code.includes('return _virtual_index') &&
+    (code.includes('return _virtual_index') ||
+      code.trim().startsWith('return ')) &&
     !code.trim().startsWith('function')
   ) {
     type = 'functionBody';
