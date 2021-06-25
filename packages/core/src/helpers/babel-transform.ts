@@ -76,7 +76,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
     // generate compile errors. They are of the form `foo() { ... }`
     const isMethod = Boolean(
       !code.startsWith('function') &&
-        code.match(/^[a-z0-9]+\s*\([^\)]*\)\s*\{/i),
+        code.match(/^[a-z0-9]+\s*\([^\)]*\)\s*[\{:]/i),
     );
 
     if (isMethod) {
