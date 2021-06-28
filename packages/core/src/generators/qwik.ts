@@ -27,6 +27,7 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { htmlAttributeEscape } from '../helpers/html-escape';
 
 const qwikImport = (options: InternalToQwikOptions) =>
   options.qwikLib || '@builder.io/qwik';
@@ -196,7 +197,7 @@ const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
     if (key.startsWith('_') || key.startsWith('$')) {
       continue;
     }
-    const value = json.properties[key];
+    const value = htmlAttributeEscape(json.properties[key] || '');
     str += ` ${key}="${value}" `;
   }
 
@@ -220,7 +221,7 @@ const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
       } else {
         eventBindings[useKey] = `QRL\`${
           options.qrlPrefix
-        }/${componentName}/on${elId(json, options)}${key.slice(
+        }/${componentName}_on${elId(json, options)}${key.slice(
           2,
         )}${options.qrlSuffix || ''}\``;
       }
@@ -307,7 +308,7 @@ const getEventHandlerFiles = (
               provideEvent,
               markDirty
             } from '${qwikImport(options)}';
-            import { ${componentName}Component } from './component.js'
+            import { ${componentName}Component } from './${componentName}.js'
             
             export ${
               options.bundle ? `const on${eventHandlerName} =` : 'default'
@@ -326,7 +327,7 @@ const getEventHandlerFiles = (
 
           str = formatCode(str, options);
           files.push({
-            path: `${componentName}/on${eventHandlerName}.ts`,
+            path: `${componentName}_on${eventHandlerName}.ts`,
             contents: str,
           });
         }
@@ -378,7 +379,7 @@ export const componentToQwik = async (
   stripMetaProperties(json);
   let str = dedent`
     import { injectMethod, QRL, jsxFactory } from '${qwikImport(options)}';
-    import { ${componentName}Component } from './component.js'
+    import { ${componentName}Component } from './${componentName}_component.js'
     ${renderPreComponent({
       ...json,
       imports: json.imports.map((item) => {
@@ -435,19 +436,19 @@ export const componentToQwik = async (
   const output = {
     files: [
       {
-        path: `${componentName}/template.tsx`,
+        path: `${componentName}_template.tsx`,
         contents: str,
       },
       {
-        path: `${componentName}/public.ts`,
+        path: `${componentName}.ts`,
         contents: formatCode(
           `
           import { jsxDeclareComponent, QRL } from '${qwikImport(options)}';
           
           export const ${componentName} = jsxDeclareComponent(QRL\`${
             options.qrlPrefix
-          }/${componentName}/${
-            options.bundle ? 'bundle' : 'template'
+          }/${componentName}${
+            options.bundle ? '/bundle' : '_template'
           }${options.qrlSuffix || ''}${
             options.bundle ? '.template' : ''
           }\`, '${kebabCase(componentName)}');
@@ -456,7 +457,7 @@ export const componentToQwik = async (
         ),
       },
       {
-        path: `${componentName}/component.ts`,
+        path: `${componentName}_component.ts`,
         contents: formatCode(
           (() => {
             let str = `
@@ -468,8 +469,8 @@ export const componentToQwik = async (
                     ? ''
                     : `static $templateQRL = '${
                         options.qrlPrefix
-                      }/${componentName}/${
-                        options.bundle ? 'bundle' : 'template'
+                      }/${componentName}${
+                        options.bundle ? '/bundle' : '_template'
                       }${options.qrlSuffix || ''}${
                         options.bundle ? '.template' : ''
                       }'`
@@ -500,8 +501,8 @@ export const componentToQwik = async (
               export const ${componentName}Component = new Proxy(_${componentName}Component, {
                 get(target, prop) {
                   if (prop === '$templateQRL') {
-                    return '${options.qrlPrefix}/${componentName}/${
-                      options.bundle ? 'bundle' : 'template'
+                    return '${options.qrlPrefix}/${componentName}${
+                      options.bundle ? '/bundle' : '_template'
                     }${options.qrlSuffix || ''}${
                       options.bundle ? '.template' : ''
                     }'
@@ -532,7 +533,7 @@ export const componentToQwik = async (
   if (options.bundle) {
     const moduleMap = {
       entry: output.files
-        .filter((file) => !file.path.endsWith('/public.ts'))
+        .filter((file) => !file.path.endsWith('.ts'))
         .map(
           (file) => `export * from './${file.path.replace(/\.tsx?$/, '.js')}';`,
         )
