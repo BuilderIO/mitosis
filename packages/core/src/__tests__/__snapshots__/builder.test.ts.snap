@@ -122,38 +122,38 @@ useState({
 `;
 
 exports[`Builder Columns 2`] = `
-"import { useState, For } from \\"@jsx-lite/core\\";
+"import { useState, useEffect } from \\"react\\";
 
 export default function MyComponent(props) {
-  const state = useState({
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
-    getColumns() {
-      return props.columns || [];
-    },
-    getGutterSize() {
-      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-    },
-    getWidth(index) {
-      const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
-    },
-    getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-    },
-  });
+  function // TODO: These methods are not used right now, but they will be when
+  // support for dynamic CSS lands
+  getColumns() {
+    return props.columns || [];
+  }
 
-  onMount(() => {
+  function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  }
+
+  function getWidth(index) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+
+  function getColumnCssWidth(index) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+
+  useEffect(() => {
     var props = state;
-  });
+  }, []);
 
   return (
     <div
-      class=\\"builder-columns\\"
+      className=\\"builder-columns\\"
       css={{
         display: \\"flex\\",
         flexDirection: \\"column\\",
@@ -161,18 +161,16 @@ export default function MyComponent(props) {
         lineHeight: \\"normal\\",
       }}
     >
-      <For each={props.columns}>
-        {(column, index) => (
-          <div
-            class=\\"builder-column\\"
-            css={{
-              flexGrow: \\"1\\",
-            }}
-          >
-            {column.content}
-          </div>
-        )}
-      </For>
+      {props.columns.map((column) => (
+        <div
+          className=\\"builder-column\\"
+          css={{
+            flexGrow: \\"1\\",
+          }}
+        >
+          {column.content}
+        </div>
+      ))}
     </div>
   );
 }
@@ -307,68 +305,68 @@ onMount(() => {
 `;
 
 exports[`Builder CustomCode 2`] = `
-"import { useState, useRef } from \\"@jsx-lite/core\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function MyComponent(props) {
-  const state = useState({
-    scriptsInserted: [],
-    scriptsRun: [],
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (elem.current && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = elem.current.getElementsByTagName(\\"script\\");
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
+  const [scriptsRun, setScriptsRun] = useState(() => []);
 
-          if (script.src) {
-            if (state.scriptsInserted.includes(script.src)) {
-              continue;
-            }
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-            state.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (state.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
 
-            try {
-              state.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-            }
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
           }
         }
       }
-    },
-  });
+    }
+  }
 
   const elem = useRef();
 
-  onMount(() => {
-    state.findAndRunScripts();
-  });
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
 
   return (
     <div
       ref={elem}
-      class={
+      className={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
-      innerHTML={props.code}
+      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
     />
   );
 }
@@ -504,62 +502,68 @@ onMount(() => {
 `;
 
 exports[`Builder Embed 2`] = `
-"import { useState, useRef } from \\"@jsx-lite/core\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function MyComponent(props) {
-  const state = useState({
-    scriptsInserted: [],
-    scriptsRun: [],
-    findAndRunScripts() {
-      // TODO: Move this function to standalone one in '@builder.io/utils'
-      if (elem.current && typeof window !== \\"undefined\\") {
-        /** @type {HTMLScriptElement[]} */
-        const scripts = elem.current.getElementsByTagName(\\"script\\");
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
-        for (let i = 0; i < scripts.length; i++) {
-          const script = scripts[i];
+  const [scriptsRun, setScriptsRun] = useState(() => []);
 
-          if (script.src) {
-            if (state.scriptsInserted.includes(script.src)) {
-              continue;
-            }
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
-            state.scriptsInserted.push(script.src);
-            const newScript = document.createElement(\\"script\\");
-            newScript.async = true;
-            newScript.src = script.src;
-            document.head.appendChild(newScript);
-          } else if (
-            !script.type ||
-            [
-              \\"text/javascript\\",
-              \\"application/javascript\\",
-              \\"application/ecmascript\\",
-            ].includes(script.type)
-          ) {
-            if (state.scriptsRun.includes(script.innerText)) {
-              continue;
-            }
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
 
-            try {
-              state.scriptsRun.push(script.innerText);
-              new Function(script.innerText)();
-            } catch (error) {
-              console.warn(\\"\`Embed\`: Error running script:\\", error);
-            }
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`Embed\`: Error running script:\\", error);
           }
         }
       }
-    },
-  });
+    }
+  }
 
   const elem = useRef();
 
-  onMount(() => {
-    state.findAndRunScripts();
-  });
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
 
-  return <div class=\\"builder-embed\\" ref={elem} innerHTML={props.content} />;
+  return (
+    <div
+      className=\\"builder-embed\\"
+      ref={elem}
+      dangerouslySetInnerHTML={{ __html: \\"props.content\\" }}
+    />
+  );
 }
 "
 `;
@@ -759,33 +763,34 @@ onMount(() => {
 `;
 
 exports[`Builder Image 2`] = `
-"import { useState, useRef, Show } from \\"@jsx-lite/core\\";
-import { Fragment } from \\"@builder.io/components\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function MyComponent(props) {
-  const state = useState({
-    scrollListener: null,
-    imageLoaded: false,
-    load: false,
-    setLoaded() {
-      state.imageLoaded = true;
-    },
-    isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
-    },
-  });
+  const [scrollListener, setScrollListener] = useState(() => null);
+
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+
+  const [load, setLoad] = useState(() => false);
+
+  function setLoaded() {
+    setImageLoaded(true);
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
 
   const pictureRef = useRef();
 
-  onMount(() => {
-    if (state.useLazyLoading()) {
+  useEffect(() => {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef.current) {
@@ -793,34 +798,34 @@ export default function MyComponent(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
-            state.scrollListener = null;
+            setLoad(true);
+            setScrollListener(null);
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      state.scrollListener = listener;
+      setScrollListener(listener);
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
       });
       listener();
     }
-  });
+  }, []);
 
   return (
-    <Fragment>
+    <>
       <picture ref={pictureRef}>
-        <Show when={!state.useLazyLoading() || state.load}>
+        {(!useLazyLoading() || load) && (
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+            className={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
             src={props.image}
             srcset={props.srcset}
             sizes={props.sizes}
-            onLoad={(event) => state.setLoaded()}
+            onLoad={(event) => setLoaded()}
             css={{
               opacity: \\"1\\",
               transition: \\"opacity 0.2s ease-in-out\\",
@@ -828,11 +833,11 @@ export default function MyComponent(props) {
               objectPosition: \\"center\\",
             }}
           />
-        </Show>
+        )}
         <source srcset={props.srcset} />
       </picture>
       <span>{props.children}</span>
-    </Fragment>
+    </>
   );
 }
 "
@@ -873,12 +878,13 @@ Object {
       "imports": Object {
         "Hero": "Hero",
       },
-      "path": "@builder.io/components",
+      "path": "@components",
     },
   ],
   "meta": Object {},
   "name": "MyComponent",
   "state": Object {},
+  "subComponents": Array [],
 }
 `;
 
@@ -951,6 +957,7 @@ Object {
   "meta": Object {},
   "name": "MyComponent",
   "state": Object {},
+  "subComponents": Array [],
 }
 `;
 
@@ -1698,12 +1705,14 @@ onMount(() => {
 `;
 
 exports[`Builder Stamped 2`] = `
-"import { useState, Show, For } from \\"@jsx-lite/core\\";
+"import { useState, useEffect } from \\"react\\";
 
 export default function MyComponent(props) {
-  const state = useState({ reviews: [], showReviewPrompt: false });
+  const [reviews, setReviews] = useState(() => []);
 
-  onMount(() => {
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  useEffect(() => {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
         props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
@@ -1711,67 +1720,68 @@ export default function MyComponent(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-        state.reviews = data.data;
+        setReviews(data.data);
       });
-  });
+  }, []);
 
   return (
     <div>
-      <button onClick={(event) => (state.showReviewPrompt = true)}>
+      <button onClick={(event) => setShowReviewPrompt(true)} css={}>
         Write a review
       </button>
-      <Show when={state.showReviewPrompt}>
-        <input placeholder=\\"Email\\" />
-        <input
-          placeholder=\\"Title\\"
-          css={{
-            display: \\"block\\",
-          }}
-        />
-        <textarea
-          placeholder=\\"How was your experience?\\"
-          css={{
-            display: \\"block\\",
-          }}
-        />
-        <button
-          onClick={(event) => {
-            state.showReviewPrompt = false;
-          }}
-          css={{
-            display: \\"block\\",
-          }}
-        >
-          Submit
-        </button>
-      </Show>
-      <For each={state.reviews}>
-        {(review, index) => (
-          <div
+      {showReviewPrompt && (
+        <>
+          <input placeholder=\\"Email\\" />
+          <input
+            placeholder=\\"Title\\"
             css={{
-              margin: \\"10px\\",
-              padding: \\"10px\\",
-              background: \\"white\\",
-              display: \\"flex\\",
-              borderRadius: \\"5px\\",
-              boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
+              display: \\"block\\",
+            }}
+          />
+          <textarea
+            placeholder=\\"How was your experience?\\"
+            css={{
+              display: \\"block\\",
+            }}
+          />
+          <button
+            onClick={(event) => {
+              setShowReviewPrompt(false);
+            }}
+            css={{
+              display: \\"block\\",
             }}
           >
-            <img
-              src={review.avatar}
-              css={{
-                height: \\"30px\\",
-                width: \\"30px\\",
-                marginRight: \\"10px\\",
-              }}
-            />
-            <div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
-            </div>
+            Submit
+          </button>
+        </>
+      )}
+      {reviews.map((review) => (
+        <div
+          $name=\\"Review\\"
+          css={{
+            margin: \\"10px\\",
+            padding: \\"10px\\",
+            background: \\"white\\",
+            display: \\"flex\\",
+            borderRadius: \\"5px\\",
+            boxShadow: \\"0 2px 5px rgba(0, 0, 0, 0.1)\\",
+          }}
+        >
+          <img
+            src={review.avatar}
+            css={{
+              height: \\"30px\\",
+              width: \\"30px\\",
+              marginRight: \\"10px\\",
+            }}
+          />
+          <div>
+            <div css={}>{review.author}</div>
+            <div css={}>{review.reviewMessage}</div>
           </div>
-        )}
-      </For>
+        </div>
+      ))}
     </div>
   );
 }

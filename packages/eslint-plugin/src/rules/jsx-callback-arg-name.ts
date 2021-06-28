@@ -53,7 +53,7 @@ type NodeType = NodeExt['type'];
  * // true
  * ```
  */
-function isJSXLitePath(filename: string) {
+export function isJSXLitePath(filename: string) {
   filename = path.basename(filename);
 
   const tokens = filename.split('.');

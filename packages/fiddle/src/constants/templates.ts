@@ -1,19 +1,19 @@
 import dedent from 'dedent';
 
 export const defaultCode = dedent`
-  import { useState } from '@jsx-lite/core';
+  import { useState } from "react";
 
   export default function MyComponent(props) {
-    const state = useState({
-      name: 'Steve'
-    });
+    const [name, setName] = useState("Steve");
 
     return (
       <div>
         <input
-          css={{ color: 'red' }}
-          value={state.name}
-          onChange={(event) => (state.name = event.target.value)}
+          css={{
+            color: "red",
+          }}
+          value={name}
+          onChange={(event) => setName(event.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -23,142 +23,152 @@ export const defaultCode = dedent`
 
 export const templates: { [key: string]: string } = {
   basic: dedent`
-    import { useState } from '@jsx-lite/core';
+    import { useState } from "react";
     
     export default function MyComponent(props) {
-      const state = useState({
-        name: 'Steve'
-      });
+      const [name, setName] = useState("Steve");
     
       return (
         <div>
           <input
-            css={{ color: 'red' }}
-            value={state.name}
-            onChange={(event) => (state.name = event.target.value)}
+            css={{
+              color: "red",
+            }}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
           />
-          Hello {state.name}! I can run in React, Vue, Solid, or Liquid!
+          Hello
+          {name}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
     }
   `,
 
   tailwind: dedent`
-  import { useState, For } from '@jsx-lite/core';
+  import { useState } from "react";
 
-  export default function MyComponent() {
-    const state = useState({
-      name: 'Steve',
-    });
-  
+  export default function MyComponent(props) {
+    const [name, setName] = useState("Steve");
+
     return (
-      <div css={{ padding: '10px' }}>
-        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />          
-        <input 
-          class="shadow-md rounded w-full px-4 py-2"
-          placeholder="What is your name?"
-          value={state.name} 
-          onChange={event => state.name = event.target.value} />
+      <div
+        css={{
+          padding: "10px",
+        }}
+      >
+        <link
+          href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+          rel="stylesheet"
+        />
 
-        <h1 class="text-lg" css={{ marginTop: '10px' }}>
-          Hello, {state.name}!
+        <input
+          className="shadow-md rounded w-full px-4 py-2"
+          placeholder="What is your name?"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+        />
+
+        <h1
+          className="text-lg"
+          css={{
+            marginTop: "10px",
+          }}
+        >
+          Hello,
+          {name}!
         </h1>
       </div>
     );
-  }
-  
   `,
 
-  computed: dedent`
-    import { useState } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        name: 'Steve',
-        get lowerCaseName() {
-          return state.name.toLowerCase()
-        }
-      });
-    
-      return (
-        <div>
-          <Show when={props.showInput}>
-            <input
-              value={state.name}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
-          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
-        </div>
-      );
-    }
-  `,
   'methods and refs': dedent`
-    import { useState } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        name: 'Steve',
-        onBlur() {
-          // Maintain focus
-          inputRef.focus()
-        },
-        get lowerCaseName() {
-          return state.name.toLowerCase()
-        }
-      });
-
+    import { useState, useRef } from "react";
+    
+    export default function MyComponent(props) {
+      const [name, setName] = useState("Steve");
+    
+      function onBlur() {
+        // Maintain focus
+        inputRef.current.focus();
+      }
+    
+      function lowerCaseName() {
+        return name.toLowerCase();
+      }
+    
       const inputRef = useRef();
     
       return (
         <div>
-          <Show when={props.showInput}>
-            <input
-              ref={inputRef}
-              css={{ color: 'red' }}
-              value={state.name}
-              onBlur={() => state.onBlur()}
-              onChange={(event) => (state.name = event.target.value)}
-            />
-          </Show>
-          Hello {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
+          {props.showInput && (
+            <>
+              <input
+                ref={inputRef}
+                css={{
+                  color: "red",
+                }}
+                value={name}
+                onBlur={(event) => onBlur()}
+                onChange={(event) => setName(event.target.value)}
+              />
+            </>
+          )}
+          Hello
+          {lowerCaseName()}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
     }
   `,
   loop: dedent`
-    import { useState, For } from '@jsx-lite/core';
-
-    export default function MyComponent() {
-      const state = useState({
-        list: ['hello', 'world'],
-        newItemName: 'New item',
-        addItem() {
-          state.list = [...state.list, state.newItemName]
-        }
-      });
+    import { useState } from "react";
+    
+    export default function MyComponent(props) {
+      const [list, setList] = useState(["hello", "world"]);
+    
+      const [newItemName, setNewItemName] = useState("New item");
+    
+      function addItem() {
+        setList([...list, newItemName]);
+      }
     
       return (
-        <div css={{ padding: '10px' }}>
-          <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />          
-          <input 
-            class="shadow-md rounded w-full px-4 py-2"
-            value={state.newItemName} 
-            onChange={event => state.newItemName = event.target.value} />
-          <button 
-            class="bg-blue-500 rounded w-full text-white font-bold py-2 px-4 "
-            css={{ margin: '10px 0' }} 
-            onClick={() => state.addItem()}>
+        <div
+          css={{
+            padding: "10px",
+          }}
+        >
+          <link
+            href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+            rel="stylesheet"
+          />
+    
+          <input
+            className="shadow-md rounded w-full px-4 py-2"
+            value={newItemName}
+            onChange={(event) => setNewItemName(event.target.value)}
+          />
+    
+          <button
+            className="bg-blue-500 rounded w-full text-white font-bold py-2 px-4 "
+            css={{
+              margin: "10px 0",
+            }}
+            onClick={(event) => addItem()}
+          >
             Add list item
           </button>
-          <div class="shadow-md rounded">
-            <For each={state.list}>
-              {item => (
-                <div class="border-gray-200 border-b" css={{ padding: '10px' }}>
-                  {item}
-                </div>
-              )}
-            </For>
+    
+          <div className="shadow-md rounded">
+            {list.map((item) => (
+              <div
+                className="border-gray-200 border-b"
+                css={{
+                  padding: "10px",
+                }}
+              >
+                {item}
+              </div>
+            ))}
           </div>
         </div>
       );

@@ -38,36 +38,43 @@ type ToReactOptions = {
   prettier?: boolean;
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  format?: 'lite' | 'safe';
   plugins?: Plugin[];
 };
+
+const wrapInFragment = (json: JSXLiteComponent | JSXLiteNode) =>
+  json.children.length !== 1;
 
 const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToReactOptions) => string;
 } = {
   Fragment(json, options) {
-    return `<>${json.children
+    const wrap = wrapInFragment(json);
+    return `${wrap ? '<>' : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}</>`;
+      .join('\n')}${wrap ? '</>' : ''}`;
   },
   For(json, options) {
+    const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.each as string, options)}.map(${
       json.bindings._forName
     } => (
-      <>${json.children
-        .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options))
-        .join('\n')}</>
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReact(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
     ))}`;
   },
   Show(json, options) {
-    return `{Boolean(${processBinding(
+    const wrap = wrapInFragment(json);
+    return `{${options.format === 'safe' ? 'Boolean' : ''}(${processBinding(
       json.bindings.when as string,
       options,
     )}) && (
-      <>${json.children
-        .filter(filterEmptyTextNodes)
-        .map((item) => blockToReact(item, options))
-        .join('\n')}</>
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReact(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
     )}`;
   },
 };
@@ -84,7 +91,7 @@ const BINDING_MAPPERS: {
   },
 };
 
-const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
+export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
   }
@@ -138,7 +145,10 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${useBindingValue} } `;
+      str += ` ${key}={event => ${updateStateSettersInCode(
+        useBindingValue,
+        options,
+      )} } `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -153,10 +163,19 @@ const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
       str += ` ${key}={${useBindingValue}} `;
     }
   }
+
   if (selfClosingTags.has(json.name)) {
     return str + ' />';
   }
+
+  // Self close by default if no children
+  if (!json.children.length) {
+    str += ' />';
+    return str;
+  }
+
   str += '>';
+
   if (json.children) {
     str += json.children.map((item) => blockToReact(item, options)).join('\n');
   }
@@ -190,21 +209,18 @@ const getUseStateCode = (json: JSXLiteComponent, options: ToReactOptions) => {
 
   const { state } = json;
 
-  const valueMapper = (val: string) => processBinding(val, options);
+  const valueMapper = (val: string) =>
+    processBinding(updateStateSettersInCode(val, options), options);
 
   const keyValueDelimiter = '=';
-  const lineItemDelimiter = '\n';
+  const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
     const value = state[key];
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
-        const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `const [${key}, set${capitalize(
-          key,
-        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-          functionValue,
-        )}))${lineItemDelimiter} `;
+        const useValue = value.replace(functionLiteralPrefix, '');
+        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
@@ -304,14 +320,56 @@ export const componentToReact = (
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
+
+  let str = _componentToReact(componentJson, options);
+
+  str +=
+    '\n\n\n' +
+    componentJson.subComponents
+      .map((item) => _componentToReact(item, options, true))
+      .join('\n\n\n');
+
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
+  if (options.prettier !== false) {
+    try {
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [
+          require('prettier/parser-typescript'), // To support running in browsers
+          require('prettier/parser-postcss'),
+        ],
+      })
+        // Remove spaces between imports
+        .replace(/;\n\nimport\s/g, ';\nimport ');
+    } catch (err) {
+      console.error(
+        'Format error for file:',
+        str,
+        JSON.stringify(json, null, 2),
+      );
+      throw err;
+    }
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
+  }
+  return str;
+};
+
+const _componentToReact = (
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+  isSubComponent = false,
+) => {
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
   }
 
-  const refs = getRefs(componentJson);
-  const hasRefs = Boolean(getRefs(componentJson).size);
+  const refs = getRefs(json);
   let hasState = Boolean(Object.keys(json.state).length);
 
   mapRefs(json, (refName) => `${refName}.current`);
@@ -337,7 +395,9 @@ export const componentToReact = (
     componentHasStyles &&
     collectStyledComponents(json);
 
-  stripMetaProperties(json);
+  if (options.format !== 'lite') {
+    stripMetaProperties(json);
+  }
 
   const reactLibImports: Set<ReactExports> = new Set();
   if (useStateCode && useStateCode.length > 4) {
@@ -350,6 +410,8 @@ export const componentToReact = (
     reactLibImports.add('useEffect');
   }
 
+  const wrap = wrapInFragment(json);
+
   let str = dedent`
   ${
     reactLibImports.size
@@ -357,7 +419,7 @@ export const componentToReact = (
       : ''
   }
   ${
-    componentHasStyles && stylesType === 'emotion'
+    componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
     import { jsx } from '@emotion/react'`.trim()
       : ''
@@ -381,7 +443,8 @@ export const componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    export default function ${componentJson.name || 'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${json.name ||
+    'MyComponent'}(props) {
       ${
         hasState
           ? stateType === 'mobx'
@@ -423,14 +486,14 @@ export const componentToReact = (
       }
 
       return (
-        <>
+        ${wrap ? '<>' : ''}
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
-        </>
+        ${wrap ? '</>' : ''}
       );
     }
 
@@ -438,31 +501,5 @@ export const componentToReact = (
 
   str = stripNewlinesInStrings(str);
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-          require('prettier/parser-postcss'),
-        ],
-      })
-        // Remove spaces between imports
-        .replace(/;\n\nimport\s/g, ';\nimport ');
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        str,
-        JSON.stringify(json, null, 2),
-      );
-      throw err;
-    }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
   return str;
 };

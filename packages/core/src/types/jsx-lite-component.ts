@@ -46,4 +46,5 @@ export type JSXLiteComponent = {
     postComponent?: string;
   };
   children: JSXLiteNode[];
+  subComponents: JSXLiteComponent[];
 };

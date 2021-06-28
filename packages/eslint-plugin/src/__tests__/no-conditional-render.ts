@@ -5,6 +5,7 @@ import { staticControlFlow } from '../index';
 const ruleTester = new RuleTester();
 
 const options = {
+  filename: 'component.lite.tsx',
   parserOptions: {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
     sourceType: 'module', // Allows for the use of imports
@@ -24,18 +25,17 @@ ruleTester.run('static-control-flow', staticControlFlow, {
       ...options,
       code: '<For each={list}>{item => <span />}</For>',
     },
+    {
+      ...options,
+      code: '<div>{list.map(item => <span />)}</div>',
+    },
   ],
 
   invalid: [
     {
       ...options,
       code: '<div>{foo ? <div /> : <span />}</div>',
-      errors: [{ message: /static/i }],
-    },
-    {
-      ...options,
-      code: '<div>{list.map(item => <span />)}</div>',
-      errors: [{ message: /static/i }],
+      errors: [{ message: /Ternaries/i }],
     },
   ],
 });

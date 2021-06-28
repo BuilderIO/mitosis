@@ -2,7 +2,7 @@ import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
-import { mapKeys, merge, omit, omitBy, upperFirst } from 'lodash';
+import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { Size, sizeNames, sizes } from '../constants/media-sizes';
@@ -766,14 +766,64 @@ export function extractStateHook(code: string) {
 
   return { code: newCode, state };
 }
+// TODO: maybe this should be part of the builder -> JSX Lite part
+function extractSymbols(json: BuilderContent) {
+  const subComponents: { content: BuilderContent; name: string }[] = [];
 
-export const builderContentToJsxLiteComponent = (
+  const symbols: { element: BuilderElement; depth: number; id: string }[] = [];
+
+  traverse(json).forEach(function(item) {
+    if (isBuilderElement(item)) {
+      if (item.component?.name === 'Symbol') {
+        symbols.push({ element: item, depth: this.path.length, id: item.id! });
+      }
+    }
+  });
+
+  const symbolsSortedDeepestFirst = sortBy(symbols, (info) => info.depth)
+    .reverse()
+    .map((el) => el.element);
+
+  let symbolsFound = 0;
+
+  for (const el of symbolsSortedDeepestFirst) {
+    const symbolValue = el.component?.options?.symbol;
+    const elContent = symbolValue?.content;
+
+    if (!elContent) {
+      console.warn('Symbol missing content', el.id);
+      delete el.component?.options.symbol.content;
+      continue;
+    }
+
+    const componentName = 'Symbol' + ++symbolsFound;
+
+    el.component!.name = componentName;
+
+    delete el.component?.options.symbol.content;
+
+    subComponents.push({
+      content: elContent,
+      name: componentName,
+    });
+  }
+
+  return {
+    content: json,
+    subComponents,
+  };
+}
+
+export const isBuilderElement = (el: unknown): el is BuilderElement =>
+  (el as any)?.['@type'] === '@builder.io/sdk:Element';
+
+const builderContentPartToJsxLiteComponent = (
   builderContent: BuilderContent,
   options: BuilderToJSXLiteOptions = {},
 ) => {
   builderContent = fastClone(builderContent);
   traverse(builderContent).forEach(function(elem) {
-    if (elem && elem['@type'] === '@builder.io/sdk:Element') {
+    if (isBuilderElement(elem)) {
       // Try adding self-closing tags to void elements, since Builder Text
       // blocks can contain arbitrary HTML
       // List taken from https://developer.mozilla.org/en-US/docs/Glossary/Empty_element
@@ -810,7 +860,7 @@ export const builderContentToJsxLiteComponent = (
 
   const parsed = getHooks(builderContent);
 
-  return createJSXLiteComponent({
+  const componentJson = createJSXLiteComponent({
     state: parsed?.state || {
       ...state,
       ...builderContent.data?.state,
@@ -829,4 +879,25 @@ export const builderContentToJsxLiteComponent = (
       })
       .map((item) => builderElementToJsxLiteNode(item, options)),
   });
+
+  return componentJson;
+};
+
+export const builderContentToJsxLiteComponent = (
+  builderContent: BuilderContent,
+  options: BuilderToJSXLiteOptions = {},
+) => {
+  builderContent = fastClone(builderContent);
+
+  const separated = extractSymbols(builderContent);
+
+  const componentJson = {
+    ...builderContentPartToJsxLiteComponent(separated.content, options),
+    subComponents: separated.subComponents.map((item) => ({
+      ...builderContentPartToJsxLiteComponent(item.content, options),
+      name: item.name,
+    })),
+  };
+
+  return componentJson;
 };

@@ -1,10 +1,15 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
+import jsxCallbackArgNameRule, {
+  isJSXLitePath,
+} from './rules/jsx-callback-arg-name';
 
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
+    if (!isJSXLitePath(context.getFilename())) return {};
+
     return {
-      VariableDeclarator(node: any) {
+      VariableDeclarator(node) {
         if (types.isVariableDeclarator(node)) {
           if (
             types.isObjectPattern(node.id) &&
@@ -20,25 +25,42 @@ export const staticControlFlow: Rule.RuleModule = {
         }
       },
 
-      JSXExpressionContainer(node: any) {
+      CallExpression(node) {
+        if (types.isCallExpression(node)) {
+          if (
+            types.isIdentifier(node.callee) &&
+            node.callee.name === 'useEffect'
+          ) {
+            const useEffectMessage =
+              'Only useEffect with an empty array second argument is allowed. E.g. useEfffect(...) must be useEffect(..., [])';
+            const secondArg = node.arguments[1];
+            if (
+              !(
+                secondArg &&
+                types.isArrayExpression(secondArg) &&
+                secondArg.elements.length === 0
+              )
+            ) {
+              context.report({
+                node: node,
+                message: useEffectMessage,
+              });
+            }
+          }
+        }
+      },
+
+      JSXExpressionContainer(node) {
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {
-            context.report({
-              node: node as any,
-              message:
-                'Static rendering is required. E.g. {foo ? bar : baz} should be <Show when={foo}>{bar}</Show>',
-            });
-          }
-          if (types.isCallExpression(node.expression)) {
-            const firstArg = node.expression.arguments[0];
             if (
-              types.isArrowFunctionExpression(firstArg) ||
-              types.isFunctionExpression(firstArg)
+              types.isJSXElement(node.expression.consequent) ||
+              types.isJSXElement(node.expression.alternate)
             ) {
               context.report({
                 node: node as any,
                 message:
-                  'Static rendering is required. E.g. {foo.map(...)} should be <For each={foo}>{...}</For>',
+                  'Ternaries around JSX Elements are not currently supported. Instead use binary expressions - e.g. {foo ? <bar /> : <baz />} should be {foo && <bar />}{!foo && <baz />}',
               });
             }
           }
@@ -50,5 +72,5 @@ export const staticControlFlow: Rule.RuleModule = {
 
 export const rules = {
   'static-control-flow': staticControlFlow,
-  'jsx-callback-arg-name': import('./rules/jsx-callback-arg-name'),
+  'jsx-callback-arg-name': jsxCallbackArgNameRule,
 };
