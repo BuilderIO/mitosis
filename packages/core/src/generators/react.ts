@@ -33,6 +33,7 @@ import {
 import { capitalize } from '../helpers/capitalize';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 
 type ToReactOptions = {
   prettier?: boolean;
@@ -130,12 +131,14 @@ export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
         str += ` ${BINDING_MAPPERS[key]}="${value}" `;
       }
     } else {
-      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+      if (isValidAttributeName(key)) {
+        str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+      }
     }
   }
 
   for (const key in json.bindings) {
-    const value = json.bindings[key] as string;
+    const value = String(json.bindings[key]);
     if (key === '_spread') {
       continue;
     }
@@ -160,7 +163,9 @@ export const blockToReact = (json: JSXLiteNode, options: ToReactOptions) => {
         str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
       }
     } else {
-      str += ` ${key}={${useBindingValue}} `;
+      if (isValidAttributeName(key)) {
+        str += ` ${key}={${useBindingValue}} `;
+      }
     }
   }
 

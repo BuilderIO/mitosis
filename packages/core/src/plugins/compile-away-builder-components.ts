@@ -297,7 +297,7 @@ export const components: CompileAwayComponentsMap = {
         <img
           $name="image"
           ${lazy ? ` loading="lazy" ` : ''}
-          src=${image} 
+          ${image ? ` src=${image} ` : ''} 
           ${!sizes ? '' : `sizes=${sizes}`} 
           ${!srcSet ? '' : `srcSet="${srcSet}"`}
           css={{
