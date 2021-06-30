@@ -13,7 +13,7 @@ import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { blockToReact, componentToReact } from './react';
 
-export const DEFAULT_FORMAT = 'react';
+export const DEFAULT_FORMAT = 'legacy';
 
 export type JsxLiteFormat = 'react' | 'legacy';
 

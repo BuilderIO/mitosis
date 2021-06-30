@@ -194,11 +194,13 @@ const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
   }
 
   for (const key in json.properties) {
-    if (key.startsWith('_') || key.startsWith('$')) {
+    if (!key || key.startsWith('_') || key.startsWith('$')) {
       continue;
     }
     const value = htmlAttributeEscape(json.properties[key] || '');
-    str += ` ${key}="${value}" `;
+    if (isValidAttributeName(key)) {
+      str += ` ${key}="${value}" `;
+    }
   }
 
   const eventBindings: Record<string, string> = {};

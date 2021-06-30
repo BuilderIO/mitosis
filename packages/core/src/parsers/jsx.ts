@@ -548,7 +548,6 @@ export function parseJsx(
   jsx: string,
   options: Partial<ParseJSXLiteOptions> = {},
 ): JSXLiteComponent {
-  console.log('jsx', jsx);
   const useOptions: ParseJSXLiteOptions = {
     format: 'react',
     ...options,
