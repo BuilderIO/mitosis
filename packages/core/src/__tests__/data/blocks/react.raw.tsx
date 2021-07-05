@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function MyBasicComponent() {
-  const [setName, name] = useState('Steve');
+  const [name, setName] = useState('Steve');
 
   const className = name == 'Steve' ? 'text-red' : 'text-black';
 
@@ -9,7 +9,7 @@ export default function MyBasicComponent() {
     <div className="container">
       <input
         value={name}
-        autoCapitalize
+        autoCapitalize="off"
         onChange={(event) => setName(event.target.value)}
       />
 
@@ -18,12 +18,7 @@ export default function MyBasicComponent() {
       <span className={className}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </span>
-      <svg
-        width={120}
-        height={120}
-        viewBox="0 0 120 120"
-        xmlns="http://www.w3.org/2000/svg"
-      >
+      <svg width={120} height={120} viewBox="0 0 120 120">
         <polygon points="60,30 90,90 30,90">
           <animateTransform
             attributeName="transform"

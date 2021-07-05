@@ -2,7 +2,7 @@ import { componentToSvelte } from '../generators/svelte';
 import { parseJsx } from '../parsers/jsx';
 
 const buttonWithMetadata = require('./data/blocks/button-with-metadata.raw');
-const functionComponent = require('./data/proper-react.raw');
+const functionComponent = require('./data/blocks/react.raw');
 
 describe('Parse JSX', () => {
   test('metadata', () => {
