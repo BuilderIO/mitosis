@@ -1,19 +1,24 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import JSON5 from 'json5';
-import { JSXLiteNode } from '../types/jsx-lite-node';
-import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
-import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
+import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
+import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
+import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
+import {
+  REACT_ATTRIBUTE_MAPPING,
+  REACT_ELEMENT_ATTRIBUTE_MAPPING,
+  REACT_ELEMENT_TAG_NAME_MAPPING,
+} from './react-elements';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -334,14 +339,17 @@ const jsxElementToJson = (
     });
   }
 
-  const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
+  let nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
+
+  if (REACT_ELEMENT_TAG_NAME_MAPPING[nodeName]) {
+    nodeName = REACT_ELEMENT_TAG_NAME_MAPPING[nodeName];
+  }
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -373,8 +381,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -388,8 +398,16 @@ const jsxElementToJson = (
     name: nodeName,
     properties: node.openingElement.attributes.reduce((memo, item) => {
       if (types.isJSXAttribute(item)) {
-        const key = item.name.name as string;
-        const value = item.value;
+        let key = item.name.name as string;
+        let value = item.value;
+        key = replaceReactStandardAttributes(nodeName, key);
+
+        if (value == null) {
+          if (key == 'checked') value = types.stringLiteral('checked');
+          if (key == 'disabled') value = types.stringLiteral('disabled');
+          if (key == 'selected') value = types.stringLiteral('selected');
+        }
+
         if (types.isStringLiteral(value)) {
           memo[key] = value;
           return memo;
@@ -399,8 +417,10 @@ const jsxElementToJson = (
     }, {} as { [key: string]: JSONOrNode }) as any,
     bindings: node.openingElement.attributes.reduce((memo, item) => {
       if (types.isJSXAttribute(item)) {
-        const key = item.name.name as string;
+        let key = item.name.name as string;
         const value = item.value;
+
+        key = replaceReactStandardAttributes(nodeName, key);
 
         if (types.isJSXExpressionContainer(value)) {
           const { expression } = value;
@@ -422,6 +442,21 @@ const jsxElementToJson = (
     children: node.children.map((item) => jsxElementToJson(item as any)) as any,
   });
 };
+
+function replaceReactStandardAttributes(tagName: string, key: string) {
+  if (REACT_ATTRIBUTE_MAPPING[key]) {
+    key = REACT_ATTRIBUTE_MAPPING[key];
+  }
+
+  if (
+    REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName] &&
+    REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName][key]
+  ) {
+    key = REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName][key];
+  }
+
+  return key;
+}
 
 const getHook = (node: babel.Node) => {
   const item = node;
@@ -529,7 +564,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
