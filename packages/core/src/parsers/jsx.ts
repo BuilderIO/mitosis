@@ -400,7 +400,14 @@ const jsxElementToJson = (
       if (types.isJSXAttribute(item)) {
         let key = item.name.name as string;
         let value = item.value;
-        key = replaceReactStandardAttributes(nodeName, key);
+        key = replaceReactStandardAttributes(key);
+
+        if (
+          REACT_ELEMENT_ATTRIBUTE_MAPPING[nodeName] &&
+          REACT_ELEMENT_ATTRIBUTE_MAPPING[nodeName][key]
+        ) {
+          key = REACT_ELEMENT_ATTRIBUTE_MAPPING[nodeName][key];
+        }
 
         if (value == null) {
           if (key == 'checked') value = types.stringLiteral('checked');
@@ -420,7 +427,7 @@ const jsxElementToJson = (
         let key = item.name.name as string;
         const value = item.value;
 
-        key = replaceReactStandardAttributes(nodeName, key);
+        key = replaceReactStandardAttributes(key);
 
         if (types.isJSXExpressionContainer(value)) {
           const { expression } = value;
@@ -443,18 +450,10 @@ const jsxElementToJson = (
   });
 };
 
-function replaceReactStandardAttributes(tagName: string, key: string) {
+function replaceReactStandardAttributes(key: string) {
   if (REACT_ATTRIBUTE_MAPPING[key]) {
     key = REACT_ATTRIBUTE_MAPPING[key];
   }
-
-  if (
-    REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName] &&
-    REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName][key]
-  ) {
-    key = REACT_ELEMENT_ATTRIBUTE_MAPPING[tagName][key];
-  }
-
   return key;
 }
 
