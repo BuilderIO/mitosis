@@ -45,40 +45,41 @@ export const templates: { [key: string]: string } = {
   `,
 
   tailwind: dedent`
-  import { useState } from "react";
+    import { useState } from "react";
 
-  export default function MyComponent(props) {
-    const [name, setName] = useState("Steve");
+    export default function MyComponent(props) {
+      const [name, setName] = useState("Steve");
 
-    return (
-      <div
-        css={{
-          padding: "10px",
-        }}
-      >
-        <link
-          href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
-          rel="stylesheet"
-        />
-
-        <input
-          className="shadow-md rounded w-full px-4 py-2"
-          placeholder="What is your name?"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-
-        <h1
-          className="text-lg"
+      return (
+        <div
           css={{
-            marginTop: "10px",
+            padding: "10px",
           }}
         >
-          Hello,
-          {name}!
-        </h1>
-      </div>
-    );
+          <link
+            href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+            rel="stylesheet"
+          />
+
+          <input
+            className="shadow-md rounded w-full px-4 py-2"
+            placeholder="What is your name?"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+
+          <h1
+            className="text-lg"
+            css={{
+              marginTop: "10px",
+            }}
+          >
+            Hello,
+            {name}!
+          </h1>
+        </div>
+      );
+    }
   `,
 
   'methods and refs': dedent`
