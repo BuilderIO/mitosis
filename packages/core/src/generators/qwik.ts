@@ -310,7 +310,7 @@ const getEventHandlerFiles = (
               provideEvent,
               markDirty
             } from '${qwikImport(options)}';
-            import { ${componentName}Component } from './${componentName}.js'
+            import { ${componentName}Component } from './${componentName}_component.js'
             
             export ${
               options.bundle ? `const on${eventHandlerName} =` : 'default'
