@@ -65,7 +65,7 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
-        const value = json5.parse(item.bindings.css as string);
+        const value = parseCssObject(item.bindings.css as string);
         delete item.bindings.css;
         const componentName = item.properties.$name
           ? capitalize(camelCase(item.properties.$name))
@@ -113,6 +113,15 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
   return styledComponentsCode;
 };
 
+export const parseCssObject = (css: string) => {
+  try {
+    return json5.parse(css)
+  } catch (e) {
+    console.warn('Could not parse CSS object', css)
+    throw e
+  }
+}
+
 export const collectStyles = (
   json: JSXLiteComponent,
   options: CollectStyleOptions = {},
@@ -127,7 +136,7 @@ export const collectStyles = (
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (nodeHasStyles(item)) {
-        const value = json5.parse(item.bindings.css as string);
+        const value = parseCssObject(item.bindings.css as string);
         delete item.bindings.css;
         const componentName = item.properties.$name
           ? dashCase(item.properties.$name)
