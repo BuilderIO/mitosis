@@ -22,7 +22,7 @@ export const collectReactNativeStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
