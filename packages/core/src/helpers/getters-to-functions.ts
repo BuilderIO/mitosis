@@ -18,21 +18,32 @@ export const gettersToFunctions = (json: JSXLiteComponent) => {
     return false;
   });
 
-  traverse(json).forEach(function(item) {
+  console.log('getterKeys', getterKeys);
+
+  traverse(json).forEach(function (item) {
     // TODO: not all strings are expressions!
     if (typeof item === 'string') {
       let value = item;
       for (const key of getterKeys) {
         try {
-          this.update(
-            value.replace(
-              new RegExp(`state\\s*\\.\\s*${key}([^a-z0-9]|$)`, 'i'),
-              `${key}()$1`,
-            ),
+          value = value.replace(
+            new RegExp(`state\\s*\\.\\s*${key}([^a-z0-9]|$)`, 'gi'),
+            (match, group1) => {
+              console.log('matched', match);
+
+              if (match.endsWith('?')) {
+                return `${key}?.()${group1}`;
+              }
+
+              return `${key}()${group1}`;
+            },
           );
         } catch (err) {
           console.error('Could not update getter ref', err);
         }
+      }
+      if (value !== item) {
+        this.update(value);
       }
     }
   });
