@@ -106,6 +106,11 @@ export const blockToVue = (
     if (key === '_spread') {
       continue;
     }
+    if (key === 'class') {
+      // TODO: support dynamic classes as objects somehow like Vue requires
+      // https://vuejs.org/v2/guide/class-and-style.html
+      continue;
+    }
     const value = node.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value);

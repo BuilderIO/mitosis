@@ -1,5 +1,6 @@
 import json5 from 'json5';
 import { camelCase, size } from 'lodash';
+import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/collect-styles';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
@@ -21,7 +22,7 @@ export const collectReactNativeStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -44,9 +45,10 @@ export const collectReactNativeStyles = (
 };
 
 export const componentToReactNative = (
-  json: JSXLiteComponent,
+  componentJson: JSXLiteComponent,
   options: ToReactNativeOptions,
 ) => {
+  const json = fastClone(componentJson);
   traverse(json).forEach((node) => {
     if (isJsxLiteNode(node)) {
       // TODO: handle TextInput, Image, etc
