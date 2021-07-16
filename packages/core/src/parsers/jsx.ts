@@ -283,7 +283,7 @@ const jsxElementToJson = (
   }
   if (types.isJSXExpressionContainer(node)) {
     // foo.map -> <For each={foo}>...</For>
-    if (types.isCallExpression(node.expression)) {
+    if (types.isCallExpression(node.expression) || types.isOptionalCallExpression(node.expression)) {
       const callback = node.expression.arguments[0];
       if (types.isArrowFunctionExpression(callback)) {
         if (types.isIdentifier(callback.params[0])) {
@@ -292,7 +292,9 @@ const jsxElementToJson = (
           return createJSXLiteNode({
             name: 'For',
             bindings: {
-              each: generate(node.expression.callee).code.slice(0, -4),
+              each: generate(node.expression.callee).code
+              // Remove .map or potentially ?.map
+              .replace(/\??\.map$/, ''),
               _forName: forName,
             },
             children: [jsxElementToJson(callback.body as any)],
@@ -334,7 +336,7 @@ const jsxElementToJson = (
     });
   }
 
-  const nodeName = (node.openingElement.name as babel.types.JSXIdentifier).name;
+  const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
     const whenAttr:

@@ -1,27 +1,26 @@
 import { types } from '@babel/core';
-import * as CSS from 'csstype';
 import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase, size } from 'lodash';
 import { format } from 'prettier/standalone';
-import { capitalize } from '../helpers/capitalize';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { ClassStyleMap } from '../helpers/collect-styles';
+import { capitalize } from '../helpers/capitalize';
+import { collectStyles, hasStyles } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { mapRefs } from '../helpers/map-refs';
+import { processTagReferences } from '../helpers/process-tag-references';
 import { renderPreComponent } from '../helpers/render-imports';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -29,87 +28,76 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-
-export const collectStyles = (json: JSXLiteComponent): ClassStyleMap => {
-  const styleMap: ClassStyleMap = {};
-
-  const componentIndexes: { [className: string]: number | undefined } = {};
-
-  traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
-      if (typeof item.bindings.css === 'string') {
-        const value = json5.parse(item.bindings.css);
-        delete item.bindings.css;
-        if (!size(value)) {
-          return;
-        }
-        const componentName = camelCase(item.name || 'view');
-        const index = (componentIndexes[componentName] =
-          (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${index}`;
-        item.bindings.style = `styles.${className}`;
-
-        styleMap[className] = value;
-      }
-    }
-  });
-
-  return styleMap;
-};
+import { selfClosingTags } from '../parsers/jsx';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 
 type ToReactNativeOptions = {
   prettier?: boolean;
+  stylesType?: 'emotion' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
+  format?: 'lite' | 'safe';
   plugins?: Plugin[];
 };
 
-const getStyles = (json: JSXLiteNode) => {
-  if (!json.bindings.css) {
-    return null;
-  }
-  let css: CSS.Properties;
-  try {
-    css = json5.parse(json.bindings.css as string);
-  } catch (err) {
-    console.warn('Could not json 5 parse css');
-    return null;
-  }
-  return css;
-};
+const wrapInFragment = (json: JSXLiteComponent | JSXLiteNode) =>
+  json.children.length !== 1;
 
-const scrolls = (json: JSXLiteNode) => {
-  return getStyles(json)?.overflow === 'auto';
-};
-
-const mappers: {
+const NODE_MAPPERS: {
   [key: string]: (json: JSXLiteNode, options: ToReactNativeOptions) => string;
 } = {
-  Fragment: (json, options) => {
-    return `<>${json.children
+  Fragment(json, options) {
+    const wrap = wrapInFragment(json);
+    return `${wrap ? '<>' : ''}${json.children
       .map((item) => blockToReactNative(item, options))
-      .join('\n')}</>`;
+      .join('\n')}${wrap ? '</>' : ''}`;
+  },
+  For(json, options) {
+    const wrap = wrapInFragment(json);
+    return `{${processBinding(json.bindings.each as string, options)}.map(${
+      json.bindings._forName
+    } => (
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReactNative(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
+    ))}`;
+  },
+  Show(json, options) {
+    const wrap = wrapInFragment(json);
+    return `{${options.format === 'safe' ? 'Boolean' : ''}(${processBinding(
+      json.bindings.when as string,
+      options,
+    )}) && (
+      ${wrap ? '<>' : ''}${json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToReactNative(item, options))
+      .join('\n')}${wrap ? '</>' : ''}
+    )}`;
   },
 };
 
-const blockToReactNative = (
+// TODO: Maybe in the future allow defining `string | function` as values
+const BINDING_MAPPERS: {
+  [key: string]: string | ((key: string, value: string) => [string, string]);
+} = {
+  innerHTML(_key, value) {
+    return [
+      'dangerouslySetInnerHTML',
+      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+    ];
+  },
+};
+
+export const blockToReactNative = (
   json: JSXLiteNode,
   options: ToReactNativeOptions,
-): string => {
-  if (mappers[json.name]) {
-    return mappers[json.name](json, options);
-  }
-
-  if (isChildren(json)) {
-    // The default generator uses `<Text/>` so we override it here
-    // to use `<View/>` which is the ReactNative analog to React's `<div/>`
-    return `<View>{${json.bindings._text}}</View>`;
+) => {
+  if (NODE_MAPPERS[json.name]) {
+    return NODE_MAPPERS[json.name](json, options);
   }
 
   if (json.properties._text) {
-    if (!json.properties._text.trim().length) {
-      return '';
-    }
     return `<Text>${json.properties._text}</Text>`;
   }
   if (json.bindings._text) {
@@ -121,83 +109,91 @@ const blockToReactNative = (
 
   let str = '';
 
-  const children = json.children.filter(filterEmptyTextNodes);
+  // TODO: handle TextInput, Image, etc
+  let name = json.name.toLowerCase() === json.name ? 'View' : json.name;
 
-  // TODO: do as preprocess step and do more mappings of dom attributes to special
-  // Image, TextField, etc component props
-  const name =
-    json.name === 'input'
-      ? 'TextInput'
-      : json.name === 'img'
-      ? 'Image'
-      : json.name[0].toLowerCase() === json.name[0]
-      ? json.bindings.onClick
-        ? 'TouchableWithoutFeedback'
-        : scrolls(json)
-        ? 'ScrollView'
-        : 'View'
-      : json.name;
+  str += `<${name} `;
 
-  if (json.name === 'For') {
-    str += `{${processBinding(json.bindings.each as string, options)}.map(${
-      json.bindings._forName
-    } => (
-      <>${children
-        .map((item) => blockToReactNative(item, options))
-        .join('\n')}</>
-    ))}`;
-  } else if (json.name === 'Show') {
-    str += `{Boolean(${processBinding(
-      json.bindings.when as string,
+  if (json.bindings._spread) {
+    str += ` {...(${processBinding(
+      json.bindings._spread as string,
       options,
-    )}) && (
-      <>${children
-        .map((item) => blockToReactNative(item, options))
-        .join('\n')}</>
-    )}`;
-  } else {
-    str += `<${name} `;
-
-    if (json.bindings._spread) {
-      str += ` {...(${processBinding(
-        json.bindings._spread as string,
-        options,
-      )})} `;
-    }
-
-    for (const key in json.properties) {
-      if (key.startsWith('$')) {
-        continue;
-      }
-      const value = json.properties[key];
-      str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
-    }
-    for (const key in json.bindings) {
-      const value = json.bindings[key] as string;
-      if (key === '_spread') {
-        continue;
-      }
-
-      if (key.startsWith('on')) {
-        str += ` ${key}={event => ${processBinding(value, options)}} `;
-      } else {
-        str += ` ${key}={${processBinding(value, options)}} `;
-      }
-    }
-    if (selfClosingTags.has(json.name)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children
-        .map((item) => blockToReactNative(item, options))
-        .join('\n');
-    }
-
-    str += `</${name}>`;
+    )})} `;
   }
 
-  return str;
+  for (const key in json.properties) {
+    const value = (json.properties[key] || '')
+      .replace(/"/g, '&quot;')
+      .replace(/\n/g, '\\n');
+
+    if (key === 'class') {
+      str += ` className="${value}" `;
+    } else if (BINDING_MAPPERS[key]) {
+      const mapper = BINDING_MAPPERS[key];
+      if (typeof mapper === 'function') {
+        const [newKey, newValue] = mapper(key, value);
+        str += ` ${newKey}={${newValue}} `;
+      } else {
+        str += ` ${BINDING_MAPPERS[key]}="${value}" `;
+      }
+    } else {
+      if (isValidAttributeName(key)) {
+        str += ` ${key}="${(value as string).replace(/"/g, '&quot;')}" `;
+      }
+    }
+  }
+
+  for (const key in json.bindings) {
+    const value = String(json.bindings[key]);
+    if (key === '_spread') {
+      continue;
+    }
+    if (key === 'css' && value.trim() === '{}') {
+      continue;
+    }
+
+    const useBindingValue = processBinding(value, options);
+    if (key.startsWith('on')) {
+      str += ` ${key}={event => ${updateStateSettersInCode(
+        useBindingValue,
+        options,
+      )} } `;
+    } else if (key === 'class') {
+      str += ` className={${useBindingValue}} `;
+    } else if (BINDING_MAPPERS[key]) {
+      const mapper = BINDING_MAPPERS[key];
+      if (typeof mapper === 'function') {
+        const [newKey, newValue] = mapper(key, useBindingValue);
+        str += ` ${newKey}={${newValue}} `;
+      } else {
+        str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
+      }
+    } else {
+      if (isValidAttributeName(key)) {
+        str += ` ${key}={${useBindingValue}} `;
+      }
+    }
+  }
+
+  if (selfClosingTags.has(name)) {
+    return str + ' />';
+  }
+
+  // Self close by default if no children
+  if (!json.children.length) {
+    str += ' />';
+    return str;
+  }
+
+  str += '>';
+
+  if (json.children) {
+    str += json.children
+      .map((item) => blockToReactNative(item, options))
+      .join('\n');
+  }
+
+  return str + `</${name}>`;
 };
 
 const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
@@ -229,21 +225,18 @@ const getUseStateCode = (
 
   const { state } = json;
 
-  const valueMapper = (val: string) => processBinding(val, options);
+  const valueMapper = (val: string) =>
+    processBinding(updateStateSettersInCode(val, options), options);
 
   const keyValueDelimiter = '=';
-  const lineItemDelimiter = '\n';
+  const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
     const value = state[key];
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
-        const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `const [${key}, set${capitalize(
-          key,
-        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-          functionValue,
-        )}))${lineItemDelimiter} `;
+        const useValue = value.replace(functionLiteralPrefix, '');
+        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
@@ -267,37 +260,19 @@ const getUseStateCode = (
   return str;
 };
 
-const updateStateSetters = (json: JSXLiteComponent) => {
-  traverse(json).forEach(function(item) {
+const updateStateSetters = (
+  json: JSXLiteComponent,
+  options: ToReactNativeOptions,
+) => {
+  if (options.stateType !== 'useState') {
+    return;
+  }
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
-        let matchFound = false;
-        const newValue = babelTransformExpression(value, {
-          AssignmentExpression(
-            path: babel.NodePath<babel.types.AssignmentExpression>,
-          ) {
-            const { node } = path;
-            if (types.isMemberExpression(node.left)) {
-              if (types.isIdentifier(node.left.object)) {
-                // TODO: utillity to properly trace this reference to the beginning
-                if (node.left.object.name === 'state') {
-                  // TODO: ultimately support other property access like strings
-                  const propertyName = (node.left.property as types.Identifier)
-                    .name;
-                  matchFound = true;
-                  path.replaceWith(
-                    types.callExpression(
-                      types.identifier(`set${capitalize(propertyName)}`),
-                      [node.right],
-                    ),
-                  );
-                }
-              }
-            }
-          },
-        });
-        if (matchFound) {
+        const newValue = updateStateSettersInCode(value, options);
+        if (newValue !== value) {
           item.bindings[key] = newValue;
         }
       }
@@ -305,121 +280,69 @@ const updateStateSetters = (json: JSXLiteComponent) => {
   });
 };
 
-const guessAtComponentsUsed = (code: string) => {
-  const components: string[] = [];
-  // Slightly janky, but reliable and WAY lighter weight than doing a final babel parse (tho
-  // plugins may support this later)
-  for (const component of [
-    'View',
-    'TextInput',
-    'Text',
-    'Image',
-    'TouchableWithoutFeedback',
-    'ScrollView',
-  ]) {
-    if (code.match(new RegExp(`<${component}\\W`))) {
-      components.push(component);
-    }
+const updateStateSettersInCode = (
+  value: string,
+  options: ToReactNativeOptions,
+) => {
+  if (options.stateType !== 'useState') {
+    return value;
   }
-  return components;
+  return babelTransformExpression(value, {
+    AssignmentExpression(
+      path: babel.NodePath<babel.types.AssignmentExpression>,
+    ) {
+      const { node } = path;
+      if (types.isMemberExpression(node.left)) {
+        if (types.isIdentifier(node.left.object)) {
+          // TODO: utillity to properly trace this reference to the beginning
+          if (node.left.object.name === 'state') {
+            // TODO: ultimately support other property access like strings
+            const propertyName = (node.left.property as types.Identifier).name;
+            path.replaceWith(
+              types.callExpression(
+                types.identifier(`set${capitalize(propertyName)}`),
+                [node.right],
+              ),
+            );
+          }
+        }
+      }
+    },
+  });
 };
+
+const getInitCode = (
+  json: JSXLiteComponent,
+  options: ToReactNativeOptions,
+): string => {
+  return processBinding(json.hooks.init || '', options);
+};
+
+type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
 
 export const componentToReactNative = (
   componentJson: JSXLiteComponent,
-  options: ToReactNativeOptions = {},
+  reactOptions: ToReactNativeOptions = {},
 ) => {
   let json = fastClone(componentJson);
+  const options: ToReactNativeOptions = {
+    stateType: 'useState',
+    stylesType: 'react-native',
+    ...reactOptions,
+  };
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
-  if (options.stateType === 'useState') {
-    gettersToFunctions(json);
-    updateStateSetters(json);
-  }
 
-  const styles = collectStyles(json);
-  const hasStyles = Boolean(Object.keys(styles).length);
+  processTagReferences(json);
 
-  const hasRefs = Boolean(getRefs(componentJson).size);
-  const hasState = Boolean(Object.keys(json.state).length);
-  mapRefs(json, (refName) => `${refName}.current`);
+  let str = _componentToReactNative(componentJson, options);
 
-  const stateType = options.stateType || 'mobx';
-
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-
-  const useStateCode =
-    stateType === 'useState' && getUseStateCode(json, options);
-
-  const children = json.children
-    .map((item) => blockToReactNative(item, options))
-    .join('\n');
-
-  let str = dedent`
-    import { ${guessAtComponentsUsed(children).join(', ')} ${
-    hasStyles ? ', StyleSheet' : ''
-  } } from 'react-native';
-    ${
-      useStateCode && useStateCode.length > 4
-        ? `import { useState } from 'react'`
-        : ''
-    }
-
-    ${
-      hasState && stateType === 'valtio'
-        ? `import { useLocalProxy } from 'valtio/utils';`
-        : ''
-    }
-    ${
-      hasState && stateType === 'solid'
-        ? `import { useMutable } from 'react-solid-state';`
-        : ''
-    }
-    ${
-      stateType === 'mobx' && hasState
-        ? `import { useLocalObservable } from 'mobx-react-lite';`
-        : ''
-    }
-    ${hasRefs ? `import { useRef } from 'react';` : ''}
-    ${renderPreComponent(json)}
-
-    export default function ${componentJson.name}(props) {
-      ${
-        hasState
-          ? stateType === 'mobx'
-            ? `const state = useLocalObservable(() => (${getStateObjectString(
-                json,
-              )}))`
-            : stateType === 'useState'
-            ? useStateCode
-            : stateType === 'builder'
-            ? `const state = useBuilderState(${getStateObjectString(json)})`
-            : stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectString(json)});`
-            : `const state = useLocalProxy(${getStateObjectString(json)});`
-          : ''
-      }
-      ${getRefsString(json)}
-
-      return (
-        <>
-          ${children}
-        </>
-      );
-    }
-
-    ${
-      !hasStyles
-        ? ''
-        : `
-
-      const styles = StyleSheet.create(${json5.stringify(styles)})
-    `
-    }
-
-  `;
+  str +=
+    '\n\n\n' +
+    componentJson.subComponents
+      .map((item) => _componentToReactNative(item, options, true))
+      .join('\n\n\n');
 
   if (options.plugins) {
     str = runPreCodePlugins(str, options.plugins);
@@ -447,5 +370,154 @@ export const componentToReactNative = (
   if (options.plugins) {
     str = runPostCodePlugins(str, options.plugins);
   }
+  return str;
+};
+
+const _componentToReactNative = (
+  json: JSXLiteComponent,
+  options: ToReactNativeOptions,
+  isSubComponent = false,
+) => {
+  const componentHasStyles = hasStyles(json);
+  if (options.stateType === 'useState') {
+    gettersToFunctions(json);
+    updateStateSetters(json, options);
+  }
+
+  const styles = collectStyles(json);
+
+  const refs = getRefs(json);
+  let hasState = Boolean(Object.keys(json.state).length);
+
+  mapRefs(json, (refName) => `${refName}.current`);
+
+  const stylesType = options.stylesType || 'react-native';
+  const stateType = options.stateType || 'mobx';
+  if (stateType === 'builder') {
+    // Always use state if we are generate Builder react code
+    hasState = true;
+  }
+
+  const useStateCode =
+    stateType === 'useState' && getUseStateCode(json, options);
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
+
+  if (options.format !== 'lite') {
+    stripMetaProperties(json);
+  }
+
+  const reactLibImports: Set<ReactExports> = new Set();
+  if (useStateCode && useStateCode.length > 4) {
+    reactLibImports.add('useState');
+  }
+  if (refs.size) {
+    reactLibImports.add('useRef');
+  }
+  if (json.hooks.onMount || json.hooks.onUnMount) {
+    reactLibImports.add('useEffect');
+  }
+
+  const wrap = wrapInFragment(json);
+
+  let str = dedent`
+  ${
+    reactLibImports.size
+      ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
+      : ''
+  }
+  import * as React from 'react';
+  import { Text, View, StyleSheet } from 'react-native';
+  ${
+    componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
+      ? `/** @jsx jsx */
+    import { jsx } from '@emotion/native'`.trim()
+      : ''
+  }
+    ${
+      hasState && stateType === 'valtio'
+        ? `import { useLocalProxy } from 'valtio/utils';`
+        : ''
+    }
+    ${
+      hasState && stateType === 'solid'
+        ? `import { useMutable } from 'react-solid-state';`
+        : ''
+    }
+    ${
+      stateType === 'mobx' && hasState
+        ? `import { useLocalObservable } from 'mobx-react-lite';`
+        : ''
+    }
+    ${renderPreComponent(json)}
+
+
+
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
+      ${
+        hasState
+          ? stateType === 'mobx'
+            ? `const state = useLocalObservable(() => (${getStateObjectString(
+                json,
+              )}));`
+            : stateType === 'useState'
+            ? useStateCode
+            : stateType === 'solid'
+            ? `const state = useMutable(${getStateObjectString(json)});`
+            : stateType === 'builder'
+            ? `var state = useBuilderState(${getStateObjectString(json)});`
+            : `const state = useLocalProxy(${getStateObjectString(json)});`
+          : ''
+      }
+      ${getRefsString(json)}
+      ${getInitCode(json, options)}
+
+      ${
+        json.hooks.onMount
+          ? `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onMount, options),
+              options,
+            )}
+          }, [])`
+          : ''
+      }
+
+      ${
+        json.hooks.onUnMount
+          ? `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onUnMount, options),
+              options,
+            )}
+          }, [])`
+          : ''
+      }
+
+      return (
+        ${wrap ? '<>' : ''}
+        
+        ${json.children
+          .map((item) => blockToReactNative(item, options))
+          .join('\n')}
+        ${wrap ? '</>' : ''}
+      );
+    }
+
+    ${
+      !hasStyles || stylesType !== 'react-native'
+        ? ''
+        : `
+      const styles = StyleSheet.create(${json5.stringify(styles)})
+    `
+    }
+
+  `;
+
+  str = stripNewlinesInStrings(str);
+
   return str;
 };
