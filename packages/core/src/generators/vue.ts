@@ -20,6 +20,8 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import traverse from 'traverse';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -66,9 +68,24 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
   innerHTML: 'v-html',
 };
 
+// Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
+function processDynamicComponents(
+  json: JSXLiteComponent,
+  options: ToVueOptions,
+) {
+  traverse(json).forEach((node) => {
+    if (isJsxLiteNode(node)) {
+      if (node.name.includes('.')) {
+        node.bindings.is = node.name;
+        node.name = 'component';
+      }
+    }
+  });
+}
+
 export const blockToVue = (
   node: JSXLiteNode,
-  options: ToVueOptions = {},
+  options: ToVueOptions,
 ): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -151,8 +168,9 @@ export const componentToVue = (
   component: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
-  // Make a copy we can safely mutate, similar to babel's toolchain
+  // Make a copy we can safely mutate, similar to babel's toolchain can be used
   component = fastClone(component);
+  processDynamicComponents(component, options);
 
   if (options.plugins) {
     component = runPreJsonPlugins(component, options.plugins);
@@ -203,7 +221,7 @@ export const componentToVue = (
 
   let str = dedent`
     <template>
-      ${component.children.map((item) => blockToVue(item)).join('\n')}
+      ${component.children.map((item) => blockToVue(item, options)).join('\n')}
     </template>
     <script>
       ${renderPreComponent(component)}

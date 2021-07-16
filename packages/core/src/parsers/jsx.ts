@@ -296,7 +296,7 @@ const jsxElementToJson = (
             name: 'For',
             bindings: {
               each: generate(node.expression.callee)
-                .code// Remove .map or potentially ?.map
+                .code // Remove .map or potentially ?.map
                 .replace(/\??\.map$/, ''),
               _forName: forName,
             },
@@ -342,11 +342,10 @@ const jsxElementToJson = (
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -378,8 +377,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -434,9 +435,7 @@ const getHook = (node: babel.Node) => {
     const expression = item.expression;
     if (types.isCallExpression(expression)) {
       if (types.isIdentifier(expression.callee)) {
-        if (expression.callee.name.match(/^use[A-Z0-9]/)) {
-          return expression;
-        }
+        return expression;
       }
     }
   }
@@ -455,17 +454,18 @@ export const METADATA_HOOK_NAME = 'useMetadata';
 const collectMetadata = (
   nodes: babel.types.Statement[],
   component: JSXLiteComponent,
+  options: ParseJSXLiteOptions,
 ) => {
+  const hookNames = new Set(
+    (options.jsonHookNames || []).concat(METADATA_HOOK_NAME),
+  );
   return nodes.filter((node) => {
     const hook = getHook(node);
     if (!hook) {
       return true;
     }
-    if (
-      types.isIdentifier(hook.callee) &&
-      hook.callee.name === METADATA_HOOK_NAME
-    ) {
-      component.meta.metadataHook = JSON5.parse(
+    if (types.isIdentifier(hook.callee) && hookNames.has(hook.callee.name)) {
+      component.meta[hook.callee.name] = JSON5.parse(
         generate(hook.arguments[0]).code,
       );
       return false;
@@ -476,6 +476,7 @@ const collectMetadata = (
 
 type ParseJSXLiteOptions = {
   format: 'react' | 'simple';
+  jsonHookNames?: string[];
 };
 
 function mapReactIdentifiersInExpression(
@@ -534,7 +535,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
@@ -596,6 +597,7 @@ export function parseJsx(
             cutStatements = collectMetadata(
               cutStatements,
               context.builder.component,
+              useOptions,
             );
 
             // TODO: support multiple? e.g. for others to add imports?
