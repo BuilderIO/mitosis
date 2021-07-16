@@ -10,6 +10,7 @@ import { capitalize } from '../helpers/capitalize';
 import {
   collectCss,
   collectStyledComponents,
+  collectStyles,
   hasStyles,
 } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
@@ -35,12 +36,14 @@ import {
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
+import { collectReactNativeStyles } from './react-native';
 
 type ToReactOptions = {
   prettier?: boolean;
-  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
+  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
+  type?: 'dom' | 'native';
   plugins?: Plugin[];
 };
 
@@ -413,7 +416,20 @@ const _componentToReact = (
 
   const wrap = wrapInFragment(json);
 
+  const nativeStyles =
+    stylesType === 'react-native' &&
+    componentHasStyles &&
+    collectReactNativeStyles(json);
+
   let str = dedent`
+  ${
+    options.type !== 'native'
+      ? ''
+      : `
+  import * as React from 'react';
+  import { View, StyleSheet, Image, Text } from 'react-native';
+  `
+  }
   ${
     reactLibImports.size
       ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
@@ -498,6 +514,13 @@ const _componentToReact = (
       );
     }
 
+    ${
+      !nativeStyles
+        ? ''
+        : `
+      const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
+    `
+    }
   `;
 
   str = stripNewlinesInStrings(str);
