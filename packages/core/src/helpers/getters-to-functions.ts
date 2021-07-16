@@ -18,8 +18,6 @@ export const gettersToFunctions = (json: JSXLiteComponent) => {
     return false;
   });
 
-  console.log('getterKeys', getterKeys);
-
   traverse(json).forEach(function (item) {
     // TODO: not all strings are expressions!
     if (typeof item === 'string') {
