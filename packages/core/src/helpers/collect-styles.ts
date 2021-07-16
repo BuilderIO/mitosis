@@ -115,12 +115,12 @@ export const collectStyledComponents = (json: JSXLiteComponent): string => {
 
 export const parseCssObject = (css: string) => {
   try {
-    return json5.parse(css)
+    return json5.parse(css);
   } catch (e) {
-    console.warn('Could not parse CSS object', css)
-    throw e
+    console.warn('Could not parse CSS object', css);
+    throw e;
   }
-}
+};
 
 export const collectStyles = (
   json: JSXLiteComponent,
