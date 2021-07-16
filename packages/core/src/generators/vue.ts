@@ -22,6 +22,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import traverse from 'traverse';
+import { getComponentsUsed } from '../helpers/get-components-used';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -43,9 +44,7 @@ const NODE_MAPPERS: {
     | undefined;
 } = {
   Fragment(json, options) {
-    return `<div>${json.children
-      .map((item) => blockToVue(item, options))
-      .join('\n')}</div>`;
+    return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
     return `<template v-for="${
@@ -146,7 +145,7 @@ export const blockToVue = (
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
     } else if (BINDING_MAPPERS[key]) {
-      str += ` :${BINDING_MAPPERS[key]}="${useValue}" `;
+      str += ` ${BINDING_MAPPERS[key]}="${useValue}" `;
     } else {
       str += ` :${key}="${useValue}" `;
     }
@@ -207,14 +206,25 @@ export const componentToVue = (
       stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
   });
 
+  const blocksString = JSON.stringify(component.children);
+
   // Append refs to data as { foo, bar, etc }
   dataString = dataString.replace(
     /}$/,
     `${component.imports
       .map((thisImport) => Object.keys(thisImport.imports).join(','))
-      .filter(Boolean)
+      .filter((key) => Boolean(key && blocksString.includes(key)))
       .join(',')}}`,
   );
+
+  // Component references to include in `component: { YourComponent, ... }
+  const componentsUsed = Array.from(getComponentsUsed(component))
+    .filter(
+      (name) =>
+        name.length && !name.includes('.') && name[0].toUpperCase() === name[0],
+    )
+    // Strip out components that compile away
+    .filter((name) => !['For', 'Show', 'Fragment'].includes(name));
 
   const elementProps = getProps(component);
   stripMetaProperties(component);
@@ -227,6 +237,11 @@ export const componentToVue = (
       ${renderPreComponent(component)}
 
       export default {
+        ${
+          !componentsUsed.length
+            ? ''
+            : `components: { ${componentsUsed.join(',')} },`
+        }
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
