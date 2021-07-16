@@ -224,7 +224,9 @@ export const componentToVue = (
         name.length && !name.includes('.') && name[0].toUpperCase() === name[0],
     )
     // Strip out components that compile away
-    .filter((name) => !['For', 'Show', 'Fragment'].includes(name));
+    .filter(
+      (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
+    );
 
   const elementProps = getProps(component);
   stripMetaProperties(component);
@@ -237,6 +239,7 @@ export const componentToVue = (
       ${renderPreComponent(component)}
 
       export default {
+        ${!component.name ? '' : `name: '${component.name}',`}
         ${
           !componentsUsed.length
             ? ''
