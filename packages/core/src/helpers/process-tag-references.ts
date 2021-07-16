@@ -1,10 +1,10 @@
-import { last, startCase } from 'lodash';
+import { camelCase, last, upperFirst } from 'lodash';
 import traverse from 'traverse';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { isJsxLiteNode } from './is-jsx-lite-node';
 
 function getRefName(path: string) {
-  return startCase(last(path.split('.'))) + 'Ref';
+  return upperFirst(camelCase(last(path.split('.')))) + 'Ref';
 }
 
 export function processTagReferences(json: JSXLiteComponent) {

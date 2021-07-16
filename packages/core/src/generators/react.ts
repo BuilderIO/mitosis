@@ -321,13 +321,11 @@ export const componentToReact = (
     json = runPreJsonPlugins(json, options.plugins);
   }
 
-  processTagReferences(json);
-
-  let str = _componentToReact(componentJson, options);
+  let str = _componentToReact(json, options);
 
   str +=
     '\n\n\n' +
-    componentJson.subComponents
+    json.subComponents
       .map((item) => _componentToReact(item, options, true))
       .join('\n\n\n');
 
@@ -365,6 +363,7 @@ const _componentToReact = (
   options: ToReactOptions,
   isSubComponent = false,
 ) => {
+  processTagReferences(json);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);

@@ -334,13 +334,11 @@ export const componentToReactNative = (
     json = runPreJsonPlugins(json, options.plugins);
   }
 
-  processTagReferences(json);
-
-  let str = _componentToReactNative(componentJson, options);
+  let str = _componentToReactNative(json, options);
 
   str +=
     '\n\n\n' +
-    componentJson.subComponents
+    json.subComponents
       .map((item) => _componentToReactNative(item, options, true))
       .join('\n\n\n');
 
@@ -378,6 +376,7 @@ const _componentToReactNative = (
   options: ToReactNativeOptions,
   isSubComponent = false,
 ) => {
+  processTagReferences(json);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
