@@ -29,8 +29,6 @@ export const gettersToFunctions = (json: JSXLiteComponent) => {
           value = value.replace(
             new RegExp(`state\\s*\\.\\s*${key}([^a-z0-9]|$)`, 'gi'),
             (match, group1) => {
-              console.log('matched', match);
-
               if (match.endsWith('?')) {
                 return `${key}?.()${group1}`;
               }
