@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Solid Basic 1`] = `
-"import { createMutable } from \\"solid-js\\";
+"import { createMutable } from \\"solid-js/store\\";
 
 export default function MyBasicComponent(props) {
   const state = createMutable({ name: \\"Steve\\" });
@@ -24,7 +24,7 @@ exports[`Solid Button 1`] = `
 
 export default function Button(props) {
   return (
-    <Fragment>
+    <>
       <Show when={props.link}>
         <a
           {...props.attributes}
@@ -40,14 +40,16 @@ export default function Button(props) {
           {props.text}
         </button>
       </Show>
-    </Fragment>
+    </>
   );
 }
 "
 `;
 
 exports[`Solid Columns 1`] = `
-"import { createMutable, For } from \\"solid-js\\";
+"import { For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 export default function Column(props) {
@@ -83,13 +85,15 @@ export default function Column(props) {
       })}
     >
       <For each={props.columns}>
-        <div
-          class={css({
-            flexGrow: \\"1\\",
-          })}
-        >
-          {column.content}
-        </div>
+        {(column, index) => (
+          <div
+            class={css({
+              flexGrow: \\"1\\",
+            })}
+          >
+            {column.content}
+          </div>
+        )}
       </For>
     </div>
   );
@@ -98,7 +102,7 @@ export default function Column(props) {
 `;
 
 exports[`Solid CustomCode 1`] = `
-"import { createMutable } from \\"solid-js\\";
+"import { createMutable } from \\"solid-js/store\\";
 
 export default function CustomCode(props) {
   const state = createMutable({
@@ -148,6 +152,10 @@ export default function CustomCode(props) {
   });
 
   const elem = useRef();
+
+  onMount(() => {
+    state.findAndRunScripts();
+  });
 
   return (
     <div
@@ -163,7 +171,7 @@ export default function CustomCode(props) {
 `;
 
 exports[`Solid Embed 1`] = `
-"import { createMutable } from \\"solid-js\\";
+"import { createMutable } from \\"solid-js/store\\";
 
 export default function CustomCode(props) {
   const state = createMutable({
@@ -214,6 +222,10 @@ export default function CustomCode(props) {
 
   const elem = useRef();
 
+  onMount(() => {
+    state.findAndRunScripts();
+  });
+
   return (
     <div
       class={
@@ -228,7 +240,9 @@ export default function CustomCode(props) {
 `;
 
 exports[`Solid Form block 1`] = `
-"import { createMutable, Show, For } from \\"solid-js\\";
+"import { Show, For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
@@ -482,10 +496,12 @@ export default function FormComponent(props) {
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
-          <BuilderBlockComponent
-            key={block.id}
-            block={block}
-          ></BuilderBlockComponent>
+          {(block, index) => (
+            <BuilderBlockComponent
+              key={block.id}
+              block={block}
+            ></BuilderBlockComponent>
+          )}
         </For>
       </Show>
 
@@ -532,7 +548,9 @@ export default function FormComponent(props) {
 `;
 
 exports[`Solid Image 1`] = `
-"import { createMutable, Show } from \\"solid-js\\";
+"import { Show, onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 export default function Image(props) {
@@ -557,8 +575,33 @@ export default function Image(props) {
 
   const pictureRef = useRef();
 
+  onMount(() => {
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  });
+
   return (
-    <Fragment>
+    <>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
           <img
@@ -586,7 +629,7 @@ export default function Image(props) {
       </picture>
 
       {props.children}
-    </Fragment>
+    </>
   );
 }
 "
@@ -687,7 +730,9 @@ export default function SelectComponent(props) {
       name={props.name}
     >
       <For each={props.options}>
-        <option value={option.value}>{option.name || option.value}</option>
+        {(option, index) => (
+          <option value={option.value}>{option.name || option.value}</option>
+        )}
       </For>
     </select>
   );

@@ -17,6 +17,26 @@ import {
 import { fastClone } from '../helpers/fast-clone';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getComponentsUsed } from '../helpers/get-components-used';
+import traverse from 'traverse';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+
+// Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
+function processDynamicComponents(
+  json: JSXLiteComponent,
+  options: ToSolidOptions,
+) {
+  let found = false;
+  traverse(json).forEach((node) => {
+    if (isJsxLiteNode(node)) {
+      if (node.name.includes('.')) {
+        node.bindings.component = node.name;
+        node.name = 'Dynamic';
+        found = true;
+      }
+    }
+  });
+  return found;
+}
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
@@ -78,7 +98,10 @@ type ToSolidOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
 };
-const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
+const blockToSolid = (
+  json: JSXLiteNode,
+  options: ToSolidOptions = {},
+): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -86,9 +109,23 @@ const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
     return `{${json.bindings._text}}`;
   }
 
+  if (json.name === 'For') {
+    const needsWrapper = json.children.length !== 1;
+    return `<For each={${json.bindings.each}}>
+    {(${json.bindings._forName}, index) =>
+      ${needsWrapper ? '<>' : ''}
+        ${json.children.map((child) => blockToSolid(child, options))}}
+      ${needsWrapper ? '</>' : ''}
+    </For>`;
+  }
+
   let str = '';
 
-  str += `<${json.name} `;
+  if (json.name === 'Fragment') {
+    str += '<';
+  } else {
+    str += `<${json.name} `;
+  }
 
   const classString = collectClassString(json);
   if (classString) {
@@ -125,7 +162,11 @@ const blockToSolid = (json: JSXLiteNode, options: ToSolidOptions = {}) => {
     str += json.children.map((item) => blockToSolid(item, options)).join('\n');
   }
 
-  str += `</${json.name}>`;
+  if (json.name === 'Fragment') {
+    str += '</>';
+  } else {
+    str += `</${json.name}>`;
+  }
 
   return str;
 };
@@ -154,6 +195,7 @@ export const componentToSolid = (
     json = runPostJsonPlugins(json, options.plugins);
   }
   stripMetaProperties(json);
+  const foundDynamicComponents = processDynamicComponents(json, options);
 
   const stateString = getStateObjectString(json);
   const hasState = Boolean(Object.keys(componentJson.state).length);
@@ -164,12 +206,16 @@ export const componentToSolid = (
 
   let str = dedent`
     ${
-      !(hasState || hasShowComponent || hasForComponent)
+      !(hasShowComponent || hasForComponent)
         ? ''
-        : `import { ${!hasState ? '' : 'createMutable, '} 
+        : `import { 
           ${!hasShowComponent ? '' : 'Show, '}
-          ${!hasForComponent ? '' : 'For, '} } from 'solid-js';`
+          ${!hasForComponent ? '' : 'For, '}
+          ${!json.hooks.onMount ? '' : 'onMount, '}
+         } from 'solid-js';`
     }
+    ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
+    ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
     ${
       !componentHasStyles
         ? ''
@@ -177,10 +223,12 @@ export const componentToSolid = (
     }
     ${renderPreComponent(json)}
 
-    export default function ${componentJson.name}(props) {
+    export default function ${json.name}(props) {
       ${!hasState ? '' : `const state = createMutable(${stateString});`}
       
       ${getRefsString(json)}
+
+      ${!json.hooks.onMount ? '' : `onMount(() => { ${json.hooks.onMount} })`}
 
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToSolid(item, options)).join('\n')}

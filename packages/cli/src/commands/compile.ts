@@ -53,7 +53,8 @@ const command: GluegunCommand = {
       includeIds: opts.includeIds,
       stylesType: opts.styles,
       stateType: opts.state,
-      reactive: opts.reactive
+      reactive: opts.reactive,
+      type: opts.type
     }
 
     // Positional Args

@@ -1,28 +1,31 @@
+import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+import { babelTransformExpression } from '../helpers/babel-transform';
+import { capitalize } from '../helpers/capitalize';
 import {
   collectCss,
   collectStyledComponents,
+  collectStyles,
   hasStyles,
 } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectString } from '../helpers/get-state-object-string';
-import { mapRefs } from '../helpers/map-refs';
-import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
-import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { types } from '@babel/core';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
+import { mapRefs } from '../helpers/map-refs';
+import { processTagReferences } from '../helpers/process-tag-references';
+import { renderPreComponent } from '../helpers/render-imports';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import { stripMetaProperties } from '../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   Plugin,
   runPostCodePlugins,
@@ -30,16 +33,17 @@ import {
   runPreCodePlugins,
   runPreJsonPlugins,
 } from '../modules/plugins';
-import { capitalize } from '../helpers/capitalize';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
+import { selfClosingTags } from '../parsers/jsx';
+import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
+import { collectReactNativeStyles } from './react-native';
 
 type ToReactOptions = {
   prettier?: boolean;
-  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx';
+  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
+  type?: 'dom' | 'native';
   plugins?: Plugin[];
 };
 
@@ -297,17 +301,11 @@ const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
   });
 };
 
-const getInitCode = (json: JSXLiteComponent): string => {
-  if (!json.hooks.init) {
-    return '';
-  }
-  return `
-    const [firstRender, setFirstRender] = React.useState(true);
-    if (firstRender) {
-      setFirstRender(false);
-      ${json.hooks.init}
-    }
-  `;
+const getInitCode = (
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+): string => {
+  return processBinding(json.hooks.init || '', options);
 };
 
 type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
@@ -326,11 +324,11 @@ export const componentToReact = (
     json = runPreJsonPlugins(json, options.plugins);
   }
 
-  let str = _componentToReact(componentJson, options);
+  let str = _componentToReact(json, options);
 
   str +=
     '\n\n\n' +
-    componentJson.subComponents
+    json.subComponents
       .map((item) => _componentToReact(item, options, true))
       .join('\n\n\n');
 
@@ -368,6 +366,7 @@ const _componentToReact = (
   options: ToReactOptions,
   isSubComponent = false,
 ) => {
+  processTagReferences(json);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
@@ -417,7 +416,20 @@ const _componentToReact = (
 
   const wrap = wrapInFragment(json);
 
+  const nativeStyles =
+    stylesType === 'react-native' &&
+    componentHasStyles &&
+    collectReactNativeStyles(json);
+
   let str = dedent`
+  ${
+    options.type !== 'native'
+      ? ''
+      : `
+  import * as React from 'react';
+  import { View, StyleSheet, Image, Text } from 'react-native';
+  `
+  }
   ${
     reactLibImports.size
       ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
@@ -466,7 +478,7 @@ const _componentToReact = (
           : ''
       }
       ${getRefsString(json)}
-      ${getInitCode(json)}
+      ${getInitCode(json, options)}
 
       ${
         json.hooks.onMount
@@ -502,6 +514,13 @@ const _componentToReact = (
       );
     }
 
+    ${
+      !nativeStyles
+        ? ''
+        : `
+      const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
+    `
+    }
   `;
 
   str = stripNewlinesInStrings(str);

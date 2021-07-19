@@ -20,6 +20,9 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import traverse from 'traverse';
+import { getComponentsUsed } from '../helpers/get-components-used';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -41,9 +44,7 @@ const NODE_MAPPERS: {
     | undefined;
 } = {
   Fragment(json, options) {
-    return `<div>${json.children
-      .map((item) => blockToVue(item, options))
-      .join('\n')}</div>`;
+    return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
     return `<template v-for="${
@@ -66,9 +67,24 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
   innerHTML: 'v-html',
 };
 
+// Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
+function processDynamicComponents(
+  json: JSXLiteComponent,
+  options: ToVueOptions,
+) {
+  traverse(json).forEach((node) => {
+    if (isJsxLiteNode(node)) {
+      if (node.name.includes('.')) {
+        node.bindings.is = node.name;
+        node.name = 'component';
+      }
+    }
+  });
+}
+
 export const blockToVue = (
   node: JSXLiteNode,
-  options: ToVueOptions = {},
+  options: ToVueOptions,
 ): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -106,6 +122,11 @@ export const blockToVue = (
     if (key === '_spread') {
       continue;
     }
+    if (key === 'class') {
+      // TODO: support dynamic classes as objects somehow like Vue requires
+      // https://vuejs.org/v2/guide/class-and-style.html
+      continue;
+    }
     const value = node.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value);
@@ -124,7 +145,7 @@ export const blockToVue = (
     } else if (key === 'ref') {
       str += ` ref="${useValue}" `;
     } else if (BINDING_MAPPERS[key]) {
-      str += ` :${BINDING_MAPPERS[key]}="${useValue}" `;
+      str += ` ${BINDING_MAPPERS[key]}="${useValue}" `;
     } else {
       str += ` :${key}="${useValue}" `;
     }
@@ -146,8 +167,9 @@ export const componentToVue = (
   component: JSXLiteComponent,
   options: ToVueOptions = {},
 ) => {
-  // Make a copy we can safely mutate, similar to babel's toolchain
+  // Make a copy we can safely mutate, similar to babel's toolchain can be used
   component = fastClone(component);
+  processDynamicComponents(component, options);
 
   if (options.plugins) {
     component = runPreJsonPlugins(component, options.plugins);
@@ -184,26 +206,45 @@ export const componentToVue = (
       stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
   });
 
+  const blocksString = JSON.stringify(component.children);
+
   // Append refs to data as { foo, bar, etc }
   dataString = dataString.replace(
     /}$/,
     `${component.imports
       .map((thisImport) => Object.keys(thisImport.imports).join(','))
-      .filter(Boolean)
+      .filter((key) => Boolean(key && blocksString.includes(key)))
       .join(',')}}`,
   );
+
+  // Component references to include in `component: { YourComponent, ... }
+  const componentsUsed = Array.from(getComponentsUsed(component))
+    .filter(
+      (name) =>
+        name.length && !name.includes('.') && name[0].toUpperCase() === name[0],
+    )
+    // Strip out components that compile away
+    .filter(
+      (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
+    );
 
   const elementProps = getProps(component);
   stripMetaProperties(component);
 
   let str = dedent`
     <template>
-      ${component.children.map((item) => blockToVue(item)).join('\n')}
+      ${component.children.map((item) => blockToVue(item, options)).join('\n')}
     </template>
     <script>
       ${renderPreComponent(component)}
 
       export default {
+        ${!component.name ? '' : `name: '${component.name}',`}
+        ${
+          !componentsUsed.length
+            ? ''
+            : `components: { ${componentsUsed.join(',')} },`
+        }
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
