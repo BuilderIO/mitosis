@@ -15,7 +15,10 @@ export function processTagReferences(json: JSXLiteComponent) {
       if (el.name.includes('.')) {
         if (!namesFound.has(el.name)) {
           namesFound.add(el.name);
-          json.hooks.init ??= '';
+          if (typeof json.hooks.init !== 'string') {
+            json.hooks.init = '';
+          }
+
           json.hooks.init += `
             const ${getRefName(el.name)} = ${el.name};
           `;
