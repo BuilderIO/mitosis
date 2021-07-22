@@ -115,6 +115,34 @@ export const components: CompileAwayComponentsMap = {
       components,
     );
   },
+  BuilderAccordion() {
+    // TODO
+    return createJSXLiteNode({
+      name: 'div',
+      properties: { 'data-missing-component': 'BuilderAccordion' },
+    });
+  },
+  BuilderMasonry() {
+    // TODO
+    return createJSXLiteNode({
+      name: 'div',
+      properties: { 'data-missing-component': 'BuilderMasonry' },
+    });
+  },
+  BuilderTabs() {
+    // TODO
+    return createJSXLiteNode({
+      name: 'div',
+      properties: { 'data-missing-component': 'BuilderTabs' },
+    });
+  },
+  BuilderCarousel() {
+    // TODO
+    return createJSXLiteNode({
+      name: 'div',
+      properties: { 'data-missing-component': 'BuilderCarousel' },
+    });
+  },
   CustomCode(node: JSXLiteNode, context, components) {
     const options = getRenderOptions(node);
     return wrapOutput(

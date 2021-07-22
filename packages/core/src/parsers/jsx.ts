@@ -1,6 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import JSON5 from 'json5';
+
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
 import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
@@ -14,6 +14,7 @@ import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
+import * as JSON5 from 'json5';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
