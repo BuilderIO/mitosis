@@ -1,3 +1,3 @@
-declare module 'json6' {
+declare module 'json-6' {
   export = JSON;
 }
