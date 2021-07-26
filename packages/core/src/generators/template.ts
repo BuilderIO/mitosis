@@ -13,7 +13,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import dedent from 'dedent';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 
 type ToTemplateOptions = {
   prettier?: boolean;
@@ -135,7 +135,7 @@ export const componentToTemplate = (
 
   str = dedent`
     export default function template(props) {
-      let state = ${getStateObjectString(json)}
+      let state = ${getStateObjectStringFromComponent(json)}
 
       return \`${str.replace(/\s+/g, ' ')}\`
     }

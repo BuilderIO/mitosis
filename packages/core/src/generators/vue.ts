@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -182,13 +182,13 @@ export const componentToVue = (
   }
   const css = collectCss(component);
 
-  let dataString = getStateObjectString(component, {
+  let dataString = getStateObjectStringFromComponent(component, {
     data: true,
     functions: false,
     getters: false,
   });
 
-  const getterString = getStateObjectString(component, {
+  const getterString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: true,
     functions: false,
@@ -198,7 +198,7 @@ export const componentToVue = (
       }),
   });
 
-  const functionsString = getStateObjectString(component, {
+  const functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,

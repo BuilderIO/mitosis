@@ -5,7 +5,7 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -171,7 +171,7 @@ export const componentToSvelte = (
   const css = collectCss(json);
   stripMetaProperties(json);
 
-  let dataString = getStateObjectString(json, {
+  let dataString = getStateObjectStringFromComponent(json, {
     data: true,
     functions: false,
     getters: false,
@@ -183,7 +183,7 @@ export const componentToSvelte = (
       }),
   });
 
-  const getterString = getStateObjectString(json, {
+  const getterString = getStateObjectStringFromComponent(json, {
     data: false,
     getters: true,
     functions: false,
@@ -198,7 +198,7 @@ export const componentToSvelte = (
       ),
   });
 
-  const functionsString = getStateObjectString(json, {
+  const functionsString = getStateObjectStringFromComponent(json, {
     data: false,
     getters: false,
     functions: true,

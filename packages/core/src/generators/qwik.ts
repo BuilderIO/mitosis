@@ -10,7 +10,7 @@ import { capitalize } from '../helpers/capitalize';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
@@ -430,7 +430,7 @@ export const componentToQwik = async (
     str = runPostCodePlugins(str, options.plugins);
   }
 
-  const dataString = getStateObjectString(json, {
+  const dataString = getStateObjectStringFromComponent(json, {
     format: 'class',
     valueMapper: (code) => processBinding(code, options),
   });

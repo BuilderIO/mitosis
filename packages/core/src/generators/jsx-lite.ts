@@ -5,7 +5,7 @@ import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
@@ -193,7 +193,7 @@ export const componentToJsxLite = (
       ${
         !hasState
           ? ''
-          : `const state = useState(${getStateObjectString(json)});`
+          : `const state = useState(${getStateObjectStringFromComponent(json)});`
       }
       ${getRefsString(json)}
 

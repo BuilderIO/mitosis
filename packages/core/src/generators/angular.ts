@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -171,7 +171,7 @@ export const componentToAngular = (
 
   stripMetaProperties(json);
 
-  const dataString = getStateObjectString(json, {
+  const dataString = getStateObjectStringFromComponent(json, {
     format: 'class',
     valueMapper: (code) =>
       stripStateAndPropsRefs(code, { replaceWith: 'this.' }),

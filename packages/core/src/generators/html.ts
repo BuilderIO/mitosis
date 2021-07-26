@@ -7,7 +7,7 @@ import { babelTransformExpression } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { hasComponent } from '../helpers/has-component';
 import { isComponent } from '../helpers/is-component';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
@@ -422,7 +422,7 @@ export const componentToHtml = (
     str += `
       <script>
       (() => {
-        const state = ${getStateObjectString(json, {
+        const state = ${getStateObjectStringFromComponent(json, {
           valueMapper: (value) =>
             addUpdateAfterSetInCode(
               updateReferencesInCode(value, useOptions),
@@ -611,7 +611,7 @@ export const componentToCustomElement = (
           super();
 
           const self = this;
-          this.state = ${getStateObjectString(json, {
+          this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(
                 stripStateAndPropsRefs(

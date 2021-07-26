@@ -1,20 +1,19 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-
-import { JSXLiteNode } from '../types/jsx-lite-node';
-import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
-import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
+import * as JSON5 from 'json5';
+import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
-import * as JSON5 from 'json5';
+import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
+import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
+import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
+import { JSXLiteNode } from '../types/jsx-lite-node';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -343,11 +342,10 @@ const jsxElementToJson = (
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -379,8 +377,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -535,7 +535,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];

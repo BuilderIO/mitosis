@@ -16,7 +16,7 @@ import {
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
@@ -465,16 +465,16 @@ const _componentToReact = (
       ${
         hasState
           ? stateType === 'mobx'
-            ? `const state = useLocalObservable(() => (${getStateObjectString(
+            ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
                 json,
               )}));`
             : stateType === 'useState'
             ? useStateCode
             : stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectString(json)});`
+            ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
             : stateType === 'builder'
-            ? `var state = useBuilderState(${getStateObjectString(json)});`
-            : `const state = useLocalProxy(${getStateObjectString(json)});`
+            ? `var state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
           : ''
       }
       ${getRefsString(json)}
