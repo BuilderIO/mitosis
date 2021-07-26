@@ -193,7 +193,9 @@ export const componentToJsxLite = (
       ${
         !hasState
           ? ''
-          : `const state = useState(${getStateObjectStringFromComponent(json)});`
+          : `const state = useState(${getStateObjectStringFromComponent(
+              json,
+            )});`
       }
       ${getRefsString(json)}
 

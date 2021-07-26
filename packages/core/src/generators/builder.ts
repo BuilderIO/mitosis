@@ -322,7 +322,9 @@ export const componentToBuilder = (
         ${
           !hasState
             ? ''
-            : `Object.assign(state, ${getStateObjectStringFromComponent(componentJson)});`
+            : `Object.assign(state, ${getStateObjectStringFromComponent(
+                componentJson,
+              )});`
         }
 
         ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
@@ -330,7 +332,11 @@ export const componentToBuilder = (
       tsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
 
-        ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(componentJson)});`}
+        ${
+          !hasState
+            ? ''
+            : `useState(${getStateObjectStringFromComponent(componentJson)});`
+        }
 
         ${
           !componentJson.hooks.onMount

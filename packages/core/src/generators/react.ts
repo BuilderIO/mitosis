@@ -471,10 +471,16 @@ const _componentToReact = (
             : stateType === 'useState'
             ? useStateCode
             : stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
+            ? `const state = useMutable(${getStateObjectStringFromComponent(
+                json,
+              )});`
             : stateType === 'builder'
-            ? `var state = useBuilderState(${getStateObjectStringFromComponent(json)});`
-            : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
+            ? `var state = useBuilderState(${getStateObjectStringFromComponent(
+                json,
+              )});`
+            : `const state = useLocalProxy(${getStateObjectStringFromComponent(
+                json,
+              )});`
           : ''
       }
       ${getRefsString(json)}
