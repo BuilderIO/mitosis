@@ -301,6 +301,24 @@ const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
   });
 };
 
+function getContextString(
+  component: JSXLiteComponent,
+  options: ToReactOptions,
+) {
+  let str = '';
+  for (const key in component.context) {
+    str += `
+      const ${key} = useContext(${component.context[key].name});
+    `;
+  }
+
+  return str;
+}
+
+function hasContext(component: JSXLiteComponent) {
+  return Object.keys(component.context).length;
+}
+
 const getInitCode = (
   json: JSXLiteComponent,
   options: ToReactOptions,
@@ -308,7 +326,12 @@ const getInitCode = (
   return processBinding(json.hooks.init || '', options);
 };
 
-type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
+type ReactExports =
+  | 'useState'
+  | 'useRef'
+  | 'useCallback'
+  | 'useEffect'
+  | 'useContext';
 
 export const componentToReact = (
   componentJson: JSXLiteComponent,
@@ -407,6 +430,9 @@ const _componentToReact = (
   if (useStateCode && useStateCode.length > 4) {
     reactLibImports.add('useState');
   }
+  if (hasContext(json)) {
+    reactLibImports.add('useContext');
+  }
   if (refs.size) {
     reactLibImports.add('useRef');
   }
@@ -483,6 +509,7 @@ const _componentToReact = (
               )});`
           : ''
       }
+      ${getContextString(json, options)}
       ${getRefsString(json)}
       ${getInitCode(json, options)}
 

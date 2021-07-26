@@ -37,7 +37,7 @@ export type JSXLiteComponent = {
     metadataHook?: JSONObject;
   };
   state: JSONObject;
-  context: { [key: string]: string };
+  context: { [key: string]: { name: string; path: string } };
   hooks: {
     init?: string;
     onMount?: string;

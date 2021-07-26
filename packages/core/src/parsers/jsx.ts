@@ -252,10 +252,13 @@ const componentFunctionToJson = (
               if (types.isIdentifier(firstArg)) {
                 const varName = declaration.id.name;
                 const name = firstArg.name;
-                componentContext[varName] = traceReferenceToModulePath(
-                  context.builder.component.imports,
+                componentContext[varName] = {
                   name,
-                );
+                  path: traceReferenceToModulePath(
+                    context.builder.component.imports,
+                    name,
+                  ),
+                };
               }
             }
           }
