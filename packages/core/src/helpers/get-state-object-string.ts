@@ -1,5 +1,5 @@
 import json5 from 'json5';
-import { JSON } from '../types/json';
+import { JSONObject } from '../types/json';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -14,7 +14,7 @@ export type GetStateObjectStringOptions = {
 };
 
 export const getMemberObjectString = (
-  object: { [key: string]: JSON | undefined },
+  object: JSONObject,
   options: GetStateObjectStringOptions = {},
 ) => {
   const format = options.format || 'object';

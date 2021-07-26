@@ -33,11 +33,11 @@ export type JSXLiteComponent = {
   '@type': '@jsx-lite/component';
   name: string;
   imports: JSXLiteImport[];
-  meta: {
+  meta: JSONObject & {
     metadataHook?: JSONObject;
-    [key: string]: JSON | undefined;
   };
-  state: { [key: string]: JSON | undefined };
+  state: JSONObject;
+  context: { [key: string]: string };
   hooks: {
     init?: string;
     onMount?: string;
