@@ -387,10 +387,11 @@ const jsxElementToJson = (
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr: babel.types.JSXAttribute | undefined =
-      node.openingElement.attributes.find(
-        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-      ) as any;
+    const whenAttr:
+      | babel.types.JSXAttribute
+      | undefined = node.openingElement.attributes.find(
+      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+    ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -422,10 +423,8 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              (
-                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                  .value as babel.types.JSXExpressionContainer
-              ).expression,
+              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                .value as babel.types.JSXExpressionContainer).expression,
             ).code,
             _forName: argName,
           },
@@ -580,7 +579,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
@@ -597,10 +596,8 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
 
 const expressionToNode = (str: string) => {
   const code = `export default ${str}`;
-  return (
-    (babel.parse(code) as babel.types.File).program
-      .body[0] as babel.types.ExportDefaultDeclaration
-  ).declaration;
+  return ((babel.parse(code) as babel.types.File).program
+    .body[0] as babel.types.ExportDefaultDeclaration).declaration;
 };
 
 /**
@@ -608,7 +605,7 @@ const expressionToNode = (str: string) => {
  * JSXLiteComponent tree
  */
 function extractContextComponents(json: JSXLiteComponent) {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (item.name.endsWith('.Provider')) {
         const value = item.bindings.value;
