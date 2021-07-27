@@ -2,6 +2,7 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -16,7 +17,10 @@ import {
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
@@ -273,6 +277,26 @@ const updateStateSetters = (
   });
 };
 
+function addProviderComponents(
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+) {
+  for (const key in json.context.set) {
+    const { name, value } = json.context.set[key];
+    json.children = [
+      createJSXLiteNode({
+        name: `${name}.Provider`,
+        children: json.children,
+        ...(value && {
+          bindings: {
+            value: getMemberObjectString(value),
+          },
+        }),
+      }),
+    ];
+  }
+}
+
 const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return value;
@@ -306,9 +330,9 @@ function getContextString(
   options: ToReactOptions,
 ) {
   let str = '';
-  for (const key in component.context) {
+  for (const key in component.context.get) {
     str += `
-      const ${key} = useContext(${component.context[key].name});
+      const ${key} = useContext(${component.context.get[key].name});
     `;
   }
 
@@ -390,6 +414,7 @@ const _componentToReact = (
   isSubComponent = false,
 ) => {
   processTagReferences(json);
+  addProviderComponents(json, options);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);

@@ -5,7 +5,7 @@ export function createJsxLiteContext(
 ): JSXLiteContext {
   return {
     '@type': '@jsx-lite/context',
-    members: {},
+    value: {},
     ...options,
   };
 }

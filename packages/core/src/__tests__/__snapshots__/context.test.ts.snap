@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Context Simple example 1`] = `
+exports[`Context Parse context 1`] = `
 "import { createContext } from \\"react\\";
 
 export default createContext({
@@ -12,5 +12,131 @@ export default createContext({
     return this.fooUpperCase.toLowercase();
   },
 });
+"
+`;
+
+exports[`Context Use and set context in components 1`] = `
+Object {
+  "@type": "@jsx-lite/component",
+  "children": Array [
+    Object {
+      "@type": "@jsx-lite/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {},
+          "children": Array [
+            Object {
+              "@type": "@jsx-lite/node",
+              "bindings": Object {
+                "_text": "foo.value",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {},
+            },
+          ],
+          "meta": Object {},
+          "name": "Fragment",
+          "properties": Object {},
+        },
+        Object {
+          "@type": "@jsx-lite/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "Fragment",
+      "properties": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {
+      "foo": Object {
+        "name": "Context1",
+        "path": "@dummy/1:default",
+      },
+    },
+    "set": Object {
+      "@dummy/1:default": Object {
+        "name": "Context1",
+        "value": Object {
+          "foo": "bar",
+        },
+      },
+      "@dummy/2:default": Object {
+        "name": "Context2",
+        "value": Object {
+          "bar": "baz",
+        },
+      },
+    },
+  },
+  "hooks": Object {},
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "Context1": "default",
+      },
+      "path": "@dummy/1",
+    },
+    Object {
+      "imports": Object {
+        "Context2": "default",
+      },
+      "path": "@dummy/2",
+    },
+  ],
+  "meta": Object {},
+  "name": "ComponentWithContext",
+  "state": Object {},
+  "subComponents": Array [],
+}
+`;
+
+exports[`Context Use and set context in components 2`] = `
+"import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+        }}
+      >
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
 "
 `;

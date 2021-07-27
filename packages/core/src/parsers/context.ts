@@ -34,7 +34,9 @@ export function parseContext(
                   ) {
                     const firstArg = expression.arguments[0];
                     if (types.isObjectExpression(firstArg)) {
-                      context.members = parseStateObject(firstArg);
+                      // TODO: support non object values by parsing any node type
+                      // like the logic within each property value of parseStateObject
+                      context.value = parseStateObject(firstArg);
                       found = true;
                     }
                   }

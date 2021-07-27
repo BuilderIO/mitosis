@@ -13,7 +13,7 @@ export function contextToReact(
   let str = `
   import { createContext } from 'react';
 
-  export default createContext(${getMemberObjectString(context.members)})
+  export default createContext(${getMemberObjectString(context.value)})
   `;
 
   if (options.format !== false) {

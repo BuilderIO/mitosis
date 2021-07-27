@@ -3,8 +3,10 @@ export * from './flow';
 // These compile away
 export const useState = <T>(obj: T) => obj;
 export const useRef = () => null as any;
-export const useContext = () => null as any;
-export const createContext = (value: any) => null as any;
+export const useContext = (key: any) => null as any;
+export const createContext = (value: { [key: string]: any }) => null as any;
+export const setContext = (key: any, value: { [key: string]: any }) =>
+  null as any;
 export const onMount = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
 export const afterUnmount = (fn: () => any) => null as any;

@@ -177,14 +177,35 @@ const componentFunctionToJson = (
   context: Context,
 ): JSONOrNode => {
   const hooks: JSXLiteComponent['hooks'] = {};
-  let state: JSONObject = {};
-  const componentContext: JSONObject = {};
+  let state: JSXLiteComponent['state'] = {};
+  const accessedContext: JSXLiteComponent['context']['get'] = {};
+  const setContext: JSXLiteComponent['context']['set'] = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
       if (types.isCallExpression(expression)) {
         if (types.isIdentifier(expression.callee)) {
           if (
+            expression.callee.name === 'setContext' ||
+            expression.callee.name === 'provideContext'
+          ) {
+            const keyNode = expression.arguments[0];
+            if (types.isIdentifier(keyNode)) {
+              const key = keyNode.name;
+              const keyPath = traceReferenceToModulePath(
+                context.builder.component.imports,
+                key,
+              )!;
+              const valueNode = expression.arguments[1];
+              setContext[keyPath] = {
+                name: keyNode.name,
+                value:
+                  valueNode && types.isObjectExpression(valueNode)
+                    ? parseStateObject(valueNode)
+                    : undefined,
+              };
+            }
+          } else if (
             expression.callee.name === 'onMount' ||
             expression.callee.name === 'useEffect'
           ) {
@@ -252,12 +273,12 @@ const componentFunctionToJson = (
               if (types.isIdentifier(firstArg)) {
                 const varName = declaration.id.name;
                 const name = firstArg.name;
-                componentContext[varName] = {
+                accessedContext[varName] = {
                   name,
                   path: traceReferenceToModulePath(
                     context.builder.component.imports,
                     name,
-                  ),
+                  )!,
                 };
               }
             }
@@ -284,6 +305,10 @@ const componentFunctionToJson = (
     state,
     children,
     hooks,
+    context: {
+      get: accessedContext,
+      set: setContext,
+    },
   }) as any;
 };
 
@@ -362,11 +387,10 @@ const jsxElementToJson = (
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
@@ -398,8 +422,10 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
             _forName: argName,
           },
@@ -554,7 +580,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isJsxLiteNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
@@ -565,6 +591,47 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
           );
         }
       }
+    }
+  });
+}
+
+const expressionToNode = (str: string) => {
+  const code = `export default ${str}`;
+  return (
+    (babel.parse(code) as babel.types.File).program
+      .body[0] as babel.types.ExportDefaultDeclaration
+  ).declaration;
+};
+
+/**
+ * Convert <Context.Provider /> to hooks formats by mutating the
+ * JSXLiteComponent tree
+ */
+function extractContextComponents(json: JSXLiteComponent) {
+  traverse(json).forEach(function (item) {
+    if (isJsxLiteNode(item)) {
+      if (item.name.endsWith('.Provider')) {
+        const value = item.bindings.value;
+        const name = item.name.split('.')[0];
+        const refPath = traceReferenceToModulePath(json.imports, name)!;
+        json.context.set[refPath] = {
+          name,
+          value: value
+            ? parseStateObject(
+                expressionToNode(value) as babel.types.ObjectExpression,
+              )
+            : undefined,
+        };
+
+        this.update(
+          createJSXLiteNode({
+            name: 'Fragment',
+            children: item.children,
+          }),
+        );
+      }
+      // TODO: maybe support Context.Consumer:
+      // if (item.name.endsWith('.Consumer')) { ... }
     }
   });
 }
@@ -707,6 +774,7 @@ export function parseJsx(
   }
 
   mapReactIdentifiers(parsed);
+  extractContextComponents(parsed);
 
   parsed.subComponents = subComponentFunctions.map((item) =>
     parseJsx(item, useOptions),
