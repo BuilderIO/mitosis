@@ -343,6 +343,8 @@ const jsxElementToJson = (
               each: generate(node.expression.callee)
                 .code // Remove .map or potentially ?.map
                 .replace(/\??\.map$/, ''),
+            },
+            properties: {
               _forName: forName,
             },
             children: [jsxElementToJson(callback.body as any)],
@@ -426,6 +428,8 @@ const jsxElementToJson = (
               ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
                 .value as babel.types.JSXExpressionContainer).expression,
             ).code,
+          },
+          properties: {
             _forName: argName,
           },
           children: [jsxElementToJson(childExpression.body as any)],
@@ -509,10 +513,14 @@ const collectMetadata = (
       return true;
     }
     if (types.isIdentifier(hook.callee) && hookNames.has(hook.callee.name)) {
-      component.meta[hook.callee.name] = JSON5.parse(
-        generate(hook.arguments[0]).code,
-      );
-      return false;
+      const code = generate(hook.arguments[0]).code;
+      try {
+        component.meta[hook.callee.name] = JSON5.parse(code);
+        return false;
+      } catch (e) {
+        console.error(`Error parsing metadata hook ${hook.callee.name}`, code);
+        throw e;
+      }
     }
     return true;
   });

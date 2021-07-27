@@ -79,12 +79,12 @@ const blockToLiquid = (
     if (
       !(
         isValidLiquidBinding(json.bindings.each as string) &&
-        isValidLiquidBinding(json.bindings._forName as string)
+        isValidLiquidBinding(json.properties._forName as string)
       )
     ) {
       return str;
     }
-    str += `{% for ${json.bindings._forName} in ${stripStateAndPropsRefs(
+    str += `{% for ${json.properties._forName} in ${stripStateAndPropsRefs(
       json.bindings.each as string,
     )} %}`;
     if (json.children) {

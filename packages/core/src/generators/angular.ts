@@ -62,7 +62,7 @@ export const blockToAngular = (
 
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
-      json.bindings._forName
+      json.properties._forName
     } of ${stripStateAndPropsRefs(json.bindings.each as string)}">`;
     str += json.children
       .map((item) => blockToAngular(item, options))

@@ -45,7 +45,7 @@ export const blockToJsxLite = (
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each}}>
-    {(${json.bindings._forName}, index) =>
+    {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToJsxLite(child, options))}}
       ${needsWrapper ? '</>' : ''}

@@ -95,7 +95,7 @@ const componentMappers: {
         },
         repeat: {
           collection: node.bindings.each as string,
-          itemName: node.bindings._forName as string,
+          itemName: node.properties._forName as string,
         },
         children: node.children
           .filter(filterEmptyTextNodes)

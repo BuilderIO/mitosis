@@ -95,6 +95,8 @@ const angularTemplateNodeToJsxLiteNode = (
         name: 'For',
         bindings: {
           each: transformBinding(expression, options),
+        },
+        properties: {
           _forName: itemName,
         },
         children: [

@@ -65,7 +65,7 @@ const getForNames = (json: JSXLiteComponent) => {
   traverse(json).forEach(function(item) {
     if (isJsxLiteNode(item)) {
       if (item.name === 'For') {
-        names.push(item.bindings._forName as string);
+        names.push(item.properties._forName as string);
       }
     }
   });
@@ -189,7 +189,7 @@ const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
   let str = '';
 
   if (json.name === 'For') {
-    const itemName = json.bindings._forName;
+    const itemName = json.properties._forName;
     addOnChangeJs(
       elId,
       options,

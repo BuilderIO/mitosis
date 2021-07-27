@@ -48,7 +48,7 @@ export default {
 exports[`Vue Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <template v-for=\\"column in columns\\">
+    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
       <div class=\\"builder-column div-2\\">
         {{ column.content }}
       </div>
@@ -238,7 +238,7 @@ exports[`Vue Form block 1`] = `
     @submit=\\"onSubmit(event)\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
-      <template v-for=\\"block in builderBlock?.children\\">
+      <template :key=\\"index\\" v-for=\\"(block, index) in builderBlock?.children\\">
         <BuilderBlockComponent
           :key=\\"block.id\\"
           :block=\\"block\\"
@@ -742,7 +742,7 @@ exports[`Vue Select block 1`] = `
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
   >
-    <template v-for=\\"option in options\\">
+    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
       <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
     </template>
   </select>
@@ -777,7 +777,7 @@ exports[`Vue Stamped.io 1`] = `
 
       <button class=\\"button\\" @click=\\"showReviewPrompt = false\\">Submit</button>
     </template>
-    <template v-for=\\"review in reviews\\">
+    <template :key=\\"index\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
         <div>

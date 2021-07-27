@@ -66,7 +66,7 @@ export const blockToSvelte = (
   if (json.name === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
       includeState: options.stateType === 'variables',
-    })} as ${json.bindings._forName} }`;
+    })} as ${json.properties._forName} }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/each}`;
   } else if (json.name === 'Show') {

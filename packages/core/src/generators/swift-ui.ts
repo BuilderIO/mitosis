@@ -139,7 +139,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
     str += `_: <For each={${processBinding(
       json.bindings.each as string,
       options,
-    )}}>{${json.bindings._forName} => ({
+    )}}>{${json.properties._forName} => ({
       ${children.map((item) => blockToSwift(item, options)).join('\n')}
     })}</For>`;
   } else if (json.name === 'Show') {

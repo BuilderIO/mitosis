@@ -369,8 +369,10 @@ const componentMappers: {
     return createJSXLiteNode({
       name: 'For',
       bindings: {
-        _forName: block.component!.options!.repeat!.itemName,
         each: `state.${block.component!.options!.repeat!.collection}`,
+      },
+      properties: {
+        _forName: block.component!.options!.repeat!.itemName,
       },
       children: (block.children || []).map((child) =>
         builderElementToJsxLiteNode(child, options),
@@ -532,6 +534,8 @@ export const builderElementToJsxLiteNode = (
         name: 'For',
         bindings: {
           each: wrapBindingIfNeeded(block.repeat?.collection!, options),
+        },
+        properties: {
           _forName: block.repeat?.itemName || 'item',
         },
         children:
@@ -549,6 +553,8 @@ export const builderElementToJsxLiteNode = (
         name: 'For',
         bindings: {
           each: wrapBindingIfNeeded(block.repeat?.collection!, options),
+        },
+        properties: {
           _forName: block.repeat?.itemName || 'item',
         },
         children: [builderElementToJsxLiteNode(omit(useBlock, 'repeat'))],

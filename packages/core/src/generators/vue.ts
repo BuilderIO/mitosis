@@ -47,9 +47,9 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    return `<template v-for="${
-      json.bindings._forName
-    } in ${stripStateAndPropsRefs(json.bindings.each as string)}">
+    return `<template :key="index" v-for="(${
+      json.properties._forName
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
       ${json.children.map((item) => blockToVue(item, options)).join('\n')}
     </template>`;
   },

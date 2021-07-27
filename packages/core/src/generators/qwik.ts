@@ -117,7 +117,7 @@ const NODE_MAPPERS: {
   },
   For(json, options) {
     return `{${processBinding(json.bindings.each as string, options)}.map(${
-      json.bindings._forName
+      json.properties._forName
     } => (
       <>${json.children
         .filter(filterEmptyTextNodes)
