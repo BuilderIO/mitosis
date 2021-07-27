@@ -1,4 +1,4 @@
-import { format } from 'prettier';
+import { format } from 'prettier/standalone';
 import { getMemberObjectString } from '../../helpers/get-state-object-string';
 import { JSXLiteContext } from '../../types/jsx-lite-context';
 

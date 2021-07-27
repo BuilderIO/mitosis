@@ -18,15 +18,15 @@ export function parseContext(
   let found = false;
   const context = createJsxLiteContext({ name: options.name });
 
-  babel.parse(code, {
+  babel.transform(code, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       () => ({
         visitor: {
           Program(path: babel.NodePath<babel.types.Program>) {
             for (const item of path.node.body) {
-              if (types.isExpressionStatement(item)) {
-                const expression = item.expression;
+              if (types.isExportDefaultDeclaration(item)) {
+                const expression = item.declaration;
                 if (types.isCallExpression(expression)) {
                   if (
                     types.isIdentifier(expression.callee) &&
