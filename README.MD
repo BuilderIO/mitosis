@@ -1,4 +1,4 @@
-<br /><br />
+<br />
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fbd8709e610d44cde8f623ebcc960e7dd"></p>
 
 <p align="center">
