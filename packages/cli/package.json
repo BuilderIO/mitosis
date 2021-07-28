@@ -8,11 +8,11 @@
   },
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
-    "clean-build": "npx tsc --build --clean && rm -rf ./build",
+    "clean-build": "npx tsc --build --clean && rm -rf ./dist",
     "clean": "npx tsc --build --clean",
     "compile": "npx tsc --build --verbose --pretty",
     "start": "npm run compile -- --watch",
-    "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./build/; fi",
+    "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
     "release:patch": "npm version patch && npm publish",
@@ -23,22 +23,30 @@
   },
   "files": [
     "tsconfig.json",
-    "build",
+    "dist",
     "LICENSE",
     "readme.md",
     "docs",
     "bin"
   ],
   "license": "MIT",
+  "peerDependencies": {
+    "@builder.io/mitosis": ">=0.0.44-18"
+  },
   "dependencies": {
-    "@builder.io/mitosis": "0.0.44-18",
     "@types/fs-extra": "^9.0.8",
+    "@types/lodash": "^4.14.171",
+    "@vue/compiler-sfc": "^3.1.5",
+    "babel-preset-solid": "^1.0.6",
     "chalk": "^4.1.0",
+    "esbuild": "^0.12.16",
     "fs-extra": "^9.1.0",
     "globby": "^11.0.2",
-    "gluegun": "latest"
+    "gluegun": "latest",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
+    "@builder.io/mitosis": "0.0.44-18",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.11",
     "jest": "^24.1.0",
