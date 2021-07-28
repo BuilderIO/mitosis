@@ -8,30 +8,30 @@ import { getStateObjectStringFromComponent } from '../helpers/get-state-object-s
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 
 export const DEFAULT_FORMAT = 'legacy';
 
-export type JsxLiteFormat = 'react' | 'legacy';
+export type MitosisFormat = 'react' | 'legacy';
 
-// Special isValidAttributeName for JSX Lite so we can allow for $ in names
+// Special isValidAttributeName for Mitosis so we can allow for $ in names
 const isValidAttributeName = (str: string) => {
   return Boolean(str && /^[$a-z0-9\-_:]+$/i.test(str));
 };
 
-export type ToJsxLiteOptions = {
+export type ToMitosisOptions = {
   prettier?: boolean;
-  format: JsxLiteFormat;
+  format: MitosisFormat;
 };
-export const blockToJsxLite = (
-  json: JSXLiteNode,
-  toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
+export const blockToMitosis = (
+  json: MitosisNode,
+  toMitosisOptions: Partial<ToMitosisOptions> = {},
 ): string => {
-  const options: ToJsxLiteOptions = {
+  const options: ToMitosisOptions = {
     format: DEFAULT_FORMAT,
-    ...toJsxLiteOptions,
+    ...toMitosisOptions,
   };
   if (options.format === 'react') {
     return blockToReact(json, {
@@ -47,7 +47,7 @@ export const blockToJsxLite = (
     return `<For each={${json.bindings.each}}>
     {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
-        ${json.children.map((child) => blockToJsxLite(child, options))}}
+        ${json.children.map((child) => blockToMitosis(child, options))}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -107,7 +107,7 @@ export const blockToJsxLite = (
   str += '>';
   if (json.children) {
     str += json.children
-      .map((item) => blockToJsxLite(item, options))
+      .map((item) => blockToMitosis(item, options))
       .join('\n');
   }
 
@@ -116,7 +116,7 @@ export const blockToJsxLite = (
   return str;
 };
 
-const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
+const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   let str = '';
 
   for (const ref of Array.from(refs)) {
@@ -126,15 +126,15 @@ const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
   return str;
 };
 
-const jsxLiteCoreComponents = ['Show', 'For'];
+const mitosisCoreComponents = ['Show', 'For'];
 
-export const componentToJsxLite = (
-  componentJson: JSXLiteComponent,
-  toJsxLiteOptions: Partial<ToJsxLiteOptions> = {},
+export const componentToMitosis = (
+  componentJson: MitosisComponent,
+  toMitosisOptions: Partial<ToMitosisOptions> = {},
 ) => {
-  const options: ToJsxLiteOptions = {
+  const options: ToMitosisOptions = {
     format: DEFAULT_FORMAT,
-    ...toJsxLiteOptions,
+    ...toMitosisOptions,
   };
 
   if (options.format === 'react') {
@@ -156,27 +156,27 @@ export const componentToJsxLite = (
 
   const components = Array.from(getComponents(json));
 
-  const jsxLiteComponents = components.filter((item) =>
-    jsxLiteCoreComponents.includes(item),
+  const mitosisComponents = components.filter((item) =>
+    mitosisCoreComponents.includes(item),
   );
   const otherComponents = components.filter(
-    (item) => !jsxLiteCoreComponents.includes(item),
+    (item) => !mitosisCoreComponents.includes(item),
   );
 
   const hasState = Boolean(Object.keys(componentJson.state).length);
 
-  const needsJsxLiteCoreImport = Boolean(
-    hasState || refs.size || jsxLiteComponents.length,
+  const needsMitosisCoreImport = Boolean(
+    hasState || refs.size || mitosisComponents.length,
   );
 
   // TODO: smart only pull in imports as needed
   let str = dedent`
     ${
-      !needsJsxLiteCoreImport
+      !needsMitosisCoreImport
         ? ''
         : `import { ${!hasState ? '' : 'useState, '} ${
             !refs.size ? '' : 'useRef, '
-          } ${jsxLiteComponents.join(', ')} } from '@jsx-lite/core';`
+          } ${mitosisComponents.join(', ')} } from '@builder.io/mitosis';`
     }
     ${
       !otherComponents.length
@@ -212,7 +212,7 @@ export const componentToJsxLite = (
       }
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToJsxLite(item, options)).join('\n')}
+        ${json.children.map((item) => blockToMitosis(item, options)).join('\n')}
         ${addWrapper ? '</>' : ''})
     }
 

@@ -3,8 +3,8 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import {} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -21,7 +21,7 @@ type ToTemplateOptions = {
 };
 
 const mappers: {
-  [key: string]: (json: JSXLiteNode, options: ToTemplateOptions) => string;
+  [key: string]: (json: MitosisNode, options: ToTemplateOptions) => string;
 } = {
   Fragment: (json, options) => {
     return `<div>${json.children
@@ -32,7 +32,7 @@ const mappers: {
 
 // TODO: spread support
 const blockToTemplate = (
-  json: JSXLiteNode,
+  json: MitosisNode,
   options: ToTemplateOptions = {},
 ) => {
   if (mappers[json.name]) {
@@ -116,7 +116,7 @@ const blockToTemplate = (
 
 // TODO: add JS support similar to componentToHtml()
 export const componentToTemplate = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToTemplateOptions = {},
 ) => {
   let json = fastClone(componentJson);

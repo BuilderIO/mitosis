@@ -3,8 +3,8 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -42,7 +42,7 @@ type ToLiquidOptions = {
 };
 
 const mappers: {
-  [key: string]: (json: JSXLiteNode, options: ToLiquidOptions) => string;
+  [key: string]: (json: MitosisNode, options: ToLiquidOptions) => string;
 } = {
   Fragment: (json, options) => {
     return `<div>${json.children
@@ -53,7 +53,7 @@ const mappers: {
 
 // TODO: spread support
 const blockToLiquid = (
-  json: JSXLiteNode,
+  json: MitosisNode,
   options: ToLiquidOptions = {},
 ): string => {
   if (mappers[json.name]) {
@@ -156,7 +156,7 @@ const blockToLiquid = (
 
 // TODO: add JS support similar to componentToHtml()
 export const componentToLiquid = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToLiquidOptions = {},
 ) => {
   let json = fastClone(componentJson);

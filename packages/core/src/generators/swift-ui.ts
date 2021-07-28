@@ -10,12 +10,12 @@ import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import { getStyles } from '../helpers/get-styles';
-import { JSXLiteStyles } from '../types/jsx-lite-styles';
+import { MitosisStyles } from '../types/mitosis-styles';
 
 type ToSwiftOptions = {
   prettier?: boolean;
@@ -23,7 +23,7 @@ type ToSwiftOptions = {
 
 const temp = (fragment: string) => fragment;
 
-const scrolls = (json: JSXLiteNode) => {
+const scrolls = (json: MitosisNode) => {
   return getStyles(json)?.overflow === 'auto';
 };
 
@@ -60,7 +60,7 @@ const fixIndents = (str: string) => {
 };
 
 const mappers: {
-  [key: string]: (json: JSXLiteNode, options: ToSwiftOptions) => string;
+  [key: string]: (json: MitosisNode, options: ToSwiftOptions) => string;
 } = {
   Fragment: (json, options) => {
     return `${json.children
@@ -74,7 +74,7 @@ const mappers: {
   },
 };
 
-const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
+const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -194,7 +194,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
     str += `}${temp(')')}`;
     for (const key in style) {
       let useKey = key;
-      const rawValue = style[key as keyof JSXLiteStyles]!;
+      const rawValue = style[key as keyof MitosisStyles]!;
       let value: number | string = `"${rawValue}"`;
       if (['padding', 'margin'].includes(key)) {
         // TODO: throw error if calc()
@@ -220,9 +220,9 @@ const processBinding = (str: string, options: ToSwiftOptions) => {
   });
 };
 
-const useTextBinding = (json: JSXLiteComponent, options: ToSwiftOptions) => {
+const useTextBinding = (json: MitosisComponent, options: ToSwiftOptions) => {
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
         if (
@@ -316,7 +316,7 @@ const replaceSwiftMethods = (code: string) => {
 };
 
 export const componentToSwift = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToSwiftOptions = {},
 ) => {
   const json = fastClone(componentJson);

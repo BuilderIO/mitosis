@@ -1,4 +1,4 @@
-import '@jsx-lite/core';
+import '@builder.io/mitosis';
 
 export interface SectionProps {
   maxWidth?: number;

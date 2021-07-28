@@ -1,4 +1,4 @@
-import { useState, For } from '@jsx-lite/core';
+import { useState, For } from '@builder.io/mitosis';
 
 type Column = {
   content: any;

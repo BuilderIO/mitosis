@@ -1,30 +1,30 @@
 # JSX-Lite CLI
 
-A CLI for jsx-lite.
+A CLI for mitosis.
 
 ## Installation
 
 ```bash
-npm install -g @jsx-lite/cli
+npm install -g @builder.io/mitosis-cli
 ```
 
 ## Usage
 
 ```bash
-jsx-lite compile --to=<format> < <input-file>
-cat my-file.tsx | jsx-lite compile -t=<format>
-jsx-lite compile -t=<format> <input-file>
+mitosis compile --to=<format> < <input-file>
+cat my-file.tsx | mitosis compile -t=<format>
+mitosis compile -t=<format> <input-file>
 ```
 
-Check the output from `jsx-lite compile --help`.
+Check the output from `mitosis compile --help`.
 
 **Examples**
 
 ```bash
-jsx-lite compile -t react component.tsx
-jsx-lite compile -t react < component.tsx
-cat component.tsx | jsx-lite compile -t html -
-jsx-lite compile -t react --out-dir build -- src/**/*.tsx
+mitosis compile -t react component.tsx
+mitosis compile -t react < component.tsx
+cat component.tsx | mitosis compile -t html -
+mitosis compile -t react --out-dir build -- src/**/*.tsx
 ```
 
 ## Options
@@ -38,7 +38,7 @@ Supported formats for `--to` are:
 - `template`
 - `html`
 - `customElement`
-- `jsxLite`
+- `mitosis`
 - `builder`
 - `swift`
 - `svelte`
@@ -47,7 +47,7 @@ Supported formats for `--to` are:
 
 Supported formats for `--from` are:
 
-- `jsxLite`
+- `mitosis`
 - `builder`
 - `liquid`
 
@@ -55,15 +55,15 @@ Supported formats for `--from` are:
 
 Here are some recipes for standard tasks
 
-### Validate how Builder will transform JSX Lite
+### Validate how Builder will transform Mitosis
 
 ```bash
 cat components/postscript.lite.tsx |
-  jsx-lite compile -t builder - |
-  jsx-lite compile -f builder -t jsxLite
+  mitosis compile -t builder - |
+  mitosis compile -f builder -t mitosis
 ```
 
-### Run jsx-lite on file system change
+### Run mitosis on file system change
 
 Use a tool like [entr](https://github.com/eradman/entr) or [guard](https://github.com/guard/guard)
 
@@ -73,7 +73,7 @@ find . -name '*lite.tsx' | entr make /_
 
 ## Known issues
 
-- Running `jsx-lite` from the root of this repository breaks due to some
+- Running `mitosis` from the root of this repository breaks due to some
   dynamic babel configuration look up
 - Files that are created as the result of `--out-dir=<dir>` maintain the original
   file extension of the input file, which doesn't make any sense in the case of
@@ -83,8 +83,8 @@ find . -name '*lite.tsx' | entr make /_
 ## Manual installation
 
 ```bash
-git clone git@github.com:BuilderIO/jsx-lite.git
-cd jsx-lite/packages/cli
+git clone git@github.com:BuilderIO/mitosis.git
+cd mitosis/packages/cli
 npm install
 npm run build
 npm link

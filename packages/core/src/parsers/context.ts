@@ -1,6 +1,6 @@
 import * as babel from '@babel/core';
-import { JSXLiteContext } from '../types/jsx-lite-context';
-import { createJsxLiteContext } from '../helpers/create-jsx-lite-context';
+import { MitosisContext } from '../types/mitosis-context';
+import { createMitosisContext } from '../helpers/create-mitosis-context';
 import { parseStateObject } from './jsx';
 
 const { types } = babel;
@@ -14,9 +14,9 @@ type ParseContextOptions = {
 export function parseContext(
   code: string,
   options: ParseContextOptions,
-): JSXLiteContext | null {
+): MitosisContext | null {
   let found = false;
-  const context = createJsxLiteContext({ name: options.name });
+  const context = createMitosisContext({ name: options.name });
 
   babel.transform(code, {
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],

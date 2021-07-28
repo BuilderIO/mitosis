@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@jsx-lite'],
+  plugins: ['@builder.io/mitosis'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [],
   parserOptions: {
@@ -16,6 +16,6 @@ module.exports = {
   },
 
   rules: {
-    // '@jsx-lite/no-conditional-render': 'warn',
+    // '@builder.io/mitosis/no-conditional-render': 'warn',
   },
 };

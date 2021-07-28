@@ -8,10 +8,10 @@ module.exports = (toolbox: GluegunToolbox) => {
   }
 
   // enable this if you want to read configuration in from
-  // the current folder's package.json (in a "jsx-lite" property),
-  // jsx-lite.config.json, etc.
+  // the current folder's package.json (in a "mitosis" property),
+  // mitosis.config.json, etc.
   // toolbox.config = {
   //   ...toolbox.config,
-  //   ...toolbox.config.loadConfig("jsx-lite", process.cwd())
+  //   ...toolbox.config.loadConfig("mitosis", process.cwd())
   // }
 }

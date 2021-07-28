@@ -1,4 +1,10 @@
-import { useState, useRef, onMount, onUnMount, Show } from '@jsx-lite/core';
+import {
+  useState,
+  useRef,
+  onMount,
+  onUnMount,
+  Show,
+} from '@builder.io/mitosis';
 
 // TODO: AMP Support?
 

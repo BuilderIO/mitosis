@@ -1,7 +1,7 @@
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { MitosisComponent } from '../types/mitosis-component';
 
-export const hasProps = (json: JSXLiteComponent) => {
+export const hasProps = (json: MitosisComponent) => {
   let has = false;
   traverse(json).forEach(function(item) {
     // TODO: use proper reference tracking

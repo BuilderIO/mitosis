@@ -15,7 +15,7 @@ cd "$tempdir"
 
 set -x
 
-jsx-lite new
+mitosis new
 
 echo "exit-code: $?"
 

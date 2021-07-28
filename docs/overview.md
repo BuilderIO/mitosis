@@ -1,6 +1,6 @@
-# JSX Lite Overview
+# Mitosis Overview
 
-JSX Lite is a subset of [JSX](https://github.com/facebook/jsx). It supports generating code for a number of frontend frameworks, including React, Vue, Angular, Svelte, and Solid.
+Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports generating code for a number of frontend frameworks, including React, Vue, Angular, Svelte, and Solid.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -30,12 +30,12 @@ JSX Lite is a subset of [JSX](https://github.com/facebook/jsx). It supports gene
 
 ## At a glance
 
-JSX Lite is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
+Mitosis is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
 
-An example JSX Lite component showing several features:
+An example Mitosis component showing several features:
 
 ```javascript
-import { For, Show, useState } from '@jsx-lite/core';
+import { For, Show, useState } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
   const state = useState({
@@ -67,7 +67,7 @@ export default function MyComponent(props) {
 
 ## Components
 
-JSX Lite is component-driven like most modern frontend frameworks. Each JSX Lite component should be in its own file and be the single default export. They are simple functions that return JSX elements
+Mitosis is component-driven like most modern frontend frameworks. Each Mitosis component should be in its own file and be the single default export. They are simple functions that return JSX elements
 
 ```jsx
 export default function MyComponent() {
@@ -187,7 +187,7 @@ export default function MyComponent(props) {
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
 ```jsx
-import { useState } from '@jsx-lite/core';
+import { useState } from '@builder.io/mitosis';
 
 export default function MyComponent() {
   const state = useState({
@@ -252,7 +252,7 @@ export default function MyComponent() {
 
 ### Defining variables with the same name as a state property will shadow it
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -266,7 +266,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -285,7 +285,7 @@ export default function MyComponent(props) {
 
 Use a different variable name
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -299,7 +299,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -316,7 +316,7 @@ export default function MyComponent(props) {
 
 ### Async methods can't be defined on "state"
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -337,7 +337,7 @@ You can either:
 a. Use promises in this context instead or
 b. Use an immediately invoked async function
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -351,7 +351,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -372,7 +372,7 @@ export default function MyComponent(props) {
 Regardless of what you make name the argument to a callback, it will be
 renamed in the output to `event`.
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -380,7 +380,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 export default function MyComponent(props) {
@@ -398,7 +398,7 @@ export default function MyComponent(props) {
 
 ### Functions can't be passed by reference to JSX callbacks
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -412,7 +412,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -438,7 +438,7 @@ export default function MyComponent(props) {
 
 Define an anonymous function in the callback
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -452,7 +452,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -478,7 +478,7 @@ export default function MyComponent(props) {
 
 JSX lite parsing fails on referencing `props` in a call to `useState`.
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent(props) {
@@ -492,7 +492,7 @@ export default function MyComponent(props) {
 
 Use _onMount_:
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent(props) {
@@ -504,7 +504,7 @@ export default function MyComponent(props) {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -525,7 +525,7 @@ export default function MyComponent(props) {
 Destructuring assignment from `state` isn't currently supported, and is
 ignored by the compiler.
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -537,7 +537,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';
@@ -557,7 +557,7 @@ export default function MyComponent(props) {
 
 Use standard assignment instead for now.
 
-_JSX Lite input_
+_Mitosis input_
 
 ```typescript
 export default function MyComponent() {
@@ -569,7 +569,7 @@ export default function MyComponent() {
 }
 ```
 
-_JSX Lite output_
+_Mitosis output_
 
 ```typescript
 import { useState } from 'react';

@@ -23,7 +23,7 @@ ruleTester.run('jsx-callback-arg-name', rule, {
     { ...opts, code: '<button onClick={ event => doSomething(event) }/>' },
     { ...opts, code: '<button onClick={ () => doSomething() }/>', ...opts },
     { ...opts, code: '<button onClick={ function(event) {} }/>', ...opts },
-    // Doesn't apply to none jsx-lite files
+    // Doesn't apply to none mitosis files
     {
       ...opts,
       code: '<button onClick={ e => console.log(e) }/>',

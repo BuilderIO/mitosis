@@ -1,6 +1,6 @@
 import Context1 from '@dummy/1';
 import Context2 from '@dummy/2';
-import { useContext, setContext } from '@jsx-lite/core';
+import { useContext, setContext } from '@builder.io/mitosis';
 
 export default function ComponentWithContext() {
   const foo = useContext(Context1);

@@ -1,11 +1,11 @@
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { isMitosisNode } from './is-mitosis-node';
 
-export const hasComponent = (name: string, json: JSXLiteComponent) => {
+export const hasComponent = (name: string, json: MitosisComponent) => {
   let has = false;
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       if (item.name === name) {
         has = true;
         this.stop();

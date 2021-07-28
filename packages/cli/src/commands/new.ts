@@ -3,7 +3,7 @@ import { GluegunCommand } from 'gluegun'
 const command: GluegunCommand = {
   name: 'new',
   alias: 'n',
-  description: 'jsx-lite new [options]',
+  description: 'mitosis new [options]',
   async run(toolbox) {
     const sys = toolbox.system
     const pkg = toolbox.packageManager
@@ -32,10 +32,13 @@ const command: GluegunCommand = {
 
     spinner.start('Installing packages')
 
-    await pkg.add(['@jsx-lite/core', '@jsx-lite/cli', 'typescript'], {
-      dev: true,
-      force: 'npm'
-    })
+    await pkg.add(
+      ['@builder.io/mitosis', '@builder.io/mitosis-cli', 'typescript'],
+      {
+        dev: true,
+        force: 'npm'
+      }
+    )
 
     spinner.succeed('Installed packages')
 
@@ -47,11 +50,11 @@ const command: GluegunCommand = {
     spinner.succeed('Wrote tsconfig.json')
 
     toolbox.template.generate({
-      template: 'jsx-lite.config.js.ejs',
-      target: 'jsx-lite.config.js'
+      template: 'mitosis.config.js.ejs',
+      target: 'mitosis.config.js'
     })
 
-    spinner.succeed('Wrote jsx-lite.config.js ')
+    spinner.succeed('Wrote mitosis.config.js ')
 
     toolbox.template.generate({
       template: 'component.lite.tsx.ejs',

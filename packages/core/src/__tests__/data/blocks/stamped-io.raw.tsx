@@ -1,4 +1,4 @@
-import { useState, onMount, For, Show } from '@jsx-lite/core';
+import { useState, onMount, For, Show } from '@builder.io/mitosis';
 
 type SmileReviewsProps = {
   productId: string;

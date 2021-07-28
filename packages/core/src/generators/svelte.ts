@@ -6,12 +6,12 @@ import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -30,7 +30,7 @@ export type ToSvelteOptions = {
 };
 
 const mappers: {
-  [key: string]: (json: JSXLiteNode, options: ToSvelteOptions) => string;
+  [key: string]: (json: MitosisNode, options: ToSvelteOptions) => string;
 } = {
   Fragment: (json, options) => {
     return `${json.children
@@ -40,7 +40,7 @@ const mappers: {
 };
 
 export const blockToSvelte = (
-  json: JSXLiteNode,
+  json: MitosisNode,
   options: ToSvelteOptions,
 ): string => {
   if (mappers[json.name]) {
@@ -130,9 +130,9 @@ export const blockToSvelte = (
  *    <input bind:value={state.name}/>
  * when easily identified, for more idiomatic svelte code
  */
-const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
+const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
         if (
@@ -149,7 +149,7 @@ const useBindValue = (json: JSXLiteComponent, options: ToSvelteOptions) => {
 };
 
 export const componentToSvelte = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToSvelteOptions = {},
 ) => {
   const useOptions: ToSvelteOptions = {

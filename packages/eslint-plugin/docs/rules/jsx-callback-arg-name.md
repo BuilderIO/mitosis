@@ -1,6 +1,6 @@
 # jsx-callback-arg-name (jsx-callback-arg-name)
 
-This rule warns about a JSX Lite limitation.
+This rule warns about a Mitosis limitation.
 
 ## Rule Details
 

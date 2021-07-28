@@ -1,6 +1,6 @@
-import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
+import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 
-const getStarImport = (theImport: JSXLiteImport): string | null => {
+const getStarImport = (theImport: MitosisImport): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === '*') {
@@ -9,7 +9,7 @@ const getStarImport = (theImport: JSXLiteImport): string | null => {
   }
   return null;
 };
-const getDefaultImport = (theImport: JSXLiteImport): string | null => {
+const getDefaultImport = (theImport: MitosisImport): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === 'default') {
@@ -19,7 +19,7 @@ const getDefaultImport = (theImport: JSXLiteImport): string | null => {
   return null;
 };
 
-export const renderImport = (theImport: JSXLiteImport): string => {
+export const renderImport = (theImport: MitosisImport): string => {
   let importString = 'import ';
 
   const starImport = getStarImport(theImport);
@@ -58,7 +58,7 @@ export const renderImport = (theImport: JSXLiteImport): string => {
   return importString;
 };
 
-export const renderImports = (imports: JSXLiteImport[]): string => {
+export const renderImports = (imports: MitosisImport[]): string => {
   let importString = '';
 
   for (const theImport of imports) {
@@ -66,8 +66,8 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
     if (theImport.path === '@builder.io/components') {
       continue;
     }
-    // TODO: JSX Lite output needs this
-    if (theImport.path.startsWith('@jsx-lite/core')) {
+    // TODO: Mitosis output needs this
+    if (theImport.path.startsWith('@builder.io/mitosis')) {
       continue;
     }
     importString += renderImport(theImport) + '\n';
@@ -76,7 +76,7 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
   return importString;
 };
 
-export const renderPreComponent = (component: JSXLiteComponent): string => {
+export const renderPreComponent = (component: MitosisComponent): string => {
   return `
     ${renderImports(component.imports)}
     ${component.hooks.preComponent || ''}

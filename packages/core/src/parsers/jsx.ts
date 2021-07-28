@@ -7,14 +7,14 @@ import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
-import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { createMitosisComponent } from '../helpers/create-mitosis-component';
+import { createMitosisNode } from '../helpers/create-mitosis-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -41,7 +41,7 @@ const { types } = babel;
 type Context = {
   // Babel has other context
   builder: {
-    component: JSXLiteComponent;
+    component: MitosisComponent;
   };
 };
 
@@ -176,10 +176,10 @@ const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
-  const hooks: JSXLiteComponent['hooks'] = {};
-  let state: JSXLiteComponent['state'] = {};
-  const accessedContext: JSXLiteComponent['context']['get'] = {};
-  const setContext: JSXLiteComponent['context']['set'] = {};
+  const hooks: MitosisComponent['hooks'] = {};
+  let state: MitosisComponent['state'] = {};
+  const accessedContext: MitosisComponent['context']['get'] = {};
+  const setContext: MitosisComponent['context']['set'] = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
@@ -291,15 +291,15 @@ const componentFunctionToJson = (
   const theReturn = node.body.body.find((item) =>
     types.isReturnStatement(item),
   );
-  const children: JSXLiteNode[] = [];
+  const children: MitosisNode[] = [];
   if (theReturn) {
     const value = (theReturn as babel.types.ReturnStatement).argument;
     if (types.isJSXElement(value) || types.isJSXFragment(value)) {
-      children.push(jsxElementToJson(value) as JSXLiteNode);
+      children.push(jsxElementToJson(value) as MitosisNode);
     }
   }
 
-  return createJSXLiteComponent({
+  return createMitosisComponent({
     ...context.builder.component,
     name: node.id?.name,
     state,
@@ -318,9 +318,9 @@ const jsxElementToJson = (
     | babel.types.JSXText
     | babel.types.JSXFragment
     | babel.types.JSXExpressionContainer,
-): JSXLiteNode => {
+): MitosisNode => {
   if (types.isJSXText(node)) {
-    return createJSXLiteNode({
+    return createMitosisNode({
       properties: {
         _text: node.value,
       },
@@ -337,7 +337,7 @@ const jsxElementToJson = (
         if (types.isIdentifier(callback.params[0])) {
           const forName = callback.params[0].name;
 
-          return createJSXLiteNode({
+          return createMitosisNode({
             name: 'For',
             bindings: {
               each: generate(node.expression.callee)
@@ -356,7 +356,7 @@ const jsxElementToJson = (
     // {foo && <div />} -> <Show when={foo}>...</Show>
     if (types.isLogicalExpression(node.expression)) {
       if (node.expression.operator === '&&') {
-        return createJSXLiteNode({
+        return createMitosisNode({
           name: 'Show',
           bindings: {
             when: generate(node.expression.left).code!,
@@ -370,7 +370,7 @@ const jsxElementToJson = (
 
     // TODO: support {foo ? bar : baz}
 
-    return createJSXLiteNode({
+    return createMitosisNode({
       bindings: {
         _text: generate(node.expression).code,
       },
@@ -378,7 +378,7 @@ const jsxElementToJson = (
   }
 
   if (types.isJSXFragment(node)) {
-    return createJSXLiteNode({
+    return createMitosisNode({
       name: 'Fragment',
       children: node.children.map((item) =>
         jsxElementToJson(item as any),
@@ -399,7 +399,7 @@ const jsxElementToJson = (
       types.isJSXExpressionContainer(whenAttr.value) &&
       generate(whenAttr.value.expression).code;
 
-    return createJSXLiteNode({
+    return createMitosisNode({
       name: 'Show',
       bindings: {
         when: whenValue || undefined,
@@ -421,7 +421,7 @@ const jsxElementToJson = (
       if (types.isArrowFunctionExpression(childExpression)) {
         const argName = (childExpression.params[0] as babel.types.Identifier)
           .name;
-        return createJSXLiteNode({
+        return createMitosisNode({
           name: 'For',
           bindings: {
             each: generate(
@@ -438,7 +438,7 @@ const jsxElementToJson = (
     }
   }
 
-  return createJSXLiteNode({
+  return createMitosisNode({
     name: nodeName,
     properties: node.openingElement.attributes.reduce((memo, item) => {
       if (types.isJSXAttribute(item)) {
@@ -501,8 +501,8 @@ export const METADATA_HOOK_NAME = 'useMetadata';
  */
 const collectMetadata = (
   nodes: babel.types.Statement[],
-  component: JSXLiteComponent,
-  options: ParseJSXLiteOptions,
+  component: MitosisComponent,
+  options: ParseMitosisOptions,
 ) => {
   const hookNames = new Set(
     (options.jsonHookNames || []).concat(METADATA_HOOK_NAME),
@@ -526,7 +526,7 @@ const collectMetadata = (
   });
 };
 
-type ParseJSXLiteOptions = {
+type ParseMitosisOptions = {
   format: 'react' | 'simple';
   jsonHookNames?: string[];
 };
@@ -567,12 +567,12 @@ function mapReactIdentifiersInExpression(
 }
 
 /**
- * Convert state identifiers from React hooks format to the state.* format JSX Lite needs
+ * Convert state identifiers from React hooks format to the state.* format Mitosis needs
  * e.g.
  *   text -> state.text
  *   setText(...) -> state.text = ...
  */
-function mapReactIdentifiers(json: JSXLiteComponent) {
+function mapReactIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
   for (const key in json.state) {
@@ -588,7 +588,7 @@ function mapReactIdentifiers(json: JSXLiteComponent) {
   }
 
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
         if (value) {
@@ -610,11 +610,11 @@ const expressionToNode = (str: string) => {
 
 /**
  * Convert <Context.Provider /> to hooks formats by mutating the
- * JSXLiteComponent tree
+ * MitosisComponent tree
  */
-function extractContextComponents(json: JSXLiteComponent) {
+function extractContextComponents(json: MitosisComponent) {
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       if (item.name.endsWith('.Provider')) {
         const value = item.bindings.value;
         const name = item.name.split('.')[0];
@@ -629,7 +629,7 @@ function extractContextComponents(json: JSXLiteComponent) {
         };
 
         this.update(
-          createJSXLiteNode({
+          createMitosisNode({
             name: 'Fragment',
             children: item.children,
           }),
@@ -643,9 +643,9 @@ function extractContextComponents(json: JSXLiteComponent) {
 
 export function parseJsx(
   jsx: string,
-  options: Partial<ParseJSXLiteOptions> = {},
-): JSXLiteComponent {
-  const useOptions: ParseJSXLiteOptions = {
+  options: Partial<ParseMitosisOptions> = {},
+): MitosisComponent {
+  const useOptions: ParseMitosisOptions = {
     format: 'react',
     ...options,
   };
@@ -663,7 +663,7 @@ export function parseJsx(
               return;
             }
             context.builder = {
-              component: createJSXLiteComponent(),
+              component: createMitosisComponent(),
             };
 
             const isImportOrDefaultExport = (node: babel.Node) =>
@@ -716,16 +716,16 @@ export function parseJsx(
             path: babel.NodePath<babel.types.ImportDeclaration>,
             context: Context,
           ) {
-            // @jsx-lite/core or React imports compile away
+            // @builder.io/mitosis or React imports compile away
             if (
-              ['react', '@jsx-lite/core', '@emotion/react'].includes(
+              ['react', '@builder.io/mitosis', '@emotion/react'].includes(
                 path.node.source.value,
               )
             ) {
               path.remove();
               return;
             }
-            const importObject: JSXLiteImport = {
+            const importObject: MitosisImport = {
               imports: {},
               path: path.node.source.value,
             };
@@ -769,7 +769,7 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
-  let parsed: JSXLiteComponent;
+  let parsed: MitosisComponent;
   try {
     parsed = JSON5.parse(toParse);
   } catch (err) {

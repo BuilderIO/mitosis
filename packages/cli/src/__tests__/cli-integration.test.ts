@@ -4,7 +4,7 @@ import { filesystem, system } from 'gluegun'
 const { version } = require('../../package.json')
 
 const root = filesystem.path(__dirname, '..', '..')
-const script = filesystem.path(root, 'bin', 'jsx-lite')
+const script = filesystem.path(root, 'bin', 'mitosis')
 
 const cli = async (cmd: string) => {
   const shcmd = `node ${script} ${cmd}`

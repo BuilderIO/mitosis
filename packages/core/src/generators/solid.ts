@@ -5,8 +5,8 @@ import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -18,16 +18,16 @@ import { fastClone } from '../helpers/fast-clone';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   options: ToSolidOptions,
 ) {
   let found = false;
   traverse(json).forEach((node) => {
-    if (isJsxLiteNode(node)) {
+    if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
         node.bindings.component = node.name;
         node.name = 'Dynamic';
@@ -40,7 +40,7 @@ function processDynamicComponents(
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
-const collectClassString = (json: JSXLiteNode): string | null => {
+const collectClassString = (json: MitosisNode): string | null => {
   const staticClasses: string[] = [];
 
   const hasStaticClasses = Boolean(staticClasses.length);
@@ -99,7 +99,7 @@ type ToSolidOptions = {
   plugins?: Plugin[];
 };
 const blockToSolid = (
-  json: JSXLiteNode,
+  json: MitosisNode,
   options: ToSolidOptions = {},
 ): string => {
   if (json.properties._text) {
@@ -171,7 +171,7 @@ const blockToSolid = (
   return str;
 };
 
-const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
+const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   let str = '';
 
   for (const ref of Array.from(refs)) {
@@ -182,7 +182,7 @@ const getRefsString = (json: JSXLiteComponent, refs = getRefs(json)) => {
 };
 
 export const componentToSolid = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToSolidOptions = {},
 ) => {
   let json = fastClone(componentJson);

@@ -3,7 +3,7 @@ export {
   componentToBuilder as builder,
   componentToCustomElement as customElement,
   componentToHtml as html,
-  componentToJsxLite as jsxLite,
+  componentToMitosis as mitosis,
   componentToLiquid as liquid,
   componentToReact as react,
   componentToReactNative as reactNative,
@@ -12,4 +12,4 @@ export {
   componentToSwift as swift,
   componentToTemplate as template,
   componentToVue as vue
-} from '@jsx-lite/core'
+} from '@builder.io/mitosis'
