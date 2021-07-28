@@ -1,4 +1,4 @@
-import '@jsx-lite/core/dist/src/jsx-types';
+import '@builder.io/mitosis/dist/src/jsx-types';
 import Footer from '../components/footer.lite';
 import Header from '../components/header.lite';
 

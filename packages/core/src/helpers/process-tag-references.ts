@@ -1,7 +1,7 @@
 import { camelCase, last, upperFirst } from 'lodash';
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { isJsxLiteNode } from './is-mitosis-node';
 
 function getRefName(path: string) {
   return upperFirst(camelCase(last(path.split('.')))) + 'Ref';

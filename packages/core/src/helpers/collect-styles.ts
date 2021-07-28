@@ -1,12 +1,12 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { camelCase, pickBy } from 'lodash';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteNode } from '../types/mitosis-node';
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import { capitalize } from './capitalize';
 import { dashCase } from './dash-case';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { isJsxLiteNode } from './is-mitosis-node';
 import { isUpperCase } from './is-upper-case';
 import hash from 'object-hash';
 

@@ -3,9 +3,9 @@ import { camelCase, size } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/collect-styles';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import { Plugin } from '../modules/plugins';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
 
 type ToReactNativeOptions = {

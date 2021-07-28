@@ -6,7 +6,7 @@ root="$dir/.."
 
 pushd "$root"
 
-script="$root/bin/jsx-lite"
+script="$root/bin/mitosis"
 
 set -x
 

@@ -1,6 +1,6 @@
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { isJsxLiteNode } from './is-mitosis-node';
 
 export function getComponentsUsed(json: JSXLiteComponent) {
   const components = new Set<string>();

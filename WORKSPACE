@@ -1,5 +1,5 @@
 workspace(
-    name = "jsx-lite",
+    name = "mitosis",
     managed_directories = {
         "@npm": ["node_modules"],
         "@npm_core": ["packages/core/node_modules"],

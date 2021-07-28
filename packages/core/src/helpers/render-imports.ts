@@ -1,4 +1,4 @@
-import { JSXLiteComponent, JSXLiteImport } from '../types/jsx-lite-component';
+import { JSXLiteComponent, JSXLiteImport } from '../types/mitosis-component';
 
 const getStarImport = (theImport: JSXLiteImport): string | null => {
   for (const key in theImport.imports) {
@@ -66,8 +66,8 @@ export const renderImports = (imports: JSXLiteImport[]): string => {
     if (theImport.path === '@builder.io/components') {
       continue;
     }
-    // TODO: JSX Lite output needs this
-    if (theImport.path.startsWith('@jsx-lite/core')) {
+    // TODO: Mitosis output needs this
+    if (theImport.path.startsWith('@builder.io/mitosis')) {
       continue;
     }
     importString += renderImport(theImport) + '\n';

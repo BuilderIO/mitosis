@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
-import { componentToJsxLite } from '../generators/jsx-lite';
+import { componentToJsxLite } from '../generators/mitosis';
 import {
   builderContentToJsxLiteComponent,
   extractStateHook,
@@ -88,7 +88,7 @@ describe('Builder', () => {
 
   test('Regenerate Image', () => {
     const code = dedent`
-      import { useState } from "@jsx-lite/core";
+      import { useState } from "@builder.io/mitosis";
       import { Image } from "@components";
 
       export default function MyComponent(props) {
@@ -122,7 +122,7 @@ describe('Builder', () => {
 
   test('Regenerate Text', () => {
     const code = dedent`
-      import { useState } from "@jsx-lite/core";
+      import { useState } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });
@@ -156,7 +156,7 @@ describe('Builder', () => {
 
   test('Regenerate loop', () => {
     const code = dedent`
-      import { useState, For } from "@jsx-lite/core";
+      import { useState, For } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
         const state = useState({ people: ["Steve", "Sewell"] });

@@ -1,7 +1,7 @@
 import { getStyles, setStyles } from '../helpers/get-styles';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import { TraverseContext } from 'traverse';
-import { JSXLiteStyles } from '../types/jsx-lite-styles';
+import { JSXLiteStyles } from '../types/mitosis-styles';
 import { tarverseNodes } from '../helpers/traverse-nodes';
 
 type MapStylesOptions = {

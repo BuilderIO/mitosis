@@ -1,4 +1,4 @@
-import { Show } from '@jsx-lite/core';
+import { Show } from '@builder.io/mitosis';
 
 export interface ButtonProps {
   attributes?: any;

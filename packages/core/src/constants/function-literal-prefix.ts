@@ -1,1 +1,1 @@
-export const functionLiteralPrefix = `@jsx-lite/function:`;
+export const functionLiteralPrefix = `@builder.io/mitosis/function:`;

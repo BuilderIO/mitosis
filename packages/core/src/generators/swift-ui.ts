@@ -10,12 +10,12 @@ import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { getStyles } from '../helpers/get-styles';
-import { JSXLiteStyles } from '../types/jsx-lite-styles';
+import { JSXLiteStyles } from '../types/mitosis-styles';
 
 type ToSwiftOptions = {
   prettier?: boolean;

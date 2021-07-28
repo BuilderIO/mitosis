@@ -11,7 +11,7 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
@@ -25,8 +25,8 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { htmlAttributeEscape } from '../helpers/html-escape';
 
 const qwikImport = (options: InternalToQwikOptions) =>

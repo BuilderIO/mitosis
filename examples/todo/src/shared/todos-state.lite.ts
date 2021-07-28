@@ -1,4 +1,4 @@
-import { useMetadata } from '@jsx-lite/core';
+import { useMetadata } from '@builder.io/mitosis';
 
 export type Todo = {
   completed: boolean;

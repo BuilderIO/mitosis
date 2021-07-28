@@ -1,1 +1,1 @@
-export const methodLiteralPrefix = `@jsx-lite/method:`;
+export const methodLiteralPrefix = `@builder.io/mitosis/method:`;

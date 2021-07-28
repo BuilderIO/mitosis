@@ -8,8 +8,8 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -20,7 +20,7 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
 

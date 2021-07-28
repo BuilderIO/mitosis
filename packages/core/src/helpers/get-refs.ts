@@ -1,6 +1,6 @@
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { isJsxLiteNode } from './is-mitosis-node';
 
 export const getRefs = (json: JSXLiteComponent) => {
   const refs = new Set<string>();

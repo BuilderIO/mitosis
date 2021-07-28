@@ -1,10 +1,10 @@
-import { JSXLiteContext } from '../types/jsx-lite-context';
+import { JSXLiteContext } from '../types/mitosis-context';
 
 export function createJsxLiteContext(
   options: Partial<JSXLiteContext> & { name: string },
 ): JSXLiteContext {
   return {
-    '@type': '@jsx-lite/context',
+    '@type': '@builder.io/mitosis/context',
     value: {},
     ...options,
   };

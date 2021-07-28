@@ -3,8 +3,8 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import {} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,

@@ -1,5 +1,5 @@
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 
 export const hasProps = (json: JSXLiteComponent) => {
   let has = false;

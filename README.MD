@@ -6,16 +6,16 @@
 
 <p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
-  <a href="https://github.com/BuilderIO/jsx-lite/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
-  <a href="https://github.com/BuilderIO/jsx-lite"><img alt="License" src="https://img.shields.io/github/license/BuilderIO/jsx-lite" /></a>
-  <a href="https://www.npmjs.com/package/@jsx-lite/core"><img alt="Types" src="https://img.shields.io/npm/types/@jsx-lite/core" /></a>
-  <a href="https://www.npmjs.com/package/@jsx-lite/core" rel="nofollow"><img src="https://img.shields.io/npm/v/@jsx-lite/core.svg?sanitize=true"></a>
+  <a href="https://github.com/BuilderIO/mitosis/pulls"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
+  <a href="https://github.com/BuilderIO/mitosis"><img alt="License" src="https://img.shields.io/github/license/BuilderIO/mitosis" /></a>
+  <a href="https://www.npmjs.com/package/@builder.io/mitosis"><img alt="Types" src="https://img.shields.io/npm/types/@builder.io/mitosis" /></a>
+  <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
 <br />
 
 <p align="center">
-  <a href="https://jsx-lite.builder.io/">
+  <a href="https://mitosis.builder.io/">
     <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
   </a>
 </p>
@@ -41,7 +41,7 @@
           <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F467c9b604d4e486abfc39d27a2fddc12" />
         </p>
         <p align="center">
-          Try our  <a href="https://jsx-lite.builder.io/"><b>interactive fiddle</b></a>
+          Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
         </p>
       </td>
     </tr>
@@ -50,7 +50,7 @@
         <a href="https://github.com/builderio/figma-html"><img width="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" /></a>
       </td>
       <td>
-        <a href="https://jsx-lite.builder.io/"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
+        <a href="https://mitosis.builder.io/"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
       </td>
     </tr>
     <tr>
@@ -113,12 +113,12 @@
 
 ## At a glance
 
-JSX Lite is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
+Mitosis is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
 
-This is what a basic JSX Lite component that manages some state looks like:
+This is what a basic Mitosis component that manages some state looks like:
 
 ```javascript
-import { useState, Show, For } from '@jsx-lite/core';
+import { useState, Show, For } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
   const state = useState({
@@ -152,23 +152,23 @@ Learn more [in the docs](docs/overview.md)
 
 ## CLI
 
-Try JSX Lite out locally with our [CLI](packages/cli)
+Try Mitosis out locally with our [CLI](packages/cli)
 
 ```bash
-npm install -g @jsx-lite/cli
+npm install -g @builder.io/mitosis-cli
 
-jsx-lite compile --to=vue my-file.lite.jsx
+mitosis compile --to=vue my-file.lite.jsx
 ```
 
 ## Why
 
 ### Component libraries
 
-Managing support for libraries that provide UI components across frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With JSX Lite you can write once, and run everywhere while maintaining full compatibilty with the target framework.
+Managing support for libraries that provide UI components across frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With Mitosis you can write once, and run everywhere while maintaining full compatibilty with the target framework.
 
 ### Modern workflows for all platforms
 
-JSX Lite allows you to incrementally adopt modern and familiar workflows for many different platforms. For instance, when working with Shopify, you can server side render to liquid and hydrate with React.
+Mitosis allows you to incrementally adopt modern and familiar workflows for many different platforms. For instance, when working with Shopify, you can server side render to liquid and hydrate with React.
 
 ### JS framework fatigue
 
@@ -176,7 +176,7 @@ If you have ever had to migrate a huge codebase from one framework to another, i
 
 ### Design to code
 
-With JSX Lite, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
+With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
 
 <p align="center">
 <img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F28066781f8584569b131fb4bffd893eb" />
@@ -184,7 +184,7 @@ With JSX Lite, you can convert designs from [Figma](https://github.com/BuilderIO
 
 ## How does it work
 
-JSX Lite uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
+Mitosis uses a static subset of JSX, inspired by [Solid](https://github.com/ryansolid/solid/blob/master/documentation/rendering.md). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
 
 ```tsx
 export function MyComponent() {
@@ -207,17 +207,17 @@ becomes:
 
 ```json
 {
-  "@type": "@jsx-lite/component",
+  "@type": "@builder.io/mitosis/component",
   "state": {
     "name": "Steve"
   },
   "nodes": [
     {
-      "@type": "@jsx-lite/node",
+      "@type": "@builder.io/mitosis/node",
       "name": "div",
       "children": [
         {
-          "@type": "@jsx-lite/node",
+          "@type": "@builder.io/mitosis/node",
           "bindings": {
             "value": "state.name",
             "onChange": "state.name = event.target.value"
@@ -248,7 +248,7 @@ Adding framework support is surprisingly easy with the plugin system (docs comin
 
 ## No-code tooling
 
-JSX Lite's static JSON format also enables no-code tooling for visual code editing and importing. You can see this with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma).
+Mitosis's static JSON format also enables no-code tooling for visual code editing and importing. You can see this with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma).
 
 <img src="https://i.imgur.com/BoKsLFs.gif" >
 
@@ -256,7 +256,7 @@ JSX Lite's static JSON format also enables no-code tooling for visual code editi
 
 ## Formatting options
 
-JSX Lite supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon.
+Mitosis supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon.
 
 <img src="https://imgur.com/hWXfNF3.gif "/>
 

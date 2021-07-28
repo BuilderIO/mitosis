@@ -2,10 +2,10 @@ import MonacoEditor, { MonacoEditorProps } from 'react-monaco-editor';
 import { Linter as ESLinter } from 'eslint';
 import * as monaco from 'monaco-editor';
 // eslint-disable-next-line import/no-webpack-loader-syntax
-import types from 'raw-loader!@jsx-lite/core/dist/src/jsx-types';
+import types from 'raw-loader!@builder.io/mitosis/dist/src/jsx-types';
 import React, { useState } from 'react';
 import { useDebounce } from 'react-use';
-import { rules } from '@jsx-lite/eslint-plugin';
+import { rules } from 'eslint-plugin-mitosis';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 
@@ -72,7 +72,7 @@ function eslint(code: string, version: any) {
           },
         },
         {
-          filename: 'jsx-lite-file.tsx',
+          filename: 'mitosis-file.tsx',
         },
       )
       .map((err) => ({

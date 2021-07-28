@@ -1,5 +1,5 @@
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
 
 /**

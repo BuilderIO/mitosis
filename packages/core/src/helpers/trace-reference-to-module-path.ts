@@ -1,4 +1,4 @@
-import { JSXLiteImport } from '../types/jsx-lite-component';
+import { JSXLiteImport } from '../types/mitosis-component';
 
 export function traceReferenceToModulePath(
   imports: JSXLiteImport[],

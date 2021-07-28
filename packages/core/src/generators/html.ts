@@ -10,11 +10,11 @@ import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { hasComponent } from '../helpers/has-component';
 import { isComponent } from '../helpers/is-component';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   Plugin,

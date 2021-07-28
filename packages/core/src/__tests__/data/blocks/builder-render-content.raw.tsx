@@ -1,7 +1,13 @@
-import { Show, onMount, useState, For, afterUnmount } from '@jsx-lite/core';
+import {
+  Show,
+  onMount,
+  useState,
+  For,
+  afterUnmount,
+} from '@builder.io/mitosis';
 import { Builder, BuilderContent, GetContentOptions } from '@builder.io/sdk';
 import { applyPatchWithMinimalMutationChain } from '@builder.io/utils';
-import { useBuilderData } from '@builder.io/jsx-lite';
+import { useBuilderData } from '@builder.io/mitosis';
 import { RenderBlock } from './builder-render-block.raw';
 
 type RenderContentProps = {

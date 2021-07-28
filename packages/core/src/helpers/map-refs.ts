@@ -1,9 +1,9 @@
 import traverse from 'traverse';
 import * as babel from '@babel/core';
 
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import { getRefs } from './get-refs';
-import { isJsxLiteNode } from './is-jsx-lite-node';
+import { isJsxLiteNode } from './is-mitosis-node';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { babelTransformExpression } from './babel-transform';

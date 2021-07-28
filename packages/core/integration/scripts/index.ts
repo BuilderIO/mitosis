@@ -9,14 +9,14 @@ import { componentToSolid } from '../../src/generators/solid';
 import { parseJsx } from '../../src/parsers/jsx';
 
 export const generateFiles = async () => {
-  const files = await globby('integration/jsx-lite/**.lite.tsx');
+  const files = await globby('integration/mitosis/**.lite.tsx');
   await Promise.all(
     files.map(async (file) => {
       const content = await fs.readFileAsync(file, 'utf8');
       const json = parseJsx(content);
 
       const filePath = file
-        .replace('integration/jsx-lite/', '')
+        .replace('integration/mitosis/', '')
         .split('.')
         .shift();
 

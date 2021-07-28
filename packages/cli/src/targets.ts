@@ -12,4 +12,4 @@ export {
   componentToSwift as swift,
   componentToTemplate as template,
   componentToVue as vue
-} from '@jsx-lite/core'
+} from '@builder.io/mitosis'

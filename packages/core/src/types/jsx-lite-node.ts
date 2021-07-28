@@ -1,7 +1,7 @@
 import { JSONObject } from './json';
 
 export type JSXLiteNode = {
-  '@type': '@jsx-lite/node';
+  '@type': '@builder.io/mitosis/node';
   name: string;
   meta: JSONObject;
   properties: { [key: string]: string | undefined };

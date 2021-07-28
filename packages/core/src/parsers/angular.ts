@@ -8,13 +8,13 @@ import {
   BoundText,
 } from '@angular/compiler/src/render3/r3_ast';
 import { ASTWithSource } from '@angular/compiler/src/expression_parser/ast';
-import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { createJSXLiteComponent } from '../helpers/create-mitosis-component';
+import { createJSXLiteNode } from '../helpers/create-mitosis-node';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { omit } from 'lodash';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 import { capitalize } from '../helpers/capitalize';
 
 const getTsAST = (code: string) => {

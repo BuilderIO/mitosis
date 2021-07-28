@@ -5,8 +5,8 @@ import { getRefs } from '../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -18,7 +18,7 @@ import { fastClone } from '../helpers/fast-clone';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import traverse from 'traverse';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(

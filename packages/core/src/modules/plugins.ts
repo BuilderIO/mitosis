@@ -1,4 +1,4 @@
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { JSXLiteComponent } from '../types/mitosis-component';
 
 export type Plugin = (
   options?: any,

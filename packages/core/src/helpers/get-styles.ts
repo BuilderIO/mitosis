@@ -1,8 +1,8 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { size } from 'lodash';
-import { JSXLiteNode } from '../types/jsx-lite-node';
-import { JSXLiteStyles } from '../types/jsx-lite-styles';
+import { JSXLiteNode } from '../types/mitosis-node';
+import { JSXLiteStyles } from '../types/mitosis-styles';
 
 export const getStyles = (json: JSXLiteNode) => {
   if (!json.bindings.css) {

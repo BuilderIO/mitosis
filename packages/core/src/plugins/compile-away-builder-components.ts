@@ -1,12 +1,12 @@
 import { mapValues, omit, pick } from 'lodash';
 import { parseNode, parseNodes } from '../helpers/parse-node';
 import traverse, { TraverseContext } from 'traverse';
-import { JSXLiteNode } from '../types/jsx-lite-node';
-import { blockToJsxLite } from '../generators/jsx-lite';
+import { JSXLiteNode } from '../types/mitosis-node';
+import { blockToJsxLite } from '../generators/mitosis';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
+import { createJSXLiteNode } from '../helpers/create-mitosis-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
 
 const getRenderOptions = (node: JSXLiteNode) => {
   return {

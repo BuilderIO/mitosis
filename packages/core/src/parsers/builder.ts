@@ -7,9 +7,9 @@ import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { Size, sizeNames, sizes } from '../constants/media-sizes';
 import { capitalize } from '../helpers/capitalize';
-import { createJSXLiteComponent } from '../helpers/create-jsx-lite-component';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { createJSXLiteComponent } from '../helpers/create-mitosis-component';
+import { createJSXLiteNode } from '../helpers/create-mitosis-node';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { parseJsx, parseStateObject } from './jsx';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
@@ -696,7 +696,7 @@ const getHooks = (content: BuilderContent) => {
     return parseJsx(`
     export default function TemporaryComponent() {
       ${
-        // JSX Lite parser looks for useState to be a variable assignment,
+        // Mitosis parser looks for useState to be a variable assignment,
         // but in Builder that's not how it works. For now do a replace to
         // easily resuse the same parsing code as this is the only difference
         code.replace(`useState(`, `var state = useState(`)
@@ -704,7 +704,7 @@ const getHooks = (content: BuilderContent) => {
     }`);
   } catch (err) {
     console.warn(
-      'Could not parse js code as a JSX Lite component body',
+      'Could not parse js code as a Mitosis component body',
       err,
       code,
     );
@@ -772,7 +772,7 @@ export function extractStateHook(code: string) {
 
   return { code: newCode, state };
 }
-// TODO: maybe this should be part of the builder -> JSX Lite part
+// TODO: maybe this should be part of the builder -> Mitosis part
 function extractSymbols(json: BuilderContent) {
   const subComponents: { content: BuilderContent; name: string }[] = [];
 

@@ -1,4 +1,4 @@
-import { useState } from '@jsx-lite/core';
+import { useState } from '@builder.io/mitosis';
 
 export default function MyBasicComponent() {
   const state = useState({

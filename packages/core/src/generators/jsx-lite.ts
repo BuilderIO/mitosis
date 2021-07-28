@@ -8,15 +8,15 @@ import { getStateObjectStringFromComponent } from '../helpers/get-state-object-s
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 
 export const DEFAULT_FORMAT = 'legacy';
 
 export type JsxLiteFormat = 'react' | 'legacy';
 
-// Special isValidAttributeName for JSX Lite so we can allow for $ in names
+// Special isValidAttributeName for Mitosis so we can allow for $ in names
 const isValidAttributeName = (str: string) => {
   return Boolean(str && /^[$a-z0-9\-_:]+$/i.test(str));
 };
@@ -176,7 +176,7 @@ export const componentToJsxLite = (
         ? ''
         : `import { ${!hasState ? '' : 'useState, '} ${
             !refs.size ? '' : 'useRef, '
-          } ${jsxLiteComponents.join(', ')} } from '@jsx-lite/core';`
+          } ${jsxLiteComponents.join(', ')} } from '@builder.io/mitosis';`
     }
     ${
       !otherComponents.length

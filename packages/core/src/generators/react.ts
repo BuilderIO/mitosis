@@ -2,7 +2,7 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
+import { createJSXLiteNode } from '../helpers/create-mitosis-node';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -22,7 +22,7 @@ import {
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
+import { isJsxLiteNode } from '../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { mapRefs } from '../helpers/map-refs';
 import { processTagReferences } from '../helpers/process-tag-references';
@@ -38,8 +38,8 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/jsx-lite-component';
-import { JSXLiteNode } from '../types/jsx-lite-node';
+import { JSXLiteComponent } from '../types/mitosis-component';
+import { JSXLiteNode } from '../types/mitosis-node';
 import { collectReactNativeStyles } from './react-native';
 
 type ToReactOptions = {

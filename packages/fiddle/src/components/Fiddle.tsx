@@ -21,7 +21,7 @@ import {
   parseJsx,
   parseReactiveScript,
   reactiveScriptRe,
-} from '@jsx-lite/core';
+} from '@builder.io/mitosis';
 import {
   Button,
   createMuiTheme,
@@ -43,7 +43,7 @@ import React, { useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import { adapt } from 'webcomponents-in-react';
 import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
-import logo from '../assets/jsx-lite-logo-white.png';
+import logo from '../assets/mitosis-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
 import { defaultCode, templates } from '../constants/templates';
@@ -135,7 +135,7 @@ const AlphaPreviewMessage = () => (
       This is an early alpha preview, please{' '}
       <TextLink
         css={{ color: 'inherit', textDecoration: 'underline' }}
-        href="https://github.com/BuilderIO/jsx-lite/issues"
+        href="https://github.com/BuilderIO/mitosis/issues"
         target="_blank"
       >
         report bugs and share feedback
@@ -147,7 +147,7 @@ const AlphaPreviewMessage = () => (
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
-  previewUrl: 'https://jsx-lite.builder.io/preview.html',
+  previewUrl: 'https://mitosis.builder.io/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
@@ -225,7 +225,7 @@ const plugins = [
   }),
 ];
 
-// TODO: Build this Fiddle app with JSX Lite :)
+// TODO: Build this Fiddle app with Mitosis :)
 export default function Fiddle() {
   const [staticState] = useState(() => ({
     ignoreNextBuilderUpdate: false,
@@ -237,7 +237,7 @@ export default function Fiddle() {
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    inputTab: getQueryParam('inputTab') || 'jsx lite',
+    inputTab: getQueryParam('inputTab') || 'mitosis',
     builderData: {} as any,
     isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
@@ -370,7 +370,7 @@ export default function Fiddle() {
                 })
               ).files.find((file) => file.path.endsWith('template.tsx'))!
                 ?.contents
-            : state.outputTab === 'jsx lite'
+            : state.outputTab === 'mitosis'
             ? componentToJsxLite(json)
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
@@ -582,13 +582,13 @@ export default function Fiddle() {
             <a
               target="_blank"
               rel="noreferrer"
-              href="https://github.com/builderio/jsx-lite"
+              href="https://github.com/builderio/mitosis"
               css={{
                 marginRight: 'auto',
               }}
             >
               <img
-                alt="JSX Lite Logo"
+                alt="Mitosis Logo"
                 src={logo}
                 css={{
                   marginLeft: 10,
@@ -656,7 +656,7 @@ export default function Fiddle() {
                 display: 'flex',
                 alignItems: 'center',
               }}
-              href="https://github.com/builderio/jsx-lite"
+              href="https://github.com/builderio/mitosis"
             >
               <span css={{ [smallBreakpoint]: { display: 'none' } }}>
                 Source
@@ -745,11 +745,11 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="JSX Lite"
+                      label="Mitosis"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
                     />
                   }
-                  value="jsx lite"
+                  value="mitosis"
                 />
                 <Tab
                   label={<TabLabelWithIcon label="Liquid Lite" />}
@@ -757,7 +757,7 @@ export default function Fiddle() {
                 />
               </Tabs>
             </div>
-            <Show when={state.inputTab === 'jsx lite'}>
+            <Show when={state.inputTab === 'mitosis'}>
               <div css={{ paddingTop: 15, flexGrow: 1, position: 'relative' }}>
                 <Select
                   disableUnderline
@@ -997,8 +997,8 @@ export default function Fiddle() {
                   value="template"
                 />
                 <Tab
-                  label={<TabLabelWithIcon label="JSX Lite" />}
-                  value="jsx lite"
+                  label={<TabLabelWithIcon label="Mitosis" />}
+                  value="mitosis"
                 />
                 <Tab
                   label={
@@ -1221,7 +1221,7 @@ export default function Fiddle() {
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
-                        state.outputTab === 'jsx lite' ||
+                        state.outputTab === 'mitosis' ||
                         state.outputTab === 'template' ||
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||

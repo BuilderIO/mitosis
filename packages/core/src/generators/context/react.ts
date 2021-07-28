@@ -1,6 +1,6 @@
 import { format } from 'prettier/standalone';
 import { getMemberObjectString } from '../../helpers/get-state-object-string';
-import { JSXLiteContext } from '../../types/jsx-lite-context';
+import { JSXLiteContext } from '../../types/mitosis-context';
 
 type ContextToReactOptions = {
   format?: boolean;
