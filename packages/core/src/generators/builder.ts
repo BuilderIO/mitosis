@@ -1,7 +1,7 @@
 import { JSXLiteComponent } from '../types/jsx-lite-component';
 import { JSXLiteNode } from '../types/jsx-lite-node';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { fastClone } from '../helpers/fast-clone';
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
@@ -95,7 +95,7 @@ const componentMappers: {
         },
         repeat: {
           collection: node.bindings.each as string,
-          itemName: node.bindings._forName as string,
+          itemName: node.properties._forName as string,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
@@ -322,7 +322,9 @@ export const componentToBuilder = (
         ${
           !hasState
             ? ''
-            : `Object.assign(state, ${getStateObjectString(componentJson)});`
+            : `Object.assign(state, ${getStateObjectStringFromComponent(
+                componentJson,
+              )});`
         }
 
         ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
@@ -330,7 +332,11 @@ export const componentToBuilder = (
       tsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
 
-        ${!hasState ? '' : `useState(${getStateObjectString(componentJson)});`}
+        ${
+          !hasState
+            ? ''
+            : `useState(${getStateObjectStringFromComponent(componentJson)});`
+        }
 
         ${
           !componentJson.hooks.onMount

@@ -8,7 +8,7 @@ import traverse from 'traverse';
 import isChildren from '../helpers/is-children';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -139,7 +139,7 @@ const blockToSwift = (json: JSXLiteNode, options: ToSwiftOptions): string => {
     str += `_: <For each={${processBinding(
       json.bindings.each as string,
       options,
-    )}}>{${json.bindings._forName} => ({
+    )}}>{${json.properties._forName} => ({
       ${children.map((item) => blockToSwift(item, options)).join('\n')}
     })}</For>`;
   } else if (json.name === 'Show') {
@@ -328,7 +328,7 @@ export const componentToSwift = (
     .map((item) => blockToSwift(item, options))
     .join('\n');
 
-  const dataString = getStateObjectString(json, {
+  const dataString = getStateObjectStringFromComponent(json, {
     format: 'class',
     keyPrefix: '@State ',
     functions: false,
@@ -336,14 +336,14 @@ export const componentToSwift = (
     valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
   });
 
-  const methodString = getStateObjectString(json, {
+  const methodString = getStateObjectStringFromComponent(json, {
     format: 'class',
     data: false,
     getters: false,
     keyPrefix: '@func ',
     valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
   });
-  const getterString = getStateObjectString(json, {
+  const getterString = getStateObjectStringFromComponent(json, {
     format: 'class',
     data: false,
     getters: true,

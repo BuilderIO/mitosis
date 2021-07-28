@@ -2,6 +2,7 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { createJSXLiteNode } from '../helpers/create-jsx-lite-node';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -16,7 +17,10 @@ import {
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { isJsxLiteNode } from '../helpers/is-jsx-lite-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
@@ -62,7 +66,7 @@ const NODE_MAPPERS: {
   For(json, options) {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.each as string, options)}.map(${
-      json.bindings._forName
+      json.properties._forName
     } => (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
@@ -273,6 +277,26 @@ const updateStateSetters = (
   });
 };
 
+function addProviderComponents(
+  json: JSXLiteComponent,
+  options: ToReactOptions,
+) {
+  for (const key in json.context.set) {
+    const { name, value } = json.context.set[key];
+    json.children = [
+      createJSXLiteNode({
+        name: `${name}.Provider`,
+        children: json.children,
+        ...(value && {
+          bindings: {
+            value: getMemberObjectString(value),
+          },
+        }),
+      }),
+    ];
+  }
+}
+
 const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return value;
@@ -301,6 +325,24 @@ const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
   });
 };
 
+function getContextString(
+  component: JSXLiteComponent,
+  options: ToReactOptions,
+) {
+  let str = '';
+  for (const key in component.context.get) {
+    str += `
+      const ${key} = useContext(${component.context.get[key].name});
+    `;
+  }
+
+  return str;
+}
+
+function hasContext(component: JSXLiteComponent) {
+  return Object.keys(component.context).length;
+}
+
 const getInitCode = (
   json: JSXLiteComponent,
   options: ToReactOptions,
@@ -308,7 +350,12 @@ const getInitCode = (
   return processBinding(json.hooks.init || '', options);
 };
 
-type ReactExports = 'useState' | 'useRef' | 'useCallback' | 'useEffect';
+type ReactExports =
+  | 'useState'
+  | 'useRef'
+  | 'useCallback'
+  | 'useEffect'
+  | 'useContext';
 
 export const componentToReact = (
   componentJson: JSXLiteComponent,
@@ -367,6 +414,7 @@ const _componentToReact = (
   isSubComponent = false,
 ) => {
   processTagReferences(json);
+  addProviderComponents(json, options);
   const componentHasStyles = hasStyles(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
@@ -406,6 +454,9 @@ const _componentToReact = (
   const reactLibImports: Set<ReactExports> = new Set();
   if (useStateCode && useStateCode.length > 4) {
     reactLibImports.add('useState');
+  }
+  if (hasContext(json)) {
+    reactLibImports.add('useContext');
   }
   if (refs.size) {
     reactLibImports.add('useRef');
@@ -465,18 +516,25 @@ const _componentToReact = (
       ${
         hasState
           ? stateType === 'mobx'
-            ? `const state = useLocalObservable(() => (${getStateObjectString(
+            ? `const state = useLocalObservable(() => (${getStateObjectStringFromComponent(
                 json,
               )}));`
             : stateType === 'useState'
             ? useStateCode
             : stateType === 'solid'
-            ? `const state = useMutable(${getStateObjectString(json)});`
+            ? `const state = useMutable(${getStateObjectStringFromComponent(
+                json,
+              )});`
             : stateType === 'builder'
-            ? `var state = useBuilderState(${getStateObjectString(json)});`
-            : `const state = useLocalProxy(${getStateObjectString(json)});`
+            ? `var state = useBuilderState(${getStateObjectStringFromComponent(
+                json,
+              )});`
+            : `const state = useLocalProxy(${getStateObjectStringFromComponent(
+                json,
+              )});`
           : ''
       }
+      ${getContextString(json, options)}
       ${getRefsString(json)}
       ${getInitCode(json, options)}
 

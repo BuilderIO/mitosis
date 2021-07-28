@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -47,9 +47,9 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    return `<template v-for="${
-      json.bindings._forName
-    } in ${stripStateAndPropsRefs(json.bindings.each as string)}">
+    return `<template :key="index" v-for="(${
+      json.properties._forName
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
       ${json.children.map((item) => blockToVue(item, options)).join('\n')}
     </template>`;
   },
@@ -93,6 +93,13 @@ export const blockToVue = (
 
   if (isChildren(node)) {
     return `<slot></slot>`;
+  }
+
+  if (node.name === 'style') {
+    // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
+    // <component is="style">...</component>
+    node.name = 'component';
+    node.properties.is = 'style';
   }
 
   if (node.properties._text) {
@@ -182,13 +189,13 @@ export const componentToVue = (
   }
   const css = collectCss(component);
 
-  let dataString = getStateObjectString(component, {
+  let dataString = getStateObjectStringFromComponent(component, {
     data: true,
     functions: false,
     getters: false,
   });
 
-  const getterString = getStateObjectString(component, {
+  const getterString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: true,
     functions: false,
@@ -198,7 +205,7 @@ export const componentToVue = (
       }),
   });
 
-  const functionsString = getStateObjectString(component, {
+  const functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,

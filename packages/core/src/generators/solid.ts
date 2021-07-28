@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { hasStyles } from '../helpers/collect-styles';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -112,7 +112,7 @@ const blockToSolid = (
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each}}>
-    {(${json.bindings._forName}, index) =>
+    {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToSolid(child, options))}}
       ${needsWrapper ? '</>' : ''}
@@ -197,7 +197,7 @@ export const componentToSolid = (
   stripMetaProperties(json);
   const foundDynamicComponents = processDynamicComponents(json, options);
 
-  const stateString = getStateObjectString(json);
+  const stateString = getStateObjectStringFromComponent(json);
   const hasState = Boolean(Object.keys(componentJson.state).length);
   const componentsUsed = getComponentsUsed(json);
 

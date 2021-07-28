@@ -29,15 +29,20 @@ export interface JSXLiteImport {
   };
 }
 
+type ContextInfo = { name: string; path: string };
+
 export type JSXLiteComponent = {
   '@type': '@jsx-lite/component';
   name: string;
   imports: JSXLiteImport[];
-  meta: {
+  meta: JSONObject & {
     metadataHook?: JSONObject;
-    [key: string]: JSON | undefined;
   };
-  state: { [key: string]: JSON | undefined };
+  state: JSONObject;
+  context: {
+    get: { [key: string]: ContextInfo };
+    set: { [key: string]: { name: string; value?: JSONObject } }; // TODO: support non object values
+  };
   hooks: {
     init?: string;
     onMount?: string;

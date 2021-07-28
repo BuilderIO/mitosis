@@ -1,4 +1,5 @@
 import json5 from 'json5';
+import { JSONObject } from '../types/json';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { JSXLiteComponent } from '../types/jsx-lite-component';
@@ -12,14 +13,12 @@ export type GetStateObjectStringOptions = {
   keyPrefix?: string;
 };
 
-export const getStateObjectString = (
-  component: JSXLiteComponent,
+export const getMemberObjectString = (
+  object: JSONObject,
   options: GetStateObjectStringOptions = {},
 ) => {
   const format = options.format || 'object';
   let str = format === 'object' ? '{' : '';
-
-  const { state } = component;
 
   const valueMapper = options.valueMapper || ((val: string) => val);
 
@@ -27,8 +26,8 @@ export const getStateObjectString = (
   const lineItemDelimiter = format === 'object' ? ',' : '\n';
   const keyPrefix = options.keyPrefix || '';
 
-  for (const key in state) {
-    const value = state[key];
+  for (const key in object) {
+    const value = object[key];
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         if (options.functions === false) {
@@ -74,4 +73,11 @@ export const getStateObjectString = (
 
   str += format === 'object' ? '}' : '';
   return str;
+};
+
+export const getStateObjectStringFromComponent = (
+  component: JSXLiteComponent,
+  options: GetStateObjectStringOptions = {},
+) => {
+  return getMemberObjectString(component.state, options);
 };

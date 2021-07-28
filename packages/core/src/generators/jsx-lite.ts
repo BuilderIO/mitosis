@@ -1,11 +1,10 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
@@ -16,6 +15,11 @@ import { blockToReact, componentToReact } from './react';
 export const DEFAULT_FORMAT = 'legacy';
 
 export type JsxLiteFormat = 'react' | 'legacy';
+
+// Special isValidAttributeName for JSX Lite so we can allow for $ in names
+const isValidAttributeName = (str: string) => {
+  return Boolean(str && /^[$a-z0-9\-_:]+$/i.test(str));
+};
 
 export type ToJsxLiteOptions = {
   prettier?: boolean;
@@ -41,7 +45,7 @@ export const blockToJsxLite = (
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     return `<For each={${json.bindings.each}}>
-    {(${json.bindings._forName}, index) =>
+    {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToJsxLite(child, options))}}
       ${needsWrapper ? '</>' : ''}
@@ -193,7 +197,9 @@ export const componentToJsxLite = (
       ${
         !hasState
           ? ''
-          : `const state = useState(${getStateObjectString(json)});`
+          : `const state = useState(${getStateObjectStringFromComponent(
+              json,
+            )});`
       }
       ${getRefsString(json)}
 

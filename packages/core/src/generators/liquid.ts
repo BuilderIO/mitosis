@@ -13,7 +13,7 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { getStateObjectString } from '../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 
 /**
  * Test if the binding expression would be likely to generate
@@ -79,12 +79,12 @@ const blockToLiquid = (
     if (
       !(
         isValidLiquidBinding(json.bindings.each as string) &&
-        isValidLiquidBinding(json.bindings._forName as string)
+        isValidLiquidBinding(json.properties._forName as string)
       )
     ) {
       return str;
     }
-    str += `{% for ${json.bindings._forName} in ${stripStateAndPropsRefs(
+    str += `{% for ${json.properties._forName} in ${stripStateAndPropsRefs(
       json.bindings.each as string,
     )} %}`;
     if (json.children) {
@@ -175,7 +175,7 @@ export const componentToLiquid = (
   }
 
   if (options.reactive) {
-    const stateObjectString = getStateObjectString(json);
+    const stateObjectString = getStateObjectStringFromComponent(json);
     if (stateObjectString.trim().length > 4) {
       str += `<script reactive>
         export default {
