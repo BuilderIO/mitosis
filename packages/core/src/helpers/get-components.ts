@@ -1,12 +1,12 @@
 import traverse from 'traverse';
-import { JSXLiteComponent } from '../types/mitosis-component';
-import { isJsxLiteNode } from './is-mitosis-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { isMitosisNode } from './is-mitosis-node';
 import { isUpperCase } from './is-upper-case';
 
-export function getComponents(json: JSXLiteComponent): Set<string> {
+export function getComponents(json: MitosisComponent): Set<string> {
   const components = new Set<string>();
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       if (isUpperCase(item.name[0])) {
         components.add(item.name);
       }

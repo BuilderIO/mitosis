@@ -1,12 +1,12 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
 import jsxCallbackArgNameRule, {
-  isJSXLitePath,
+  isMitosisPath,
 } from './rules/jsx-callback-arg-name';
 
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
-    if (!isJSXLitePath(context.getFilename())) return {};
+    if (!isMitosisPath(context.getFilename())) return {};
 
     return {
       VariableDeclarator(node) {

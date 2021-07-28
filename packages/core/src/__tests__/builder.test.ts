@@ -1,9 +1,9 @@
 import dedent from 'dedent';
 import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
-import { componentToJsxLite } from '../generators/mitosis';
+import { componentToMitosis } from '../generators/mitosis';
 import {
-  builderContentToJsxLiteComponent,
+  builderContentToMitosisComponent,
   extractStateHook,
 } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
@@ -41,9 +41,9 @@ describe('Builder', () => {
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis);
+    expect(mitosis).toMatchSnapshot();
   });
 
   test('CustomCode', () => {
@@ -51,9 +51,9 @@ describe('Builder', () => {
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis);
+    expect(mitosis).toMatchSnapshot();
   });
 
   test('Embed', () => {
@@ -61,9 +61,9 @@ describe('Builder', () => {
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis);
+    expect(mitosis).toMatchSnapshot();
   });
 
   test('Image', () => {
@@ -71,9 +71,9 @@ describe('Builder', () => {
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis);
+    expect(mitosis).toMatchSnapshot();
   });
 
   test('Columns', () => {
@@ -81,9 +81,9 @@ describe('Builder', () => {
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
 
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite);
-    expect(jsxLite).toMatchSnapshot();
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis);
+    expect(mitosis).toMatchSnapshot();
   });
 
   test('Regenerate Image', () => {
@@ -113,11 +113,11 @@ describe('Builder', () => {
 
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('Regenerate Text', () => {
@@ -147,11 +147,11 @@ describe('Builder', () => {
 
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('Regenerate loop', () => {
@@ -180,11 +180,11 @@ describe('Builder', () => {
 
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('Regenerate custom Hero', () => {
@@ -217,12 +217,12 @@ describe('Builder', () => {
     expect(json).toMatchSnapshot();
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    expect(backToJsxLite).toMatchSnapshot();
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis).toMatchSnapshot();
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   // TODO: fix divs and CoreFragment - need to find way to reproduce
@@ -245,12 +245,12 @@ describe('Builder', () => {
     expect(json).toMatchSnapshot();
     const builderJson = componentToBuilder(json);
     expect(builderJson).toMatchSnapshot();
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    expect(backToJsxLite).toMatchSnapshot();
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis).toMatchSnapshot();
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   // TODO: get passing, don't add extra divs. or at least use spans instead so don't break layout
@@ -278,10 +278,10 @@ describe('Builder', () => {
 
     const json = parseJsx(code);
     const builderJson = componentToBuilder(json);
-    const backToJsxLite = builderContentToJsxLiteComponent(builderJson);
-    const jsxLite = componentToJsxLite(backToJsxLite, {
+    const backToMitosis = builderContentToMitosisComponent(builderJson);
+    const mitosis = componentToMitosis(backToMitosis, {
       format: 'legacy',
     });
-    expect(jsxLite.trim()).toEqual(code.trim());
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 });

@@ -1,13 +1,13 @@
-import { JSXLiteComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 
 export type Plugin = (
   options?: any,
 ) => {
   json?: {
     // Happens before any modifiers
-    pre?: (json: JSXLiteComponent) => JSXLiteComponent | void;
+    pre?: (json: MitosisComponent) => MitosisComponent | void;
     // Happens after built in modifiers
-    post?: (json: JSXLiteComponent) => JSXLiteComponent | void;
+    post?: (json: MitosisComponent) => MitosisComponent | void;
   };
   code?: {
     // Happens before formatting
@@ -18,7 +18,7 @@ export type Plugin = (
 };
 
 export const runPreJsonPlugins = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   plugins: Plugin[],
   options?: any,
 ) => {
@@ -33,7 +33,7 @@ export const runPreJsonPlugins = (
 };
 
 export const runPostJsonPlugins = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   plugins: Plugin[],
   options?: any,
 ) => {

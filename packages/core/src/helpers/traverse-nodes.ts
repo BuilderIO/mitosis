@@ -1,14 +1,14 @@
-import { JSXLiteComponent } from '../types/mitosis-component';
-import { JSXLiteNode } from '../types/mitosis-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import traverse, { TraverseContext } from 'traverse';
-import { isJsxLiteNode } from './is-mitosis-node';
+import { isMitosisNode } from './is-mitosis-node';
 
 export function tarverseNodes(
-  component: JSXLiteComponent | JSXLiteNode,
-  cb: (node: JSXLiteNode, context: TraverseContext) => void,
+  component: MitosisComponent | MitosisNode,
+  cb: (node: MitosisNode, context: TraverseContext) => void,
 ) {
   traverse(component).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       cb(item, this);
     }
   });

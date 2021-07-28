@@ -8,24 +8,24 @@ import {
   BoundText,
 } from '@angular/compiler/src/render3/r3_ast';
 import { ASTWithSource } from '@angular/compiler/src/expression_parser/ast';
-import { createJSXLiteComponent } from '../helpers/create-mitosis-component';
-import { createJSXLiteNode } from '../helpers/create-mitosis-node';
-import { JSXLiteNode } from '../types/mitosis-node';
+import { createMitosisComponent } from '../helpers/create-mitosis-component';
+import { createMitosisNode } from '../helpers/create-mitosis-node';
+import { MitosisNode } from '../types/mitosis-node';
 import { omit } from 'lodash';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { types } from '@babel/core';
-import { JSXLiteComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { capitalize } from '../helpers/capitalize';
 
 const getTsAST = (code: string) => {
   return ts.createSourceFile('code.ts', code, ts.ScriptTarget.Latest, true);
 };
 
-interface AngularToJsxLiteOptions {}
+interface AngularToMitosisOptions {}
 
 const transformBinding = (
   binding: string,
-  _options: AngularToJsxLiteOptions,
+  _options: AngularToMitosisOptions,
 ) => {
   return babelTransformCode(binding, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
@@ -63,14 +63,14 @@ const isText = (node: Node): node is Text =>
 const isBoundText = (node: Node): node is BoundText =>
   typeof (node as any).value === 'object';
 
-const angularTemplateNodeToJsxLiteNode = (
+const angularTemplateNodeToMitosisNode = (
   node: Node,
-  options: AngularToJsxLiteOptions,
-): JSXLiteNode => {
+  options: AngularToMitosisOptions,
+): MitosisNode => {
   if (isTemplate(node)) {
     const ngIf = node.templateAttrs.find((item) => item.name === 'ngIf');
     if (ngIf) {
-      return createJSXLiteNode({
+      return createMitosisNode({
         name: 'Show',
         bindings: {
           when: transformBinding(
@@ -79,7 +79,7 @@ const angularTemplateNodeToJsxLiteNode = (
           ),
         },
         children: [
-          angularTemplateNodeToJsxLiteNode(
+          angularTemplateNodeToMitosisNode(
             omit(node, 'templateAttrs'),
             options,
           ),
@@ -91,7 +91,7 @@ const angularTemplateNodeToJsxLiteNode = (
       const value = (ngFor.value as ASTWithSource).source!;
       const split = value.split(/let\s|\sof\s/);
       const [_let, itemName, _of, expression] = split;
-      return createJSXLiteNode({
+      return createMitosisNode({
         name: 'For',
         bindings: {
           each: transformBinding(expression, options),
@@ -100,7 +100,7 @@ const angularTemplateNodeToJsxLiteNode = (
           _forName: itemName,
         },
         children: [
-          angularTemplateNodeToJsxLiteNode(
+          angularTemplateNodeToMitosisNode(
             omit(node, 'templateAttrs'),
             options,
           ),
@@ -131,18 +131,18 @@ const angularTemplateNodeToJsxLiteNode = (
       properties[attribute.name] = attribute.value;
     }
 
-    return createJSXLiteNode({
+    return createMitosisNode({
       name: node.name,
       properties,
       bindings,
       children: node.children.map((node) =>
-        angularTemplateNodeToJsxLiteNode(node, options),
+        angularTemplateNodeToMitosisNode(node, options),
       ),
     });
   }
 
   if (isText(node)) {
-    return createJSXLiteNode({
+    return createMitosisNode({
       properties: {
         _text: node.value,
       },
@@ -151,7 +151,7 @@ const angularTemplateNodeToJsxLiteNode = (
 
   if (isBoundText(node)) {
     // TODO: handle the bindings
-    return createJSXLiteNode({
+    return createMitosisNode({
       properties: {
         _text: (node.value as ASTWithSource).source!,
       },
@@ -161,20 +161,20 @@ const angularTemplateNodeToJsxLiteNode = (
   throw new Error(`Element node type {${node}} is not supported`);
 };
 
-const angularTemplateToJsxLiteNodes = (
+const angularTemplateToMitosisNodes = (
   template: string,
-  options: AngularToJsxLiteOptions,
+  options: AngularToMitosisOptions,
 ) => {
   const ast = parseTemplate(template, '.');
   const blocks = ast.nodes.map((node) =>
-    angularTemplateNodeToJsxLiteNode(node, options),
+    angularTemplateNodeToMitosisNode(node, options),
   );
 
   return blocks;
 };
 
-const parseTypescript = (code: string, options: AngularToJsxLiteOptions) => {
-  const component = createJSXLiteComponent();
+const parseTypescript = (code: string, options: AngularToMitosisOptions) => {
+  const component = createMitosisComponent();
 
   const ast = getTsAST(code);
   for (const statement of ast.statements) {
@@ -200,7 +200,7 @@ const parseTypescript = (code: string, options: AngularToJsxLiteOptions) => {
                           .getText()
                           .trim()
                           .slice(1, -1);
-                        component.children = angularTemplateToJsxLiteNodes(
+                        component.children = angularTemplateToMitosisNodes(
                           template,
                           options,
                         );
@@ -218,9 +218,9 @@ const parseTypescript = (code: string, options: AngularToJsxLiteOptions) => {
   return component;
 };
 
-export function angularToJsxLiteComponent(
+export function angularToMitosisComponent(
   code: string,
-  options: AngularToJsxLiteOptions = {},
-): JSXLiteComponent {
+  options: AngularToMitosisOptions = {},
+): MitosisComponent {
   return parseTypescript(code, options);
 }

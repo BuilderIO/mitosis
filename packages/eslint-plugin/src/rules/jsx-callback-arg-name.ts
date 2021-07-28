@@ -46,14 +46,14 @@ type NodeType = NodeExt['type'];
  *
  * @example
  * ```typescript
- * isJSXLitePath('file.jsx')
+ * isMitosisPath('file.jsx')
  * // false
  *
- * isJSXLitePath('file.lite.jsx')
+ * isMitosisPath('file.lite.jsx')
  * // true
  * ```
  */
-export function isJSXLitePath(filename: string) {
+export function isMitosisPath(filename: string) {
   filename = path.basename(filename);
 
   const tokens = filename.split('.');
@@ -85,7 +85,7 @@ const rule: Rule.RuleModule = {
     // variables should be defined here
     const filename = context.getFilename();
 
-    if (!isJSXLitePath(filename)) return {};
+    if (!isMitosisPath(filename)) return {};
 
     // ----------------------------------------------------------------------
     // Helpers

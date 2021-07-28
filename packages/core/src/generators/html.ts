@@ -10,11 +10,11 @@ import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { hasComponent } from '../helpers/has-component';
 import { isComponent } from '../helpers/is-component';
-import { isJsxLiteNode } from '../helpers/is-mitosis-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/mitosis-component';
-import { JSXLiteNode } from '../types/mitosis-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   Plugin,
@@ -43,11 +43,11 @@ type InternalToHtmlOptions = ToHtmlOptions & {
 };
 
 const addUpdateAfterSet = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   options: InternalToHtmlOptions,
 ) => {
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
 
@@ -60,10 +60,10 @@ const addUpdateAfterSet = (
   });
 };
 
-const getForNames = (json: JSXLiteComponent) => {
+const getForNames = (json: MitosisComponent) => {
   const names: string[] = [];
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       if (item.name === 'For') {
         names.push(item.properties._forName as string);
       }
@@ -73,14 +73,14 @@ const getForNames = (json: JSXLiteComponent) => {
 };
 
 const replaceForNameIdentifiers = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   options: InternalToHtmlOptions,
 ) => {
   // TODO: cache this. by reference? lru?
   const forNames = getForNames(json);
 
   traverse(json).forEach((item) => {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         if (key === 'css' || key === '_forName') {
           continue;
@@ -102,14 +102,14 @@ const replaceForNameIdentifiers = (
 };
 
 const mappers: {
-  [key: string]: (json: JSXLiteNode, options: InternalToHtmlOptions) => string;
+  [key: string]: (json: MitosisNode, options: InternalToHtmlOptions) => string;
 } = {
   Fragment: (json, options) => {
     return json.children.map((item) => blockToHtml(item, options)).join('\n');
   },
 };
 
-const getId = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
+const getId = (json: MitosisNode, options: InternalToHtmlOptions) => {
   const name = json.properties.$name
     ? dashCase(json.properties.$name)
     : /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
@@ -157,7 +157,7 @@ const addOnChangeJs = (
 };
 
 // TODO: spread support
-const blockToHtml = (json: JSXLiteNode, options: InternalToHtmlOptions) => {
+const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
@@ -377,7 +377,7 @@ const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 
 // TODO: props support via custom elements
 export const componentToHtml = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToHtmlOptions = {},
 ) => {
   const useOptions: InternalToHtmlOptions = {
@@ -541,7 +541,7 @@ export const componentToHtml = (
 
 // TODO: props support via custom elements
 export const componentToCustomElement = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToHtmlOptions = {},
 ) => {
   const useOptions: InternalToHtmlOptions = {

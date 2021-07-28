@@ -1,8 +1,8 @@
-import { JSXLiteComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 
-export const createJSXLiteComponent = (
-  options?: Partial<JSXLiteComponent>,
-): JSXLiteComponent => ({
+export const createMitosisComponent = (
+  options?: Partial<MitosisComponent>,
+): MitosisComponent => ({
   '@type': '@builder.io/mitosis/component',
   imports: [],
   meta: {},

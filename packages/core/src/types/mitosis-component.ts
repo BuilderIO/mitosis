@@ -1,5 +1,5 @@
 import { JSON, JSONObject } from './json';
-import { JSXLiteNode } from './mitosis-node';
+import { MitosisNode } from './mitosis-node';
 
 /**
  * @example
@@ -22,7 +22,7 @@ import { JSXLiteNode } from './mitosis-node';
  *    }
  *  }
  */
-export interface JSXLiteImport {
+export interface MitosisImport {
   path: string;
   imports: {
     [key: string]: string | undefined;
@@ -31,10 +31,10 @@ export interface JSXLiteImport {
 
 type ContextInfo = { name: string; path: string };
 
-export type JSXLiteComponent = {
+export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
-  imports: JSXLiteImport[];
+  imports: MitosisImport[];
   meta: JSONObject & {
     metadataHook?: JSONObject;
   };
@@ -50,6 +50,6 @@ export type JSXLiteComponent = {
     preComponent?: string;
     postComponent?: string;
   };
-  children: JSXLiteNode[];
-  subComponents: JSXLiteComponent[];
+  children: MitosisNode[];
+  subComponents: MitosisComponent[];
 };

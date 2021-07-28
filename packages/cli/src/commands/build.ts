@@ -1,7 +1,7 @@
 import pathModule from 'path'
 import chalk from 'chalk'
 import { GluegunCommand } from 'gluegun'
-import { getJsxLiteConfig } from '../helpers/get-mitosis-config'
+import { getMitosisConfig } from '../helpers/get-mitosis-config'
 import globby from 'globby'
 import fs from 'fs-extra'
 import {
@@ -25,7 +25,7 @@ const command: GluegunCommand = {
       targets: [],
       dest: 'dist',
       files: 'src/*',
-      ...getJsxLiteConfig()
+      ...getMitosisConfig()
     }
     const cwd = process.cwd()
 

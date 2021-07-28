@@ -3,9 +3,9 @@ import { camelCase, size } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/collect-styles';
-import { isJsxLiteNode } from '../helpers/is-mitosis-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { Plugin } from '../modules/plugins';
-import { JSXLiteComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
 
 type ToReactNativeOptions = {
@@ -16,14 +16,14 @@ type ToReactNativeOptions = {
 };
 
 export const collectReactNativeStyles = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
 ): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
   traverse(json).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
         delete item.bindings.css;
@@ -45,12 +45,12 @@ export const collectReactNativeStyles = (
 };
 
 export const componentToReactNative = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: ToReactNativeOptions,
 ) => {
   const json = fastClone(componentJson);
   traverse(json).forEach((node) => {
-    if (isJsxLiteNode(node)) {
+    if (isMitosisNode(node)) {
       // TODO: handle TextInput, Image, etc
       if (node.name.toLowerCase() === node.name) {
         node.name = 'View';

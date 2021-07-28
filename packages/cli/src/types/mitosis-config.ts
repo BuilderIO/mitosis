@@ -9,7 +9,7 @@ type FileInfo = {
   target: string
 }
 
-export type JSXLiteConfig = {
+export type MitosisConfig = {
   type?: 'library' // Only one type right now
   targets: Target[]
   dest?: string

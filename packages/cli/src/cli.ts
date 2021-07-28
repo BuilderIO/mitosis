@@ -31,7 +31,7 @@ OPTIONS
 		- template
 		- html
 		- customElement
-		- jsxLite
+		- mitosis
 		- builder
 		- swift
 		- svelte
@@ -40,7 +40,7 @@ OPTIONS
 	--from=<format>, -f=<format>
 		Specify input format. <format> can be one of:
 		
-		- jsxLite
+		- mitosis
 		- builder
 		- liquid
 	--list, -l

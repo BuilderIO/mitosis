@@ -1,14 +1,14 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { size } from 'lodash';
-import { JSXLiteNode } from '../types/mitosis-node';
-import { JSXLiteStyles } from '../types/mitosis-styles';
+import { MitosisNode } from '../types/mitosis-node';
+import { MitosisStyles } from '../types/mitosis-styles';
 
-export const getStyles = (json: JSXLiteNode) => {
+export const getStyles = (json: MitosisNode) => {
   if (!json.bindings.css) {
     return null;
   }
-  let css: JSXLiteStyles;
+  let css: MitosisStyles;
   try {
     css = json5.parse(json.bindings.css as string);
   } catch (err) {
@@ -18,7 +18,7 @@ export const getStyles = (json: JSXLiteNode) => {
   return css;
 };
 
-export const setStyles = (json: JSXLiteNode, styles: JSXLiteStyles | null) => {
+export const setStyles = (json: MitosisNode, styles: MitosisStyles | null) => {
   if (!size(styles)) {
     delete json.bindings.css;
   } else {

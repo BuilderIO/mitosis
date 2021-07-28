@@ -38,7 +38,7 @@ Supported formats for `--to` are:
 - `template`
 - `html`
 - `customElement`
-- `jsxLite`
+- `mitosis`
 - `builder`
 - `swift`
 - `svelte`
@@ -47,7 +47,7 @@ Supported formats for `--to` are:
 
 Supported formats for `--from` are:
 
-- `jsxLite`
+- `mitosis`
 - `builder`
 - `liquid`
 
@@ -60,7 +60,7 @@ Here are some recipes for standard tasks
 ```bash
 cat components/postscript.lite.tsx |
   mitosis compile -t builder - |
-  mitosis compile -f builder -t jsxLite
+  mitosis compile -f builder -t mitosis
 ```
 
 ### Run mitosis on file system change

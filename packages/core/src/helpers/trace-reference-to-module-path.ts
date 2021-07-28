@@ -1,7 +1,7 @@
-import { JSXLiteImport } from '../types/mitosis-component';
+import { MitosisImport } from '../types/mitosis-component';
 
 export function traceReferenceToModulePath(
-  imports: JSXLiteImport[],
+  imports: MitosisImport[],
   name: string,
 ): string | null {
   let response: string | null = null;

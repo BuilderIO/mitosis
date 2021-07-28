@@ -11,7 +11,7 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { isJsxLiteNode } from '../helpers/is-mitosis-node';
+import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
@@ -25,8 +25,8 @@ import {
   runPreJsonPlugins,
 } from '../modules/plugins';
 import { selfClosingTags } from '../parsers/jsx';
-import { JSXLiteComponent } from '../types/mitosis-component';
-import { JSXLiteNode } from '../types/mitosis-node';
+import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisNode } from '../types/mitosis-node';
 import { htmlAttributeEscape } from '../helpers/html-escape';
 
 const qwikImport = (options: InternalToQwikOptions) =>
@@ -108,7 +108,7 @@ const processBinding = (binding: string, options: InternalToQwikOptions) =>
     .replace(/;$/, '');
 
 const NODE_MAPPERS: {
-  [key: string]: (json: JSXLiteNode, options: InternalToQwikOptions) => string;
+  [key: string]: (json: MitosisNode, options: InternalToQwikOptions) => string;
 } = {
   Fragment(json, options) {
     return `<>${json.children
@@ -135,7 +135,7 @@ const NODE_MAPPERS: {
   },
 };
 
-const getId = (json: JSXLiteNode, options: InternalToQwikOptions) => {
+const getId = (json: MitosisNode, options: InternalToQwikOptions) => {
   const name = json.properties.$name
     ? camelCase(json.properties.$name)
     : /^h\d$/.test(json.name || '') // don't dashcase h1 into h-1
@@ -147,7 +147,7 @@ const getId = (json: JSXLiteNode, options: InternalToQwikOptions) => {
   return capitalize(`${name}${newNameNum === 1 ? '' : `${newNameNum}`}`);
 };
 
-const elId = (node: JSXLiteNode, options: InternalToQwikOptions) => {
+const elId = (node: MitosisNode, options: InternalToQwikOptions) => {
   if (node.meta.id) {
     return node.meta.id;
   }
@@ -169,12 +169,12 @@ type ToQwikOptions = {
   format?: 'builder' | 'default';
 };
 type InternalToQwikOptions = ToQwikOptions & {
-  componentJson: JSXLiteComponent;
+  componentJson: MitosisComponent;
   namesMap: NumberRecord;
   qrlPrefix: string;
 };
 
-const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
+const blockToQwik = (json: MitosisNode, options: InternalToQwikOptions) => {
   if (NODE_MAPPERS[json.name]) {
     return NODE_MAPPERS[json.name](json, options);
   }
@@ -256,7 +256,7 @@ const blockToQwik = (json: JSXLiteNode, options: InternalToQwikOptions) => {
 };
 
 const getComponentName = (
-  json: JSXLiteComponent,
+  json: MitosisComponent,
   options: InternalToQwikOptions,
 ) => {
   return capitalize(camelCase(json.name || 'my-component'));
@@ -264,7 +264,7 @@ const getComponentName = (
 
 // TODO
 const getProvidersString = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: InternalToQwikOptions,
 ): string => {
   return 'null';
@@ -293,13 +293,13 @@ const formatCode = (
 };
 
 const getEventHandlerFiles = (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   options: InternalToQwikOptions,
 ): File[] => {
   const files: File[] = [];
 
   traverse(componentJson).forEach(function(item) {
-    if (isJsxLiteNode(item)) {
+    if (isMitosisNode(item)) {
       for (const binding in item.bindings) {
         if (binding.startsWith('on')) {
           const eventHandlerName = elId(item, options) + binding.slice(2);
@@ -346,7 +346,7 @@ export type File = {
 };
 
 export const componentToQwik = async (
-  componentJson: JSXLiteComponent,
+  componentJson: MitosisComponent,
   toQwikOptions: ToQwikOptions = {},
 ): Promise<{ files: File[] }> => {
   let json = fastClone(componentJson);

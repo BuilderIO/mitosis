@@ -1,11 +1,11 @@
 import {
-  builderContentToJsxLiteComponent,
+  builderContentToMitosisComponent,
   compileAwayBuilderComponents,
   componentToAngular,
   componentToBuilder,
   componentToCustomElement,
   componentToHtml,
-  componentToJsxLite,
+  componentToMitosis,
   componentToLiquid,
   componentToQwik,
   componentToReact,
@@ -16,7 +16,7 @@ import {
   componentToTemplate,
   componentToVue,
   liquidToBuilder,
-  angularToJsxLiteComponent,
+  angularToMitosisComponent,
   mapStyles,
   parseJsx,
   parseReactiveScript,
@@ -298,8 +298,8 @@ export default function Fiddle() {
       if (!builderJson) {
         return;
       }
-      const jsxJson = builderContentToJsxLiteComponent(builderJson);
-      state.code = componentToJsxLite(jsxJson);
+      const jsxJson = builderContentToMitosisComponent(builderJson);
+      state.code = componentToMitosis(jsxJson);
       state.pendingBuilderChange = null;
     },
     async parseLiquidInputCode() {
@@ -311,7 +311,7 @@ export default function Fiddle() {
         state.inputCode.replace(reactiveScriptRe, ''),
       );
 
-      const jsx = builderContentToJsxLiteComponent({
+      const jsx = builderContentToMitosisComponent({
         data: { blocks: builderJson },
       });
       jsx.state = jsxState;
@@ -324,7 +324,7 @@ export default function Fiddle() {
         staticState.ignoreNextBuilderUpdate = true;
         const json =
           state.inputTab === 'angular'
-            ? angularToJsxLiteComponent(state.inputCode)
+            ? angularToMitosisComponent(state.inputCode)
             : state.inputTab === 'liquid'
             ? await this.parseLiquidInputCode()
             : parseJsx(state.code);
@@ -371,7 +371,7 @@ export default function Fiddle() {
               ).files.find((file) => file.path.endsWith('template.tsx'))!
                 ?.contents
             : state.outputTab === 'mitosis'
-            ? componentToJsxLite(json)
+            ? componentToMitosis(json)
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
