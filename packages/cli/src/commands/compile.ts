@@ -10,7 +10,6 @@ import * as targets from '../targets'
 import { UnionToIntersection } from '../types'
 import { Target, Targets } from '../types/mitosis-config'
 
-
 type GeneratorOpts = Parameters<Targets[Target]>[1]
 
 type AllGeneratorOption = UnionToIntersection<GeneratorOpts>

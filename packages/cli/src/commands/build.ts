@@ -6,7 +6,7 @@ const command: GluegunCommand = {
   name: 'build',
   alias: 'b',
   run: async toolbox => {
-    await build(getMitosisConfig());
+    await build(getMitosisConfig())
   }
 }
 

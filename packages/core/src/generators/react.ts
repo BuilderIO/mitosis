@@ -465,7 +465,8 @@ const _componentToReact = (
     reactLibImports.add('useEffect');
   }
 
-  const wrap = wrapInFragment(json) || (componentHasStyles && stylesType === 'styled-jsx');
+  const wrap =
+    wrapInFragment(json) || (componentHasStyles && stylesType === 'styled-jsx');
 
   const nativeStyles =
     stylesType === 'react-native' &&
