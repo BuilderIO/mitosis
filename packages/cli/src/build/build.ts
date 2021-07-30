@@ -3,7 +3,9 @@ import {
   componentToReactNative,
   componentToSolid,
   componentToVue,
+  contextToReact,
   MitosisComponent,
+  parseContext,
   parseJsx
 } from '@builder.io/mitosis'
 import { outputFile, readFile, remove } from 'fs-extra'
@@ -14,7 +16,7 @@ import * as json5 from 'json5'
 import { transpileSolidFile } from './helpers/transpile-solid-file'
 import glob from 'fast-glob'
 import { MitosisConfig, Target } from '../types/mitosis-config'
-import { kebabCase } from 'lodash'
+import { kebabCase, upperFirst, camelCase, last } from 'lodash'
 import micromatch from 'micromatch'
 
 const cwd = process.cwd()
@@ -33,7 +35,6 @@ export async function build(config?: MitosisConfig) {
   const tsLiteFiles = await Promise.all(
     micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
       async path => {
-        console.log('got path?')
         try {
           const parsed = parseJsx(await readFile(path, 'utf8'), {
             jsonHookNames: ['registerComponent']
@@ -55,9 +56,9 @@ export async function build(config?: MitosisConfig) {
       const jsFiles = await buildTsFiles(target)
       await Promise.all([
         outputTsFiles(target, jsFiles, options),
-        outputTsxLiteFiles(target, tsLiteFiles, config)
+        outputTsxLiteFiles(target, tsLiteFiles, options)
       ])
-      await outputOverrides(target, config)
+      await outputOverrides(target, options)
     })
   )
 }
@@ -140,7 +141,6 @@ async function outputTsxLiteFiles(
           registerComponent(${mitosisJson.name}, ${json5.stringify(
           registerComponentHook
         )});
-        
         `
       }
     }
@@ -197,7 +197,20 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
 
   return await Promise.all(
     tsFiles.map(async path => {
-      const output = await transpile({ path, target })
+      let output: string
+      if (path.endsWith('.context.lite.ts')) {
+        // 'foo/bar/my-thing.context.ts' -> 'MyThing'
+        const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]))
+        const context = parseContext(await readFile(path, 'utf8'), {
+          name: name
+        })
+        if (!context) {
+          console.warn('Could not parse context from file', path)
+        } else {
+          output = contextToReact(context)
+        }
+      }
+      output = await transpile({ path, target, content: output })
 
       return {
         path,

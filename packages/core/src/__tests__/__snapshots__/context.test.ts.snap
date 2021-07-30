@@ -1,6 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Context Parse context 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/context",
+  "name": "SimpleExample",
+  "value": Object {
+    "content": null,
+    "context": Object {},
+    "foo": "bar",
+    "fooUpperCase": "@builder.io/mitosis/method:get fooUpperCase() {
+  return this.foo.toUpperCase();
+}",
+    "someMethod": "@builder.io/mitosis/method:someMethod() {
+  return this.fooUpperCase.toLowercase();
+}",
+    "state": Object {},
+  },
+}
+`;
+
+exports[`Context Parse context 2`] = `
 "import { createContext } from \\"react\\";
 
 export default createContext({
@@ -11,6 +30,9 @@ export default createContext({
   someMethod() {
     return this.fooUpperCase.toLowercase();
   },
+  content: null,
+  context: {},
+  state: {},
 });
 "
 `;
