@@ -1,62 +1,23 @@
-import { types } from '@babel/core';
-import * as CSS from 'csstype';
 import dedent from 'dedent';
-import json5 from 'json5';
-import { format } from 'prettier/standalone';
-import { babelTransformCode } from '../helpers/babel-transform';
+import { tryPrettierFormat } from '../helpers/try-prettier-format';
 import traverse from 'traverse';
-import isChildren from '../helpers/is-children';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { format } from '../helpers/generic-format';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { getStyles } from '../helpers/get-styles';
+import isChildren from '../helpers/is-children';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import { getStyles } from '../helpers/get-styles';
 import { MitosisStyles } from '../types/mitosis-styles';
 
-type ToSwiftOptions = {
+export type ToSwiftOptions = {
   prettier?: boolean;
 };
 
-const temp = (fragment: string) => fragment;
-
 const scrolls = (json: MitosisNode) => {
   return getStyles(json)?.overflow === 'auto';
-};
-
-const preSpaceRegex = /^ */g;
-const getPreSpaces = (str: string) => str.match(preSpaceRegex)?.[0].length || 0;
-
-const fixIndents = (str: string) => {
-  const lines = str.split('\n');
-  let last = 0;
-  lines.forEach((item, index) => {
-    const spaces = getPreSpaces(item);
-    const maxSpaces = last + 2;
-    if (spaces > maxSpaces) {
-      const delta = spaces - maxSpaces;
-      lines.slice(index).every((nextLine, incrIndex) => {
-        const nextLineSpaces = getPreSpaces(nextLine);
-        if (nextLineSpaces > maxSpaces) {
-          const newItem = nextLine.replace(
-            preSpaceRegex,
-            ' '.repeat(nextLineSpaces - delta),
-          );
-          lines[index + incrIndex] = newItem;
-          return true;
-        } else {
-          return false;
-        }
-      });
-      last = maxSpaces;
-    } else {
-      last = spaces;
-    }
-  });
-  return lines.join('\n');
 };
 
 const mappers: {
@@ -69,8 +30,8 @@ const mappers: {
   },
   link: () => '',
   Image: (json, options) => {
-    return `_: Image(${json.bindings.image ||
-      `"${json.properties.image}"`})${temp(',')}`;
+    return `Image(${processBinding(json.bindings.image as string, options) ||
+      `"${json.properties.image}"`})`;
   },
 };
 
@@ -83,22 +44,17 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
   // Right now we return an empty string because the generated code
   // is very likely wrong.
   if (isChildren(json)) {
-    return '// `props.children` is not supported yet for SwiftUI';
+    return '/* `props.children` is not supported yet for SwiftUI */';
   }
 
   if (json.properties._text) {
     if (!json.properties._text.trim().length) {
       return '';
     }
-    return `_: Text("${json.properties._text
-      .trim()
-      .replace(/\s+/g, ' ')}")${temp(',')}`;
+    return `Text("${json.properties._text.trim().replace(/\s+/g, ' ')}")`;
   }
   if (json.bindings._text) {
-    return `_: Text(${processBinding(
-      json.bindings._text as string,
-      options,
-    )})${temp(',')}`;
+    return `Text(${processBinding(json.bindings._text as string, options)})`;
   }
 
   let str = '';
@@ -125,10 +81,6 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
         : 'VStack'
       : json.name;
 
-  if (name === 'VStack' || name === 'HStack') {
-    // json.bindings.padding = '0';
-  }
-
   if (name === 'TextField') {
     const placeholder = json.properties.placeholder;
     delete json.properties.placeholder;
@@ -136,32 +88,31 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
   }
 
   if (json.name === 'For') {
-    str += `_: <For each={${processBinding(
+    str += `ForEach(${processBinding(
       json.bindings.each as string,
       options,
-    )}}>{${json.properties._forName} => ({
-      ${children.map((item) => blockToSwift(item, options)).join('\n')}
-    })}</For>`;
+    )}, id: \\.self) { ${json.properties._forName} in ${children
+      .map((item) => blockToSwift(item, options))
+      .join('\n')} }`;
   } else if (json.name === 'Show') {
-    str += `_: <Show when={${processBinding(
-      json.bindings.when as string,
-      options,
-    )}}>{{
+    str += `if ${processBinding(json.bindings.when as string, options)} {
       ${children.map((item) => blockToSwift(item, options)).join('\n')}
-    }}</Show>,`;
+    }`;
   } else {
-    str += `_: ${name}(${temp('{')}`;
+    str += `${name}(`;
 
     for (const key in json.properties) {
       if (key === 'class' || key === 'className') {
         continue;
       }
-      const value = json.properties[key];
-      str += ` ${key}: "${(value as string).replace(/"/g, '&quot;')}", `;
+      // TODO: binding mappings
+      // const value = json.properties[key];
+      // str += ` ${key}: "${(value as string).replace(/"/g, '&quot;')}", `;
+      console.warn(`Unsupported property "${key}"`);
     }
     for (const key in json.bindings) {
-      const value = json.bindings[key] as string;
       if (
+        // TODO: implement spread, ref, more css
         key === '_spread' ||
         key === 'ref' ||
         key === 'css' ||
@@ -172,26 +123,28 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
       }
 
       if (key.startsWith('on')) {
-        let useKey = key;
         if (key === 'onClick') {
-          useKey = 'action';
+          continue;
+        } else {
+          // TODO: other event mappings
+          console.warn(`Unsupported event binding "${key}"`);
         }
-        // TODO: replace with fn refs
-        str += ` ${useKey}: () => { ${processBinding(value, options)} }, `;
       } else {
-        str += ` ${key}: ${processBinding(value, options)}, `;
+        console.warn(`Unsupported binding "${key}"`);
+        // TODO: need binding mappings
+        // str += ` ${key}: ${processBinding(value, options)}, `;
       }
     }
-    str += `${temp('}')})`;
+    str += `)`;
 
-    str += `${temp('(')}{`;
+    str += ` {`;
     if (json.children) {
       str += json.children
         .map((item) => blockToSwift(item, options))
         .join('\n');
     }
 
-    str += `}${temp(')')}`;
+    str += `}`;
     for (const key in style) {
       let useKey = key;
       const rawValue = style[key as keyof MitosisStyles]!;
@@ -199,121 +152,57 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
       if (['padding', 'margin'].includes(key)) {
         // TODO: throw error if calc()
         value = parseFloat(rawValue as string);
-      }
-      if (key === 'color') {
+        str += `.${useKey}(${value})`;
+      } else if (key === 'color') {
         useKey = 'foregroundColor';
-        // TODO: this assumes things like `color: 'red'` - also map rgb using Color(red: ..., ....)
-        value = '`.' + rawValue + '`';
+        // TODO: convert to RBG and use Color(red: ..., ....)
+      } else {
+        console.warn(`Styling key "${key}" is not supported`);
       }
-      str += `.${useKey}(${value})`;
     }
-    str += ',';
+
+    if (json.bindings.onClick) {
+      str += `.onTapGesture {
+        ${processBinding(json.bindings.onClick as string, options)}
+      }`;
+    }
   }
 
   return str;
 };
 
+function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
+  const str = `const state = ${getStateObjectStringFromComponent(json)};`;
+  if (options.prettier === false) {
+    return str.trim();
+  } else {
+    return tryPrettierFormat(str, 'typescript').trim();
+  }
+}
+
 const processBinding = (str: string, options: ToSwiftOptions) => {
-  return stripStateAndPropsRefs(str, {
-    includeState: true,
-    includeProps: true,
-  });
+  return `eval(code: """${str}""")`;
 };
 
-const useTextBinding = (json: MitosisComponent, options: ToSwiftOptions) => {
-  traverse(json).forEach(function(item) {
-    if (isMitosisNode(item)) {
-      const { value, onChange } = item.bindings;
-      if (value && onChange) {
-        if (
-          (onChange as string).replace(/\s+/g, '') ===
-          `${value}=event.target.value`
-        ) {
-          delete item.bindings.value;
-          delete item.bindings.onChange;
-          item.bindings.text = '$' + value;
-        }
+function componentHasDynamicData(json: MitosisComponent) {
+  const hasState = Object.keys(json.state).length > 0;
+  if (hasState) {
+    return true;
+  }
+  let found = false;
+  traverse(json).forEach(function(node) {
+    if (isMitosisNode(node)) {
+      if (Object.keys(node.bindings).filter((item) => item !== 'css').length) {
+        found = true;
+        this.stop();
       }
     }
   });
-};
 
-const swiftMethodMap: { [key: string]: string } = {
-  toLowerCase: 'lowercased',
-  push: 'append',
-};
+  return found;
+}
 
-const replaceSwiftMethods = (code: string) => {
-  function hasSpread(nodes: babel.Node[]) {
-    return Boolean(nodes.find((node) => types.isSpreadElement(node)));
-  }
-
-  function push(_props: any, nodes: babel.Node[]) {
-    if (!_props.length) return _props;
-    nodes.push(types.arrayExpression(_props));
-    return [];
-  }
-
-  function build(props: any[], scope: any) {
-    const nodes = [];
-    let _props: any[] = [];
-
-    for (const prop of props) {
-      if (types.isSpreadElement(prop)) {
-        _props = push(_props, nodes);
-        nodes.push(prop.argument);
-      } else {
-        _props.push(prop);
-      }
-    }
-
-    push(_props, nodes);
-
-    return nodes;
-  }
-
-  return babelTransformCode(code, {
-    CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-      const { callee } = path.node;
-      if (types.isMemberExpression(callee)) {
-        if (types.isIdentifier(callee.property)) {
-          const mapper = swiftMethodMap[callee.property.name];
-          if (mapper) {
-            path.replaceWith(
-              types.callExpression(
-                types.memberExpression(callee.object, types.identifier(mapper)),
-                path.node.arguments,
-              ),
-            );
-          }
-        }
-      }
-    },
-
-    // Convert array spreads to swift concat syntax (`+` operator)
-    ArrayExpression(path: babel.NodePath<babel.types.ArrayExpression>) {
-      const { node, scope } = path;
-      const elements = node.elements;
-      if (!hasSpread(elements as any)) return;
-
-      const nodes = build(elements, scope);
-      let first = nodes[0];
-
-      if (nodes.length === 1 && first !== (elements[0] as any).argument) {
-        path.replaceWith(first);
-        return;
-      }
-
-      if (!types.isArrayExpression(first)) {
-        first = types.arrayExpression([]);
-      } else {
-        nodes.shift();
-      }
-
-      path.replaceWith(types.binaryExpression('+', nodes[0], nodes[1]));
-    },
-  });
-};
+function getStyleString() {}
 
 export const componentToSwift = (
   componentJson: MitosisComponent,
@@ -321,68 +210,50 @@ export const componentToSwift = (
 ) => {
   const json = fastClone(componentJson);
 
-  gettersToFunctions(json);
-  useTextBinding(json, options);
+  const hasDyanmicData = componentHasDynamicData(json);
 
   let children = json.children
     .map((item) => blockToSwift(item, options))
     .join('\n');
 
-  const dataString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    keyPrefix: '@State ',
-    functions: false,
-    getters: false,
-    valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
-  });
-
-  const methodString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    data: false,
-    getters: false,
-    keyPrefix: '@func ',
-    valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '' }),
-  });
-  const getterString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    data: false,
-    getters: true,
-    functions: false,
-    keyPrefix: '@func ',
-    valueMapper: (code) =>
-      stripStateAndPropsRefs(code.replace('get ', ''), { replaceWith: '' }),
-  });
-
   let str = dedent`
-    import "SwiftUI"
+    import SwiftUI
+    ${!hasDyanmicData ? '' : `import JavaScriptCore`}
 
-    class ${componentJson.name} {
-      ${dataString}
-      ${methodString}
-      ${getterString}
+    struct ${componentJson.name}: View {
+      ${
+        !hasDyanmicData
+          ? ''
+          : `
+        /* Keep track of updates to force a view update */
+        @State private var updateIndex = 0
+        private var jsContext = JSContext()
 
-      __body = {
-        _: VStack({})({
+        func eval(code: String) -> JSValue! {
+          return jsContext?.evaluateScript(code)
+        }
+
+        init() {
+          let jsSource = """
+              ${getJsSource(json, options)}
+          """
+          jsContext?.evaluateScript(jsSource)
+        }
+      `.trim()
+      }
+
+      var body: some View {
+        VStack {
+          ${!hasDyanmicData ? '' : `Text(String(updateIndex)).hidden()`}
           ${children}
-        })
+        }
       }
     }
   `;
 
-  str = replaceSwiftMethods(str);
-
   if (options.prettier !== false) {
     try {
-      str = format(str, {
-        semi: false,
-        trailingComma: 'none',
-        singleQuote: false,
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-          require('prettier/parser-postcss'),
-        ],
-      });
+      str = format(str);
     } catch (err) {
       console.error(
         'Format error for file:',
@@ -395,57 +266,5 @@ export const componentToSwift = (
     }
   }
 
-  // Remove JS / JSX artifacts
-  str = str
-    // Remove temp property prefixes
-    .replace(/_:\s?/g, '')
-    // Convert <Show when={...}> to if ... { ... }
-    .replace(/\(\s*<Show when={([\s\S]+)}>\s*{{/g, 'if $1 {')
-    .replace(/}}\s*<\/Show>\s*\),?/g, '}')
-    // Deserialize html quotes
-    .replace(/&quot;/g, '\\"')
-    // Convert class MyComponent to struct MyComponent : View
-    .replace(
-      `class ${componentJson.name}`,
-      `struct ${componentJson.name} : View`,
-    )
-    // Convert @State foo = to @State private var foo =
-    .replace(/@State\s+/g, '@State private var ')
-    // Convert @func foo() to func foo()
-    .replace(/@func\s+/g, 'func ')
-    // Convert __body = to var body: some View =
-    .replace(/(\s*)__body = /, '\n$1var body: some View ')
-    // Convert import 'foo' to import foo;
-    .replace(/import ['"]([^'"]+)['"];?/g, 'import $1')
-    // Convert Foo({ too Foo(
-    .replace(/([A-Z][a-zA-Z0-9]+)\({([\s\S]*?)}\)/g, '$1($2)')
-    // Remove arrow function
-    .replace(/\(\)\s*=>/g, '')
-    // Remove dangling "({"
-    .replace(/\({/g, ' {')
-    // Remove dangling "})"
-    .replace(/}\),?/g, '}')
-    // Remove dangling "{}"
-    .replace(/ {}/g, '')
-    // Convert `.foo` to .foo (escaped enum members)
-    .replace(/`(\.[\w\d]+)`/g, '$1')
-    // Remove dangling "),"
-    .replace(/\),\n/g, ')\n')
-    // Convert <For each={...}> to ForEach(...) {
-    .replace(
-      /\(\s*<For\s*each={([\s\S]+)}>\s*{\((.*?)\)\s*=>\s*\{/g,
-      'ForEach($1, id: \\.self) { $2 in',
-    )
-    // Convert </For> to }
-    .replace(/}}\s*<\/For>\s*\),?/g, '}')
-    // Remove dangling "()"
-    .replace(/(\s[A-Z][\w\d]+)\(\) {/g, '$1 {')
-    // Replace (action: { foo() }) with (action: foo)
-    .replace(/\(\s*action:\s*{\s*([\w\d]+)\(\)\s*}\s*\)/g, '(action: $1)')
-    // Replace action: { foo() } with action: foo
-    .replace(/action:\s*{\s*([\w\d]+)\(\)\s*}/g, 'action: $1')
-    // Replace multiple newlines with one
-    .replace(/\n{3,}/g, '\n\n');
-
-  return fixIndents(str);
+  return str;
 };

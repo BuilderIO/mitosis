@@ -209,6 +209,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
         } else {
           output = contextToReact(context)
         }
+        path = path.replace('.lite.ts', '.ts')
       }
       output = await transpile({ path, target, content: output })
 
