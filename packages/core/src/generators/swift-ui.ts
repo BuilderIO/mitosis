@@ -30,8 +30,42 @@ const mappers: {
   },
   link: () => '',
   Image: (json, options) => {
-    return `Image(${processBinding(json.bindings.image as string, options) ||
-      `"${json.properties.image}"`})`;
+    return (
+      `Image(${
+        processBinding(json.bindings.image as string, options) ||
+        `"${json.properties.image}"`
+      })` +
+      getStyleString(json, options) +
+      getActionsString(json, options)
+    );
+  },
+  input: (json, options) => {
+    const name = json.properties.$name;
+    let str =
+      `TextField(${
+        json.bindings.placeholder
+          ? processBinding(json.bindings.placeholder as string, options)
+          : json.properties.placeholder
+          ? JSON.stringify(json.bindings.placeholder)
+          : '""'
+      }, text: $${name})` +
+      getStyleString(json, options) +
+      getActionsString(json, options);
+
+    if (json.bindings.onChange) {
+      str += `
+        .onChange(of: ${name}) { ${name} in 
+          ${processBinding(
+            wrapAction(
+              `var event = { target: { value: "\\(${name})" } };
+              ${json.bindings.onChange as string}`,
+            ),
+            options,
+          )} 
+        }`;
+    }
+
+    return str;
   },
 };
 
@@ -54,7 +88,10 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     return `Text("${json.properties._text.trim().replace(/\s+/g, ' ')}")`;
   }
   if (json.bindings._text) {
-    return `Text(${processBinding(json.bindings._text as string, options)})`;
+    return `Text(${processBinding(
+      json.bindings._text as string,
+      options,
+    )}.toString())`;
   }
 
   let str = '';
@@ -71,10 +108,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
       : json.name === 'img'
       ? 'Image'
       : json.name[0].toLowerCase() === json.name[0]
-      ? json.bindings.onClick
-        ? // TODO: also map onClick to action:s
-          'Button'
-        : scrolls(json)
+      ? scrolls(json)
         ? 'ScrollView'
         : style?.display === 'flex' && style.flexDirection !== 'column'
         ? 'HStack'
@@ -145,34 +179,57 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     }
 
     str += `}`;
-    for (const key in style) {
-      let useKey = key;
-      const rawValue = style[key as keyof MitosisStyles]!;
-      let value: number | string = `"${rawValue}"`;
-      if (['padding', 'margin'].includes(key)) {
-        // TODO: throw error if calc()
-        value = parseFloat(rawValue as string);
-        str += `.${useKey}(${value})`;
-      } else if (key === 'color') {
-        useKey = 'foregroundColor';
-        // TODO: convert to RBG and use Color(red: ..., ....)
-      } else {
-        console.warn(`Styling key "${key}" is not supported`);
-      }
-    }
-
-    if (json.bindings.onClick) {
-      str += `.onTapGesture {
-        ${processBinding(json.bindings.onClick as string, options)}
-      }`;
-    }
+    str += getStyleString(json, options);
+    str += getActionsString(json, options);
   }
 
   return str;
 };
 
+const wrapAction = (str: string) => `(() => { ${str} })()`;
+
+function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
+  let str = '';
+  if (json.bindings.onClick) {
+    str += `\n.onTapGesture {
+      ${processBinding(wrapAction(json.bindings.onClick as string), options)}
+    }`;
+  }
+  return str;
+}
+
+function getStyleString(node: MitosisNode, options: ToSwiftOptions): string {
+  const style = getStyles(node);
+  let str = '';
+  for (const key in style) {
+    let useKey = key;
+    const rawValue = style[key as keyof MitosisStyles]!;
+    let value: number | string = `"${rawValue}"`;
+    if (['padding', 'margin'].includes(key)) {
+      // TODO: throw error if calc()
+      value = parseFloat(rawValue as string);
+      str += `\n.${useKey}(${value})`;
+    } else if (key === 'color') {
+      useKey = 'foregroundColor';
+      // TODO: convert to RBG and use Color(red: ..., ....)
+    } else {
+      console.warn(`Styling key "${key}" is not supported`);
+    }
+  }
+
+  return str;
+}
+
 function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
-  const str = `const state = ${getStateObjectStringFromComponent(json)};`;
+  const str = `const state = new Proxy(${getStateObjectStringFromComponent(
+    json,
+  )}, {
+    set: (target, key, value) => {
+      const returnVal = Reflect.set(target, key, value);
+      update();
+      return returnVal;
+    }
+  });`;
   if (options.prettier === false) {
     return str.trim();
   } else {
@@ -181,7 +238,14 @@ function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
 }
 
 const processBinding = (str: string, options: ToSwiftOptions) => {
-  return `eval(code: """${str}""")`;
+  // Use triple quotes for multiline strings or strings including '"'
+  if (str.includes('\n') || str.includes('"')) {
+    return `eval(code: """
+      ${str}
+      """)`;
+  }
+  // Use double quotes for simple strings
+  return `eval(code: "${str}")`;
 };
 
 function componentHasDynamicData(json: MitosisComponent) {
@@ -190,7 +254,7 @@ function componentHasDynamicData(json: MitosisComponent) {
     return true;
   }
   let found = false;
-  traverse(json).forEach(function(node) {
+  traverse(json).forEach(function (node) {
     if (isMitosisNode(node)) {
       if (Object.keys(node.bindings).filter((item) => item !== 'css').length) {
         found = true;
@@ -202,13 +266,47 @@ function componentHasDynamicData(json: MitosisComponent) {
   return found;
 }
 
-function getStyleString() {}
+function mapDataForSwiftCompatability(json: MitosisComponent) {
+  let inputIndex = 0;
+  json.meta.inputNames = json.meta.inputNames || [];
 
+  traverse(json).forEach(function (node) {
+    if (isMitosisNode(node)) {
+      if (node.name === 'input') {
+        if (
+          !Object.keys(node.bindings).filter((item) => item !== 'css').length
+        ) {
+          return;
+        }
+        if (!node.properties.$name) {
+          node.properties.$name = `input${++inputIndex}`;
+        }
+        (json.meta.inputNames as Record<string, string>)[
+          node.properties.$name
+        ] = node.bindings.value || '';
+      }
+    }
+  });
+}
+
+function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
+  let str = '';
+  const inputNames = json.meta.inputNames as Record<string, string>;
+  if (!inputNames) {
+    return str;
+  }
+
+  for (const item in inputNames) {
+    str += `\n@State private var ${item}: String = ""`;
+  }
+  return str;
+}
 export const componentToSwift = (
   componentJson: MitosisComponent,
   options: ToSwiftOptions = {},
 ) => {
   const json = fastClone(componentJson);
+  mapDataForSwiftCompatability(json);
 
   const hasDyanmicData = componentHasDynamicData(json);
 
@@ -216,27 +314,66 @@ export const componentToSwift = (
     .map((item) => blockToSwift(item, options))
     .join('\n');
 
+  const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
+
   let str = dedent`
     import SwiftUI
-    ${!hasDyanmicData ? '' : `import JavaScriptCore`}
+    ${
+      !hasDyanmicData
+        ? ''
+        : `import JavaScriptCore
+    
+    final class UpdateTracker: ObservableObject {
+        @Published var value = 0;
+    
+        func update() {
+            value += 1
+        }
+    }
+    `
+    }
 
     struct ${componentJson.name}: View {
       ${
         !hasDyanmicData
           ? ''
           : `
-        /* Keep track of updates to force a view update */
-        @State private var updateIndex = 0
+        @ObservedObject var updateTracker = UpdateTracker()
         private var jsContext = JSContext()
+        ${getInputBindings(json, options)}
 
         func eval(code: String) -> JSValue! {
           return jsContext?.evaluateScript(code)
+        }
+
+        ${
+          !hasInputNames
+            ? ''
+            : `
+        func setComputedState() {
+          ${Object.keys(json.meta.inputNames || {})
+            .map((item) => {
+              return `${item} = ${processBinding(
+                (json.meta.inputNames as Record<string, string>)[item],
+                options,
+              )}.toString()!`;
+            })
+            .join('\n')}
+        }`
         }
 
         init() {
           let jsSource = """
               ${getJsSource(json, options)}
           """
+          jsContext?.exceptionHandler = { context, exception in
+            print("JS Error: \\(exception!)") 
+          }
+
+          let updateRef = updateTracker.update
+          let updateFn : @convention(block) () -> Void = { updateRef() }
+          jsContext?.setObject(updateFn, forKeyedSubscript: "update" as NSString)
+
           jsContext?.evaluateScript(jsSource)
         }
       `.trim()
@@ -244,26 +381,22 @@ export const componentToSwift = (
 
       var body: some View {
         VStack {
-          ${!hasDyanmicData ? '' : `Text(String(updateIndex)).hidden()`}
           ${children}
+        }${
+          !hasInputNames
+            ? ''
+            : `
+        .onAppear {
+          setComputedState()
+        }
+        `
         }
       }
     }
   `;
 
   if (options.prettier !== false) {
-    try {
-      str = format(str);
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        err,
-        '\n\n',
-        str,
-        '\n\n\n',
-        JSON.stringify(json, null, 2),
-      );
-    }
+    str = format(str);
   }
 
   return str;

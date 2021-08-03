@@ -13,6 +13,11 @@ export const format = (str: string, indentSpaces = DEFAULT_INDENT_SPACES) => {
   lines.forEach((item, index) => {
     item = item.trimEnd();
 
+    if (!item) {
+      lines[index] = '';
+      return;
+    }
+
     lines[index] = item.replace(
       preSpaceRegex,
       ' '.repeat(currentIndent * indentSpaces),
@@ -25,7 +30,7 @@ export const format = (str: string, indentSpaces = DEFAULT_INDENT_SPACES) => {
 
     if (nextLine.match(/^\s*[})][,;]?\s*$/)) {
       currentIndent--;
-    } else if (item.match(/[({]$/)) {
+    } else if (item.match(/([({]| in)$/)) {
       currentIndent++;
     }
 
