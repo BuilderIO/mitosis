@@ -8,18 +8,18 @@
   },
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
-    "clean-build": "npx tsc --build --clean && rm -rf ./dist",
-    "clean": "npx tsc --build --clean",
-    "compile": "npx tsc --build --verbose --pretty",
+    "clean-build": "tsc --build --clean && rm -rf ./dist",
+    "clean": "tsc --build --clean",
+    "compile": "tsc --build --verbose --pretty",
     "start": "npm run compile -- --watch",
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
     "release:patch": "npm version patch && npm publish",
-    "test": "npx jest",
-    "watch": "npx jest --watch",
-    "snapupdate": "npx jest --updateSnapshot",
-    "coverage": "npx jest --coverage"
+    "test": "jest",
+    "watch": "jest --watch",
+    "snapupdate": "jest --updateSnapshot",
+    "coverage": "jest --coverage"
   },
   "files": [
     "tsconfig.json",

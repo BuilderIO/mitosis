@@ -6,23 +6,22 @@ import SwiftUI
 import JavaScriptCore
 
 struct MyComponent: View {
-  
+
   @State private var updateIndex = 0
   private var context = JSContext()
-  
+
   func eval(expression: String) -> JSValue! {
     return context?.evaluateScript(expression)
   }
-  
+
   init() {
     let jsSource = \\"\\"\\"
     const state = { name: \\"Steve\\" };
-    
+
     \\"\\"\\"
     context?.evaluateScript(jsSource)
   }
-  
-  
+
   var body: some View {
     VStack {
       Text(String(updateIndex)).hidden()
@@ -37,5 +36,5 @@ struct MyComponent: View {
       }
     }
   }
-  "
+"
 `;
