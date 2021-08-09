@@ -31,10 +31,8 @@ const mappers: {
   link: () => '',
   Image: (json, options) => {
     return (
-      `Image(${
-        processBinding(json.bindings.image as string, options) ||
-        `"${json.properties.image}"`
-      })` +
+      `Image(${processBinding(json.bindings.image as string, options) ||
+        `"${json.properties.image}"`})` +
       getStyleString(json, options) +
       getActionsString(json, options)
     );
@@ -254,7 +252,7 @@ function componentHasDynamicData(json: MitosisComponent) {
     return true;
   }
   let found = false;
-  traverse(json).forEach(function (node) {
+  traverse(json).forEach(function(node) {
     if (isMitosisNode(node)) {
       if (Object.keys(node.bindings).filter((item) => item !== 'css').length) {
         found = true;
@@ -270,7 +268,7 @@ function mapDataForSwiftCompatability(json: MitosisComponent) {
   let inputIndex = 0;
   json.meta.inputNames = json.meta.inputNames || [];
 
-  traverse(json).forEach(function (node) {
+  traverse(json).forEach(function(node) {
     if (isMitosisNode(node)) {
       if (node.name === 'input') {
         if (
