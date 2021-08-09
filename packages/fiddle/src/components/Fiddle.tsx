@@ -147,7 +147,7 @@ const AlphaPreviewMessage = () => (
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
-  previewUrl: 'https://mitosis.builder.io/preview.html',
+  previewUrl: 'https://jsx-lite.builder.io/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
@@ -591,9 +591,9 @@ export default function Fiddle() {
                 alt="Mitosis Logo"
                 src={logo}
                 css={{
-                  marginLeft: 10,
+                  marginLeft: 20,
                   objectFit: 'contain',
-                  width: 200,
+                  width: 130,
                   height: 60,
                   ...lightColorInvert,
                 }}
@@ -968,7 +968,7 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="React Native" />}
                   value="reactNative"
                 />
-                {/* <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" /> */}
+                <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
                 <Tab
                   label={
                     <TabLabelWithIcon

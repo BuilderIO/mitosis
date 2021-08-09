@@ -52,7 +52,7 @@ monaco.languages.registerDocumentFormattingEditProvider('typescript', {
 });
 
 const linter = new Linter();
-linter.defineRules(rules);
+linter.defineRules(rules as any);
 
 function eslint(code: string, version: any) {
   try {

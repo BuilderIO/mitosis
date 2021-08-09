@@ -1,6 +1,6 @@
-# JSX-Lite CLI
+# Mitosis CLI
 
-A CLI for mitosis.
+A CLI for Mitosis.
 
 ## Installation
 

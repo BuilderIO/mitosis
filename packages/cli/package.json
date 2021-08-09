@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/mitosis-cli",
-  "version": "1.0.1",
+  "version": "0.0.6",
   "description": "mitosis CLI",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -8,22 +8,22 @@
   },
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json}",
-    "clean-build": "npx tsc --build --clean && rm -rf ./build",
-    "clean": "npx tsc --build --clean",
-    "compile": "npx tsc --build --verbose --pretty",
+    "clean-build": "tsc --build --clean && rm -rf ./dist",
+    "clean": "tsc --build --clean",
+    "compile": "tsc --build --verbose --pretty",
     "start": "npm run compile -- --watch",
-    "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./build/; fi",
+    "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
     "release:patch": "npm version patch && npm publish",
-    "test": "npx jest",
-    "watch": "npx jest --watch",
-    "snapupdate": "npx jest --updateSnapshot",
-    "coverage": "npx jest --coverage"
+    "test": "jest",
+    "watch": "jest --watch",
+    "snapupdate": "jest --updateSnapshot",
+    "coverage": "jest --coverage"
   },
   "files": [
     "tsconfig.json",
-    "build",
+    "dist",
     "LICENSE",
     "readme.md",
     "docs",
@@ -31,18 +31,26 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@builder.io/mitosis": "0.0.44-18",
+    "@babel/preset-typescript": "^7.15.0",
+    "@builder.io/mitosis": "0.0.44-21",
     "@types/fs-extra": "^9.0.8",
+    "@types/lodash": "^4.14.171",
+    "@vue/compiler-sfc": "^3.1.5",
+    "babel-preset-solid": "^1.0.6",
     "chalk": "^4.1.0",
+    "esbuild": "^0.12.16",
     "fs-extra": "^9.1.0",
     "globby": "^11.0.2",
-    "gluegun": "latest"
+    "gluegun": "latest",
+    "lodash": "^4.17.21",
+    "micromatch": "^4.0.4",
+    "prettier": "^1.12.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
+    "@types/micromatch": "^4.0.2",
     "@types/node": "^12.7.11",
     "jest": "^24.1.0",
-    "prettier": "^1.12.1",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.4.1",
     "typescript": "^4.2.3"

@@ -12,6 +12,7 @@ describe('Context', () => {
     if (!json) {
       throw new Error('No parseable context found for simple.context.lite.ts');
     }
+    expect(json).toMatchSnapshot();
     const reactContext = contextToReact(json);
     expect(reactContext).toMatchSnapshot();
   });

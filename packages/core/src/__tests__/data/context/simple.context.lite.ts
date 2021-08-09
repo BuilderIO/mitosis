@@ -8,4 +8,7 @@ export default createContext({
   someMethod() {
     return this.fooUpperCase.toLowercase();
   },
+  content: null,
+  context: {} as any,
+  state: {},
 });
