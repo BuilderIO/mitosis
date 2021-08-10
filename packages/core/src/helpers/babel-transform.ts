@@ -14,6 +14,8 @@ export const babelTransform = <VisitorContextType = any>(
 ) => {
   return babel.transform(code, {
     sourceFileName: 'file.tsx',
+    configFile: false,
+    babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [[decorators, { legacy: true }], jsxPlugin, () => ({ visitor })],
   });

@@ -653,6 +653,8 @@ export function parseJsx(
   let subComponentFunctions: string[] = [];
 
   const output = babel.transform(jsx, {
+    configFile: false,
+    babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       jsxPlugin,
