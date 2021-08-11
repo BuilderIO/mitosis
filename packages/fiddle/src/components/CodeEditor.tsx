@@ -5,7 +5,8 @@ import * as monaco from 'monaco-editor';
 import types from 'raw-loader!@builder.io/mitosis/dist/src/jsx-types';
 import React, { useState } from 'react';
 import { useDebounce } from 'react-use';
-import { rules } from 'eslint-plugin-mitosis';
+// TODO: add back when build fixed
+// import { rules } from 'eslint-plugin-mitosis';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 
@@ -52,7 +53,8 @@ monaco.languages.registerDocumentFormattingEditProvider('typescript', {
 });
 
 const linter = new Linter();
-linter.defineRules(rules as any);
+// TODO: add back when build fixed
+// linter.defineRules(rules as any);
 
 function eslint(code: string, version: any) {
   try {
