@@ -1,7 +1,7 @@
 import { NodePath, transform, types } from '@babel/core';
 import virtual from '@rollup/plugin-virtual';
 import dedent from 'dedent';
-import { camelCase, kebabCase, size } from 'lodash';
+import { kebabCase, size } from 'lodash';
 import { format } from 'prettier/standalone';
 import { rollup } from 'rollup';
 import traverse from 'traverse';
@@ -380,7 +380,7 @@ export const componentToQwik = async (
   );
   stripMetaProperties(json);
   let str = dedent`
-    import { injectMethod, QRL, jsxFactory } from '${qwikImport(options)}';
+    import { injectMethod, QRL, h } from '${qwikImport(options)}';
     import { ${componentName}Component } from './${componentName}_component.js'
     ${renderPreComponent({
       ...json,
@@ -550,14 +550,14 @@ export const componentToQwik = async (
                 jsx: 'react',
                 isTSX: true,
                 allExtensions: true,
-                jsxFactory: 'jsxFactory',
-                jsxPragma: 'jsxFactory',
+                jsxFactory: 'h',
+                jsxPragma: 'h',
               },
             ],
             [
               require('@babel/plugin-transform-react-jsx'),
               {
-                pragma: 'jsxFactory',
+                pragma: 'h',
                 pragmaFrag: 'null',
                 throwIfNamespace: false,
               },
@@ -589,3 +589,16 @@ export const componentToQwik = async (
 
   return output;
 };
+
+/**
+ * This is a function similar to loadash `camelCase`, but it does not mess with capitalization.
+ *
+ * loadash: `camelCase('A-BC')` => "ABc"
+ * this fn: `camelCase('A-BC')` => "ABC"
+ *
+ */
+function camelCase(text: string = ''): string {
+  const parts = text.split('-');
+  const first = parts.shift();
+  return first + parts.map(capitalize).join('');
+}
