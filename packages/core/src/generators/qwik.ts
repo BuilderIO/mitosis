@@ -116,7 +116,7 @@ const NODE_MAPPERS: {
       .join('\n')}</>`;
   },
   For(json, options) {
-    return `{${processBinding(json.bindings.each as string, options)}.map(${
+    return `{${processBinding(json.bindings.each as string, options)}?.map(${
       json.properties._forName
     } => (
       <>${json.children

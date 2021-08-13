@@ -15,6 +15,8 @@ type ToReactNativeOptions = {
   plugins?: Plugin[];
 };
 
+const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
+
 export const collectReactNativeStyles = (
   json: MitosisComponent,
 ): ClassStyleMap => {
@@ -22,13 +24,33 @@ export const collectReactNativeStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
         delete item.bindings.css;
         if (!size(value)) {
           return;
+        }
+
+        // Style properties like `"20px"` need to be numbers like `20` for react native
+        for (const key in value) {
+          const propertyValue = value[key];
+          if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
+            const newValue = parseFloat(propertyValue);
+            if (!isNaN(newValue)) {
+              value[key] = newValue;
+            }
+          }
+          if (
+            stylePropertiesThatMustBeNumber.has(key) &&
+            typeof value[key] !== 'number'
+          ) {
+            console.warn(
+              `Style key ${key} must be a number, but had value \`${value[key]}\``,
+            );
+            delete value[key];
+          }
         }
         const componentName = camelCase(item.name || 'view');
         const index = (componentIndexes[componentName] =

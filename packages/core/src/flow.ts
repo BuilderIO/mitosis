@@ -17,7 +17,7 @@ export function For<T, U extends JSX.Element>(props: {
 export function Show<T>(props: {
   when: T | undefined | null | false;
   else?: JSX.Element;
-  children: JSX.Element;
+  children?: JSX.Element | null;
 }): JSX.Element {
   return null as JSX.Element;
 }
