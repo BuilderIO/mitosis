@@ -106,10 +106,18 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
   }
 
   if (json.properties._text) {
-    return json.properties._text;
+    const text = json.properties._text;
+    if (options.type === 'native') {
+      return `<Text>${text}</Text>`;
+    }
+    return text;
   }
   if (json.bindings._text) {
-    return `{${processBinding(json.bindings._text as string, options)}}`;
+    const processed = processBinding(json.bindings._text as string, options);
+    if (options.type === 'native') {
+      return `<Text>{${processed}}</Text>`;
+    }
+    return `{${processed}}`;
   }
 
   let str = '';
@@ -264,7 +272,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -512,8 +520,9 @@ const _componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'

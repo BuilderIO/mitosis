@@ -68,7 +68,7 @@ export const collectReactNativeStyles = (
 
 export const componentToReactNative = (
   componentJson: MitosisComponent,
-  options: ToReactNativeOptions,
+  options: ToReactNativeOptions = {},
 ) => {
   const json = fastClone(componentJson);
   traverse(json).forEach((node) => {
