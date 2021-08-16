@@ -2,7 +2,6 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -11,9 +10,9 @@ import { capitalize } from '../helpers/capitalize';
 import {
   collectCss,
   collectStyledComponents,
-  collectStyles,
   hasStyles,
 } from '../helpers/collect-styles';
+import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
@@ -107,7 +106,7 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
 
   if (json.properties._text) {
     const text = json.properties._text;
-    if (options.type === 'native') {
+    if (options.type === 'native' && text.trim().length) {
       return `<Text>${text}</Text>`;
     }
     return text;
