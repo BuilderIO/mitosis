@@ -159,8 +159,9 @@ export const components: CompileAwayComponentsMap = {
   CoreSection(node: MitosisNode, context, components) {
     return wrapOutput(
       node,
-      parseNode(`<div
+      parseNode(`<section
       $name="section"
+      ${node.bindings.lazyLoad === 'true' ? 'lazyload="true"' : ''}
       css={{
         width: '100%',
         alignSelf: 'stretch',
@@ -183,7 +184,7 @@ export const components: CompileAwayComponentsMap = {
         }),
       )
       .join('\n')}
-    </div>`),
+    </section>`),
       components,
     );
   },

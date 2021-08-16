@@ -2,11 +2,13 @@ import dedent from 'dedent';
 import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
 import { componentToMitosis } from '../generators/mitosis';
+import { componentToHtml } from '../generators/html';
 import {
   builderContentToMitosisComponent,
   extractStateHook,
 } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
+import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 
 /**
  * Load a file using nodejs resolution as a string.
@@ -21,6 +23,9 @@ const customCode = fixture('./data/blocks/custom-code.raw');
 const embed = fixture('./data/blocks/embed.raw');
 const image = fixture('./data/blocks/image.raw');
 const columns = fixture('./data/blocks/columns.raw');
+const lazyLoadSection = JSON.parse(
+  fixture('./data/builder/lazy-load-section.json'),
+);
 
 describe('Builder', () => {
   test('extractStateHook', () => {
@@ -84,6 +89,16 @@ describe('Builder', () => {
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis(backToMitosis);
     expect(mitosis).toMatchSnapshot();
+  });
+
+  test('Section', async () => {
+    const mitosisComponent = builderContentToMitosisComponent(lazyLoadSection);
+
+    const html = await componentToHtml(mitosisComponent, {
+      plugins: [compileAwayBuilderComponents()],
+    });
+
+    expect(html).toMatchSnapshot();
   });
 
   test('Regenerate Image', () => {
