@@ -1405,6 +1405,76 @@ Object {
 }
 `;
 
+exports[`Builder Section 1`] = `
+"<div class=\\"div\\"><p>EAGER LOAD</p></div>
+<div class=\\"div-2\\" data-name=\\"div-1\\">
+  <section lazyload=\\"true\\" class=\\"section\\">
+    <p>LAZY LOAD</p>
+  </section>
+</div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin-top: 20px;
+    line-height: normal;
+    height: auto;
+    text-align: center;
+  }
+  .div-2 {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    line-height: normal;
+    height: auto;
+    text-align: center;
+  }
+  .section {
+    width: 100%;
+    align-self: stretch;
+    flex-grow: 1;
+    box-sizing: border-box;
+    max-width: 1234px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+<script>
+  (() => {
+    const state = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.maxWidth = 1234;
+        el.lazyLoad = true;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Builder Stamped 1`] = `
 Object {
   "data": Object {
