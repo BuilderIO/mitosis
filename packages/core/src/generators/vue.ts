@@ -47,7 +47,7 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    return `<template :key="index" v-for="(${
+    return `<template :key="${json.bindings.key || 'index'}" v-for="(${
       json.properties._forName
     }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
       ${json.children.map((item) => blockToVue(item, options)).join('\n')}
@@ -77,6 +77,20 @@ function processDynamicComponents(
       if (node.name.includes('.')) {
         node.bindings.is = node.name;
         node.name = 'component';
+      }
+    }
+  });
+}
+
+function processForKeys(json: MitosisComponent, options: ToVueOptions) {
+  traverse(json).forEach((node) => {
+    if (isMitosisNode(node)) {
+      if (node.name === 'For') {
+        const firstChild = node.children[0];
+        if (firstChild && firstChild.bindings.key) {
+          node.bindings.key = firstChild.bindings.key;
+          delete firstChild.bindings.key;
+        }
       }
     }
   });
@@ -177,6 +191,7 @@ export const componentToVue = (
   // Make a copy we can safely mutate, similar to babel's toolchain can be used
   component = fastClone(component);
   processDynamicComponents(component, options);
+  processForKeys(component, options);
 
   if (options.plugins) {
     component = runPreJsonPlugins(component, options.plugins);
