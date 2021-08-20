@@ -108,7 +108,7 @@ export function MyComponent() {
     <div>
       <input
         value={state.name}
-        onChange={(e) => (state.name = e.target.value)}
+        onChange={(event) => (state.name = event.target.value)}
       />
     </div>
   );
