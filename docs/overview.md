@@ -177,7 +177,7 @@ export default function MyComponent(props) {
   return (
     <For each={state.myArray}>
       {(theArrayItem, index) => <div>{theArrayItem}</div>}
-    </Show>
+    </For>
   );
 }
 ```
