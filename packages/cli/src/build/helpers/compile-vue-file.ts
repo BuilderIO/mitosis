@@ -4,12 +4,14 @@ import dedent from 'dedent'
 import { getSimpleId } from './get-simple-id'
 import * as json5 from 'json5'
 import * as esbuild from 'esbuild'
+import { vue2Transform } from './compile-vue-v2-file'
 
 export type CompileVueFileOptions = {
   distDir: string
   path: string
   contents: string
   mitosisComponent: MitosisComponent
+  vueVersion?: 2 | 3
 }
 
 export type FileSpec = {
@@ -35,9 +37,68 @@ async function toCjs(path: string, contents: string) {
   }
 }
 
+export async function compileVueV2(options: CompileVueFileOptions) {
+  const rootPath = `${options.distDir}/vue/${options.path.replace(
+    /\.lite\.tsx$/,
+    ''
+  )}`
+
+  const id = getSimpleId()
+  const registerComponentHook = options.mitosisComponent.meta.registerComponent
+
+  const fileName = rootPath.split('/').pop()
+
+  // Via https://www.npmjs.com/package/@vue/compiler-sfc README
+  const entry = dedent`      
+    import script from './${fileName}_script'
+    import { render } from './${fileName}_render'
+    import './${fileName}_styles.css'
+
+    script.render = render
+
+    ${
+      !registerComponentHook
+        ? ''
+        : dedent`
+          import { registerComponent } from '../functions/register-component'
+          registerComponent(script, ${json5.stringify(registerComponentHook)})
+        `
+    }
+    export default script
+  `
+
+  const { css, code } = vue2Transform(options.contents, id, {})
+
+  let scriptContents = code
+  // Remove .lite extensions from imports without having to load a slow parser like babel
+  // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+  scriptContents = scriptContents.replace(/\.lite(['"];)/g, '$1')
+
+  return await Promise.all(
+    [
+      { path: `${rootPath}.original.vue`, contents: options.contents },
+      { path: `${rootPath}.js`, contents: entry },
+      { path: `${rootPath}_script.js`, contents: scriptContents },
+      { path: `${rootPath}_styles.css`, contents: css }
+    ].map(async item =>
+      item.path.endsWith('.js')
+        ? {
+            path: item.path,
+            contents: await toCjs(item.path, item.contents)
+          }
+        : item
+    )
+  )
+
+  return []
+}
+
 export async function compileVueFile(
   options: CompileVueFileOptions
 ): Promise<FileSpec[]> {
+  if (options.vueVersion === 2) {
+    return compileVueV2(options)
+  }
   const rootPath = `${options.distDir}/vue/${options.path.replace(
     /\.lite\.tsx$/,
     ''

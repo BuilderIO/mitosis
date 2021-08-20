@@ -2,7 +2,10 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -23,6 +26,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
+import { size } from 'lodash';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -143,12 +147,13 @@ export const blockToVue = (
     if (key === '_spread') {
       continue;
     }
+    const value = node.bindings[key] as string;
     if (key === 'class') {
+      str += ` :class="_classStringToObject(${value})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
       continue;
     }
-    const value = node.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value);
 
@@ -183,6 +188,46 @@ export const blockToVue = (
 
   return str + `</${node.name}>`;
 };
+
+function getContextInjectString(
+  component: MitosisComponent,
+  options: ToVueOptions,
+) {
+  let str = '{';
+
+  for (const key in component.context.get) {
+    str += `
+      ${key}: "${component.context.get[key].name}",
+    `;
+  }
+
+  str += '}';
+  return str;
+}
+
+function getContextProvideString(
+  component: MitosisComponent,
+  options: ToVueOptions,
+) {
+  let str = '{';
+
+  for (const key in component.context.set) {
+    const { value, name } = component.context.set[key];
+    str += `
+      ${name}: ${
+      value
+        ? getMemberObjectString(value, {
+            valueMapper: (code) =>
+              stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
+          })
+        : null
+    },
+    `;
+  }
+
+  str += '}';
+  return str;
+}
 
 export const componentToVue = (
   component: MitosisComponent,
@@ -220,7 +265,7 @@ export const componentToVue = (
       }),
   });
 
-  const functionsString = getStateObjectStringFromComponent(component, {
+  let functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
@@ -253,9 +298,30 @@ export const componentToVue = (
   const elementProps = getProps(component);
   stripMetaProperties(component);
 
+  const template = component.children
+    .map((item) => blockToVue(item, options))
+    .join('\n');
+
+  const includeClassMapHelper = template.includes('_classStringToObject');
+
+  if (includeClassMapHelper) {
+    functionsString = functionsString.replace(
+      /}\s*$/,
+      `_classStringToObject(str) {
+        const obj = {};
+        if (typeof str !== 'string') { return obj }
+        const classNames = str.trim().split(/\\s+/); 
+        for (const name of classNames) {
+          obj[name] = true;
+        } 
+        return obj;
+      }  }`,
+    );
+  }
+
   let str = dedent`
     <template>
-      ${component.children.map((item) => blockToVue(item, options)).join('\n')}
+      ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
@@ -280,6 +346,20 @@ export const componentToVue = (
             : `
         data: () => (${dataString}),
         `
+        }
+
+        ${
+          size(component.context.set)
+            ? `provide() {
+                const _this = this;
+                return ${getContextProvideString(component, options)}
+              },`
+            : ''
+        }
+        ${
+          size(component.context.get)
+            ? `inject: ${getContextInjectString(component, options)},`
+            : ''
         }
 
         ${
