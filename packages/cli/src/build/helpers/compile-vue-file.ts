@@ -12,6 +12,7 @@ export type CompileVueFileOptions = {
   contents: string
   mitosisComponent: MitosisComponent
   vueVersion?: 2 | 3
+  id?: string
 }
 
 export type FileSpec = {
@@ -43,7 +44,7 @@ export async function compileVueV2(options: CompileVueFileOptions) {
     ''
   )}`
 
-  const id = getSimpleId()
+  const id = options.id || getSimpleId()
   const registerComponentHook = options.mitosisComponent.meta.registerComponent
 
   const fileName = rootPath.split('/').pop()

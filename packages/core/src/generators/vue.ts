@@ -33,6 +33,7 @@ export type ToVueOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
   vueVersion?: 2 | 3;
+  cssNamespace?: string;
 };
 
 function getContextNames(json: MitosisComponent) {
@@ -265,7 +266,9 @@ export const componentToVue = (
   if (options.plugins) {
     component = runPostJsonPlugins(component, options.plugins);
   }
-  const css = collectCss(component);
+  const css = collectCss(component, {
+    prefix: options.cssNamespace,
+  });
 
   let dataString = getStateObjectStringFromComponent(component, {
     data: true,
@@ -411,7 +414,7 @@ export const componentToVue = (
     ${
       !css.trim().length
         ? ''
-        : `<style>
+        : `<style scoped>
       ${css}
     </style>`
     }
