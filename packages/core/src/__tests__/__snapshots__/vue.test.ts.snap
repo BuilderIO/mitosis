@@ -62,8 +62,6 @@ export default {
   props: [\\"columns\\", \\"space\\"],
 
   methods: {
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
     getColumns() {
       return this.columns || [];
     },
@@ -100,7 +98,15 @@ export default {
 
 exports[`Vue CustomCode 1`] = `
 "<template>
-  <div ref=\\"elem\\" v-html=\\"code\\"></div>
+  <div
+    ref=\\"elem\\"
+    :class=\\"
+      _classStringToObject(
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
+      )
+    \\"
+    v-html=\\"code\\"
+  ></div>
 </template>
 <script>
 export default {
@@ -156,6 +162,17 @@ export default {
         }
       }
     },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
   },
 };
 </script>
@@ -164,7 +181,15 @@ export default {
 
 exports[`Vue Embed 1`] = `
 "<template>
-  <div ref=\\"elem\\" v-html=\\"code\\"></div>
+  <div
+    ref=\\"elem\\"
+    :class=\\"
+      _classStringToObject(
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
+      )
+    \\"
+    v-html=\\"code\\"
+  ></div>
 </template>
 <script>
 export default {
@@ -219,6 +244,17 @@ export default {
           }
         }
       }
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
     },
   },
 };
@@ -554,6 +590,7 @@ exports[`Vue Image 1`] = `
         class=\\"img\\"
         :alt=\\"altText\\"
         :aria-role=\\"altText ? 'presentation' : undefined\\"
+        :class=\\"_classStringToObject('builder-image' + (class ? ' ' + class : ''))\\"
         :src=\\"image\\"
         @load=\\"setLoaded()\\"
         :srcset=\\"srcset\\"
@@ -611,6 +648,17 @@ export default {
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
       return !!this.lazy && this.isBrowser();
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
     },
   },
 };
@@ -696,13 +744,30 @@ export default {
 
 exports[`Vue RawText 1`] = `
 "<template>
-  <span v-html=\\"text || ''\\"></span>
+  <span
+    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
+    v-html=\\"text || ''\\"
+  ></span>
 </template>
 <script>
 export default {
   name: \\"RawText\\",
 
   props: [\\"attributes\\", \\"text\\"],
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 };
 </script>
 "

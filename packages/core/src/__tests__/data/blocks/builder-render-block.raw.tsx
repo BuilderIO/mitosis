@@ -1,85 +1,104 @@
-import { BuilderElement } from '@builder.io/sdk';
-import {
-  useState,
-  useDynamicTag,
-  createContext,
-  Show,
-  onError,
-  useContext,
-  For,
-} from '@builder.io/mitosis';
-import {
-  stringToFunction,
-  getBlockOptions, // TODO: migrate logic here
-  getEmotionCss, // TODO: migrate logic here
-} from '@builder.io/utils';
+import { useState, Show, useContext, For } from '@builder.io/mitosis';
+import { getBlockComponentOptions } from '../functions/get-block-component-options';
+import { getBlockProperties } from '../functions/get-block-properties';
+import { getBlockStyles } from '../functions/get-block-styles';
+import { getBlockTag } from '../functions/get-block-tag';
+import { components } from '../functions/register-component';
+import { BuilderBlock } from '../types/builder-block';
+import BuilderContext from '../context/builder.context.lite';
+import { getBlockActions } from '../functions/get-block-actions';
+import { getProcessedBlock } from '../functions/get-processed-block';
+import BlockStyles from './block-styles.lite';
 
-type RenderBlockProps = {
-  block: BuilderElement;
+export type RenderBlockProps = {
+  block: BuilderBlock;
 };
 
-export const BuilderContext = createContext();
+export default function RenderBlock(props: RenderBlockProps) {
+  const builderContext = useContext(BuilderContext);
 
-export function RenderBlock(props: RenderBlockProps) {
   const state = useState({
-    error: false,
-    get useRepeat() {
-      return Boolean(
-        props.block.repeat?.collection &&
-          Array.isArray(stringToFunction(this.repeatArray)),
-      );
+    get component() {
+      const componentName = state.useBlock.component?.name;
+      if (!componentName) {
+        return null;
+      }
+      const ref = components[state.useBlock.component?.name!];
+      if (componentName && !ref) {
+        // TODO: Public doc page with more info about this message
+        console.warn(`
+          Could not find a registered component named "${componentName}". 
+          If you registered it, is the file that registered it imported by the file that needs to render it?`);
+      }
+      return ref;
     },
-    get repeatArray() {
-      return stringToFunction(props.block.repeat?.collection);
+    get componentInfo() {
+      return state.component?.info;
     },
-    get itemName() {
-      const collectionPath = props.block.repeat?.collection;
-      const split = (collectionPath || '')
-        .trim()
-        .split('(')[0]
-        .trim()
-        .split('.');
-      const collectionName = split[split.length - 1];
-      const itemName =
-        props.block.repeat?.itemName ||
-        (collectionName ? collectionName + 'Item' : 'item');
-      return itemName;
+    get componentRef() {
+      return state.component?.component;
     },
-    get blockOptions() {
-      return getBlockOptions(props.block, context);
+    get tagName() {
+      return getBlockTag(state.useBlock) as any;
     },
-    get emotionCss() {
-      return getEmotionCss(props.block, context);
+    get properties() {
+      return getBlockProperties(state.useBlock);
+    },
+    get useBlock() {
+      return getProcessedBlock({
+        block: props.block,
+        state: builderContext.state,
+        context: builderContext.context,
+      });
+    },
+    get actions() {
+      return getBlockActions({
+        block: state.useBlock,
+        state: builderContext.state,
+        context: builderContext.context,
+      });
+    },
+    get css() {
+      return getBlockStyles(state.useBlock);
+    },
+    get componentOptions() {
+      return getBlockComponentOptions(state.useBlock);
     },
   });
-
-  const context = useContext();
-
-  const DynamicTag = useDynamicTag(() => {
-    return props.block.tagName || 'div';
-  });
-
-  onError(() => (state.error = true));
 
   return (
     <>
-      <Show when={state.error}>
-        Builder block error :( Check console for details
+      {/* TODO: add the below back when support `else` */}
+      {/* <Show when={state.componentInfo?.noWrap}>
+        <state.componentRef
+          attributes={state.properties}
+          {...state.componentInfo?.options}
+          style={state.css}
+          children={state.useBlock.children}
+        />
       </Show>
-      <Show when={!state.error}>
-        <Show when={state.useRepeat}>
-          <For each={state.repeatArray}>
-            {(item, index) => (
-              <BuilderContext.Provider>
-                <DynamicTag {...state.blockOptions} />
-              </BuilderContext.Provider>
-            )}
+      <Show when={!state.componentInfo?.noWrap}> */}
+      <state.tagName {...state.properties} style={state.css}>
+        <BlockStyles block={state.useBlock} />
+        {state.componentRef && (
+          <state.componentRef
+            {...state.componentOptions}
+            children={state.useBlock.children}
+          />
+        )}
+        <Show
+          when={
+            !state.componentRef &&
+            state.useBlock.children &&
+            state.useBlock.children.length
+          }
+        >
+          <For each={state.useBlock.children}>
+            {(child: any) => <RenderBlock block={child} />}
           </For>
         </Show>
-        <Show when={!state.useRepeat}>
-          <DynamicTag {...state.blockOptions} />
-        </Show>
-      </Show>
+      </state.tagName>
+      {/* </Show> */}
     </>
   );
 }

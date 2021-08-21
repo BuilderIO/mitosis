@@ -27,19 +27,35 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { size } from 'lodash';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 
 export type ToVueOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
+  vueVersion?: 2 | 3;
 };
 
-function processBinding(code: string, _options: ToVueOptions): string {
-  return stripStateAndPropsRefs(code, {
-    includeState: true,
-    includeProps: true,
+function getContextNames(json: MitosisComponent) {
+  return Object.keys(json.context.get);
+}
 
-    replaceWith: 'this.',
-  });
+// TODO: migrate all stripStateAndPropsRefs to use this here
+// to properly replace context refs
+function processBinding(
+  code: string,
+  _options: ToVueOptions,
+  json: MitosisComponent,
+): string {
+  return replaceIdentifiers(
+    stripStateAndPropsRefs(code, {
+      includeState: true,
+      includeProps: true,
+
+      replaceWith: 'this.',
+    }),
+    getContextNames(json),
+    (name) => `this.${name}`,
+  );
 }
 
 const NODE_MAPPERS: {
@@ -149,7 +165,9 @@ export const blockToVue = (
     }
     const value = node.bindings[key] as string;
     if (key === 'class') {
-      str += ` :class="_classStringToObject(${value})" `;
+      str += ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
+        replaceWith: 'this.',
+      })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
       continue;
@@ -260,17 +278,14 @@ export const componentToVue = (
     getters: true,
     functions: false,
     valueMapper: (code) =>
-      stripStateAndPropsRefs(code.replace(/^get /, ''), {
-        replaceWith: 'this.',
-      }),
+      processBinding(code.replace(/^get /, ''), options, component),
   });
 
   let functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) =>
-      stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
+    valueMapper: (code) => processBinding(code, options, component),
   });
 
   const blocksString = JSON.stringify(component.children);
@@ -365,14 +380,14 @@ export const componentToVue = (
         ${
           component.hooks.onMount
             ? `mounted() {
-                ${processBinding(component.hooks.onMount, options)}
+                ${processBinding(component.hooks.onMount, options, component)}
               },`
             : ''
         }
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(component.hooks.onUnMount, options)}
+                ${processBinding(component.hooks.onUnMount, options, component)}
               },`
             : ''
         }

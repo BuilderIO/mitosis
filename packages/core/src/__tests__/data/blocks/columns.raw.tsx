@@ -19,8 +19,6 @@ export interface ColumnProps {
 
 export default function Column(props: ColumnProps) {
   const state = useState({
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
     getColumns(): Column[] {
       return props.columns || [];
     },

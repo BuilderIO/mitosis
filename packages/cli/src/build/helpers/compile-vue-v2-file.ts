@@ -54,7 +54,11 @@ function injectRender(script, render, lang, options) {
         `${render.staticRenderFns.map(wrapRenderFunction).join(',')}],}`
 
       if (options.stripWith !== false) {
-        renderScript = transpileVueTemplate(renderScript, options.vue)
+        try {
+          renderScript = transpileVueTemplate(renderScript, options.vue)
+        } catch (e) {
+          console.error(e, 'in:', renderScript)
+        }
       }
 
       const result = script
@@ -132,7 +136,12 @@ function processTemplate(source, id, content, options) {
 }
 
 function processScript(source, id, content, options, nodes) {
-  const template = processTemplate(nodes.template[0], id, content, options)
+  const startTemplate = nodes.template[0]
+  if (startTemplate) {
+    startTemplate.code = startTemplate.code
+  }
+
+  const template = processTemplate(startTemplate, id, content, options)
 
   const lang = source.attrs.lang || 'js'
 
@@ -142,7 +151,11 @@ function processScript(source, id, content, options, nodes) {
   const map = new MagicString(script).generateMap({ hires: true })
 
   if (template && options.compileTemplate) {
-    const render = require('vue-template-compiler').compile(template)
+    const final = template
+      // Remove ?. operator which Vue 2 templates don't support
+      .replace(/\?\./g, '.')
+
+    const render = require('vue-template-compiler').compile(final)
 
     return { map, code: injectRender(script, render, lang, options) }
   } else if (template) {

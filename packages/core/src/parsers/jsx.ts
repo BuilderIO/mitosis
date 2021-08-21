@@ -318,7 +318,7 @@ const jsxElementToJson = (
     | babel.types.JSXText
     | babel.types.JSXFragment
     | babel.types.JSXExpressionContainer,
-): MitosisNode => {
+): MitosisNode | null => {
   if (types.isJSXText(node)) {
     return createMitosisNode({
       properties: {
@@ -327,6 +327,9 @@ const jsxElementToJson = (
     });
   }
   if (types.isJSXExpressionContainer(node)) {
+    if (types.isJSXEmptyExpression(node.expression)) {
+      return null;
+    }
     // foo.map -> <For each={foo}>...</For>
     if (
       types.isCallExpression(node.expression) ||
@@ -347,7 +350,7 @@ const jsxElementToJson = (
             properties: {
               _forName: forName,
             },
-            children: [jsxElementToJson(callback.body as any)],
+            children: [jsxElementToJson(callback.body as any)!],
           });
         }
       }
@@ -361,7 +364,7 @@ const jsxElementToJson = (
           bindings: {
             when: generate(node.expression.left).code!,
           },
-          children: [jsxElementToJson(node.expression.right as any)],
+          children: [jsxElementToJson(node.expression.right as any)!],
         });
       } else {
         // TODO: good warning system for unsupported operators
@@ -380,9 +383,9 @@ const jsxElementToJson = (
   if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
-      children: node.children.map((item) =>
-        jsxElementToJson(item as any),
-      ) as any,
+      children: node.children
+        .map((item) => jsxElementToJson(item as any))
+        .filter(Boolean) as any,
     });
   }
 
@@ -403,9 +406,9 @@ const jsxElementToJson = (
       bindings: {
         when: whenValue || undefined,
       },
-      children: node.children.map((item) =>
-        jsxElementToJson(item as any),
-      ) as any,
+      children: node.children
+        .map((item) => jsxElementToJson(item as any))
+        .filter(Boolean) as any,
     });
   }
 
@@ -433,7 +436,7 @@ const jsxElementToJson = (
           properties: {
             _forName: argName,
           },
-          children: [jsxElementToJson(childExpression.body as any)],
+          children: [jsxElementToJson(childExpression.body as any)!],
         });
       }
     }
@@ -474,7 +477,9 @@ const jsxElementToJson = (
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
-    children: node.children.map((item) => jsxElementToJson(item as any)) as any,
+    children: node.children
+      .map((item) => jsxElementToJson(item as any))
+      .filter(Boolean) as any,
   });
 };
 
@@ -611,7 +616,6 @@ function mapReactIdentifiers(json: MitosisComponent) {
           item.properties.class = currentValue;
         }
       }
-
     }
   });
 }
@@ -676,6 +680,14 @@ export function parseJsx(
       jsxPlugin,
       () => ({
         visitor: {
+          JSXExpressionContainer(
+            path: babel.NodePath<babel.types.JSXExpressionContainer>,
+            context: Context,
+          ) {
+            if (types.isJSXEmptyExpression(path.node.expression)) {
+              path.remove();
+            }
+          },
           Program(path: babel.NodePath<babel.types.Program>, context: Context) {
             if (context.builder) {
               return;

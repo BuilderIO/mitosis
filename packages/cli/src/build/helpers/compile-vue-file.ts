@@ -51,10 +51,7 @@ export async function compileVueV2(options: CompileVueFileOptions) {
   // Via https://www.npmjs.com/package/@vue/compiler-sfc README
   const entry = dedent`      
     import script from './${fileName}_script'
-    import { render } from './${fileName}_render'
-    import './${fileName}_styles.css'
-
-    script.render = render
+    import './${fileName}_styles'
 
     ${
       !registerComponentHook
@@ -67,19 +64,37 @@ export async function compileVueV2(options: CompileVueFileOptions) {
     export default script
   `
 
-  const { css, code } = vue2Transform(options.contents, id, {})
+  const { css, code } = vue2Transform(options.contents, id, {
+    compileTemplate: true
+  })
 
   let scriptContents = code
   // Remove .lite extensions from imports without having to load a slow parser like babel
   // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
   scriptContents = scriptContents.replace(/\.lite(['"];)/g, '$1')
 
+  const cssContents: string = css[0]?.code || ''
+
+  const cssCode = cssContents
+    ? `
+    const id = '${id}';
+    if (typeof document !== 'undefined') {
+      if (!document.getElementById(id)) {
+        const style = document.createElement('style');
+        style.id = id;
+        style.innerHTML = \`${cssContents.replace(/`/g, '\\`')}\`;
+        document.head.appendChild(style);
+      }
+    }
+  `
+    : ''
+
   return await Promise.all(
     [
       { path: `${rootPath}.original.vue`, contents: options.contents },
       { path: `${rootPath}.js`, contents: entry },
       { path: `${rootPath}_script.js`, contents: scriptContents },
-      { path: `${rootPath}_styles.css`, contents: css }
+      { path: `${rootPath}_styles.js`, contents: cssCode }
     ].map(async item =>
       item.path.endsWith('.js')
         ? {

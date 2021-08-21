@@ -10,18 +10,20 @@ import {
   parseContext,
   parseJsx
 } from '@builder.io/mitosis'
-import { outputFile, readFile, remove } from 'fs-extra'
+import dedent from 'dedent'
+import glob from 'fast-glob'
+import { outputFile, pathExists, readFile, remove } from 'fs-extra'
+import * as json5 from 'json5'
+import { camelCase, kebabCase, last, upperFirst } from 'lodash'
+import micromatch from 'micromatch'
+import { MitosisConfig, Target } from '../types/mitosis-config'
 import { compileVueFile } from './helpers/compile-vue-file'
 import { transpile } from './helpers/transpile'
-import dedent from 'dedent'
-import * as json5 from 'json5'
 import { transpileSolidFile } from './helpers/transpile-solid-file'
-import glob from 'fast-glob'
-import { MitosisConfig, Target } from '../types/mitosis-config'
-import { kebabCase, upperFirst, camelCase, last } from 'lodash'
-import micromatch from 'micromatch'
 
 const cwd = process.cwd()
+
+const COMPILE_VUE = true
 
 export async function build(config?: MitosisConfig) {
   const options: MitosisConfig = {
@@ -63,6 +65,8 @@ export async function build(config?: MitosisConfig) {
       await outputOverrides(target, options)
     })
   )
+
+  console.info('Done!')
 }
 
 async function clean(options: MitosisConfig) {
@@ -106,20 +110,35 @@ async function outputTsxLiteFiles(
 ) {
   const kebabTarget = kebabCase(target)
   const output = files.map(async ({ path, mitosisJson }) => {
+    const overrideFilePath = `${
+      options.overridesDir
+    }/${kebabTarget}/${path.replace(
+      /\.lite\.tsx$/,
+      target === 'vue' ? '.vue' : target === 'swift' ? '.swift' : '.js'
+    )}`
+    const overrideFile = (await pathExists(overrideFilePath))
+      ? await readFile(overrideFilePath, 'utf8')
+      : null
+
     let transpiled =
-      target === 'reactNative'
+      overrideFile ??
+      (target === 'reactNative'
         ? componentToReactNative(mitosisJson, {
             stateType: 'useState'
           })
         : target === 'vue'
         ? componentToVue(mitosisJson)
+            // Transform <FooBar> to <foo-bar> as Vue2 needs
+            .replace(/<\/?\w+/g, match =>
+              match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
+            )
         : target === 'react'
         ? componentToReact(mitosisJson)
         : target === 'swift'
         ? componentToSwift(mitosisJson)
         : target === 'solid'
         ? componentToSolid(mitosisJson)
-        : (null as never)
+        : (null as never))
 
     const original = transpiled
 
@@ -150,14 +169,28 @@ async function outputTsxLiteFiles(
     }
     const vueCompile = target === 'vue'
     if (vueCompile) {
-      const files = await compileVueFile({
-        distDir: options.dest,
-        contents: transpiled,
-        path,
-        mitosisComponent: mitosisJson,
-        vueVersion: 2
-      })
-      await Promise.all(files.map(file => outputFile(file.path, file.contents)))
+      if (COMPILE_VUE) {
+        // TODO: subfolders for each of these
+        const files = await compileVueFile({
+          distDir: options.dest,
+          contents: transpiled,
+          path,
+          mitosisComponent: mitosisJson,
+          vueVersion: 2
+        })
+        await Promise.all(
+          files.map(file => outputFile(file.path, file.contents))
+        )
+      } else {
+        outputFile(
+          `${options.dest}/${kebabTarget}/${path.replace(
+            /\.lite\.tsx$/,
+            '.vue'
+          )}`,
+          // TODO: transform to CJS (?)
+          transpiled.replace(/\.lite(['"];)/g, '$1')
+        )
+      }
     } else {
       return await Promise.all([
         outputFile(
