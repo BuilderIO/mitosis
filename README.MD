@@ -90,10 +90,6 @@ If you have ever had to migrate a huge codebase from one framework to another, i
 
 With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
 
-<p align="center">
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F600190f853c545bb9eea87bf9afb70e9" />
-</p>
-
 ## How does it work
 
 Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com/guide#jsx-compilation). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
