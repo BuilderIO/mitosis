@@ -2,7 +2,7 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. 
+  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, Liquid, Qwik, and more. 
 </p>
 
 <p align="center">
