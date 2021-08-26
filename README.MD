@@ -2,8 +2,18 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, Liquid, Qwik, and more. 
+  Write components once, run everywhere. Compiles to:
 </p>
+
+<p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
+
+<p align="center">
+  <a href="https://jsx-lite.builder.io/">
+    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
+  </a>
+</p>
+
+<br />
 
 <p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
@@ -14,16 +24,6 @@
 </p>
 
 <br />
-
-<p align="center">
-  <a href="https://jsx-lite.builder.io/">
-    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
-  </a>
-</p>
-
-<br />
-
-<p align="center"><img width="700" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
 
 ## At a glance
 
