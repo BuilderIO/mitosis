@@ -139,7 +139,7 @@ becomes:
 }
 ```
 
-Which can be reserialized into many languges and framworks. For example, to support angular, we just make a serializer that loops over the json and produces:
+Which can be reserialized into many languges and frameworks. For example, to support angular, we just make a serializer that loops over the json and produces:
 
 ```ts
 @Component({
