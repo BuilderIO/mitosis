@@ -19,21 +19,18 @@ export default {
 
 exports[`Vue Button 1`] = `
 "<template>
-  <template v-if=\\"link\\">
-    <a
-      v-bind=\\"attributes\\"
-      :href=\\"link\\"
-      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-    >
-      {{ text }}
-    </a>
-  </template>
+  <a
+    v-bind=\\"attributes\\"
+    v-if=\\"link\\"
+    :href=\\"link\\"
+    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+  >
+    {{ text }}
+  </a>
 
-  <template v-if=\\"!link\\">
-    <button v-bind=\\"attributes\\" type=\\"button\\">
-      {{ text }}
-    </button>
-  </template>
+  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
+    {{ text }}
+  </button>
 </template>
 <script>
 export default {
@@ -48,11 +45,13 @@ export default {
 exports[`Vue Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
-      <div class=\\"builder-column div-2\\">
-        {{ column.content }}
-      </div>
-    </template>
+    <div
+      class=\\"builder-column div-2\\"
+      v-for=\\"(column, index) in columns\\"
+      :key=\\"index\\"
+    >
+      {{ column.content }}
+    </div>
   </div>
 </template>
 <script>
@@ -273,41 +272,37 @@ exports[`Vue Form block 1`] = `
     :name=\\"name\\"
     @submit=\\"onSubmit(event)\\"
   >
-    <template v-if=\\"builderBlock && builderBlock.children\\">
-      <template
-        :key=\\"block.id\\"
-        v-for=\\"(block, index) in builderBlock?.children\\"
-      >
-        <BuilderBlockComponent :block=\\"block\\"></BuilderBlockComponent>
-      </template>
-    </template>
+    <BuilderBlockComponent
+      v-for=\\"(block, index) in builderBlock?.children\\"
+      :block=\\"block\\"
+      :key=\\"block.id\\"
+    ></BuilderBlockComponent>
 
-    <template v-if=\\"submissionState === 'error'\\">
-      <BuilderBlocks
-        dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      v-if=\\"submissionState === 'error'\\"
+      :blocks=\\"errorMessage\\"
+    ></BuilderBlocks>
 
-    <template v-if=\\"submissionState === 'sending'\\">
-      <BuilderBlocks
-        dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      v-if=\\"submissionState === 'sending'\\"
+      :blocks=\\"sendingMessage\\"
+    ></BuilderBlocks>
 
-    <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
+    <pre
+      class=\\"builder-form-error-text pre\\"
+      v-if=\\"submissionState === 'error' && responseData\\"
+    >
         {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
-    </template>
+      </pre
+    >
 
-    <template v-if=\\"submissionState === 'success'\\">
-      <BuilderBlocks
-        dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      v-if=\\"submissionState === 'success'\\"
+      :blocks=\\"successMessage\\"
+    ></BuilderBlocks>
   </form>
 </template>
 <script>
@@ -587,22 +582,21 @@ export default {
 exports[`Vue Image 1`] = `
 "<template>
   <picture ref=\\"pictureRef\\">
-    <template v-if=\\"!useLazyLoading() || load\\">
-      <img
-        class=\\"img\\"
-        :alt=\\"altText\\"
-        :aria-role=\\"altText ? 'presentation' : undefined\\"
-        :class=\\"
-          _classStringToObject(
-            'builder-image' + (this.class ? ' ' + this.class : '')
-          )
-        \\"
-        :src=\\"image\\"
-        @load=\\"setLoaded()\\"
-        :srcset=\\"srcset\\"
-        :sizes=\\"sizes\\"
-      />
-    </template>
+    <img
+      class=\\"img\\"
+      v-if=\\"!useLazyLoading() || load\\"
+      :alt=\\"altText\\"
+      :aria-role=\\"altText ? 'presentation' : undefined\\"
+      :class=\\"
+        _classStringToObject(
+          'builder-image' + (this.class ? ' ' + this.class : '')
+        )
+      \\"
+      :src=\\"image\\"
+      @load=\\"setLoaded()\\"
+      :srcset=\\"srcset\\"
+      :sizes=\\"sizes\\"
+    />
 
     <source :srcset=\\"srcset\\" />
   </picture>
@@ -816,9 +810,13 @@ exports[`Vue Select block 1`] = `
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
   >
-    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
-      <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
-    </template>
+    <option
+      v-for=\\"(option, index) in options\\"
+      :value=\\"option.value\\"
+      :key=\\"index\\"
+    >
+      {{ option.name || option.value }}
+    </option>
   </select>
 </template>
 <script>
@@ -840,28 +838,15 @@ exports[`Vue Stamped.io 1`] = `
   <div>
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
 
-    <template v-if=\\"showReviewPrompt\\">
-      <input placeholder=\\"Email\\" />
+    <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
 
-      <input placeholder=\\"Title\\" class=\\"input\\" />
-
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-
-      <button class=\\"button\\" @click=\\"showReviewPrompt = false\\">Submit</button>
-    </template>
-
-    <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
-      <div class=\\"review\\">
-        <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div>
-          <div>{{ review.author }}</div>
-          <div>{{ review.reviewMessage }}</div>
-        </div>
+    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
+      <img class=\\"img\\" :src=\\"review.avatar\\" />
+      <div>
+        <div>{{ review.author }}</div>
+        <div>{{ review.reviewMessage }}</div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 <script>

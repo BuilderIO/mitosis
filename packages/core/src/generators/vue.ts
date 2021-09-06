@@ -26,8 +26,9 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
-import { kebabCase, size } from 'lodash';
+import { first, kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -68,27 +69,61 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-    return `<template :key="${json.bindings.key || 'index'}" v-for="(${
+    const keyValue = json.bindings.key || 'index';
+    const forValue = `(${
       json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
-      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-    </template>`;
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}`;
+
+    if (options.vueVersion! >= 3) {
+      // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
+      return `<template :key="${keyValue}" v-for="${forValue}">
+        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+      </template>`;
+    }
+    // Vue 2 can only handle one root element
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+    if (!firstChild) {
+      return '';
+    }
+    firstChild.bindings.key = keyValue;
+    firstChild.properties['v-for'] = forValue;
+    return blockToVue(firstChild, options);
   },
   Show(json, options) {
-    return `
-    <template v-if="${stripStateAndPropsRefs(json.bindings.when as string)}">
-      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-    </template>
-    ${
-      !json.meta.else
-        ? ''
-        : `
-      <template v-else>
-        ${blockToVue(json.meta.else as any, options)}
+    const ifValue = stripStateAndPropsRefs(json.bindings.when as string);
+    if (options.vueVersion! >= 3) {
+      return `
+      <template v-if="${ifValue}">
+        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>
-    `
+      ${
+        !json.meta.else
+          ? ''
+          : `
+        <template v-else>
+          ${blockToVue(json.meta.else as any, options)}
+        </template>
+      `
+      }
+      `;
     }
+    let ifString = '';
+    // Vue 2 can only handle one root element
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+    if (firstChild) {
+      firstChild.properties['v-if'] = ifValue;
+      ifString = blockToVue(firstChild, options);
+    }
+    let elseString = '';
+    const elseBlock = json.meta.else;
+    if (isMitosisNode(elseBlock)) {
+      elseBlock.properties['v-else'] = '';
+      elseString = blockToVue(elseBlock, options);
+    }
+
+    return `
+    ${ifString}
+    ${elseString}
     `;
   },
 };
