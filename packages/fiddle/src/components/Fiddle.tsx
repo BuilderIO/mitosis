@@ -267,9 +267,11 @@ export default function Fiddle() {
               return;
             }
 
-            (document.querySelector(
-              'builder-editor iframe',
-            ) as HTMLIFrameElement)?.contentWindow?.postMessage(
+            (
+              document.querySelector(
+                'builder-editor iframe',
+              ) as HTMLIFrameElement
+            )?.contentWindow?.postMessage(
               {
                 type: 'builder.changeSelection',
                 data: {
@@ -546,7 +548,6 @@ export default function Fiddle() {
   );
 
   return useObserver(() => {
-    const lightColorInvert = {};
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
     const barStyle: any = {
       overflow: 'auto',
@@ -560,9 +561,10 @@ export default function Fiddle() {
           display: 'flex',
           flexDirection: 'column',
           height: '100vh',
-          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input': {
-            backgroundColor: 'transparent !important',
-          },
+          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input':
+            {
+              backgroundColor: 'transparent !important',
+            },
         }}
       >
         <div
@@ -594,8 +596,8 @@ export default function Fiddle() {
                   marginLeft: 20,
                   objectFit: 'contain',
                   width: 130,
+                  marginBottom: -5,
                   height: 60,
-                  ...lightColorInvert,
                 }}
               />
             </a>
@@ -624,7 +626,7 @@ export default function Fiddle() {
               <img
                 width={20}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
-                css={{ marginLeft: 10, ...lightColorInvert }}
+                css={{ marginLeft: 10 }}
                 alt="Figma Logo"
               />
             </a>
@@ -644,7 +646,7 @@ export default function Fiddle() {
               <img
                 width={30}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
-                css={{ marginLeft: 10, ...lightColorInvert }}
+                css={{ marginLeft: 10 }}
                 alt="VS Code Logo"
               />
             </a>
@@ -664,7 +666,7 @@ export default function Fiddle() {
               <img
                 width={30}
                 src={githubLogo}
-                css={{ marginLeft: 10, ...lightColorInvert }}
+                css={{ marginLeft: 10 }}
                 alt="Github Mark"
               />
             </a>

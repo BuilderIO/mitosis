@@ -75,15 +75,14 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${options.format === 'safe' ? 'Boolean' : ''}(${processBinding(
-      json.bindings.when as string,
-      options,
-    )}) && (
+    return `{${processBinding(json.bindings.when as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? '</>' : ''}
-    )}`;
+    ) : ${
+      !json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)
+    }}`;
   },
 };
 
@@ -271,7 +270,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -519,8 +518,9 @@ const _componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'

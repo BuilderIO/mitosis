@@ -68,6 +68,7 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
+    // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
     return `<template :key="${json.bindings.key || 'index'}" v-for="(${
       json.properties._forName
     }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
@@ -75,11 +76,20 @@ const NODE_MAPPERS: {
     </template>`;
   },
   Show(json, options) {
-    return `<template v-if="${stripStateAndPropsRefs(
-      json.bindings.when as string,
-    )}">
+    return `
+    <template v-if="${stripStateAndPropsRefs(json.bindings.when as string)}">
       ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-    </template>`;
+    </template>
+    ${
+      !json.meta.else
+        ? ''
+        : `
+      <template v-else>
+        ${blockToVue(json.meta.else as any, options)}
+      </template>
+    `
+    }
+    `;
   },
 };
 
@@ -355,7 +365,9 @@ export const componentToVue = (
             : `components: { ${componentsUsed
                 .map(
                   (componentName) =>
-                    `'${kebabCase(componentName)}': async () => ${componentName}`,
+                    `'${kebabCase(
+                      componentName,
+                    )}': async () => ${componentName}`,
                 )
                 .join(',')} },`
         }

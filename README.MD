@@ -16,7 +16,7 @@
 <br />
 
 <p align="center">
-  <a href="https://jsx-lite.builder.io/">
+  <a href="https://mitosis.builder.io/">
     <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
   </a>
 </p>
