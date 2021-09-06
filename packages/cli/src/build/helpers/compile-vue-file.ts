@@ -65,7 +65,7 @@ export async function compileVueV2(options: CompileVueFileOptions) {
     export default script
   `
 
-  const { css, code } = vue2Transform(options.contents, id, {
+  const { css, code } = await vue2Transform(options.contents, id, {
     compileTemplate: true
   })
 
@@ -85,6 +85,7 @@ export async function compileVueV2(options: CompileVueFileOptions) {
         style.id = id;
         style.innerHTML = \`${cssContents.replace(/`/g, '\\`')}\`;
         document.head.appendChild(style);
+        console.log('added style?', style)
       }
     }
   `

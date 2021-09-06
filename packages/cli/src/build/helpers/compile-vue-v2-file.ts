@@ -10,6 +10,9 @@ import validateTemplate from 'vue-template-validator'
 import transpileVueTemplate from 'vue-template-es2015-compiler'
 import { relative } from 'path'
 import MagicString from 'magic-string'
+import * as esbuild from 'esbuild'
+import * as babel from '@babel/core'
+const tsPreset = require('@babel/preset-typescript')
 
 function getNodeAttrs(node) {
   if (node.attrs) {
@@ -114,20 +117,20 @@ function processTemplate(source, id, content, options) {
   const template = deIndent(code)
   const ignore = [
     'Found camelCase attribute:',
-    'Tag <slot> cannot appear inside <table> due to HTML content restrictions.'
+    'Tag <slot> cannot appear inside <table> due to HTML content restrictions.',
   ]
 
   const warnings = validateTemplate(code, content)
   if (warnings) {
     const relativePath = relative(process.cwd(), id)
     warnings
-      .filter(warning => {
+      .filter((warning) => {
         return (
           options.compileTemplate &&
-          ignore.findIndex(i => warning.indexOf(i) > -1) < 0
+          ignore.findIndex((i) => warning.indexOf(i) > -1) < 0
         )
       })
-      .forEach(msg => {
+      .forEach((msg) => {
         console.warn(`\n Warning in ${relativePath}:\n ${msg}`)
       })
   }
@@ -135,7 +138,83 @@ function processTemplate(source, id, content, options) {
   return htmlMinifier.minify(template, options.htmlMinifier)
 }
 
-function processScript(source, id, content, options, nodes) {
+async function replaceAsync(
+  str: string,
+  regex: RegExp,
+  asyncFn: (substring: string, ...args: any[]) => Promise<string>
+) {
+  const promises = []
+  str.replace(regex, (match, ...args): any => {
+    const promise = asyncFn(match, ...args)
+    promises.push(promise)
+  })
+  const data = await Promise.all(promises)
+  return str.replace(regex, () => data.shift())
+}
+
+const CUSTOM_BABEL_OPTIONAL = true
+
+export const babelTransformExpression = <VisitorContextType = any>(
+  code: string,
+  visitor: any
+) => {
+  return babel
+    .transform(`let _ = ${code}`, {
+      sourceFileName: 'file.tsx',
+      configFile: false,
+      babelrc: false,
+      presets: [[tsPreset, { allExtensions: true }]],
+      plugins: [() => ({ visitor })],
+    })
+    .code!.trim()
+    .replace(/^(let|var)\s+_\s*=\s*/, '')
+    .replace(/;$/, '')
+}
+
+export async function transpileBindingExpression(code: string) {
+  if (!code.match(/\?\./)) {
+    return code
+  }
+
+  if (CUSTOM_BABEL_OPTIONAL) {
+    const { types } = babel
+    return babelTransformExpression(code, {
+      // Replace foo?.bar -> foo && foo.barF
+      OptionalMemberExpression(
+        path: babel.NodePath<babel.types.OptionalMemberExpression>
+      ) {
+        path.replaceWith(
+          types.parenthesizedExpression(
+            types.logicalExpression(
+              '&&',
+              path.node.object,
+              types.memberExpression(path.node.object, path.node.property)
+            )
+          )
+        )
+      },
+    })
+  }
+
+  return (
+    await esbuild
+      .transform(`(() => ${code})()`, {
+        target: 'es5',
+      })
+      .catch((err) => {
+        console.warn(
+          'Could not esbuild transform property binding expression:',
+          code
+        )
+        return { code }
+      })
+  ).code
+    .trim()
+    .replace(/;$/, '')
+    .replace(/"/g, "'")
+}
+
+async function processScript(source, id, content, options, nodes) {
   const startTemplate = nodes.template[0]
   if (startTemplate) {
     startTemplate.code = startTemplate.code
@@ -151,9 +230,22 @@ function processScript(source, id, content, options, nodes) {
   const map = new MagicString(script).generateMap({ hires: true })
 
   if (template && options.compileTemplate) {
-    const final = template
-      // Remove ?. operator which Vue 2 templates don't support
-      .replace(/\?\./g, '.')
+    // Transpile out the ?. operator which Vue 2 templates don't support
+    // Special match for v-for as it doesn't use normal JS syntax at the
+    // start of it
+    let final = await replaceAsync(
+      template,
+      /v-for="(.+?) in ([^"]+?)"/g,
+      async (_match, group1, group2) =>
+        `v-for="${group1} in ${await transpileBindingExpression(group2)}"`
+    )
+
+    // Transpile out the ?. operator which Vue 2 templates don't support
+    final = await replaceAsync(
+      final,
+      /"([^"]*?\?\.[^"]*?)"/g,
+      async (_match, group) => `"${await transpileBindingExpression(group)}"`
+    )
 
     const render = require('vue-template-compiler').compile(final)
 
@@ -166,22 +258,22 @@ function processScript(source, id, content, options, nodes) {
 }
 
 function processStyle(styles, id) {
-  return styles.map(style => ({
+  return styles.map((style) => ({
     id,
     code: deIndent(style.code).trim(),
-    lang: style.attrs.lang || 'css'
+    lang: style.attrs.lang || 'css',
   }))
 }
 
 function parseTemplate(code) {
   const fragment = parse5.parseFragment(code, {
-    locationInfo: true
+    locationInfo: true,
   }) as any
 
   const nodes = {
     template: [],
     script: [],
-    style: []
+    style: [],
   }
 
   for (let i = fragment.childNodes.length - 1; i >= 0; i -= 1) {
@@ -196,7 +288,7 @@ function parseTemplate(code) {
     nodes[name].push({
       node: fragment.childNodes[i],
       code: code.substr(start, end - start),
-      attrs: getNodeAttrs(fragment.childNodes[i])
+      attrs: getNodeAttrs(fragment.childNodes[i]),
     })
   }
 
@@ -204,16 +296,16 @@ function parseTemplate(code) {
     nodes.script.push({
       node: null,
       code: 'export default {\n}',
-      attrs: {}
+      attrs: {},
     })
   }
 
   return nodes
 }
 
-export function vue2Transform(code, id, options) {
+export async function vue2Transform(code, id, options) {
   const nodes = parseTemplate(code)
-  const js = processScript(nodes.script[0], id, code, options, nodes)
+  const js = await processScript(nodes.script[0], id, code, options, nodes)
   const css = processStyle(nodes.style, id)
 
   const isProduction = process.env.NODE_ENV === 'production'
