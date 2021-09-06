@@ -456,20 +456,22 @@ export default function RenderBlock(props) {
       <TagNameRef {...properties()} style={css()}>
         <BlockStyles block={useBlock()} />
 
-        {componentRef() && (
+        {componentRef() ? (
           <ComponentRefRef
             {...componentOptions()}
             children={useBlock().children}
           />
-        )}
+        ) : null}
 
-        {!componentRef() && useBlock().children && useBlock().children.length && (
+        {!componentRef() &&
+        useBlock().children &&
+        useBlock().children.length ? (
           <>
             {useBlock().children?.map((child) => (
               <RenderBlock block={child} />
             ))}
           </>
-        )}
+        ) : null}
       </TagNameRef>
     </>
   );

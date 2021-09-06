@@ -26,7 +26,7 @@ import { useContext } from \\"react\\";
 export default function Button(props) {
   return (
     <>
-      {props.link && (
+      {props.link ? (
         <>
           <View
             {...props.attributes}
@@ -36,15 +36,15 @@ export default function Button(props) {
             <Text>{props.text}</Text>
           </View>
         </>
-      )}
+      ) : null}
 
-      {!props.link && (
+      {!props.link ? (
         <>
           <View {...props.attributes} type=\\"button\\">
             <Text>{props.text}</Text>
           </View>
         </>
-      )}
+      ) : null}
     </>
   );
 }
@@ -453,42 +453,42 @@ export default function FormComponent(props) {
       onSubmit={(event) => onSubmit(event)}
     >
       {\\" \\"}
-      {props.builderBlock && props.builderBlock.children && (
+      {props.builderBlock && props.builderBlock.children ? (
         <>
           {props.builderBlock?.children?.map((block) => (
             <BuilderBlockComponent key={block.id} block={block} />
           ))}
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"error\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" ? (
         <>
           <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"sending\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"sending\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
             blocks={props.sendingMessage}
           />
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"error\\" && responseData && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" && responseData ? (
         <>
           <View className=\\"builder-form-error-text\\" style={styles.view1}>
             {\\" \\"}
             <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
           </View>
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"success\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"success\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
             blocks={props.successMessage}
           />
         </>
-      )}{\\" \\"}
+      ) : null}{\\" \\"}
     </View>
   );
 }
@@ -555,7 +555,7 @@ export default function Image(props) {
   return (
     <>
       <View ref={pictureRef}>
-        {(!useLazyLoading() || load) && (
+        {!useLazyLoading() || load ? (
           <>
             <View
               alt={props.altText}
@@ -570,7 +570,7 @@ export default function Image(props) {
               style={styles.view1}
             />
           </>
-        )}
+        ) : null}
 
         <View srcset={props.srcset} />
       </View>
@@ -739,7 +739,7 @@ export default function SmileReviews(props) {
         <Text>Write a review</Text>
       </View>
 
-      {showReviewPrompt && (
+      {showReviewPrompt ? (
         <>
           <View placeholder=\\"Email\\" />
           <View placeholder=\\"Title\\" style={styles.view1} />
@@ -753,7 +753,7 @@ export default function SmileReviews(props) {
             <Text>Submit</Text>
           </View>
         </>
-      )}
+      ) : null}
 
       {reviews?.map((review) => (
         <View key={review.id} style={styles.view4}>

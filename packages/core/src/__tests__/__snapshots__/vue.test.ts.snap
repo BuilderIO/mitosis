@@ -9,7 +9,7 @@ exports[`Vue Basic 1`] = `
 </template>
 <script>
 export default {
-  name: \\"MyBasicComponent\\",
+  name: \\"my-basic-component\\",
 
   data: () => ({ name: \\"Steve\\" }),
 };
@@ -37,7 +37,7 @@ exports[`Vue Button 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Button\\",
+  name: \\"button\\",
 
   props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
 };
@@ -57,7 +57,7 @@ exports[`Vue Columns 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Column\\",
+  name: \\"column\\",
 
   props: [\\"columns\\", \\"space\\"],
 
@@ -110,7 +110,7 @@ exports[`Vue CustomCode 1`] = `
 </template>
 <script>
 export default {
-  name: \\"CustomCode\\",
+  name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
 
@@ -193,7 +193,7 @@ exports[`Vue Embed 1`] = `
 </template>
 <script>
 export default {
-  name: \\"CustomCode\\",
+  name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
 
@@ -318,8 +318,11 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 export default {
-  name: \\"FormComponent\\",
-  components: { BuilderBlockComponent, BuilderBlocks },
+  name: \\"form-component\\",
+  components: {
+    \\"builder-block-component\\": async () => BuilderBlockComponent,
+    \\"builder-blocks\\": async () => BuilderBlocks,
+  },
   props: [
     \\"previewState\\",
     \\"sendWithJs\\",
@@ -346,7 +349,6 @@ export default {
     responseData: null,
     formErrorMessage: \\"\\",
     BuilderBlock,
-    BuilderBlocks,
   }),
 
   computed: {
@@ -601,6 +603,7 @@ exports[`Vue Image 1`] = `
         :sizes=\\"sizes\\"
       />
     </template>
+
     <source :srcset=\\"srcset\\" />
   </picture>
 
@@ -608,9 +611,9 @@ exports[`Vue Image 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Image\\",
+  name: \\"image\\",
 
-  props: [\\"lazy\\", \\"altText\\", \\"class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+  props: [\\"lazy\\", \\"altText\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
 
   data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
 
@@ -695,7 +698,7 @@ exports[`Vue Img 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"ImgComponent\\",
+  name: \\"img-component\\",
 
   props: [
     \\"backgroundSize\\",
@@ -728,7 +731,7 @@ exports[`Vue Input block 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"FormInputComponent\\",
+  name: \\"form-input-component\\",
 
   props: [
     \\"attributes\\",
@@ -757,7 +760,7 @@ exports[`Vue RawText 1`] = `
 </template>
 <script>
 export default {
-  name: \\"RawText\\",
+  name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
 
@@ -796,7 +799,7 @@ exports[`Vue Section 1`] = `
 </template>
 <script>
 export default {
-  name: \\"SectionComponent\\",
+  name: \\"section-component\\",
 
   props: [\\"attributes\\", \\"maxWidth\\"],
 };
@@ -822,7 +825,7 @@ exports[`Vue Select block 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"SelectComponent\\",
+  name: \\"select-component\\",
 
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
 
@@ -836,6 +839,7 @@ exports[`Vue Stamped.io 1`] = `
 "<template>
   <div>
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
+
     <template v-if=\\"showReviewPrompt\\">
       <input placeholder=\\"Email\\" />
 
@@ -848,6 +852,7 @@ exports[`Vue Stamped.io 1`] = `
 
       <button class=\\"button\\" @click=\\"showReviewPrompt = false\\">Submit</button>
     </template>
+
     <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
       <div class=\\"review\\">
         <img class=\\"img\\" :src=\\"review.avatar\\" />
@@ -861,7 +866,7 @@ exports[`Vue Stamped.io 1`] = `
 </template>
 <script>
 export default {
-  name: \\"SmileReviews\\",
+  name: \\"smile-reviews\\",
 
   props: [\\"apiKey\\", \\"productId\\"],
 
@@ -915,7 +920,7 @@ exports[`Vue Submit button block 1`] = `
 </template>
 <script>
 export default {
-  name: \\"SubmitButton\\",
+  name: \\"submit-button\\",
 
   props: [\\"attributes\\", \\"text\\"],
 };
@@ -934,7 +939,7 @@ exports[`Vue Text 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"Text\\",
+  name: \\"text\\",
 
   props: [\\"text\\", \\"content\\"],
 };
@@ -954,7 +959,7 @@ exports[`Vue Textarea 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Textarea\\",
+  name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
 };
@@ -987,7 +992,7 @@ exports[`Vue Video 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Video\\",
+  name: \\"video\\",
 
   props: [
     \\"attributes\\",

@@ -22,7 +22,7 @@ exports[`React Button 1`] = `
 export default function Button(props) {
   return (
     <>
-      {props.link && (
+      {props.link ? (
         <>
           <a
             {...props.attributes}
@@ -32,15 +32,15 @@ export default function Button(props) {
             {props.text}
           </a>
         </>
-      )}
+      ) : null}
 
-      {!props.link && (
+      {!props.link ? (
         <>
           <button {...props.attributes} type=\\"button\\">
             {props.text}
           </button>
         </>
-      )}
+      ) : null}
     </>
   );
 }
@@ -453,42 +453,42 @@ export default function FormComponent(props) {
       onSubmit={(event) => onSubmit(event)}
     >
       {\\" \\"}
-      {props.builderBlock && props.builderBlock.children && (
+      {props.builderBlock && props.builderBlock.children ? (
         <>
           {props.builderBlock?.children?.map((block) => (
             <BuilderBlockComponent key={block.id} block={block} />
           ))}
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"error\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" ? (
         <>
           <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"sending\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"sending\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
             blocks={props.sendingMessage}
           />
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"error\\" && responseData && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" && responseData ? (
         <>
           <Pre className=\\"builder-form-error-text\\">
             {\\" \\"}
             {JSON.stringify(responseData, null, 2)}{\\" \\"}
           </Pre>
         </>
-      )}{\\" \\"}
-      {submissionState() === \\"success\\" && (
+      ) : null}{\\" \\"}
+      {submissionState() === \\"success\\" ? (
         <>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
             blocks={props.successMessage}
           />
         </>
-      )}{\\" \\"}
+      ) : null}{\\" \\"}
     </form>
   );
 }
@@ -558,7 +558,7 @@ export default function Image(props) {
   return (
     <>
       <picture ref={pictureRef}>
-        {(!useLazyLoading() || load) && (
+        {!useLazyLoading() || load ? (
           <>
             <Img
               alt={props.altText}
@@ -572,7 +572,7 @@ export default function Image(props) {
               sizes={props.sizes}
             />
           </>
-        )}
+        ) : null}
 
         <source srcset={props.srcset} />
       </picture>
@@ -746,7 +746,7 @@ export default function SmileReviews(props) {
         Write a review
       </button>
 
-      {showReviewPrompt && (
+      {showReviewPrompt ? (
         <>
           <input placeholder=\\"Email\\" />
           <Input placeholder=\\"Title\\" />
@@ -759,7 +759,7 @@ export default function SmileReviews(props) {
             Submit
           </Button>
         </>
-      )}
+      ) : null}
 
       {reviews?.map((review) => (
         <Review key={review.id}>
