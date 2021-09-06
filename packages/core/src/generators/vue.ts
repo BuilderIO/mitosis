@@ -26,7 +26,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
-import { size } from 'lodash';
+import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 
 export type ToVueOptions = {
@@ -293,15 +293,6 @@ export const componentToVue = (
 
   const blocksString = JSON.stringify(component.children);
 
-  // Append refs to data as { foo, bar, etc }
-  dataString = dataString.replace(
-    /}$/,
-    `${component.imports
-      .map((thisImport) => Object.keys(thisImport.imports).join(','))
-      .filter((key) => Boolean(key && blocksString.includes(key)))
-      .join(',')}}`,
-  );
-
   // Component references to include in `component: { YourComponent, ... }
   const componentsUsed = Array.from(getComponentsUsed(component))
     .filter(
@@ -312,6 +303,18 @@ export const componentToVue = (
     .filter(
       (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
     );
+
+  // Append refs to data as { foo, bar, etc }
+  dataString = dataString.replace(
+    /}$/,
+    `${component.imports
+      .map((thisImport) => Object.keys(thisImport.imports).join(','))
+      // Make sure actually used in template
+      .filter((key) => Boolean(key && blocksString.includes(key)))
+      // Don't include component imports
+      .filter((key) => !componentsUsed.includes(key))
+      .join(',')}}`,
+  );
 
   const elementProps = getProps(component);
   stripMetaProperties(component);
@@ -345,11 +348,16 @@ export const componentToVue = (
       ${renderPreComponent(component)}
 
       export default {
-        ${!component.name ? '' : `name: '${component.name}',`}
+        ${!component.name ? '' : `name: '${kebabCase(component.name)}',`}
         ${
           !componentsUsed.length
             ? ''
-            : `components: { ${componentsUsed.join(',')} },`
+            : `components: { ${componentsUsed
+                .map(
+                  (componentName) =>
+                    `'${kebabCase(componentName)}': async () => ${componentName}`,
+                )
+                .join(',')} },`
         }
         ${
           elementProps.size
