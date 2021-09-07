@@ -1,13 +1,12 @@
-import * as babel from '@babel/core';
-import { babelTransformExpression } from './babel-transform-expression';
-
+import * as babel from '@babel/core'
+import { babelTransformExpression } from './babel-transform-expression'
 
 export function transpileBindingExpression(code: string) {
   if (!code.match(/\?\./)) {
-    return code;
+    return code
   }
 
-  const { types } = babel;
+  const { types } = babel
   return babelTransformExpression(code, {
     // Replace foo?.bar -> foo && foo.barF
     OptionalMemberExpression(
@@ -21,7 +20,7 @@ export function transpileBindingExpression(code: string) {
             types.memberExpression(path.node.object, path.node.property)
           )
         )
-      );
-    },
-  });
+      )
+    }
+  })
 }

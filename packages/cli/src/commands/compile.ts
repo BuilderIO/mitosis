@@ -44,7 +44,7 @@ const command: GluegunCommand = {
       plugins.push(compileAwayBuilderComponents())
     }
 
-    const generatorOpts: { [K in AllGeneratorOptionKeys]: any } = {
+    const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
       prettier: opts.prettier ?? true,
       plugins: plugins,
       format: opts.format,
