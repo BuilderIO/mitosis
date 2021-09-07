@@ -139,6 +139,9 @@ async function outputTsxLiteFiles(
         : target === 'vue'
         ? componentToVue(mitosisJson, {
             cssNamespace: id,
+            // TODO: config for this
+            namePrefix: path.includes('/blocks/') ? 'builder' : undefined,
+            builderRegister: true,
           })
             // Transform <FooBar> to <foo-bar> as Vue2 needs
             .replace(/<\/?\w+/g, (match) =>
@@ -185,7 +188,7 @@ async function outputTsxLiteFiles(
         // Nuxt
         (async () => {
           await outputFile(
-            `${options.dest}/${kebabTarget}/nuxt/${path.replace(
+            `${options.dest}/${kebabTarget}/nuxt2/${path.replace(
               /\.lite\.tsx$/,
               '.vue'
             )}`,
@@ -197,26 +200,26 @@ async function outputTsxLiteFiles(
           )
         })(),
         // Vue 2
-        (async () => {
-          // TODO: subfolders for each of these
-          const files = await compileVueFile({
-            distDir: options.dest + '/vue2',
-            contents: transpileOptionalChaining(transpiled),
-            path,
-            mitosisComponent: mitosisJson,
-            vueVersion: 2,
-            id: id,
-          })
-          await Promise.all(
-            files.map((file) => outputFile(file.path, file.contents))
-          )
-        })(),
+        // (async () => {
+        //   // TODO: subfolders for each of these
+        //   const files = await compileVueFile({
+        //     distDir: options.dest + 'vue/vue2',
+        //     contents: transpileOptionalChaining(transpiled),
+        //     path,
+        //     mitosisComponent: mitosisJson,
+        //     vueVersion: 2,
+        //     id: id,
+        //   })
+        //   await Promise.all(
+        //     files.map((file) => outputFile(file.path, file.contents))
+        //   )
+        // })(),
         // Vue 3
         // TODO: add back
         // (async () => {
         //   // TODO: subfolders for each of these
         //   const files = await compileVueFile({
-        //     distDir: options.dest + '/vue3',
+        //     distDir: options.dest + '/vue/vue3',
         //     contents: transpiled,
         //     path,
         //     mitosisComponent: mitosisJson,
@@ -257,7 +260,7 @@ async function outputTsxLiteFiles(
 function getTargetPaths(target: Target) {
   const kebabTarget = kebabCase(target)
   const targetPaths =
-    target === 'vue' ? ['vue/nuxt', 'vue/vue2', 'vue/vue3'] : [kebabTarget]
+    target === 'vue' ? ['vue/nuxt2', 'vue/vue2', 'vue/vue3'] : [kebabTarget]
 
   return targetPaths
 }

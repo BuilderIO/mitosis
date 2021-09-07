@@ -29,12 +29,15 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { first, kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import json5 from 'json5';
 
 export type ToVueOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
   vueVersion?: 2 | 3;
   cssNamespace?: string;
+  namePrefix?: string;
+  builderRegister?: boolean;
 };
 
 function getContextNames(json: MitosisComponent) {
@@ -385,15 +388,30 @@ export const componentToVue = (
     );
   }
 
+  const builderRegister = Boolean(
+    options.builderRegister && component.meta.registerComponent,
+  );
+
   let str = dedent`
     <template>
       ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
+      ${
+        !builderRegister
+          ? ''
+          : `import { registerComponent } from '@builder.io/sdk-vue'`
+      }
 
-      export default {
-        ${!component.name ? '' : `name: '${kebabCase(component.name)}',`}
+      export default ${!builderRegister ? '' : 'registerComponent('}{
+        ${
+          !component.name
+            ? ''
+            : `name: '${
+                options.namePrefix ? options.namePrefix + '-' : ''
+              }${kebabCase(component.name)}',`
+        }
         ${
           !componentsUsed.length
             ? ''
@@ -466,6 +484,10 @@ export const componentToVue = (
           methods: ${functionsString},
         `
         }
+      }${
+        !builderRegister
+          ? ''
+          : `, ${json5.stringify(component.meta.registerComponent || {})})`
       }
     </script>
     ${
