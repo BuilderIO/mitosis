@@ -11,5 +11,5 @@ export {
   componentToSvelte as svelte,
   componentToSwift as swift,
   componentToTemplate as template,
-  componentToVue as vue
+  componentToVue as vue,
 } from '@builder.io/mitosis'
