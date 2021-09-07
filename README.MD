@@ -1,9 +1,19 @@
 <br />
-<p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fa508a4de1529463fb0ea31ccc8da7a19"></p>
+<p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to Vue, React, Solid, Angular, Svelte, and Liquid. 
+  Write components once, run everywhere. Compiles to:
 </p>
+
+<p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
+
+<p align="center">
+  <a href="https://mitosis.builder.io/">
+    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
+  </a>
+</p>
+
+<br />
 
 <p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
@@ -11,14 +21,6 @@
   <a href="https://github.com/BuilderIO/mitosis"><img alt="License" src="https://img.shields.io/github/license/BuilderIO/mitosis" /></a>
   <a href="https://www.npmjs.com/package/@builder.io/mitosis"><img alt="Types" src="https://img.shields.io/npm/types/@builder.io/mitosis" /></a>
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
-</p>
-
-<br />
-
-<p align="center">
-  <a href="https://mitosis.builder.io/">
-    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
-  </a>
 </p>
 
 <br />
@@ -90,10 +92,6 @@ If you have ever had to migrate a huge codebase from one framework to another, i
 
 With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
 
-<p align="center">
-<img src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F600190f853c545bb9eea87bf9afb70e9" />
-</p>
-
 ## How does it work
 
 Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com/guide#jsx-compilation). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
@@ -141,7 +139,7 @@ becomes:
 }
 ```
 
-Which can be reserialized into many languges and framworks. For example, to support angular, we just make a serializer that loops over the json and produces:
+Which can be reserialized into many languges and frameworks. For example, to support angular, we just make a serializer that loops over the json and produces:
 
 ```ts
 @Component({
