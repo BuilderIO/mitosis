@@ -5,13 +5,11 @@
 
 import deIndent from 'de-indent'
 import htmlMinifier from 'html-minifier'
-import parse5, { AST } from 'parse5'
-import validateTemplate from 'vue-template-validator'
-import transpileVueTemplate from 'vue-template-es2015-compiler'
-import { relative } from 'path'
 import MagicString from 'magic-string'
-import * as esbuild from 'esbuild'
-import { transpileOptionalChaining } from './transpile-optional-chaining'
+import parse5 from 'parse5'
+import { relative } from 'path'
+import transpileVueTemplate from 'vue-template-es2015-compiler'
+import validateTemplate from 'vue-template-validator'
 const tsPreset = require('@babel/preset-typescript')
 
 function getNodeAttrs(node) {
