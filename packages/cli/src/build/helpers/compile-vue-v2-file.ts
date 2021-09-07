@@ -117,20 +117,20 @@ function processTemplate(source, id, content, options) {
   const template = deIndent(code)
   const ignore = [
     'Found camelCase attribute:',
-    'Tag <slot> cannot appear inside <table> due to HTML content restrictions.',
+    'Tag <slot> cannot appear inside <table> due to HTML content restrictions.'
   ]
 
   const warnings = validateTemplate(code, content)
   if (warnings) {
     const relativePath = relative(process.cwd(), id)
     warnings
-      .filter((warning) => {
+      .filter(warning => {
         return (
           options.compileTemplate &&
-          ignore.findIndex((i) => warning.indexOf(i) > -1) < 0
+          ignore.findIndex(i => warning.indexOf(i) > -1) < 0
         )
       })
-      .forEach((msg) => {
+      .forEach(msg => {
         console.warn(`\n Warning in ${relativePath}:\n ${msg}`)
       })
   }
@@ -165,22 +165,22 @@ async function processScript(source, id, content, options, nodes) {
 }
 
 function processStyle(styles, id) {
-  return styles.map((style) => ({
+  return styles.map(style => ({
     id,
     code: deIndent(style.code).trim(),
-    lang: style.attrs.lang || 'css',
+    lang: style.attrs.lang || 'css'
   }))
 }
 
 function parseTemplate(code) {
   const fragment = parse5.parseFragment(code, {
-    locationInfo: true,
+    locationInfo: true
   }) as any
 
   const nodes = {
     template: [],
     script: [],
-    style: [],
+    style: []
   }
 
   for (let i = fragment.childNodes.length - 1; i >= 0; i -= 1) {
@@ -195,7 +195,7 @@ function parseTemplate(code) {
     nodes[name].push({
       node: fragment.childNodes[i],
       code: code.substr(start, end - start),
-      attrs: getNodeAttrs(fragment.childNodes[i]),
+      attrs: getNodeAttrs(fragment.childNodes[i])
     })
   }
 
@@ -203,7 +203,7 @@ function parseTemplate(code) {
     nodes.script.push({
       node: null,
       code: 'export default {\n}',
-      attrs: {},
+      attrs: {}
     })
   }
 

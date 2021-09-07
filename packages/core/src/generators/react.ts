@@ -270,7 +270,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -518,9 +518,8 @@ const _componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    ${isSubComponent ? '' : 'export default '}function ${
-    json.name || 'MyComponent'
-  }(props) {
+    ${isSubComponent ? '' : 'export default '}function ${json.name ||
+    'MyComponent'}(props) {
       ${
         hasState
           ? stateType === 'mobx'

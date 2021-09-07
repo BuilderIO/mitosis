@@ -1,6 +1,5 @@
-import * as babel from '@babel/core';
-const tsPreset = require('@babel/preset-typescript');
-
+import * as babel from '@babel/core'
+const tsPreset = require('@babel/preset-typescript')
 
 export function babelTransformExpression<VisitorContextType = any>(
   code: string,
@@ -12,9 +11,9 @@ export function babelTransformExpression<VisitorContextType = any>(
       configFile: false,
       babelrc: false,
       presets: [[tsPreset, { allExtensions: true }]],
-      plugins: [() => ({ visitor })],
+      plugins: [() => ({ visitor })]
     })
     .code!.trim()
     .replace(/^(let|var)\s+_\s*=\s*/, '')
-    .replace(/;$/, '');
+    .replace(/;$/, '')
 }
