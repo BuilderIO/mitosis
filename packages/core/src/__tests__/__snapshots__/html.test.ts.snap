@@ -19,7 +19,7 @@ exports[`Html Stamped 1`] = `
 
   <span data-name=\\"for\\"></span>
   <template data-template-for=\\"for\\">
-    <div class=\\"review\\">
+    <div class=\\"review\\" data-name=\\"review\\">
       <img class=\\"img\\" data-name=\\"img-1\\" />
 
       <div>
@@ -85,6 +85,10 @@ exports[`Html Stamped 1`] = `
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"review\\");
+      });
+
+      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+        el.key = getContext(el, \\"review\\").id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {

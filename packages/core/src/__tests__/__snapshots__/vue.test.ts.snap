@@ -9,7 +9,7 @@ exports[`Vue Basic 1`] = `
 </template>
 <script>
 export default {
-  name: \\"MyBasicComponent\\",
+  name: \\"my-basic-component\\",
 
   data: () => ({ name: \\"Steve\\" }),
 };
@@ -19,25 +19,22 @@ export default {
 
 exports[`Vue Button 1`] = `
 "<template>
-  <template v-if=\\"link\\">
-    <a
-      v-bind=\\"attributes\\"
-      :href=\\"link\\"
-      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-    >
-      {{ text }}
-    </a>
-  </template>
+  <a
+    v-bind=\\"attributes\\"
+    v-if=\\"link\\"
+    :href=\\"link\\"
+    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+  >
+    {{ text }}
+  </a>
 
-  <template v-if=\\"!link\\">
-    <button v-bind=\\"attributes\\" type=\\"button\\">
-      {{ text }}
-    </button>
-  </template>
+  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
+    {{ text }}
+  </button>
 </template>
 <script>
 export default {
-  name: \\"Button\\",
+  name: \\"button\\",
 
   props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
 };
@@ -48,22 +45,22 @@ export default {
 exports[`Vue Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
-      <div class=\\"builder-column div-2\\">
-        {{ column.content }}
-      </div>
-    </template>
+    <div
+      class=\\"builder-column div-2\\"
+      v-for=\\"(column, index) in columns\\"
+      :key=\\"index\\"
+    >
+      {{ column.content }}
+    </div>
   </div>
 </template>
 <script>
 export default {
-  name: \\"Column\\",
+  name: \\"column\\",
 
   props: [\\"columns\\", \\"space\\"],
 
   methods: {
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
     getColumns() {
       return this.columns || [];
     },
@@ -84,7 +81,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .div {
   display: flex;
   flex-direction: column;
@@ -100,11 +97,19 @@ export default {
 
 exports[`Vue CustomCode 1`] = `
 "<template>
-  <div ref=\\"elem\\" v-html=\\"code\\"></div>
+  <div
+    ref=\\"elem\\"
+    :class=\\"
+      _classStringToObject(
+        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+      )
+    \\"
+    v-html=\\"code\\"
+  ></div>
 </template>
 <script>
 export default {
-  name: \\"CustomCode\\",
+  name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
 
@@ -156,6 +161,17 @@ export default {
         }
       }
     },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
   },
 };
 </script>
@@ -164,11 +180,19 @@ export default {
 
 exports[`Vue Embed 1`] = `
 "<template>
-  <div ref=\\"elem\\" v-html=\\"code\\"></div>
+  <div
+    ref=\\"elem\\"
+    :class=\\"
+      _classStringToObject(
+        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+      )
+    \\"
+    v-html=\\"code\\"
+  ></div>
 </template>
 <script>
 export default {
-  name: \\"CustomCode\\",
+  name: \\"custom-code\\",
 
   props: [\\"replaceNodes\\", \\"code\\"],
 
@@ -219,6 +243,17 @@ export default {
           }
         }
       }
+    },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
     },
   },
 };
@@ -237,41 +272,37 @@ exports[`Vue Form block 1`] = `
     :name=\\"name\\"
     @submit=\\"onSubmit(event)\\"
   >
-    <template v-if=\\"builderBlock && builderBlock.children\\">
-      <template :key=\\"index\\" v-for=\\"(block, index) in builderBlock?.children\\">
-        <BuilderBlockComponent
-          :key=\\"block.id\\"
-          :block=\\"block\\"
-        ></BuilderBlockComponent>
-      </template>
-    </template>
+    <BuilderBlockComponent
+      v-for=\\"(block, index) in builderBlock?.children\\"
+      :block=\\"block\\"
+      :key=\\"block.id\\"
+    ></BuilderBlockComponent>
 
-    <template v-if=\\"submissionState === 'error'\\">
-      <BuilderBlocks
-        dataPath=\\"errorMessage\\"
-        :blocks=\\"errorMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      v-if=\\"submissionState === 'error'\\"
+      :blocks=\\"errorMessage\\"
+    ></BuilderBlocks>
 
-    <template v-if=\\"submissionState === 'sending'\\">
-      <BuilderBlocks
-        dataPath=\\"sendingMessage\\"
-        :blocks=\\"sendingMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      v-if=\\"submissionState === 'sending'\\"
+      :blocks=\\"sendingMessage\\"
+    ></BuilderBlocks>
 
-    <template v-if=\\"submissionState === 'error' && responseData\\">
-      <pre class=\\"builder-form-error-text pre\\">
+    <pre
+      class=\\"builder-form-error-text pre\\"
+      v-if=\\"submissionState === 'error' && responseData\\"
+    >
         {{ JSON.stringify(responseData, null, 2) }}
-      </pre>
-    </template>
+      </pre
+    >
 
-    <template v-if=\\"submissionState === 'success'\\">
-      <BuilderBlocks
-        dataPath=\\"successMessage\\"
-        :blocks=\\"successMessage\\"
-      ></BuilderBlocks>
-    </template>
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      v-if=\\"submissionState === 'success'\\"
+      :blocks=\\"successMessage\\"
+    ></BuilderBlocks>
   </form>
 </template>
 <script>
@@ -282,8 +313,11 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 export default {
-  name: \\"FormComponent\\",
-  components: { BuilderBlockComponent, BuilderBlocks },
+  name: \\"form-component\\",
+  components: {
+    \\"builder-block-component\\": async () => BuilderBlockComponent,
+    \\"builder-blocks\\": async () => BuilderBlocks,
+  },
   props: [
     \\"previewState\\",
     \\"sendWithJs\\",
@@ -310,7 +344,6 @@ export default {
     responseData: null,
     formErrorMessage: \\"\\",
     BuilderBlock,
-    BuilderBlocks,
   }),
 
   computed: {
@@ -536,7 +569,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .pre {
   padding: 10px;
   color: red;
@@ -549,17 +582,22 @@ export default {
 exports[`Vue Image 1`] = `
 "<template>
   <picture ref=\\"pictureRef\\">
-    <template v-if=\\"!useLazyLoading() || load\\">
-      <img
-        class=\\"img\\"
-        :alt=\\"altText\\"
-        :aria-role=\\"altText ? 'presentation' : undefined\\"
-        :src=\\"image\\"
-        @load=\\"setLoaded()\\"
-        :srcset=\\"srcset\\"
-        :sizes=\\"sizes\\"
-      />
-    </template>
+    <img
+      class=\\"img\\"
+      v-if=\\"!useLazyLoading() || load\\"
+      :alt=\\"altText\\"
+      :aria-role=\\"altText ? 'presentation' : undefined\\"
+      :class=\\"
+        _classStringToObject(
+          'builder-image' + (this.class ? ' ' + this.class : '')
+        )
+      \\"
+      :src=\\"image\\"
+      @load=\\"setLoaded()\\"
+      :srcset=\\"srcset\\"
+      :sizes=\\"sizes\\"
+    />
+
     <source :srcset=\\"srcset\\" />
   </picture>
 
@@ -567,9 +605,9 @@ exports[`Vue Image 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Image\\",
+  name: \\"image\\",
 
-  props: [\\"lazy\\", \\"altText\\", \\"class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+  props: [\\"lazy\\", \\"altText\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
 
   data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
 
@@ -612,10 +650,21 @@ export default {
       // TODO: Add more checks here, like testing for real web browsers
       return !!this.lazy && this.isBrowser();
     },
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
   },
 };
 </script>
-<style>
+<style scoped>
 .img {
   opacity: 1;
   transition: opacity 0.2s ease-in-out;
@@ -643,7 +692,7 @@ exports[`Vue Img 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"ImgComponent\\",
+  name: \\"img-component\\",
 
   props: [
     \\"backgroundSize\\",
@@ -676,7 +725,7 @@ exports[`Vue Input block 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"FormInputComponent\\",
+  name: \\"form-input-component\\",
 
   props: [
     \\"attributes\\",
@@ -696,13 +745,32 @@ export default {
 
 exports[`Vue RawText 1`] = `
 "<template>
-  <span v-html=\\"text || ''\\"></span>
+  <span
+    :class=\\"
+      _classStringToObject(this.attributes?.class || this.attributes?.className)
+    \\"
+    v-html=\\"text || ''\\"
+  ></span>
 </template>
 <script>
 export default {
-  name: \\"RawText\\",
+  name: \\"raw-text\\",
 
   props: [\\"attributes\\", \\"text\\"],
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
 };
 </script>
 "
@@ -725,7 +793,7 @@ exports[`Vue Section 1`] = `
 </template>
 <script>
 export default {
-  name: \\"SectionComponent\\",
+  name: \\"section-component\\",
 
   props: [\\"attributes\\", \\"maxWidth\\"],
 };
@@ -742,16 +810,20 @@ exports[`Vue Select block 1`] = `
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
   >
-    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
-      <option :value=\\"option.value\\">{{ option.name || option.value }}</option>
-    </template>
+    <option
+      v-for=\\"(option, index) in options\\"
+      :value=\\"option.value\\"
+      :key=\\"index\\"
+    >
+      {{ option.name || option.value }}
+    </option>
   </select>
 </template>
 <script>
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"SelectComponent\\",
+  name: \\"select-component\\",
 
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
 
@@ -765,32 +837,21 @@ exports[`Vue Stamped.io 1`] = `
 "<template>
   <div>
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
-    <template v-if=\\"showReviewPrompt\\">
-      <input placeholder=\\"Email\\" />
 
-      <input placeholder=\\"Title\\" class=\\"input\\" />
+    <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
 
-      <textarea
-        placeholder=\\"How was your experience?\\"
-        class=\\"textarea\\"
-      ></textarea>
-
-      <button class=\\"button\\" @click=\\"showReviewPrompt = false\\">Submit</button>
-    </template>
-    <template :key=\\"index\\" v-for=\\"(review, index) in reviews\\">
-      <div class=\\"review\\">
-        <img class=\\"img\\" :src=\\"review.avatar\\" />
-        <div>
-          <div>{{ review.author }}</div>
-          <div>{{ review.reviewMessage }}</div>
-        </div>
+    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
+      <img class=\\"img\\" :src=\\"review.avatar\\" />
+      <div>
+        <div>{{ review.author }}</div>
+        <div>{{ review.reviewMessage }}</div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 <script>
 export default {
-  name: \\"SmileReviews\\",
+  name: \\"smile-reviews\\",
 
   props: [\\"apiKey\\", \\"productId\\"],
 
@@ -809,7 +870,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .input {
   display: block;
 }
@@ -844,7 +905,7 @@ exports[`Vue Submit button block 1`] = `
 </template>
 <script>
 export default {
-  name: \\"SubmitButton\\",
+  name: \\"submit-button\\",
 
   props: [\\"attributes\\", \\"text\\"],
 };
@@ -863,7 +924,7 @@ exports[`Vue Text 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
-  name: \\"Text\\",
+  name: \\"text\\",
 
   props: [\\"text\\", \\"content\\"],
 };
@@ -883,7 +944,7 @@ exports[`Vue Textarea 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Textarea\\",
+  name: \\"textarea\\",
 
   props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
 };
@@ -916,7 +977,7 @@ exports[`Vue Video 1`] = `
 </template>
 <script>
 export default {
-  name: \\"Video\\",
+  name: \\"video\\",
 
   props: [
     \\"attributes\\",

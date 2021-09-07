@@ -51,6 +51,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
         {(review) => (
           <div
             $name="Review"
+            key={review.id}
             css={{
               margin: '10px',
               padding: '10px',

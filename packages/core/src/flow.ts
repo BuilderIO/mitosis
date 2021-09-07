@@ -10,14 +10,14 @@
 export function For<T, U extends JSX.Element>(props: {
   each?: readonly T[];
   children: (item: T, index: number) => U;
-}): JSX.Element {
-  return null as JSX.Element;
+}): any {
+  return null;
 }
 
 export function Show<T>(props: {
   when: T | undefined | null | false;
   else?: JSX.Element;
-  children: JSX.Element;
-}): JSX.Element {
-  return null as JSX.Element;
+  children?: JSX.Element | null;
+}): any {
+  return null;
 }

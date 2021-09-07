@@ -53,7 +53,9 @@ const command: GluegunCommand = {
       stylesType: opts.styles,
       stateType: opts.state,
       reactive: opts.reactive,
-      type: opts.type
+      type: opts.type,
+      vueVersion: opts.vueVersion,
+      cssNamespace: opts.cssNamespace
     }
 
     // Positional Args

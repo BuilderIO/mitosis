@@ -72,30 +72,35 @@ export const babelTransformExpression = <VisitorContextType = any>(
         });
 
   if (isError(result) || type === 'expression') {
-    // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
+    try {
+      // If it can't, e.g. this is an expression or code fragment, modify the code below and try again
 
-    // Detect method fragments. These get passed sometimes and otherwise
-    // generate compile errors. They are of the form `foo() { ... }`
-    const isMethod = Boolean(
-      !code.startsWith('function') &&
-        code.match(/^[a-z0-9]+\s*\([^\)]*\)\s*[\{:]/i),
-    );
+      // Detect method fragments. These get passed sometimes and otherwise
+      // generate compile errors. They are of the form `foo() { ... }`
+      const isMethod = Boolean(
+        !code.startsWith('function') &&
+          code.match(/^[a-z0-9]+\s*\([^\)]*\)\s*[\{:]/i),
+      );
 
-    if (isMethod) {
-      useCode = `function ${useCode}`;
-    }
-    // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
-    // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
-    // that is an object
-    useCode = `let _ = ${useCode}`;
-    result = (babelTransform(useCode, visitor)?.code || '')
-      // Babel addes trailing semicolons, but for expressions we need those gone
-      .replace(/;$/, '')
-      // Remove our fake variable assignment
-      .replace(/let _ =\s/, '');
+      if (isMethod) {
+        useCode = `function ${useCode}`;
+      }
+      // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
+      // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
+      // that is an object
+      useCode = `let _ = ${useCode}`;
+      result = (babelTransform(useCode, visitor)?.code || '')
+        // Babel addes trailing semicolons, but for expressions we need those gone
+        .replace(/;$/, '')
+        // Remove our fake variable assignment
+        .replace(/let _ =\s/, '');
 
-    if (isMethod) {
-      result = result.replace('function', '');
+      if (isMethod) {
+        result = result.replace('function', '');
+      }
+    } catch (err) {
+      console.error('Error parsing code:\n', code, '\n', result);
+      throw err;
     }
   }
   if (type === 'functionBody') {

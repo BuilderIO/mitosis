@@ -18,8 +18,8 @@ export default injectMethod(TodoComponent, function (this: TodoComponent) {
     >
       <div class=\\"view\\">
         <input
-          class=\\"toggle\\"
           type=\\"checkbox\\"
+          class=\\"toggle\\"
           checked={this.todo.completed}
           on:click={QRL\`ui:/Todo_onInputClick\`}
         />
@@ -168,8 +168,8 @@ export const template = injectMethod(
       >
         <div class=\\"view\\">
           <input
-            class=\\"toggle\\"
             type=\\"checkbox\\"
+            class=\\"toggle\\"
             checked={this.todo.completed}
             on:click={QRL\`ui:/Todo/bundle.onInputClick\`}
           />
@@ -327,8 +327,8 @@ const template = injectMethod(TodoComponent, function () {
   }, h(\\"div\\", {
     class: \\"view\\"
   }, h(\\"input\\", {
-    class: \\"toggle\\",
     type: \\"checkbox\\",
+    class: \\"toggle\\",
     checked: this.todo.completed,
     \\"on:click\\": QRL\`ui:/Todo/bundle.onInputClick\`
   }), h(\\"label\\", {
@@ -368,8 +368,8 @@ export default injectMethod(TodosComponent, function (this: TodosComponent) {
       {todosState.todos.length ? (
         <>
           <input
-            class=\\"toggle-all\\"
             type=\\"checkbox\\"
+            class=\\"toggle-all\\"
             checked={todosState.allCompleted}
             on:click={QRL\`ui:/Todos_onInputClick\`}
           />
@@ -377,7 +377,7 @@ export default injectMethod(TodosComponent, function (this: TodosComponent) {
       ) : undefined}
 
       <ul class=\\"todo-list\\">
-        {todosState.todos.map((todo) => (
+        {todosState.todos?.map((todo) => (
           <>
             <Todo todo={todo}></Todo>
           </>

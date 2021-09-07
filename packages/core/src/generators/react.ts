@@ -2,7 +2,6 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -11,9 +10,9 @@ import { capitalize } from '../helpers/capitalize';
 import {
   collectCss,
   collectStyledComponents,
-  collectStyles,
   hasStyles,
 } from '../helpers/collect-styles';
+import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
@@ -65,7 +64,7 @@ const NODE_MAPPERS: {
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${processBinding(json.bindings.each as string, options)}.map(${
+    return `{${processBinding(json.bindings.each as string, options)}?.map(${
       json.properties._forName
     } => (
       ${wrap ? '<>' : ''}${json.children
@@ -76,15 +75,14 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${options.format === 'safe' ? 'Boolean' : ''}(${processBinding(
-      json.bindings.when as string,
-      options,
-    )}) && (
+    return `{${processBinding(json.bindings.when as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? '</>' : ''}
-    )}`;
+    ) : ${
+      !json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)
+    }}`;
   },
 };
 
@@ -106,10 +104,18 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
   }
 
   if (json.properties._text) {
-    return json.properties._text;
+    const text = json.properties._text;
+    if (options.type === 'native' && text.trim().length) {
+      return `<Text>${text}</Text>`;
+    }
+    return text;
   }
   if (json.bindings._text) {
-    return `{${processBinding(json.bindings._text as string, options)}}`;
+    const processed = processBinding(json.bindings._text as string, options);
+    if (options.type === 'native') {
+      return `<Text>{${processed}}</Text>`;
+    }
+    return `{${processed}}`;
   }
 
   let str = '';
@@ -264,7 +270,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -512,8 +518,9 @@ const _componentToReact = (
     ${styledComponentsCode ? styledComponentsCode : ''}
 
 
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'

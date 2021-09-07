@@ -6,7 +6,7 @@ export const transpile = async ({
   path,
   content,
   target,
-  format
+  format,
 }: {
   path: string
   content?: string | null
@@ -14,16 +14,15 @@ export const transpile = async ({
   format?: 'esm' | 'cjs'
 }) => {
   try {
-    const output = await esbuild.transform(
-      content ?? (await readFile(path, 'utf8')),
-      {
-        format:
-          format ||
-          (target === 'reactNative' || target === 'solid' ? 'esm' : 'cjs'),
-        loader: 'tsx',
-        target: 'es6'
-      }
-    )
+    let useContent = content ?? (await readFile(path, 'utf8'))
+    useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`)
+    const output = await esbuild.transform(useContent, {
+      format:
+        format ||
+        (target === 'reactNative' || target === 'solid' ? 'esm' : 'cjs'),
+      loader: 'tsx',
+      target: 'es6',
+    })
 
     if (output.warnings.length) {
       console.warn(`Warnings found in file: ${path}`, output.warnings)

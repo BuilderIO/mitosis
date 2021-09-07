@@ -49,7 +49,7 @@ const blockToTemplate = (
   let str = '';
 
   if (json.name === 'For') {
-    str += `\${${json.bindings.each as string}.map(${
+    str += `\${${json.bindings.each as string}?.map(${
       json.properties._forName
     } => \``;
     if (json.children) {

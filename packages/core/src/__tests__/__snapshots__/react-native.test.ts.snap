@@ -1,44 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useState, useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext } from \\"react\\";
 
 export default function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
-    <div>
-      <input value={name} onChange={(event) => setName(event.target.value)} />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
+    <View>
+      <View value={name} onChange={(event) => setName(event.target.value)} />
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
   );
 }
 "
 `;
 
 exports[`React Button 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function Button(props) {
   return (
     <>
       {props.link ? (
         <>
-          <a
+          <View
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
-            {props.text}
-          </a>
+            <Text>{props.text}</Text>
+          </View>
         </>
       ) : null}
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
-            {props.text}
-          </button>
+          <View {...props.attributes} type=\\"button\\">
+            <Text>{props.text}</Text>
+          </View>
         </>
       ) : null}
     </>
@@ -48,19 +52,9 @@ export default function Button(props) {
 `;
 
 exports[`React Columns 1`] = `
-"import { useState, useContext } from \\"react\\";
-import styled from \\"styled-components\\";
-
-const Div = styled.div\`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-\`;
-
-const Div2 = styled.div\`
-  flex-grow: 1;
-\`;
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext } from \\"react\\";
 
 export default function Column(props) {
   function getColumns() {
@@ -84,18 +78,27 @@ export default function Column(props) {
   }
 
   return (
-    <Div className=\\"builder-columns\\">
+    <View className=\\"builder-columns\\" style={styles.view1}>
       {props.columns?.map((column) => (
-        <Div2 className=\\"builder-column\\">{column.content}</Div2>
+        <View className=\\"builder-column\\" style={styles.view2}>
+          <Text>{column.content}</Text>
+        </View>
       ))}
-    </Div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+  view2: { flexGrow: 1 },
+});
 "
 `;
 
 exports[`React CustomCode 1`] = `
-"import { useState, useContext, useRef, useEffect } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
@@ -151,7 +154,7 @@ export default function CustomCode(props) {
   }, []);
 
   return (
-    <div
+    <View
       ref={elem}
       className={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
@@ -164,7 +167,9 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Embed 1`] = `
-"import { useState, useContext, useRef, useEffect } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
@@ -220,7 +225,7 @@ export default function CustomCode(props) {
   }, []);
 
   return (
-    <div
+    <View
       ref={elem}
       className={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
@@ -233,19 +238,14 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Form block 1`] = `
-"import { useState, useContext, useRef } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useRef } from \\"react\\";
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
-import styled from \\"styled-components\\";
-
-const Pre = styled.pre\`
-  padding: 10px;
-  color: red;
-  text-align: center;
-\`;
 
 export default function FormComponent(props) {
   const [state, setState] = useState(() => \\"unsubmitted\\");
@@ -443,7 +443,7 @@ export default function FormComponent(props) {
   }
   const formRef = useRef();
   return (
-    <form
+    <View
       {...props.attributes}
       validate={props.validate}
       ref={formRef}
@@ -475,10 +475,10 @@ export default function FormComponent(props) {
       ) : null}{\\" \\"}
       {submissionState() === \\"error\\" && responseData ? (
         <>
-          <Pre className=\\"builder-form-error-text\\">
+          <View className=\\"builder-form-error-text\\" style={styles.view1}>
             {\\" \\"}
-            {JSON.stringify(responseData, null, 2)}{\\" \\"}
-          </Pre>
+            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
+          </View>
         </>
       ) : null}{\\" \\"}
       {submissionState() === \\"success\\" ? (
@@ -489,22 +489,19 @@ export default function FormComponent(props) {
           />
         </>
       ) : null}{\\" \\"}
-    </form>
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
+});
 "
 `;
 
 exports[`React Image 1`] = `
-"import { useState, useContext, useRef, useEffect } from \\"react\\";
-import styled from \\"styled-components\\";
-
-const Img = styled.img\`
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-\`;
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useRef, useEffect } from \\"react\\";
 
 export default function Image(props) {
   const [scrollListener, setScrollListener] = useState(() => null);
@@ -557,10 +554,10 @@ export default function Image(props) {
 
   return (
     <>
-      <picture ref={pictureRef}>
+      <View ref={pictureRef}>
         {!useLazyLoading() || load ? (
           <>
-            <Img
+            <View
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
               className={
@@ -570,27 +567,39 @@ export default function Image(props) {
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
+              style={styles.view1}
             />
           </>
         ) : null}
 
-        <source srcset={props.srcset} />
-      </picture>
+        <View srcset={props.srcset} />
+      </View>
 
-      {props.children}
+      <Text>{props.children}</Text>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  view1: {
+    opacity: 1,
+    transition: \\"opacity 0.2s ease-in-out\\",
+    objectFit: \\"cover\\",
+    objectPosition: \\"center\\",
+  },
+});
 "
 `;
 
 exports[`React Img 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function ImgComponent(props) {
   return (
-    <img
+    <View
       {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
@@ -606,12 +615,14 @@ export default function ImgComponent(props) {
 `;
 
 exports[`React Input block 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function FormInputComponent(props) {
   return (
-    <input
+    <View
       {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
@@ -631,11 +642,13 @@ export default function FormInputComponent(props) {
 `;
 
 exports[`React RawText 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function RawText(props) {
   return (
-    <span
+    <View
       className={props.attributes?.class || props.attributes?.className}
       dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
     />
@@ -645,11 +658,13 @@ export default function RawText(props) {
 `;
 
 exports[`React Section 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function SectionComponent(props) {
   return (
-    <section
+    <View
       {...props.attributes}
       style={
         props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -659,20 +674,22 @@ export default function SectionComponent(props) {
           : undefined
       }
     >
-      {props.children}
-    </section>
+      <Text>{props.children}</Text>
+    </View>
   );
 }
 "
 `;
 
 exports[`React Select block 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function SelectComponent(props) {
   return (
-    <select
+    <View
       {...props.attributes}
       value={props.value}
       key={
@@ -684,44 +701,20 @@ export default function SelectComponent(props) {
       name={props.name}
     >
       {props.options?.map((option) => (
-        <option value={option.value}>{option.name || option.value}</option>
+        <View value={option.value}>
+          <Text>{option.name || option.value}</Text>
+        </View>
       ))}
-    </select>
+    </View>
   );
 }
 "
 `;
 
 exports[`React Stamped.io 1`] = `
-"import { useState, useContext, useEffect } from \\"react\\";
-import styled from \\"styled-components\\";
-
-const Input = styled.input\`
-  display: block;
-\`;
-
-const Textarea = styled.textarea\`
-  display: block;
-\`;
-
-const Button = styled.button\`
-  display: block;
-\`;
-
-const Review = styled.div\`
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-\`;
-
-const Img = styled.img\`
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-\`;
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useEffect } from \\"react\\";
 
 export default function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -741,63 +734,87 @@ export default function SmileReviews(props) {
   }, []);
 
   return (
-    <div>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
+    <View>
+      <View onClick={(event) => setShowReviewPrompt(true)}>
+        <Text>Write a review</Text>
+      </View>
 
       {showReviewPrompt ? (
         <>
-          <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\" />
-          <Textarea placeholder=\\"How was your experience?\\" />
-          <Button
+          <View placeholder=\\"Email\\" />
+          <View placeholder=\\"Title\\" style={styles.view1} />
+          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View
             onClick={(event) => {
               setShowReviewPrompt(false);
             }}
+            style={styles.view3}
           >
-            Submit
-          </Button>
+            <Text>Submit</Text>
+          </View>
         </>
       ) : null}
 
       {reviews?.map((review) => (
-        <Review key={review.id}>
-          <Img src={review.avatar} />
+        <View key={review.id} style={styles.view4}>
+          <View src={review.avatar} style={styles.view5} />
 
-          <div>
-            <div>{review.author}</div>
+          <View>
+            <View>
+              <Text>{review.author}</Text>
+            </View>
 
-            <div>{review.reviewMessage}</div>
-          </div>
-        </Review>
+            <View>
+              <Text>{review.reviewMessage}</Text>
+            </View>
+          </View>
+        </View>
       ))}
-    </div>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  view1: { display: \\"block\\" },
+  view2: { display: \\"block\\" },
+  view3: { display: \\"block\\" },
+  view4: {
+    margin: 10,
+    padding: 10,
+    background: \\"white\\",
+    display: \\"flex\\",
+    borderRadius: 5,
+    boxShadow: 0,
+  },
+  view5: { height: 30, width: 30, marginRight: 10 },
+});
 "
 `;
 
 exports[`React Submit button block 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function SubmitButton(props) {
   return (
-    <button {...props.attributes} type=\\"submit\\">
-      {props.text}
-    </button>
+    <View {...props.attributes} type=\\"submit\\">
+      <Text>{props.text}</Text>
+    </View>
   );
 }
 "
 `;
 
 exports[`React Text 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function Text(props) {
   return (
-    <div
+    <View
       contentEditable={allowEditingText || undefined}
       dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
     />
@@ -807,11 +824,13 @@ export default function Text(props) {
 `;
 
 exports[`React Textarea 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function Textarea(props) {
   return (
-    <textarea
+    <View
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
@@ -824,11 +843,13 @@ export default function Textarea(props) {
 `;
 
 exports[`React Video 1`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
 
 export default function Video(props) {
   return (
-    <video
+    <View
       {...props.attributes}
       preload=\\"none\\"
       style={{

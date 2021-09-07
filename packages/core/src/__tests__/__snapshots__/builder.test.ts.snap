@@ -74,8 +74,6 @@ Object {
     "jsCode": "var props = state;
 
 Object.assign(state, {
-  // TODO: These methods are not used right now, but they will be when
-  // support for dynamic CSS lands
   getColumns() {
     return props.columns || [];
   },
@@ -97,8 +95,6 @@ Object.assign(state, {
     "tsCode": "var props = state;
 
 useState({
-  // TODO: These methods are not used right now, but they will be when
-  // support for dynamic CSS lands
   getColumns() {
     return props.columns || [];
   },
@@ -126,8 +122,6 @@ exports[`Builder Columns 2`] = `
 
 export default function MyComponent(props) {
   const state = useState({
-    // TODO: These methods are not used right now, but they will be when
-    // support for dynamic CSS lands
     getColumns() {
       return props.columns || [];
     },
@@ -1622,7 +1616,9 @@ Object {
               Object {
                 "@type": "@builder.io/sdk:Element",
                 "actions": Object {},
-                "bindings": Object {},
+                "bindings": Object {
+                  "key": "review.id",
+                },
                 "children": Array [
                   Object {
                     "@type": "@builder.io/sdk:Element",
@@ -1829,6 +1825,7 @@ export default function MyComponent(props) {
         {(review, index) => (
           <div
             $name=\\"Review\\"
+            key={review.id}
             css={{
               margin: \\"10px\\",
               padding: \\"10px\\",

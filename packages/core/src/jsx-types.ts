@@ -255,6 +255,9 @@ declare global {
       | 'worker';
 
     interface HTMLAttributes<T> extends DOMAttributes<T> {
+      // Special attributes
+      key?: string | boolean | number;
+
       // Standard HTML Attributes
       accessKey?: string;
       class?: string;

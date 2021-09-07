@@ -4,12 +4,15 @@ import dedent from 'dedent'
 import { getSimpleId } from './get-simple-id'
 import * as json5 from 'json5'
 import * as esbuild from 'esbuild'
+import { vue2Transform } from './compile-vue-v2-file'
 
 export type CompileVueFileOptions = {
   distDir: string
   path: string
   contents: string
   mitosisComponent: MitosisComponent
+  vueVersion?: 2 | 3
+  id?: string
 }
 
 export type FileSpec = {
@@ -35,9 +38,84 @@ async function toCjs(path: string, contents: string) {
   }
 }
 
+export async function compileVueV2(options: CompileVueFileOptions) {
+  const rootPath = `${options.distDir}/vue/${options.path.replace(
+    /\.lite\.tsx$/,
+    ''
+  )}`
+
+  const id = options.id || getSimpleId()
+  const registerComponentHook = options.mitosisComponent.meta.registerComponent
+
+  const fileName = rootPath.split('/').pop()
+
+  // Via https://www.npmjs.com/package/@vue/compiler-sfc README
+  const entry = dedent`      
+    import script from './${fileName}_script'
+    import './${fileName}_styles'
+
+    ${
+      !registerComponentHook
+        ? ''
+        : dedent`
+          import { registerComponent } from '../functions/register-component'
+          registerComponent(script, ${json5.stringify(registerComponentHook)})
+        `
+    }
+    export default script
+  `
+
+  const { css, code } = await vue2Transform(options.contents, id, {
+    compileTemplate: true
+  })
+
+  let scriptContents = code
+  // Remove .lite extensions from imports without having to load a slow parser like babel
+  // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+  scriptContents = scriptContents.replace(/\.lite(['"];)/g, '$1')
+
+  const cssContents: string = css[0]?.code || ''
+
+  const cssCode = cssContents
+    ? `
+    const id = '${id}';
+    if (typeof document !== 'undefined') {
+      if (!document.getElementById(id)) {
+        const style = document.createElement('style');
+        style.id = id;
+        style.innerHTML = \`${cssContents.replace(/`/g, '\\`')}\`;
+        document.head.appendChild(style);
+        console.log('added style?', style)
+      }
+    }
+  `
+    : ''
+
+  return await Promise.all(
+    [
+      { path: `${rootPath}.original.vue`, contents: options.contents },
+      { path: `${rootPath}.js`, contents: entry },
+      { path: `${rootPath}_script.js`, contents: scriptContents },
+      { path: `${rootPath}_styles.js`, contents: cssCode }
+    ].map(async item =>
+      item.path.endsWith('.js')
+        ? {
+            path: item.path,
+            contents: await toCjs(item.path, item.contents)
+          }
+        : item
+    )
+  )
+
+  return []
+}
+
 export async function compileVueFile(
   options: CompileVueFileOptions
 ): Promise<FileSpec[]> {
+  if (options.vueVersion === 2) {
+    return compileVueV2(options)
+  }
   const rootPath = `${options.distDir}/vue/${options.path.replace(
     /\.lite\.tsx$/,
     ''

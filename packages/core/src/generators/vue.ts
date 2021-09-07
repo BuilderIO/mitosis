@@ -2,7 +2,10 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -23,19 +26,41 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
+import { first, kebabCase, size } from 'lodash';
+import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import json5 from 'json5';
 
 export type ToVueOptions = {
   prettier?: boolean;
   plugins?: Plugin[];
+  vueVersion?: 2 | 3;
+  cssNamespace?: string;
+  namePrefix?: string;
+  builderRegister?: boolean;
 };
 
-function processBinding(code: string, _options: ToVueOptions): string {
-  return stripStateAndPropsRefs(code, {
-    includeState: true,
-    includeProps: true,
+function getContextNames(json: MitosisComponent) {
+  return Object.keys(json.context.get);
+}
 
-    replaceWith: 'this.',
-  });
+// TODO: migrate all stripStateAndPropsRefs to use this here
+// to properly replace context refs
+function processBinding(
+  code: string,
+  _options: ToVueOptions,
+  json: MitosisComponent,
+): string {
+  return replaceIdentifiers(
+    stripStateAndPropsRefs(code, {
+      includeState: true,
+      includeProps: true,
+
+      replaceWith: 'this.',
+    }),
+    getContextNames(json),
+    (name) => `this.${name}`,
+  );
 }
 
 const NODE_MAPPERS: {
@@ -47,18 +72,62 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    return `<template :key="index" v-for="(${
+    const keyValue = json.bindings.key || 'index';
+    const forValue = `(${
       json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}">
-      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-    </template>`;
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}`;
+
+    if (options.vueVersion! >= 3) {
+      // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
+      return `<template :key="${keyValue}" v-for="${forValue}">
+        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+      </template>`;
+    }
+    // Vue 2 can only handle one root element
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+    if (!firstChild) {
+      return '';
+    }
+    firstChild.bindings.key = keyValue;
+    firstChild.properties['v-for'] = forValue;
+    return blockToVue(firstChild, options);
   },
   Show(json, options) {
-    return `<template v-if="${stripStateAndPropsRefs(
-      json.bindings.when as string,
-    )}">
-      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-    </template>`;
+    const ifValue = stripStateAndPropsRefs(json.bindings.when as string);
+    if (options.vueVersion! >= 3) {
+      return `
+      <template v-if="${ifValue}">
+        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+      </template>
+      ${
+        !json.meta.else
+          ? ''
+          : `
+        <template v-else>
+          ${blockToVue(json.meta.else as any, options)}
+        </template>
+      `
+      }
+      `;
+    }
+    let ifString = '';
+    // Vue 2 can only handle one root element
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+    if (firstChild) {
+      firstChild.properties['v-if'] = ifValue;
+      ifString = blockToVue(firstChild, options);
+    }
+    let elseString = '';
+    const elseBlock = json.meta.else;
+    if (isMitosisNode(elseBlock)) {
+      elseBlock.properties['v-else'] = '';
+      elseString = blockToVue(elseBlock, options);
+    }
+
+    return `
+    ${ifString}
+    ${elseString}
+    `;
   },
 };
 
@@ -77,6 +146,20 @@ function processDynamicComponents(
       if (node.name.includes('.')) {
         node.bindings.is = node.name;
         node.name = 'component';
+      }
+    }
+  });
+}
+
+function processForKeys(json: MitosisComponent, options: ToVueOptions) {
+  traverse(json).forEach((node) => {
+    if (isMitosisNode(node)) {
+      if (node.name === 'For') {
+        const firstChild = node.children[0];
+        if (firstChild && firstChild.bindings.key) {
+          node.bindings.key = firstChild.bindings.key;
+          delete firstChild.bindings.key;
+        }
       }
     }
   });
@@ -129,12 +212,15 @@ export const blockToVue = (
     if (key === '_spread') {
       continue;
     }
+    const value = node.bindings[key] as string;
     if (key === 'class') {
+      str += ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
+        replaceWith: 'this.',
+      })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
       continue;
     }
-    const value = node.bindings[key] as string;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value);
 
@@ -170,6 +256,46 @@ export const blockToVue = (
   return str + `</${node.name}>`;
 };
 
+function getContextInjectString(
+  component: MitosisComponent,
+  options: ToVueOptions,
+) {
+  let str = '{';
+
+  for (const key in component.context.get) {
+    str += `
+      ${key}: "${component.context.get[key].name}",
+    `;
+  }
+
+  str += '}';
+  return str;
+}
+
+function getContextProvideString(
+  component: MitosisComponent,
+  options: ToVueOptions,
+) {
+  let str = '{';
+
+  for (const key in component.context.set) {
+    const { value, name } = component.context.set[key];
+    str += `
+      ${name}: ${
+      value
+        ? getMemberObjectString(value, {
+            valueMapper: (code) =>
+              stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
+          })
+        : null
+    },
+    `;
+  }
+
+  str += '}';
+  return str;
+}
+
 export const componentToVue = (
   component: MitosisComponent,
   options: ToVueOptions = {},
@@ -177,6 +303,7 @@ export const componentToVue = (
   // Make a copy we can safely mutate, similar to babel's toolchain can be used
   component = fastClone(component);
   processDynamicComponents(component, options);
+  processForKeys(component, options);
 
   if (options.plugins) {
     component = runPreJsonPlugins(component, options.plugins);
@@ -187,7 +314,9 @@ export const componentToVue = (
   if (options.plugins) {
     component = runPostJsonPlugins(component, options.plugins);
   }
-  const css = collectCss(component);
+  const css = collectCss(component, {
+    prefix: options.cssNamespace,
+  });
 
   let dataString = getStateObjectStringFromComponent(component, {
     data: true,
@@ -200,29 +329,17 @@ export const componentToVue = (
     getters: true,
     functions: false,
     valueMapper: (code) =>
-      stripStateAndPropsRefs(code.replace(/^get /, ''), {
-        replaceWith: 'this.',
-      }),
+      processBinding(code.replace(/^get /, ''), options, component),
   });
 
-  const functionsString = getStateObjectStringFromComponent(component, {
+  let functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) =>
-      stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
+    valueMapper: (code) => processBinding(code, options, component),
   });
 
   const blocksString = JSON.stringify(component.children);
-
-  // Append refs to data as { foo, bar, etc }
-  dataString = dataString.replace(
-    /}$/,
-    `${component.imports
-      .map((thisImport) => Object.keys(thisImport.imports).join(','))
-      .filter((key) => Boolean(key && blocksString.includes(key)))
-      .join(',')}}`,
-  );
 
   // Component references to include in `component: { YourComponent, ... }
   const componentsUsed = Array.from(getComponentsUsed(component))
@@ -235,27 +352,84 @@ export const componentToVue = (
       (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
     );
 
+  // Append refs to data as { foo, bar, etc }
+  dataString = dataString.replace(
+    /}$/,
+    `${component.imports
+      .map((thisImport) => Object.keys(thisImport.imports).join(','))
+      // Make sure actually used in template
+      .filter((key) => Boolean(key && blocksString.includes(key)))
+      // Don't include component imports
+      .filter((key) => !componentsUsed.includes(key))
+      .join(',')}}`,
+  );
+
   const elementProps = getProps(component);
   stripMetaProperties(component);
 
+  const template = component.children
+    .map((item) => blockToVue(item, options))
+    .join('\n');
+
+  const includeClassMapHelper = template.includes('_classStringToObject');
+
+  if (includeClassMapHelper) {
+    functionsString = functionsString.replace(
+      /}\s*$/,
+      `_classStringToObject(str) {
+        const obj = {};
+        if (typeof str !== 'string') { return obj }
+        const classNames = str.trim().split(/\\s+/); 
+        for (const name of classNames) {
+          obj[name] = true;
+        } 
+        return obj;
+      }  }`,
+    );
+  }
+
+  const builderRegister = Boolean(
+    options.builderRegister && component.meta.registerComponent,
+  );
+
   let str = dedent`
     <template>
-      ${component.children.map((item) => blockToVue(item, options)).join('\n')}
+      ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
+      ${
+        !builderRegister
+          ? ''
+          : `import { registerComponent } from '@builder.io/sdk-vue'`
+      }
 
-      export default {
-        ${!component.name ? '' : `name: '${component.name}',`}
+      export default ${!builderRegister ? '' : 'registerComponent('}{
+        ${
+          !component.name
+            ? ''
+            : `name: '${
+                options.namePrefix ? options.namePrefix + '-' : ''
+              }${kebabCase(component.name)}',`
+        }
         ${
           !componentsUsed.length
             ? ''
-            : `components: { ${componentsUsed.join(',')} },`
+            : `components: { ${componentsUsed
+                .map(
+                  (componentName) =>
+                    `'${kebabCase(
+                      componentName,
+                    )}': async () => ${componentName}`,
+                )
+                .join(',')} },`
         }
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter((prop) => prop !== 'children'),
+                Array.from(elementProps).filter(
+                  (prop) => prop !== 'children' && prop !== 'class',
+                ),
               )},`
             : ''
         }
@@ -268,16 +442,30 @@ export const componentToVue = (
         }
 
         ${
+          size(component.context.set)
+            ? `provide() {
+                const _this = this;
+                return ${getContextProvideString(component, options)}
+              },`
+            : ''
+        }
+        ${
+          size(component.context.get)
+            ? `inject: ${getContextInjectString(component, options)},`
+            : ''
+        }
+
+        ${
           component.hooks.onMount
             ? `mounted() {
-                ${processBinding(component.hooks.onMount, options)}
+                ${processBinding(component.hooks.onMount, options, component)}
               },`
             : ''
         }
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(component.hooks.onUnMount, options)}
+                ${processBinding(component.hooks.onUnMount, options, component)}
               },`
             : ''
         }
@@ -296,12 +484,16 @@ export const componentToVue = (
           methods: ${functionsString},
         `
         }
+      }${
+        !builderRegister
+          ? ''
+          : `, ${json5.stringify(component.meta.registerComponent || {})})`
       }
     </script>
     ${
       !css.trim().length
         ? ''
-        : `<style>
+        : `<style scoped>
       ${css}
     </style>`
     }

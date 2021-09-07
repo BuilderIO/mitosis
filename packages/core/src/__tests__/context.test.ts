@@ -5,6 +5,7 @@ import { componentToReact } from '../generators/react';
 
 const simpleExample = require('./data/context/simple.context.lite');
 const componentWithContext = require('./data/context/component-with-context.lite');
+const renderBlock = require('./data/blocks/builder-render-block.raw');
 
 describe('Context', () => {
   test('Parse context', () => {
@@ -19,6 +20,13 @@ describe('Context', () => {
 
   test('Use and set context in components', () => {
     const json = parseJsx(componentWithContext);
+    expect(json).toMatchSnapshot();
+    const reactComponent = componentToReact(json);
+    expect(reactComponent).toMatchSnapshot();
+  });
+
+  test('Use and set context in complex components', () => {
+    const json = parseJsx(renderBlock);
     expect(json).toMatchSnapshot();
     const reactComponent = componentToReact(json);
     expect(reactComponent).toMatchSnapshot();

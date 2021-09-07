@@ -318,7 +318,7 @@ const jsxElementToJson = (
     | babel.types.JSXText
     | babel.types.JSXFragment
     | babel.types.JSXExpressionContainer,
-): MitosisNode => {
+): MitosisNode | null => {
   if (types.isJSXText(node)) {
     return createMitosisNode({
       properties: {
@@ -327,6 +327,9 @@ const jsxElementToJson = (
     });
   }
   if (types.isJSXExpressionContainer(node)) {
+    if (types.isJSXEmptyExpression(node.expression)) {
+      return null;
+    }
     // foo.map -> <For each={foo}>...</For>
     if (
       types.isCallExpression(node.expression) ||
@@ -347,7 +350,7 @@ const jsxElementToJson = (
             properties: {
               _forName: forName,
             },
-            children: [jsxElementToJson(callback.body as any)],
+            children: [jsxElementToJson(callback.body as any)!],
           });
         }
       }
@@ -361,11 +364,25 @@ const jsxElementToJson = (
           bindings: {
             when: generate(node.expression.left).code!,
           },
-          children: [jsxElementToJson(node.expression.right as any)],
+          children: [jsxElementToJson(node.expression.right as any)!],
         });
       } else {
         // TODO: good warning system for unsupported operators
       }
+    }
+
+    // {foo ? <div /> : <span />} -> <Show when={foo} else={<span />}>...</Show>
+    if (types.isConditionalExpression(node.expression)) {
+      return createMitosisNode({
+        name: 'Show',
+        meta: {
+          else: jsxElementToJson(node.expression.alternate as any)!,
+        },
+        bindings: {
+          when: generate(node.expression.test).code!,
+        },
+        children: [jsxElementToJson(node.expression.consequent as any)!],
+      });
     }
 
     // TODO: support {foo ? bar : baz}
@@ -380,33 +397,46 @@ const jsxElementToJson = (
   if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
-      children: node.children.map((item) =>
-        jsxElementToJson(item as any),
-      ) as any,
+      children: node.children
+        .map((item) => jsxElementToJson(item as any))
+        .filter(Boolean) as any,
     });
   }
 
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr:
-      | babel.types.JSXAttribute
-      | undefined = node.openingElement.attributes.find(
-      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-    ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+      ) as any;
+
+    const elseAttr: babel.types.JSXAttribute | undefined =
+      node.openingElement.attributes.find(
+        (item) => types.isJSXAttribute(item) && item.name.name === 'else',
+      ) as any;
+
     const whenValue =
       whenAttr &&
       types.isJSXExpressionContainer(whenAttr.value) &&
       generate(whenAttr.value.expression).code;
 
+    const elseValue =
+      elseAttr &&
+      types.isJSXExpressionContainer(elseAttr.value) &&
+      jsxElementToJson(elseAttr.value.expression as any);
+
     return createMitosisNode({
       name: 'Show',
+      meta: {
+        else: elseValue || undefined,
+      },
       bindings: {
         when: whenValue || undefined,
       },
-      children: node.children.map((item) =>
-        jsxElementToJson(item as any),
-      ) as any,
+      children: node.children
+        .map((item) => jsxElementToJson(item as any))
+        .filter(Boolean) as any,
     });
   }
 
@@ -425,14 +455,16 @@ const jsxElementToJson = (
           name: 'For',
           bindings: {
             each: generate(
-              ((node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                .value as babel.types.JSXExpressionContainer).expression,
+              (
+                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                  .value as babel.types.JSXExpressionContainer
+              ).expression,
             ).code,
           },
           properties: {
             _forName: argName,
           },
-          children: [jsxElementToJson(childExpression.body as any)],
+          children: [jsxElementToJson(childExpression.body as any)!],
         });
       }
     }
@@ -473,7 +505,9 @@ const jsxElementToJson = (
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
-    children: node.children.map((item) => jsxElementToJson(item as any)) as any,
+    children: node.children
+      .map((item) => jsxElementToJson(item as any))
+      .filter(Boolean) as any,
   });
 };
 
@@ -587,7 +621,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
     }
   }
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
@@ -597,6 +631,18 @@ function mapReactIdentifiers(json: MitosisComponent) {
             stateProperties,
           );
         }
+        if (key === 'className') {
+          const currentValue = item.bindings[key];
+          delete item.bindings[key];
+          item.bindings.class = currentValue;
+        }
+      }
+      for (const key in item.properties) {
+        if (key === 'class') {
+          const currentValue = item.properties[key];
+          delete item.properties[key];
+          item.properties.class = currentValue;
+        }
       }
     }
   });
@@ -604,8 +650,10 @@ function mapReactIdentifiers(json: MitosisComponent) {
 
 const expressionToNode = (str: string) => {
   const code = `export default ${str}`;
-  return ((babel.parse(code) as babel.types.File).program
-    .body[0] as babel.types.ExportDefaultDeclaration).declaration;
+  return (
+    (babel.parse(code) as babel.types.File).program
+      .body[0] as babel.types.ExportDefaultDeclaration
+  ).declaration;
 };
 
 /**
@@ -613,7 +661,7 @@ const expressionToNode = (str: string) => {
  * MitosisComponent tree
  */
 function extractContextComponents(json: MitosisComponent) {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (item.name.endsWith('.Provider')) {
         const value = item.bindings.value;
@@ -660,6 +708,14 @@ export function parseJsx(
       jsxPlugin,
       () => ({
         visitor: {
+          JSXExpressionContainer(
+            path: babel.NodePath<babel.types.JSXExpressionContainer>,
+            context: Context,
+          ) {
+            if (types.isJSXEmptyExpression(path.node.expression)) {
+              path.remove();
+            }
+          },
           Program(path: babel.NodePath<babel.types.Program>, context: Context) {
             if (context.builder) {
               return;

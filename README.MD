@@ -8,7 +8,7 @@
 <p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
 
 <p align="center">
-  <a href="https://jsx-lite.builder.io/">
+  <a href="https://mitosis.builder.io/">
     <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
   </a>
 </p>
