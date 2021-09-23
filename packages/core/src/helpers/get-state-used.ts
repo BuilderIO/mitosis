@@ -9,7 +9,7 @@ const allStateMatchesRegex = new RegExp(stateAccessRegex, 'g');
  */
 export const getStateUsed = (json: MitosisComponent) => {
   const stateProperties = new Set<string>();
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (typeof item === 'string') {
       // TODO: proper babel ref matching
       const matches = item.match(allStateMatchesRegex);

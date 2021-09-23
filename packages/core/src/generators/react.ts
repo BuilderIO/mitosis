@@ -272,7 +272,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -492,6 +492,7 @@ const _componentToReact = (
   import { View, StyleSheet, Image, Text } from 'react-native';
   `
   }
+  ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size
       ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
@@ -520,9 +521,8 @@ const _componentToReact = (
     }
     ${renderPreComponent(json)}
 
-    ${isSubComponent ? '' : 'export default '}function ${
-    json.name || 'MyComponent'
-  }(props) {
+    ${isSubComponent ? '' : 'export default '}function ${json.name ||
+    'MyComponent'}(props) {
       ${
         hasState
           ? stateType === 'mobx'

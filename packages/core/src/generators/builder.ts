@@ -129,7 +129,11 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id: 'builder-' + Math.random().toString(36).split('.')[1],
+    id:
+      'builder-' +
+      Math.random()
+        .toString(36)
+        .split('.')[1],
   }),
   ...options,
 });
@@ -197,8 +201,9 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey =
-      key.match(eventBindingKeyRegex)?.[1];
+    const firstCharMatchForEventBindingKey = key.match(
+      eventBindingKeyRegex,
+    )?.[1];
     if (firstCharMatchForEventBindingKey) {
       actions[
         key.replace(
@@ -355,7 +360,7 @@ export const componentToBuilder = (
     subComponentMap[name] = componentToBuilder(subComponent, options);
   }
 
-  traverse([result, subComponentMap]).forEach(function (el) {
+  traverse([result, subComponentMap]).forEach(function(el) {
     if (isBuilderElement(el)) {
       const value = subComponentMap[el.component?.name!];
       if (value) {
