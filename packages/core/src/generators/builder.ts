@@ -316,6 +316,7 @@ export const componentToBuilder = (
 
   const result = fastClone({
     data: {
+      httpRequests: (componentJson?.meta?.useMetadata as any)?.httpRequests,
       jsCode: tryFormat(dedent`
         ${!hasProps(componentJson) ? '' : `var props = state;`}
 

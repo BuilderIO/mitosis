@@ -21,9 +21,11 @@ import {
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { handleMissingState } from '../helpers/handle-missing-state';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { mapRefs } from '../helpers/map-refs';
+import { processHttpRequests } from '../helpers/process-http-requests';
 import { processTagReferences } from '../helpers/process-tag-references';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
@@ -419,6 +421,8 @@ const _componentToReact = (
   options: ToReactOptions,
   isSubComponent = false,
 ) => {
+  processHttpRequests(json);
+  handleMissingState(json);
   processTagReferences(json);
   addProviderComponents(json, options);
   const componentHasStyles = hasStyles(json);
@@ -488,6 +492,7 @@ const _componentToReact = (
   import { View, StyleSheet, Image, Text } from 'react-native';
   `
   }
+  ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
   ${
     reactLibImports.size
       ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'`
@@ -515,8 +520,6 @@ const _componentToReact = (
         : ''
     }
     ${renderPreComponent(json)}
-    ${styledComponentsCode ? styledComponentsCode : ''}
-
 
     ${isSubComponent ? '' : 'export default '}function ${json.name ||
     'MyComponent'}(props) {
@@ -586,6 +589,8 @@ const _componentToReact = (
       const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
     `
     }
+
+    ${styledComponentsCode ? styledComponentsCode : ''}
   `;
 
   str = stripNewlinesInStrings(str);

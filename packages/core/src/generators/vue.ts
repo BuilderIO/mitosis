@@ -30,6 +30,7 @@ import { first, kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import json5 from 'json5';
+import { processHttpRequests } from '../helpers/process-http-requests';
 
 export type ToVueOptions = {
   prettier?: boolean;
@@ -302,6 +303,7 @@ export const componentToVue = (
 ) => {
   // Make a copy we can safely mutate, similar to babel's toolchain can be used
   component = fastClone(component);
+  processHttpRequests(component);
   processDynamicComponents(component, options);
   processForKeys(component, options);
 

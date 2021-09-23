@@ -867,6 +867,11 @@ const builderContentPartToMitosisComponent = (
   const parsed = getHooks(builderContent);
 
   const componentJson = createMitosisComponent({
+    meta: {
+      useMetadata: {
+        httpRequests: builderContent.data?.httpRequests,
+      },
+    },
     state: parsed?.state || {
       ...state,
       ...builderContent.data?.state,

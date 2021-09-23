@@ -57,7 +57,7 @@ type CollectStyleOptions = {
 };
 
 export const collectStyledComponents = (json: MitosisComponent): string => {
-  let styledComponentsCode = `import styled from 'styled-components';\n`;
+  let styledComponentsCode = '';
 
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};

@@ -750,10 +750,10 @@ export default function Fiddle() {
                   }
                   value="mitosis"
                 />
-                <Tab
+                {/* <Tab
                   label={<TabLabelWithIcon label="Liquid Lite" />}
                   value="liquid"
-                />
+                /> */}
               </Tabs>
             </div>
             <Show when={state.inputTab === 'mitosis'}>
