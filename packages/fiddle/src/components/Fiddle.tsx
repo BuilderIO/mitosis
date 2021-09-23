@@ -267,9 +267,11 @@ export default function Fiddle() {
               return;
             }
 
-            (document.querySelector(
-              'builder-editor iframe',
-            ) as HTMLIFrameElement)?.contentWindow?.postMessage(
+            (
+              document.querySelector(
+                'builder-editor iframe',
+              ) as HTMLIFrameElement
+            )?.contentWindow?.postMessage(
               {
                 type: 'builder.changeSelection',
                 data: {
@@ -559,9 +561,10 @@ export default function Fiddle() {
           display: 'flex',
           flexDirection: 'column',
           height: '100vh',
-          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input': {
-            backgroundColor: 'transparent !important',
-          },
+          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input':
+            {
+              backgroundColor: 'transparent !important',
+            },
         }}
       >
         <div
@@ -750,10 +753,10 @@ export default function Fiddle() {
                   }
                   value="mitosis"
                 />
-                <Tab
+                {/* <Tab
                   label={<TabLabelWithIcon label="Liquid Lite" />}
                   value="liquid"
-                />
+                /> */}
               </Tabs>
             </div>
             <Show when={state.inputTab === 'mitosis'}>

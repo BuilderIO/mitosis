@@ -100,7 +100,11 @@ export const babelTransformExpression = <VisitorContextType = any>(
       }
     } catch (err) {
       console.error('Error parsing code:\n', code, '\n', result);
-      throw err;
+      try {
+        return babelTransformExpression(code, visitor, 'functionBody');
+      } catch (err) {
+        throw err;
+      }
     }
   }
   if (type === 'functionBody') {

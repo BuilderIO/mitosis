@@ -21,9 +21,11 @@ import {
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { handleMissingState } from '../helpers/handle-missing-state';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { mapRefs } from '../helpers/map-refs';
+import { processHttpRequests } from '../helpers/process-http-requests';
 import { processTagReferences } from '../helpers/process-tag-references';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
@@ -270,7 +272,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -419,6 +421,8 @@ const _componentToReact = (
   options: ToReactOptions,
   isSubComponent = false,
 ) => {
+  processHttpRequests(json);
+  handleMissingState(json);
   processTagReferences(json);
   addProviderComponents(json, options);
   const componentHasStyles = hasStyles(json);
@@ -515,11 +519,10 @@ const _componentToReact = (
         : ''
     }
     ${renderPreComponent(json)}
-    ${styledComponentsCode ? styledComponentsCode : ''}
 
-
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'
@@ -586,6 +589,8 @@ const _componentToReact = (
       const styles = StyleSheet.create(${json5.stringify(nativeStyles)});
     `
     }
+
+    ${styledComponentsCode ? styledComponentsCode : ''}
   `;
 
   str = stripNewlinesInStrings(str);
