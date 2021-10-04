@@ -33,9 +33,9 @@ const styleOmitList: (
 ];
 
 const getCssFromBlock = (block: BuilderElement) => {
-  const blockSizes: Size[] = Object.keys(block.responsiveStyles || {}).filter(
-    (size) => sizeNames.includes(size as Size),
-  ) as Size[];
+  const blockSizes: Size[] = Object.keys(
+    block.responsiveStyles || {},
+  ).filter((size) => sizeNames.includes(size as Size)) as Size[];
   let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
   for (const size of blockSizes) {
     if (size === 'large') {
@@ -421,8 +421,8 @@ const componentMappers: {
       ),
     };
     const innerProperties = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']:
-        block.component!.options.text,
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!
+        .options.text,
     };
 
     if (options.preserveTextBlocks) {
@@ -777,7 +777,7 @@ function extractSymbols(json: BuilderContent) {
 
   const symbols: { element: BuilderElement; depth: number; id: string }[] = [];
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isBuilderElement(item)) {
       if (item.component?.name === 'Symbol') {
         symbols.push({ element: item, depth: this.path.length, id: item.id! });
@@ -827,14 +827,13 @@ const builderContentPartToMitosisComponent = (
   options: BuilderToMitosisOptions = {},
 ) => {
   builderContent = fastClone(builderContent);
-  traverse(builderContent).forEach(function (elem) {
+  traverse(builderContent).forEach(function(elem) {
     if (isBuilderElement(elem)) {
       // Try adding self-closing tags to void elements, since Builder Text
       // blocks can contain arbitrary HTML
       // List taken from https://developer.mozilla.org/en-US/docs/Glossary/Empty_element
       // TODO: Maybe this should be using something more robust than a regular expression
-      const voidElemRegex =
-        /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
+      const voidElemRegex = /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
 
       try {
         if (elem.component?.name === 'Text') {
