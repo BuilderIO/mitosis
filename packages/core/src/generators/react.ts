@@ -272,7 +272,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -372,7 +372,7 @@ export const componentToReact = (
   let json = fastClone(componentJson);
   const options: ToReactOptions = {
     stateType: 'useState',
-    stylesType: 'styled-components',
+    stylesType: 'styled-jsx',
     ...reactOptions,
   };
   if (options.plugins) {
@@ -521,8 +521,9 @@ const _componentToReact = (
     }
     ${renderPreComponent(json)}
 
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'
@@ -572,12 +573,12 @@ const _componentToReact = (
 
       return (
         ${wrap ? '<>' : ''}
+        ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx'
             ? `<style jsx>{\`${css}\`}</style>`
             : ''
         }
-        ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${wrap ? '</>' : ''}
       );
     }
