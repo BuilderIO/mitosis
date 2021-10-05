@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`React Basic 1`] = `
-"import { useState, useContext } from \\"react\\";
+"import { useState } from \\"react\\";
 
 export default function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
@@ -17,9 +17,7 @@ export default function MyBasicComponent(props) {
 `;
 
 exports[`React Button 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function Button(props) {
+"export default function Button(props) {
   return (
     <>
       {props.link ? (
@@ -48,10 +46,7 @@ export default function Button(props) {
 `;
 
 exports[`React Columns 1`] = `
-"import styled from \\"styled-components\\";
-import { useState, useContext } from \\"react\\";
-
-export default function Column(props) {
+"export default function Column(props) {
   function getColumns() {
     return props.columns || [];
   }
@@ -73,29 +68,31 @@ export default function Column(props) {
   }
 
   return (
-    <Div className=\\"builder-columns\\">
-      {props.columns?.map((column) => (
-        <Div2 className=\\"builder-column\\">{column.content}</Div2>
-      ))}
-    </Div>
+    <>
+      <div className=\\"builder-columns div\\">
+        {props.columns?.map((column) => (
+          <div className=\\"builder-column div-2\\">{column.content}</div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        .div-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </>
   );
 }
-
-const Div = styled.div\`
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  line-height: normal;
-\`;
-
-const Div2 = styled.div\`
-  flex-grow: 1;
-\`;
 "
 `;
 
 exports[`React CustomCode 1`] = `
-"import { useState, useContext, useRef, useEffect } from \\"react\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
@@ -164,7 +161,7 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Embed 1`] = `
-"import { useState, useContext, useRef, useEffect } from \\"react\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
@@ -233,8 +230,7 @@ export default function CustomCode(props) {
 `;
 
 exports[`React Form block 1`] = `
-"import styled from \\"styled-components\\";
-import { useState, useContext, useRef } from \\"react\\";
+"import { useState, useRef } from \\"react\\";
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -437,66 +433,73 @@ export default function FormComponent(props) {
   }
   const formRef = useRef();
   return (
-    <form
-      {...props.attributes}
-      validate={props.validate}
-      ref={formRef}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => onSubmit(event)}
-    >
+    <>
       {\\" \\"}
-      {props.builderBlock && props.builderBlock.children ? (
-        <>
-          {props.builderBlock?.children?.map((block) => (
-            <BuilderBlockComponent key={block.id} block={block} />
-          ))}
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" ? (
-        <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"sending\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" && responseData ? (
-        <>
-          <Pre className=\\"builder-form-error-text\\">
-            {\\" \\"}
-            {JSON.stringify(responseData, null, 2)}{\\" \\"}
-          </Pre>
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"success\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-    </form>
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+      >
+        {\\" \\"}
+        {props.builderBlock && props.builderBlock.children ? (
+          <>
+            {props.builderBlock?.children?.map((block) => (
+              <BuilderBlockComponent key={block.id} block={block} />
+            ))}
+          </>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={props.errorMessage}
+            />
+          </>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"sending\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={props.sendingMessage}
+            />
+          </>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" && responseData ? (
+          <>
+            <pre className=\\"builder-form-error-text pre\\">
+              {\\" \\"}
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
+            </pre>
+          </>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"success\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={props.successMessage}
+            />
+          </>
+        ) : null}{\\" \\"}
+      </form>{\\" \\"}
+      <style jsx>{\`
+        .pre {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>{\\" \\"}
+    </>
   );
 }
-const Pre = styled.pre\`
-  padding: 10px;
-  color: red;
-  text-align: center;
-\`;
 "
 `;
 
 exports[`React Image 1`] = `
-"import styled from \\"styled-components\\";
-import { useState, useContext, useRef, useEffect } from \\"react\\";
+"import { useState, useRef, useEffect } from \\"react\\";
 
 export default function Image(props) {
   const [scrollListener, setScrollListener] = useState(() => null);
@@ -549,43 +552,46 @@ export default function Image(props) {
 
   return (
     <>
-      <picture ref={pictureRef}>
-        {!useLazyLoading() || load ? (
-          <>
-            <Img
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              className={
-                \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-              }
-              src={props.image}
-              onLoad={(event) => setLoaded()}
-              srcset={props.srcset}
-              sizes={props.sizes}
-            />
-          </>
-        ) : null}
+      <>
+        <picture ref={pictureRef}>
+          {!useLazyLoading() || load ? (
+            <>
+              <img
+                className=\\"img\\"
+                alt={props.altText}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
+                className={
+                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+                }
+                src={props.image}
+                onLoad={(event) => setLoaded()}
+                srcset={props.srcset}
+                sizes={props.sizes}
+              />
+            </>
+          ) : null}
 
-        <source srcset={props.srcset} />
-      </picture>
+          <source srcset={props.srcset} />
+        </picture>
 
-      {props.children}
+        {props.children}
+      </>
+      <style jsx>{\`
+        .img {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
     </>
   );
 }
-
-const Img = styled.img\`
-  opacity: 1;
-  transition: opacity 0.2s ease-in-out;
-  object-fit: cover;
-  object-position: center;
-\`;
 "
 `;
 
 exports[`React Img 1`] = `
-"import { useContext } from \\"react\\";
-import { Builder } from \\"@builder.io/sdk\\";
+"import { Builder } from \\"@builder.io/sdk\\";
 
 export default function ImgComponent(props) {
   return (
@@ -605,8 +611,7 @@ export default function ImgComponent(props) {
 `;
 
 exports[`React Input block 1`] = `
-"import { useContext } from \\"react\\";
-import { Builder } from \\"@builder.io/sdk\\";
+"import { Builder } from \\"@builder.io/sdk\\";
 
 export default function FormInputComponent(props) {
   return (
@@ -630,9 +635,7 @@ export default function FormInputComponent(props) {
 `;
 
 exports[`React RawText 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function RawText(props) {
+"export default function RawText(props) {
   return (
     <span
       className={props.attributes?.class || props.attributes?.className}
@@ -644,9 +647,7 @@ export default function RawText(props) {
 `;
 
 exports[`React Section 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function SectionComponent(props) {
+"export default function SectionComponent(props) {
   return (
     <section
       {...props.attributes}
@@ -666,8 +667,7 @@ export default function SectionComponent(props) {
 `;
 
 exports[`React Select block 1`] = `
-"import { useContext } from \\"react\\";
-import { Builder } from \\"@builder.io/sdk\\";
+"import { Builder } from \\"@builder.io/sdk\\";
 
 export default function SelectComponent(props) {
   return (
@@ -693,7 +693,7 @@ export default function SelectComponent(props) {
 
 exports[`React Stamped.io 1`] = `
 "import styled from \\"styled-components\\";
-import { useState, useContext, useEffect } from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 export default function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -778,9 +778,7 @@ const Img = styled.img\`
 `;
 
 exports[`React Submit button block 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function SubmitButton(props) {
+"export default function SubmitButton(props) {
   return (
     <button {...props.attributes} type=\\"submit\\">
       {props.text}
@@ -791,8 +789,7 @@ export default function SubmitButton(props) {
 `;
 
 exports[`React Text 1`] = `
-"import { useContext } from \\"react\\";
-import { Builder } from \\"@builder.io/sdk\\";
+"import { Builder } from \\"@builder.io/sdk\\";
 
 export default function Text(props) {
   return (
@@ -806,9 +803,7 @@ export default function Text(props) {
 `;
 
 exports[`React Textarea 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function Textarea(props) {
+"export default function Textarea(props) {
   return (
     <textarea
       {...props.attributes}
@@ -823,9 +818,7 @@ export default function Textarea(props) {
 `;
 
 exports[`React Video 1`] = `
-"import { useContext } from \\"react\\";
-
-export default function Video(props) {
+"export default function Video(props) {
   return (
     <video
       {...props.attributes}

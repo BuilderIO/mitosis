@@ -348,7 +348,10 @@ function getContextString(
 }
 
 function hasContext(component: MitosisComponent) {
-  return Object.keys(component.context).length;
+  return Boolean(
+    Object.keys(component.context.get).length ||
+      Object.keys(component.context.set).length,
+  );
 }
 
 const getInitCode = (
@@ -462,7 +465,7 @@ const _componentToReact = (
   }
 
   const reactLibImports: Set<ReactExports> = new Set();
-  if (useStateCode && useStateCode.length > 4) {
+  if (useStateCode && useStateCode.includes('useState')) {
     reactLibImports.add('useState');
   }
   if (hasContext(json)) {
