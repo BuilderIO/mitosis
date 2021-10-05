@@ -20,7 +20,7 @@ export const nodeHasStyles = (node: MitosisNode) => {
 export const hasStyles = (component: MitosisComponent) => {
   let hasStyles = false;
 
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (nodeHasStyles(item)) {
         hasStyles = true;
@@ -62,13 +62,18 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (nodeHasStyles(item)) {
         const value = parseCssObject(item.bindings.css as string);
         delete item.bindings.css;
-        const componentName = item.properties.$name
-          ? capitalize(camelCase(item.properties.$name))
+
+        const normalizedNameProperty = item.properties.$name
+          ? capitalize(camelCase(item.properties.$name.replace(/[^a-z]/gi, '')))
+          : null;
+
+        const componentName = normalizedNameProperty
+          ? normalizedNameProperty
           : /^h\d$/.test(item.name || '')
           ? item.name
           : capitalize(camelCase(item.name || 'div'));
@@ -133,7 +138,7 @@ export const collectStyles = (
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (nodeHasStyles(item)) {
         const value = parseCssObject(item.bindings.css as string);
@@ -149,8 +154,9 @@ export const collectStyles = (
           const className = `${componentName}${
             options.prefix ? `-${options.prefix}` : ''
           }`;
-          item.properties[classProperty] = `${item.properties[classProperty] ||
-            ''} ${className}`
+          item.properties[classProperty] = `${
+            item.properties[classProperty] || ''
+          } ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
           return;
@@ -166,8 +172,9 @@ export const collectStyles = (
           options.prefix ? `-${options.prefix}` : ''
         }${index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${item.properties[classProperty] ||
-          ''} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 
