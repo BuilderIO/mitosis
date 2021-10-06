@@ -7,6 +7,14 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
+import { Builder } from '@builder.io/react';
+
+function getComponentInputNames(componentName: string): string[] {
+  const componentInfo = Builder.components.find(
+    (item) => item.name === componentName,
+  );
+  return componentInfo?.inputs?.map((item) => item.name) || [];
+}
 
 const getRenderOptions = (node: MitosisNode) => {
   return {
@@ -30,26 +38,15 @@ const wrapOutput = (
   child: MitosisNode | MitosisNode[],
   components: CompileAwayComponentsMap,
 ) => {
+  const inputNames = getComponentInputNames(node.name);
   compileAwayBuilderComponentsFromTree(child as any, components);
   return createMitosisNode({
     ...node,
     properties: {
-      ...omit(
-        node.properties,
-        // TODO: need actual component schemas to do this right
-        // We should be able to get this from the Builder SDKs but can
-        // harcode for now
-        'content',
-        'innerHTML',
-        'text',
-        'code',
-        'lazy',
-        'srcset',
-        'sizes',
-        'aspectRatio',
-        'columns',
-        'code',
-      ),
+      ...omit(node.properties, ...inputNames),
+    },
+    bindings: {
+      ...omit(node.bindings, ...inputNames),
     },
     // TODO: forward tagName as a $tagName="..."
     name: node.properties._tagName || node.properties.$tagName || 'div',
@@ -167,9 +164,9 @@ export const components: CompileAwayComponentsMap = {
         alignSelf: 'stretch',
         flexGrow: '1',
         boxSizing: 'border-box',
-        maxWidth: '${(node.bindings.maxWidth &&
-          Number(node.bindings.maxWidth)) ||
-          1200}px',
+        maxWidth: '${
+          (node.bindings.maxWidth && Number(node.bindings.maxWidth)) || 1200
+        }px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'stretch',
@@ -477,7 +474,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: MitosisNode | MitosisComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function(item) {
+  traverse(tree).forEach(function (item) {
     if (isMitosisNode(item)) {
       const mapper = components[item.name];
       if (mapper) {

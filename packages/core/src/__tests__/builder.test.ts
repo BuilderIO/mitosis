@@ -9,6 +9,7 @@ import {
 } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
+import { componentToReact } from '..';
 
 /**
  * Load a file using nodejs resolution as a string.
@@ -133,6 +134,10 @@ describe('Builder', () => {
       format: 'legacy',
     });
     expect(mitosis.trim()).toEqual(code.trim());
+    const react = componentToReact(json, {
+      plugins: [compileAwayBuilderComponents()],
+    });
+    expect(react).toMatchSnapshot();
   });
 
   test('Regenerate Text', () => {
