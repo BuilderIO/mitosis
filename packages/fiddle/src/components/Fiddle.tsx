@@ -267,9 +267,11 @@ export default function Fiddle() {
               return;
             }
 
-            (document.querySelector(
-              'builder-editor iframe',
-            ) as HTMLIFrameElement)?.contentWindow?.postMessage(
+            (
+              document.querySelector(
+                'builder-editor iframe',
+              ) as HTMLIFrameElement
+            )?.contentWindow?.postMessage(
               {
                 type: 'builder.changeSelection',
                 data: {
@@ -285,7 +287,7 @@ export default function Fiddle() {
     options: {
       reactStyleType:
         localStorageGet('options.reactStyleType') ||
-        ('emotion' as 'emotion' | 'styled-jsx'),
+        ('styled-jsx' as 'emotion' | 'styled-jsx'),
       reactStateType:
         localStorageGet('options.reactStateType') ||
         ('useState' as 'useState' | 'mobx' | 'solid'),
@@ -559,9 +561,10 @@ export default function Fiddle() {
           display: 'flex',
           flexDirection: 'column',
           height: '100vh',
-          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input': {
-            backgroundColor: 'transparent !important',
-          },
+          '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input':
+            {
+              backgroundColor: 'transparent !important',
+            },
         }}
       >
         <div
