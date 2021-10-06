@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 
 export const defaultCode = dedent`
-  import { useState } from "react";
+  import { useState } from "@builder.io/mitosis";
 
   export default function MyComponent(props) {
     const [name, setName] = useState("Steve");
@@ -23,7 +23,7 @@ export const defaultCode = dedent`
 
 export const templates: { [key: string]: string } = {
   basic: dedent`
-    import { useState } from "react";
+    import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
       const [name, setName] = useState("Steve");
@@ -45,7 +45,7 @@ export const templates: { [key: string]: string } = {
   `,
 
   tailwind: dedent`
-    import { useState } from "react";
+    import { useState } from "@builder.io/mitosis";
 
     export default function MyComponent(props) {
       const [name, setName] = useState("Steve");
@@ -83,7 +83,7 @@ export const templates: { [key: string]: string } = {
   `,
 
   'methods and refs': dedent`
-    import { useState, useRef } from "react";
+    import { useState, useRef } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
       const [name, setName] = useState("Steve");
@@ -121,7 +121,7 @@ export const templates: { [key: string]: string } = {
     }
   `,
   loop: dedent`
-    import { useState } from "react";
+    import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
       const [list, setList] = useState(["hello", "world"]);
