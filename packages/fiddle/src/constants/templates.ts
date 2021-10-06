@@ -62,14 +62,14 @@ export const templates: { [key: string]: string } = {
           />
 
           <input
-            className="shadow-md rounded w-full px-4 py-2"
+            class="shadow-md rounded w-full px-4 py-2"
             placeholder="What is your name?"
             value={name}
             onChange={(event) => setName(event.target.value)}
           />
 
           <h1
-            className="text-lg"
+            class="text-lg"
             css={{
               marginTop: "10px",
             }}
@@ -144,13 +144,13 @@ export const templates: { [key: string]: string } = {
           />
     
           <input
-            className="shadow-md rounded w-full px-4 py-2"
+            class="shadow-md rounded w-full px-4 py-2"
             value={newItemName}
             onChange={(event) => setNewItemName(event.target.value)}
           />
     
           <button
-            className="bg-blue-500 rounded w-full text-white font-bold py-2 px-4 "
+            class="bg-blue-500 rounded w-full text-white font-bold py-2 px-4 "
             css={{
               margin: "10px 0",
             }}
@@ -159,10 +159,10 @@ export const templates: { [key: string]: string } = {
             Add list item
           </button>
     
-          <div className="shadow-md rounded">
+          <div class="shadow-md rounded">
             {list.map((item) => (
               <div
-                className="border-gray-200 border-b"
+                class="border-gray-200 border-b"
                 css={{
                   padding: "10px",
                 }}
