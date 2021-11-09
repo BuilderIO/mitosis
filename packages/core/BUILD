@@ -35,6 +35,7 @@ ts_project(
         "@npm_core//@types/traverse",
         "@npm_core//@types/rollup__plugin-virtual",
         "@npm_core//@builder.io/sdk",
+        "@npm_core//@builder.io/react",
         "@npm_core//@babel/core",
         "@npm_core//@babel/generator",
         "@npm_core//@rollup/plugin-virtual",
