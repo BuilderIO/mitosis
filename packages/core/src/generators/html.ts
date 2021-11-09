@@ -342,7 +342,7 @@ function addUpdateAfterSetInCode(
           if (node.left.object.name === 'state') {
             // TODO: ultimately do updates by property, e.g. updateName()
             // that updates any attributes dependent on name, etcç
-            let parent: NodePath<any> = path;
+            let parent: NodePath<any> | null = path;
 
             // `_temp = ` assignments are created sometimes when we insertAfter
             // for simple expressions. this causes us to re-process the same expression

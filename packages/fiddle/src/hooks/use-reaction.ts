@@ -6,5 +6,6 @@ export function useReaction<T = any>(
   effect: (value: T) => void,
   options: IReactionOptions = { fireImmediately: true },
 ): void {
+  // eslint-disable-next-line
   useEffect(() => reaction(expression, effect, options), []);
 }
