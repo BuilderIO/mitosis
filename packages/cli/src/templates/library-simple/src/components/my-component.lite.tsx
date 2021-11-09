@@ -8,7 +8,7 @@ type MyProps = {
 
 export default function MyComponent(props: MyProps) {
   const state = useState({
-    name: 'Steve'
+    name: 'Steve',
   })
 
   return (
@@ -17,7 +17,7 @@ export default function MyComponent(props: MyProps) {
         <input
           css={{ color: 'red' }}
           value={state.name}
-          onChange={event => (state.name = event.target.value)}
+          onChange={(event) => (state.name = event.target.value)}
         />
       </Show>
       Hello! I can run in React, Vue, Solid, or Liquid!
