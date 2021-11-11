@@ -1337,13 +1337,16 @@ async function processInnerTemplates(
         }
       }
     } catch (error) {
-      if (error.message.includes('Unexpected closing tag')) {
+      if (
+        error instanceof Error &&
+        error.message.includes('Unexpected closing tag')
+      ) {
         // template.str have an unclosed tag, extract all valid text and
         // replace the invlalid endtag with htmlattr
         const { col, line } = getErrorInfo(error.message)!;
         const errorTag = error.message.match(
           /Unexpected closing tag "(\s*\S*)"/,
-        )?.[1];
+        )?.[1]!;
         const preErrorTag = getSubstringTill(Number(col), Number(line), str);
         result += preErrorTag;
         result += createHtmlAttribute('endopencondtag', {
@@ -1593,7 +1596,10 @@ export const htmlNodeToBuilder = async (
   // throw new Error('Unhandled node type');
 };
 
-const assets: Record<string, Promise<string | Error | undefined>> = {};
+const assets: Record<
+  string,
+  Promise<string | Error | undefined> | undefined
+> = {};
 
 const getShopifyAsset = async (
   assetKey: string,

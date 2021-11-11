@@ -1434,7 +1434,7 @@ Object {
 exports[`Builder Section 1`] = `
 "<div class=\\"div\\"><p>EAGER LOAD</p></div>
 <div class=\\"div-2\\" data-name=\\"div-1\\">
-  <section lazyload=\\"true\\" class=\\"section\\">
+  <section lazyLoad=\\"true\\" class=\\"section\\" data-name=\\"section-1\\">
     <p>LAZY LOAD</p>
   </section>
 </div>
@@ -1489,6 +1489,11 @@ exports[`Builder Section 1`] = `
     // in the dom
     function update() {
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.maxWidth = 1234;
+        el.lazyLoad = true;
+      });
+
+      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
         el.maxWidth = 1234;
         el.lazyLoad = true;
       });

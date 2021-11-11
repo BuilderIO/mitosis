@@ -1,13 +1,11 @@
+import { Builder } from '@builder.io/react';
 import { mapValues, omit, pick } from 'lodash';
-import { parseNode, parseNodes } from '../helpers/parse-node';
 import traverse, { TraverseContext } from 'traverse';
-import { MitosisNode } from '../types/mitosis-node';
-import { blockToMitosis } from '../generators/mitosis';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
-import { Builder } from '@builder.io/react';
+import { MitosisNode } from '../types/mitosis-node';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find(
@@ -106,7 +104,7 @@ export const components: CompileAwayComponentsMap = {
       createMitosisNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: (node.properties.content || '').replace(/"/g, '&quot;'),
+          innerHTML: node.properties.content || '',
         },
       }),
       components,
@@ -141,13 +139,12 @@ export const components: CompileAwayComponentsMap = {
     });
   },
   CustomCode(node: MitosisNode, context, components) {
-    const options = getRenderOptions(node);
     return wrapOutput(
       node,
       createMitosisNode({
         name: (node.properties.builderTag as string) || 'div',
         properties: {
-          innerHTML: (node.properties.code || '').replace(/"/g, '&quot;'),
+          innerHTML: node.properties.code || '',
         },
       }),
       components,
@@ -156,32 +153,34 @@ export const components: CompileAwayComponentsMap = {
   CoreSection(node: MitosisNode, context, components) {
     return wrapOutput(
       node,
-      parseNode(`<section
-      $name="section"
-      ${node.bindings.lazyLoad === 'true' ? 'lazyload="true"' : ''}
-      css={{
-        width: '100%',
-        alignSelf: 'stretch',
-        flexGrow: '1',
-        boxSizing: 'border-box',
-        maxWidth: '${
-          (node.bindings.maxWidth && Number(node.bindings.maxWidth)) || 1200
-        }px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      }}
-    >
-    ${node.children
-      .map((block) =>
-        blockToMitosis(block, {
-          prettier: false,
-        }),
-      )
-      .join('\n')}
-    </section>`),
+      createMitosisNode({
+        name: 'section',
+        properties: {
+          ...node.properties,
+          $name: 'section',
+          ...(node.bindings.lazyLoad === 'true' && {
+            lazyLoad: 'true',
+          }),
+        },
+        bindings: {
+          ...node.bindings,
+          css: JSON.stringify({
+            width: '100%',
+            alignSelf: 'stretch',
+            flexGrow: '1',
+            boxSizing: 'border-box',
+            maxWidth: `${(node.bindings.maxWidth &&
+              Number(node.bindings.maxWidth)) ||
+              1200}px`,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+          }),
+        },
+        children: node.children,
+      }),
       components,
     );
   },
@@ -208,78 +207,66 @@ export const components: CompileAwayComponentsMap = {
 
     return wrapOutput(
       node,
-      parseNode(`
-        <div
-          class="builder-columns"
-          $name="columns"
-          css={{
+      createMitosisNode({
+        name: 'div',
+        properties: {
+          class: 'builder-columns',
+        },
+        bindings: {
+          css: JSON.stringify({
             display: 'flex',
-            ${
-              properties.stackColumnsAt === 'never'
-                ? ''
-                : `
-              "@media (max-width: ${
-                properties.stackColumnsAt !== 'tablet' ? 639 : 999
-              }px)": {
-                flexDirection: "${
-                  properties.reverseColumnsWhenStacked === 'true'
-                    ? 'column-reverse'
-                    : 'column'
-                }",
-                alignItems: 'stretch',
-              },
-            `
-            }
-          }}
-        >
-          ${columns
-            .map((col, index) => {
-              // TODO: pass size down in context
-
-              return `<div
-              $name="column"
-              class="builder-column"
-              css={{
+            ...(properties.stackColumnsAt === 'never'
+              ? {}
+              : {
+                  [`@media (max-width: ${
+                    properties.stackColumnsAt !== 'tablet' ? 639 : 999
+                  }px)`]: {
+                    flexDirection:
+                      properties.reverseColumnsWhenStacked === 'true'
+                        ? 'column-reverse'
+                        : 'column',
+                    alignItems: 'stretch',
+                  },
+                }),
+          }),
+        },
+        children: columns.map((col, index) => {
+          return createMitosisNode({
+            name: 'div',
+            properties: {
+              $name: 'column',
+              class: 'builder-column',
+            },
+            bindings: {
+              css: JSON.stringify({
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'stretch',
                 lineHeight: 'normal',
-                width: "${getColumnWidth(index)}",
-                marginLeft: "${index === 0 ? 0 : gutterSize}px",
-                ${
-                  properties.stackColumnsAt === 'never'
-                    ? ''
-                    : `
-                  
-                  "@media (max-width: ${
-                    properties.stackColumnsAt !== 'tablet' ? 639 : 999
-                  }px)": {
-                    width: '100%',
-                    marginLeft: 0,
-                  },
-                  `
-                }
-              }}
-            >
-              ${col.children
-                .map((block) =>
-                  blockToMitosis(block, {
-                    prettier: false,
-                  }),
-                )
-                .join('\n')}
-            </div>
-          `;
-            })
-            .join('\n')}
-        </div>
-  `),
+                width: `${getColumnWidth(index)}`,
+                marginLeft: `${index === 0 ? 0 : gutterSize}px`,
+                ...(properties.stackColumnsAt === 'never'
+                  ? {}
+                  : {
+                      [`@media (max-width: ${
+                        properties.stackColumnsAt !== 'tablet' ? 639 : 999
+                      }px)`]: {
+                        width: '100%',
+                        marginLeft: 0,
+                      },
+                    }),
+              }),
+            },
+            children: col.children,
+          });
+        }),
+      }),
       components,
     );
   },
   Image(node: MitosisNode, context, components) {
     const options = getRenderOptions(node);
-    const { backgroundSize, backgroundPosition, sizes, lazy, image } = options;
+    const { backgroundSize, backgroundPosition } = options;
     const { srcset } = node.properties;
     const widths = [100, 200, 400, 800, 1200, 1600, 2000];
 
@@ -307,60 +294,176 @@ export const components: CompileAwayComponentsMap = {
               .join(', ')
           : ''
       }`;
+    const source =
+      srcSet &&
+      createMitosisNode({
+        name: 'source',
+        properties: {
+          srcSet: srcSet.replace(/\?/g, '?format=webp&'),
+          type: 'image/webp',
+        },
+      });
+    const img = createMitosisNode({
+      name: 'img',
+      properties: noUndefined({
+        $name: 'image',
+        loading: node.properties.lazy ? 'lazy' : undefined,
+        src: node.properties.image,
+        sizes: node.properties.sizes,
+        srcSet: srcSet || null,
+      }),
+      bindings: noUndefined({
+        loading: node.bindings.lazy ? '"lazy"' : undefined,
+        src: node.bindings.image,
+        sizes: node.bindings.sizes,
+        css: JSON.stringify({
+          ...(node.bindings.css ? JSON.parse(node.bindings.css) : null),
+          objectFit: backgroundSize || 'cover',
+          objectPosition: backgroundPosition || 'cover',
+          ...(aspectRatio
+            ? {
+                position: 'absolute',
+                height: '100%',
+                width: '100%',
+                top: '0',
+                left: '0',
+              }
+            : {}),
+        }),
+      }),
+    });
 
-    return wrapOutput(
-      node,
-      parseNodes(`
-      <picture>
-        ${
-          srcSet && srcSet.match(/builder\.io/)
-            ? `<source srcSet="${srcSet.replace(
-                /\?/g,
-                '?format=webp&',
-              )}" type="image/webp" />`
-            : ''
-        }
-        <img
-          $name="image"
-          ${lazy ? ` loading="lazy" ` : ''}
-          ${image ? ` src=${image} ` : ''} 
-          ${!sizes ? '' : `sizes=${sizes}`} 
-          ${!srcSet ? '' : `srcSet="${srcSet}"`}
-          css={{
-          objectFit: ${backgroundSize || '"cover"'},
-          objectPosition: ${backgroundPosition || '"cover"'},
-          ${
-            !aspectRatio
-              ? ''
-              : `
-          position: 'absolute',
-          height: '100%',
-          width: '100%',
-          top: '0',
-          left: '0',
-          `
-          }
-        }} />
-      </picture>
-      ${
-        aspectRatio
-          ? `<div
-          class="builder-image-sizer"
-          $name="image-sizer"
-          css={{
+    const picture = createMitosisNode({
+      name: 'picture',
+      children: source ? [source, img] : [img],
+    });
+
+    const imgSizer =
+      aspectRatio &&
+      createMitosisNode({
+        name: 'div',
+        properties: {
+          $name: 'image-sizer',
+          class: 'builder-image-sizer',
+        },
+        bindings: {
+          css: JSON.stringify({
             width: '100%',
-            paddingTop: "${aspectRatio * 100 + '%'}",
+            paddingTop: aspectRatio * 100 + '%',
             pointerEvents: 'none',
             fontSize: '0',
-          }} />`
-          : ''
-      }
-        ${
-          node.children && node.children.length
-            ? `
-          <div
-            $name="image-contents"
-            css={{
+          }),
+        },
+      });
+
+    const children =
+      node.children &&
+      node.children.length &&
+      createMitosisNode({
+        name: 'div',
+        properties: {
+          $name: 'image-contents',
+        },
+        bindings: {
+          css: JSON.stringify({
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'stretch',
+            position: 'absolute',
+            top: '0',
+            left: '0',
+            width: '100%',
+            height: '100%',
+          }),
+        },
+        children: node.children,
+      });
+
+    const imageNodes = [picture];
+    imgSizer && imageNodes.push(imgSizer);
+    children && imageNodes.push(children);
+
+    return wrapOutput(node, imageNodes, components);
+  },
+  Video(node: MitosisNode, context, components) {
+    let aspectRatio = node.bindings.aspectRatio
+      ? parseFloat(node.bindings.aspectRatio as string)
+      : null;
+    if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
+      aspectRatio = null;
+    }
+    const videoContainerNodes: MitosisNode[] = [];
+
+    videoContainerNodes.push(
+      createMitosisNode({
+        name: 'video',
+        properties: noUndefined({
+          $name: 'builder-video',
+          poster: node.properties.posterImage,
+          autoplay: node.properties.autoPlay,
+          muted: node.properties.muted,
+          controls: node.properties.controls,
+          loop: node.properties.loop,
+          preload: node.properties.lazy ? 'none' : undefined,
+        }),
+        bindings: noUndefined({
+          poster: node.bindings.posterImage,
+          autoplay: node.bindings.autoPlay,
+          muted: node.bindings.muted,
+          controls: node.bindings.controls,
+          loop: node.bindings.loop,
+          css: JSON.stringify({
+            width: '100%',
+            height: '100%',
+            objectFit: node.properties.fit,
+            objectPosition: node.properties.position,
+            borderRadius: '1',
+            position: aspectRatio ? 'absolute' : '',
+          }),
+        }),
+        children: [
+          createMitosisNode({
+            name: 'source',
+            properties: {
+              type: 'video/mp4',
+              src: node.properties.video,
+            },
+            bindings: {
+              src: node.bindings.video,
+            },
+          }),
+        ],
+      }),
+    );
+
+    aspectRatio &&
+      videoContainerNodes.push(
+        createMitosisNode({
+          name: 'div',
+          properties: {
+            $name: 'builder-video-sizer',
+          },
+          bindings: {
+            css: JSON.stringify({
+              width: '100%',
+              paddingTop: aspectRatio * 100 + '%',
+              pointerEvents: 'none',
+              fontSize: '0',
+            }),
+          },
+        }),
+      );
+
+    node.children &&
+      node.children.length &&
+      videoContainerNodes.push(
+        createMitosisNode({
+          name: 'div',
+          properties: {
+            $name: 'image-contents',
+          },
+          bindings: {
+            css: JSON.stringify({
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'stretch',
@@ -369,99 +472,23 @@ export const components: CompileAwayComponentsMap = {
               left: '0',
               width: '100%',
               height: '100%',
-            }}
-          >
-            ${node.children
-              .map((block) =>
-                blockToMitosis(block, {
-                  prettier: false,
-                }),
-              )
-              .join('\n')}
-          </div>`
-            : ''
-        }
-      `),
-      components,
-    );
-  },
-  Video(node: MitosisNode, context, components) {
-    const options = getRenderOptions(node);
-    let aspectRatio = node.bindings.aspectRatio
-      ? parseFloat(node.bindings.aspectRatio as string)
-      : null;
-    if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
-      aspectRatio = null;
-    }
+            }),
+          },
+          children: node.children,
+        }),
+      );
 
-    const str = `
-    <div $name="video-container" css={{ position: 'relative' }}>
-      <video
-        ${options.posterImage ? `poster=${options.posterImage}` : ''}
-        ${options.autoPlay ? `autoPlay=${options.autoPlay}` : ''}
-        ${options.muted ? `muted=${options.muted}` : ''}
-        ${options.controls ? `controls=${options.controls}` : ''}
-        ${options.loop ? `loop=${options.loop}` : ''}
-        ${options.lazy ? 'preload="none"' : ''}
-        $name="builder-video"
-        css={{
-          width: '100%',
-          height: '100%',
-          ${options.fit ? `objectFit: ${options.fit},` : ''}
-          ${options.position ? `objectPosition: ${options.position},` : ''}
-          borderRadius: '1',
-          ${aspectRatio ? `position: "absolute",` : ''}
-        }}
-      >
-        <source type="video/mp4" src=${options.video} />
-      </video>
-      ${
-        !aspectRatio
-          ? ''
-          : `
-        <div
-          $name="builder-video-sizer"
-          css={{
-            width: '100%',
-            paddingTop: '${aspectRatio * 100 + '%'}',
-            pointerEvents: 'none',
-            fontSize: '0'
-          }}
-        />
-      `
-      }
-      ${
-        node.children && node.children.length
-          ? `
-        <div
-          $name="video-contents"
-          css={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%'
-          }}
-        >
-          ${node.children
-            .map((block) =>
-              blockToMitosis(block, {
-                prettier: false,
-              }),
-            )
-            .join('\n')}
-        </div>`
-          : ''
-      }
-    </div>
-    `;
-
-    const output = wrapOutput(node, parseNodes(str), components);
-
-    return output;
+    const videoContainer = createMitosisNode({
+      name: 'div',
+      properties: {
+        $name: 'video-container',
+      },
+      bindings: {
+        css: JSON.stringify({ position: 'relative' }),
+      },
+      children: videoContainerNodes,
+    });
+    return wrapOutput(node, videoContainer, components);
   },
 };
 
@@ -474,7 +501,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: MitosisNode | MitosisComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function (item) {
+  traverse(tree).forEach(function(item) {
     if (isMitosisNode(item)) {
       const mapper = components[item.name];
       if (mapper) {
@@ -506,3 +533,16 @@ export const compileAwayBuilderComponents = (
     },
   });
 };
+
+function noUndefined(obj: Record<string, any>): Record<string, any> {
+  const cleanObj: Record<string, any> = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      if (value != null) {
+        cleanObj[key] = value;
+      }
+    }
+  }
+  return cleanObj;
+}
