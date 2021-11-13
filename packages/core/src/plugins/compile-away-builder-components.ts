@@ -6,6 +6,9 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
+import * as JSON5 from 'json5';
+import { BuilderElement } from '@builder.io/sdk';
+import { builderElementToMitosisNode } from '../parsers/builder';
 
 function getComponentInputNames(componentName: string): string[] {
   const componentInfo = Builder.components.find(
@@ -52,6 +55,11 @@ type CompileAwayComponentsMap = {
     components: CompileAwayComponentsMap,
   ) => MitosisNode | void;
 };
+
+interface AccordionItem {
+  title: BuilderElement[];
+  detail: BuilderElement[];
+}
 
 export const components: CompileAwayComponentsMap = {
   CoreButton(node: MitosisNode, context, components) {
@@ -103,12 +111,51 @@ export const components: CompileAwayComponentsMap = {
       components,
     );
   },
-  BuilderAccordion() {
-    // TODO
-    return createMitosisNode({
-      name: 'div',
-      properties: { 'data-missing-component': 'BuilderAccordion' },
+  BuilderAccordion(node: MitosisNode, context, components) {
+    const itemsJSON = node.bindings.items || '[]';
+    const accordionItems: AccordionItem[] = JSON5.parse(itemsJSON);
+    const children: MitosisNode[] = accordionItems.map((accordionItem) => {
+      const titleChildren: MitosisNode[] = accordionItem.title.map((element) =>
+        builderElementToMitosisNode(element, {
+          includeBuilderExtras: true,
+          preserveTextBlocks: true,
+        }),
+      );
+      const detailChildren: MitosisNode[] = accordionItem.detail.map(
+        (element) =>
+          builderElementToMitosisNode(element, {
+            includeBuilderExtras: true,
+            preserveTextBlocks: true,
+          }),
+      );
+      return createMitosisNode({
+        name: 'div',
+        properties: { builder: 'accordion' },
+        children: [
+          createMitosisNode({
+            name: 'div',
+            properties: { builder: 'accordion-title' },
+            children: titleChildren,
+          }),
+          createMitosisNode({
+            name: 'div',
+            properties: { builder: 'accordion-detail' },
+            children: detailChildren,
+          }),
+        ],
+      });
     });
+    return wrapOutput(
+      node,
+      createMitosisNode({
+        name: (node.properties.builderTag as string) || 'div',
+        properties: {
+          $name: 'accordion',
+        },
+        children: children,
+      }),
+      components,
+    );
   },
   BuilderMasonry() {
     // TODO

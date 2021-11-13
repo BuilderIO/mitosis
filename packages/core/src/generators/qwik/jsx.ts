@@ -1,6 +1,5 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
-import { extractJSBlock } from './handlers';
 import {
   File,
   INDENT,
