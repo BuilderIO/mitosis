@@ -161,9 +161,9 @@ export const components: CompileAwayComponentsMap = {
             alignSelf: 'stretch',
             flexGrow: '1',
             boxSizing: 'border-box',
-            maxWidth: `${(node.bindings.maxWidth &&
-              Number(node.bindings.maxWidth)) ||
-              1200}px`,
+            maxWidth: `${
+              (node.bindings.maxWidth && Number(node.bindings.maxWidth)) || 1200
+            }px`,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'stretch',
@@ -286,7 +286,7 @@ export const components: CompileAwayComponentsMap = {
           : ''
       }`;
     const source =
-      srcSet &&
+      node.bindings.noWebp !== 'true' &&
       createMitosisNode({
         name: 'source',
         properties: {
@@ -491,7 +491,7 @@ export const compileAwayBuilderComponentsFromTree = (
   tree: MitosisNode | MitosisComponent,
   components: CompileAwayComponentsMap,
 ) => {
-  traverse(tree).forEach(function(item) {
+  traverse(tree).forEach(function (item) {
     if (isMitosisNode(item)) {
       const mapper = components[item.name];
       if (mapper) {
