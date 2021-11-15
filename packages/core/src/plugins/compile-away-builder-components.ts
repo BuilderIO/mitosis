@@ -290,7 +290,7 @@ export const components: CompileAwayComponentsMap = {
       createMitosisNode({
         name: 'source',
         properties: {
-          srcSet: srcSet.replace(/\?/g, '?format=webp&'),
+          srcset: srcSet.replace(/\?/g, '?format=webp&'),
           type: 'image/webp',
         },
       });
@@ -301,7 +301,7 @@ export const components: CompileAwayComponentsMap = {
         loading: node.properties.lazy ? 'lazy' : undefined,
         src: node.properties.image,
         sizes: node.properties.sizes,
-        srcSet: srcSet || null,
+        srcset: srcSet || null,
       }),
       bindings: noUndefined({
         loading: node.bindings.lazy ? '"lazy"' : undefined,
