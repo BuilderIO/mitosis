@@ -14,13 +14,6 @@ function getComponentInputNames(componentName: string): string[] {
   return componentInfo?.inputs?.map((item) => item.name) || [];
 }
 
-const getRenderOptions = (node: MitosisNode) => {
-  return {
-    ...mapValues(node.properties, (value) => `"${value}"`),
-    ...mapValues(node.bindings, (value) => `{${value}}`),
-  };
-};
-
 function updateQueryParam(uri = '', key: string, value: string) {
   const re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
   const separator = uri.indexOf('?') !== -1 ? '&' : '?';
@@ -163,7 +156,6 @@ export const components: CompileAwayComponentsMap = {
           }),
         },
         bindings: {
-          ...node.bindings,
           css: JSON.stringify({
             width: '100%',
             alignSelf: 'stretch',
@@ -265,8 +257,7 @@ export const components: CompileAwayComponentsMap = {
     );
   },
   Image(node: MitosisNode, context, components) {
-    const options = getRenderOptions(node);
-    const { backgroundSize, backgroundPosition } = options;
+    const { backgroundSize, backgroundPosition } = node.properties;
     const { srcset } = node.properties;
     const widths = [100, 200, 400, 800, 1200, 1600, 2000];
 
@@ -317,7 +308,6 @@ export const components: CompileAwayComponentsMap = {
         src: node.bindings.image,
         sizes: node.bindings.sizes,
         css: JSON.stringify({
-          ...(node.bindings.css ? JSON.parse(node.bindings.css) : null),
           objectFit: backgroundSize || 'cover',
           objectPosition: backgroundPosition || 'cover',
           ...(aspectRatio

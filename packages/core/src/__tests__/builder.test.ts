@@ -118,7 +118,9 @@ describe('Builder', () => {
           >
             <Image
               image="hi"
+              backgroundSize="contain"
               css={{
+                marignTop: "50px",
                 display: "block",
               }}
             />
