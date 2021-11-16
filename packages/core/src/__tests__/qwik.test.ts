@@ -15,7 +15,7 @@ const debugFiles = true;
 
 const debugOutput = async (fileSet: FileSet) => {
   const testName = expect.getState().currentTestName;
-  const base = 'dist/test/qwik/' + testName.split(' ').join('/') + '/';
+  const base = 'dist/test/' + testName.split(' ').join('/') + '/';
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
@@ -129,6 +129,7 @@ describe('qwik', () => {
     debugOutput(fileSet);
     expect(toObj(fileSet)).toMatchSnapshot();
   });
+
   test('Image.slow', async () => {
     const component = builderContentToMitosisComponent(
       require('./qwik.test.image.json'),
@@ -139,6 +140,22 @@ describe('qwik', () => {
     );
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
+
+    addComponent(fileSet, component);
+    debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('Accordion', async () => {
+    const component = builderContentToMitosisComponent(
+      require('./qwik.test.accordion.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+    const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
     addComponent(fileSet, component);
     debugOutput(fileSet);
