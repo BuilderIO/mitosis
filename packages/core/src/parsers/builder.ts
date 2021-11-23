@@ -481,7 +481,7 @@ export type InternalBuilderToMitosisOptions = BuilderToMitosisOptions & {
 
 export const builderElementToMitosisNode = (
   block: BuilderElement,
-  options: BuilderToMitosisOptions = {},
+  options: BuilderToMitosisOptions,
   _internalOptions: InternalOptions = {},
 ): MitosisNode => {
   if (block.component?.name === 'Core:Fragment') {
@@ -512,14 +512,17 @@ export const builderElementToMitosisNode = (
           when: wrapBindingIfNeeded(showBinding, options),
         },
         children: [
-          builderElementToMitosisNode({
-            ...block,
-            code: {
-              ...block.code,
+          builderElementToMitosisNode(
+            {
+              ...block,
+              code: {
+                ...block.code,
+                bindings: omit(blockBindings, 'show'),
+              },
               bindings: omit(blockBindings, 'show'),
             },
-            bindings: omit(blockBindings, 'show'),
-          }),
+            options,
+          ),
         ],
       });
     }
@@ -556,7 +559,9 @@ export const builderElementToMitosisNode = (
         properties: {
           _forName: block.repeat?.itemName || 'item',
         },
-        children: [builderElementToMitosisNode(omit(useBlock, 'repeat'))],
+        children: [
+          builderElementToMitosisNode(omit(useBlock, 'repeat'), options),
+        ],
       });
     }
   }
