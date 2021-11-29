@@ -117,7 +117,7 @@ describe('Builder', () => {
             }}
           >
             <Image
-              image="hi"
+              image="https://cdn.builder.io/api/v1/image/foobar"
               sizes="100vw"
               backgroundSize="contain"
               css={{
