@@ -333,7 +333,7 @@ export const components: CompileAwayComponentsMap = {
           : ''
       }`;
     const source =
-      srcSet &&
+      node.bindings.noWebp !== 'true' &&
       createMitosisNode({
         name: 'source',
         properties: {
