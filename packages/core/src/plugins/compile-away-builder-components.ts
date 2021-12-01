@@ -449,7 +449,7 @@ export const components: CompileAwayComponentsMap = {
           autoplay: node.bindings.autoPlay,
           muted: node.bindings.muted,
           controls: node.bindings.controls,
-          playsinline: node.properties.playsInline,
+          playsinline: node.bindings.playsInline,
           loop: node.bindings.loop,
           css: JSON.stringify({
             width: '100%',
