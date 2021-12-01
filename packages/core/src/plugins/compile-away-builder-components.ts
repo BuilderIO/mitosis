@@ -441,6 +441,7 @@ export const components: CompileAwayComponentsMap = {
           muted: node.properties.muted,
           controls: node.properties.controls,
           loop: node.properties.loop,
+          playsinline: node.properties.playsInline,
           preload: node.properties.lazy ? 'none' : undefined,
         }),
         bindings: noUndefined({
@@ -448,6 +449,7 @@ export const components: CompileAwayComponentsMap = {
           autoplay: node.bindings.autoPlay,
           muted: node.bindings.muted,
           controls: node.bindings.controls,
+          playsinline: node.properties.playsInline,
           loop: node.bindings.loop,
           css: JSON.stringify({
             width: '100%',
