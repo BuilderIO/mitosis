@@ -26,10 +26,6 @@ const styleOmitList: (
   'backgroundRepeatY',
   'backgroundPositionX',
   'backgroundPositionY',
-  'borderBottomLeftRadius',
-  'borderBottomRightRadius',
-  'borderTopRightRadius',
-  'borderTopRightRadius',
 ];
 
 const getCssFromBlock = (block: BuilderElement) => {
