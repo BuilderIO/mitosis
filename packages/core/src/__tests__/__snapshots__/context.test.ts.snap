@@ -604,3 +604,34 @@ export default function ComponentWithContext(props) {
 }
 "
 `;
+
+exports[`Context Use and set context in components 3`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+        }}
+      >
+        <>
+          <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;

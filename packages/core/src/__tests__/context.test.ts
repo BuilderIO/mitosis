@@ -2,6 +2,7 @@ import { parseJsx } from '../parsers/jsx';
 import { contextToReact } from '../generators/context/react';
 import { parseContext } from '../parsers/context';
 import { componentToReact } from '../generators/react';
+import { componentToReactNative } from '../generators/react-native';
 
 const simpleExample = require('./data/context/simple.context.lite');
 const componentWithContext = require('./data/context/component-with-context.lite');
@@ -23,6 +24,9 @@ describe('Context', () => {
     expect(component).toMatchSnapshot();
     const reactComponent = componentToReact()({ component });
     expect(reactComponent).toMatchSnapshot();
+
+    const reactNativeComponent = componentToReactNative()({ component });
+    expect(reactNativeComponent).toMatchSnapshot();
   });
 
   test('Use and set context in complex components', () => {
