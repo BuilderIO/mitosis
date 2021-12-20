@@ -1,4 +1,3 @@
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
@@ -15,6 +14,11 @@ import { attempt, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
+import { TranspilerArgs } from '../types/config';
+
+export interface ToBuilderOptions {
+  includeIds?: boolean;
+}
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -129,18 +133,10 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
-
-export type ToBuilderOptions = {
-  includeIds?: boolean;
-};
 
 function tryFormat(code: string) {
   let str = code;
@@ -201,9 +197,8 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey = key.match(
-      eventBindingKeyRegex,
-    )?.[1];
+    const firstCharMatchForEventBindingKey =
+      key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
       actions[
         key.replace(
@@ -308,67 +303,68 @@ export const blockToBuilder = (
   );
 };
 
-export const componentToBuilder = (
-  componentJson: MitosisComponent,
-  options: ToBuilderOptions = {},
-) => {
-  const hasState = Boolean(Object.keys(componentJson.state).length);
+export const componentToBuilder =
+  (options: ToBuilderOptions = {}) =>
+  ({ component }: TranspilerArgs) => {
+    const hasState = Boolean(Object.keys(component.state).length);
 
-  const result = fastClone({
-    data: {
-      httpRequests: (componentJson?.meta?.useMetadata as any)?.httpRequests,
-      jsCode: tryFormat(dedent`
-        ${!hasProps(componentJson) ? '' : `var props = state;`}
+    const result = fastClone({
+      data: {
+        httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
+        jsCode: tryFormat(dedent`
+        ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
           !hasState
             ? ''
             : `Object.assign(state, ${getStateObjectStringFromComponent(
-                componentJson,
+                component,
               )});`
         }
 
-        ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
+        ${!component.hooks.onMount ? '' : component.hooks.onMount}
       `),
-      tsCode: tryFormat(dedent`
-        ${!hasProps(componentJson) ? '' : `var props = state;`}
+        tsCode: tryFormat(dedent`
+        ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
           !hasState
             ? ''
-            : `useState(${getStateObjectStringFromComponent(componentJson)});`
+            : `useState(${getStateObjectStringFromComponent(component)});`
         }
 
         ${
-          !componentJson.hooks.onMount
+          !component.hooks.onMount
             ? ''
             : `onMount(() => {
-                ${componentJson.hooks.onMount}
+                ${component.hooks.onMount}
               })`
         }
       `),
-      blocks: componentJson.children
-        .filter(filterEmptyTextNodes)
-        .map((child) => blockToBuilder(child, options)),
-    },
-  });
+        blocks: component.children
+          .filter(filterEmptyTextNodes)
+          .map((child) => blockToBuilder(child, options)),
+      },
+    });
 
-  const subComponentMap: Record<string, BuilderContent> = {};
+    const subComponentMap: Record<string, BuilderContent> = {};
 
-  for (const subComponent of componentJson.subComponents) {
-    const name = subComponent.name;
-    subComponentMap[name] = componentToBuilder(subComponent, options);
-  }
-
-  traverse([result, subComponentMap]).forEach(function(el) {
-    if (isBuilderElement(el)) {
-      const value = subComponentMap[el.component?.name!];
-      if (value) {
-        console.log('applied?');
-        set(el, 'component.options.symbol.content', value);
-      }
+    for (const subComponent of component.subComponents) {
+      const name = subComponent.name;
+      subComponentMap[name] = componentToBuilder(options)({
+        component: subComponent,
+      });
     }
-  });
 
-  return result;
-};
+    traverse([result, subComponentMap]).forEach(function (el) {
+      if (isBuilderElement(el)) {
+        const value = subComponentMap[el.component?.name!];
+        if (value) {
+          console.log('applied?');
+          set(el, 'component.options.symbol.content', value);
+        }
+      }
+    });
+
+    return result;
+  };

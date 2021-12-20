@@ -9,26 +9,26 @@ const renderBlock = require('./data/blocks/builder-render-block.raw');
 
 describe('Context', () => {
   test('Parse context', () => {
-    const json = parseContext(simpleExample, { name: 'SimpleExample' });
-    if (!json) {
+    const component = parseContext(simpleExample, { name: 'SimpleExample' });
+    if (!component) {
       throw new Error('No parseable context found for simple.context.lite.ts');
     }
-    expect(json).toMatchSnapshot();
-    const reactContext = contextToReact(json);
+    expect(component).toMatchSnapshot();
+    const reactContext = contextToReact()({ context: component });
     expect(reactContext).toMatchSnapshot();
   });
 
   test('Use and set context in components', () => {
-    const json = parseJsx(componentWithContext);
-    expect(json).toMatchSnapshot();
-    const reactComponent = componentToReact(json);
+    const component = parseJsx(componentWithContext);
+    expect(component).toMatchSnapshot();
+    const reactComponent = componentToReact()({ component });
     expect(reactComponent).toMatchSnapshot();
   });
 
   test('Use and set context in complex components', () => {
-    const json = parseJsx(renderBlock);
-    expect(json).toMatchSnapshot();
-    const reactComponent = componentToReact(json);
+    const component = parseJsx(renderBlock);
+    expect(component).toMatchSnapshot();
+    const reactComponent = componentToReact()({ component });
     expect(reactComponent).toMatchSnapshot();
   });
 });

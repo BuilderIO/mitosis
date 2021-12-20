@@ -11,6 +11,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
+import { Transpiler } from '..';
 
 export type ToSwiftOptions = {
   prettier?: boolean;
@@ -31,8 +32,10 @@ const mappers: {
   link: () => '',
   Image: (json, options) => {
     return (
-      `Image(${processBinding(json.bindings.image as string, options) ||
-        `"${json.properties.image}"`})` +
+      `Image(${
+        processBinding(json.bindings.image as string, options) ||
+        `"${json.properties.image}"`
+      })` +
       getStyleString(json, options) +
       getActionsString(json, options)
     );
@@ -252,7 +255,7 @@ function componentHasDynamicData(json: MitosisComponent) {
     return true;
   }
   let found = false;
-  traverse(json).forEach(function(node) {
+  traverse(json).forEach(function (node) {
     if (isMitosisNode(node)) {
       if (Object.keys(node.bindings).filter((item) => item !== 'css').length) {
         found = true;
@@ -268,7 +271,7 @@ function mapDataForSwiftCompatability(json: MitosisComponent) {
   let inputIndex = 0;
   json.meta.inputNames = json.meta.inputNames || [];
 
-  traverse(json).forEach(function(node) {
+  traverse(json).forEach(function (node) {
     if (isMitosisNode(node)) {
       if (node.name === 'input') {
         if (
@@ -299,22 +302,21 @@ function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
   }
   return str;
 }
-export const componentToSwift = (
-  componentJson: MitosisComponent,
-  options: ToSwiftOptions = {},
-) => {
-  const json = fastClone(componentJson);
-  mapDataForSwiftCompatability(json);
+export const componentToSwift =
+  (options: ToSwiftOptions = {}): Transpiler =>
+  ({ component }) => {
+    const json = fastClone(component);
+    mapDataForSwiftCompatability(json);
 
-  const hasDyanmicData = componentHasDynamicData(json);
+    const hasDyanmicData = componentHasDynamicData(json);
 
-  let children = json.children
-    .map((item) => blockToSwift(item, options))
-    .join('\n');
+    let children = json.children
+      .map((item) => blockToSwift(item, options))
+      .join('\n');
 
-  const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
+    const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
 
-  let str = dedent`
+    let str = dedent`
     import SwiftUI
     ${
       !hasDyanmicData
@@ -331,7 +333,7 @@ export const componentToSwift = (
     `
     }
 
-    struct ${componentJson.name}: View {
+    struct ${component.name}: View {
       ${
         !hasDyanmicData
           ? ''
@@ -393,9 +395,9 @@ export const componentToSwift = (
     }
   `;
 
-  if (options.prettier !== false) {
-    str = format(str);
-  }
+    if (options.prettier !== false) {
+      str = format(str);
+    }
 
-  return str;
-};
+    return str;
+  };

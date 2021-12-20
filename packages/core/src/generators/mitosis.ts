@@ -1,6 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { Transpiler } from '..';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
@@ -12,19 +13,18 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 
-export const DEFAULT_FORMAT = 'legacy';
+export interface ToMitosisOptions {
+  prettier?: boolean;
+  format: 'react' | 'legacy';
+}
 
-export type MitosisFormat = 'react' | 'legacy';
+export const DEFAULT_FORMAT: ToMitosisOptions['format'] = 'legacy';
 
 // Special isValidAttributeName for Mitosis so we can allow for $ in names
 const isValidAttributeName = (str: string) => {
   return Boolean(str && /^[$a-z0-9\-_:]+$/i.test(str));
 };
 
-export type ToMitosisOptions = {
-  prettier?: boolean;
-  format: MitosisFormat;
-};
 export const blockToMitosis = (
   json: MitosisNode,
   toMitosisOptions: Partial<ToMitosisOptions> = {},
@@ -128,49 +128,48 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
 
 const mitosisCoreComponents = ['Show', 'For'];
 
-export const componentToMitosis = (
-  componentJson: MitosisComponent,
-  toMitosisOptions: Partial<ToMitosisOptions> = {},
-) => {
-  const options: ToMitosisOptions = {
-    format: DEFAULT_FORMAT,
-    ...toMitosisOptions,
-  };
+export const componentToMitosis =
+  (toMitosisOptions: Partial<ToMitosisOptions> = {}): Transpiler =>
+  ({ component }) => {
+    const options: ToMitosisOptions = {
+      format: DEFAULT_FORMAT,
+      ...toMitosisOptions,
+    };
 
-  if (options.format === 'react') {
-    return componentToReact(componentJson, {
-      format: 'lite',
-      stateType: 'useState',
-      stylesType: 'emotion',
-      prettier: options.prettier,
-    });
-  }
+    if (options.format === 'react') {
+      return componentToReact({
+        format: 'lite',
+        stateType: 'useState',
+        stylesType: 'emotion',
+        prettier: options.prettier,
+      })({ component });
+    }
 
-  const json = fastClone(componentJson);
+    const json = fastClone(component);
 
-  const refs = getRefs(json);
+    const refs = getRefs(json);
 
-  mapRefs(json, (refName) => `${refName}.current`);
+    mapRefs(json, (refName) => `${refName}.current`);
 
-  const addWrapper = json.children.length !== 1;
+    const addWrapper = json.children.length !== 1;
 
-  const components = Array.from(getComponents(json));
+    const components = Array.from(getComponents(json));
 
-  const mitosisComponents = components.filter((item) =>
-    mitosisCoreComponents.includes(item),
-  );
-  const otherComponents = components.filter(
-    (item) => !mitosisCoreComponents.includes(item),
-  );
+    const mitosisComponents = components.filter((item) =>
+      mitosisCoreComponents.includes(item),
+    );
+    const otherComponents = components.filter(
+      (item) => !mitosisCoreComponents.includes(item),
+    );
 
-  const hasState = Boolean(Object.keys(componentJson.state).length);
+    const hasState = Boolean(Object.keys(component.state).length);
 
-  const needsMitosisCoreImport = Boolean(
-    hasState || refs.size || mitosisComponents.length,
-  );
+    const needsMitosisCoreImport = Boolean(
+      hasState || refs.size || mitosisComponents.length,
+    );
 
-  // TODO: smart only pull in imports as needed
-  let str = dedent`
+    // TODO: smart only pull in imports as needed
+    let str = dedent`
     ${
       !needsMitosisCoreImport
         ? ''
@@ -186,14 +185,14 @@ export const componentToMitosis = (
     ${renderPreComponent(json)}
 
     ${
-      !componentJson.meta.metadataHook
+      !component.meta.metadataHook
         ? ''
         : `${METADATA_HOOK_NAME}(${json5.stringify(
-            componentJson.meta.metadataHook,
+            component.meta.metadataHook,
           )})`
     }
 
-    export default function ${componentJson.name}(props) {
+    export default function ${component.name}(props) {
       ${
         !hasState
           ? ''
@@ -218,22 +217,22 @@ export const componentToMitosis = (
 
   `;
 
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-        ],
-      });
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        str,
-        JSON.stringify(json, null, 2),
-      );
-      throw err;
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'typescript',
+          plugins: [
+            require('prettier/parser-typescript'), // To support running in browsers
+          ],
+        });
+      } catch (err) {
+        console.error(
+          'Format error for file:',
+          str,
+          JSON.stringify(json, null, 2),
+        );
+        throw err;
+      }
     }
-  }
-  return str;
-};
+    return str;
+  };

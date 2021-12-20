@@ -1,12 +1,9 @@
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import {} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -14,11 +11,9 @@ import {
 } from '../modules/plugins';
 import dedent from 'dedent';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-type ToTemplateOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-};
+export interface ToTemplateOptions extends BaseTranspilerOptions {}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToTemplateOptions) => string;
@@ -115,25 +110,24 @@ const blockToTemplate = (
 };
 
 // TODO: add JS support similar to componentToHtml()
-export const componentToTemplate = (
-  componentJson: MitosisComponent,
-  options: ToTemplateOptions = {},
-) => {
-  let json = fastClone(componentJson);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  const css = collectCss(json);
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  let str = json.children.map((item) => blockToTemplate(item)).join('\n');
+export const componentToTemplate =
+  (options: ToTemplateOptions = {}): Transpiler =>
+  ({ component }) => {
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
+    }
+    const css = collectCss(json);
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    let str = json.children.map((item) => blockToTemplate(item)).join('\n');
 
-  if (css.trim().length) {
-    str += `<style>${css}</style>`;
-  }
+    if (css.trim().length) {
+      str += `<style>${css}</style>`;
+    }
 
-  str = dedent`
+    str = dedent`
     export default function template(props) {
       let state = ${getStateObjectStringFromComponent(json)}
 
@@ -142,29 +136,29 @@ export const componentToTemplate = (
   
   `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        htmlWhitespaceSensitivity: 'ignore',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-typescript'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-        ],
-      });
-    } catch (err) {
-      console.warn('Could not prettify', { string: str }, err);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-  }
 
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'typescript',
+          htmlWhitespaceSensitivity: 'ignore',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-typescript'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+          ],
+        });
+      } catch (err) {
+        console.warn('Could not prettify', { string: str }, err);
+      }
+    }
+
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };

@@ -9,7 +9,7 @@ import {
 } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
-import { componentToReact } from '..';
+import { componentToReact, ToMitosisOptions } from '..';
 
 /**
  * Load a file using nodejs resolution as a string.
@@ -28,6 +28,10 @@ const lazyLoadSection = JSON.parse(
   fixture('./data/builder/lazy-load-section.json'),
 );
 
+const mitosisOptions: ToMitosisOptions = {
+  format: 'legacy',
+};
+
 describe('Builder', () => {
   test('extractStateHook', () => {
     const code = `useState({ foo: 'bar' }); alert('hi');`;
@@ -43,61 +47,61 @@ describe('Builder', () => {
   });
 
   test('Stamped', () => {
-    const json = parseJsx(stamped);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(stamped);
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
   });
 
   test('CustomCode', () => {
-    const json = parseJsx(customCode);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(customCode);
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
   });
 
   test('Embed', () => {
-    const json = parseJsx(embed);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(embed);
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
   });
 
   test('Image', () => {
-    const json = parseJsx(image);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(image);
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
   });
 
   test('Columns', () => {
-    const json = parseJsx(columns);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(columns);
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
 
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis);
+    const mitosis = componentToMitosis()({ component: backToMitosis });
     expect(mitosis).toMatchSnapshot();
   });
 
   test('Section', async () => {
-    const mitosisComponent = builderContentToMitosisComponent(lazyLoadSection);
+    const component = builderContentToMitosisComponent(lazyLoadSection);
 
-    const html = await componentToHtml(mitosisComponent, {
+    const html = await componentToHtml({
       plugins: [compileAwayBuilderComponents()],
-    });
+    })({ component });
 
     expect(html).toMatchSnapshot();
   });
@@ -130,16 +134,16 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
-    const react = componentToReact(json, {
+    const react = componentToReact({
       plugins: [compileAwayBuilderComponents()],
-    });
+    })({ component });
     expect(react).toMatchSnapshot();
   });
 
@@ -168,11 +172,11 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
@@ -201,11 +205,11 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
@@ -236,14 +240,14 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    expect(json).toMatchSnapshot();
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    expect(component).toMatchSnapshot();
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     expect(backToMitosis).toMatchSnapshot();
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
@@ -264,14 +268,14 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    expect(json).toMatchSnapshot();
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    expect(component).toMatchSnapshot();
+    const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     expect(backToMitosis).toMatchSnapshot();
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });
@@ -299,11 +303,11 @@ describe('Builder', () => {
       }
     `;
 
-    const json = parseJsx(code);
-    const builderJson = componentToBuilder(json);
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
-    const mitosis = componentToMitosis(backToMitosis, {
-      format: 'legacy',
+    const mitosis = componentToMitosis(mitosisOptions)({
+      component: backToMitosis,
     });
     expect(mitosis.trim()).toEqual(code.trim());
   });

@@ -8,10 +8,8 @@ import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -22,11 +20,9 @@ import { getProps } from '../helpers/get-props';
 import { kebabCase } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-export type ToAngularOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-};
+export interface ToAngularOptions extends BaseTranspilerOptions {}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
@@ -141,54 +137,51 @@ export const blockToAngular = (
 const indent = (str: string, spaces = 4) =>
   str.replace(/\n([^\n])/g, `\n${' '.repeat(spaces)}$1`);
 
-export const componentToAngular = (
-  componentJson: MitosisComponent,
-  options: ToAngularOptions = {},
-) => {
-  // Make a copy we can safely mutate, similar to babel's toolchain
-  let json = fastClone(componentJson);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
+export const componentToAngular =
+  (options: ToAngularOptions = {}): Transpiler =>
+  ({ component }) => {
+    // Make a copy we can safely mutate, similar to babel's toolchain
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
+    }
 
-  const props = getProps(componentJson);
+    const props = getProps(component);
 
-  const refs = Array.from(getRefs(json));
-  mapRefs(json, (refName) => `this.${refName}.nativeElement`);
+    const refs = Array.from(getRefs(json));
+    mapRefs(json, (refName) => `this.${refName}.nativeElement`);
 
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  let css = collectCss(json);
-  if (options.prettier !== false) {
-    css = tryFormat(css, 'css');
-  }
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    let css = collectCss(json);
+    if (options.prettier !== false) {
+      css = tryFormat(css, 'css');
+    }
 
-  let template = json.children.map((item) => blockToAngular(item)).join('\n');
-  if (options.prettier !== false) {
-    template = tryFormat(template, 'html');
-  }
+    let template = json.children.map((item) => blockToAngular(item)).join('\n');
+    if (options.prettier !== false) {
+      template = tryFormat(template, 'html');
+    }
 
-  stripMetaProperties(json);
+    stripMetaProperties(json);
 
-  const dataString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    valueMapper: (code) =>
-      stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
-  });
+    const dataString = getStateObjectStringFromComponent(json, {
+      format: 'class',
+      valueMapper: (code) =>
+        stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
+    });
 
-  let str = dedent`
+    let str = dedent`
     import { Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
-    props.size ? ', Input' : ''
-  } } from '@angular/core';
+      props.size ? ', Input' : ''
+    } } from '@angular/core';
     ${renderPreComponent(json)}
 
     @Component({
       selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
-        ${indent(template, 8)
-          .replace(/`/g, '\\`')
-          .replace(/\$\{/g, '\\${')}
+        ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
       \`,
       ${
         css.length
@@ -198,7 +191,7 @@ export const componentToAngular = (
           : ''
       }
     })
-    export default class ${componentJson.name} {
+    export default class ${component.name} {
       ${Array.from(props)
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
@@ -208,20 +201,20 @@ export const componentToAngular = (
         .join('\n')}
 
       ${
-        !componentJson.hooks.onMount
+        !component.hooks.onMount
           ? ''
           : `ngOnInit() {
-              ${stripStateAndPropsRefs(componentJson.hooks.onMount, {
+              ${stripStateAndPropsRefs(component.hooks.onMount, {
                 replaceWith: 'this.',
               })}
             }`
       }
 
       ${
-        !componentJson.hooks.onUnMount
+        !component.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(componentJson.hooks.onUnMount, {
+              ${stripStateAndPropsRefs(component.hooks.onUnMount, {
                 replaceWith: 'this.',
               })}
             }`
@@ -231,17 +224,17 @@ export const componentToAngular = (
     }
   `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    str = tryFormat(str, 'typescript');
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
+    }
+    if (options.prettier !== false) {
+      str = tryFormat(str, 'typescript');
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };
 
 const tryFormat = (str: string, parser: string) => {
   try {

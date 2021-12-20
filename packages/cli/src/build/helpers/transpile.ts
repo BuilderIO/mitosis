@@ -1,12 +1,12 @@
 import * as esbuild from 'esbuild'
 import { readFile } from 'fs-extra'
-import { Target } from '../../types/mitosis-config'
+import { Target } from '@builder.io/mitosis'
 
 export const transpile = async ({
   path,
   content,
   target,
-  format
+  format,
 }: {
   path: string
   content?: string | null
@@ -21,7 +21,7 @@ export const transpile = async ({
         format ||
         (target === 'reactNative' || target === 'solid' ? 'esm' : 'cjs'),
       loader: 'tsx',
-      target: 'es6'
+      target: 'es6',
     })
 
     if (output.warnings.length) {

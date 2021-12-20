@@ -3,10 +3,8 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -14,6 +12,11 @@ import {
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
+
+export interface ToLiquidOptions extends BaseTranspilerOptions {
+  reactive?: boolean;
+}
 
 /**
  * Test if the binding expression would be likely to generate
@@ -33,12 +36,6 @@ export const isValidLiquidBinding = (str = '') => {
     // e.g. `state.product.price` -> `{{product.price}}	    // we regex out later to transform back into valid liquid expressions
     Boolean(str.match(/^[a-z0-9_\.\s]+$/i))
   );
-};
-
-type ToLiquidOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-  reactive?: boolean;
 };
 
 const mappers: {
@@ -155,57 +152,56 @@ const blockToLiquid = (
 };
 
 // TODO: add JS support similar to componentToHtml()
-export const componentToLiquid = (
-  componentJson: MitosisComponent,
-  options: ToLiquidOptions = {},
-) => {
-  let json = fastClone(componentJson);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  const css = collectCss(json);
-  stripMetaProperties(json);
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  let str = json.children.map((item) => blockToLiquid(item)).join('\n');
+export const componentToLiquid =
+  (options: ToLiquidOptions = {}): Transpiler =>
+  ({ component }) => {
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
+    }
+    const css = collectCss(json);
+    stripMetaProperties(json);
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    let str = json.children.map((item) => blockToLiquid(item)).join('\n');
 
-  if (css.trim().length) {
-    str += `<style>${css}</style>`;
-  }
+    if (css.trim().length) {
+      str += `<style>${css}</style>`;
+    }
 
-  if (options.reactive) {
-    const stateObjectString = getStateObjectStringFromComponent(json);
-    if (stateObjectString.trim().length > 4) {
-      str += `<script reactive>
+    if (options.reactive) {
+      const stateObjectString = getStateObjectStringFromComponent(json);
+      if (stateObjectString.trim().length > 4) {
+        str += `<script reactive>
         export default {
           state: ${stateObjectString}
         }
       </script>`;
+      }
     }
-  }
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'html',
-        htmlWhitespaceSensitivity: 'ignore',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-html'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-        ],
-      });
-    } catch (err) {
-      console.warn('Could not prettify', { string: str }, err);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'html',
+          htmlWhitespaceSensitivity: 'ignore',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-html'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+          ],
+        });
+      } catch (err) {
+        console.warn('Could not prettify', { string: str }, err);
+      }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };

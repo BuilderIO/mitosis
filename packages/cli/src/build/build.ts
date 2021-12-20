@@ -8,7 +8,10 @@ import {
   contextToVue,
   MitosisComponent,
   parseContext,
-  parseJsx
+  parseJsx,
+  MitosisConfig,
+  Target,
+  Transpiler,
 } from '@builder.io/mitosis'
 import dedent from 'dedent'
 import glob from 'fast-glob'
@@ -16,8 +19,6 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra'
 import * as json5 from 'json5'
 import { camelCase, kebabCase, last, upperFirst } from 'lodash'
 import micromatch from 'micromatch'
-import { MitosisConfig, Target } from '../types/mitosis-config'
-import { compileVueFile } from './helpers/compile-vue-file'
 import { getSimpleId } from './helpers/get-simple-id'
 import { transpile } from './helpers/transpile'
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining'
@@ -25,27 +26,47 @@ import { transpileSolidFile } from './helpers/transpile-solid-file'
 
 const cwd = process.cwd()
 
+const DEFAULT_CONFIG: Partial<MitosisConfig> = {
+  targets: [],
+  dest: 'output',
+  files: 'src/*',
+  overridesDir: 'overrides',
+}
+
+const DEFAULT_OPTIONS: MitosisConfig['options'] = {
+  vue: {
+    cssNamespace: () => getSimpleId(),
+    // TODO: config for this
+    namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
+    builderRegister: true,
+  },
+}
+
 export async function build(config?: MitosisConfig) {
   const options: MitosisConfig = {
-    targets: [],
-    dest: 'output',
-    files: 'src/*',
-    overridesDir: 'overrides',
-    ...config
+    ...DEFAULT_CONFIG,
+    ...config,
+    options: {
+      ...DEFAULT_OPTIONS,
+      vue: {
+        ...DEFAULT_OPTIONS.vue,
+        ...config?.options?.vue,
+      },
+    },
   }
 
   await clean(options)
 
   const tsLiteFiles = await Promise.all(
     micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
-      async path => {
+      async (path) => {
         try {
           const parsed = parseJsx(await readFile(path, 'utf8'), {
-            jsonHookNames: ['registerComponent']
+            jsonHookNames: ['registerComponent'],
           })
           return {
             path,
-            mitosisJson: parsed
+            mitosisJson: parsed,
           }
         } catch (err) {
           console.error('Could not parse file:', path)
@@ -56,11 +77,11 @@ export async function build(config?: MitosisConfig) {
   )
 
   await Promise.all(
-    options.targets.map(async target => {
+    options.targets.map(async (target) => {
       const jsFiles = await buildTsFiles(target)
       await Promise.all([
         outputTsFiles(target, jsFiles, options),
-        outputTsxLiteFiles(target, tsLiteFiles, options)
+        outputTsxLiteFiles(target, tsLiteFiles, options),
       ])
       await outputOverrides(target, options)
     })
@@ -72,7 +93,7 @@ export async function build(config?: MitosisConfig) {
 async function clean(options: MitosisConfig) {
   const files = await glob(`${options.dest}/*/${options.files}`)
   await Promise.all(
-    files.map(async file => {
+    files.map(async (file) => {
       await remove(file)
     })
   )
@@ -82,10 +103,10 @@ async function outputOverrides(target: Target, options: MitosisConfig) {
   const kebabTarget = kebabCase(target)
   const files = await glob([
     `${options.overridesDir}/${kebabTarget}/**/*`,
-    `!${options.overridesDir}/${kebabTarget}/node_modules/**/*`
+    `!${options.overridesDir}/${kebabTarget}/node_modules/**/*`,
   ])
   await Promise.all(
-    files.map(async file => {
+    files.map(async (file) => {
       let contents = await readFile(file, 'utf8')
 
       const esbuildTranspile = file.match(/\.tsx?$/)
@@ -96,7 +117,7 @@ async function outputOverrides(target: Target, options: MitosisConfig) {
       const targetPaths = getTargetPaths(target)
 
       await Promise.all(
-        targetPaths.map(targetPath =>
+        targetPaths.map((targetPath) =>
           outputFile(
             file
               .replace(
@@ -110,6 +131,30 @@ async function outputOverrides(target: Target, options: MitosisConfig) {
       )
     })
   )
+}
+
+const getTranspilerForTarget = ({
+  target,
+  options,
+}: {
+  target: Target
+  options: MitosisConfig
+}): Transpiler => {
+  switch (target) {
+    case 'reactNative':
+      return componentToReactNative({ stateType: 'useState' })
+    case 'vue':
+      return componentToVue(options.options.vue)
+    case 'react':
+      return componentToReact()
+    case 'swift':
+      return componentToSwift()
+    case 'solid':
+      return componentToSolid()
+    default:
+      // throw instead of `never`
+      return null as never
+  }
 }
 
 async function outputTsxLiteFiles(
@@ -129,31 +174,12 @@ async function outputTsxLiteFiles(
       ? await readFile(overrideFilePath, 'utf8')
       : null
 
-    const id = getSimpleId()
     let transpiled =
       overrideFile ??
-      (target === 'reactNative'
-        ? componentToReactNative(mitosisJson, {
-            stateType: 'useState'
-          })
-        : target === 'vue'
-        ? componentToVue(mitosisJson, {
-            cssNamespace: id,
-            // TODO: config for this
-            namePrefix: path.includes('/blocks/') ? 'builder' : undefined,
-            builderRegister: true
-          })
-            // Transform <FooBar> to <foo-bar> as Vue2 needs
-            .replace(/<\/?\w+/g, match =>
-              match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
-            )
-        : target === 'react'
-        ? componentToReact(mitosisJson)
-        : target === 'swift'
-        ? componentToSwift(mitosisJson)
-        : target === 'solid'
-        ? componentToSolid(mitosisJson)
-        : (null as never))
+      getTranspilerForTarget({ options, target })({
+        path,
+        component: mitosisJson,
+      })
 
     const original = transpiled
 
@@ -162,7 +188,7 @@ async function outputTsxLiteFiles(
       transpiled = await transpileSolidFile({
         contents: transpiled,
         path,
-        mitosisComponent: mitosisJson
+        mitosisComponent: mitosisJson,
       })
     }
 
@@ -198,7 +224,7 @@ async function outputTsxLiteFiles(
               '$1'
             )
           )
-        })()
+        })(),
         // Vue 2
         // (async () => {
         //   // TODO: subfolders for each of these
@@ -249,8 +275,8 @@ async function outputTsxLiteFiles(
                   '.js'
                 )}`,
                 original
-              )
-            ])
+              ),
+            ]),
       ])
     }
   })
@@ -287,17 +313,17 @@ async function outputTsFiles(
 
 async function buildTsFiles(target: Target, options?: MitosisConfig) {
   const tsFiles = await glob(`src/**/*.ts`, {
-    cwd: cwd
+    cwd: cwd,
   })
 
   return await Promise.all(
-    tsFiles.map(async path => {
+    tsFiles.map(async (path) => {
       let output: string
       if (path.endsWith('.context.lite.ts')) {
         // 'foo/bar/my-thing.context.ts' -> 'MyThing'
         const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]))
         const context = parseContext(await readFile(path, 'utf8'), {
-          name: name
+          name: name,
         })
         if (!context) {
           console.warn('Could not parse context from file', path)
@@ -305,7 +331,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
           if (target === 'vue') {
             output = contextToVue(context)
           } else {
-            output = contextToReact(context)
+            output = contextToReact()({ context })
           }
         }
         path = path.replace('.lite.ts', '.ts')
@@ -314,7 +340,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
 
       return {
         path,
-        output
+        output,
       }
     })
   )

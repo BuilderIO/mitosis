@@ -1,16 +1,17 @@
 import {
   builderContentToMitosisComponent,
   compileAwayBuilderComponents,
+  GeneratorOptions,
   MitosisComponent,
-  parseJsx
+  parseJsx,
+  Target,
+  targets,
 } from '@builder.io/mitosis'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
-import * as targets from '../targets'
 import { UnionToIntersection } from '../types'
-import { Target, Targets } from '../types/mitosis-config'
 
-type GeneratorOpts = Parameters<Targets[Target]>[1]
+type GeneratorOpts = GeneratorOptions[Target]
 
 type AllGeneratorOption = UnionToIntersection<GeneratorOpts>
 // The only purpose this really serves is to ensure I provide a flag API
@@ -20,7 +21,7 @@ type AllGeneratorOptionKeys = keyof AllGeneratorOption
 const command: GluegunCommand = {
   name: 'compile',
   alias: 'c',
-  run: async toolbox => {
+  run: async (toolbox) => {
     const { parameters, strings, filesystem, print } = toolbox
     const opts = parameters.options
 
@@ -55,7 +56,7 @@ const command: GluegunCommand = {
       reactive: opts.reactive,
       type: opts.type,
       vueVersion: opts.vueVersion,
-      cssNamespace: opts.cssNamespace
+      cssNamespace: opts.cssNamespace,
     }
 
     // Positional Args
@@ -129,7 +130,7 @@ const command: GluegunCommand = {
         }
 
         // TODO validate generator options
-        output = generator(json, generatorOpts as any)
+        output = generator(generatorOpts as any)({ component: json, path })
       } catch (e) {
         print.divider()
         print.info(`Path: ${path}`)
@@ -160,7 +161,7 @@ const command: GluegunCommand = {
         filesystem.write(out, output)
       }
     }
-  }
+  },
 }
 
 module.exports = command
@@ -183,9 +184,9 @@ function isTarget(term: string): term is Target {
 async function readStdin() {
   const chunks = []
 
-  await new Promise(res =>
+  await new Promise((res) =>
     process.stdin
-      .on('data', data => {
+      .on('data', (data) => {
         return chunks.push(data)
       })
       .on('end', () => {
