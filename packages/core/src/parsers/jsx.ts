@@ -14,7 +14,7 @@ import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings'
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
-import { tryParseJson } from 'src/helpers/json';
+import { tryParseJson } from '../helpers/json';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -674,6 +674,108 @@ function extractContextComponents(json: MitosisComponent) {
   });
 }
 
+const isImportOrDefaultExport = (node: babel.Node) =>
+  types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
+
+const visitorPlugin = ({
+  subComponentFunctions,
+  useOptions,
+}: {
+  useOptions: ParseMitosisOptions;
+  subComponentFunctions: string[];
+}): babel.PluginObj<Context> => ({
+  visitor: {
+    JSXExpressionContainer(path, context) {
+      if (types.isJSXEmptyExpression(path.node.expression)) {
+        path.remove();
+      }
+    },
+    Program(path, context) {
+      if (context.builder) {
+        return;
+      }
+      context.builder = {
+        component: createMitosisComponent(),
+      };
+
+      const keepStatements = path.node.body.filter((statement) =>
+        isImportOrDefaultExport(statement),
+      );
+      let cutStatements = path.node.body.filter(
+        (statement) => !isImportOrDefaultExport(statement),
+      );
+
+      subComponentFunctions.push(
+        ...path.node.body
+          .filter(
+            (node) =>
+              !types.isExportDefaultDeclaration(node) &&
+              types.isFunctionDeclaration(node),
+          )
+          .map((node) => `export default ${generate(node).code!}`),
+      );
+
+      cutStatements = collectMetadata(
+        cutStatements,
+        context.builder.component,
+        useOptions,
+      );
+
+      // TODO: support multiple? e.g. for others to add imports?
+      context.builder.component.hooks.preComponent = generate(
+        types.program(cutStatements),
+      ).code;
+
+      path.replaceWith(types.program(keepStatements));
+    },
+    FunctionDeclaration(path, context) {
+      const { node } = path;
+      if (types.isIdentifier(node.id)) {
+        const name = node.id.name;
+        if (name[0].toUpperCase() === name[0]) {
+          path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
+        }
+      }
+    },
+    ImportDeclaration(path, context) {
+      // @builder.io/mitosis or React imports compile away
+      if (
+        ['react', '@builder.io/mitosis', '@emotion/react'].includes(
+          path.node.source.value,
+        )
+      ) {
+        path.remove();
+        return;
+      }
+      const importObject: MitosisImport = {
+        imports: {},
+        path: path.node.source.value,
+      };
+      for (const specifier of path.node.specifiers) {
+        if (types.isImportSpecifier(specifier)) {
+          importObject.imports[
+            (specifier.imported as babel.types.Identifier).name
+          ] = specifier.local.name;
+        } else if (types.isImportDefaultSpecifier(specifier)) {
+          importObject.imports[specifier.local.name] = 'default';
+        } else if (types.isImportNamespaceSpecifier(specifier)) {
+          importObject.imports[specifier.local.name] = '*';
+        }
+      }
+      context.builder.component.imports.push(importObject);
+
+      path.remove();
+    },
+    ExportDefaultDeclaration(path) {
+      path.replaceWith(path.node.declaration);
+    },
+    JSXElement(path) {
+      const { node } = path;
+      path.replaceWith(jsonToAst(jsxElementToJson(node)));
+    },
+  },
+});
+
 export function parseJsx(
   jsx: string,
   options: Partial<ParseMitosisOptions> = {},
@@ -683,122 +785,13 @@ export function parseJsx(
     ...options,
   };
 
-  let subComponentFunctions: string[] = [];
+  const subComponentFunctions: string[] = [];
 
   const output = babel.transform(jsx, {
     configFile: false,
     babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [
-      jsxPlugin,
-      () => ({
-        visitor: {
-          JSXExpressionContainer(
-            path: babel.NodePath<babel.types.JSXExpressionContainer>,
-            context: Context,
-          ) {
-            if (types.isJSXEmptyExpression(path.node.expression)) {
-              path.remove();
-            }
-          },
-          Program(path: babel.NodePath<babel.types.Program>, context: Context) {
-            if (context.builder) {
-              return;
-            }
-            context.builder = {
-              component: createMitosisComponent(),
-            };
-
-            const isImportOrDefaultExport = (node: babel.Node) =>
-              types.isExportDefaultDeclaration(node) ||
-              types.isImportDeclaration(node);
-
-            const keepStatements = path.node.body.filter((statement) =>
-              isImportOrDefaultExport(statement),
-            );
-            let cutStatements = path.node.body.filter(
-              (statement) => !isImportOrDefaultExport(statement),
-            );
-
-            subComponentFunctions = path.node.body
-              .filter(
-                (node) =>
-                  !types.isExportDefaultDeclaration(node) &&
-                  types.isFunctionDeclaration(node),
-              )
-              .map((node) => `export default ${generate(node).code!}`);
-
-            cutStatements = collectMetadata(
-              cutStatements,
-              context.builder.component,
-              useOptions,
-            );
-
-            // TODO: support multiple? e.g. for others to add imports?
-            context.builder.component.hooks.preComponent = generate(
-              types.program(cutStatements),
-            ).code;
-
-            path.replaceWith(types.program(keepStatements));
-          },
-          FunctionDeclaration(
-            path: babel.NodePath<babel.types.FunctionDeclaration>,
-            context: Context,
-          ) {
-            const { node } = path;
-            if (types.isIdentifier(node.id)) {
-              const name = node.id.name;
-              if (name[0].toUpperCase() === name[0]) {
-                path.replaceWith(
-                  jsonToAst(componentFunctionToJson(node, context)),
-                );
-              }
-            }
-          },
-          ImportDeclaration(
-            path: babel.NodePath<babel.types.ImportDeclaration>,
-            context: Context,
-          ) {
-            // @builder.io/mitosis or React imports compile away
-            if (
-              ['react', '@builder.io/mitosis', '@emotion/react'].includes(
-                path.node.source.value,
-              )
-            ) {
-              path.remove();
-              return;
-            }
-            const importObject: MitosisImport = {
-              imports: {},
-              path: path.node.source.value,
-            };
-            for (const specifier of path.node.specifiers) {
-              if (types.isImportSpecifier(specifier)) {
-                importObject.imports[
-                  (specifier.imported as babel.types.Identifier).name
-                ] = specifier.local.name;
-              } else if (types.isImportDefaultSpecifier(specifier)) {
-                importObject.imports[specifier.local.name] = 'default';
-              } else if (types.isImportNamespaceSpecifier(specifier)) {
-                importObject.imports[specifier.local.name] = '*';
-              }
-            }
-            context.builder.component.imports.push(importObject);
-
-            path.remove();
-          },
-          ExportDefaultDeclaration(
-            path: babel.NodePath<babel.types.ExportDefaultDeclaration>,
-          ) {
-            path.replaceWith(path.node.declaration);
-          },
-          JSXElement(path: babel.NodePath<babel.types.JSXElement>) {
-            const { node } = path;
-            path.replaceWith(jsonToAst(jsxElementToJson(node)));
-          },
-        },
-      }),
-    ],
+    plugins: [jsxPlugin, visitorPlugin({ useOptions, subComponentFunctions })],
   });
 
   const toParse = stripNewlinesInStrings(
