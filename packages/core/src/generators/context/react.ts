@@ -6,10 +6,11 @@ type ContextToReactOptions = {
   format?: boolean;
 };
 
-export function contextToReact(
-  context: MitosisContext,
-  options: ContextToReactOptions = {},
-): string {
+export const contextToReact = (options: ContextToReactOptions = {}) => ({
+  context,
+}: {
+  context: MitosisContext;
+}): string => {
   let str = `
   import { createContext } from 'react';
 
@@ -31,4 +32,4 @@ export function contextToReact(
   }
 
   return str;
-}
+};

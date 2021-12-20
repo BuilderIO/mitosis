@@ -41,6 +41,9 @@ export * from './helpers/is-mitosis-node';
 
 export * from './types/mitosis-node';
 export * from './types/mitosis-component';
+export * from './types/config';
 
 export * from './plugins/compile-away-builder-components';
 export * from './plugins/map-styles';
+
+export * from './targets';

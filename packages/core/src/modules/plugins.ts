@@ -1,21 +1,7 @@
 import { MitosisComponent } from '../types/mitosis-component';
+import { Plugin } from '../types/plugins';
 
-export type Plugin = (
-  options?: any,
-) => {
-  json?: {
-    // Happens before any modifiers
-    pre?: (json: MitosisComponent) => MitosisComponent | void;
-    // Happens after built in modifiers
-    post?: (json: MitosisComponent) => MitosisComponent | void;
-  };
-  code?: {
-    // Happens before formatting
-    pre?: (code: string) => string;
-    // Happens after formatting
-    post?: (code: string) => string;
-  };
-};
+export { Plugin };
 
 export const runPreJsonPlugins = (
   json: MitosisComponent,

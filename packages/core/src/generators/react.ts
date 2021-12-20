@@ -2,6 +2,7 @@ import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -32,7 +33,6 @@ import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings'
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -43,14 +43,12 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { collectReactNativeStyles } from './react-native';
 
-type ToReactOptions = {
-  prettier?: boolean;
+export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
-  plugins?: Plugin[];
-};
+}
 
 const wrapInFragment = (json: MitosisComponent | MitosisNode) =>
   json.children.length !== 1;
@@ -369,10 +367,9 @@ type ReactExports =
   | 'useContext';
 
 export const componentToReact = (
-  componentJson: MitosisComponent,
   reactOptions: ToReactOptions = {},
-) => {
-  let json = fastClone(componentJson);
+): Transpiler => ({ component }) => {
+  let json = fastClone(component);
   const options: ToReactOptions = {
     stateType: 'useState',
     stylesType: 'styled-jsx',
