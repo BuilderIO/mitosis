@@ -5,7 +5,7 @@ import {
   MitosisComponent,
   parseJsx,
   Target,
-  targets,
+  targets
 } from '@builder.io/mitosis'
 import { GluegunCommand } from 'gluegun'
 import { join } from 'path'
@@ -21,7 +21,7 @@ type AllGeneratorOptionKeys = keyof AllGeneratorOption
 const command: GluegunCommand = {
   name: 'compile',
   alias: 'c',
-  run: async (toolbox) => {
+  run: async toolbox => {
     const { parameters, strings, filesystem, print } = toolbox
     const opts = parameters.options
 
@@ -56,7 +56,7 @@ const command: GluegunCommand = {
       reactive: opts.reactive,
       type: opts.type,
       vueVersion: opts.vueVersion,
-      cssNamespace: opts.cssNamespace,
+      cssNamespace: opts.cssNamespace
     }
 
     // Positional Args
@@ -161,7 +161,7 @@ const command: GluegunCommand = {
         filesystem.write(out, output)
       }
     }
-  },
+  }
 }
 
 module.exports = command
@@ -184,9 +184,9 @@ function isTarget(term: string): term is Target {
 async function readStdin() {
   const chunks = []
 
-  await new Promise((res) =>
+  await new Promise(res =>
     process.stdin
-      .on('data', (data) => {
+      .on('data', data => {
         return chunks.push(data)
       })
       .on('end', () => {

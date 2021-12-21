@@ -296,8 +296,7 @@ function getContextProvideString(
   return str;
 }
 
-export const componentToVue =
-  (options: ToVueOptions = {}) =>
+export const componentToVue = (options: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {

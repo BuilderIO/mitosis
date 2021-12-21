@@ -22,7 +22,7 @@ export const collectReactNativeStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isMitosisNode(item)) {
       if (typeof item.bindings.css === 'string') {
         const value = json5.parse(item.bindings.css);
@@ -64,29 +64,29 @@ export const collectReactNativeStyles = (
   return styleMap;
 };
 
-export const componentToReactNative =
-  (options: ToReactNativeOptions = {}): Transpiler =>
-  ({ component, path }) => {
-    const json = fastClone(component);
-    traverse(json).forEach((node) => {
-      if (isMitosisNode(node)) {
-        // TODO: handle TextInput, Image, etc
-        if (node.name.toLowerCase() === node.name) {
-          node.name = 'View';
-        }
-
-        if (
-          node.properties._text?.trim().length ||
-          node.bindings._text?.trim()?.length
-        ) {
-          node.name = 'Text';
-        }
+export const componentToReactNative = (
+  options: ToReactNativeOptions = {},
+): Transpiler => ({ component, path }) => {
+  const json = fastClone(component);
+  traverse(json).forEach((node) => {
+    if (isMitosisNode(node)) {
+      // TODO: handle TextInput, Image, etc
+      if (node.name.toLowerCase() === node.name) {
+        node.name = 'View';
       }
-    });
 
-    return componentToReact({
-      ...options,
-      stylesType: options.stylesType || 'react-native',
-      type: 'native',
-    })({ component: json, path });
-  };
+      if (
+        node.properties._text?.trim().length ||
+        node.bindings._text?.trim()?.length
+      ) {
+        node.name = 'Text';
+      }
+    }
+  });
+
+  return componentToReact({
+    ...options,
+    stylesType: options.stylesType || 'react-native',
+    type: 'native',
+  })({ component: json, path });
+};
