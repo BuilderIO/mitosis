@@ -367,13 +367,13 @@ type ReactExports =
   | 'useContext';
 
 export const componentToReact =
-  (_options: ToReactOptions = {}): Transpiler =>
+  (reactOptions: ToReactOptions = {}): Transpiler =>
   ({ component }) => {
     let json = fastClone(component);
     const options: ToReactOptions = {
       stateType: 'useState',
       stylesType: 'styled-jsx',
-      ..._options,
+      ...reactOptions,
     };
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
