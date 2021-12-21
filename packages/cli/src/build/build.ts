@@ -36,7 +36,6 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
 const DEFAULT_OPTIONS: MitosisConfig['options'] = {
   vue: {
     cssNamespace: () => getSimpleId(),
-    // TODO: config for this
     namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
     builderRegister: true,
   },
@@ -152,7 +151,7 @@ const getTranspilerForTarget = ({
     case 'solid':
       return componentToSolid()
     default:
-      // throw instead of `never`
+      // TO-DO: throw instead of `never`
       return null as never
   }
 }
