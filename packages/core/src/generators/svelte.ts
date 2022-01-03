@@ -13,7 +13,6 @@ import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -22,12 +21,11 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-export type ToSvelteOptions = {
-  prettier?: boolean;
+export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
-  plugins?: Plugin[];
-};
+}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToSvelteOptions) => string;
@@ -149,15 +147,14 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
 };
 
 export const componentToSvelte = (
-  componentJson: MitosisComponent,
   options: ToSvelteOptions = {},
-) => {
+): Transpiler => ({ component }) => {
   const useOptions: ToSvelteOptions = {
     ...options,
     stateType: 'variables',
   };
   // Make a copy we can safely mutate, similar to babel's toolchain
-  let json = fastClone(componentJson);
+  let json = fastClone(component);
   if (useOptions.plugins) {
     json = runPreJsonPlugins(json, useOptions.plugins);
   }

@@ -8,10 +8,8 @@ import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -22,11 +20,9 @@ import { getProps } from '../helpers/get-props';
 import { kebabCase } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-export type ToAngularOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-};
+export interface ToAngularOptions extends BaseTranspilerOptions {}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
@@ -142,16 +138,15 @@ const indent = (str: string, spaces = 4) =>
   str.replace(/\n([^\n])/g, `\n${' '.repeat(spaces)}$1`);
 
 export const componentToAngular = (
-  componentJson: MitosisComponent,
   options: ToAngularOptions = {},
-) => {
+): Transpiler => ({ component }) => {
   // Make a copy we can safely mutate, similar to babel's toolchain
-  let json = fastClone(componentJson);
+  let json = fastClone(component);
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
 
-  const props = getProps(componentJson);
+  const props = getProps(component);
 
   const refs = Array.from(getRefs(json));
   mapRefs(json, (refName) => `this.${refName}.nativeElement`);
@@ -198,7 +193,7 @@ export const componentToAngular = (
           : ''
       }
     })
-    export default class ${componentJson.name} {
+    export default class ${component.name} {
       ${Array.from(props)
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
@@ -208,20 +203,20 @@ export const componentToAngular = (
         .join('\n')}
 
       ${
-        !componentJson.hooks.onMount
+        !component.hooks.onMount
           ? ''
           : `ngOnInit() {
-              ${stripStateAndPropsRefs(componentJson.hooks.onMount, {
+              ${stripStateAndPropsRefs(component.hooks.onMount, {
                 replaceWith: 'this.',
               })}
             }`
       }
 
       ${
-        !componentJson.hooks.onUnMount
+        !component.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(componentJson.hooks.onUnMount, {
+              ${stripStateAndPropsRefs(component.hooks.onUnMount, {
                 replaceWith: 'this.',
               })}
             }`

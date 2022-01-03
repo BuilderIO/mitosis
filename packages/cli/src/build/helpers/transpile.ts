@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild'
 import { readFile } from 'fs-extra'
-import { Target } from '../../types/mitosis-config'
+import { Target } from '@builder.io/mitosis'
 
 export const transpile = async ({
   path,

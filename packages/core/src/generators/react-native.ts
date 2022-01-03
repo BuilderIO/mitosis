@@ -4,16 +4,14 @@ import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/collect-styles';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { Plugin } from '../modules/plugins';
 import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-type ToReactNativeOptions = {
-  prettier?: boolean;
+export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-  plugins?: Plugin[];
-};
+}
 
 const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 
@@ -67,10 +65,9 @@ export const collectReactNativeStyles = (
 };
 
 export const componentToReactNative = (
-  componentJson: MitosisComponent,
   options: ToReactNativeOptions = {},
-) => {
-  const json = fastClone(componentJson);
+): Transpiler => ({ component, path }) => {
+  const json = fastClone(component);
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       // TODO: handle TextInput, Image, etc
@@ -87,9 +84,9 @@ export const componentToReactNative = (
     }
   });
 
-  return componentToReact(json, {
+  return componentToReact({
     ...options,
     stylesType: options.stylesType || 'react-native',
     type: 'native',
-  });
+  })({ component: json, path });
 };

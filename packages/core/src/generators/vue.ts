@@ -14,7 +14,6 @@ import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -26,20 +25,20 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
-import { first, kebabCase, size } from 'lodash';
+import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
+import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
 
-export type ToVueOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
+export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
-  cssNamespace?: string;
-  namePrefix?: string;
+  cssNamespace?: () => string;
+  namePrefix?: (path: string) => string;
   builderRegister?: boolean;
-};
+  registerComponentPrepend?: string;
+}
 
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
@@ -140,7 +139,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(
   json: MitosisComponent,
-  options: ToVueOptions,
+  _options: ToVueOptions,
 ) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
@@ -152,7 +151,7 @@ function processDynamicComponents(
   });
 }
 
-function processForKeys(json: MitosisComponent, options: ToVueOptions) {
+function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name === 'For') {
@@ -297,88 +296,90 @@ function getContextProvideString(
   return str;
 }
 
-export const componentToVue = (
-  component: MitosisComponent,
-  options: ToVueOptions = {},
-) => {
-  // Make a copy we can safely mutate, similar to babel's toolchain can be used
-  component = fastClone(component);
-  processHttpRequests(component);
-  processDynamicComponents(component, options);
-  processForKeys(component, options);
+export const componentToVue = (options: ToVueOptions = {}) =>
+  // hack while we migrate all other transpilers to receive/handle path
+  // TO-DO: use `Transpiler` once possible
+  ({ component, path }: TranspilerArgs & { path: string }) => {
+    // Make a copy we can safely mutate, similar to babel's toolchain can be used
+    component = fastClone(component);
+    processHttpRequests(component);
+    processDynamicComponents(component, options);
+    processForKeys(component, options);
 
-  if (options.plugins) {
-    component = runPreJsonPlugins(component, options.plugins);
-  }
+    if (options.plugins) {
+      component = runPreJsonPlugins(component, options.plugins);
+    }
 
-  mapRefs(component, (refName) => `this.$refs.${refName}`);
+    mapRefs(component, (refName) => `this.$refs.${refName}`);
 
-  if (options.plugins) {
-    component = runPostJsonPlugins(component, options.plugins);
-  }
-  const css = collectCss(component, {
-    prefix: options.cssNamespace,
-  });
+    if (options.plugins) {
+      component = runPostJsonPlugins(component, options.plugins);
+    }
+    const css = collectCss(component, {
+      prefix: options.cssNamespace?.() ?? undefined,
+    });
 
-  let dataString = getStateObjectStringFromComponent(component, {
-    data: true,
-    functions: false,
-    getters: false,
-  });
+    let dataString = getStateObjectStringFromComponent(component, {
+      data: true,
+      functions: false,
+      getters: false,
+    });
 
-  const getterString = getStateObjectStringFromComponent(component, {
-    data: false,
-    getters: true,
-    functions: false,
-    valueMapper: (code) =>
-      processBinding(code.replace(/^get /, ''), options, component),
-  });
+    const getterString = getStateObjectStringFromComponent(component, {
+      data: false,
+      getters: true,
+      functions: false,
+      valueMapper: (code) =>
+        processBinding(code.replace(/^get /, ''), options, component),
+    });
 
-  let functionsString = getStateObjectStringFromComponent(component, {
-    data: false,
-    getters: false,
-    functions: true,
-    valueMapper: (code) => processBinding(code, options, component),
-  });
+    let functionsString = getStateObjectStringFromComponent(component, {
+      data: false,
+      getters: false,
+      functions: true,
+      valueMapper: (code) => processBinding(code, options, component),
+    });
 
-  const blocksString = JSON.stringify(component.children);
+    const blocksString = JSON.stringify(component.children);
 
-  // Component references to include in `component: { YourComponent, ... }
-  const componentsUsed = Array.from(getComponentsUsed(component))
-    .filter(
-      (name) =>
-        name.length && !name.includes('.') && name[0].toUpperCase() === name[0],
-    )
-    // Strip out components that compile away
-    .filter(
-      (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
+    // Component references to include in `component: { YourComponent, ... }
+    const componentsUsed = Array.from(getComponentsUsed(component))
+      .filter(
+        (name) =>
+          name.length &&
+          !name.includes('.') &&
+          name[0].toUpperCase() === name[0],
+      )
+      // Strip out components that compile away
+      .filter(
+        (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
+      );
+
+    // Append refs to data as { foo, bar, etc }
+    dataString = dataString.replace(
+      /}$/,
+      `${component.imports
+        .map((thisImport) => Object.keys(thisImport.imports).join(','))
+        // Make sure actually used in template
+        .filter((key) => Boolean(key && blocksString.includes(key)))
+        // Don't include component imports
+        .filter((key) => !componentsUsed.includes(key))
+        .join(',')}}`,
     );
 
-  // Append refs to data as { foo, bar, etc }
-  dataString = dataString.replace(
-    /}$/,
-    `${component.imports
-      .map((thisImport) => Object.keys(thisImport.imports).join(','))
-      // Make sure actually used in template
-      .filter((key) => Boolean(key && blocksString.includes(key)))
-      // Don't include component imports
-      .filter((key) => !componentsUsed.includes(key))
-      .join(',')}}`,
-  );
+    const elementProps = getProps(component);
+    stripMetaProperties(component);
 
-  const elementProps = getProps(component);
-  stripMetaProperties(component);
+    const template = component.children
+      .map((item) => blockToVue(item, options))
+      .join('\n');
 
-  const template = component.children
-    .map((item) => blockToVue(item, options))
-    .join('\n');
+    const includeClassMapHelper = template.includes('_classStringToObject');
 
-  const includeClassMapHelper = template.includes('_classStringToObject');
-
-  if (includeClassMapHelper) {
-    functionsString = functionsString.replace(
-      /}\s*$/,
-      `_classStringToObject(str) {
+    if (includeClassMapHelper) {
+      functionsString = functionsString.replace(
+        /}\s*$/,
+        `_classStringToObject(str) {
         const obj = {};
         if (typeof str !== 'string') { return obj }
         const classNames = str.trim().split(/\\s+/); 
@@ -387,23 +388,23 @@ export const componentToVue = (
         } 
         return obj;
       }  }`,
+      );
+    }
+
+    const builderRegister = Boolean(
+      options.builderRegister && component.meta.registerComponent,
     );
-  }
 
-  const builderRegister = Boolean(
-    options.builderRegister && component.meta.registerComponent,
-  );
-
-  let str = dedent`
+    let str = dedent`
     <template>
       ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
       ${
-        !builderRegister
-          ? ''
-          : `import { registerComponent } from '@builder.io/sdk-vue'`
+        component.meta.registerComponent
+          ? options.registerComponentPrepend ?? ''
+          : ''
       }
 
       export default ${!builderRegister ? '' : 'registerComponent('}{
@@ -411,7 +412,9 @@ export const componentToVue = (
           !component.name
             ? ''
             : `name: '${
-                options.namePrefix ? options.namePrefix + '-' : ''
+                options.namePrefix?.(path)
+                  ? options.namePrefix?.(path) + '-'
+                  : ''
               }${kebabCase(component.name)}',`
         }
         ${
@@ -501,33 +504,37 @@ export const componentToVue = (
     }
   `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (true || options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'vue',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-html'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-        ],
-      });
-    } catch (err) {
-      console.warn('Could not prettify', { string: str }, err);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
+    if (true || options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'vue',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-html'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+          ],
+        });
+      } catch (err) {
+        console.warn('Could not prettify', { string: str }, err);
+      }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
 
-  for (const pattern of removePatterns) {
-    str = str.replace(pattern, '');
-  }
-  return str;
-};
+    for (const pattern of removePatterns) {
+      str = str.replace(pattern, '');
+    }
+
+    // Transform <FooBar> to <foo-bar> as Vue2 needs
+    return str.replace(/<\/?\w+/g, (match) =>
+      match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
+    );
+  };
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

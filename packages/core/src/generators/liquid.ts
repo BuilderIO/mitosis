@@ -3,10 +3,8 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -14,6 +12,11 @@ import {
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
+
+export interface ToLiquidOptions extends BaseTranspilerOptions {
+  reactive?: boolean;
+}
 
 /**
  * Test if the binding expression would be likely to generate
@@ -33,12 +36,6 @@ export const isValidLiquidBinding = (str = '') => {
     // e.g. `state.product.price` -> `{{product.price}}	    // we regex out later to transform back into valid liquid expressions
     Boolean(str.match(/^[a-z0-9_\.\s]+$/i))
   );
-};
-
-type ToLiquidOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-  reactive?: boolean;
 };
 
 const mappers: {
@@ -156,10 +153,9 @@ const blockToLiquid = (
 
 // TODO: add JS support similar to componentToHtml()
 export const componentToLiquid = (
-  componentJson: MitosisComponent,
   options: ToLiquidOptions = {},
-) => {
-  let json = fastClone(componentJson);
+): Transpiler => ({ component }) => {
+  let json = fastClone(component);
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }

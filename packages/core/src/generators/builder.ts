@@ -1,4 +1,3 @@
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
@@ -15,6 +14,11 @@ import { attempt, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
+import { TranspilerArgs } from '../types/config';
+
+export interface ToBuilderOptions {
+  includeIds?: boolean;
+}
 
 const omitMetaProperties = (obj: Record<string, any>) =>
   omitBy(obj, (_value, key) => key.startsWith('$'));
@@ -137,10 +141,6 @@ const el = (
   }),
   ...options,
 });
-
-export type ToBuilderOptions = {
-  includeIds?: boolean;
-};
 
 function tryFormat(code: string) {
   let str = code;
@@ -308,46 +308,45 @@ export const blockToBuilder = (
   );
 };
 
-export const componentToBuilder = (
-  componentJson: MitosisComponent,
-  options: ToBuilderOptions = {},
-) => {
-  const hasState = Boolean(Object.keys(componentJson.state).length);
+export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
+  component,
+}: TranspilerArgs) => {
+  const hasState = Boolean(Object.keys(component.state).length);
 
   const result = fastClone({
     data: {
-      httpRequests: (componentJson?.meta?.useMetadata as any)?.httpRequests,
+      httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
       jsCode: tryFormat(dedent`
-        ${!hasProps(componentJson) ? '' : `var props = state;`}
+        ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
           !hasState
             ? ''
             : `Object.assign(state, ${getStateObjectStringFromComponent(
-                componentJson,
+                component,
               )});`
         }
 
-        ${!componentJson.hooks.onMount ? '' : componentJson.hooks.onMount}
+        ${!component.hooks.onMount ? '' : component.hooks.onMount}
       `),
       tsCode: tryFormat(dedent`
-        ${!hasProps(componentJson) ? '' : `var props = state;`}
+        ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
           !hasState
             ? ''
-            : `useState(${getStateObjectStringFromComponent(componentJson)});`
+            : `useState(${getStateObjectStringFromComponent(component)});`
         }
 
         ${
-          !componentJson.hooks.onMount
+          !component.hooks.onMount
             ? ''
             : `onMount(() => {
-                ${componentJson.hooks.onMount}
+                ${component.hooks.onMount}
               })`
         }
       `),
-      blocks: componentJson.children
+      blocks: component.children
         .filter(filterEmptyTextNodes)
         .map((child) => blockToBuilder(child, options)),
     },
@@ -355,9 +354,11 @@ export const componentToBuilder = (
 
   const subComponentMap: Record<string, BuilderContent> = {};
 
-  for (const subComponent of componentJson.subComponents) {
+  for (const subComponent of component.subComponents) {
     const name = subComponent.name;
-    subComponentMap[name] = componentToBuilder(subComponent, options);
+    subComponentMap[name] = componentToBuilder(options)({
+      component: subComponent,
+    });
   }
 
   traverse([result, subComponentMap]).forEach(function(el) {

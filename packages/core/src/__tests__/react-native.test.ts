@@ -20,106 +20,106 @@ const columns = require('./data/blocks/columns.raw');
 
 describe('React', () => {
   test('Basic', () => {
-    const json = parseJsx(basic);
-    const output = componentToReactNative(json);
+    const component = parseJsx(basic);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Input block', () => {
-    const json = parseJsx(inputBlock);
-    const output = componentToReactNative(json);
+    const component = parseJsx(inputBlock);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Submit button block', () => {
-    const json = parseJsx(submitButtonBlock);
-    const output = componentToReactNative(json);
+    const component = parseJsx(submitButtonBlock);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Select block', () => {
-    const json = parseJsx(selectBlock);
-    const output = componentToReactNative(json);
+    const component = parseJsx(selectBlock);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Form block', () => {
-    const json = parseJsx(formBlock);
-    const output = componentToReactNative(json);
+    const component = parseJsx(formBlock);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Button', () => {
-    const json = parseJsx(button);
-    const output = componentToReactNative(json);
+    const component = parseJsx(button);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Textarea', () => {
-    const json = parseJsx(textarea);
-    const output = componentToReactNative(json);
+    const component = parseJsx(textarea);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Img', () => {
-    const json = parseJsx(img);
-    const output = componentToReactNative(json);
+    const component = parseJsx(img);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Video', () => {
-    const json = parseJsx(video);
-    const output = componentToReactNative(json);
+    const component = parseJsx(video);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Section', () => {
-    const json = parseJsx(section);
-    const output = componentToReactNative(json);
+    const component = parseJsx(section);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Text', () => {
-    const json = parseJsx(text);
-    const output = componentToReactNative(json);
+    const component = parseJsx(text);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('RawText', () => {
-    const json = parseJsx(rawText);
-    const output = componentToReactNative(json);
+    const component = parseJsx(rawText);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Stamped.io', () => {
-    const json = parseJsx(stamped);
-    const output = componentToReactNative(json, {
+    const component = parseJsx(stamped);
+    const output = componentToReactNative({
       stateType: 'useState',
-    });
+    })({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('CustomCode', () => {
-    const json = parseJsx(customCode);
-    const output = componentToReactNative(json);
+    const component = parseJsx(customCode);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Embed', () => {
-    const json = parseJsx(customCode);
-    const output = componentToReactNative(json);
+    const component = parseJsx(customCode);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Image', () => {
-    const json = parseJsx(image);
-    const output = componentToReactNative(json);
+    const component = parseJsx(image);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Columns', () => {
-    const json = parseJsx(columns);
-    const output = componentToReactNative(json);
+    const component = parseJsx(columns);
+    const output = componentToReactNative()({ component });
     expect(output).toMatchSnapshot();
   });
 });

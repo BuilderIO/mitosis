@@ -1,6 +1,5 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import * as JSON5 from 'json5';
 import { traceReferenceToModulePath } from '../helpers/trace-reference-to-module-path';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
@@ -15,6 +14,7 @@ import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings'
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
+import { tryParseJson } from '../helpers/json';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -149,27 +149,13 @@ export const parseStateObject = (object: babel.types.ObjectExpression) => {
   });
 
   const newObject = types.objectExpression(useProperties);
-  let code;
-  let obj;
-  try {
-    code = generate(newObject).code!;
-    obj = JSON5.parse(code);
-  } catch (err) {
-    console.error('Could not JSON5 parse object:\n', code);
-    throw err;
-  }
+  const obj = parseCodeJson(newObject);
   return obj;
 };
 
-const parseJson = (node: babel.types.Node) => {
-  let code: string | undefined;
-  try {
-    code = generate(node).code!;
-    return JSON5.parse(code);
-  } catch (err) {
-    console.error('Could not JSON5 parse object:\n', code);
-    throw err;
-  }
+const parseCodeJson = (node: babel.types.Node) => {
+  const code = generate(node).code;
+  return tryParseJson(code);
 };
 
 const componentFunctionToJson = (
@@ -248,11 +234,11 @@ const componentFunctionToJson = (
             // Function as init, like:
             // useState(() => true)
             if (types.isArrowFunctionExpression(value)) {
-              state[varName] = parseJson(value.body);
+              state[varName] = parseCodeJson(value.body);
             } else {
               // Value as init, like:
               // useState(true)
-              state[varName] = parseJson(value);
+              state[varName] = parseCodeJson(value);
             }
           }
         }
@@ -547,12 +533,11 @@ const collectMetadata = (
       return true;
     }
     if (types.isIdentifier(hook.callee) && hookNames.has(hook.callee.name)) {
-      const code = generate(hook.arguments[0]).code;
       try {
-        component.meta[hook.callee.name] = JSON5.parse(code);
+        component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
         return false;
       } catch (e) {
-        console.error(`Error parsing metadata hook ${hook.callee.name}`, code);
+        console.error(`Error parsing metadata hook ${hook.callee.name}`);
         throw e;
       }
     }
@@ -687,6 +672,9 @@ function extractContextComponents(json: MitosisComponent) {
   });
 }
 
+const isImportOrDefaultExport = (node: babel.Node) =>
+  types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
+
 export function parseJsx(
   jsx: string,
   options: Partial<ParseMitosisOptions> = {},
@@ -704,27 +692,20 @@ export function parseJsx(
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       jsxPlugin,
-      () => ({
+      (): babel.PluginObj<Context> => ({
         visitor: {
-          JSXExpressionContainer(
-            path: babel.NodePath<babel.types.JSXExpressionContainer>,
-            context: Context,
-          ) {
+          JSXExpressionContainer(path, context) {
             if (types.isJSXEmptyExpression(path.node.expression)) {
               path.remove();
             }
           },
-          Program(path: babel.NodePath<babel.types.Program>, context: Context) {
+          Program(path, context) {
             if (context.builder) {
               return;
             }
             context.builder = {
               component: createMitosisComponent(),
             };
-
-            const isImportOrDefaultExport = (node: babel.Node) =>
-              types.isExportDefaultDeclaration(node) ||
-              types.isImportDeclaration(node);
 
             const keepStatements = path.node.body.filter((statement) =>
               isImportOrDefaultExport(statement),
@@ -754,10 +735,7 @@ export function parseJsx(
 
             path.replaceWith(types.program(keepStatements));
           },
-          FunctionDeclaration(
-            path: babel.NodePath<babel.types.FunctionDeclaration>,
-            context: Context,
-          ) {
+          FunctionDeclaration(path, context) {
             const { node } = path;
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
@@ -768,10 +746,7 @@ export function parseJsx(
               }
             }
           },
-          ImportDeclaration(
-            path: babel.NodePath<babel.types.ImportDeclaration>,
-            context: Context,
-          ) {
+          ImportDeclaration(path, context) {
             // @builder.io/mitosis or React imports compile away
             if (
               ['react', '@builder.io/mitosis', '@emotion/react'].includes(
@@ -800,12 +775,10 @@ export function parseJsx(
 
             path.remove();
           },
-          ExportDefaultDeclaration(
-            path: babel.NodePath<babel.types.ExportDefaultDeclaration>,
-          ) {
+          ExportDefaultDeclaration(path) {
             path.replaceWith(path.node.declaration);
           },
-          JSXElement(path: babel.NodePath<babel.types.JSXElement>) {
+          JSXElement(path) {
             const { node } = path;
             path.replaceWith(jsonToAst(jsxElementToJson(node)));
           },
@@ -825,14 +798,7 @@ export function parseJsx(
       .replace(/^\({/, '{')
       .replace(/}\);$/, '}'),
   );
-  let parsed: MitosisComponent;
-  try {
-    parsed = JSON5.parse(toParse);
-  } catch (err) {
-    debugger;
-    console.error('Could not parse code', toParse);
-    throw err;
-  }
+  const parsed = tryParseJson(toParse);
 
   mapReactIdentifiers(parsed);
   extractContextComponents(parsed);
