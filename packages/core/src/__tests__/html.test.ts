@@ -5,8 +5,8 @@ const stamped = require('./data/blocks/stamped-io.raw');
 
 describe('Html', () => {
   test('Stamped', () => {
-    const json = parseJsx(stamped);
-    const html = componentToHtml(json);
+    const component = parseJsx(stamped);
+    const html = componentToHtml()({ component });
     expect(html).toMatchSnapshot();
   });
 });

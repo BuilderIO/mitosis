@@ -17,7 +17,6 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -26,13 +25,12 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-type ToHtmlOptions = {
-  prettier?: boolean;
+export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
-  plugins?: Plugin[];
   prefix?: string;
-};
+}
 
 type StringRecord = { [key: string]: string };
 type NumberRecord = { [key: string]: number };
@@ -376,10 +374,9 @@ function addUpdateAfterSetInCode(
 const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 
 // TODO: props support via custom elements
-export const componentToHtml = (
-  componentJson: MitosisComponent,
-  options: ToHtmlOptions = {},
-) => {
+export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
+  component,
+}) => {
   const useOptions: InternalToHtmlOptions = {
     ...options,
     onChangeJsById: {},
@@ -387,7 +384,7 @@ export const componentToHtml = (
     namesMap: {},
     format: 'script',
   };
-  let json = fastClone(componentJson);
+  let json = fastClone(component);
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
@@ -541,9 +538,8 @@ export const componentToHtml = (
 
 // TODO: props support via custom elements
 export const componentToCustomElement = (
-  componentJson: MitosisComponent,
   options: ToHtmlOptions = {},
-) => {
+): Transpiler => ({ component }) => {
   const useOptions: InternalToHtmlOptions = {
     ...options,
     onChangeJsById: {},
@@ -551,7 +547,7 @@ export const componentToCustomElement = (
     namesMap: {},
     format: 'class',
   };
-  let json = fastClone(componentJson);
+  let json = fastClone(component);
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
@@ -595,7 +591,7 @@ export const componentToCustomElement = (
     }
   }
 
-  const kebabName = componentJson.name
+  const kebabName = component.name
     .replace(/([a-z])([A-Z])/g, '$1-$2')
     .toLowerCase();
 
@@ -606,7 +602,7 @@ export const componentToCustomElement = (
        *  <${kebabName}></${kebabName}>
        * 
        */
-      class ${componentJson.name} extends HTMLElement {
+      class ${component.name} extends HTMLElement {
         constructor() {
           super();
 
@@ -733,7 +729,7 @@ export const componentToCustomElement = (
         }
       }
 
-      customElements.define('${kebabName}', ${componentJson.name});
+      customElements.define('${kebabName}', ${component.name});
     `;
 
   if (options.plugins) {

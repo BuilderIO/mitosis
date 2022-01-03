@@ -11,6 +11,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
+import { Transpiler } from '..';
 
 export type ToSwiftOptions = {
   prettier?: boolean;
@@ -299,11 +300,10 @@ function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
   }
   return str;
 }
-export const componentToSwift = (
-  componentJson: MitosisComponent,
-  options: ToSwiftOptions = {},
-) => {
-  const json = fastClone(componentJson);
+export const componentToSwift = (options: ToSwiftOptions = {}): Transpiler => ({
+  component,
+}) => {
+  const json = fastClone(component);
   mapDataForSwiftCompatability(json);
 
   const hasDyanmicData = componentHasDynamicData(json);
@@ -331,7 +331,7 @@ export const componentToSwift = (
     `
     }
 
-    struct ${componentJson.name}: View {
+    struct ${component.name}: View {
       ${
         !hasDyanmicData
           ? ''

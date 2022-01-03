@@ -578,7 +578,7 @@ const isSerializedBlock = (str: string) => {
 };
 
 const deserializeBlock = (str: string) => {
-  const parts = [];
+  const parts: string[] = [];
   let attribute = str;
   let matches = str.match(/<builder-serialized-block block='([^']*)'/);
   while (matches?.[1]) {
@@ -2097,7 +2097,7 @@ const matchConditionalTagsWithEndings = (nodes: BuilderElement[]) => {
 
         // cursor at condition now
         let condition = tag;
-        let hoistedCondition = null;
+        let hoistedCondition: any = null;
         /* originalIndex is where the open tag was, e.g 
           {% if test %} TEXT<span> in span</span> <div class = '''>
           it'll be 2,
@@ -2660,7 +2660,7 @@ export const preprocessLiquid = async (
   const captureGroupRegex = /{%-?\s*capture\s*(.+?)-?%}([\s\S]*?){%-?\s*endcapture\s*-?%}/gi;
   let matchedCaptureGroup;
 
-  const allCaptureGroupMatches = [];
+  const allCaptureGroupMatches: any[] = [];
   while (
     (matchedCaptureGroup = captureGroupRegex.exec(processedLiquid)) !== null
   ) {

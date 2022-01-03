@@ -1,12 +1,9 @@
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
-import {} from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -14,11 +11,9 @@ import {
 } from '../modules/plugins';
 import dedent from 'dedent';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
-type ToTemplateOptions = {
-  prettier?: boolean;
-  plugins?: Plugin[];
-};
+export interface ToTemplateOptions extends BaseTranspilerOptions {}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToTemplateOptions) => string;
@@ -116,10 +111,9 @@ const blockToTemplate = (
 
 // TODO: add JS support similar to componentToHtml()
 export const componentToTemplate = (
-  componentJson: MitosisComponent,
   options: ToTemplateOptions = {},
-) => {
-  let json = fastClone(componentJson);
+): Transpiler => ({ component }) => {
+  let json = fastClone(component);
   if (options.plugins) {
     json = runPreJsonPlugins(json, options.plugins);
   }
