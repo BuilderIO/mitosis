@@ -2,7 +2,7 @@ import { outputFileAsync } from 'fs-extra-promise';
 import { builderContentToMitosisComponent } from '..';
 import { File } from '../generators/qwik';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
-import { isExpression } from '../generators/qwik/src-generator';
+import { isStatement } from '../generators/qwik/src-generator';
 import { parseJsx } from '../parsers/jsx';
 import {
   compileAwayBuilderComponentsFromTree,
@@ -164,16 +164,17 @@ describe('qwik', () => {
   });
 
   describe('helper functions', () => {
-    describe('isExpression', () => {
+    describe('isStatement', () => {
       test('is an expression', () => {
-        expect(isExpression('a.b')).toBe(true);
-        expect(isExpression('"var x; return foo + \'\\"\';"')).toBe(true);
-        expect(isExpression('"foo" + `bar\nbaz`')).toBe(true);
+        expect(isStatement('a.b')).toBe(false);
+        expect(isStatement('1?2:"bar"')).toBe(false);
+        expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
+        expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
       });
 
       test('is a statement', () => {
-        expect(isExpression('var x; return x;')).toBe(false);
-        expect(isExpression('var x')).toBe(false);
+        expect(isStatement('var x; return x;')).toBe(true);
+        expect(isStatement('var x')).toBe(true);
       });
     });
   });

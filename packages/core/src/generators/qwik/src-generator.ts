@@ -279,12 +279,11 @@ export class SrcBuilder {
         }
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('={') : this.emit(':', WS);
-        const bindingExpressionOrStatement = bindings[key];
-        this.emit(
-          isExpression(bindingExpressionOrStatement)
-            ? bindings[key]
-            : iif(bindingExpressionOrStatement),
-        );
+        let binding = bindings[key];
+        if (typeof binding == 'string' && isStatement(binding)) {
+          binding = iif(binding);
+        }
+        this.emit(binding);
         this.isJSX ? this.emit('}') : this.emit();
       }
     }
@@ -435,20 +434,20 @@ function isWhitespace(ch: string) {
 }
 
 /**
- * Returns `true` if the code is an expression.
+ * Returns `true` if the code is a statement (rather than expression).
  *
  * Code is an expression if it is a list of identifiers all connected with a valid separator
  * identifier: [a-z_$](a-z0-9_$)*
- * seperator: [()[]{}.-+/*,]
+ * separator: [()[]{}.-+/*,]
  *
  * it is not 100% but a good enough approximation
  */
-export function isExpression(code: string) {
+export function isStatement(code: string) {
+  if (typeof code !== 'string') console.log(code, String(code));
   code = code.replace(STRING_LITERAL, 'STRING_LITERAL');
   const identifiers = code.split(EXPRESSION_SEPARATORS);
   return (
-    identifiers.filter((ident) => ident && !ident.match(EXPRESSION_IDENTIFIER))
-      .length == 0
+    identifiers.filter((i) => i && !i.match(EXPRESSION_IDENTIFIER)).length !== 0
   );
 }
 
@@ -459,4 +458,4 @@ const STRING_LITERAL = /(["'`])((\\{2})*|((\n|.)*?[^\\](\\{2})*))\1/g;
 const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,]+/;
 
 // https://regexr.com/6cpka
-const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z_$][a-zA-Z0-9_$]*\s*$/;
+const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z0-9_$]+\s*$/;
