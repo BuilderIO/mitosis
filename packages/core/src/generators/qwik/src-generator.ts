@@ -280,7 +280,11 @@ export class SrcBuilder {
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('={') : this.emit(':', WS);
         const bindingExpressionOrStatement = bindings[key];
-        this.emit(isExpression(bindingExpressionOrStatement) ?  bindings[key] : iif(bindingExpressionOrStatement));
+        this.emit(
+          isExpression(bindingExpressionOrStatement)
+            ? bindings[key]
+            : iif(bindingExpressionOrStatement),
+        );
         this.isJSX ? this.emit('}') : this.emit();
       }
     }
@@ -410,7 +414,7 @@ export function arrowFnValue(args: string[], expression: any) {
 
 export function iif(code: any) {
   return function(this: SrcBuilder) {
-    this.emit('(()', WS, '=>', WS, '{' , WS, NL, code, NL, '}', ')()');
+    this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
   };
 }
 
@@ -432,20 +436,27 @@ function isWhitespace(ch: string) {
 
 /**
  * Returns `true` if the code is an expression.
- * 
+ *
  * Code is an expression if it is a list of identifiers all connected with a valid separator
  * identifier: [a-z_$](a-z0-9_$)*
  * seperator: [()[]{}.-+/*,]
- * 
- * it is not 100% but a good approximation
+ *
+ * it is not 100% but a good enough approximation
  */
-function isExpression(code: string) {
+export function isExpression(code: string) {
+  code = code.replace(STRING_LITERAL, 'STRING_LITERAL');
   const identifiers = code.split(EXPRESSION_SEPARATORS);
-  return identifiers.filter((ident) => ident && !ident.match(EXPRESSION_IDENTIFIER)).length == 0;
+  return (
+    identifiers.filter((ident) => ident && !ident.match(EXPRESSION_IDENTIFIER))
+      .length == 0
+  );
 }
 
+// https://regexr.com/6cppf
+const STRING_LITERAL = /(["'`])((\\{2})*|((\n|.)*?[^\\](\\{2})*))\1/g;
+
 // https://regexr.com/6cpk4
-const EXPRESSION_SEPARATORS = /[()\[\]{}.\-+/*,]+/;
+const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,]+/;
 
 // https://regexr.com/6cpka
 const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z_$][a-zA-Z0-9_$]*\s*$/;

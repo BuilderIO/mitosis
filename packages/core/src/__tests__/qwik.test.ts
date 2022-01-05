@@ -2,6 +2,7 @@ import { outputFileAsync } from 'fs-extra-promise';
 import { builderContentToMitosisComponent } from '..';
 import { File } from '../generators/qwik';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
+import { isExpression } from '../generators/qwik/src-generator';
 import { parseJsx } from '../parsers/jsx';
 import {
   compileAwayBuilderComponentsFromTree,
@@ -160,6 +161,21 @@ describe('qwik', () => {
     addComponent(fileSet, component);
     debugOutput(fileSet);
     expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  describe('helper functions', () => {
+    describe('isExpression', () => {
+      test('is an expression', () => {
+        expect(isExpression('a.b')).toBe(true);
+        expect(isExpression('"var x; return foo + \'\\"\';"')).toBe(true);
+        expect(isExpression('"foo" + `bar\nbaz`')).toBe(true);
+      });
+
+      test('is a statement', () => {
+        expect(isExpression('var x; return x;')).toBe(false);
+        expect(isExpression('var x')).toBe(false);
+      });
+    });
   });
 });
 
