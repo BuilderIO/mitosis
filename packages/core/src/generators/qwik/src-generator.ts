@@ -48,7 +48,7 @@ export class File {
   }
 
   toQrl(symbol: string) {
-    return string(this.qrlPrefix + this.module + '#' + symbol);
+    return quote(this.qrlPrefix + this.module + '#' + symbol);
   }
 
   exportConst(name: string, value?: any) {
@@ -110,14 +110,14 @@ export class SrcBuilder {
         WS,
         'from',
         WS,
-        string(module),
+        quote(module),
         ';',
         NL,
       );
     } else {
       symbols.forEach((symbol) => {
         this.const(symbol, function(this: SrcBuilder) {
-          this.emit(invoke('require', [string(module)]), '.', symbol);
+          this.emit(invoke('require', [quote(module)]), '.', symbol);
         });
       });
     }
@@ -263,7 +263,7 @@ export class SrcBuilder {
         }
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('=') : this.emit(':', WS);
-        this.emit(string(props[key]));
+        this.emit(quote(props[key]));
       }
     }
     for (const key in bindings) {
@@ -279,7 +279,11 @@ export class SrcBuilder {
         }
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('={') : this.emit(':', WS);
-        this.emit(bindings[key]);
+        let binding = bindings[key];
+        if (typeof binding == 'string' && isStatement(binding)) {
+          binding = iif(binding);
+        }
+        this.emit(binding);
         this.isJSX ? this.emit('}') : this.emit();
       }
     }
@@ -358,6 +362,7 @@ function ignoreKey(key: string): boolean {
   return (
     key.startsWith('$') ||
     key.startsWith('_') ||
+    key.startsWith('symbol.data') ||
     key == 'code' ||
     key == '' ||
     key == 'builder-id'
@@ -375,7 +380,7 @@ function possiblyQuotePropertyName(key: string): any {
   return /^\w[\w\d]*$/.test(key) ? key : JSON.stringify(key);
 }
 
-export function string(text: string) {
+export function quote(text: string) {
   return JSON.stringify(text);
 }
 
@@ -406,6 +411,12 @@ export function arrowFnValue(args: string[], expression: any) {
   };
 }
 
+export function iif(code: any) {
+  return function(this: SrcBuilder) {
+    this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
+  };
+}
+
 const LOWER_CASE = 'a'.charCodeAt(0) - 1;
 
 function literalTagName(symbol: string | Symbol): string | Symbol {
@@ -414,10 +425,37 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
     symbol.charCodeAt(0) > LOWER_CASE &&
     symbol.indexOf('.') === -1
   ) {
-    return string(symbol);
+    return quote(symbol);
   }
   return symbol;
 }
 function isWhitespace(ch: string) {
   return ch == '' || ch == RS || ch == NL;
 }
+
+/**
+ * Returns `true` if the code is a statement (rather than expression).
+ *
+ * Code is an expression if it is a list of identifiers all connected with a valid separator
+ * identifier: [a-z_$](a-z0-9_$)*
+ * separator: [()[]{}.-+/*,]
+ *
+ * it is not 100% but a good enough approximation
+ */
+export function isStatement(code: string) {
+  if (typeof code !== 'string') console.log(code, String(code));
+  code = code.replace(STRING_LITERAL, 'STRING_LITERAL');
+  const identifiers = code.split(EXPRESSION_SEPARATORS);
+  return (
+    identifiers.filter((i) => i && !i.match(EXPRESSION_IDENTIFIER)).length !== 0
+  );
+}
+
+// https://regexr.com/6cppf
+const STRING_LITERAL = /(["'`])((\\{2})*|((\n|.)*?[^\\](\\{2})*))\1/g;
+
+// https://regexr.com/6cpk4
+const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,]+/;
+
+// https://regexr.com/6cpka
+const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z0-9_$]+\s*$/;
