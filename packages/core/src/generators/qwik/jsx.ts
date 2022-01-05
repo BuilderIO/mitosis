@@ -6,7 +6,7 @@ import {
   invoke,
   NL,
   SrcBuilder,
-  string,
+  quote,
   UNINDENT,
 } from './src-generator';
 import { CssStyles } from './styles';
@@ -35,7 +35,7 @@ export function renderJSXNodes(
         } else {
           this.isJSX
             ? this.emit(child.properties._text)
-            : this.jsxTextBinding(string(child.properties._text!));
+            : this.jsxTextBinding(quote(child.properties._text!));
         }
       } else {
         let childName = child.name;
@@ -125,7 +125,7 @@ function rewriteHandlers(
         } else if ((handlerBlock = handlers.get(binding))) {
           key = `on:${key.substr(2).toLowerCase()}`;
           binding = invoke(file.import(file.qwikModule, 'qHook'), [
-            string(file.qrlPrefix + 'high#' + handlerBlock),
+            quote(file.qrlPrefix + 'high#' + handlerBlock),
           ]);
         }
         outBindings[key] = binding;
