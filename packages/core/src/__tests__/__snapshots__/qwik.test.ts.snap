@@ -770,7 +770,7 @@ export const Todos_onClick_0 = qHook<any, any>((props, state) => {
 });
 
 ",
-  "low.tsx": "import { For, Todo } from \\"./med.js\\";
+  "low.tsx": "import { Todo } from \\"./med.js\\";
 
 import { h, qHook } from \\"@builder.io/qwik\\";
 
@@ -787,10 +787,11 @@ export const Todos_onRender = qHook((props, state) => (
       : null
     }
     <ul class=\\"todo-list\\">
-      <For each={todosState.todos}>
+      { (todosState.todos || []).forEach(() => (
         <Todo todo={todo}>
         </Todo>
-      </For>
+      ))
+      }
     </ul>
   </section>
 ));
