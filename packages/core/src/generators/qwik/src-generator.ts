@@ -254,7 +254,11 @@ export class SrcBuilder {
     }
     let first = true;
     for (const key in props) {
-      if (Object.prototype.hasOwnProperty.call(props, key) && !ignoreKey(key)) {
+      if (
+        Object.prototype.hasOwnProperty.call(props, key) &&
+        !ignoreKey(key) &&
+        !Object.prototype.hasOwnProperty.call(bindings, key)
+      ) {
         if (first) {
           first = false;
           this.isJSX && this.emit(RS, INDENT, INDENT);
@@ -443,7 +447,10 @@ function isWhitespace(ch: string) {
  * it is not 100% but a good enough approximation
  */
 export function isStatement(code: string) {
-  if (typeof code !== 'string') console.log(code, String(code));
+  if (code.startsWith('(')) {
+    // Code starting with `(` is most likely and IFF and hence is an expression.
+    return false;
+  }
   code = code.replace(STRING_LITERAL, 'STRING_LITERAL');
   const identifiers = code.split(EXPRESSION_SEPARATORS);
   return (

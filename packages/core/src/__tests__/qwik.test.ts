@@ -163,6 +163,22 @@ describe('qwik', () => {
     expect(toObj(fileSet)).toMatchSnapshot();
   });
 
+  test('For', async () => {
+    const component = builderContentToMitosisComponent(
+      require('./qwik.test.for-loop.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+    const fileSet = createFileSet({ output: 'mjs', jsx: true });
+
+    addComponent(fileSet, component);
+    debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
   describe('helper functions', () => {
     describe('isStatement', () => {
       test('is an expression', () => {
@@ -170,6 +186,7 @@ describe('qwik', () => {
         expect(isStatement('1?2:"bar"')).toBe(false);
         expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
         expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
+        expect(isStatement('(...)()')).toBe(false);
       });
 
       test('is a statement', () => {
