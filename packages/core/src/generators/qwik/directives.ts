@@ -8,16 +8,20 @@ export const DIRECTIVES: Record<
   Show: (node: MitosisNode, blockFn: () => void) =>
     function(this: SrcBuilder) {
       const expr = node.bindings.when;
-      if (this.isJSX) {
-        this.emit('{', WS, INDENT, expr, WS, '?', NL);
-      } else {
-        this.emit(expr, WS, '?', INDENT, NL);
-      }
+      this.isJSX && this.emit('{', WS);
+      this.emit(expr, WS, '?', INDENT, NL);
       blockFn();
-      if (this.isJSX) {
-        this.emit(':', WS, 'null', UNINDENT, NL, '}', NL);
-      } else {
-        this.emit(':', WS, 'null', UNINDENT, NL);
-      }
+      this.emit(':', WS, 'null', UNINDENT, NL);
+      this.isJSX && this.emit('}', NL);
+    },
+  For: (node: MitosisNode, blockFn: () => void) =>
+    function(this: SrcBuilder) {
+      const expr = node.bindings.each;
+      this.isJSX && this.emit('{', WS);
+      this.emit('(', expr, WS, '||', WS, '[])');
+      this.emit('.forEach(', '()', WS, '=>', WS, '(', INDENT, NL);
+      blockFn();
+      this.emit(UNINDENT, ')', ')', NL);
+      this.isJSX && this.emit('}', NL);
     },
 };

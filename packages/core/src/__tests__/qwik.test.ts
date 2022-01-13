@@ -2,6 +2,7 @@ import { outputFileAsync } from 'fs-extra-promise';
 import { builderContentToMitosisComponent } from '..';
 import { File } from '../generators/qwik';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
+import { isStatement } from '../generators/qwik/src-generator';
 import { parseJsx } from '../parsers/jsx';
 import {
   compileAwayBuilderComponentsFromTree,
@@ -160,6 +161,39 @@ describe('qwik', () => {
     addComponent(fileSet, component);
     debugOutput(fileSet);
     expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('For', async () => {
+    const component = builderContentToMitosisComponent(
+      require('./qwik.test.for-loop.json'),
+      {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      },
+    );
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+    const fileSet = createFileSet({ output: 'mjs', jsx: true });
+
+    addComponent(fileSet, component);
+    debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  describe('helper functions', () => {
+    describe('isStatement', () => {
+      test('is an expression', () => {
+        expect(isStatement('a.b')).toBe(false);
+        expect(isStatement('1?2:"bar"')).toBe(false);
+        expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
+        expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
+        expect(isStatement('(...)()')).toBe(false);
+      });
+
+      test('is a statement', () => {
+        expect(isStatement('var x; return x;')).toBe(true);
+        expect(isStatement('var x')).toBe(true);
+      });
+    });
   });
 });
 

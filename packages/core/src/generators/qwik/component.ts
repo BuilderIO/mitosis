@@ -8,6 +8,7 @@ import { renderJSXNodes } from './jsx';
 import {
   arrowFnValue,
   File,
+  iif,
   INDENT,
   invoke,
   NL,
@@ -189,7 +190,7 @@ function addComponentOnMount(
               INDENT,
               'const state = {};',
               NL,
-              component.hooks.onMount,
+              iif(component.hooks.onMount),
               NL,
               'return state;',
               UNINDENT,

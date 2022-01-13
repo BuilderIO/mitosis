@@ -1,0 +1,59 @@
+{
+  "data": {
+    "title": "Builtin: For",
+    "inputs": [],
+    "blocks": [
+      {
+        "@type": "@builder.io/sdk:Element",
+        "@version": 2,
+        "id": "builder-a58a66676d9b4ecc826c1b8bc5ad91f1",
+        "component": {
+          "name": "Core:Section",
+          "options": { "maxWidth": 1200 }
+        },
+        "children": [
+          {
+            "@type": "@builder.io/sdk:Element",
+            "@version": 2,
+            "bindings": {
+              "component.options.text": "var _virtual_index=state.resultsItem.data.title;return _virtual_index"
+            },
+            "code": {
+              "bindings": {
+                "component.options.text": "state.resultsItem.data.title"
+              }
+            },
+            "repeat": { "collection": "state.simpleList.results" },
+            "id": "builder-927e0013cb8142a9bd46a4f3811d0865",
+            "component": {
+              "name": "Text",
+              "options": {
+                "text": "text_content"
+              }
+            },
+            "responsiveStyles": { "large": { "textAlign": "center" } }
+          }
+        ],
+        "responsiveStyles": {
+          "large": {
+            "display": "flex",
+            "flexDirection": "column",
+            "position": "relative",
+            "flexShrink": "0",
+            "boxSizing": "border-box",
+            "marginTop": "0px",
+            "paddingLeft": "20px",
+            "paddingRight": "20px",
+            "paddingTop": "50px",
+            "paddingBottom": "50px",
+            "width": "100vw",
+            "marginLeft": "calc(50% - 50vw)"
+          }
+        }
+      }
+    ],
+    "httpRequests": {
+      "simpleList": "https://cdn.builder.io/api/v2/content/simple-list?apiKey=23dfd7cef1104af59f281d58ec525923&includeRefs=true&fields=data&limit=10"
+    }
+  }
+}

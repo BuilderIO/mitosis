@@ -110,6 +110,79 @@ export const MyComponent = qComponent({
 }
 `;
 
+exports[`qwik For 1`] = `
+Object {
+  "high.jsx": "
+",
+  "low.jsx": "import { h, qHook } from \\"@builder.io/qwik\\";
+
+
+export const MyComponent_styles = \`
+  .cvdfnp5{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+  }
+  .cz5wnof{
+    width: 100%;
+    align-self: stretch;
+    flex-grow: 1;
+    box-sizing: border-box;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cdrk993{
+    text-align: center;
+  }
+\`;
+
+export const MyComponent_onRender = qHook((props, state) => (
+  <div class=\\"cvdfnp5\\"
+      maxWidth={1200}>
+    <section class=\\"cz5wnof\\">
+      { (state.simpleList.results || []).forEach(() => (
+        <div class=\\"cdrk993\\">
+          <div class=\\"builder-text\\"
+              innerHTML={(() => {
+    try { var _virtual_index=state.resultsItem.data.title;return _virtual_index }
+    catch (err) {
+      console.warn('Builder code error', err);
+    }
+  })()}>
+          </div>
+        </div>
+      ))
+      }
+    </section>
+  </div>
+));
+",
+  "med.jsx": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+
+
+export const onMountCreateEmptyState = qHook(() => ({}));
+export const MyComponent = qComponent({
+  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
+  onRender: qHook(\\"./low#MyComponent_onRender\\"),
+  styles: \\"./low#MyComponent_styles\\"
+});
+",
+}
+`;
+
 exports[`qwik Image 1`] = `
 Object {
   "high.js": "
@@ -697,7 +770,7 @@ export const Todos_onClick_0 = qHook<any, any>((props, state) => {
 });
 
 ",
-  "low.tsx": "import { For, Todo } from \\"./med.js\\";
+  "low.tsx": "import { Todo } from \\"./med.js\\";
 
 import { h, qHook } from \\"@builder.io/qwik\\";
 
@@ -714,10 +787,11 @@ export const Todos_onRender = qHook((props, state) => (
       : null
     }
     <ul class=\\"todo-list\\">
-      <For each={todosState.todos}>
+      { (todosState.todos || []).forEach(() => (
         <Todo todo={todo}>
         </Todo>
-      </For>
+      ))
+      }
     </ul>
   </section>
 ));
