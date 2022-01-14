@@ -212,6 +212,17 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   return str;
 };
 
+/**
+ * Removes all `this.` references.
+ */
+const stripThisRefs = (str: string, options: ToReactOptions) => {
+  if (options.stateType !== 'useState') {
+    return str;
+  }
+
+  return str.replaceAll('this.', '');
+};
+
 const processBinding = (str: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return str;
@@ -228,8 +239,10 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
 
   const { state } = json;
 
-  const valueMapper = (val: string) =>
-    processBinding(updateStateSettersInCode(val, options), options);
+  const valueMapper = (val: string) => {
+    const x = processBinding(updateStateSettersInCode(val, options), options);
+    return stripThisRefs(x, options);
+  };
 
   const lineItemDelimiter = '\n\n\n';
 
@@ -243,7 +256,9 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const useValue = value.replace(functionLiteralPrefix, '');
-        str += valueMapper(useValue);
+        const mappedVal = valueMapper(useValue);
+
+        str += mappedVal;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
