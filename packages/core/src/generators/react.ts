@@ -236,6 +236,13 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
 
   for (const key in state) {
     const value = state[key];
+
+    const defaultCase = `const [${key}, set${capitalize(
+      key,
+    )}] ${keyValueDelimiter} useState(() => (${valueMapper(
+      json5.stringify(value),
+    )}))${lineItemDelimiter} `;
+
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const useValue = value.replace(functionLiteralPrefix, '');
@@ -245,18 +252,10 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
         const useValue = methodValue.replace(/^(get )?/, 'function ');
         str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
       } else {
-        str += `const [${key}, set${capitalize(
-          key,
-        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-          json5.stringify(value),
-        )}))${lineItemDelimiter} `;
+        str += defaultCase;
       }
     } else {
-      str += `const [${key}, set${capitalize(
-        key,
-      )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-        json5.stringify(value),
-      )}))${lineItemDelimiter} `;
+      str += defaultCase;
     }
   }
 
@@ -270,7 +269,7 @@ const updateStateSetters = (
   if (options.stateType !== 'useState') {
     return;
   }
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -366,55 +365,55 @@ type ReactExports =
   | 'useEffect'
   | 'useContext';
 
-export const componentToReact = (
-  reactOptions: ToReactOptions = {},
-): Transpiler => ({ component }) => {
-  let json = fastClone(component);
-  const options: ToReactOptions = {
-    stateType: 'useState',
-    stylesType: 'styled-jsx',
-    ...reactOptions,
-  };
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-
-  let str = _componentToReact(json, options);
-
-  str +=
-    '\n\n\n' +
-    json.subComponents
-      .map((item) => _componentToReact(item, options, true))
-      .join('\n\n\n');
-
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-          require('prettier/parser-postcss'),
-        ],
-      })
-        // Remove spaces between imports
-        .replace(/;\n\nimport\s/g, ';\nimport ');
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        str,
-        JSON.stringify(json, null, 2),
-      );
-      throw err;
+export const componentToReact =
+  (reactOptions: ToReactOptions = {}): Transpiler =>
+  ({ component }) => {
+    let json = fastClone(component);
+    const options: ToReactOptions = {
+      stateType: 'useState',
+      stylesType: 'styled-jsx',
+      ...reactOptions,
+    };
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
     }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+
+    let str = _componentToReact(json, options);
+
+    str +=
+      '\n\n\n' +
+      json.subComponents
+        .map((item) => _componentToReact(item, options, true))
+        .join('\n\n\n');
+
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
+    }
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'typescript',
+          plugins: [
+            require('prettier/parser-typescript'), // To support running in browsers
+            require('prettier/parser-postcss'),
+          ],
+        })
+          // Remove spaces between imports
+          .replace(/;\n\nimport\s/g, ';\nimport ');
+      } catch (err) {
+        console.error(
+          'Format error for file:',
+          str,
+          JSON.stringify(json, null, 2),
+        );
+        throw err;
+      }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };
 
 const _componentToReact = (
   json: MitosisComponent,
@@ -521,8 +520,9 @@ const _componentToReact = (
     }
     ${renderPreComponent(json)}
 
-    ${isSubComponent ? '' : 'export default '}function ${json.name ||
-    'MyComponent'}(props) {
+    ${isSubComponent ? '' : 'export default '}function ${
+    json.name || 'MyComponent'
+  }(props) {
       ${
         hasState
           ? stateType === 'mobx'
