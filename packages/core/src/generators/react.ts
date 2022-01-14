@@ -231,7 +231,6 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
   const valueMapper = (val: string) =>
     processBinding(updateStateSettersInCode(val, options), options);
 
-  const keyValueDelimiter = '=';
   const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
@@ -239,24 +238,24 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
 
     const defaultCase = `const [${key}, set${capitalize(
       key,
-    )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-      json5.stringify(value),
-    )}))${lineItemDelimiter} `;
+    )}] = useState(() => (${valueMapper(json5.stringify(value))}))`;
 
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const useValue = value.replace(functionLiteralPrefix, '');
-        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
+        str += valueMapper(useValue);
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
-        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
+        str += valueMapper(useValue);
       } else {
         str += defaultCase;
       }
     } else {
       str += defaultCase;
     }
+
+    str += lineItemDelimiter;
   }
 
   return str;
