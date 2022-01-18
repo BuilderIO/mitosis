@@ -19,7 +19,7 @@ export const DIRECTIVES: Record<
       const expr = node.bindings.each;
       this.isJSX && this.emit('{', WS);
       this.emit('(', expr, WS, '||', WS, '[])');
-      this.emit('.forEach(', '()', WS, '=>', WS, '(', INDENT, NL);
+      this.emit('.map(', '()', WS, '=>', WS, '(', INDENT, NL);
       blockFn();
       this.emit(UNINDENT, ')', ')', NL);
       this.isJSX && this.emit('}', NL);
