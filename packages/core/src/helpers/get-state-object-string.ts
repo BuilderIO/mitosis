@@ -32,7 +32,7 @@ const convertStateMemberToString =
         )}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
-        const isGet = Boolean(methodValue.match(/^get /));
+        const isGet = Boolean(methodValue.match(/^get/));
         if (isGet && options.getters === false) {
           return undefined;
         }
