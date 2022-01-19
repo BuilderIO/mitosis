@@ -18,7 +18,6 @@ export const getMemberObjectString = (
   options: GetStateObjectStringOptions = {},
 ) => {
   const format = options.format || 'object';
-  let str = format === 'object' ? '{' : '';
 
   const valueMapper = options.valueMapper || ((val: string) => val);
 
@@ -26,55 +25,61 @@ export const getMemberObjectString = (
   const lineItemDelimiter = format === 'object' ? ',' : '\n';
   const keyPrefix = options.keyPrefix || '';
 
-  for (const key in object) {
-    const value = object[key];
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        if (options.functions === false) {
-          continue;
+  const keys = Object.keys(object);
+
+  const stringifiedProperties = keys
+    .map((key) => {
+      const value = object[key];
+
+      if (typeof value === 'string') {
+        if (value.startsWith(functionLiteralPrefix)) {
+          if (options.functions === false) {
+            return undefined;
+          }
+          const functionValue = value.replace(functionLiteralPrefix, '');
+          return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
+            functionValue,
+            'function',
+          )}`;
+        } else if (value.startsWith(methodLiteralPrefix)) {
+          const methodValue = value.replace(methodLiteralPrefix, '');
+          const isGet = Boolean(methodValue.match(/^get /));
+          if (isGet && options.getters === false) {
+            return undefined;
+          }
+          if (!isGet && options.functions === false) {
+            return undefined;
+          }
+          return `${keyPrefix} ${valueMapper(
+            methodValue,
+            isGet ? 'getter' : 'function', // TODO: create a separate method type
+          )}`;
+        } else {
+          if (options.data === false) {
+            return undefined;
+          }
+          return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+            json5.stringify(value),
+            'data',
+          )}`;
         }
-        const functionValue = value.replace(functionLiteralPrefix, '');
-        str += `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
-          functionValue,
-          'function',
-        )}`;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const isGet = Boolean(methodValue.match(/^get /));
-        if (isGet && options.getters === false) {
-          continue;
-        }
-        if (!isGet && options.functions === false) {
-          continue;
-        }
-        str += `${keyPrefix} ${valueMapper(
-          methodValue,
-          isGet ? 'getter' : 'function', // TODO: create a separate method type
-        )}`;
       } else {
         if (options.data === false) {
-          continue;
+          return undefined;
         }
-        str += `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+        return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
           json5.stringify(value),
           'data',
         )}`;
       }
-    } else {
-      if (options.data === false) {
-        continue;
-      }
-      str += `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-        json5.stringify(value),
-        'data',
-      )}`;
-    }
+    })
+    .filter((x) => x === undefined)
+    .join(lineItemDelimiter);
 
-    str += lineItemDelimiter;
-  }
+  const prefix = format === 'object' ? '{' : '';
+  const suffix = format === 'object' ? '}' : '';
 
-  str += format === 'object' ? '}' : '';
-  return str;
+  return `${prefix}${stringifiedProperties}${suffix}`;
 };
 
 export const getStateObjectStringFromComponent = (
