@@ -34,10 +34,10 @@ export const getMemberObjectString = (
           continue;
         }
         const functionValue = value.replace(functionLiteralPrefix, '');
-        str += ` ${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
+        str += `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
           functionValue,
           'function',
-        )}${lineItemDelimiter} `;
+        )}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(/^get /));
@@ -50,25 +50,27 @@ export const getMemberObjectString = (
         str += `${keyPrefix} ${valueMapper(
           methodValue,
           isGet ? 'getter' : 'function', // TODO: create a separate method type
-        )} ${lineItemDelimiter}`;
+        )}`;
       } else {
         if (options.data === false) {
           continue;
         }
-        str += ` ${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+        str += `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
           json5.stringify(value),
           'data',
-        )}${lineItemDelimiter} `;
+        )}`;
       }
     } else {
       if (options.data === false) {
         continue;
       }
-      str += ` ${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+      str += `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
         json5.stringify(value),
         'data',
-      )}${lineItemDelimiter} `;
+      )}`;
     }
+
+    str += lineItemDelimiter;
   }
 
   str += format === 'object' ? '}' : '';
