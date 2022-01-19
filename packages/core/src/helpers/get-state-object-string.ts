@@ -1,5 +1,5 @@
 import json5 from 'json5';
-import { JSONObject } from '../types/json';
+import { JSONObject, JSON } from '../types/json';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -13,56 +13,36 @@ export type GetStateObjectStringOptions = {
   keyPrefix?: string;
 };
 
-export const getMemberObjectString = (
-  object: JSONObject,
-  options: GetStateObjectStringOptions = {},
-) => {
-  const format = options.format || 'object';
+const convertStateMemberToString =
+  (options: GetStateObjectStringOptions) =>
+  ([key, value]: [string, JSON]) => {
+    const valueMapper = options.valueMapper || ((val: string) => val);
+    const keyValueDelimiter = options.format === 'object' ? ':' : '=';
+    const keyPrefix = options.keyPrefix || '';
 
-  const valueMapper = options.valueMapper || ((val: string) => val);
-
-  const keyValueDelimiter = format === 'object' ? ':' : '=';
-  const lineItemDelimiter = format === 'object' ? ',' : '\n';
-  const keyPrefix = options.keyPrefix || '';
-
-  const keys = Object.keys(object);
-
-  const stringifiedProperties = keys
-    .map((key) => {
-      const value = object[key];
-
-      if (typeof value === 'string') {
-        if (value.startsWith(functionLiteralPrefix)) {
-          if (options.functions === false) {
-            return undefined;
-          }
-          const functionValue = value.replace(functionLiteralPrefix, '');
-          return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
-            functionValue,
-            'function',
-          )}`;
-        } else if (value.startsWith(methodLiteralPrefix)) {
-          const methodValue = value.replace(methodLiteralPrefix, '');
-          const isGet = Boolean(methodValue.match(/^get /));
-          if (isGet && options.getters === false) {
-            return undefined;
-          }
-          if (!isGet && options.functions === false) {
-            return undefined;
-          }
-          return `${keyPrefix} ${valueMapper(
-            methodValue,
-            isGet ? 'getter' : 'function', // TODO: create a separate method type
-          )}`;
-        } else {
-          if (options.data === false) {
-            return undefined;
-          }
-          return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-            json5.stringify(value),
-            'data',
-          )}`;
+    if (typeof value === 'string') {
+      if (value.startsWith(functionLiteralPrefix)) {
+        if (options.functions === false) {
+          return undefined;
         }
+        const functionValue = value.replace(functionLiteralPrefix, '');
+        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
+          functionValue,
+          'function',
+        )}`;
+      } else if (value.startsWith(methodLiteralPrefix)) {
+        const methodValue = value.replace(methodLiteralPrefix, '');
+        const isGet = Boolean(methodValue.match(/^get /));
+        if (isGet && options.getters === false) {
+          return undefined;
+        }
+        if (!isGet && options.functions === false) {
+          return undefined;
+        }
+        return `${keyPrefix} ${valueMapper(
+          methodValue,
+          isGet ? 'getter' : 'function', // TODO: create a separate method type
+        )}`;
       } else {
         if (options.data === false) {
           return undefined;
@@ -72,8 +52,30 @@ export const getMemberObjectString = (
           'data',
         )}`;
       }
-    })
-    .filter((x) => x === undefined)
+    } else {
+      if (options.data === false) {
+        return undefined;
+      }
+      return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+        json5.stringify(value),
+        'data',
+      )}`;
+    }
+  };
+
+export const getMemberObjectString = (
+  object: JSONObject,
+  options: GetStateObjectStringOptions = {},
+) => {
+  const format = options.format || 'object';
+
+  const lineItemDelimiter = format === 'object' ? ',' : '\n';
+
+  const keys = Object.entries(object);
+
+  const stringifiedProperties = keys
+    .map(convertStateMemberToString({ ...options, format }))
+    .filter((x) => x !== undefined)
     .join(lineItemDelimiter);
 
   const prefix = format === 'object' ? '{' : '';
