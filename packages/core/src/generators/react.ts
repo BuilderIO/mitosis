@@ -212,6 +212,17 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   return str;
 };
 
+/**
+ * Removes all `this.` references.
+ */
+const stripThisRefs = (str: string, options: ToReactOptions) => {
+  if (options.stateType !== 'useState') {
+    return str;
+  }
+
+  return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
+};
+
 const processBinding = (str: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return str;
@@ -228,36 +239,38 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
 
   const { state } = json;
 
-  const valueMapper = (val: string) =>
-    processBinding(updateStateSettersInCode(val, options), options);
+  const valueMapper = (val: string) => {
+    const x = processBinding(updateStateSettersInCode(val, options), options);
+    return stripThisRefs(x, options);
+  };
 
-  const keyValueDelimiter = '=';
   const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
     const value = state[key];
+
+    const defaultCase = `const [${key}, set${capitalize(
+      key,
+    )}] = useState(() => (${valueMapper(json5.stringify(value))}))`;
+
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         const useValue = value.replace(functionLiteralPrefix, '');
-        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
+        const mappedVal = valueMapper(useValue);
+
+        str += mappedVal;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
-        str += `${valueMapper(useValue)} ${lineItemDelimiter}`;
+        str += valueMapper(useValue);
       } else {
-        str += `const [${key}, set${capitalize(
-          key,
-        )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-          json5.stringify(value),
-        )}))${lineItemDelimiter} `;
+        str += defaultCase;
       }
     } else {
-      str += `const [${key}, set${capitalize(
-        key,
-      )}] ${keyValueDelimiter} useState(() => (${valueMapper(
-        json5.stringify(value),
-      )}))${lineItemDelimiter} `;
+      str += defaultCase;
     }
+
+    str += lineItemDelimiter;
   }
 
   return str;

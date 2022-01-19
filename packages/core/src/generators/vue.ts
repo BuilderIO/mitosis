@@ -31,6 +31,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
+import { GETTER } from '../helpers/patterns';
 
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
@@ -330,7 +331,7 @@ export const componentToVue = (options: ToVueOptions = {}) =>
       getters: true,
       functions: false,
       valueMapper: (code) =>
-        processBinding(code.replace(/^get /, ''), options, component),
+        processBinding(code.replace(GETTER, ''), options, component),
     });
 
     let functionsString = getStateObjectStringFromComponent(component, {
