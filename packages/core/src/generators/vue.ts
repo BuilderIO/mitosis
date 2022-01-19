@@ -31,7 +31,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
-import { GETTER } from 'src/helpers/patterns';
+import { GETTER } from '../helpers/patterns';
 
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
