@@ -451,11 +451,13 @@ export function isStatement(code: string) {
     // Code starting with `(` is most likely and IFF and hence is an expression.
     return false;
   }
-  code = code.replace(STRING_LITERAL, 'STRING_LITERAL');
-  const identifiers = code.split(EXPRESSION_SEPARATORS);
-  return (
-    identifiers.filter((i) => i && !i.match(EXPRESSION_IDENTIFIER)).length !== 0
-  );
+  const codeNoStrings = code.replace(STRING_LITERAL, 'STRING_LITERAL');
+  const identifiers = codeNoStrings.split(EXPRESSION_SEPARATORS);
+  const filteredIdentifiers = identifiers.filter((i) => {
+    i = i.trim();
+    return i && !i.match(EXPRESSION_IDENTIFIER);
+  });
+  return filteredIdentifiers.length !== 0;
 }
 
 // https://regexr.com/6cppf
