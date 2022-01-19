@@ -71,7 +71,14 @@ export const getMemberObjectString = (
   const prefix = format === 'object' ? '{' : '';
   const suffix = format === 'object' ? '}' : '';
 
-  return `${prefix}${stringifiedProperties}${suffix}`;
+  // NOTE: we add a `lineItemDelimiter` at the very end because other functions will sometimes append more properties.
+  // If the delimiter is a comma and the format is `object`, then we need to make sure we have an extra comma at the end,
+  // or the object will become invalid JS.
+  // We also have to make sure that `stringifiedProperties` isn't empty, or we will get `{,}` which is invalid
+  const extraDelimiter =
+    stringifiedProperties.length > 0 ? lineItemDelimiter : '';
+
+  return `${prefix}${stringifiedProperties}${extraDelimiter}${suffix}`;
 };
 
 export const getStateObjectStringFromComponent = (
