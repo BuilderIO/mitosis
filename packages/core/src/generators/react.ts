@@ -220,7 +220,7 @@ const stripThisRefs = (str: string, options: ToReactOptions) => {
     return str;
   }
 
-  return str.replaceAll('this.', '');
+  return str.replace(/this./g, '');
 };
 
 const processBinding = (str: string, options: ToReactOptions) => {
