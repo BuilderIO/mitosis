@@ -60,12 +60,9 @@ export const getMemberObjectString = (
   options: GetStateObjectStringOptions = {},
 ) => {
   const format = options.format || 'object';
-
   const lineItemDelimiter = format === 'object' ? ',' : '\n';
 
-  const keys = Object.entries(object);
-
-  const stringifiedProperties = keys
+  const stringifiedProperties = Object.entries(object)
     .map(convertStateMemberToString({ ...options, format }))
     .filter((x) => x !== undefined)
     .join(lineItemDelimiter);
