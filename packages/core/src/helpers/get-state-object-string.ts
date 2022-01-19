@@ -3,6 +3,7 @@ import { JSONObject, JSON } from '../types/json';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { MitosisComponent } from '../types/mitosis-component';
+import { GETTER } from './patterns';
 
 export type GetStateObjectStringOptions = {
   data?: boolean;
@@ -32,7 +33,7 @@ const convertStateMemberToString =
         )}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
-        const isGet = Boolean(methodValue.match(/^get/));
+        const isGet = Boolean(methodValue.match(GETTER));
         if (isGet && options.getters === false) {
           return undefined;
         }
