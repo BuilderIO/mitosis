@@ -15,6 +15,7 @@ import {
   SrcBuilder,
   SrcBuilderOptions,
   UNINDENT,
+  WS,
 } from './src-generator';
 import { collectStyles, CssStyles, renderStyles } from './styles';
 
@@ -188,7 +189,12 @@ function addComponentOnMount(
               '{',
               NL,
               INDENT,
-              'const state = {};',
+              'const state',
+              WS,
+              '=',
+              WS,
+              componentFile.import(componentFile.qwikModule, 'qObject').name,
+              '({});',
               NL,
               iif(component.hooks.onMount),
               NL,

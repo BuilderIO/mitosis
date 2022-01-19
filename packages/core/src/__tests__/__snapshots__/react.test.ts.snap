@@ -56,15 +56,15 @@ exports[`React Columns 1`] = `
   }
 
   function getWidth(index) {
-    const columns = this.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
   function getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -375,7 +375,7 @@ export default function FormComponent(props) {
               get(body, props.errorMessagePath);
             if (message) {
               if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like             error: - email has been taken */ message =
+                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
                   JSON.stringify(message);
               }
               setFormErrorMessage(message);
