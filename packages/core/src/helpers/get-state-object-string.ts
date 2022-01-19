@@ -14,47 +14,48 @@ export type GetStateObjectStringOptions = {
   keyPrefix?: string;
 };
 
-const convertStateMemberToString =
-  (options: GetStateObjectStringOptions) =>
-  ([key, value]: [string, JSON]) => {
-    const valueMapper = options.valueMapper || ((val: string) => val);
-    const keyValueDelimiter = options.format === 'object' ? ':' : '=';
-    const keyPrefix = options.keyPrefix || '';
+const convertStateMemberToString = (options: GetStateObjectStringOptions) => ([
+  key,
+  value,
+]: [string, JSON]) => {
+  const valueMapper = options.valueMapper || ((val: string) => val);
+  const keyValueDelimiter = options.format === 'object' ? ':' : '=';
+  const keyPrefix = options.keyPrefix || '';
 
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        if (options.functions === false) {
-          return undefined;
-        }
-        const functionValue = value.replace(functionLiteralPrefix, '');
-        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
-          functionValue,
-          'function',
-        )}`;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const isGet = Boolean(methodValue.match(GETTER));
-        if (isGet && options.getters === false) {
-          return undefined;
-        }
-        if (!isGet && options.functions === false) {
-          return undefined;
-        }
-        return `${keyPrefix} ${valueMapper(
-          methodValue,
-          isGet ? 'getter' : 'function', // TODO: create a separate method type
-        )}`;
+  if (typeof value === 'string') {
+    if (value.startsWith(functionLiteralPrefix)) {
+      if (options.functions === false) {
+        return undefined;
       }
+      const functionValue = value.replace(functionLiteralPrefix, '');
+      return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
+        functionValue,
+        'function',
+      )}`;
+    } else if (value.startsWith(methodLiteralPrefix)) {
+      const methodValue = value.replace(methodLiteralPrefix, '');
+      const isGet = Boolean(methodValue.match(GETTER));
+      if (isGet && options.getters === false) {
+        return undefined;
+      }
+      if (!isGet && options.functions === false) {
+        return undefined;
+      }
+      return `${keyPrefix} ${valueMapper(
+        methodValue,
+        isGet ? 'getter' : 'function', // TODO: create a separate method type
+      )}`;
     }
+  }
 
-    if (options.data === false) {
-      return undefined;
-    }
-    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-      json5.stringify(value),
-      'data',
-    )}`;
-  };
+  if (options.data === false) {
+    return undefined;
+  }
+  return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+    json5.stringify(value),
+    'data',
+  )}`;
+};
 
 export const getMemberObjectString = (
   object: JSONObject,
