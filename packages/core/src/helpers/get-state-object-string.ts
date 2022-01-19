@@ -43,24 +43,16 @@ const convertStateMemberToString =
           methodValue,
           isGet ? 'getter' : 'function', // TODO: create a separate method type
         )}`;
-      } else {
-        if (options.data === false) {
-          return undefined;
-        }
-        return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-          json5.stringify(value),
-          'data',
-        )}`;
       }
-    } else {
-      if (options.data === false) {
-        return undefined;
-      }
-      return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-        json5.stringify(value),
-        'data',
-      )}`;
     }
+
+    if (options.data === false) {
+      return undefined;
+    }
+    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
+      json5.stringify(value),
+      'data',
+    )}`;
   };
 
 export const getMemberObjectString = (
