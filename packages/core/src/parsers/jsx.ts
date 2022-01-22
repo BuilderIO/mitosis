@@ -209,11 +209,13 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
                   
-              if (types.isArrayExpression(secondArg) && secondArg.elements.length > 0){
-                const depsCode =  generate(secondArg).code
-                hooks.onUpdate = {
+              if (!secondArg || (types.isArrayExpression(secondArg) && secondArg.elements.length > 0)){
+                const depsCode = secondArg ? generate(secondArg).code : null;                hooks.onUpdate = {
                   code,
-                  deps: depsCode
+                }
+
+                if (depsCode){
+                  hooks.onUpdate.deps = depsCode;
                 }
                 continue;
               }
