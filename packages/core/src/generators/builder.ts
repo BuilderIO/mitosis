@@ -342,7 +342,7 @@ export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
           !component.hooks.onMount
             ? ''
             : `onMount(() => {
-                ${component.hooks.onMount}
+                ${component.hooks.onMount.code}
               })`
         }
 

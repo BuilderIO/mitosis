@@ -562,7 +562,7 @@ const _componentToReact = (
       ${getInitCode(json, options)}
 
       ${
-        json.hooks.onMount
+        json.hooks.onMount?.code
           ? `useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(json.hooks.onMount.code, options),
@@ -584,7 +584,7 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUnMount
+        json.hooks.onUnMount?.code
           ? `useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(json.hooks.onUnMount.code, options),
