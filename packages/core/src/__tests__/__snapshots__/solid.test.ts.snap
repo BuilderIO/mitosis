@@ -151,10 +151,6 @@ export default function CustomCode(props) {
 
   const elem = useRef();
 
-  onMount(() => {
-    state.findAndRunScripts();
-  });
-
   return (
     <div
       class={
@@ -219,10 +215,6 @@ export default function CustomCode(props) {
   });
 
   const elem = useRef();
-
-  onMount(() => {
-    state.findAndRunScripts();
-  });
 
   return (
     <div
@@ -546,7 +538,7 @@ export default function FormComponent(props) {
 `;
 
 exports[`Solid Image 1`] = `
-"import { Show, onMount } from \\"solid-js\\";
+"import { Show } from \\"solid-js\\";
 
 import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
@@ -572,31 +564,6 @@ export default function Image(props) {
   });
 
   const pictureRef = useRef();
-
-  onMount(() => {
-    if (state.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
-            state.scrollListener = null;
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      state.scrollListener = listener;
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  });
 
   return (
     <>
