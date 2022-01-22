@@ -219,8 +219,7 @@ const componentFunctionToJson = (
               }
 
               hooks.onMount = {
-                code,
-                deps: '[]',
+                code
               };
             }
           }
