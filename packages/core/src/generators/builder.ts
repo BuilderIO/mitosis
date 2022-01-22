@@ -327,7 +327,7 @@ export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
               )});`
         }
 
-        ${!component.hooks.onMount ? '' : component.hooks.onMount}
+        ${!component.hooks.onMount ? '' : component.hooks.onMount.code}
       `),
       tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
@@ -343,6 +343,14 @@ export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
             ? ''
             : `onMount(() => {
                 ${component.hooks.onMount}
+              })`
+        }
+
+        ${
+          !component.hooks.onUpdate
+            ? ''
+            : `onUpdate(() => {
+                ${component.hooks.onUpdate.code}
               })`
         }
       `),

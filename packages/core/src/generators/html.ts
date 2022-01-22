@@ -450,6 +450,15 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
             `;
             })
             .join('\n\n')}
+
+            ${
+              !json.hooks.onUpdate
+                ? ''
+                :
+                  `
+                  ${updateReferencesInCode(json.hooks.onUpdate.code, useOptions)} 
+                  `
+            }
         }
 
         ${useOptions.js}
@@ -466,7 +475,7 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
               `
               // onMount
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                 useOptions,
               )} 
               `
@@ -653,7 +662,7 @@ export const componentToCustomElement = (
           disconnectedCallback() {
             // onUnMount
             ${updateReferencesInCode(
-              addUpdateAfterSetInCode(json.hooks.onUnMount, useOptions),
+              addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
             )}
           }
@@ -672,7 +681,7 @@ export const componentToCustomElement = (
                 `
                 // onMount
                 ${updateReferencesInCode(
-                  addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                  addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                   useOptions,
                 )}
                 `
@@ -693,6 +702,15 @@ export const componentToCustomElement = (
             `;
             })
             .join('\n\n')}
+
+            ${
+              !json.hooks.onUpdate
+                ? ''
+                :
+                  `
+                  ${updateReferencesInCode(json.hooks.onUpdate.code, useOptions)} 
+                  `
+            } 
         }
 
         ${

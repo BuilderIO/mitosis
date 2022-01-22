@@ -877,8 +877,8 @@ const builderContentPartToMitosisComponent = (
       ...builderContent.data?.state,
     },
     hooks: {
-      ...((parsed?.hooks.onMount || customCode) && {
-        onMount: parsed?.hooks.onMount || customCode,
+      ...((parsed?.hooks.onMount || {code: customCode}) && {
+        onMount: parsed?.hooks.onMount || {code: customCode, deps: '[]'},
       }),
     },
     children: (builderContent.data?.blocks || [])

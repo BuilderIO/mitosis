@@ -206,7 +206,17 @@ export const componentToAngular = (
         !component.hooks.onMount
           ? ''
           : `ngOnInit() {
-              ${stripStateAndPropsRefs(component.hooks.onMount, {
+              ${stripStateAndPropsRefs(component.hooks.onMount.code, {
+                replaceWith: 'this.',
+              })}
+            }`
+      }
+
+      ${
+        !component.hooks.onUpdate
+          ? ''
+          : `ngAfterContentChecked() {
+              ${stripStateAndPropsRefs(component.hooks.onUpdate.code, {
                 replaceWith: 'this.',
               })}
             }`
@@ -216,7 +226,7 @@ export const componentToAngular = (
         !component.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(component.hooks.onUnMount, {
+              ${stripStateAndPropsRefs(component.hooks.onUnMount.code, {
                 replaceWith: 'this.',
               })}
             }`

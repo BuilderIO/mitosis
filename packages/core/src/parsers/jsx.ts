@@ -196,17 +196,32 @@ const componentFunctionToJson = (
             expression.callee.name === 'useEffect'
           ) {
             const firstArg = expression.arguments[0];
+            const secondArg = expression.arguments[1];
             if (
               types.isFunctionExpression(firstArg) ||
               types.isArrowFunctionExpression(firstArg)
             ) {
-              hooks.onMount = generate(firstArg.body)
+              const code = generate(firstArg.body)
                 .code.trim()
                 // Remove abtrary block wrapping if any
                 // AKA
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')
                 .replace(/}$/, '');
+                  
+              if (types.isArrayExpression(secondArg) && secondArg.elements.length > 0){
+                const depsCode =  generate(secondArg).code
+                hooks.onUpdate = {
+                  code,
+                  deps: depsCode
+                }
+                continue;
+              }
+
+              hooks.onMount = {
+                code,
+                deps: '[]',
+              };
             }
           }
         }
@@ -729,9 +744,11 @@ export function parseJsx(
             );
 
             // TODO: support multiple? e.g. for others to add imports?
-            context.builder.component.hooks.preComponent = generate(
-              types.program(cutStatements),
-            ).code;
+            context.builder.component.hooks.preComponent = {
+              code: generate(
+                types.program(cutStatements),
+              ).code
+            };
 
             path.replaceWith(types.program(keepStatements));
           },
