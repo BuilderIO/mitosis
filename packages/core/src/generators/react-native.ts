@@ -15,6 +15,8 @@ export interface ToReactNativeOptions extends BaseTranspilerOptions {
 
 const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 
+const MEDIA_QUERY_KEY_REGEX = /^@media.*/;
+
 export const collectReactNativeStyles = (
   json: MitosisComponent,
 ): ClassStyleMap => {
@@ -23,42 +25,55 @@ export const collectReactNativeStyles = (
   const componentIndexes: { [className: string]: number | undefined } = {};
 
   traverse(json).forEach(function(item) {
-    if (isMitosisNode(item)) {
-      if (typeof item.bindings.css === 'string') {
-        const value = json5.parse(item.bindings.css);
-        delete item.bindings.css;
-        if (!size(value)) {
-          return;
-        }
+    if (!isMitosisNode(item) || typeof item.bindings.css !== 'string') {
+      return;
+    }
+    const value = json5.parse(item.bindings.css);
+    delete item.bindings.css;
+    if (!size(value)) {
+      return;
+    }
 
-        // Style properties like `"20px"` need to be numbers like `20` for react native
-        for (const key in value) {
-          const propertyValue = value[key];
-          if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
-            const newValue = parseFloat(propertyValue);
-            if (!isNaN(newValue)) {
-              value[key] = newValue;
-            }
-          }
-          if (
-            stylePropertiesThatMustBeNumber.has(key) &&
-            typeof value[key] !== 'number'
-          ) {
-            console.warn(
-              `Style key ${key} must be a number, but had value \`${value[key]}\``,
-            );
-            delete value[key];
-          }
-        }
-        const componentName = camelCase(item.name || 'view');
-        const index = (componentIndexes[componentName] =
-          (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${index}`;
-        item.bindings.style = `styles.${className}`;
+    // Style properties like `"20px"` need to be numbers like `20` for react native
+    for (const key in value) {
+      const propertyValue = value[key];
 
-        styleMap[className] = value;
+      if (key.match(MEDIA_QUERY_KEY_REGEX)) {
+        console.warn(
+          'Unsupported: skipping media queries for react-native: ',
+          key,
+          propertyValue,
+        );
+        delete value[key];
+        continue;
+      }
+
+      if (
+        stylePropertiesThatMustBeNumber.has(key) &&
+        typeof propertyValue !== 'number'
+      ) {
+        console.warn(
+          `Style key ${key} must be a number, but had value \`${propertyValue}\``,
+        );
+        delete value[key];
+        continue;
+      }
+
+      // convert strings to number if applicable
+      if (typeof propertyValue === 'string' && propertyValue.match(/^\d/)) {
+        const newValue = parseFloat(propertyValue);
+        if (!isNaN(newValue)) {
+          value[key] = newValue;
+        }
       }
     }
+    const componentName = camelCase(item.name || 'view');
+    const index = (componentIndexes[componentName] =
+      (componentIndexes[componentName] || 0) + 1);
+    const className = `${componentName}${index}`;
+    item.bindings.style = `styles.${className}`;
+
+    styleMap[className] = value;
   });
 
   return styleMap;
