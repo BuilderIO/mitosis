@@ -46,6 +46,12 @@ export default function Column(props: ColumnProps) {
         flexDirection: 'column',
         alignItems: 'stretch',
         lineHeight: 'normal',
+        '@media (max-width: 999px)': {
+          flexDirection: 'row',
+        },
+        '@media (max-width: 639px)': {
+          flexDirection: 'row-reverse',
+        },
       }}
     >
       <For each={props.columns}>
