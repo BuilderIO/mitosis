@@ -39,11 +39,6 @@ export const collectReactNativeStyles = (
       const propertyValue = value[key];
 
       if (key.match(MEDIA_QUERY_KEY_REGEX)) {
-        console.warn(
-          'Unsupported: skipping media queries for react-native: ',
-          key,
-          propertyValue,
-        );
         delete value[key];
         continue;
       }
