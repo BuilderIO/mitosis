@@ -1,13 +1,17 @@
 import { outputFileAsync } from 'fs-extra-promise';
-import { builderContentToMitosisComponent } from '..';
 import { File } from '../generators/qwik';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
 import { isStatement } from '../generators/qwik/src-generator';
+import { builderContentToMitosisComponent } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../plugins/compile-away-builder-components';
+import {
+  convertBuilderContentToSymbolHierarchy,
+  convertBuilderElementToMitosisComponent,
+} from '../symbols/symbol-processor';
 
 const todo = require('../../../../examples/todo/src/components/todo.lite');
 const todos = require('../../../../examples/todo/src/components/todos.lite');
@@ -139,7 +143,6 @@ describe('qwik', () => {
         preserveTextBlocks: true,
       },
     );
-    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -177,6 +180,32 @@ describe('qwik', () => {
     addComponent(fileSet, component);
     debugOutput(fileSet);
     expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  describe('component', () => {
+    test('bindings', async () => {
+      const content = require('./qwik.test.component-binding.json');
+      const hierarchy = convertBuilderContentToSymbolHierarchy(content);
+      const fileSet = createFileSet({ output: 'mjs', jsx: true });
+      hierarchy.depthFirstSymbols.forEach((builderComponent) => {
+        const mitosisComponent = convertBuilderElementToMitosisComponent(
+          builderComponent,
+        );
+        mitosisComponent &&
+          addComponent(fileSet, mitosisComponent, { isRoot: false });
+      });
+
+      const component = builderContentToMitosisComponent(content, {
+        includeBuilderExtras: true,
+        preserveTextBlocks: true,
+      });
+      compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+      component.children[0].bindings.title = '"TestBoundValue"';
+
+      addComponent(fileSet, component);
+      debugOutput(fileSet);
+      expect(toObj(fileSet)).toMatchSnapshot();
+    });
   });
 
   describe('helper functions', () => {

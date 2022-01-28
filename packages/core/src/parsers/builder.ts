@@ -820,6 +820,18 @@ function extractSymbols(json: BuilderContent) {
   };
 }
 
+export const createBuilderElement = (
+  options?: Partial<BuilderElement>,
+): BuilderElement => ({
+  '@type': '@builder.io/sdk:Element',
+  id:
+    'builder-' +
+    Math.random()
+      .toString(36)
+      .split('.')[1],
+  ...options,
+});
+
 export const isBuilderElement = (el: unknown): el is BuilderElement =>
   (el as any)?.['@type'] === '@builder.io/sdk:Element';
 
