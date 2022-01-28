@@ -202,7 +202,11 @@ export const componentToMitosis = (
       }
       ${getRefsString(json)}
 
-      ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
+      ${
+        !json.hooks.onMount?.code
+          ? ''
+          : `onMount(() => { ${json.hooks.onMount.code} })`
+      }
 
       ${
         !json.hooks.onUnMount

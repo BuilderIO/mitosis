@@ -464,21 +464,33 @@ export const componentToVue = (options: ToVueOptions = {}) =>
         ${
           component.hooks.onMount
             ? `mounted() {
-                ${processBinding(component.hooks.onMount.code, options, component)}
+                ${processBinding(
+                  component.hooks.onMount.code,
+                  options,
+                  component,
+                )}
               },`
             : ''
         }
         ${
           component.hooks.onUpdate
             ? `updated() {
-                ${processBinding(component.hooks.onUpdate.code, options, component)}
+                ${processBinding(
+                  component.hooks.onUpdate.code,
+                  options,
+                  component,
+                )}
               },`
             : ''
         }
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(component.hooks.onUnMount.code, options, component)}
+                ${processBinding(
+                  component.hooks.onUnMount.code,
+                  options,
+                  component,
+                )}
               },`
             : ''
         }

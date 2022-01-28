@@ -225,7 +225,11 @@ export const componentToSolid = (options: ToSolidOptions = {}): Transpiler => ({
       
       ${getRefsString(json)}
 
-      ${!json.hooks.onMount ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
+      ${
+        !json.hooks.onMount
+          ? ''
+          : `onMount(() => { ${json.hooks.onMount.code} })`
+      }
 
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToSolid(item, options)).join('\n')}

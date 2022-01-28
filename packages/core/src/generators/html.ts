@@ -454,9 +454,11 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
             ${
               !json.hooks.onUpdate
                 ? ''
-                :
-                  `
-                  ${updateReferencesInCode(json.hooks.onUpdate.code, useOptions)} 
+                : `
+                  ${updateReferencesInCode(
+                    json.hooks.onUpdate.code,
+                    useOptions,
+                  )} 
                   `
             }
         }
@@ -706,9 +708,11 @@ export const componentToCustomElement = (
             ${
               !json.hooks.onUpdate
                 ? ''
-                :
-                  `
-                  ${updateReferencesInCode(json.hooks.onUpdate.code, useOptions)} 
+                : `
+                  ${updateReferencesInCode(
+                    json.hooks.onUpdate.code,
+                    useOptions,
+                  )} 
                   `
             } 
         }

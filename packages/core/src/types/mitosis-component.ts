@@ -31,7 +31,7 @@ export interface MitosisImport {
 
 type ContextInfo = { name: string; path: string };
 
-type extendedHook = { code: string, deps?: string };
+type extendedHook = { code: string; deps?: string };
 
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
@@ -51,7 +51,7 @@ export type MitosisComponent = {
     onUnMount?: extendedHook;
     preComponent?: extendedHook;
     postComponent?: extendedHook;
-    onUpdate?: extendedHook ;
+    onUpdate?: extendedHook;
   };
   children: MitosisNode[];
   subComponents: MitosisComponent[];

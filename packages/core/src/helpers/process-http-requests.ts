@@ -4,7 +4,7 @@ export function processHttpRequests(json: MitosisComponent) {
   const httpRequests: Record<string, string> | undefined = (json.meta
     .useMetadata as any)?.httpRequests;
 
-  let onMount = json.hooks.onMount || {code: ''};
+  let onMount = json.hooks.onMount || { code: '' };
 
   if (httpRequests) {
     for (const key in httpRequests) {

@@ -208,20 +208,25 @@ const componentFunctionToJson = (
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')
                 .replace(/}$/, '');
-                  
-              if (!secondArg || (types.isArrayExpression(secondArg) && secondArg.elements.length > 0)){
-                const depsCode = secondArg ? generate(secondArg).code : null;                hooks.onUpdate = {
-                  code,
-                }
 
-                if (depsCode){
+              if (
+                !secondArg ||
+                (types.isArrayExpression(secondArg) &&
+                  secondArg.elements.length > 0)
+              ) {
+                const depsCode = secondArg ? generate(secondArg).code : null;
+                hooks.onUpdate = {
+                  code,
+                };
+
+                if (depsCode) {
                   hooks.onUpdate.deps = depsCode;
                 }
                 continue;
               }
 
               hooks.onMount = {
-                code
+                code,
               };
             }
           }
@@ -746,9 +751,7 @@ export function parseJsx(
 
             // TODO: support multiple? e.g. for others to add imports?
             context.builder.component.hooks.preComponent = {
-              code: generate(
-                types.program(cutStatements),
-              ).code
+              code: generate(types.program(cutStatements)).code,
             };
 
             path.replaceWith(types.program(keepStatements));
