@@ -1,4 +1,3 @@
-import { omit } from 'lodash';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
@@ -84,10 +83,10 @@ export function addComponent(
   opts: { isRoot?: boolean; shareStyles?: boolean } = {},
 ) {
   const _opts = { isRoot: false, shareStyles: false, ...opts };
-  compileAwayBuilderComponentsFromTree(
-    component,
-    omit(compileAwayComponents, ['Image']),
-  );
+  compileAwayBuilderComponentsFromTree(component, {
+    ...compileAwayComponents,
+    Image: undefined!,
+  });
   const componentName = component.name;
   const handlers = renderHandlers(
     fileSet.high,

@@ -1,5 +1,5 @@
 import { Builder } from '@builder.io/react';
-import { mapValues, omit, pick } from 'lodash';
+import { omit, pick } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';

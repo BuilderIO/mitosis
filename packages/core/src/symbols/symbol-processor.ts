@@ -1,6 +1,10 @@
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { forEach } from 'traverse';
-import { builderContentToMitosisComponent } from '../parsers/builder';
+import {
+  builderContentToMitosisComponent,
+  createBuilderElement,
+  isBuilderElement,
+} from '../parsers/builder';
 import { MitosisComponent } from '../types/mitosis-component';
 import { minify } from '../generators/minify';
 
@@ -146,25 +150,6 @@ function addIfMissing<T>(array: T[], value: T) {
 function isString(value: any): value is string {
   return typeof value == 'string';
 }
-
-const isBuilderElement = (el: unknown): el is BuilderElement =>
-  Boolean(
-    el &&
-      typeof el === 'object' &&
-      (el as any)['@type'] === '@builder.io/sdk:Element',
-  );
-
-const createBuilderElement = (
-  options?: Partial<BuilderElement>,
-): BuilderElement => ({
-  '@type': '@builder.io/sdk:Element',
-  id:
-    'builder-' +
-    Math.random()
-      .toString(36)
-      .split('.')[1],
-  ...options,
-});
 
 function generateId() {
   return (
