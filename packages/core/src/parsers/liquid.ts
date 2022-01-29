@@ -30,6 +30,7 @@ import { isValidLiquidBinding } from '../generators/liquid';
 import { mapToAttributes } from '../helpers/map-to-attributes';
 import { StringMap } from '../types/string-map';
 import { mapToCss } from '../helpers/map-to-css';
+import { createBuilderElement } from '..';
 
 const voidElements = new Set([
   'area',
@@ -1370,20 +1371,14 @@ async function processInnerTemplates(
   return processHtml(html);
 }
 
-const el = (options?: Partial<BuilderElement>): BuilderElement => ({
-  '@type': '@builder.io/sdk:Element',
-  id:
-    'builder-' +
-    Math.random()
-      .toString(36)
-      .split('.')[1],
-  meta: {
-    importedFrom: 'liquid',
-    ...options?.meta,
-  },
-  // TODO: merge(...)
-  ...options,
-});
+const el = (options?: Partial<BuilderElement>): BuilderElement =>
+  createBuilderElement({
+    meta: {
+      importedFrom: 'liquid',
+      ...options?.meta,
+    },
+    ...options,
+  });
 
 const tagRe = /\[([a-z]+)\](='([^']+)')?/;
 const tagReAll = /\[([^\]]+)\](='([^']+)')?/g;

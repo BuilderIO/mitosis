@@ -1,5 +1,5 @@
 import { Builder } from '@builder.io/react';
-import { mapValues, omit, pick } from 'lodash';
+import { omit, pick } from 'lodash';
 import traverse, { TraverseContext } from 'traverse';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
@@ -15,16 +15,6 @@ function getComponentInputNames(componentName: string): string[] {
     (item) => item.name === componentName,
   );
   return componentInfo?.inputs?.map((item) => item.name) || [];
-}
-
-function updateQueryParam(uri = '', key: string, value: string) {
-  const re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
-  const separator = uri.indexOf('?') !== -1 ? '&' : '?';
-  if (uri.match(re)) {
-    return uri.replace(re, '$1' + key + '=' + encodeURIComponent(value) + '$2');
-  }
-
-  return uri + separator + key + '=' + encodeURIComponent(value);
 }
 
 const wrapOutput = (
@@ -306,7 +296,6 @@ export const components: CompileAwayComponentsMap = {
   Image(node: MitosisNode, context, components) {
     const { backgroundSize, backgroundPosition } = node.properties;
     const { srcset } = node.properties;
-    const widths = [100, 200, 400, 800, 1200, 1600, 2000];
 
     let aspectRatio = node.bindings.aspectRatio
       ? parseFloat(node.bindings.aspectRatio as string)
@@ -315,23 +304,8 @@ export const components: CompileAwayComponentsMap = {
       aspectRatio = null;
     }
 
-    const srcSet =
-      srcset ||
-      `${
-        (node.properties.image || '').match(/builder\.io/)
-          ? widths
-              .map(
-                (size) =>
-                  `${updateQueryParam(
-                    node.properties.image,
-                    'width',
-                    String(size),
-                  )} ${size}w`,
-              )
-              .concat([node.properties.image!])
-              .join(', ')
-          : ''
-      }`;
+    const image = node.properties.image!;
+    const srcSet = srcset || generateBuilderIoSrcSet(image);
     const source =
       node.bindings.noWebp !== 'true' &&
       createMitosisNode({
@@ -420,7 +394,23 @@ export const components: CompileAwayComponentsMap = {
     imgSizer && imageNodes.push(imgSizer);
     children && imageNodes.push(children);
 
-    return wrapOutput(node, imageNodes, components);
+    const href = node.properties.href;
+    const hrefBinding = node.bindings.href;
+    if (href || hrefBinding) {
+      const aHref = createMitosisNode({
+        name: 'a',
+        properties: {
+          href: href,
+        },
+        bindings: {
+          href: hrefBinding,
+        },
+        children: imageNodes,
+      });
+      return wrapOutput(node, aHref, components);
+    } else {
+      return wrapOutput(node, imageNodes, components);
+    }
   },
   Video(node: MitosisNode, context, components) {
     let aspectRatio = node.bindings.aspectRatio
@@ -572,6 +562,29 @@ export const compileAwayBuilderComponents = (
     },
   });
 };
+
+function updateQueryParam(uri = '', key: string, value: string) {
+  const re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
+  const separator = uri.indexOf('?') !== -1 ? '&' : '?';
+  if (uri.match(re)) {
+    return uri.replace(re, '$1' + key + '=' + encodeURIComponent(value) + '$2');
+  }
+
+  return uri + separator + key + '=' + encodeURIComponent(value);
+}
+
+function generateBuilderIoSrcSet(image: string): string {
+  const isBuilderIo = !!(image || '').match(/builder\.io/);
+  return isBuilderIo
+    ? [100, 200, 400, 800, 1200, 1600, 2000]
+        .map(
+          (size) =>
+            `${updateQueryParam(image, 'width', String(size))} ${size}w`,
+        )
+        .concat([image])
+        .join(', ')
+    : '';
+}
 
 function noUndefined(obj: Record<string, any>): Record<string, any> {
   const cleanObj: Record<string, any> = {};

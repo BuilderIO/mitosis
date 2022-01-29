@@ -6,6 +6,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
+  arrowFnBlock,
   arrowFnValue,
   File,
   iif,
@@ -82,7 +83,10 @@ export function addComponent(
   opts: { isRoot?: boolean; shareStyles?: boolean } = {},
 ) {
   const _opts = { isRoot: false, shareStyles: false, ...opts };
-  compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+  compileAwayBuilderComponentsFromTree(component, {
+    ...compileAwayComponents,
+    Image: undefined!,
+  });
   const componentName = component.name;
   const handlers = renderHandlers(
     fileSet.high,
@@ -153,15 +157,48 @@ export function addComponent(
   );
 
   onRenderFile.src.emit(NL);
+  const directives: Map<string, string> = new Map();
   onRenderFile.exportConst(
     componentName + '_onRender',
     invoke(onRenderFile.import(onRenderFile.qwikModule, 'qHook'), [
-      arrowFnValue(
-        ['props', 'state'],
-        renderJSXNodes(onRenderFile, handlers, component.children, styles),
+      arrowFnBlock(
+        ['props', '__state__'],
+        [
+          function(this: SrcBuilder) {
+            return this.emit(
+              'const state',
+              WS,
+              '=',
+              WS,
+              'Object.assign({},',
+              WS,
+              '__state__,',
+              WS,
+              'props)',
+            );
+          },
+          function(this: SrcBuilder) {
+            return this.emit(
+              'return ',
+              renderJSXNodes(
+                onRenderFile,
+                directives,
+                handlers,
+                component.children,
+                styles,
+                {},
+              ),
+              ';',
+            );
+          },
+        ],
       ),
     ]),
   );
+  directives.forEach((code, name) => {
+    fileSet.med.import(fileSet.med.qwikModule, 'h');
+    fileSet.med.exportConst(name, code);
+  });
 }
 
 export function addCommonStyles(fileSet: FileSet) {
