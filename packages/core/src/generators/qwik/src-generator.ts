@@ -285,7 +285,11 @@ export class SrcBuilder {
         }
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('={') : this.emit(':', WS);
-        if (typeof binding == 'string' && isStatement(binding)) {
+        if (binding === props[key]) {
+          // HACK: workaround for the fact that sometimes the `bindings` have string literals
+          // We assume that when the binding content equals prop content.
+          binding = JSON.stringify(binding);
+        } else if (typeof binding == 'string' && isStatement(binding)) {
           binding = iif(binding);
         }
         this.emit(binding);
