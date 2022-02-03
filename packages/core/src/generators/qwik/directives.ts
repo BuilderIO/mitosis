@@ -91,7 +91,6 @@ export function Image(props: {
     const isBuilderIoImage = !!(image || '').match(/builder\.io/);
     const imgProps = {
       src: props.image,
-      class: props.class,
       style:
         `object-fit:${props.backgroundSize ||
           'cover'};object-position:${props.backgroundPosition || 'center'};` +
@@ -103,6 +102,11 @@ export function Image(props: {
       loading: props.lazy ? 'lazy' : undefined,
       srcset: undefined as string | undefined,
     };
+    const sizingDiv = h('div', {
+      class: 'builder-image-sizer',
+      style: `width:100%;padding-top:${(props.aspectRatio || 1) *
+        100}%;pointer-events:none;font-size:0`,
+    });
     if (isBuilderIoImage) {
       const srcset = ['100', '200', '400', '800', '1200', '1600', '2000']
         .map((size) => {
@@ -115,15 +119,11 @@ export function Image(props: {
         h('picture', {}, [
           h('source', { type: 'image/webp', srcset: srcset }),
           h('img', imgProps, jsx),
-          h('div', {
-            class: 'builder-image-sizer',
-            style: `width:100%;padding-top:${(props.aspectRatio || 1) *
-              100}%;pointer-events:none;font-size:0`,
-          }),
+          sizingDiv,
         ]),
       ];
     } else {
-      jsx = [h('img', imgProps, jsx)];
+      jsx = [h('img', imgProps, jsx), sizingDiv];
     }
   }
   return h(
