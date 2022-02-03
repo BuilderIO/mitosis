@@ -52,6 +52,7 @@ export class File {
   }
 
   exportConst(name: string, value?: any) {
+    if (this.exports.has(name)) return;
     this.exports.set(name, this.src.isModule ? name : 'exports.' + name);
     this.src.const(name, value, true);
   }
