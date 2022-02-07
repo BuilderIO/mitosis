@@ -202,7 +202,7 @@ const componentFunctionToJson = (
             ) {
               hooks.onMount = generate(firstArg.body)
                 .code.trim()
-                // Remove abtrary block wrapping if any
+                // Remove arbitrary block wrapping if any
                 // AKA
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')

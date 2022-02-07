@@ -119,8 +119,8 @@ export function Image(props: {
         h('picture', {}, [
           h('source', { type: 'image/webp', srcset: srcset }),
           h('img', imgProps, jsx),
-          sizingDiv,
         ]),
+        sizingDiv,
       ];
     } else {
       jsx = [h('img', imgProps, jsx), sizingDiv];
