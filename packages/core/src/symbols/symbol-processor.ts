@@ -60,10 +60,25 @@ export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
   });
 }
 
+interface BuilderSymbol {
+  data: Record<string, any>;
+  content: {
+    data: {
+      state: Record<string, any>;
+    };
+  };
+}
+
 //TODO(misko): needs test
 export function convertBuilderContentToSymbolHierarchy(
   content: BuilderContent,
-  collectComponentStyles?: string[],
+  {
+    collectComponentStyles,
+    collectComponentState,
+  }: {
+    collectComponentStyles?: string[];
+    collectComponentState?: Record<string, any>;
+  } = {},
 ): SymbolHierarchy {
   const path: (string | number)[] = [-1, content.id!];
   const hierarchy: SymbolHierarchy = {
@@ -81,12 +96,23 @@ export function convertBuilderContentToSymbolHierarchy(
     }
     if (isBuilderElement(el)) {
       if (el?.component?.name === 'Symbol') {
+        if (collectComponentState) {
+          const symbol: BuilderSymbol = el.component.options.symbol;
+          const props = symbol.data;
+          const state = symbol.content.data.state;
+          const id = toHash(state);
+          props['serverStateId'] = id;
+          collectComponentState[id] = state;
+        }
         if (path[Path.DEPTH] < this.path.length) {
           const id = getIdFromSymbol(el);
           hierarchy[id] = [];
           addIfMissing(hierarchy[path[Path.ID]], id);
           path.unshift(this.path.length, id);
         }
+        // TODO(misko): This should be `el.content` not `el`
+        // Because we don't wante to take the `<Symbol>` with us.
+        // TODO(misko): Do we really want to add ALL symbols? Even duplicates?
         hierarchy.depthFirstSymbols.unshift(el);
       }
     }
@@ -117,6 +143,7 @@ export function convertBuilderElementToMitosisComponent(
     createBuilderElement({
       component: {
         name: componentName,
+        options: symbolValue.data,
       },
     }),
   ];
@@ -158,4 +185,21 @@ function generateId() {
     // new Date().getTime().toString(36) +
     Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36)
   );
+}
+
+function toHash(obj: any): string {
+  return hashCode(JSON.stringify(obj));
+}
+
+function hashCode(text: string): string {
+  var hash = 0,
+    i,
+    chr;
+  if (text.length === 0) return String(hash);
+  for (i = 0; i < text.length; i++) {
+    chr = text.charCodeAt(i);
+    hash = (hash << 5) - hash + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return Number(Math.abs(hash)).toString(36);
 }

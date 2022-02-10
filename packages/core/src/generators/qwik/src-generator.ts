@@ -205,9 +205,18 @@ export class SrcBuilder {
     return this;
   }
 
-  const(name: string, value?: any, exprt: boolean = false) {
+  const(
+    name: string,
+    value?: any,
+    exprt: boolean = false,
+    locallyVisible: boolean = false,
+  ) {
     if (exprt) {
-      this.emit(this.isModule ? 'export const ' : 'exports.');
+      this.emit(
+        this.isModule
+          ? 'export const '
+          : (locallyVisible ? 'const ' + name + '=' : '') + 'exports.',
+      );
     } else {
       this.emit('const ');
     }
@@ -237,6 +246,10 @@ export class SrcBuilder {
     props: Record<string, any>,
     bindings: Record<string, any>,
   ) {
+    if (symbol == 'div' && ('href' in props || 'href' in bindings)) {
+      // HACK: if we contain href then we are `a` not `div`
+      symbol = 'a';
+    }
     if (this.isJSX) {
       this.emit('<' + symbol);
     } else {

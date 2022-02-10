@@ -64,6 +64,7 @@ export const DIRECTIVES: Record<
       this.isJSX && this.emit('}', NL);
     },
   Image: minify`${Image}`,
+  CoreButton: minify`${CoreButton}`,
 };
 
 declare const h: (
@@ -126,10 +127,11 @@ export function Image(props: {
       jsx = [h('img', imgProps, jsx), sizingDiv];
     }
   }
+  const children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? 'a' : 'div',
     { href: props.href, class: props.class },
-    jsx,
+    children,
   );
 
   function updateQueryParam(uri = '', key: string, value: string) {
@@ -144,4 +146,21 @@ export function Image(props: {
 
     return uri + separator + key + '=' + encodeURIComponent(value);
   }
+}
+
+export function CoreButton(props: {
+  text?: string;
+  link?: string;
+  class?: string;
+  openInNewTab?: string;
+  tagName$: string;
+}) {
+  const hasLink = !!props.link;
+  const hProps = {
+    innerHTML: props.text || '',
+    href: props.link,
+    target: props.openInNewTab ? '_blank' : '_self',
+    class: props.class,
+  };
+  return h(hasLink ? 'a' : props.tagName$ || 'span', hProps);
 }
