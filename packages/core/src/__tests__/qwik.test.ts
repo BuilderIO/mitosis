@@ -184,8 +184,14 @@ describe('qwik', () => {
 
   describe('component', () => {
     test('bindings', async () => {
+      // https://builder.io/content/0937630137c94676ba24f95d9d12e426/edit
+      // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachbust=true
       const content = require('./qwik.test.component-binding.json');
-      const hierarchy = convertBuilderContentToSymbolHierarchy(content);
+      const state: Record<string, any> = {};
+      const hierarchy = convertBuilderContentToSymbolHierarchy(content, {
+        collectComponentState: state,
+      });
+      expect(state).toMatchSnapshot();
       const fileSet = createFileSet({ output: 'mjs', jsx: true });
       hierarchy.depthFirstSymbols.forEach((builderComponent) => {
         const mitosisComponent = convertBuilderElementToMitosisComponent(
@@ -200,7 +206,6 @@ describe('qwik', () => {
         preserveTextBlocks: true,
       });
       compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
-      component.children[0].bindings.title = '"TestBoundValue"';
 
       addComponent(fileSet, component);
       debugOutput(fileSet);
