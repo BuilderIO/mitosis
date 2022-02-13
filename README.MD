@@ -271,17 +271,17 @@ Mitosis supports settings for generating code to match your preferred formatting
 
 | Framework     | Status       |
 | ------------- | ------------ |
-| React         | Alpha        |
-| Vue           | Alpha        |
+| React         | Beta         |
+| Vue           | Beta         |
 | Liquid        | Alpha        |
-| Builder.io    | Alpha        |
-| Solid         | Alpha        |
+| Builder.io    | Beta         |
+| Solid         | Beta         |
 | Figma         | Alpha        |
-| Angular       | Alpha        |
-| Svelte        | Alpha        |
-| HTML/CSS/JS   | Alpha        |
-| Webcomponents | Alpha        |
-| React Native  | Alpha        |
+| Angular       | Beta         |
+| Svelte        | Beta         |
+| HTML/CSS/JS   | Beta         |
+| Webcomponents | Beta         |
+| React Native  | Beta         |
 | SwiftUI       | Experimental |
 
 ## Coming soon
