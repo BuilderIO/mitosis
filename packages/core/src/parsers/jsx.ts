@@ -211,8 +211,8 @@ const componentFunctionToJson = (
                 .replace(/}$/, '');
               if (
                 secondArg &&
-                (types.isArrayExpression(secondArg) &&
-                  secondArg.elements.length > 0)
+                types.isArrayExpression(secondArg) &&
+                  secondArg.elements.length > 0
               ) {
                 const depsCode = secondArg ? generate(secondArg).code : null;
                 hooks.onUpdate = {
