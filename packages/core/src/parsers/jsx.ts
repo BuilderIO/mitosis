@@ -208,7 +208,7 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
             }
-          }else if (expression.callee.name === 'onUnMount'){
+          } else if (expression.callee.name === 'onUnMount') {
             const firstArg = expression.arguments[0];
             if (
               types.isFunctionExpression(firstArg) ||
