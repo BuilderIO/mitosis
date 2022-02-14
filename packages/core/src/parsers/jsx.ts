@@ -208,39 +208,40 @@ const componentFunctionToJson = (
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')
                 .replace(/}$/, '');
-                if (
-                  !secondArg ||
-                  (types.isArrayExpression(secondArg) &&
-                    secondArg.elements.length > 0)
-                ) {
-                  const depsCode = secondArg ? generate(secondArg).code : null;
-                  hooks.onUpdate = {
-                    code,
-                  };
-  
-                  if (depsCode) {
-                    hooks.onUpdate.deps = depsCode;
-                  }
-                  continue;
-                }
-  
-                hooks.onMount = {
+              if (
+                !secondArg ||
+                (types.isArrayExpression(secondArg) &&
+                  secondArg.elements.length > 0)
+              ) {
+                const depsCode = secondArg ? generate(secondArg).code : null;
+                hooks.onUpdate = {
                   code,
                 };
+
+                if (depsCode) {
+                  hooks.onUpdate.deps = depsCode;
+                }
+                continue;
+              }
+
+              hooks.onMount = {
+                code,
+              };
             }
-          }else if (expression.callee.name === 'onUnMount'){
+          } else if (expression.callee.name === 'onUnMount') {
             const firstArg = expression.arguments[0];
             if (
               types.isFunctionExpression(firstArg) ||
               types.isArrowFunctionExpression(firstArg)
             ) {
-              const code = generate(firstArg.body).code.trim()
-              // Remove arbitrary block wrapping if any
-              // AKA
-              //  { console.log('hi') } -> console.log('hi')
-              .replace(/^{/, '')
-              .replace(/}$/, '');
-              hooks.onUnMount = {code}
+              const code = generate(firstArg.body)
+                .code.trim()
+                // Remove arbitrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
+              hooks.onUnMount = { code };
             }
           }
         }
