@@ -99,10 +99,9 @@ export const componentToReactNative = (
     }
   });
 
-  const res = componentToReact({
+  return componentToReact({
     ...options,
     stylesType: options.stylesType || 'react-native',
     type: 'native',
   })({ component: json, path });
-  return res;
 };
