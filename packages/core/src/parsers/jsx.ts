@@ -195,6 +195,7 @@ const componentFunctionToJson = (
             expression.callee.name === 'onMount' ||
             expression.callee.name === 'useEffect'
           ) {
+            console.log('trhrthrtp');
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
             if (
@@ -209,7 +210,7 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
               if (
-                !secondArg ||
+                secondArg &&
                 (types.isArrayExpression(secondArg) &&
                   secondArg.elements.length > 0)
               ) {

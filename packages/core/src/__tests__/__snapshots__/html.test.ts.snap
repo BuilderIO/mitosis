@@ -102,16 +102,6 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
-
-      fetch(
-        \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-          props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-        }&productId=\${props.productId || \\"2410511106127\\"}\`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          state.reviews = data.data;
-        });
     }
 
     // Event handler for 'click' event on button-1
@@ -128,6 +118,18 @@ exports[`Html Stamped 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // onMount
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+        update();
+      });
 
     // Helper to render loops
     function renderLoop(el, array, template, itemName) {
