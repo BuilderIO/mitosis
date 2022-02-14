@@ -1,4 +1,6 @@
-type CSS = Partial<CSSStyleDeclaration> & { [key: string]: string };
+type CSS = Partial<CSSStyleDeclaration> & {
+  [key: string]: Partial<CSSStyleDeclaration> | string;
+};
 
 declare global {
   /**

@@ -8,14 +8,17 @@ import {
   SrcBuilder,
   quote,
   UNINDENT,
+  lastProperty,
 } from './src-generator';
 import { CssStyles } from './styles';
 
 export function renderJSXNodes(
   file: File,
+  directives: Map<string, string>,
   handlers: Map<string, string>,
   children: MitosisNode[],
   styles: Map<string, CssStyles>,
+  parentSymbolBindings: Record<string, string>,
   root = true,
 ): any {
   return function(this: SrcBuilder) {
@@ -45,14 +48,22 @@ export function renderJSXNodes(
             directive(child, () =>
               renderJSXNodes(
                 file,
+                directives,
                 handlers,
                 child.children,
                 styles,
+                {},
                 false,
               ).call(this),
             ),
           );
         } else {
+          if (typeof directive == 'string') {
+            directives.set(childName, directive);
+            if (file.module !== 'med') {
+              file.import('./med.js', childName);
+            }
+          }
           if (isSymbol(childName)) {
             // TODO(misko): We are hard coding './med.js' which is not right.
             file.import('./med.js', childName);
@@ -67,14 +78,26 @@ export function renderJSXNodes(
             props = { ...props };
             props.class = addClass(styles.get(css)!.CLASS_NAME, props.class);
           }
-          this.jsxBegin(
-            childName,
-            props,
-            rewriteHandlers(file, handlers, child.bindings),
+          const symbolBindings: Record<string, string> = {};
+          const bindings = rewriteHandlers(
+            file,
+            handlers,
+            child.bindings,
+            symbolBindings,
           );
-          renderJSXNodes(file, handlers, child.children, styles, false).call(
-            this,
-          );
+          this.jsxBegin(childName, props, {
+            ...bindings,
+            ...parentSymbolBindings,
+          });
+          renderJSXNodes(
+            file,
+            directives,
+            handlers,
+            child.children,
+            styles,
+            symbolBindings,
+            false,
+          ).call(this);
           this.jsxEnd(childName);
         }
       }
@@ -109,10 +132,23 @@ function isTextNode(child: MitosisNode) {
   );
 }
 
+/**
+ * Rewrites bindings:
+ * - Remove `css`
+ * - Rewrites event handles
+ * - Extracts symbol bindings.
+ *
+ * @param file
+ * @param handlers
+ * @param bindings
+ * @param symbolBindings Options record which will receive the symbol bindings
+ * @returns
+ */
 function rewriteHandlers(
   file: File,
   handlers: Map<string, string>,
   bindings: Record<string, string | undefined>,
+  symbolBindings: Record<string, string>,
 ): Record<string, string> {
   const outBindings: Record<string, string> = {};
   for (let key in bindings) {
@@ -127,6 +163,8 @@ function rewriteHandlers(
           binding = invoke(file.import(file.qwikModule, 'qHook'), [
             quote(file.qrlPrefix + 'high#' + handlerBlock),
           ]);
+        } else if (symbolBindings && key.startsWith('symbol.data.')) {
+          symbolBindings[lastProperty(key)] = binding;
         }
         outBindings[key] = binding;
       }

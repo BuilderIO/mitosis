@@ -52,6 +52,7 @@ export class File {
   }
 
   exportConst(name: string, value?: any) {
+    if (this.exports.has(name)) return;
     this.exports.set(name, this.src.isModule ? name : 'exports.' + name);
     this.src.const(name, value, true);
   }
@@ -204,9 +205,18 @@ export class SrcBuilder {
     return this;
   }
 
-  const(name: string, value?: any, exprt: boolean = false) {
+  const(
+    name: string,
+    value?: any,
+    exprt: boolean = false,
+    locallyVisible: boolean = false,
+  ) {
     if (exprt) {
-      this.emit(this.isModule ? 'export const ' : 'exports.');
+      this.emit(
+        this.isModule
+          ? 'export const '
+          : (locallyVisible ? 'const ' + name + '=' : '') + 'exports.',
+      );
     } else {
       this.emit('const ');
     }
@@ -236,6 +246,10 @@ export class SrcBuilder {
     props: Record<string, any>,
     bindings: Record<string, any>,
   ) {
+    if (symbol == 'div' && ('href' in props || 'href' in bindings)) {
+      // HACK: if we contain href then we are `a` not `div`
+      symbol = 'a';
+    }
     if (this.isJSX) {
       this.emit('<' + symbol);
     } else {
@@ -270,11 +284,13 @@ export class SrcBuilder {
         this.emit(quote(props[key]));
       }
     }
-    for (const key in bindings) {
+    for (const rawKey in bindings) {
       if (
-        Object.prototype.hasOwnProperty.call(bindings, key) &&
-        !ignoreKey(key)
+        Object.prototype.hasOwnProperty.call(bindings, rawKey) &&
+        !ignoreKey(rawKey)
       ) {
+        let binding = bindings[rawKey];
+        const key = lastProperty(rawKey);
         if (first) {
           first = false;
           this.isJSX && this.emit(RS, INDENT, INDENT);
@@ -283,8 +299,11 @@ export class SrcBuilder {
         }
         this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
         this.isJSX ? this.emit('={') : this.emit(':', WS);
-        let binding = bindings[key];
-        if (typeof binding == 'string' && isStatement(binding)) {
+        if (binding === props[key]) {
+          // HACK: workaround for the fact that sometimes the `bindings` have string literals
+          // We assume that when the binding content equals prop content.
+          binding = JSON.stringify(binding);
+        } else if (typeof binding == 'string' && isStatement(binding)) {
           binding = iif(binding);
         }
         this.emit(binding);
@@ -366,10 +385,10 @@ function ignoreKey(key: string): boolean {
   return (
     key.startsWith('$') ||
     key.startsWith('_') ||
-    key.startsWith('symbol.data') ||
     key == 'code' ||
     key == '' ||
-    key == 'builder-id'
+    key == 'builder-id' ||
+    key.indexOf('.') !== -1
   );
 }
 
@@ -468,3 +487,12 @@ const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,]+/;
 
 // https://regexr.com/6cpka
 const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z0-9_$]+\s*$/;
+
+export function lastProperty(expr: string): string {
+  const parts = expr.split('.');
+  return parts[parts.length - 1];
+}
+
+export function iteratorProperty(expr: string): string {
+  return lastProperty(expr) + 'Item';
+}

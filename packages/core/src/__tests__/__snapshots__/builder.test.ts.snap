@@ -64,8 +64,11 @@ Object {
           "large": Object {
             "alignItems": "stretch",
             "display": "flex",
-            "flexDirection": "column",
+            "flexDirection": "row",
             "lineHeight": "normal",
+          },
+          "small": Object {
+            "flexDirection": "row-reverse",
           },
         },
         "tagName": "div",
@@ -150,9 +153,12 @@ export default function MyComponent(props) {
       class=\\"builder-columns\\"
       css={{
         display: \\"flex\\",
-        flexDirection: \\"column\\",
+        flexDirection: \\"row\\",
         alignItems: \\"stretch\\",
         lineHeight: \\"normal\\",
+        \\"@media (max-width: 640px)\\": {
+          flexDirection: \\"row-reverse\\",
+        },
       }}
     >
       <For each={props.columns}>

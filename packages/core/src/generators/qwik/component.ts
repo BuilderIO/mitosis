@@ -1,11 +1,14 @@
+import { stat } from 'fs';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { minify } from '../minify';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
+  arrowFnBlock,
   arrowFnValue,
   File,
   iif,
@@ -64,6 +67,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     enumerable: false,
     value: { styles: new Map<string, CssStyles>() as any, symbolName: null },
   });
+  fileSet.med.exportConst('__merge', minify`${__merge}`);
   return fileSet;
 }
 
@@ -82,7 +86,11 @@ export function addComponent(
   opts: { isRoot?: boolean; shareStyles?: boolean } = {},
 ) {
   const _opts = { isRoot: false, shareStyles: false, ...opts };
-  compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+  compileAwayBuilderComponentsFromTree(component, {
+    ...compileAwayComponents,
+    Image: undefined!,
+    CoreButton: undefined!,
+  });
   const componentName = component.name;
   const handlers = renderHandlers(
     fileSet.high,
@@ -153,15 +161,55 @@ export function addComponent(
   );
 
   onRenderFile.src.emit(NL);
+  const directives: Map<string, string> = new Map();
   onRenderFile.exportConst(
     componentName + '_onRender',
     invoke(onRenderFile.import(onRenderFile.qwikModule, 'qHook'), [
-      arrowFnValue(
-        ['props', 'state'],
-        renderJSXNodes(onRenderFile, handlers, component.children, styles),
+      arrowFnBlock(
+        ['__props__', '__state__'],
+        [
+          renderStateConst(onRenderFile),
+          function(this: SrcBuilder) {
+            return this.emit(
+              'return ',
+              renderJSXNodes(
+                onRenderFile,
+                directives,
+                handlers,
+                component.children,
+                styles,
+                {},
+              ),
+              ';',
+            );
+          },
+        ],
       ),
     ]),
   );
+  directives.forEach((code, name) => {
+    fileSet.med.import(fileSet.med.qwikModule, 'h');
+    fileSet.med.exportConst(name, code);
+  });
+}
+
+function renderStateConst(file: File, isMount = false): any {
+  return function(this: SrcBuilder) {
+    return this.emit(
+      'const state',
+      WS,
+      '=',
+      WS,
+      file.module == 'med'
+        ? file.exports.get('__merge')
+        : file.import('./med', '__merge').name,
+      '(__state__,',
+      WS,
+      '__props__',
+      isMount ? ',true);' : ');',
+      NL,
+    );
+  };
 }
 
 export function addCommonStyles(fileSet: FileSet) {
@@ -184,18 +232,19 @@ function addComponentOnMount(
       invoke(
         componentFile.import(componentFile.qwikModule, 'qHook'),
         [
-          arrowFnValue([], () =>
+          arrowFnValue(['__props__'], () =>
             this.emit(
               '{',
               NL,
               INDENT,
-              'const state',
+              'const __state__',
               WS,
               '=',
               WS,
               componentFile.import(componentFile.qwikModule, 'qObject').name,
               '({});',
               NL,
+              renderStateConst(componentFile, true),
               iif(component.hooks.onMount),
               NL,
               'return state;',
@@ -209,4 +258,27 @@ function addComponentOnMount(
       ),
     );
   });
+}
+
+declare const __STATE__: Record<string, Record<string, any>>;
+
+function __merge(
+  state: Record<string, any>,
+  props: Record<string, any>,
+  create = false,
+) {
+  for (const key in props) {
+    if (
+      key.indexOf(':') == -1 &&
+      !key.startsWith('__') &&
+      Object.prototype.hasOwnProperty.call(props, key)
+    ) {
+      state[key] = props[key];
+    }
+  }
+  if (create && typeof __STATE__ == 'object' && props.serverStateId) {
+    debugger;
+    Object.assign(state, __STATE__[props.serverStateId]);
+  }
+  return state;
 }

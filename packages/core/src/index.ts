@@ -30,6 +30,7 @@ export * from './generators/solid';
 export * from './generators/liquid';
 export * from './generators/builder';
 export * from './generators/qwik/index';
+export * from './symbols/symbol-processor';
 export * from './generators/html';
 export * from './generators/svelte';
 export * from './generators/mitosis';

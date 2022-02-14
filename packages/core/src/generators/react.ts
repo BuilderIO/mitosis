@@ -379,13 +379,17 @@ type ReactExports =
   | 'useEffect'
   | 'useContext';
 
+const DEFAULT_OPTIONS: ToReactOptions = {
+  stateType: 'useState',
+  stylesType: 'styled-jsx',
+};
+
 export const componentToReact = (
   reactOptions: ToReactOptions = {},
 ): Transpiler => ({ component }) => {
   let json = fastClone(component);
   const options: ToReactOptions = {
-    stateType: 'useState',
-    stylesType: 'styled-jsx',
+    ...DEFAULT_OPTIONS,
     ...reactOptions,
   };
   if (options.plugins) {
