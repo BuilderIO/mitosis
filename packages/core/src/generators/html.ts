@@ -414,7 +414,7 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
   );
   const hasGeneratedJs = Boolean(useOptions.js.trim().length);
 
-  if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount || hasLoop) {
+  if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount?.code || hasLoop) {
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
@@ -452,7 +452,7 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
             .join('\n\n')}
 
             ${
-              !json.hooks.onUpdate
+              !json.hooks.onUpdate?.code
                 ? ''
                 : `
                   ${updateReferencesInCode(
@@ -471,7 +471,7 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
         }
 
         ${
-          !json.hooks.onMount
+          !json.hooks.onMount?.code
             ? ''
             : // TODO: make prettier by grabbing only the function body
               `
@@ -677,7 +677,7 @@ export const componentToCustomElement = (
           this.update();
 
           ${
-            !json.hooks.onMount
+            !json.hooks.onMount?.code
               ? ''
               : // TODO: make prettier by grabbing only the function body
                 `
@@ -706,7 +706,7 @@ export const componentToCustomElement = (
             .join('\n\n')}
 
             ${
-              !json.hooks.onUpdate
+              !json.hooks.onUpdate?.code
                 ? ''
                 : `
                   ${updateReferencesInCode(
