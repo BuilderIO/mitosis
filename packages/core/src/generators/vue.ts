@@ -462,7 +462,7 @@ export const componentToVue = (options: ToVueOptions = {}) =>
         }
 
         ${
-          component.hooks.onMount
+          component.hooks.onMount?.code
             ? `mounted() {
                 ${processBinding(
                   component.hooks.onMount.code,
