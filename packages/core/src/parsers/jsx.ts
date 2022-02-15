@@ -195,7 +195,21 @@ const componentFunctionToJson = (
             expression.callee.name === 'onMount' ||
             expression.callee.name === 'useEffect'
           ) {
-            console.log('trhrthrtp');
+            const firstArg = expression.arguments[0];
+            if (
+              types.isFunctionExpression(firstArg) ||
+              types.isArrowFunctionExpression(firstArg)
+            ) {
+              const code = generate(firstArg.body)
+                .code.trim()
+                // Remove arbitrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
+              hooks.onMount = { code };
+            }
+          } else if (expression.callee.name === 'onUpdate') {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
             if (
@@ -210,24 +224,17 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
               if (
-                secondArg &&
-                types.isArrayExpression(secondArg) &&
-                  secondArg.elements.length > 0
+                !secondArg ||
+                (types.isArrayExpression(secondArg) &&
+                  secondArg.elements.length > 0)
               ) {
-                const depsCode = secondArg ? generate(secondArg).code : null;
+                const depsCode = secondArg ? generate(secondArg).code : '';
                 hooks.onUpdate = {
                   code,
                 };
 
-                if (depsCode) {
-                  hooks.onUpdate.deps = depsCode;
-                }
-                continue;
+                hooks.onUpdate.deps = depsCode;
               }
-
-              hooks.onMount = {
-                code,
-              };
             }
           } else if (expression.callee.name === 'onUnMount') {
             const firstArg = expression.arguments[0];
