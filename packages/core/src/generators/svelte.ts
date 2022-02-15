@@ -215,7 +215,7 @@ export const componentToSvelte = (
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${!json.hooks.onUpdate?.code ? '' : `import { afterUpdate } from 'svelte'`}
-      ${!json.hooks.onUnMount ? '' : `import { onDestroy } from 'svelte'`}
+      ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
       ${renderPreComponent(json)}
 
       ${
@@ -256,7 +256,7 @@ export const componentToSvelte = (
       }
 
       ${
-        !json.hooks.onUnMount
+        !json.hooks.onUnMount?.code
           ? ''
           : `onDestroy(() => { ${stripStateAndPropsRefs(
               json.hooks.onUnMount.code,

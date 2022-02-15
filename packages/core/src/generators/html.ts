@@ -658,7 +658,7 @@ export const componentToCustomElement = (
         }
 
         ${
-          !json.hooks.onUnMount
+          !json.hooks.onUnMount?.code
             ? ''
             : `
           disconnectedCallback() {

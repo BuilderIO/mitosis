@@ -209,9 +209,9 @@ export const componentToMitosis = (
       }
 
       ${
-        !json.hooks.onUnMount
+        !json.hooks.onUnMount?.code
           ? ''
-          : `onUnMount(() => { ${json.hooks.onUnMount} })`
+          : `onUnMount(() => { ${json.hooks.onUnMount.code} })`
       }
 
       return (${addWrapper ? '<>' : ''}
