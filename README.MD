@@ -271,24 +271,26 @@ Mitosis supports settings for generating code to match your preferred formatting
 
 | Framework     | Status       |
 | ------------- | ------------ |
-| React         | Alpha        |
-| Vue           | Alpha        |
+| React         | Beta         |
+| Vue           | Beta         |
 | Liquid        | Alpha        |
-| Builder.io    | Alpha        |
-| Solid         | Alpha        |
+| Builder.io    | Beta         |
+| Solid         | Beta         |
 | Figma         | Alpha        |
-| Angular       | Alpha        |
-| Svelte        | Alpha        |
-| HTML/CSS/JS   | Alpha        |
-| Webcomponents | Alpha        |
-| React Native  | Alpha        |
+| Angular       | Beta         |
+| Svelte        | Beta         |
+| HTML/CSS/JS   | Beta         |
+| Webcomponents | Beta         |
+| React Native  | Beta         |
 | SwiftUI       | Experimental |
 
 ## Coming soon
 
-- Stable (v1) release
-- Plugin API docs for custom syntaxes and extensions
-- VS code plugin
+[V1 release](https://github.com/orgs/BuilderIO/projects/4) (help wanted!)
+
+## Join the community
+
+[Chat with us in discord!](https://discord.gg/6heP3wUM)
 
 <br />
 <p align="center">

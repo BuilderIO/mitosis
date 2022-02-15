@@ -1,8 +1,10 @@
+import { stat } from 'fs';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { minify } from '../minify';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
@@ -65,6 +67,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     enumerable: false,
     value: { styles: new Map<string, CssStyles>() as any, symbolName: null },
   });
+  fileSet.med.exportConst('__merge', minify`${__merge}`);
   return fileSet;
 }
 
@@ -86,6 +89,7 @@ export function addComponent(
   compileAwayBuilderComponentsFromTree(component, {
     ...compileAwayComponents,
     Image: undefined!,
+    CoreButton: undefined!,
   });
   const componentName = component.name;
   const handlers = renderHandlers(
@@ -162,21 +166,9 @@ export function addComponent(
     componentName + '_onRender',
     invoke(onRenderFile.import(onRenderFile.qwikModule, 'qHook'), [
       arrowFnBlock(
-        ['props', '__state__'],
+        ['__props__', '__state__'],
         [
-          function(this: SrcBuilder) {
-            return this.emit(
-              'const state',
-              WS,
-              '=',
-              WS,
-              'Object.assign({},',
-              WS,
-              '__state__,',
-              WS,
-              'props)',
-            );
-          },
+          renderStateConst(onRenderFile),
           function(this: SrcBuilder) {
             return this.emit(
               'return ',
@@ -201,6 +193,25 @@ export function addComponent(
   });
 }
 
+function renderStateConst(file: File, isMount = false): any {
+  return function(this: SrcBuilder) {
+    return this.emit(
+      'const state',
+      WS,
+      '=',
+      WS,
+      file.module == 'med'
+        ? file.exports.get('__merge')
+        : file.import('./med', '__merge').name,
+      '(__state__,',
+      WS,
+      '__props__',
+      isMount ? ',true);' : ');',
+      NL,
+    );
+  };
+}
+
 export function addCommonStyles(fileSet: FileSet) {
   const { styles, symbolName } = getCommonStyles(fileSet);
   const onRenderFile = fileSet.low;
@@ -221,18 +232,19 @@ function addComponentOnMount(
       invoke(
         componentFile.import(componentFile.qwikModule, 'qHook'),
         [
-          arrowFnValue([], () =>
+          arrowFnValue(['__props__'], () =>
             this.emit(
               '{',
               NL,
               INDENT,
-              'const state',
+              'const __state__',
               WS,
               '=',
               WS,
               componentFile.import(componentFile.qwikModule, 'qObject').name,
               '({});',
               NL,
+              renderStateConst(componentFile, true),
               iif(component.hooks.onMount),
               NL,
               'return state;',
@@ -246,4 +258,27 @@ function addComponentOnMount(
       ),
     );
   });
+}
+
+declare const __STATE__: Record<string, Record<string, any>>;
+
+function __merge(
+  state: Record<string, any>,
+  props: Record<string, any>,
+  create = false,
+) {
+  for (const key in props) {
+    if (
+      key.indexOf(':') == -1 &&
+      !key.startsWith('__') &&
+      Object.prototype.hasOwnProperty.call(props, key)
+    ) {
+      state[key] = props[key];
+    }
+  }
+  if (create && typeof __STATE__ == 'object' && props.serverStateId) {
+    debugger;
+    Object.assign(state, __STATE__[props.serverStateId]);
+  }
+  return state;
 }

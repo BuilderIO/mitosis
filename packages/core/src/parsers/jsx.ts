@@ -202,7 +202,21 @@ const componentFunctionToJson = (
             ) {
               hooks.onMount = generate(firstArg.body)
                 .code.trim()
-                // Remove abtrary block wrapping if any
+                // Remove arbitrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
+            }
+          } else if (expression.callee.name === 'onUnMount') {
+            const firstArg = expression.arguments[0];
+            if (
+              types.isFunctionExpression(firstArg) ||
+              types.isArrowFunctionExpression(firstArg)
+            ) {
+              hooks.onUnMount = generate(firstArg.body)
+                .code.trim()
+                // Remove arbitrary block wrapping if any
                 // AKA
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')

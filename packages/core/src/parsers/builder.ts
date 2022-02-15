@@ -691,7 +691,9 @@ export const builderElementToMitosisNode = (
 };
 
 const getHooks = (content: BuilderContent) => {
-  const code = content.data?.tsCode || content.data?.jsCode || '';
+  const code = convertExportDefaultToReturn(
+    content.data?.tsCode || content.data?.jsCode || '',
+  );
   try {
     return parseJsx(`
     export default function TemporaryComponent() {
@@ -772,6 +774,31 @@ export function extractStateHook(code: string) {
 
   return { code: newCode, state };
 }
+
+export function convertExportDefaultToReturn(code: string) {
+  const { types } = babel;
+  const ast = babel.parse(code, {
+    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    plugins: [[decorators, { legacy: true }], jsxPlugin],
+  });
+  const body = types.isFile(ast)
+    ? ast.program.body
+    : types.isProgram(ast)
+    ? ast.body
+    : [];
+  const newBody = body.slice();
+  for (let i = 0; i < body.length; i++) {
+    const statement = body[i];
+    if (types.isExportDefaultDeclaration(statement)) {
+      if (types.isCallExpression(statement.declaration)) {
+        newBody[i] = types.returnStatement(statement.declaration);
+      }
+    }
+  }
+
+  return generate(types.program(newBody)).code || '';
+}
+
 // TODO: maybe this should be part of the builder -> Mitosis part
 function extractSymbols(json: BuilderContent) {
   const subComponents: { content: BuilderContent; name: string }[] = [];
@@ -872,9 +899,10 @@ const builderContentPartToMitosisComponent = (
     }
   });
 
-  const { state, code: customCode } = extractStateHook(
+  const { state, code } = extractStateHook(
     builderContent?.data?.tsCode || builderContent?.data?.jsCode || '',
   );
+  const customCode = convertExportDefaultToReturn(code);
 
   const parsed = getHooks(builderContent);
 

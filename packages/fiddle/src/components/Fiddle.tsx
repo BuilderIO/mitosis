@@ -7,7 +7,6 @@ import {
   componentToHtml,
   componentToMitosis,
   componentToLiquid,
-  componentToQwik,
   componentToReact,
   componentToReactNative,
   componentToSolid,
@@ -132,7 +131,7 @@ const AlphaPreviewMessage = () => (
         fontSize: 15,
       }}
     >
-      This is an early alpha preview, please{' '}
+      Mitosis is in beta, please{' '}
       <TextLink
         css={{ color: 'inherit', textDecoration: 'underline' }}
         href="https://github.com/BuilderIO/mitosis/issues"
@@ -363,14 +362,15 @@ export default function Fiddle() {
                 stateType: state.options.svelteStateType,
                 plugins,
               })
-            : state.outputTab === 'qwik'
-            ? (
-                await componentToQwik(json, {
-                  plugins,
-                })
-              ).files.find((file) => file.path.endsWith('template.tsx'))!
-                ?.contents
-            : state.outputTab === 'mitosis'
+            : // TODO: add qwik support back again
+            // : state.outputTab === 'qwik'
+            // ? (
+            //     await componentToQwik(json, {
+            //       plugins,
+            //     })
+            //   ).files.find((file) => file.path.endsWith('template.tsx'))!
+            //     ?.contents
+            state.outputTab === 'mitosis'
             ? componentToMitosis(json)
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
@@ -958,7 +958,6 @@ export default function Fiddle() {
                   label={<TabLabelWithIcon label="Angular" />}
                   value="angular"
                 />
-                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab
                   label={<TabLabelWithIcon label="Svelte" />}
                   value="svelte"
