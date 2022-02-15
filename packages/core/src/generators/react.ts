@@ -488,7 +488,7 @@ const _componentToReact = (
   if (refs.size) {
     reactLibImports.add('useRef');
   }
-  if (json.hooks.onMount || json.hooks.onUnMount || json.hooks.onUpdate) {
+  if (json.hooks.onMount?.code || json.hooks.onUnMount?.code || json.hooks.onUpdate?.code) {
     reactLibImports.add('useEffect');
   }
 
