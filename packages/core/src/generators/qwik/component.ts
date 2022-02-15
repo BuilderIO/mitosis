@@ -119,7 +119,7 @@ export function addComponent(
       );
     });
   }
-  if (component.hooks.onMount) {
+  if (component.hooks.onMount?.code) {
     addComponentOnMount(componentFile, componentName, component);
   }
   const styles = _opts.shareStyles
@@ -130,7 +130,7 @@ export function addComponent(
     // tagName: string(componentName.toLowerCase()),
     onMount: invoke(componentFile.import(componentFile.qwikModule, 'qHook'), [
       componentFile.toQrl(
-        component.hooks.onMount
+        component.hooks.onMount?.code
           ? componentName + '_onMount'
           : 'onMountCreateEmptyState',
       ),
@@ -245,7 +245,7 @@ function addComponentOnMount(
               '({});',
               NL,
               renderStateConst(componentFile, true),
-              iif(component.hooks.onMount),
+              iif(component.hooks.onMount?.code),
               NL,
               'return state;',
               UNINDENT,

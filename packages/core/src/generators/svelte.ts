@@ -214,7 +214,9 @@ export const componentToSvelte = (
   let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
-      ${!json.hooks.onUpdate?.code ? '' : `import { afterUpdate } from 'svelte'`}
+      ${
+        !json.hooks.onUpdate?.code ? '' : `import { afterUpdate } from 'svelte'`
+      }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
       ${renderPreComponent(json)}
 
@@ -250,9 +252,12 @@ export const componentToSvelte = (
       ${
         !json.hooks.onUpdate?.code
           ? ''
-          : `afterUpdate(() => { ${stripStateAndPropsRefs(json.hooks.onUpdate.code, {
-              includeState: useOptions.stateType === 'variables',
-            })} });`
+          : `afterUpdate(() => { ${stripStateAndPropsRefs(
+              json.hooks.onUpdate.code,
+              {
+                includeState: useOptions.stateType === 'variables',
+              },
+            )} });`
       }
 
       ${

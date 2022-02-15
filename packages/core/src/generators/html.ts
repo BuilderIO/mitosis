@@ -414,7 +414,12 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
   );
   const hasGeneratedJs = Boolean(useOptions.js.trim().length);
 
-  if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount?.code || hasLoop) {
+  if (
+    hasChangeListeners ||
+    hasGeneratedJs ||
+    json.hooks.onMount?.code ||
+    hasLoop
+  ) {
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
