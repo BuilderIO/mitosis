@@ -7,24 +7,16 @@ workspace(
 )
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-# Fetch rules_nodejs so we can install our npm dependencies
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "4a5d654a4ccd4a4c24eca5d319d85a88a650edf119601550c95bf400c8cc897e",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/3.5.1/rules_nodejs-3.5.1.tar.gz"],
+    sha256 = "d63ecec7192394f5cc4ad95a115f8a6c9de55c60d56c1f08da79c306355e4654",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/4.6.1/rules_nodejs-4.6.1.tar.gz"],
 )
 
-# Check the rules_nodejs version and download npm dependencies
-# Note: bazel (version 2 and after) will check the .bazelversion file so we don't need to
-# assert on that.
-load("@build_bazel_rules_nodejs//:index.bzl", "check_rules_nodejs_version", "node_repositories", "npm_install")
-
-check_rules_nodejs_version(minimum_version_string = "2.2.0")
-
-# Setup the Node.js toolchain
+# fetches nodejs, npm, and yarn
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "npm_install")
 node_repositories(
-    node_version = "12.21.0",
+    node_version = "16.6.2", # This version is much higher, but it is needed to make bazel work for Apple M1
 )
 
 npm_install(
