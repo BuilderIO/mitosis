@@ -34,10 +34,14 @@ export interface ToHtmlOptions extends BaseTranspilerOptions {
 
 type StringRecord = { [key: string]: string };
 type NumberRecord = { [key: string]: number };
+type ShadowMode = 'open' | 'close' | undefined;
 type InternalToHtmlOptions = ToHtmlOptions & {
   onChangeJsById: StringRecord;
   js: string;
   namesMap: NumberRecord;
+};
+type InternalToWebComponentOptions = InternalToHtmlOptions & {
+  shadow: ShadowMode;
 };
 
 const addUpdateAfterSet = (
@@ -540,12 +544,13 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
 export const componentToCustomElement = (
   options: ToHtmlOptions = {},
 ): Transpiler => ({ component }) => {
-  const useOptions: InternalToHtmlOptions = {
+  const useOptions: InternalToWebComponentOptions = {
     ...options,
     onChangeJsById: {},
     js: '',
     namesMap: {},
     format: 'class',
+    shadow: undefined,
   };
   let json = fastClone(component);
   if (options.plugins) {
@@ -556,6 +561,7 @@ export const componentToCustomElement = (
   addUpdateAfterSet(json, useOptions);
 
   const hasLoop = hasComponent('For', json);
+  const hasShadowConfig = Boolean(useOptions?.shadow);
 
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
@@ -643,6 +649,12 @@ export const componentToCustomElement = (
           `
           }
 
+          ${
+            !hasShadowConfig
+              ? ''
+              : `this._shadowRoot = this.attachShadow({ mode: '${useOptions.shadow}' });`
+          }
+
           ${useOptions.js}
         }
 
@@ -661,7 +673,11 @@ export const componentToCustomElement = (
         }
 
         connectedCallback() {
-          this.innerHTML = \`
+          ${
+            !hasShadowConfig
+             ? 'this.innerHTML'
+             : 'this._shadowRoot.innerHTML'
+          } = \`
       ${html}\`;
           this.update();
 
@@ -686,8 +702,9 @@ export const componentToCustomElement = (
               if (!value) {
                 return '';
               }
+              const queryStringContext = !hasShadowConfig ? '' : '._shadowRoot'
               return `
-              this.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              this${queryStringContext}.querySelectorAll("[data-name='${key}']").forEach((el) => {
                 ${updateReferencesInCode(value, useOptions)}
               })
             `;
