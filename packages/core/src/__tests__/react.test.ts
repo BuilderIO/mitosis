@@ -17,6 +17,8 @@ const customCode = require('./data/blocks/custom-code.raw');
 const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
+const onUpdate = require('./data/blocks/onUpdate.raw');
+const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -120,6 +122,18 @@ describe('React', () => {
 
   test('Columns', () => {
     const component = parseJsx(columns);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onUpdate', () => {
+    const component = parseJsx(onUpdate);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onUpdateWithDeps', () => {
+    const component = parseJsx(onUpdateWithDeps);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

@@ -369,7 +369,7 @@ const getInitCode = (
   json: MitosisComponent,
   options: ToReactOptions,
 ): string => {
-  return processBinding(json.hooks.init || '', options);
+  return processBinding(json.hooks.init?.code || '', options);
 };
 
 type ReactExports =
@@ -488,7 +488,11 @@ const _componentToReact = (
   if (refs.size) {
     reactLibImports.add('useRef');
   }
-  if (json.hooks.onMount || json.hooks.onUnMount) {
+  if (
+    json.hooks.onMount?.code ||
+    json.hooks.onUnMount?.code ||
+    json.hooks.onUpdate?.code
+  ) {
     reactLibImports.add('useEffect');
   }
 
@@ -566,10 +570,10 @@ const _componentToReact = (
       ${getInitCode(json, options)}
 
       ${
-        json.hooks.onMount
+        json.hooks.onMount?.code
           ? `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onMount, options),
+              updateStateSettersInCode(json.hooks.onMount.code, options),
               options,
             )}
           }, [])`
@@ -577,10 +581,21 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUnMount
+        json.hooks.onUpdate?.code
           ? `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onUnMount, options),
+              updateStateSettersInCode(json.hooks.onUpdate.code, options),
+              options,
+            )}
+          }, ${json.hooks.onUpdate.deps})`
+          : ''
+      }
+
+      ${
+        json.hooks.onUnMount?.code
+          ? `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onUnMount.code, options),
               options,
             )}
           }, [])`

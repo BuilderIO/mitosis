@@ -414,7 +414,12 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
   );
   const hasGeneratedJs = Boolean(useOptions.js.trim().length);
 
-  if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount || hasLoop) {
+  if (
+    hasChangeListeners ||
+    hasGeneratedJs ||
+    json.hooks.onMount?.code ||
+    hasLoop
+  ) {
     // TODO: collectJs helper for here and liquid
     str += `
       <script>
@@ -450,6 +455,17 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
             `;
             })
             .join('\n\n')}
+
+            ${
+              !json.hooks.onUpdate?.code
+                ? ''
+                : `
+                  ${updateReferencesInCode(
+                    json.hooks.onUpdate.code,
+                    useOptions,
+                  )} 
+                  `
+            }
         }
 
         ${useOptions.js}
@@ -460,13 +476,13 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
         }
 
         ${
-          !json.hooks.onMount
+          !json.hooks.onMount?.code
             ? ''
             : // TODO: make prettier by grabbing only the function body
               `
               // onMount
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                 useOptions,
               )} 
               `
@@ -647,13 +663,13 @@ export const componentToCustomElement = (
         }
 
         ${
-          !json.hooks.onUnMount
+          !json.hooks.onUnMount?.code
             ? ''
             : `
           disconnectedCallback() {
             // onUnMount
             ${updateReferencesInCode(
-              addUpdateAfterSetInCode(json.hooks.onUnMount, useOptions),
+              addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
             )}
           }
@@ -666,13 +682,13 @@ export const componentToCustomElement = (
           this.update();
 
           ${
-            !json.hooks.onMount
+            !json.hooks.onMount?.code
               ? ''
               : // TODO: make prettier by grabbing only the function body
                 `
                 // onMount
                 ${updateReferencesInCode(
-                  addUpdateAfterSetInCode(json.hooks.onMount, useOptions),
+                  addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                   useOptions,
                 )}
                 `
@@ -693,6 +709,17 @@ export const componentToCustomElement = (
             `;
             })
             .join('\n\n')}
+
+            ${
+              !json.hooks.onUpdate?.code
+                ? ''
+                : `
+                  ${updateReferencesInCode(
+                    json.hooks.onUpdate.code,
+                    useOptions,
+                  )} 
+                  `
+            } 
         }
 
         ${

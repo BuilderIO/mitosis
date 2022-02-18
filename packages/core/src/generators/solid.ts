@@ -208,7 +208,7 @@ export const componentToSolid = (options: ToSolidOptions = {}): Transpiler => ({
         : `import { 
           ${!hasShowComponent ? '' : 'Show, '}
           ${!hasForComponent ? '' : 'For, '}
-          ${!json.hooks.onMount ? '' : 'onMount, '}
+          ${!json.hooks.onMount?.code ? '' : 'onMount, '}
          } from 'solid-js';`
     }
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
@@ -225,7 +225,11 @@ export const componentToSolid = (options: ToSolidOptions = {}): Transpiler => ({
       
       ${getRefsString(json)}
 
-      ${!json.hooks.onMount ? '' : `onMount(() => { ${json.hooks.onMount} })`}
+      ${
+        !json.hooks.onMount?.code
+          ? ''
+          : `onMount(() => { ${json.hooks.onMount.code} })`
+      }
 
       return (${addWrapper ? '<>' : ''}
         ${json.children.map((item) => blockToSolid(item, options)).join('\n')}

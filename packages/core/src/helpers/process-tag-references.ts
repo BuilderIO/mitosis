@@ -15,11 +15,11 @@ export function processTagReferences(json: MitosisComponent) {
       if (el.name.includes('.')) {
         if (!namesFound.has(el.name)) {
           namesFound.add(el.name);
-          if (typeof json.hooks.init !== 'string') {
-            json.hooks.init = '';
+          if (typeof json.hooks.init?.code !== 'string') {
+            json.hooks.init = { code: '' };
           }
 
-          json.hooks.init += `
+          json.hooks.init.code += `
             const ${getRefName(el.name)} = ${el.name};
           `;
         }
