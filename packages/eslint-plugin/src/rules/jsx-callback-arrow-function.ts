@@ -1,6 +1,6 @@
 import { types } from '@babel/core';
 import { Rule, AST } from 'eslint';
-import isMitosisPath from '../helper/isMitosisPath';
+import isMitosisPath from '../helpers/isMitosisPath';
 
 const regex = new RegExp('^on[A-Z]');
 

@@ -1,7 +1,8 @@
 import { types } from '@babel/core';
 import { Rule } from 'eslint';
 import { match, not, when } from 'ts-pattern';
-import isMitosisPath from '../helper/isMitosisPath';
+import isMitosisPath from '../helpers/isMitosisPath';
+import noOp from '../helpers/noOp';
 
 // ------------------------------------------------------------------------------
 // Rule Definition
@@ -38,7 +39,6 @@ const rule: Rule.RuleModule = {
     // Public
     // ----------------------------------------------------------------------
     //
-    const noOp = () => {};
 
     const listener: Rule.RuleListener = {
       JSXExpressionContainer(node) {
