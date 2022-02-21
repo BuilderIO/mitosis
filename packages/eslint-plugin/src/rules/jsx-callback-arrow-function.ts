@@ -1,5 +1,5 @@
 import { types } from '@babel/core';
-import { Rule } from 'eslint';
+import { Rule, AST } from 'eslint';
 import isMitosisPath from '../helper/isMitosisPath';
 
 const regex = new RegExp('^on[A-Z]');
@@ -50,7 +50,7 @@ const rule: Rule.RuleModule = {
           message: 'Callback value must be an arrow function expression',
           fix(fixer) {
             return fixer.replaceTextRange(
-              node.value.expression.range,
+              node.value.expression.range as AST.Range,
               '(event)=>{}',
             );
           },
