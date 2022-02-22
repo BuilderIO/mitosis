@@ -8,7 +8,7 @@ export const createContext = (value: { [key: string]: any }) => null as any;
 export const setContext = (key: any, value: { [key: string]: any }) =>
   null as any;
 export const onMount = (fn: () => any) => null as any;
-export const onUpdate = (fn: () => any) => null as any;
+export const onUpdate = (fn: () => any, deps?: any[]) => null as any;
 export const onCreate = (fn: () => any) => null as any;
 export const onInit = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
