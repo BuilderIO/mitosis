@@ -12,7 +12,6 @@ export const onUpdate = (fn: () => any) => null as any;
 export const onCreate = (fn: () => any) => null as any;
 export const onInit = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
-export const afterUnmount = (fn: () => any) => null as any;
 export const useDynamicTag = (fn: () => any) => null as any;
 export const onError = (fn: () => any) => null as any;
 export const useMetadata = (obj: object) => null;
