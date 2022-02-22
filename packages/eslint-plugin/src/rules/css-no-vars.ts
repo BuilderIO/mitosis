@@ -60,45 +60,27 @@ const rule: Rule.RuleModule = {
               value: {
                 expression: {
                   type: 'ObjectExpression',
-                  properties: [
-                    {
-                      type: 'Property',
-                      value: when(types.isIdentifier),
-                    },
-                  ],
                 },
               },
             },
             ({ value: { expression } }) => {
-              context.report({
-                node: expression as any,
-                message: "Css properties can't be a variable",
-              });
-            },
-          )
-          .with(
-            {
-              name: {
-                name: 'css',
-              },
-              value: {
-                expression: {
-                  type: 'ObjectExpression',
-                  properties: [
-                    {
-                      type: 'Property',
-                      // workaround TS2615 error
-                      value: not(not(when(types.isConditionalExpression))),
-                    },
-                  ],
-                },
-              },
-            },
-            ({ value: { expression } }) => {
-              context.report({
-                node: expression as any,
-                message: "Css properties can't be a ternary expression",
-              });
+              const { properties } = expression as any;
+              for (const prop of properties) {
+                if (prop.value && types.isIdentifier(prop.value)) {
+                  context.report({
+                    node: prop as any,
+                    message: "Css properties can't be a variable",
+                  });
+                } else if (
+                  prop.value &&
+                  types.isConditionalExpression(prop.value)
+                ) {
+                  context.report({
+                    node: prop as any,
+                    message: "Css properties can't be a ternary expression",
+                  });
+                }
+              }
             },
           )
           .with(

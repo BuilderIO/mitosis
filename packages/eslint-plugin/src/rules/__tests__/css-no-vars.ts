@@ -33,6 +33,12 @@ ruleTester.run('css-no-vars', rule, {
       code: '<button css={{ color: red }} />',
       errors: ["Css properties can't be a variable"],
     },
+    // Doesn't accept Identifier as object properties
+    {
+      ...opts,
+      code: '<button css={{ fontSize: 10, color: red }} />',
+      errors: ["Css properties can't be a variable"],
+    },
     // Doesn't accept string as value for the css attribute
     {
       ...opts,
