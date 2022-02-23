@@ -76,9 +76,9 @@ export default function Column(props) {
   }
 
   return (
-    <View className=\\"builder-columns\\" style={styles.view1}>
+    <View style={styles.view1}>
       {props.columns?.map((column) => (
-        <View className=\\"builder-column\\" style={styles.view2}>
+        <View style={styles.view2}>
           <Text>{column.content}</Text>
         </View>
       ))}
@@ -151,15 +151,7 @@ export default function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <View
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
 }
 "
 `;
@@ -222,15 +214,7 @@ export default function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return (
-    <View
-      ref={elem}
-      className={
-        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-      }
-      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
-    />
-  );
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
 }
 "
 `;
@@ -473,7 +457,7 @@ export default function FormComponent(props) {
       ) : null}{\\" \\"}
       {submissionState() === \\"error\\" && responseData ? (
         <>
-          <View className=\\"builder-form-error-text\\" style={styles.view1}>
+          <View style={styles.view1}>
             {\\" \\"}
             <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
           </View>
@@ -564,9 +548,6 @@ export default function Image(props) {
             <View
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
-              className={
-                \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-              }
               src={props.image}
               onLoad={(event) => setLoaded()}
               srcset={props.srcset}
@@ -648,12 +629,7 @@ exports[`React RawText 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
 export default function RawText(props) {
-  return (
-    <View
-      className={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
-    />
-  );
+  return <View dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }} />;
 }
 "
 `;

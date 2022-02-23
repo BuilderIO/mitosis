@@ -79,28 +79,52 @@ export const collectReactNativeStyles = (
   return styleMap;
 };
 
+// Plugin to convert DOM tags to <View /> and <Text />
+function processReactNative() {
+  return () => ({
+    json: {
+      pre: (json: MitosisComponent) => {
+        traverse(json).forEach((node) => {
+          if (isMitosisNode(node)) {
+            // TODO: handle TextInput, Image, etc
+            if (node.name.toLowerCase() === node.name) {
+              node.name = 'View';
+            }
+
+            if (
+              node.properties._text?.trim().length ||
+              node.bindings._text?.trim()?.length
+            ) {
+              node.name = 'Text';
+            }
+
+            if (node.properties.class) {
+              delete node.properties.class;
+            }
+            if (node.properties.className) {
+              delete node.properties.className;
+            }
+            if (node.bindings.class) {
+              delete node.bindings.class;
+            }
+            if (node.bindings.className) {
+              delete node.bindings.className;
+            }
+          }
+        });
+      },
+    },
+  });
+}
+
 export const componentToReactNative = (
   options: ToReactNativeOptions = {},
 ): Transpiler => ({ component, path }) => {
   const json = fastClone(component);
-  traverse(json).forEach((node) => {
-    if (isMitosisNode(node)) {
-      // TODO: handle TextInput, Image, etc
-      if (node.name.toLowerCase() === node.name) {
-        node.name = 'View';
-      }
-
-      if (
-        node.properties._text?.trim().length ||
-        node.bindings._text?.trim()?.length
-      ) {
-        node.name = 'Text';
-      }
-    }
-  });
 
   return componentToReact({
     ...options,
+    plugins: (options.plugins || []).concat([processReactNative()]),
     stylesType: options.stylesType || 'react-native',
     type: 'native',
   })({ component: json, path });

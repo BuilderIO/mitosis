@@ -213,8 +213,11 @@ export const componentToSvelte = (
 
   let str = dedent`
     <script>
-      ${!json.hooks.onMount ? '' : `import { onMount } from 'svelte'`}
-      ${!json.hooks.onUnMount ? '' : `import { onDestroy } from 'svelte'`}
+      ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
+      ${
+        !json.hooks.onUpdate?.code ? '' : `import { afterUpdate } from 'svelte'`
+      }
+      ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
       ${renderPreComponent(json)}
 
       ${
@@ -239,19 +242,33 @@ export const componentToSvelte = (
       }
 
       ${
-        !json.hooks.onMount
+        !json.hooks.onMount?.code
           ? ''
-          : `onMount(() => { ${stripStateAndPropsRefs(json.hooks.onMount, {
+          : `onMount(() => { ${stripStateAndPropsRefs(json.hooks.onMount.code, {
               includeState: useOptions.stateType === 'variables',
             })} });`
       }
 
       ${
-        !json.hooks.onUnMount
+        !json.hooks.onUpdate?.code
           ? ''
-          : `onDestroy(() => { ${stripStateAndPropsRefs(json.hooks.onUnMount, {
-              includeState: useOptions.stateType === 'variables',
-            })} });`
+          : `afterUpdate(() => { ${stripStateAndPropsRefs(
+              json.hooks.onUpdate.code,
+              {
+                includeState: useOptions.stateType === 'variables',
+              },
+            )} });`
+      }
+
+      ${
+        !json.hooks.onUnMount?.code
+          ? ''
+          : `onDestroy(() => { ${stripStateAndPropsRefs(
+              json.hooks.onUnMount.code,
+              {
+                includeState: useOptions.stateType === 'variables',
+              },
+            )} });`
       }
     </script>
 

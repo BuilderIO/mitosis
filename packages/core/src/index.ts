@@ -8,10 +8,10 @@ export const createContext = (value: { [key: string]: any }) => null as any;
 export const setContext = (key: any, value: { [key: string]: any }) =>
   null as any;
 export const onMount = (fn: () => any) => null as any;
+export const onUpdate = (fn: () => any, deps?: any[]) => null as any;
 export const onCreate = (fn: () => any) => null as any;
 export const onInit = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
-export const afterUnmount = (fn: () => any) => null as any;
 export const useDynamicTag = (fn: () => any) => null as any;
 export const onError = (fn: () => any) => null as any;
 export const useMetadata = (obj: object) => null;
@@ -45,6 +45,7 @@ export * from './types/mitosis-component';
 export * from './types/config';
 
 export * from './plugins/compile-away-builder-components';
+export * from './plugins/compile-away-components';
 export * from './plugins/map-styles';
 
 export * from './targets';

@@ -75,9 +75,9 @@ export const mapRefs = (
   for (const key of Object.keys(
     component.hooks,
   ) as (keyof typeof component.hooks)[]) {
-    const hookCode = component.hooks[key];
+    const hookCode = component.hooks[key]?.code;
     if (hookCode) {
-      component.hooks[key] = replaceRefsInString(hookCode, refs, mapper);
+      component.hooks[key]!.code = replaceRefsInString(hookCode, refs, mapper);
     }
   }
 };
