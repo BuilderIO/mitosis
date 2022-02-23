@@ -1,5 +1,5 @@
 import { types } from '@babel/core';
-import { Rule, AST } from 'eslint';
+import { Rule } from 'eslint';
 import { match, not, when } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';

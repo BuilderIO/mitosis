@@ -1,10 +1,10 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
-import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
-import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
 import cssNoVars from './rules/css-no-vars';
 import isMitosisPath from './helpers/isMitosisPath';
-
+import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
+import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
+import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
 
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
@@ -77,4 +77,5 @@ export const rules = {
   'static-control-flow': staticControlFlow,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
+  'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
 };
