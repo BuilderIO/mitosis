@@ -210,39 +210,49 @@ export const blockToVue = (
   }
 
   for (const key in node.bindings) {
-    if (key === '_spread') {
-      continue;
-    }
     const value = node.bindings[key] as string;
-    if (key === 'class') {
-      str += ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
-        replaceWith: 'this.',
-      })})" `;
-      // TODO: support dynamic classes as objects somehow like Vue requires
-      // https://vuejs.org/v2/guide/class-and-style.html
-      continue;
-    }
-    // TODO: proper babel transform to replace. Util for this
-    const useValue = stripStateAndPropsRefs(value);
 
-    if (key.startsWith('on')) {
-      let event = key.replace('on', '').toLowerCase();
-      if (event === 'change' && node.name === 'input') {
-        event = 'input';
+    const stringifyBinding = ({
+      key,
+      value,
+    }: {
+      key: string;
+      value: string;
+    }) => {
+      if (key === '_spread') {
+        return '';
+      } else if (key === 'class') {
+        return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
+          replaceWith: 'this.',
+        })})" `;
+        // TODO: support dynamic classes as objects somehow like Vue requires
+        // https://vuejs.org/v2/guide/class-and-style.html
+      } else {
+        // TODO: proper babel transform to replace. Util for this
+        const useValue = stripStateAndPropsRefs(value);
+
+        if (key.startsWith('on')) {
+          let event = key.replace('on', '').toLowerCase();
+          if (event === 'change' && node.name === 'input') {
+            event = 'input';
+          }
+          // TODO: proper babel transform to replace. Util for this
+          return ` @${event}="${removeSurroundingBlock(
+            useValue
+              // TODO: proper reference parse and replacing
+              .replace(/event\./g, '$event.'),
+          )}" `;
+        } else if (key === 'ref') {
+          return ` ref="${useValue}" `;
+        } else if (BINDING_MAPPERS[key]) {
+          return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+        } else {
+          return ` :${key}="${useValue}" `;
+        }
       }
-      // TODO: proper babel transform to replace. Util for this
-      str += ` @${event}="${removeSurroundingBlock(
-        useValue
-          // TODO: proper reference parse and replacing
-          .replace(/event\./g, '$event.'),
-      )}" `;
-    } else if (key === 'ref') {
-      str += ` ref="${useValue}" `;
-    } else if (BINDING_MAPPERS[key]) {
-      str += ` ${BINDING_MAPPERS[key]}="${useValue}" `;
-    } else {
-      str += ` :${key}="${useValue}" `;
-    }
+    };
+
+    str += stringifyBinding({ key, value });
   }
 
   if (selfClosingTags.has(node.name)) {
@@ -297,7 +307,8 @@ function getContextProvideString(
   return str;
 }
 
-export const componentToVue = (options: ToVueOptions = {}) =>
+export const componentToVue =
+  (options: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {
