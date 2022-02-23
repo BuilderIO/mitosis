@@ -166,6 +166,42 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
   });
 }
 
+const stringifyBinding =
+  (node: MitosisNode) =>
+  ([key, value]: [string, string | undefined]) => {
+    if (key === '_spread') {
+      return '';
+    } else if (key === 'class') {
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
+        replaceWith: 'this.',
+      })})" `;
+      // TODO: support dynamic classes as objects somehow like Vue requires
+      // https://vuejs.org/v2/guide/class-and-style.html
+    } else {
+      // TODO: proper babel transform to replace. Util for this
+      const useValue = stripStateAndPropsRefs(value);
+
+      if (key.startsWith('on')) {
+        let event = key.replace('on', '').toLowerCase();
+        if (event === 'change' && node.name === 'input') {
+          event = 'input';
+        }
+        // TODO: proper babel transform to replace. Util for this
+        return ` @${event}="${removeSurroundingBlock(
+          useValue
+            // TODO: proper reference parse and replacing
+            .replace(/event\./g, '$event.'),
+        )}" `;
+      } else if (key === 'ref') {
+        return ` ref="${useValue}" `;
+      } else if (BINDING_MAPPERS[key]) {
+        return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+      } else {
+        return ` :${key}="${useValue}" `;
+      }
+    }
+  };
+
 export const blockToVue = (
   node: MitosisNode,
   options: ToVueOptions,
@@ -209,51 +245,11 @@ export const blockToVue = (
     str += ` ${key}="${value}" `;
   }
 
-  for (const key in node.bindings) {
-    const value = node.bindings[key] as string;
+  const stringifiedBindings = Object.entries(node.bindings)
+    .map(stringifyBinding(node))
+    .join('');
 
-    const stringifyBinding = ({
-      key,
-      value,
-    }: {
-      key: string;
-      value: string;
-    }) => {
-      if (key === '_spread') {
-        return '';
-      } else if (key === 'class') {
-        return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
-          replaceWith: 'this.',
-        })})" `;
-        // TODO: support dynamic classes as objects somehow like Vue requires
-        // https://vuejs.org/v2/guide/class-and-style.html
-      } else {
-        // TODO: proper babel transform to replace. Util for this
-        const useValue = stripStateAndPropsRefs(value);
-
-        if (key.startsWith('on')) {
-          let event = key.replace('on', '').toLowerCase();
-          if (event === 'change' && node.name === 'input') {
-            event = 'input';
-          }
-          // TODO: proper babel transform to replace. Util for this
-          return ` @${event}="${removeSurroundingBlock(
-            useValue
-              // TODO: proper reference parse and replacing
-              .replace(/event\./g, '$event.'),
-          )}" `;
-        } else if (key === 'ref') {
-          return ` ref="${useValue}" `;
-        } else if (BINDING_MAPPERS[key]) {
-          return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
-        } else {
-          return ` :${key}="${useValue}" `;
-        }
-      }
-    };
-
-    str += stringifyBinding({ key, value });
-  }
+  str += stringifiedBindings;
 
   if (selfClosingTags.has(node.name)) {
     return str + ' />';
