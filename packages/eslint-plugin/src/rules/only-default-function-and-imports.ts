@@ -38,12 +38,14 @@ const rule: Rule.RuleModule = {
         for (const child of body) {
           if (
             !types.isImportDeclaration(child) &&
-            !types.isExportDefaultDeclaration(child)
+            !types.isExportDefaultDeclaration(child) &&
+            !types.isTypeAlias(child) &&
+            !types.isInterfaceDeclaration(child)
           ) {
             context.report({
               node: child as any,
               message:
-                "Mitosis component file shouldn't contain anything other than import declamations and the component itself a default export",
+                "Mitosis component file shouldn't contain anything other than import declamations, the component itself a default export or type declarations",
             });
           }
         }

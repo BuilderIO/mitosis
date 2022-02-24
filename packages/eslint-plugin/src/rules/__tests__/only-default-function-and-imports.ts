@@ -66,7 +66,7 @@ ruleTester.run('only-default-function-and-imports', rule, {
       export const x = y;
     `,
       errors: [
-        "Mitosis component file shouldn't contain anything other than import declamations and the component itself a default export",
+        "Mitosis component file shouldn't contain anything other than import declamations, the component itself a default export or type declarations",
       ],
     },
   ],
