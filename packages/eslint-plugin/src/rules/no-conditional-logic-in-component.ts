@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { match, not } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
 
@@ -11,7 +11,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'no-var-declaration-or-assignment-in-component',
+      description: 'no-conditional-logic-in-component',
       recommended: true,
     },
   },
@@ -33,25 +33,25 @@ const rule: Rule.RuleModule = {
     // ----------------------------------------------------------------------
     //
     const listener: Rule.RuleListener = {
-      CallExpression(node) {
+      IfStatement(node) {
         match(node)
           .with(
             {
-              callee: {
-                name: 'useState',
-              },
+              type: 'IfStatement',
               parent: {
-                type: 'VariableDeclarator',
-                id: {
-                  name: not('state'),
+                type: 'BlockStatement',
+                parent: {
+                  type: 'FunctionDeclaration',
+                  parent: {
+                    type: 'ExportDefaultDeclaration',
+                  },
                 },
               },
             },
             (node) => {
               context.report({
-                node: node.parent.id as any,
-                message:
-                  'useState should be assigned to a variable called state exclusively',
+                node: node as any,
+                message: 'Conditional logic inside components is invalid',
               });
             },
           )

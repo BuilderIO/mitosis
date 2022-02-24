@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from '../use-state-var-declarator';
+import rule from '../no-conditional-logic-in-component';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -14,7 +14,7 @@ const opts = {
 
 var ruleTester = new RuleTester();
 
-ruleTester.run('use-state-var-declarator', rule, {
+ruleTester.run('no-conditional-logic-in-component', rule, {
   valid: [
     {
       ...opts,
@@ -30,7 +30,11 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const state = useState();
+        useEffect(()=>{
+          if (x > 5){
+            return foo;
+          }
+        }, [])
         return (
             <div />
         );
@@ -41,24 +45,12 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const [name, setName] = useState();
+        if (x > 5) return <div />;
         return (
             <div />
         );
       }
-    `,
-    },
-
-    {
-      ...opts,
-      code: `
-      export default function MyComponent(props) {
-        const foo = useState();
-        return (
-            <div />
-        );
-      }
-    `,
+      `,
       filename: 'file.jsx',
     },
   ],
@@ -67,16 +59,13 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const a = useState();
-        
+        if (x > 5) return <div />;
         return (
             <div />
         );
       }
     `,
-      errors: [
-        'useState should be assigned to a variable called state exclusively',
-      ],
+      errors: ['Conditional logic inside components is invalid'],
     },
   ],
 });

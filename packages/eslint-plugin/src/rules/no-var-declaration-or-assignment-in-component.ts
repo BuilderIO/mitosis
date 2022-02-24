@@ -32,7 +32,6 @@ const rule: Rule.RuleModule = {
     // Public
     // ----------------------------------------------------------------------
     //
-    // Doesn't accept Identifier as object properties
     const listener: Rule.RuleListener = {
       VariableDeclaration(node) {
         match(node)
