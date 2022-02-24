@@ -5,6 +5,7 @@ import isMitosisPath from './helpers/isMitosisPath';
 import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
 import useStateVarDeclarator from './rules/use-state-var-declarator';
 import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
+import onlyDefaultFunctionAndImports from './rules/only-default-function-and-imports';
 import noConditionalLogicInComponent from './rules/no-conditional-logic-in-component';
 import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
 
@@ -80,6 +81,7 @@ export const rules = {
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
   'use-state-var-declarator': useStateVarDeclarator,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
+  'only-default-function-and-imports': onlyDefaultFunctionAndImports,
   'no-conditional-logic-in-component': noConditionalLogicInComponent,
   // 'no-var-declaration-or-assignment-in-jsx': noVarDeclarationOrAssignmentInJSX,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
