@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { match } from 'ts-pattern';
+import { match, not } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
 
@@ -9,7 +9,7 @@ import noOp from '../helpers/noOp';
 
 const rule: Rule.RuleModule = {
   meta: {
-    type: 'suggestion',
+    type: 'problem',
     docs: {
       description: 'no-var-declaration-or-assignment-in-component',
       recommended: true,
@@ -34,17 +34,17 @@ const rule: Rule.RuleModule = {
     //
     // Doesn't accept Identifier as object properties
     const listener: Rule.RuleListener = {
-      VariableDeclaration(node) {
+      CallExpression(node) {
         match(node)
           .with(
             {
+              callee: {
+                name: 'useState',
+              },
               parent: {
-                type: 'BlockStatement',
-                parent: {
-                  type: 'FunctionDeclaration',
-                  parent: {
-                    type: 'ExportDefaultDeclaration',
-                  },
+                type: 'VariableDeclarator',
+                id: {
+                  name: not('state'),
                 },
               },
             },
@@ -52,34 +52,7 @@ const rule: Rule.RuleModule = {
               context.report({
                 node: node as any,
                 message:
-                  'Variable declaration inside component is ignored during compilation',
-              });
-            },
-          )
-          .otherwise(noOp);
-      },
-      AssignmentExpression(node) {
-        match(node)
-          .with(
-            {
-              parent: {
-                type: 'ExpressionStatement',
-                parent: {
-                  type: 'BlockStatement',
-                  parent: {
-                    type: 'FunctionDeclaration',
-                    parent: {
-                      type: 'ExportDefaultDeclaration',
-                    },
-                  },
-                },
-              },
-            },
-            (node) => {
-              context.report({
-                node: node as any,
-                message:
-                  'Variable assignment inside component is ignored during compilation',
+                  'useState should be assigned to a variable called state exclusively',
               });
             },
           )

@@ -14,7 +14,7 @@ const opts = {
 
 var ruleTester = new RuleTester();
 
-ruleTester.run('css-no-vars', rule, {
+ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
   valid: [
     {
       ...opts,

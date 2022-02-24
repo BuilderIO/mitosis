@@ -3,6 +3,7 @@ import { types } from '@babel/core';
 import cssNoVars from './rules/css-no-vars';
 import isMitosisPath from './helpers/isMitosisPath';
 import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
+import useStateVarDeclarator from './rules/use-state-var-declarator';
 import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
 import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
 
@@ -76,6 +77,8 @@ export const rules = {
   'css-no-vars': cssNoVars,
   'static-control-flow': staticControlFlow,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
+  'use-state-var-declarator': useStateVarDeclarator,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
+  // 'no-var-declaration-or-assignment-in-jsx': noVarDeclarationOrAssignmentInJSX,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
 };
