@@ -1,8 +1,6 @@
 import { Rule } from 'eslint';
-import { match, when, not } from 'ts-pattern';
 import { types } from '@babel/core';
 import isMitosisPath from '../helpers/isMitosisPath';
-import noOp from '../helpers/noOp';
 
 // ------------------------------------------------------------------------------
 // Rule Definition
