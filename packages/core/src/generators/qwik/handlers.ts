@@ -1,4 +1,5 @@
 import { MitosisNode } from '../../types/mitosis-node';
+import { renderUseLexicalScope } from './component';
 import {
   arrowFnBlock,
   File,
@@ -62,13 +63,9 @@ export function renderHandlers(
 
 function renderHandler(file: File, symbol: string, code: string) {
   file.exportConst(symbol, function(this: SrcBuilder) {
-    this.emit(
-      invoke(
-        file.import(file.qwikModule, 'qHook'),
-        [arrowFnBlock(['props', 'state'], [wrapWithUse(file, code)])],
-        ['any', 'any'],
-      ),
-    );
+    this.emit([
+      arrowFnBlock([], [renderUseLexicalScope(file), wrapWithUse(file, code)]),
+    ]);
   });
   file.src.emit(NL);
 }

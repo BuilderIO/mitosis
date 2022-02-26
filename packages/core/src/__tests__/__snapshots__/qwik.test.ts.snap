@@ -4,9 +4,9 @@ exports[`qwik Accordion 1`] = `
 Object {
   "high.jsx": "
 ",
-  "low.jsx": "import { __merge } from \\"./med\\";
+  "low.jsx": "import { __merge } from \\"./med.js\\";
 
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -49,7 +49,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -101,18 +104,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       </div>
     </div>
   );
-});
+};
 ",
-  "med.jsx": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.jsx": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
@@ -121,9 +125,9 @@ exports[`qwik For 1`] = `
 Object {
   "high.jsx": "
 ",
-  "low.jsx": "import { __merge } from \\"./med\\";
+  "low.jsx": "import { __merge } from \\"./med.js\\";
 
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -158,7 +162,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -183,18 +190,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       </section>
     </div>
   );
-});
+};
 ",
-  "med.jsx": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.jsx": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
@@ -203,11 +211,9 @@ exports[`qwik Image 1`] = `
 Object {
   "high.js": "
 ",
-  "low.js": "import { __merge } from \\"./med\\";
+  "low.js": "import { Image, __merge } from \\"./med.js\\";
 
-import { Image } from \\"./med.js\\";
-
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -224,7 +230,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -243,18 +252,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       }
     )
   );
-});
+};
 ",
-  "med.js": "import { h, qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.js": "import { component, createStore, h, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 export const Image = function Image(props){var jsx = props.children || [];var image = props.image;if(image){var isBuilderIoImage = !!(image || '').match(/builder\\\\.io/);var imgProps ={src:props.image,style:\\"object-fit:\\".concat(props.backgroundSize || 'cover',\\";object-position:\\").concat(props.backgroundPosition || 'center',\\";\\")+(props.aspectRatio ? 'position:absolute;height:100%;width:100%;top:0;left:0':''),sizes:props.sizes,alt:props.altText,loading:props.lazy ? 'lazy':undefined,srcset:undefined,};var sizingDiv = h('div',{class:'builder-image-sizer',style:\\"width:100%;padding-top:\\".concat((props.aspectRatio || 1)* 100,\\"%;pointer-events:none;font-size:0\\"),});if(isBuilderIoImage){var srcset = ['100','200','400','800','1200','1600','2000'] .map(function(size){return updateQueryParam(image,'width',size)+ ' ' + size + 'w';}).concat([image]).join(',');imgProps.srcset = srcset;jsx = jsx = [ h('picture',{},[ h('source',{type:'image/webp',srcset:srcset}),h('img',imgProps,jsx),]),sizingDiv,];}else{jsx = [h('img',imgProps,jsx),sizingDiv];}}var children = props.children ? [jsx].concat(props.children):[jsx];return h(props.href ? 'a':'div',{href:props.href,class:props.class},children);function updateQueryParam(uri,key,value){if(uri === void 0){uri = '';}var re = new RegExp('([?&])' + key + '=.*?(&|$)','i');var separator = uri.indexOf('?')!==-1 ? '&':'?';if(uri.match(re)){return uri.replace(re,'$1' + key + '=' + encodeURIComponent(value)+ '$2');}return uri + separator + key + '=' + encodeURIComponent(value);}};
 ",
 }
@@ -264,11 +274,9 @@ exports[`qwik Image.slow 1`] = `
 Object {
   "high.js": "
 ",
-  "low.js": "import { __merge } from \\"./med\\";
+  "low.js": "import { Image, __merge } from \\"./med.js\\";
 
-import { Image } from \\"./med.js\\";
-
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -285,7 +293,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -304,18 +315,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       }
     )
   );
-});
+};
 ",
-  "med.js": "import { h, qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.js": "import { component, createStore, h, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 export const Image = function Image(props){var jsx = props.children || [];var image = props.image;if(image){var isBuilderIoImage = !!(image || '').match(/builder\\\\.io/);var imgProps ={src:props.image,style:\\"object-fit:\\".concat(props.backgroundSize || 'cover',\\";object-position:\\").concat(props.backgroundPosition || 'center',\\";\\")+(props.aspectRatio ? 'position:absolute;height:100%;width:100%;top:0;left:0':''),sizes:props.sizes,alt:props.altText,loading:props.lazy ? 'lazy':undefined,srcset:undefined,};var sizingDiv = h('div',{class:'builder-image-sizer',style:\\"width:100%;padding-top:\\".concat((props.aspectRatio || 1)* 100,\\"%;pointer-events:none;font-size:0\\"),});if(isBuilderIoImage){var srcset = ['100','200','400','800','1200','1600','2000'] .map(function(size){return updateQueryParam(image,'width',size)+ ' ' + size + 'w';}).concat([image]).join(',');imgProps.srcset = srcset;jsx = jsx = [ h('picture',{},[ h('source',{type:'image/webp',srcset:srcset}),h('img',imgProps,jsx),]),sizingDiv,];}else{jsx = [h('img',imgProps,jsx),sizingDiv];}}var children = props.children ? [jsx].concat(props.children):[jsx];return h(props.href ? 'a':'div',{href:props.href,class:props.class},children);function updateQueryParam(uri,key,value){if(uri === void 0){uri = '';}var re = new RegExp('([?&])' + key + '=.*?(&|$)','i');var separator = uri.indexOf('?')!==-1 ? '&':'?';if(uri.match(re)){return uri.replace(re,'$1' + key + '=' + encodeURIComponent(value)+ '$2');}return uri + separator + key + '=' + encodeURIComponent(value);}};
 ",
 }
@@ -323,20 +335,25 @@ export const Image = function Image(props){var jsx = props.children || [];var im
 
 exports[`qwik button 1`] = `
 Object {
-  "high.js": "import { qHook } from \\"@builder.io/qwik\\";
+  "high.js": "import { __merge } from \\"./med.js\\";
+
+import { useLexicalScope } from \\"@builder.io/qwik\\";
 
 
-export const MyComponent_onClick_0 = qHook((props, state) => {
+export const MyComponent_onClick_0 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
    alert(\\"WORKS!\\");
 
-});
+};
 
 ",
-  "low.js": "import { __merge } from \\"./med\\";
+  "low.js": "import { CoreButton, __merge } from \\"./med.js\\";
 
-import { CoreButton } from \\"./med.js\\";
-
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -360,7 +377,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -369,22 +389,23 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       {
         text: \\"Click me!\\",
         class: \\"c9nzze9\\",
-        \\"on:click\\": qHook(\\"./high#MyComponent_onClick_0\\")
+        \\"on:click\\": qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [__props__, __state__])
       }
     )
   );
-});
+};
 ",
-  "med.js": "import { h, qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.js": "import { component, createStore, h, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 export const CoreButton = function CoreButton(props){var hasLink = !!props.link;var hProps ={innerHTML:props.text || '',href:props.link,target:props.openInNewTab ? '_blank':'_self',class:props.class,};return h(hasLink ? 'a':props.tagName$ || 'span',hProps);};
 ",
 }
@@ -406,11 +427,9 @@ exports[`qwik component bindings 2`] = `
 Object {
   "high.jsx": "
 ",
-  "low.jsx": "import { __merge } from \\"./med\\";
+  "low.jsx": "import { ComponentD187055AF171488FAD843ACF045D6BF7, __merge } from \\"./med.js\\";
 
-import { ComponentD187055AF171488FAD843ACF045D6BF7 } from \\"./med.js\\";
-
-import { Fragment, h, qHook } from \\"@builder.io/qwik\\";
+import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`
@@ -442,7 +461,10 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`
   }
 \`;
 
-export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = qHook((__props__, __state__) => {
+export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -459,7 +481,7 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = qHook((__props
       </div>
     </div>
   );
-});
+};
 
 export const MyComponent_styles = \`
   .c713ty2{
@@ -472,7 +494,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -489,20 +514,21 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       </div>
     
     </>);
-});
+};
 ",
-  "med.jsx": "import { qComponent, qHook, qObject } from \\"@builder.io/qwik\\";
+  "med.jsx": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const ComponentD187055AF171488FAD843ACF045D6BF7 = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#ComponentD187055AF171488FAD843ACF045D6BF7_onRender\\"),
-  styles: \\"./low#ComponentD187055AF171488FAD843ACF045D6BF7_styles\\"
-});
-export const MyComponent_onMount = qHook((__props__) => {
-  const __state__ = qObject({});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const ComponentD187055AF171488FAD843ACF045D6BF7_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_styles\\", []))
+  return qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_onRender\\", [__props__,__state__]);
+};
+export const ComponentD187055AF171488FAD843ACF045D6BF7 = component(qrl(\\"./med.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_onMount\\", []));
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
   const state = __merge(__state__, __props__,true);
   (() => { 
   /*
@@ -530,14 +556,10 @@ async function main() {
 }
 
 return main();
-  })()
-  return state;
-});
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#MyComponent_onMount\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+  })()withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
@@ -546,9 +568,9 @@ exports[`qwik hello_world stylesheet 1`] = `
 Object {
   "high.jsx": "
 ",
-  "low.jsx": "import { __merge } from \\"./med\\";
+  "low.jsx": "import { __merge } from \\"./med.js\\";
 
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -567,7 +589,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -575,18 +600,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       <p>Hello <span class=\\"names\\">World</span></p>
 </div>
   );
-});
+};
 ",
-  "med.jsx": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.jsx": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
@@ -595,11 +621,9 @@ exports[`qwik page-with-symbol 1`] = `
 Object {
   "high.js": "
 ",
-  "low.js": "import { __merge } from \\"./med\\";
+  "low.js": "import { Symbol1, __merge } from \\"./med.js\\";
 
-import { Symbol1 } from \\"./med.js\\";
-
-import { Fragment, h, qHook } from \\"@builder.io/qwik\\";
+import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -628,7 +652,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -649,18 +676,19 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       )
     )
   );
-});
+};
 ",
-  "med.js": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.js": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
@@ -669,9 +697,9 @@ exports[`qwik svg 1`] = `
 Object {
   "high.js": "
 ",
-  "low.js": "import { __merge } from \\"./med\\";
+  "low.js": "import { __merge } from \\"./med.js\\";
 
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 export const MyComponent_styles = \`
@@ -687,7 +715,10 @@ export const MyComponent_styles = \`
   }
 \`;
 
-export const MyComponent_onRender = qHook((__props__, __state__) => {
+export const MyComponent_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -704,71 +735,106 @@ export const MyComponent_onRender = qHook((__props__, __state__) => {
       )
     )
   );
-});
+};
 ",
-  "med.js": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.js": "import { component, createStore, qrl, withScopedSty } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook(() => ({}));
-export const MyComponent = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#MyComponent_onRender\\"),
-  styles: \\"./low#MyComponent_styles\\"
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const MyComponent_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  withScopedSty(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [__props__,__state__]);
+};
+export const MyComponent = component(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
 
 exports[`qwik todo Todo.cjs 1`] = `
 Object {
-  "high.cjs": "const qHook = require(\\"@builder.io/qwik\\").qHook;
+  "high.cjs": "const __merge = require(\\"./med.js\\").__merge;
+
 const useEvent = require(\\"@builder.io/qwik\\").useEvent;
+const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 
 
-exports.Todo_onClick_0 = qHook((props, state) => {
+exports.Todo_onClick_0 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.toggle();
-});
+};
 
-exports.Todo_onDblClick_1 = qHook((props, state) => {
+exports.Todo_onDblClick_1 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.editing = true;
-});
+};
 
-exports.Todo_onClick_2 = qHook((props, state) => {
+exports.Todo_onClick_2 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
-});
+};
 
-exports.Todo_onBlur_3 = qHook((props, state) => {
+exports.Todo_onBlur_3 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.editing = false;
-});
+};
 
-exports.Todo_onKeyUp_4 = qHook((props, state) => {
+exports.Todo_onKeyUp_4 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   {
     const event = useEvent();
     props.todo.text = event.target.value
   }
-});
+};
 
 ",
   "low.cjs": "
 ",
-  "med.cjs": "const h = require(\\"@builder.io/qwik\\").h;
-const qComponent = require(\\"@builder.io/qwik\\").qComponent;
-const qHook = require(\\"@builder.io/qwik\\").qHook;
+  "med.cjs": "const component = require(\\"@builder.io/qwik\\").component;
+const createStore = require(\\"@builder.io/qwik\\").createStore;
+const h = require(\\"@builder.io/qwik\\").h;
+const qrl = require(\\"@builder.io/qwik\\").qrl;
+const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 
 
-exports.__merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-exports.onMountCreateEmptyState = qHook(() => ({}));
-exports.Todo = qComponent({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./med#Todo_onRender\\")
-});
+exports.__merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+exports.Todo_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = exports.__merge(__state__, __props__,true);
+  
+  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [__props__,__state__]);
+};
+exports.Todo = component(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
 
-exports.Todo_onRender = qHook((__props__, __state__) => {
+exports.Todo_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = exports.__merge(__state__, __props__);
   ;
   return (
@@ -788,13 +854,13 @@ exports.Todo_onRender = qHook((__props__, __state__) => {
             type: \\"checkbox\\",
             class: \\"toggle\\",
             checked: props.todo.completed,
-            \\"on:click\\": qHook(\\"./high#Todo_onClick_0\\")
+            \\"on:click\\": qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [__props__, __state__])
           }
         ),
         h(
           \\"label\\",
           {
-            \\"on:dblclick\\": qHook(\\"./high#Todo_onDblClick_1\\")
+            \\"on:dblclick\\": qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [__props__, __state__])
           },
           props.todo.text
         ),
@@ -802,7 +868,7 @@ exports.Todo_onRender = qHook((__props__, __state__) => {
           \\"button\\",
           {
             class: \\"destroy\\",
-            \\"on:click\\": qHook(\\"./high#Todo_onClick_2\\")
+            \\"on:click\\": qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [__props__, __state__])
           }
         )
       ),
@@ -812,76 +878,108 @@ exports.Todo_onRender = qHook((__props__, __state__) => {
           {
             class: \\"edit\\",
             value: props.todo.text,
-            \\"on:blur\\": qHook(\\"./high#Todo_onBlur_3\\"),
-            \\"on:keyup\\": qHook(\\"./high#Todo_onKeyUp_4\\")
+            \\"on:blur\\": qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [__props__, __state__]),
+            \\"on:keyup\\": qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [__props__, __state__])
           }
         )
         : null
     )
   );
-});
+};
 ",
 }
 `;
 
 exports[`qwik todo Todo.js 1`] = `
 Object {
-  "high.js": "import{qHook,useEvent}from\\"@builder.io/qwik\\";export const Todo_onClick_0=qHook((props,state)=>{
-  state.toggle();});export const Todo_onDblClick_1=qHook((props,state)=>{
-  state.editing = true;});export const Todo_onClick_2=qHook((props,state)=>{
-  todosState.todos.splice(todosState.todos.indexOf(props.todo));});export const Todo_onBlur_3=qHook((props,state)=>{
-  state.editing = false;});export const Todo_onKeyUp_4=qHook((props,state)=>{{const event=useEvent();props.todo.text = event.target.value}});",
+  "high.js": "import{__merge}from\\"./med.js\\";import{useEvent,useLexicalScope}from\\"@builder.io/qwik\\";export const Todo_onClick_0=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;
+  state.toggle();};export const Todo_onDblClick_1=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;
+  state.editing = true;};export const Todo_onClick_2=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;
+  todosState.todos.splice(todosState.todos.indexOf(props.todo));};export const Todo_onBlur_3=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;
+  state.editing = false;};export const Todo_onKeyUp_4=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;{const event=useEvent();props.todo.text = event.target.value}};",
   "low.js": "",
-  "med.js": "import{h,qComponent,qHook}from\\"@builder.io/qwik\\";export const __merge=function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};export const onMountCreateEmptyState=qHook(()=>({}));export const Todo=qComponent({onMount:qHook(\\"./med#onMountCreateEmptyState\\"),onRender:qHook(\\"./med#Todo_onRender\\")});export const Todo_onRender=qHook((__props__,__state__)=>{const state=__merge(__state__,__props__);;return (h(\\"li\\",{class:\`\${props.todo.completed ? 'completed' : ''} \${state.editing ? 'editing' : ''}\`},h(\\"div\\",{class:\\"view\\"},h(\\"input\\",{type:\\"checkbox\\",class:\\"toggle\\",checked:props.todo.completed,\\"on:click\\":qHook(\\"./high#Todo_onClick_0\\")}),h(\\"label\\",{\\"on:dblclick\\":qHook(\\"./high#Todo_onDblClick_1\\")},props.todo.text),h(\\"button\\",{class:\\"destroy\\",\\"on:click\\":qHook(\\"./high#Todo_onClick_2\\")})),state.editing?h(\\"input\\",{class:\\"edit\\",value:props.todo.text,\\"on:blur\\":qHook(\\"./high#Todo_onBlur_3\\"),\\"on:keyup\\":qHook(\\"./high#Todo_onKeyUp_4\\")}):null));});",
+  "med.js": "import{component,createStore,h,qrl,useLexicalScope}from\\"@builder.io/qwik\\";export const __merge=function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};export const Todo_onMount=(__props__)=>{const __state__=createStore({});const state=__merge(__state__,__props__,true);return qrl(\\"./med.js\\",\\"Todo_onRender\\",[__props__,__state__]);};export const Todo=component(qrl(\\"./med.js\\",\\"Todo_onMount\\",[]));export const Todo_onRender=()=>{const __scope__=useLexicalScope();const __props__=__scope__[0];const __state__=__scope__[1];const state=__merge(__state__,__props__);;return (h(\\"li\\",{class:\`\${props.todo.completed ? 'completed' : ''} \${state.editing ? 'editing' : ''}\`},h(\\"div\\",{class:\\"view\\"},h(\\"input\\",{type:\\"checkbox\\",class:\\"toggle\\",checked:props.todo.completed,\\"on:click\\":qrl(\\"./high.js\\",\\"Todo_onClick_0\\",[__props__, __state__])}),h(\\"label\\",{\\"on:dblclick\\":qrl(\\"./high.js\\",\\"Todo_onDblClick_1\\",[__props__, __state__])},props.todo.text),h(\\"button\\",{class:\\"destroy\\",\\"on:click\\":qrl(\\"./high.js\\",\\"Todo_onClick_2\\",[__props__, __state__])})),state.editing?h(\\"input\\",{class:\\"edit\\",value:props.todo.text,\\"on:blur\\":qrl(\\"./high.js\\",\\"Todo_onBlur_3\\",[__props__, __state__]),\\"on:keyup\\":qrl(\\"./high.js\\",\\"Todo_onKeyUp_4\\",[__props__, __state__])}):null));};",
 }
 `;
 
 exports[`qwik todo Todo.tsx 1`] = `
 Object {
-  "high.tsx": "import { qHook, useEvent } from \\"@builder.io/qwik\\";
+  "high.tsx": "import { __merge } from \\"./med.js\\";
+
+import { useEvent, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
-export const Todo_onClick_0 = qHook<any, any>((props, state) => {
+export const Todo_onClick_0 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.toggle();
-});
+};
 
-export const Todo_onDblClick_1 = qHook<any, any>((props, state) => {
+export const Todo_onDblClick_1 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.editing = true;
-});
+};
 
-export const Todo_onClick_2 = qHook<any, any>((props, state) => {
+export const Todo_onClick_2 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
-});
+};
 
-export const Todo_onBlur_3 = qHook<any, any>((props, state) => {
+export const Todo_onBlur_3 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   state.editing = false;
-});
+};
 
-export const Todo_onKeyUp_4 = qHook<any, any>((props, state) => {
+export const Todo_onKeyUp_4 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   {
     const event = useEvent();
     props.todo.text = event.target.value
   }
-});
+};
 
 ",
   "low.tsx": "
 ",
-  "med.tsx": "import { h, qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.tsx": "import { component, createStore, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook<any, any>(() => ({}));
-export const Todo = qComponent<any, any>({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./med#Todo_onRender\\")
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const Todo_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  
+  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [__props__,__state__]);
+};
+export const Todo = component<any, any>(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
 
-export const Todo_onRender = qHook((__props__, __state__) => {
+export const Todo_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -890,54 +988,62 @@ export const Todo_onRender = qHook((__props__, __state__) => {
         <input type=\\"checkbox\\"
             class=\\"toggle\\"
             checked={props.todo.completed}
-            on:click={qHook(\\"./high#Todo_onClick_0\\")}>
+            on:click={qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [__props__, __state__])}>
         </input>
-        <label on:dblclick={qHook(\\"./high#Todo_onDblClick_1\\")}>
+        <label on:dblclick={qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [__props__, __state__])}>
           {props.todo.text}
         </label>
         <button class=\\"destroy\\"
-            on:click={qHook(\\"./high#Todo_onClick_2\\")}>
+            on:click={qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [__props__, __state__])}>
         </button>
       </div>
       { state.editing ?
         <input class=\\"edit\\"
             value={props.todo.text}
-            on:blur={qHook(\\"./high#Todo_onBlur_3\\")}
-            on:keyup={qHook(\\"./high#Todo_onKeyUp_4\\")}>
+            on:blur={qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [__props__, __state__])}
+            on:keyup={qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [__props__, __state__])}>
         </input>
         : null
       }
     </li>
   );
-});
+};
 ",
 }
 `;
 
 exports[`qwik todos Todo.tsx 1`] = `
 Object {
-  "high.tsx": "import { qHook } from \\"@builder.io/qwik\\";
+  "high.tsx": "import { __merge } from \\"./med.js\\";
+
+import { useLexicalScope } from \\"@builder.io/qwik\\";
 
 
-export const Todos_onClick_0 = qHook<any, any>((props, state) => {
+export const Todos_onClick_0 = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
+  const state = __merge(__state__, __props__);
+  ;
   
   const newValue = !todosState.allCompleted;
 
   for (const todoItem of todosState.todos) {
     todoItem.completed = newValue;
   }
-});
+};
 
 ",
-  "low.tsx": "import { __merge } from \\"./med\\";
+  "low.tsx": "import { Todo, __merge } from \\"./med.js\\";
 
-import { Todo } from \\"./med.js\\";
-
-import { h, qHook } from \\"@builder.io/qwik\\";
+import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
 
 
 
-export const Todos_onRender = qHook((__props__, __state__) => {
+export const Todos_onRender = () => {
+  const __scope__ = useLexicalScope();
+  const __props__ = __scope__[0];
+  const __state__ = __scope__[1];
   const state = __merge(__state__, __props__);
   ;
   return (
@@ -946,7 +1052,7 @@ export const Todos_onRender = qHook((__props__, __state__) => {
         <input type=\\"checkbox\\"
             class=\\"toggle-all\\"
             checked={todosState.allCompleted}
-            on:click={qHook(\\"./high#Todos_onClick_0\\")}>
+            on:click={qrl(\\"./high.js\\", \\"Todos_onClick_0\\", [__props__, __state__])}>
         </input>
         : null
       }
@@ -961,17 +1067,19 @@ export const Todos_onRender = qHook((__props__, __state__) => {
       </ul>
     </section>
   );
-});
+};
 ",
-  "med.tsx": "import { qComponent, qHook } from \\"@builder.io/qwik\\";
+  "med.tsx": "import { component, createStore, qrl } from \\"@builder.io/qwik\\";
 
 
-export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){debugger;Object.assign(state,__STATE__[props.serverStateId]);}return state;};
-export const onMountCreateEmptyState = qHook<any, any>(() => ({}));
-export const Todos = qComponent<any, any>({
-  onMount: qHook(\\"./med#onMountCreateEmptyState\\"),
-  onRender: qHook(\\"./low#Todos_onRender\\")
-});
+export const __merge = function __merge(state,props,create){if(create === void 0){create = false;}for(var key in props){if(key.indexOf(':')==-1 && !key.startsWith('__')&& Object.prototype.hasOwnProperty.call(props,key)){state[key] = props[key];}}if(create && typeof __STATE__ == 'object' && props.serverStateId){Object.assign(state,__STATE__[props.serverStateId]);}return state;};
+export const Todos_onMount = (__props__) => {
+  const __state__ = createStore({});
+  const state = __merge(__state__, __props__,true);
+  
+  return qrl(\\"./low.js\\", \\"Todos_onRender\\", [__props__,__state__]);
+};
+export const Todos = component<any, any>(qrl(\\"./med.js\\", \\"Todos_onMount\\", []));
 ",
 }
 `;

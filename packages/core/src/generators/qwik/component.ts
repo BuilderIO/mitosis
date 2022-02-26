@@ -1,4 +1,5 @@
 import { stat } from 'fs';
+import { symbolName } from 'typescript';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
@@ -10,11 +11,13 @@ import { renderJSXNodes } from './jsx';
 import {
   arrowFnBlock,
   arrowFnValue,
+  EmitFn,
   File,
   iif,
   INDENT,
   invoke,
   NL,
+  quote,
   SrcBuilder,
   SrcBuilderOptions,
   UNINDENT,
@@ -106,56 +109,46 @@ export function addComponent(
   );
   const onRenderFile = isStatic ? fileSet.low : fileSet.med;
   const componentFile = fileSet.med;
-  if (!componentFile.exports.get('onMountCreateEmptyState')) {
-    componentFile.exportConst('onMountCreateEmptyState', function(
-      this: SrcBuilder,
-    ) {
-      this.emit(
-        invoke(
-          componentFile.import(componentFile.qwikModule, 'qHook'),
-          [arrowFnValue([], ['({})'])],
-          ['any', 'any'],
-        ),
-      );
-    });
-  }
-  if (component.hooks.onMount?.code) {
-    addComponentOnMount(componentFile, componentName, component);
-  }
   const styles = _opts.shareStyles
     ? getCommonStyles(fileSet).styles
     : new Map<string, CssStyles>();
   collectStyles(component.children, styles);
-  const qComponentOptions: Record<string, any> = {
-    // tagName: string(componentName.toLowerCase()),
-    onMount: invoke(componentFile.import(componentFile.qwikModule, 'qHook'), [
-      componentFile.toQrl(
-        component.hooks.onMount?.code
-          ? componentName + '_onMount'
-          : 'onMountCreateEmptyState',
-      ),
-    ]),
-    onRender: invoke(componentFile.import(componentFile.qwikModule, 'qHook'), [
-      onRenderFile.toQrl(componentName + '_onRender'),
-    ]),
-  };
+  let withStyles: EmitFn = () => null;
   if (_opts.shareStyles) {
     if (_opts.isRoot) {
       const symbolName = componentName + '_styles';
       getCommonStyles(fileSet).symbolName = symbolName;
-      qComponentOptions.unscopedStyles = onRenderFile.toQrl(symbolName);
+      withStyles = generateStyles(
+        componentFile,
+        onRenderFile,
+        symbolName,
+        false,
+      );
     }
   } else {
     if (styles.size) {
-      qComponentOptions.styles = onRenderFile.toQrl(componentName + '_styles');
-      onRenderFile.exportConst(componentName + '_styles', renderStyles(styles));
+      const symbolName = componentName + '_styles';
+      onRenderFile.exportConst(symbolName, renderStyles(styles));
+      withStyles = generateStyles(
+        componentFile,
+        onRenderFile,
+        symbolName,
+        true,
+      );
     }
   }
+  addComponentOnMount(
+    componentFile,
+    onRenderFile,
+    componentName,
+    component,
+    withStyles,
+  );
   componentFile.exportConst(
     componentName,
     invoke(
-      componentFile.import(componentFile.qwikModule, 'qComponent'),
-      [qComponentOptions],
+      componentFile.import(componentFile.qwikModule, 'component'),
+      [generateQrl(componentFile, componentName + '_onMount')],
       ['any', 'any'],
     ),
   );
@@ -164,28 +157,26 @@ export function addComponent(
   const directives: Map<string, string> = new Map();
   onRenderFile.exportConst(
     componentName + '_onRender',
-    invoke(onRenderFile.import(onRenderFile.qwikModule, 'qHook'), [
-      arrowFnBlock(
-        ['__props__', '__state__'],
-        [
-          renderStateConst(onRenderFile),
-          function(this: SrcBuilder) {
-            return this.emit(
-              'return ',
-              renderJSXNodes(
-                onRenderFile,
-                directives,
-                handlers,
-                component.children,
-                styles,
-                {},
-              ),
-              ';',
-            );
-          },
-        ],
-      ),
-    ]),
+    arrowFnBlock(
+      [],
+      [
+        renderUseLexicalScope(onRenderFile),
+        function(this: SrcBuilder) {
+          return this.emit(
+            'return ',
+            renderJSXNodes(
+              onRenderFile,
+              directives,
+              handlers,
+              component.children,
+              styles,
+              {},
+            ),
+            ';',
+          );
+        },
+      ],
+    ),
   );
   directives.forEach((code, name) => {
     fileSet.med.import(fileSet.med.qwikModule, 'h');
@@ -193,7 +184,26 @@ export function addComponent(
   });
 }
 
-function renderStateConst(file: File, isMount = false): any {
+function generateStyles(
+  componentFile: File,
+  styleFile: File,
+  symbol: string,
+  scoped: boolean,
+): EmitFn {
+  return function(this: SrcBuilder) {
+    this.emit(
+      invoke(
+        componentFile.import(
+          componentFile.qwikModule,
+          scoped ? 'withScopedSty' : 'withStyles',
+        ),
+        [generateQrl(styleFile, symbol)],
+      ),
+    );
+  };
+}
+
+export function renderStateConst(file: File, isMount = false): any {
   return function(this: SrcBuilder) {
     return this.emit(
       'const state',
@@ -202,12 +212,39 @@ function renderStateConst(file: File, isMount = false): any {
       WS,
       file.module == 'med'
         ? file.exports.get('__merge')
-        : file.import('./med', '__merge').name,
+        : file.import('./med.js', '__merge').name,
       '(__state__,',
       WS,
       '__props__',
       isMount ? ',true);' : ');',
       NL,
+    );
+  };
+}
+
+export function renderUseLexicalScope(file: File) {
+  return function(this: SrcBuilder) {
+    return this.emit(
+      'const __scope__',
+      WS,
+      '=',
+      WS,
+      file.import(file.qwikModule, 'useLexicalScope').name,
+      '();',
+      NL,
+      'const __props__',
+      WS,
+      '=',
+      WS,
+      '__scope__[0];',
+      NL,
+      'const __state__',
+      WS,
+      '=',
+      WS,
+      '__scope__[1];',
+      NL,
+      renderStateConst(file, false),
     );
   };
 }
@@ -222,39 +259,41 @@ export function addCommonStyles(fileSet: FileSet) {
 
 function addComponentOnMount(
   componentFile: File,
+  onRenderFile: File,
   componentName: string,
   component: MitosisComponent,
+  withStyles: EmitFn,
 ) {
   componentFile.exportConst(componentName + '_onMount', function(
     this: SrcBuilder,
   ) {
     this.emit(
-      invoke(
-        componentFile.import(componentFile.qwikModule, 'qHook'),
-        [
-          arrowFnValue(['__props__'], () =>
-            this.emit(
-              '{',
-              NL,
-              INDENT,
-              'const __state__',
-              WS,
-              '=',
-              WS,
-              componentFile.import(componentFile.qwikModule, 'qObject').name,
-              '({});',
-              NL,
-              renderStateConst(componentFile, true),
-              iif(component.hooks.onMount?.code),
-              NL,
-              'return state;',
-              UNINDENT,
-              NL,
-              '}',
-            ),
-          ),
-        ],
-        ['any', 'any'],
+      arrowFnValue(['__props__'], () =>
+        this.emit(
+          '{',
+          NL,
+          INDENT,
+          'const __state__',
+          WS,
+          '=',
+          WS,
+          componentFile.import(componentFile.qwikModule, 'createStore').name,
+          '({});',
+          NL,
+          renderStateConst(componentFile, true),
+          iif(component.hooks.onMount?.code),
+          withStyles,
+          NL,
+          'return ',
+          generateQrl(onRenderFile, componentName + '_onRender', [
+            '__props__',
+            '__state__',
+          ]),
+          ';',
+          UNINDENT,
+          NL,
+          '}',
+        ),
       ),
     );
   });
@@ -277,8 +316,19 @@ function __merge(
     }
   }
   if (create && typeof __STATE__ == 'object' && props.serverStateId) {
-    debugger;
     Object.assign(state, __STATE__[props.serverStateId]);
   }
   return state;
+}
+
+function generateQrl(
+  componentFile: File,
+  componentName: string,
+  capture: string[] = [],
+): any {
+  return invoke(componentFile.import(componentFile.qwikModule, 'qrl'), [
+    componentFile.toQrlChunk(),
+    quote(componentName),
+    `[${capture.join(',')}]`,
+  ]);
 }

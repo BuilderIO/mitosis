@@ -11,6 +11,8 @@ export interface SrcBuilderOptions {
   isJSX: boolean;
 }
 
+export type EmitFn = (this: SrcBuilder) => void;
+
 export class File {
   filename: string;
   imports = new Imports();
@@ -47,8 +49,8 @@ export class File {
     return this.imports.get(module, symbol);
   }
 
-  toQrl(symbol: string) {
-    return quote(this.qrlPrefix + this.module + '#' + symbol);
+  toQrlChunk() {
+    return quote(this.qrlPrefix + this.module + '.js');
   }
 
   exportConst(name: string, value?: any) {
@@ -436,7 +438,7 @@ export function arrowFnValue(args: string[], expression: any) {
 
 export function iif(code: any) {
   return function(this: SrcBuilder) {
-    this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
+    code && this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
   };
 }
 
