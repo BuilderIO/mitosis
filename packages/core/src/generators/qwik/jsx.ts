@@ -159,9 +159,11 @@ function rewriteHandlers(
         if (key == 'css') {
           continue;
         } else if ((handlerBlock = handlers.get(binding))) {
-          key = `on:${key.substr(2).toLowerCase()}`;
-          binding = invoke(file.import(file.qwikModule, 'qHook'), [
-            quote(file.qrlPrefix + 'high#' + handlerBlock),
+          key = `on:${key.substring(2).toLowerCase()}`;
+          binding = invoke(file.import(file.qwikModule, 'qrl'), [
+            quote(file.qrlPrefix + 'high.js'),
+            quote(handlerBlock),
+            '[__props__, __state__]',
           ]);
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
           symbolBindings[lastProperty(key)] = binding;
