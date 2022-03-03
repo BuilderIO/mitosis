@@ -290,7 +290,7 @@ Mitosis supports settings for generating code to match your preferred formatting
 
 ## Join the community
 
-[Chat with us in discord!](https://discord.gg/6heP3wUM)
+[Chat with us in discord!](https://discord.gg/CQZt8hzZJR)
 
 <br />
 <p align="center">
