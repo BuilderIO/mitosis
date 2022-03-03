@@ -195,7 +195,7 @@ function generateStyles(
       invoke(
         componentFile.import(
           componentFile.qwikModule,
-          scoped ? 'withScopedSty' : 'withStyles',
+          scoped ? 'withScopedStyles' : 'withStyles',
         ),
         [generateQrl(styleFile, symbol)],
       ),
@@ -282,6 +282,7 @@ function addComponentOnMount(
           NL,
           renderStateConst(componentFile, true),
           iif(component.hooks.onMount?.code),
+          ';',
           withStyles,
           NL,
           'return ',
