@@ -63,7 +63,7 @@ const rule: Rule.RuleModule = {
               expression: {
                 params: [arg1],
               },
-            }) => {
+            }: any) => {
               context.report({
                 node: arg1,
                 message: 'Callback parameter must be called `event`',
