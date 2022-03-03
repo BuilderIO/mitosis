@@ -5,9 +5,11 @@ interface NodeWithParent extends ESTree.BaseNode {
   type: NodeType;
 }
 
+type params = any[];
+
 interface JSXExpressionContainer extends NodeWithParent {
   type: 'JSXExpressionContainer';
-  expression: NodeExt;
+  expression: NodeExt & params;
 }
 
 interface JSXAttribute extends NodeWithParent {
