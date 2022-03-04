@@ -90,7 +90,7 @@ export const templates: { [key: string]: string } = {
     
       function onBlur() {
         // Maintain focus
-        inputRef.current.focus();
+        inputRef.focus();
       }
     
       function lowerCaseName() {
