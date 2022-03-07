@@ -103,11 +103,6 @@ export function Image(props: {
       loading: props.lazy ? 'lazy' : undefined,
       srcset: undefined as string | undefined,
     };
-    const sizingDiv = h('div', {
-      class: 'builder-image-sizer',
-      style: `width:100%;padding-top:${(props.aspectRatio || 1) *
-        100}%;pointer-events:none;font-size:0`,
-    });
     if (isBuilderIoImage) {
       const srcset = ['100', '200', '400', '800', '1200', '1600', '2000']
         .map((size) => {
@@ -121,10 +116,20 @@ export function Image(props: {
           h('source', { type: 'image/webp', srcset: srcset }),
           h('img', imgProps, jsx),
         ]),
-        sizingDiv,
       ];
     } else {
-      jsx = [h('img', imgProps, jsx), sizingDiv];
+      jsx = [h('img', imgProps, jsx)];
+    }
+    if (
+      props.aspectRatio &&
+      !(props.fitContent && props.children && props.children.length)
+    ) {
+      const sizingDiv = h('div', {
+        class: 'builder-image-sizer',
+        style: `width:100%;padding-top:${(props.aspectRatio || 1) *
+          100}%;pointer-events:none;font-size:0`,
+      });
+      jsx.push(sizingDiv);
     }
   }
   const children = props.children ? [jsx].concat(props.children) : [jsx];
