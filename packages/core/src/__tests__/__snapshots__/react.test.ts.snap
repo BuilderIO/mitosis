@@ -561,9 +561,11 @@ export default function Image(props) {
   }, []);
 
   useEffect(() => {
-    if (scrollListener) {
-      window.removeEventListener(\\"scroll\\", scrollListener);
-    }
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
   }, []);
 
   return (
@@ -857,6 +859,25 @@ exports[`React Video 1`] = `
       loop={props.loop}
     />
   );
+}
+"
+`;
+
+exports[`React onMount & onUnMount 1`] = `
+"import { useEffect } from \\"react\\";
+
+export default function Comp(props) {
+  useEffect(() => {
+    console.log(\\"Runs on mount\\");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"Runs on unMount\\");
+    };
+  }, []);
+
+  return <div />;
 }
 "
 `;
