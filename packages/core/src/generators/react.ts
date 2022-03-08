@@ -594,10 +594,12 @@ const _componentToReact = (
       ${
         json.hooks.onUnMount?.code
           ? `useEffect(() => {
-            ${processBinding(
-              updateStateSettersInCode(json.hooks.onUnMount.code, options),
-              options,
-            )}
+            return () => {
+              ${processBinding(
+                updateStateSettersInCode(json.hooks.onUnMount.code, options),
+                options,
+              )}
+            }
           }, [])`
           : ''
       }

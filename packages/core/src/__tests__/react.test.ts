@@ -19,6 +19,7 @@ const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
+const onMount = require('./data/blocks/onMount.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -134,6 +135,12 @@ describe('React', () => {
 
   test('onUpdateWithDeps', () => {
     const component = parseJsx(onUpdateWithDeps);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onMount & onUnMount', () => {
+    const component = parseJsx(onMount);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

@@ -18,6 +18,8 @@ const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
+const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
+const onMount = require('./data/blocks/onMount.raw');
 
 const path = 'test-path';
 
@@ -126,6 +128,18 @@ describe('Vue', () => {
 
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
+    const output = componentToVue()({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onUpdateWithDeps', () => {
+    const component = parseJsx(onUpdateWithDeps);
+    const output = componentToVue()({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onMount & onUnMount', () => {
+    const component = parseJsx(onMount);
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
   });

@@ -535,9 +535,11 @@ export default function Image(props) {
   }, []);
 
   useEffect(() => {
-    if (scrollListener) {
-      window.removeEventListener(\\"scroll\\", scrollListener);
-    }
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
   }, []);
 
   return (
@@ -841,6 +843,57 @@ export default function Video(props) {
       loop={props.loop}
     />
   );
+}
+"
+`;
+
+exports[`React onMount & onUnMount 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function Comp(props) {
+  useEffect(() => {
+    console.log(\\"Runs on mount\\");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"Runs on unMount\\");
+    };
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React onUpdate 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+
+  return <View />;
+}
+"
+`;
+
+exports[`React onUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdateWithDeps(props) {
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\");
+  }, [a, b]);
+
+  return <View />;
 }
 "
 `;
