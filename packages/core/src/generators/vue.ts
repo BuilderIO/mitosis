@@ -219,7 +219,7 @@ export const blockToVue = (
     // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
     // <component is="style">...</component>
     node.name = 'component';
-    node.properties.is = 'style';
+    node.bindings.is = 'style';
   }
 
   if (node.properties._text) {
