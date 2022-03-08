@@ -557,7 +557,7 @@ export const compileAwayBuilderComponents = (
   return (options?: any) => ({
     json: {
       pre: (json: MitosisComponent) => {
-        compileAwayBuilderComponentsFromTree(json, components);
+        compileAwayBuilderComponentsFromTree(json, obj);
       },
     },
   });
