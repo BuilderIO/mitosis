@@ -7,7 +7,7 @@ import useStateVarDeclarator from './rules/use-state-var-declarator';
 import notVarDeclarationInJSX from './rules/no-var-declaration-in-jsx';
 import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
 import onlyDefaultFunctionAndImports from './rules/only-default-function-and-imports';
-import noConditionalLogicInComponent from './rules/no-conditional-logic-in-component';
+import noConditionalLogicInComponentRender from './rules/no-conditional-logic-in-component-render';
 import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
 
 export const staticControlFlow: Rule.RuleModule = {
@@ -84,6 +84,6 @@ export const rules = {
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
-  'no-conditional-logic-in-component': noConditionalLogicInComponent,
+  'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
 };

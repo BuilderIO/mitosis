@@ -10,7 +10,8 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'only-default-function-and-imports',
+      description:
+        'disallow anything other than import declarations, the component itself (in a default export), and type declarations inside the component file.',
       recommended: true,
     },
   },
@@ -45,7 +46,7 @@ const rule: Rule.RuleModule = {
             context.report({
               node: child as any,
               message:
-                "Mitosis component file shouldn't contain anything other than import declamations, the component itself a default export or type declarations",
+                'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
             });
           }
         }

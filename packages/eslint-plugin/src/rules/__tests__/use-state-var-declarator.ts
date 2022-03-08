@@ -75,7 +75,7 @@ ruleTester.run('use-state-var-declarator', rule, {
       }
     `,
       errors: [
-        'useState should be assigned to a variable called state exclusively',
+        'useState should be exclusively assigned to a variable called state',
       ],
     },
   ],

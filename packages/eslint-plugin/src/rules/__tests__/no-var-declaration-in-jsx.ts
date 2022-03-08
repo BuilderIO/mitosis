@@ -31,7 +31,7 @@ ruleTester.run('no-var-declaration-in-jsx', rule, {
       }
     `,
     },
-    // Doesn't affect variable declaration inside JXS attributes.
+    // Doesn't affect variable declaration inside JSX attributes.
     {
       ...opts,
       code: `

@@ -12,7 +12,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'css-no-vars',
+      description: 'disallow variables as a value for the css attribute.',
       recommended: true,
     },
   },

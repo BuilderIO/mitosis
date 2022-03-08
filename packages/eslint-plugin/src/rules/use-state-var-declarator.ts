@@ -11,7 +11,8 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'no-var-declaration-or-assignment-in-component',
+      description:
+        'disallow assigning useState() to a variable with name other than state.',
       recommended: true,
     },
   },
@@ -51,7 +52,7 @@ const rule: Rule.RuleModule = {
               context.report({
                 node: node.parent.id as any,
                 message:
-                  'useState should be assigned to a variable called state exclusively',
+                  'useState should be exclusively assigned to a variable called state',
               });
             },
           )

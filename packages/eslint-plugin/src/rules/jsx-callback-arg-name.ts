@@ -12,8 +12,8 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'jsx-callback-arg-name',
-      category: 'Fill me in',
+      description:
+        'disallow naming the event arg for callbacks anything other than "event".',
       recommended: true,
     },
     fixable: 'code',

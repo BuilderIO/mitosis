@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from '../no-conditional-logic-in-component';
+import rule from '../no-conditional-logic-in-component-render';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -14,7 +14,7 @@ const opts = {
 
 var ruleTester = new RuleTester();
 
-ruleTester.run('no-conditional-logic-in-component', rule, {
+ruleTester.run('no-conditional-logic-in-component-render', rule, {
   valid: [
     {
       ...opts,

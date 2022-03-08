@@ -16,7 +16,7 @@ var ruleTester = new RuleTester();
 
 ruleTester.run('css-no-vars', rule, {
   valid: [
-    { ...opts, code: '<button/>', ...opts },
+    { ...opts, code: '<button/>' },
     { ...opts, code: '<button css={{ color: "red" }} />' },
     { ...opts, code: '<button css={{ fontSize: 12 }} />' },
     // Doesn't apply to none mitosis files

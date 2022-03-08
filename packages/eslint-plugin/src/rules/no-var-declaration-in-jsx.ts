@@ -10,7 +10,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'no-var-declaration-in-jsx',
+      description: 'disallow variable declarations inside jsx.',
       recommended: true,
     },
   },

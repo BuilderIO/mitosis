@@ -12,7 +12,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'jsx-callback-arrow-function',
+      description: 'disallow using regular functions as callbacks.',
       recommended: true,
     },
     fixable: 'code',

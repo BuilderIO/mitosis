@@ -11,7 +11,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'suggestion',
     docs: {
-      description: 'no-var-declaration-or-assignment-in-component',
+      description: 'disallow variable declaration inside component file.',
       recommended: true,
     },
   },

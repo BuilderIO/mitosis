@@ -11,7 +11,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description: 'no-conditional-logic-in-component',
+      description: 'disallow conditional logic in component render.',
       recommended: true,
     },
   },
