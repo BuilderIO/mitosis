@@ -113,12 +113,12 @@ export function addComponent(
     ? getCommonStyles(fileSet).styles
     : new Map<string, CssStyles>();
   collectStyles(component.children, styles);
-  let withStyles: EmitFn = () => null;
+  let useStyles: EmitFn = () => null;
   if (_opts.shareStyles) {
     if (_opts.isRoot) {
       const symbolName = componentName + '_styles';
       getCommonStyles(fileSet).symbolName = symbolName;
-      withStyles = generateStyles(
+      useStyles = generateStyles(
         componentFile,
         onRenderFile,
         symbolName,
@@ -129,12 +129,7 @@ export function addComponent(
     if (styles.size) {
       const symbolName = componentName + '_styles';
       onRenderFile.exportConst(symbolName, renderStyles(styles));
-      withStyles = generateStyles(
-        componentFile,
-        onRenderFile,
-        symbolName,
-        true,
-      );
+      useStyles = generateStyles(componentFile, onRenderFile, symbolName, true);
     }
   }
   addComponentOnMount(
@@ -142,7 +137,7 @@ export function addComponent(
     onRenderFile,
     componentName,
     component,
-    withStyles,
+    useStyles,
   );
   componentFile.exportConst(
     componentName,
@@ -195,7 +190,7 @@ function generateStyles(
       invoke(
         componentFile.import(
           componentFile.qwikModule,
-          scoped ? 'withScopedStyles' : 'withStyles',
+          scoped ? 'withScopedStyles' : 'useStyles',
         ),
         [generateQrl(styleFile, symbol)],
       ),
@@ -262,7 +257,7 @@ function addComponentOnMount(
   onRenderFile: File,
   componentName: string,
   component: MitosisComponent,
-  withStyles: EmitFn,
+  useStyles: EmitFn,
 ) {
   componentFile.exportConst(componentName + '_onMount', function(
     this: SrcBuilder,
@@ -283,7 +278,7 @@ function addComponentOnMount(
           renderStateConst(componentFile, true),
           iif(component.hooks.onMount?.code),
           ';',
-          withStyles,
+          useStyles,
           NL,
           'return ',
           generateQrl(onRenderFile, componentName + '_onRender', [
