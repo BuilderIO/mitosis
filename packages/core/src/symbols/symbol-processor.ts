@@ -25,6 +25,7 @@ const enum Path {
  * Mutates the data tree directly.
  */
 export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
+  let counter = 0;
   const ids = new Set<string>();
   forEach(content, function(this, el: any) {
     if (
@@ -44,7 +45,7 @@ export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
         if (id) {
           if (ids.has(id)) {
             if (el.component?.options?.symbol) {
-              const id = generateId();
+              const id = '_' + pad(counter++);
               el.component.options.symbol.entry = id;
               if (el.component.options.symbol.content) {
                 el.component.options.symbol.content.id = id;
@@ -180,15 +181,6 @@ function isString(value: any): value is string {
   return typeof value == 'string';
 }
 
-function generateId() {
-  return (
-    // TODO(misko): For now I have removed the data as I think it is overkill
-    // and makes the output unnecessarily big.
-    // new Date().getTime().toString(36) +
-    Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36)
-  );
-}
-
 function toHash(obj: any): string {
   return hashCode(JSON.stringify(obj));
 }
@@ -204,4 +196,9 @@ function hashCode(text: string): string {
     hash |= 0; // Convert to 32bit integer
   }
   return Number(Math.abs(hash)).toString(36);
+}
+function pad(value: number): string {
+  const padding = '000000';
+  let result = padding + String(value);
+  return result.substring(result.length - padding.length);
 }
