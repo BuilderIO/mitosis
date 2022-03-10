@@ -71,7 +71,11 @@ exports[`React Columns 1`] = `
     <>
       <div className=\\"builder-columns div\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-2\\">{column.content}</div>
+          <div className=\\"builder-column div-2\\">
+            {column.content}
+
+            {index}
+          </div>
         ))}
       </div>
       <style jsx>{\`
@@ -458,7 +462,11 @@ export default function FormComponent(props) {
         {props.builderBlock && props.builderBlock.children ? (
           <>
             {props.builderBlock?.children?.map((block, index) => (
-              <BuilderBlockComponent key={block.id} block={block} />
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              />
             ))}
           </>
         ) : null}{\\" \\"}
@@ -699,7 +707,9 @@ export default function SelectComponent(props) {
       name={props.name}
     >
       {props.options?.map((option, index) => (
-        <option value={option.value}>{option.name || option.value}</option>
+        <option value={option.value} data-index={index}>
+          {option.name || option.value}
+        </option>
       ))}
     </select>
   );
@@ -754,6 +764,11 @@ export default function SmileReviews(props) {
           <Img src={review.avatar} />
 
           <div>
+            <div>
+              N:
+              {index}
+            </div>
+
             <div>{review.author}</div>
 
             <div>{review.reviewMessage}</div>

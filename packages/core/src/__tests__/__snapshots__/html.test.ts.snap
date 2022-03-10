@@ -24,11 +24,16 @@ exports[`Html Stamped 1`] = `
 
       <div>
         <div>
-          <span data-name=\\"div-1\\"><!-- review.author --></span>
+          N:
+          <span data-name=\\"div-1\\"><!-- index --></span>
         </div>
 
         <div>
-          <span data-name=\\"div-2\\"><!-- review.reviewMessage --></span>
+          <span data-name=\\"div-2\\"><!-- review.author --></span>
+        </div>
+
+        <div>
+          <span data-name=\\"div-3\\"><!-- review.reviewMessage --></span>
         </div>
       </div>
     </div>
@@ -96,10 +101,14 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = getContext(el, \\"review\\").author;
+        el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").author;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }

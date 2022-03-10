@@ -85,7 +85,7 @@ export function RenderContent(props: RenderContentProps) {
           </Show>
           <Show when={content!.data!.blocks}>
             <For each={content!.data!.blocks}>
-              {(block) => <RenderBlock block={block} />}
+              {(block, index) => <RenderBlock block={block} index={index} />}
             </For>
           </Show>
         </div>

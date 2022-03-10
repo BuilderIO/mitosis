@@ -28,6 +28,17 @@ Object {
                     },
                     "tagName": "span",
                   },
+                  Object {
+                    "@type": "@builder.io/sdk:Element",
+                    "bindings": Object {
+                      "component.options.text": "index",
+                    },
+                    "component": Object {
+                      "name": "Text",
+                      "options": Object {},
+                    },
+                    "tagName": "span",
+                  },
                 ],
                 "code": Object {
                   "actions": Object {},
@@ -169,7 +180,8 @@ export default function MyComponent(props) {
               flexGrow: \\"1\\",
             }}
           >
-            {column.content}
+            <span>{column.content}</span>
+            <span>{index}</span>
           </div>
         )}
       </For>
@@ -1698,6 +1710,41 @@ Object {
                         "children": Array [
                           Object {
                             "@type": "@builder.io/sdk:Element",
+                            "bindings": Object {},
+                            "component": Object {
+                              "name": "Text",
+                              "options": Object {
+                                "text": "N: ",
+                              },
+                            },
+                            "tagName": "span",
+                          },
+                          Object {
+                            "@type": "@builder.io/sdk:Element",
+                            "bindings": Object {
+                              "component.options.text": "index",
+                            },
+                            "component": Object {
+                              "name": "Text",
+                              "options": Object {},
+                            },
+                            "tagName": "span",
+                          },
+                        ],
+                        "code": Object {
+                          "actions": Object {},
+                          "bindings": Object {},
+                        },
+                        "properties": Object {},
+                        "tagName": "div",
+                      },
+                      Object {
+                        "@type": "@builder.io/sdk:Element",
+                        "actions": Object {},
+                        "bindings": Object {},
+                        "children": Array [
+                          Object {
+                            "@type": "@builder.io/sdk:Element",
                             "bindings": Object {
                               "component.options.text": "review.author",
                             },
@@ -1889,6 +1936,10 @@ export default function MyComponent(props) {
               }}
             />
             <div>
+              <div>
+                <span>N: </span>
+                <span>{index}</span>
+              </div>
               <div>{review.author}</div>
               <div>{review.reviewMessage}</div>
             </div>

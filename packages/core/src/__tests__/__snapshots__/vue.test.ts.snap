@@ -50,7 +50,7 @@ exports[`Vue Columns 1`] = `
       v-for=\\"(column, index) in columns\\"
       :key=\\"index\\"
     >
-      {{ column.content }}
+      {{ column.content }} {{ index }}
     </div>
   </div>
 </template>
@@ -285,6 +285,7 @@ exports[`Vue Form block 1`] = `
     <builder-block-component
       v-for=\\"(block, index) in builderBlock?.children\\"
       :block=\\"block\\"
+      :index=\\"index\\"
       :key=\\"block.id\\"
     ></builder-block-component>
 
@@ -829,6 +830,7 @@ exports[`Vue Select block 1`] = `
     <option
       v-for=\\"(option, index) in options\\"
       :value=\\"option.value\\"
+      :data-index=\\"index\\"
       :key=\\"index\\"
     >
       {{ option.name || option.value }}
@@ -859,6 +861,7 @@ exports[`Vue Stamped.io 1`] = `
     <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
       <img class=\\"img\\" :src=\\"review.avatar\\" />
       <div>
+        <div>N: {{ index }}</div>
         <div>{{ review.author }}</div>
         <div>{{ review.reviewMessage }}</div>
       </div>

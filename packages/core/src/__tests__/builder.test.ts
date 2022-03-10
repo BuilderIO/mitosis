@@ -197,7 +197,7 @@ describe('Builder', () => {
                   padding: "10px 0",
                 }}
               >
-                {person}
+                {person} {index}
               </div>
             )}
           </For>
