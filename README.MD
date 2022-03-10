@@ -1,4 +1,3 @@
-<br />
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
@@ -11,9 +10,10 @@
   <a href="https://mitosis.builder.io/">
     <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
   </a>
+  <p align="center">
+    Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
+  </p>
 </p>
-
-<br />
 
 <p align="center">
   <a href="https://github.com/prettier/prettier"><img alt="code style: prettier" src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg" /></a>
@@ -23,62 +23,35 @@
   <a href="https://www.npmjs.com/package/@builder.io/mitosis" rel="nofollow"><img src="https://img.shields.io/npm/v/@builder.io/mitosis.svg?sanitize=true"></a>
 </p>
 
-<br />
+## Table of contents
 
-## At a glance
+- [Getting Started](#getting-started)
+- [Docs](#docs)
+- [Why use Mitosis?](#why-use-mitosis-)
+  - [Component libraries](#component-libraries)
+  - [Modern workflows for all platforms](#modern-workflows-for-all-platforms)
+  - [JS framework fatigue](#js-framework-fatigue)
+  - [Design to code](#design-to-code)
+- [Status](#status)
+- [Coming soon](#coming-soon)
+- [Community](#community)
+- [Related Projects](#related-projects)
 
-Mitosis is inspired by many modern frameworks. You'll see components look like React components and use React-like hooks, but have simple mutable state like Vue, use a static form of JSX like Solid, compile away like Svelte, and uses a simple, prescriptive structure like Angular.
+## Getting Started
 
-This is what a basic Mitosis component that manages some state looks like:
+The best way to learn Mitosis is to clone our [example project](./examples/basic/) and start tinkering. Otherwise, here are some helpful external resources on trying out Mitosis:
 
-```javascript
-import { useState, Show, For } from '@builder.io/mitosis';
+- https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
 
-export default function MyComponent(props) {
-  const state = useState({
-    newItemName: 'New item',
-    list: ['hello', 'world'],
-    addItem() {
-      state.list = [...state.list, state.newItemName];
-    },
-  });
+## Docs
 
-  return (
-    <div>
-      <Show when={props.showInput}>
-        <input
-          value={state.newItemName}
-          onChange={(event) => (state.newItemName = event.target.value)}
-        />
-      </Show>
-      <div css={{ padding: '10px' }}>
-        <button onClick={() => state.addItem()}>Add list item</button>
-        <div>
-          <For each={state.list}>{(item) => <div>{item}</div>}</For>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
+Curious about how Mitosis code works under the hood, and how to use it? Learn more [in the overview](docs/overview.md).
 
-Learn more [in the docs](docs/overview.md)
-
-## CLI
-
-Try Mitosis out locally with our [CLI](packages/cli)
-
-```bash
-npm install -g @builder.io/mitosis-cli
-
-mitosis compile --to=vue my-file.lite.jsx
-```
-
-## Why
+## Why use Mitosis?
 
 ### Component libraries
 
-Managing support for libraries that provide UI components across frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With Mitosis you can write once, and run everywhere while maintaining full compatibilty with the target framework.
+Providing a UI component library across multiple frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With Mitosis, you can write once and run everywhere while maintaining full compatibilty with the target framework.
 
 ### Modern workflows for all platforms
 
@@ -92,180 +65,9 @@ If you have ever had to migrate a huge codebase from one framework to another, i
 
 With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
 
-## How does it work
-
-Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com/guide#jsx-compilation). This means we can parse it to a simple JSON structure, then easily build serializers that target various frameworks and implementations.
-
-```tsx
-export function MyComponent() {
-  const state = useState({
-    name: 'Steve',
-  });
-
-  return (
-    <div>
-      <input
-        value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
-      />
-    </div>
-  );
-}
-```
-
-becomes:
-
-```json
-{
-  "@type": "@builder.io/mitosis/component",
-  "state": {
-    "name": "Steve"
-  },
-  "nodes": [
-    {
-      "@type": "@builder.io/mitosis/node",
-      "name": "div",
-      "children": [
-        {
-          "@type": "@builder.io/mitosis/node",
-          "bindings": {
-            "value": "state.name",
-            "onChange": "state.name = event.target.value"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
-
-Which can be reserialized into many languges and frameworks. For example, to support angular, we just make a serializer that loops over the json and produces:
-
-```ts
-@Component({
-  template: `
-    <div>
-      <input [value]="name" (change)="name = $event.target.value" />
-    </div>
-  `,
-})
-class MyComponent {
-  name = 'Steve';
-}
-```
-
-Adding framework support is surprisingly easy with the plugin system (docs coming soon).
-
-## Try it out
-
-<table>
-  <tbody>
-  <tr>
-      <td>
-        <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf" />
-        </p>
-        <p align="center">
-        Use our <a href="https://github.com/builderio/figma-html"><b>Figma plugin</b></a> to turn designs into code!
-        </p>
-      </td>
-      <td>
-        <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df" />
-        </p>
-        <p align="center">
-          Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a href="https://github.com/builderio/figma-html"><img width="400" alt="Figma plugin" src="https://i.imgur.com/BoKsLFs.gif" /></a>
-      </td>
-      <td>
-        <a href="https://mitosis.builder.io/"><img width="400" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" /></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-        <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3" />
-        </p>
-        <p align="center">
-          Try our <a href="https://github.com/BuilderIO/vscode"><b>VS Code extension</b></a> for in-IDE visual coding
-        </p>
-      </td>
-      <td>
-        <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F0f577e84eb4e4aa4a69d602dd376aa11" />
-        </p>
-        <p align="center">
-          Try our <a href="https://apps.shopify.com/builder-2"><b>Shopify app</b></a> for visual Shopify store building
-      </td>
-    </tr>
-    <tr>
-    <td>
-        <a href="https://github.com/BuilderIO/vscode"><img width="400" alt="Vscode plugin" src="https://i.imgur.com/UlWMkRx.gif" /></a>
-      </td>
-      <td>
-        <a href="https://apps.shopify.com/builder-2"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F97c87a29d88e463b9c1ad22b0329b2f7" /></a>
-      </td>
-    </tr>
-    <tr>
-      <td>
-      <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F084b1ebc3de4422185f9d36a409f3a24" />
-        </p>
-        <p align="center">
-          Try our <a href="https://github.com/builderio/builder"><b>headless CMS</b></a> for no-code APIs for all sites and apps
-        </p>
-      </td>
-      <td>
-      <p>&nbsp;</p> <!-- spacer -->
-        <p align="center">
-          <img height="50" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F2025f53be0ab472ca8fbb87381bfbc00" />
-        </p>
-        <p align="center">
-          View our upcoming ecommerce <a href="https://headlessapp.store">integrations</a>
-        </p>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <a href="https://github.com/builderio/builder"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2F444142b2cae54a19aeb8b5ba245feffe%2F8c2699f47fea48b296b43dbb422336e8" /></a>
-      </td>
-      <td>
-        <a href="https://headlessapp.store"><img width="400" alt="Vscode plugin" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Fd416b330ae7543089f70af8b930d8d85" /></a>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-
-## No-code tooling
-
-Mitosis's static JSON format also enables no-code tooling for visual code editing and importing. You can see this with [Builder.io](https://github.com/builderio/builder) or [Figma](https://github.com/BuilderIO/html-to-figma).
-
-<img src="https://i.imgur.com/BoKsLFs.gif" >
-
-<img src="https://i.imgur.com/UlWMkRx.gif" >
-
-## Formatting options
-
-Mitosis supports settings for generating code to match your preferred formatting, libraries, etc. These output options will be customizable and extensible with plugins soon.
-
-<img src="https://imgur.com/hWXfNF3.gif "/>
-
-## Who uses it
-
-- [Builder.io](https://github.com/builderio/builder)
-- [Snap](https://github.com/builderio/snap)
-- [HTML <> Figma](https://github.com/builderio/html-to-figma)
-- [Build.](https://github.com/builderio/build.) (coming soon)
+<p align="center">
+<img width="80%" src="https://i.imgur.com/UlWMkRx.gif" >
+</p>
 
 ## Status
 
@@ -288,11 +90,18 @@ Mitosis supports settings for generating code to match your preferred formatting
 
 [V1 release](https://github.com/orgs/BuilderIO/projects/4) (help wanted!)
 
-## Join the community
+## Community
 
-[Chat with us in discord!](https://discord.gg/CQZt8hzZJR)
+- [Mitosis Discord](https://discord.gg/CQZt8hzZJR)
+- [@Builderio](https://twitter.com/builderio)
 
-<br />
+## Related Projects
+
+- [Figma plugin](https://github.com/BuilderIO/figma-html): Convert Figma designs into high quality HTML, React, Vue, Svelte, Angular, Solid, etc code via Mitosis.
+- [Builder](https://github.com/BuilderIO): Drag and drop page builder and CMS for React, Vue, Angular, and more.
+- [Qwik](https://github.com/BuilderIO/qwik): An open-source framework designed for best possible time to interactive, by focusing on resumability of server-side-rendering of HTML, and fine-grained lazy-loading of code.
+- [Partytown](https://github.com/BuilderIO/partytown): Relocate resource intensive third-party scripts off of the main thread and into a web worker. 🎉
+
 <p align="center">
   Made with ❤️ by <a target="_blank" href="https://www.builder.io/">Builder.io</a>
 </p>
