@@ -1,3 +1,4 @@
+import dedent from 'dedent';
 import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
 import { componentToMitosis } from '../generators/mitosis';
@@ -26,13 +27,6 @@ const columns = fixture('./data/blocks/columns.raw');
 const lazyLoadSection = JSON.parse(
   fixture('./data/builder/lazy-load-section.json'),
 );
-
-const regenImage = fixture('./data/builder/regen-image.tsx');
-const regenText = fixture('./data/builder/regen-text.tsx');
-const regenLoop = fixture('./data/builder/regen-loop.tsx');
-const regenHero = fixture('./data/builder/regen-hero.tsx');
-const regenFragment = fixture('./data/builder/regen-fragment.tsx');
-const regenSpanText = fixture('./data/builder/regen-span-text.tsx');
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -113,15 +107,40 @@ describe('Builder', () => {
   });
 
   test('Regenerate Image', () => {
-    const component = parseJsx(regenImage);
-    const builderJson = componentToBuilder()({ component });
-    expect(builderJson).toMatchSnapshot();
+    const code = dedent`
+      import { useState } from "@builder.io/mitosis";
+      import { Image } from "@components";
 
+      export default function MyComponent(props) {
+        const state = useState({ people: ["Steve", "Sewell"] });
+
+        return (
+          <div
+            css={{
+              padding: "20px",
+            }}
+          >
+            <Image
+              image="https://cdn.builder.io/api/v1/image/foobar"
+              sizes="100vw"
+              backgroundSize="contain"
+              css={{
+                marignTop: "50px",
+                display: "block",
+              }}
+            />
+          </div>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
     const react = componentToReact({
       plugins: [compileAwayBuilderComponents()],
     })({ component });
@@ -129,33 +148,100 @@ describe('Builder', () => {
   });
 
   test('Regenerate Text', () => {
-    const component = parseJsx(regenText);
-    const builderJson = componentToBuilder()({ component });
-    expect(builderJson).toMatchSnapshot();
+    const code = dedent`
+      import { useState } from "@builder.io/mitosis";
 
+      export default function MyComponent(props) {
+        const state = useState({ people: ["Steve", "Sewell"] });
+
+        return (
+          <div
+            css={{
+              padding: "20px",
+            }}
+          >
+            <h2
+              css={{
+                marginBottom: "20px",
+              }}
+            >
+              Hello!
+            </h2>
+          </div>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('Regenerate loop', () => {
-    const component = parseJsx(regenLoop);
-    const builderJson = componentToBuilder()({ component });
-    expect(builderJson).toMatchSnapshot();
+    const code = dedent`
+      import { useState, For } from "@builder.io/mitosis";
 
+      export default function MyComponent(props) {
+        const state = useState({ people: ["Steve", "Sewell"] });
+
+        return (
+          <For each={state.people}>
+            {(person, index) => (
+              <div
+                key={person}
+                css={{
+                  padding: "10px 0",
+                }}
+              >
+                {person} {index}
+              </div>
+            )}
+          </For>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   test('Regenerate custom Hero', () => {
-    const component = parseJsx(regenHero);
-    expect(component).toMatchSnapshot();
+    const code = dedent`
+      import { Hero } from "@components";
 
+      export default function MyComponent(props) {
+        return (
+          <Hero
+            title="Your Title Here"
+            image="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F52dcecf48f9c48cc8ddd8f81fec63236"
+            buttonLink="https://example.com"
+            buttonText="Click"
+            height={400}
+            css={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "stretch",
+              position: "relative",
+              flexShrink: "0",
+              boxSizing: "border-box",
+              marginTop: "200px",
+            }}
+          />
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    expect(component).toMatchSnapshot();
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
     const backToMitosis = builderContentToMitosisComponent(builderJson);
@@ -163,14 +249,27 @@ describe('Builder', () => {
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   // TODO: fix divs and CoreFragment - need to find way to reproduce
   test.skip('Regenerate fragments', () => {
-    const component = parseJsx(regenFragment);
-    expect(component).toMatchSnapshot();
+    const code = dedent`
+      export default function MyComponent(props) {
+        return (
+          <>
+            Hello world
 
+            <>
+              <Fragment>Hi</Fragment>
+            </>
+          </>
+        );
+      }
+    `;
+
+    const component = parseJsx(code);
+    expect(component).toMatchSnapshot();
     const builderJson = componentToBuilder()({ component });
     expect(builderJson).toMatchSnapshot();
     const backToMitosis = builderContentToMitosisComponent(builderJson);
@@ -178,19 +277,38 @@ describe('Builder', () => {
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 
   // TODO: get passing, don't add extra divs. or at least use spans instead so don't break layout
   test.skip('Regenerate span text', () => {
-    const component = parseJsx(regenSpanText);
-    const builderJson = componentToBuilder()({ component });
-    expect(builderJson).toMatchSnapshot();
+    const code = dedent`
+      export default function MyComponent(props) {
+        return (
+          <div
+            css={{
+              display: "block",
+            }}
+          >
+            Hi there
+            <span
+              css={{
+                color: "red",
+              }}
+            >
+              Hello world
+            </span>
+          </div>
+        );
+      }
+    `;
 
+    const component = parseJsx(code);
+    const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
-    expect(mitosis.trim()).toMatchSnapshot();
+    expect(mitosis.trim()).toEqual(code.trim());
   });
 });
