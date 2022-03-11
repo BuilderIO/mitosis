@@ -77,9 +77,11 @@ export default function Column(props) {
 
   return (
     <View style={styles.view1}>
-      {props.columns?.map((column) => (
+      {props.columns?.map((column, index) => (
         <View style={styles.view2}>
           <Text>{column.content}</Text>
+
+          <Text>{index}</Text>
         </View>
       ))}
     </View>
@@ -437,8 +439,8 @@ export default function FormComponent(props) {
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
         <>
-          {props.builderBlock?.children?.map((block) => (
-            <BuilderBlockComponent key={block.id} block={block} />
+          {props.builderBlock?.children?.map((block, index) => (
+            <BuilderBlockComponent key={block.id} block={block} index={index} />
           ))}
         </>
       ) : null}{\\" \\"}
@@ -677,8 +679,8 @@ export default function SelectComponent(props) {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {props.options?.map((option) => (
-        <View value={option.value}>
+      {props.options?.map((option, index) => (
+        <View value={option.value} data-index={index}>
           <Text>{option.name || option.value}</Text>
         </View>
       ))}
@@ -732,11 +734,16 @@ export default function SmileReviews(props) {
         </>
       ) : null}
 
-      {reviews?.map((review) => (
+      {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view4}>
           <View src={review.avatar} style={styles.view5} />
 
           <View>
+            <View>
+              <Text>N: </Text>
+              <Text>{index}</Text>
+            </View>
+
             <View>
               <Text>{review.author}</Text>
             </View>

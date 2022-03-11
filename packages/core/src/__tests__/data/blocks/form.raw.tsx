@@ -262,7 +262,9 @@ export default function FormComponent(props: FormProps) {
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
-          {(block) => <BuilderBlockComponent key={block.id} block={block} />}
+          {(block, index) => (
+            <BuilderBlockComponent key={block.id} block={block} index={index} />
+          )}
         </For>
       </Show>
 

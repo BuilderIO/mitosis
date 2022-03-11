@@ -23,8 +23,10 @@ export default function SelectComponent(props: FormSelectProps) {
       name={props.name}
     >
       <For each={props.options}>
-        {(option) => (
-          <option value={option.value}>{option.name || option.value}</option>
+        {(option, index) => (
+          <option value={option.value} data-index={index}>
+            {option.name || option.value}
+          </option>
         )}
       </For>
     </select>

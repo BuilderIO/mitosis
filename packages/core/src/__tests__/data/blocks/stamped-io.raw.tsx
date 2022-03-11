@@ -48,7 +48,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
         </button>
       </Show>
       <For each={state.reviews}>
-        {(review) => (
+        {(review, index) => (
           <div
             $name="Review"
             key={review.id}
@@ -66,6 +66,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               src={review.avatar}
             />
             <div>
+              <div>N: {index}</div>
               <div>{review.author}</div>
               <div>{review.reviewMessage}</div>
             </div>

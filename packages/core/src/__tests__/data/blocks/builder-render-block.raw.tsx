@@ -12,6 +12,7 @@ import BlockStyles from './block-styles.lite';
 
 export type RenderBlockProps = {
   block: BuilderBlock;
+  index: number;
 };
 
 export default function RenderBlock(props: RenderBlockProps) {
@@ -27,7 +28,7 @@ export default function RenderBlock(props: RenderBlockProps) {
       if (componentName && !ref) {
         // TODO: Public doc page with more info about this message
         console.warn(`
-          Could not find a registered component named "${componentName}". 
+          Could not find a registered component named "${componentName}".
           If you registered it, is the file that registered it imported by the file that needs to render it?`);
       }
       return ref;
@@ -94,7 +95,9 @@ export default function RenderBlock(props: RenderBlockProps) {
           }
         >
           <For each={state.useBlock.children}>
-            {(child: any) => <RenderBlock block={child} />}
+            {(child: any, index: number) => (
+              <RenderBlock index={index} block={child} />
+            )}
           </For>
         </Show>
       </state.tagName>

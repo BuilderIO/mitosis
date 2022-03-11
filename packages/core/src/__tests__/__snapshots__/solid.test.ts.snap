@@ -96,6 +96,8 @@ export default function Column(props) {
             })}
           >
             {column.content}
+
+            {index}
           </div>
         )}
       </For>
@@ -504,6 +506,7 @@ export default function FormComponent(props) {
             <BuilderBlockComponent
               key={block.id}
               block={block}
+              index={index}
             ></BuilderBlockComponent>
           )}
         </For>
@@ -735,7 +738,9 @@ export default function SelectComponent(props) {
     >
       <For each={props.options}>
         {(option, index) => (
-          <option value={option.value}>{option.name || option.value}</option>
+          <option value={option.value} data-index={index}>
+            {option.name || option.value}
+          </option>
         )}
       </For>
     </select>
