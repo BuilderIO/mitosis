@@ -95,7 +95,9 @@ export default function RenderBlock(props: RenderBlockProps) {
           }
         >
           <For each={state.useBlock.children}>
-            {(child: any, index: number) => <RenderBlock index={index} block={child} />}
+            {(child: any, index: number) => (
+              <RenderBlock index={index} block={child} />
+            )}
           </For>
         </Show>
       </state.tagName>
