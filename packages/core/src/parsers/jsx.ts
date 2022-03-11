@@ -732,6 +732,7 @@ export function parseJsx(
   const output = babel.transform(jsx, {
     configFile: false,
     babelrc: false,
+    comments: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
     plugins: [
       jsxPlugin,
