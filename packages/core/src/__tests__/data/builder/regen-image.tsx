@@ -1,8 +1,7 @@
 import { useState } from '@builder.io/mitosis';
-// @ts-ignore
 import { Image } from '@components';
 
-export default function MyComponent(props: {}) {
+export default function MyComponent(props) {
   const state = useState({ people: ['Steve', 'Sewell'] });
 
   return (

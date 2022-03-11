@@ -1,6 +1,6 @@
 import { useState } from '@builder.io/mitosis';
 
-export default function MyComponent(props: {}) {
+export default function MyComponent(props) {
   const state = useState({ people: ['Steve', 'Sewell'] });
 
   return (

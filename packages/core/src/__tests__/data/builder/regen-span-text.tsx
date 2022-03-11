@@ -1,4 +1,4 @@
-export default function MyComponent(props: {}) {
+export default function MyComponent(props) {
   return (
     <div
       css={{
