@@ -45,7 +45,7 @@ export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
         if (id) {
           if (ids.has(id)) {
             if (el.component?.options?.symbol) {
-              const id = '_' + pad(counter++);
+              const id = pad(counter++);
               el.component.options.symbol.entry = id;
               if (el.component.options.symbol.content) {
                 el.component.options.symbol.content.id = id;
