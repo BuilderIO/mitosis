@@ -163,7 +163,7 @@ function rewriteHandlers(
           binding = invoke(file.import(file.qwikModule, 'qrl'), [
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),
-            '[__props__, __state__]',
+            '[state]',
           ]);
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
           symbolBindings[lastProperty(key)] = binding;

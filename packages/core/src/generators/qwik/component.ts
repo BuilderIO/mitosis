@@ -70,7 +70,6 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     enumerable: false,
     value: { styles: new Map<string, CssStyles>() as any, symbolName: null },
   });
-  fileSet.med.exportConst('__merge', minify`${__merge}`);
   return fileSet;
 }
 
@@ -198,48 +197,15 @@ function generateStyles(
   };
 }
 
-export function renderStateConst(file: File, isMount = false): any {
+export function renderUseLexicalScope(file: File) {
   return function(this: SrcBuilder) {
     return this.emit(
       'const state',
       WS,
       '=',
       WS,
-      file.module == 'med'
-        ? file.exports.get('__merge')
-        : file.import('./med.js', '__merge').name,
-      '(__state__,',
-      WS,
-      '__props__',
-      isMount ? ',true);' : ');',
-      NL,
-    );
-  };
-}
-
-export function renderUseLexicalScope(file: File) {
-  return function(this: SrcBuilder) {
-    return this.emit(
-      'const __scope__',
-      WS,
-      '=',
-      WS,
       file.import(file.qwikModule, 'useLexicalScope').name,
-      '();',
-      NL,
-      'const __props__',
-      WS,
-      '=',
-      WS,
-      '__scope__[0];',
-      NL,
-      'const __state__',
-      WS,
-      '=',
-      WS,
-      '__scope__[1];',
-      NL,
-      renderStateConst(file, false),
+      '()[0];',
     );
   };
 }
@@ -263,28 +229,15 @@ function addComponentOnMount(
     this: SrcBuilder,
   ) {
     this.emit(
-      arrowFnValue(['__props__'], () =>
+      arrowFnValue(['state'], () =>
         this.emit(
           '{',
-          NL,
-          INDENT,
-          'const __state__',
-          WS,
-          '=',
-          WS,
-          componentFile.import(componentFile.qwikModule, 'createStore').name,
-          '({});',
-          NL,
-          renderStateConst(componentFile, true),
           iif(component.hooks.onMount?.code),
           ';',
           useStyles,
           NL,
           'return ',
-          generateQrl(onRenderFile, componentName + '_onRender', [
-            '__props__',
-            '__state__',
-          ]),
+          generateQrl(onRenderFile, componentName + '_onRender', ['state']),
           ';',
           UNINDENT,
           NL,
@@ -293,28 +246,6 @@ function addComponentOnMount(
       ),
     );
   });
-}
-
-declare const __STATE__: Record<string, Record<string, any>>;
-
-function __merge(
-  state: Record<string, any>,
-  props: Record<string, any>,
-  create = false,
-) {
-  for (const key in props) {
-    if (
-      key.indexOf(':') == -1 &&
-      !key.startsWith('__') &&
-      Object.prototype.hasOwnProperty.call(props, key)
-    ) {
-      state[key] = props[key];
-    }
-  }
-  if (create && typeof __STATE__ == 'object' && props.serverStateId) {
-    Object.assign(state, __STATE__[props.serverStateId]);
-  }
-  return state;
 }
 
 function generateQrl(
