@@ -1,6 +1,7 @@
+// @ts-ignore
 import { Hero } from '@components';
 
-export default function MyComponent(props) {
+export default function MyComponent(props: {}) {
   return (
     <Hero
       title="Your Title Here"
