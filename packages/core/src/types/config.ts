@@ -31,6 +31,5 @@ export type MitosisConfig = {
   dest?: string;
   files?: string | string[];
   overridesDir?: string;
-  mapFile?: (info: FileInfo) => FileInfo | Promise<FileInfo>;
   options: Partial<GeneratorOptions>;
 };
