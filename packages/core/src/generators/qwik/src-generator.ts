@@ -53,10 +53,10 @@ export class File {
     return quote(this.qrlPrefix + this.module + '.js');
   }
 
-  exportConst(name: string, value?: any) {
+  exportConst(name: string, value?: any, locallyVisible = false) {
     if (this.exports.has(name)) return;
     this.exports.set(name, this.src.isModule ? name : 'exports.' + name);
-    this.src.const(name, value, true);
+    this.src.const(name, value, true, locallyVisible);
   }
 
   toString() {
@@ -210,10 +210,10 @@ export class SrcBuilder {
   const(
     name: string,
     value?: any,
-    exprt: boolean = false,
+    export_: boolean = false,
     locallyVisible: boolean = false,
   ) {
-    if (exprt) {
+    if (export_) {
       this.emit(
         this.isModule
           ? 'export const '

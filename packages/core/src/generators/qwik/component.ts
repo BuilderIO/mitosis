@@ -1,11 +1,8 @@
-import { stat } from 'fs';
-import { symbolName } from 'typescript';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { minify } from '../minify';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
@@ -14,7 +11,6 @@ import {
   EmitFn,
   File,
   iif,
-  INDENT,
   invoke,
   NL,
   quote,
@@ -117,12 +113,7 @@ export function addComponent(
     if (_opts.isRoot) {
       const symbolName = componentName + '_styles';
       getCommonStyles(fileSet).symbolName = symbolName;
-      useStyles = generateStyles(
-        componentFile,
-        onRenderFile,
-        symbolName,
-        false,
-      );
+      useStyles = generateStyles(componentFile, fileSet.low, symbolName, false);
     }
   } else {
     if (styles.size) {
@@ -141,7 +132,7 @@ export function addComponent(
   componentFile.exportConst(
     componentName,
     invoke(
-      componentFile.import(componentFile.qwikModule, 'component'),
+      componentFile.import(componentFile.qwikModule, 'componentFromQrl'),
       [generateQrl(componentFile, componentName + '_onMount')],
       ['any', 'any'],
     ),
@@ -174,7 +165,7 @@ export function addComponent(
   );
   directives.forEach((code, name) => {
     fileSet.med.import(fileSet.med.qwikModule, 'h');
-    fileSet.med.exportConst(name, code);
+    fileSet.med.exportConst(name, code, true);
   });
 }
 
@@ -189,7 +180,7 @@ function generateStyles(
       invoke(
         componentFile.import(
           componentFile.qwikModule,
-          scoped ? 'withScopedStyles' : 'useStyles',
+          scoped ? 'withScopedStylesFromQrl' : 'useStylesFromQrl',
         ),
         [generateQrl(styleFile, symbol)],
       ),
