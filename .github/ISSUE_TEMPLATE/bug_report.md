@@ -7,23 +7,6 @@ assignees: ''
 
 ---
 
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
----
-
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-
----
-
 <!-- If you have a question or need help regarding how the Builder product works, then https://forum.builder.io is a much better place to ask your question. -->
 
 **Describe the bug**
