@@ -1,5 +1,232 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Parse JSX Image 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {
+            "ref": "pictureRef",
+          },
+          "children": Array [
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "when": "!state.useLazyLoading() || state.load",
+              },
+              "children": Array [
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {},
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "div",
+                  "properties": Object {
+                    "_text": "
+          ",
+                  },
+                },
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {
+                    "alt": "props.altText",
+                    "aria-role": "props.altText ? 'presentation' : undefined",
+                    "class": "'builder-image' + (props.class ? ' ' + props.class : '')",
+                    "css": "{
+  opacity: '1',
+  transition: 'opacity 0.2s ease-in-out',
+  objectFit: 'cover',
+  objectPosition: 'center'
+}",
+                    "onLoad": "state.setLoaded()",
+                    "sizes": "props.sizes",
+                    "src": "props.image",
+                    "srcset": "props.srcset",
+                  },
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "img",
+                  "properties": Object {},
+                },
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {},
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "div",
+                  "properties": Object {
+                    "_text": "
+        ",
+                  },
+                },
+              ],
+              "meta": Object {},
+              "name": "Show",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "srcset": "props.srcset",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "source",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+      ",
+              },
+            },
+          ],
+          "meta": Object {},
+          "name": "picture",
+          "properties": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {
+            "_text": "props.children",
+          },
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "Fragment",
+      "properties": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {},
+    "set": Object {},
+  },
+  "hooks": Object {
+    "onMount": Object {
+      "code": "
+  if (state.useLazyLoading()) {
+    // throttled scroll capture listener
+    const listener = () => {
+      if (pictureRef) {
+        const rect = pictureRef.getBoundingClientRect();
+        const buffer = window.innerHeight / 2;
+
+        if (rect.top < window.innerHeight + buffer) {
+          state.load = true;
+          state.scrollListener = null;
+          window.removeEventListener('scroll', listener);
+        }
+      }
+    };
+
+    state.scrollListener = listener;
+    window.addEventListener('scroll', listener, {
+      capture: true,
+      passive: true
+    });
+    listener();
+  }
+",
+    },
+    "onUnMount": Object {
+      "code": "
+  if (state.scrollListener) {
+    window.removeEventListener('scroll', state.scrollListener);
+  }
+",
+    },
+  },
+  "imports": Array [],
+  "meta": Object {},
+  "name": "Image",
+  "state": Object {
+    "imageLoaded": false,
+    "isBrowser": "@builder.io/mitosis/method:isBrowser() {
+  return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+}",
+    "load": false,
+    "scrollListener": null,
+    "setLoaded": "@builder.io/mitosis/method:setLoaded() {
+  state.imageLoaded = true;
+}",
+    "useLazyLoading": "@builder.io/mitosis/method:useLazyLoading() {
+  // TODO: Add more checks here, like testing for real web browsers
+  return !!props.lazy && state.isBrowser();
+}",
+  },
+  "subComponents": Array [],
+}
+`;
+
 exports[`Parse JSX metadata 1`] = `
 Object {
   "@type": "@builder.io/mitosis/component",
