@@ -298,7 +298,7 @@ export default function Fiddle() {
         return;
       }
       const jsxJson = builderContentToMitosisComponent(builderJson);
-      state.code = componentToMitosis(jsxJson);
+      state.code = componentToMitosis()({ component: jsxJson });
       state.pendingBuilderChange = null;
     },
     async parseLiquidInputCode() {
@@ -331,37 +331,37 @@ export default function Fiddle() {
         console.log('json', json);
         state.output =
           state.outputTab === 'liquid'
-            ? componentToLiquid(json, { plugins })
+            ? componentToLiquid({ plugins })({ component: json })
             : state.outputTab === 'html'
-            ? componentToHtml(json, { plugins })
+            ? componentToHtml({ plugins })({ component: json })
             : state.outputTab === 'webcomponents'
-            ? componentToCustomElement(json, { plugins })
+            ? componentToCustomElement({ plugins })({ component: json })
             : state.outputTab === 'react'
-            ? componentToReact(json, {
+            ? componentToReact({
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
                 plugins,
-              })
+              })({ component: json })
             : state.outputTab === 'swift'
-            ? componentToSwift(json)
+            ? componentToSwift()({ component: json })
             : state.outputTab === 'reactNative'
-            ? componentToReactNative(json, {
+            ? componentToReactNative({
                 stateType: state.options.reactStateType,
                 plugins,
-              })
+              })({ component: json })
             : state.outputTab === 'template'
-            ? componentToTemplate(json, {
+            ? componentToTemplate({
                 plugins,
-              })
+              })({ component: json })
             : state.outputTab === 'solid'
-            ? componentToSolid(json, { plugins })
+            ? componentToSolid({ plugins })({ component: json })
             : state.outputTab === 'angular'
-            ? componentToAngular(json, { plugins })
+            ? componentToAngular({ plugins })({ component: json })
             : state.outputTab === 'svelte'
-            ? componentToSvelte(json, {
+            ? componentToSvelte({
                 stateType: state.options.svelteStateType,
                 plugins,
-              })
+              })({ component: json })
             : // TODO: add qwik support back again
             // : state.outputTab === 'qwik'
             // ? (
@@ -371,14 +371,14 @@ export default function Fiddle() {
             //   ).files.find((file) => file.path.endsWith('template.tsx'))!
             //     ?.contents
             state.outputTab === 'mitosis'
-            ? componentToMitosis(json)
+            ? componentToMitosis()({ component: json })
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
-            ? JSON.stringify(componentToBuilder(json), null, 2)
-            : componentToVue(json, { plugins });
+            ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
+            : componentToVue({ plugins })({ component: json, path: '' });
 
-        const newBuilderData = componentToBuilder(json);
+        const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
       } catch (err) {
         if (debug) {
@@ -522,8 +522,8 @@ export default function Fiddle() {
       state.inputCode =
         state.inputTab === 'liquid'
           ? // TODO: generate reactive script
-            componentToLiquid(json, { plugins, reactive: true })
-          : componentToAngular(json, { plugins });
+            componentToLiquid({ plugins, reactive: true })({ component: json })
+          : componentToAngular({ plugins })({ component: json });
       setQueryParam('inputTab', tab);
     },
     { fireImmediately: false },
