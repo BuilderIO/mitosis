@@ -3,7 +3,7 @@ import { componentToBuilder as builder } from './generators/builder';
 import {
   componentToCustomElement as customElement,
   componentToCustomElement as webcomponent,
-  componentToHtml as html
+  componentToHtml as html,
 } from './generators/html';
 import { componentToMitosis as mitosis } from './generators/mitosis';
 import { componentToLiquid as liquid } from './generators/liquid';
