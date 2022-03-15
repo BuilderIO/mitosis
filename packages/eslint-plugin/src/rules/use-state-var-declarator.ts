@@ -1,6 +1,5 @@
-import { types } from '@babel/core';
 import { Rule } from 'eslint';
-import { match, not, when } from 'ts-pattern';
+import { match, not } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
 
@@ -13,14 +12,9 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description:
-        'disallow naming the event arg for callbacks anything other than "event".',
+        'disallow assigning useState() to a variable with name other than state.',
       recommended: true,
     },
-    fixable: 'code',
-    schema: [
-      {},
-      // fill in your schema
-    ],
   },
 
   create(context) {
@@ -39,44 +33,32 @@ const rule: Rule.RuleModule = {
     // Public
     // ----------------------------------------------------------------------
     //
-
     const listener: Rule.RuleListener = {
-      JSXExpressionContainer(node) {
+      CallExpression(node) {
         match(node)
-          // Ignore zero length array's
-          .with({ expression: { params: [] } }, noOp)
-          // Ignore anything that doesn't have a function expression
-          .with({ expression: not(when(types.isFunction)) }, noOp)
-          // The actual match case
           .with(
             {
-              parent: when(types.isJSXAttribute),
-              expression: {
-                // WARN: This is a list, not a 1-length tuple, this might not
-                // work on cases that have multiple args - I don't know if there
-                // is anything in the web api that expects multiple args for the
-                // callback.
-                params: [{ type: 'Identifier', name: not('event') }],
+              callee: {
+                name: 'useState',
+              },
+              parent: {
+                type: 'VariableDeclarator',
+                id: {
+                  name: not('state'),
+                },
               },
             },
-            ({
-              expression: {
-                params: [arg1],
-              },
-            }: any) => {
+            (node) => {
               context.report({
-                node: arg1,
-                message: 'Callback parameter must be called `event`',
-                fix(fixer) {
-                  return fixer.replaceText(arg1, 'event');
-                },
+                node: node.parent.id as any,
+                message:
+                  'useState should be exclusively assigned to a variable called state',
               });
             },
           )
           .otherwise(noOp);
       },
     };
-
     return listener;
   },
 };
