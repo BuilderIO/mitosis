@@ -33,6 +33,7 @@
   - [JS framework fatigue](#js-framework-fatigue)
   - [Design to code](#design-to-code)
 - [Status](#status)
+- [Contribute](#contribute)
 - [Coming soon](#coming-soon)
 - [Community](#community)
 - [Related Projects](#related-projects)
@@ -85,6 +86,12 @@ With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/
 | Webcomponents | Beta         |
 | React Native  | Beta         |
 | SwiftUI       | Experimental |
+
+## Contribute
+
+Interested in contribute? Head over to [developer.md](./developer.md) and see how you can get setup & started!
+
+Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) page and grab your first issue!
 
 ## Coming soon
 
