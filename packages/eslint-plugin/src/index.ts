@@ -4,6 +4,7 @@ import isMitosisPath from './helpers/isMitosisPath';
 import cssNoVars from './rules/css-no-vars';
 import refNoCurrent from './rules/ref-no-current';
 import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
+import noAssignPropsToState from './rules/no-assign-props-to-state';
 import useStateVarDeclarator from './rules/use-state-var-declarator';
 import noAsyncMethodsOnState from './rules/no-async-methods-on-state';
 import notVarDeclarationInJSX from './rules/no-var-declaration-in-jsx';
@@ -84,6 +85,7 @@ export const rules = {
   'res-no-current': refNoCurrent,
   'static-control-flow': staticControlFlow,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
+  'no-assign-props-to-state': noAssignPropsToState,
   'use-state-var-declarator': useStateVarDeclarator,
   'no-async-methods-on-state': noAsyncMethodsOnState,
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,

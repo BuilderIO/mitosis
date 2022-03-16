@@ -65,7 +65,7 @@ ruleTester.run('no-async-methods-on-state', rule, {
         return <div />
       }
       `,
-      errors: ['Async methods can\'t be defined on "state"'],
+      errors: ['async methods can\'t be defined on "state"'],
     },
   ],
 });

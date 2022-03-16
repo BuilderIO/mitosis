@@ -10,8 +10,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'disallow defining variables with the same name as a state property',
+      description: 'disallow defining async methods as a state property',
       recommended: true,
     },
   },
@@ -66,13 +65,13 @@ const rule: Rule.RuleModule = {
           )
             continue;
 
-          const { async } = (prop as types.ObjectProperty)
+          const { async } = (prop as types.Property)
             .value as types.ArrowFunctionExpression;
 
           if (async) {
             context.report({
               node: prop,
-              message: 'Async methods can\'t be defined on "state"',
+              message: 'async methods can\'t be defined on "state"',
             });
           }
         }
