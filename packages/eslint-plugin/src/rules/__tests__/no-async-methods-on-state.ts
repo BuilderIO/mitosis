@@ -1,5 +1,5 @@
 import { RuleTester } from 'eslint';
-import rule from '../no-var-name-same-as-state-property';
+import rule from '../no-async-methods-on-state';
 
 const opts = {
   filename: 'component.lite.tsx',
@@ -14,23 +14,20 @@ const opts = {
 
 var ruleTester = new RuleTester();
 
-ruleTester.run('no-var-name-same-as-state-property', rule, {
+ruleTester.run('no-async-methods-on-state', rule, {
   valid: [
     {
       ...opts,
       code: `
       import { useState } from '@builder.io/mitosis';
-      
-      export default function MyComponent(props) {
+      export default function MyComponent() {
         const state = useState({
-            foo: "bar"
-          })
-          
-          const foo_ = bar;
-      
-        return (
-          <div />
-        );
+          doSomethingAsync(event) {
+            void (async function() {
+              const response = await fetch(); /* ... */
+            })();
+          },
+        });
       }
       `,
     },
@@ -39,17 +36,13 @@ ruleTester.run('no-var-name-same-as-state-property', rule, {
       ...opts,
       code: `
       import { useState } from '@builder.io/mitosis';
-      
-      export default function MyComponent(props) {
+      export default function MyComponent() {
         const state = useState({
-            foo: "bar"
-          })
-          
-          const foo = bar;
-      
-        return (
-          <div />
-        );
+          async doSomethingAsync(event) {
+            const response = await fetch(); /* ... */
+          },
+        });
+        return <div />
       }
       `,
       filename: 'file.jsx',
@@ -60,22 +53,19 @@ ruleTester.run('no-var-name-same-as-state-property', rule, {
       ...opts,
       code: `
       import { useState } from '@builder.io/mitosis';
-      
-      export default function MyComponent(props) {
+
+      export default function MyComponent() {
         const state = useState({
-            foo: "bar"
-          })
-          
-          const foo = bar;
+          async doSomethingAsync(event) {
       
-        return (
-          <div />
-        );
+            const response = await fetch(); /* ... */
+          },
+        });
+        
+        return <div />
       }
       `,
-      errors: [
-        'variables with the same name as a state property will shadow it',
-      ],
+      errors: ['Async methods can\'t be defined on "state"'],
     },
   ],
 });

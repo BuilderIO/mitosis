@@ -5,6 +5,7 @@ import cssNoVars from './rules/css-no-vars';
 import refNoCurrent from './rules/ref-no-current';
 import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
 import useStateVarDeclarator from './rules/use-state-var-declarator';
+import noAsyncMethodsOnState from './rules/no-async-methods-on-state';
 import notVarDeclarationInJSX from './rules/no-var-declaration-in-jsx';
 import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
 import noVarNameSameAsStateProperty from './rules/no-var-name-same-as-state-property';
@@ -84,6 +85,7 @@ export const rules = {
   'static-control-flow': staticControlFlow,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
   'use-state-var-declarator': useStateVarDeclarator,
+  'no-async-methods-on-state': noAsyncMethodsOnState,
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
   'no-var-name-same-as-state-property': noVarNameSameAsStateProperty,

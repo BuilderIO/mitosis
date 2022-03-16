@@ -51,55 +51,29 @@ const rule: Rule.RuleModule = {
           }
         });
 
-        if (!useState || !types.isIdentifier(node.callee)) return;
-
-        const useStateHookLocalName = useState?.local.name;
-
         if (
-          node.callee.name !== useStateHookLocalName ||
+          !useState ||
+          !types.isIdentifier(node.callee) ||
           !types.isObjectExpression(node.arguments[0])
         )
           return;
-        const component = program.body.find((n) =>
-          types.isExportDefaultDeclaration(n),
-        );
-
-        if (!types.isExportDefaultDeclaration(component)) return;
-
-        if (
-          !types.isFunctionDeclaration(component.declaration) &&
-          !types.isArrowFunctionExpression(component.declaration)
-        )
-          return;
-        if (!types.isBlock(component.declaration.body)) return;
-        const { body: componentBody } = component.declaration.body;
 
         for (const prop of node.arguments[0].properties) {
           if (
             !types.isProperty(prop) ||
-            !types.isIdentifier((prop as types.Property).key)
+            !types.isIdentifier((prop as types.Property).key) ||
+            !types.isFunctionExpression((prop as types.Property).value)
           )
             continue;
 
-          const { name } = (prop as types.Property).key as types.Identifier;
+          const { async } = (prop as types.ObjectProperty)
+            .value as types.ArrowFunctionExpression;
 
-          for (const n of componentBody) {
-            if (!types.isVariableDeclaration(n)) continue;
-
-            for (const d of n.declarations) {
-              if (
-                !types.isVariableDeclarator(d) ||
-                !types.isIdentifier(d.id) ||
-                d.id.name !== name
-              )
-                continue;
-
-              context.report({
-                node: d,
-                message:
-                  'variables with the same name as a state property will shadow it',
-              });
-            }
+          if (async) {
+            context.report({
+              node: prop,
+              message: 'Async methods can\'t be defined on "state"',
+            });
           }
         }
       },
