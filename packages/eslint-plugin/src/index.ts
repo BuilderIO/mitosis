@@ -1,12 +1,13 @@
 import { Rule } from 'eslint';
 import { types } from '@babel/core';
-import cssNoVars from './rules/css-no-vars';
 import isMitosisPath from './helpers/isMitosisPath';
-import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
+import cssNoVars from './rules/css-no-vars';
 import refNoCurrent from './rules/ref-no-current';
+import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
 import useStateVarDeclarator from './rules/use-state-var-declarator';
 import notVarDeclarationInJSX from './rules/no-var-declaration-in-jsx';
 import jsxCallbackArrowFunction from './rules/jsx-callback-arrow-function';
+import noVarNameSameAsStateProperty from './rules/no-var-name-same-as-state-property';
 import onlyDefaultFunctionAndImports from './rules/only-default-function-and-imports';
 import noConditionalLogicInComponentRender from './rules/no-conditional-logic-in-component-render';
 import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
@@ -85,6 +86,7 @@ export const rules = {
   'use-state-var-declarator': useStateVarDeclarator,
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
+  'no-var-name-same-as-state-property': noVarNameSameAsStateProperty,
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
   'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
   'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
