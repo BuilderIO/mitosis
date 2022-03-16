@@ -4,7 +4,7 @@ This rule warns about a Mitosis limitation.
 
 ## Rule Details
 
-This rule aims to declare a variable with the same name as a state property.
+This rule aims to warn you if you use and async method as a value for state property.
 
 Examples of **incorrect** code for this rule:
 

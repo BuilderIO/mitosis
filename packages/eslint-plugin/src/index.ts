@@ -3,6 +3,7 @@ import { types } from '@babel/core';
 import isMitosisPath from './helpers/isMitosisPath';
 import cssNoVars from './rules/css-no-vars';
 import refNoCurrent from './rules/ref-no-current';
+import noStateDestructuring from './rules/no-state-destructuring';
 import jsxCallbackArgNameRule from './rules/jsx-callback-arg-name';
 import noAssignPropsToState from './rules/no-assign-props-to-state';
 import useStateVarDeclarator from './rules/use-state-var-declarator';
@@ -84,6 +85,7 @@ export const rules = {
   'css-no-vars': cssNoVars,
   'res-no-current': refNoCurrent,
   'static-control-flow': staticControlFlow,
+  'no-state-destructuring': noStateDestructuring,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
   'no-assign-props-to-state': noAssignPropsToState,
   'use-state-var-declarator': useStateVarDeclarator,
