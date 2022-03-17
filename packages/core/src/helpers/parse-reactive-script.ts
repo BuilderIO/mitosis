@@ -8,8 +8,7 @@ export type ParseReactiveScriptOptions = {
   format: 'html' | 'js';
 };
 
-export const reactiveScriptRe =
-  /<script\s[^>]*reactive[^>]*>([\s\S]*)<\/\s*script>/i;
+export const reactiveScriptRe = /<script\s[^>]*reactive[^>]*>([\s\S]*)<\/\s*script>/i;
 
 export function parseReactiveScript(
   code: string,

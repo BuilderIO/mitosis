@@ -27,7 +27,7 @@ const enum Path {
 export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
   let counter = 0;
   const ids = new Set<string>();
-  forEach(content, function (this, el: any) {
+  forEach(content, function(this, el: any) {
     if (
       this.key === 'jsCode' &&
       isString(el) &&
@@ -86,7 +86,7 @@ export function convertBuilderContentToSymbolHierarchy(
     depthFirstSymbols: [],
     [content.id!]: [],
   };
-  forEach(content, function (this, el: any) {
+  forEach(content, function(this, el: any) {
     let cssCode = el?.cssCode;
     if (cssCode) {
       collectComponentStyles && collectComponentStyles.push(minify`${cssCode}`);

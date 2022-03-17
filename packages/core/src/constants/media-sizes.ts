@@ -31,5 +31,4 @@ export const sizes = {
   },
 };
 
-export const mediaQueryRegex =
-  /@\s*?media\s*?\(\s*?max-width\s*?:\s*?(\d+)(px)\s*?\)\s*?/;
+export const mediaQueryRegex = /@\s*?media\s*?\(\s*?max-width\s*?:\s*?(\d+)(px)\s*?\)\s*?/;

@@ -152,56 +152,56 @@ const blockToLiquid = (
 };
 
 // TODO: add JS support similar to componentToHtml()
-export const componentToLiquid =
-  (options: ToLiquidOptions = {}): Transpiler =>
-  ({ component }) => {
-    let json = fastClone(component);
-    if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
-    }
-    const css = collectCss(json);
-    stripMetaProperties(json);
-    if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
-    }
-    let str = json.children.map((item) => blockToLiquid(item)).join('\n');
+export const componentToLiquid = (
+  options: ToLiquidOptions = {},
+): Transpiler => ({ component }) => {
+  let json = fastClone(component);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
+  const css = collectCss(json);
+  stripMetaProperties(json);
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
+  let str = json.children.map((item) => blockToLiquid(item)).join('\n');
 
-    if (css.trim().length) {
-      str += `<style>${css}</style>`;
-    }
+  if (css.trim().length) {
+    str += `<style>${css}</style>`;
+  }
 
-    if (options.reactive) {
-      const stateObjectString = getStateObjectStringFromComponent(json);
-      if (stateObjectString.trim().length > 4) {
-        str += `<script reactive>
+  if (options.reactive) {
+    const stateObjectString = getStateObjectStringFromComponent(json);
+    if (stateObjectString.trim().length > 4) {
+      str += `<script reactive>
         export default {
           state: ${stateObjectString}
         }
       </script>`;
-      }
     }
+  }
 
-    if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
+  if (options.prettier !== false) {
+    try {
+      str = format(str, {
+        parser: 'html',
+        htmlWhitespaceSensitivity: 'ignore',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Could not prettify', { string: str }, err);
     }
-    if (options.prettier !== false) {
-      try {
-        str = format(str, {
-          parser: 'html',
-          htmlWhitespaceSensitivity: 'ignore',
-          plugins: [
-            // To support running in browsers
-            require('prettier/parser-html'),
-            require('prettier/parser-postcss'),
-            require('prettier/parser-babel'),
-          ],
-        });
-      } catch (err) {
-        console.warn('Could not prettify', { string: str }, err);
-      }
-    }
-    if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
-    }
-    return str;
-  };
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
+  }
+  return str;
+};

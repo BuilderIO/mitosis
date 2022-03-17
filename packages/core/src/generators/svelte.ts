@@ -129,7 +129,7 @@ export const blockToSvelte = (
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (isMitosisNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
@@ -146,74 +146,72 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
   });
 };
 
-export const componentToSvelte =
-  (options: ToSvelteOptions = {}): Transpiler =>
-  ({ component }) => {
-    const useOptions: ToSvelteOptions = {
-      ...options,
-      stateType: 'variables',
-    };
-    // Make a copy we can safely mutate, similar to babel's toolchain
-    let json = fastClone(component);
-    if (useOptions.plugins) {
-      json = runPreJsonPlugins(json, useOptions.plugins);
-    }
+export const componentToSvelte = (
+  options: ToSvelteOptions = {},
+): Transpiler => ({ component }) => {
+  const useOptions: ToSvelteOptions = {
+    ...options,
+    stateType: 'variables',
+  };
+  // Make a copy we can safely mutate, similar to babel's toolchain
+  let json = fastClone(component);
+  if (useOptions.plugins) {
+    json = runPreJsonPlugins(json, useOptions.plugins);
+  }
 
-    const refs = Array.from(getRefs(json));
-    useBindValue(json, useOptions);
+  const refs = Array.from(getRefs(json));
+  useBindValue(json, useOptions);
 
-    if (useOptions.plugins) {
-      json = runPostJsonPlugins(json, useOptions.plugins);
-    }
-    const css = collectCss(json);
-    stripMetaProperties(json);
+  if (useOptions.plugins) {
+    json = runPostJsonPlugins(json, useOptions.plugins);
+  }
+  const css = collectCss(json);
+  stripMetaProperties(json);
 
-    let dataString = getStateObjectStringFromComponent(json, {
-      data: true,
-      functions: false,
-      getters: false,
-      format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
-      keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
+  let dataString = getStateObjectStringFromComponent(json, {
+    data: true,
+    functions: false,
+    getters: false,
+    format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
+    keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(code, {
+        includeState: useOptions.stateType === 'variables',
+      }),
+  });
+
+  const getterString = getStateObjectStringFromComponent(json, {
+    data: false,
+    getters: true,
+    functions: false,
+    format: 'variables',
+    keyPrefix: '$: ',
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(
+        code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
+        {
           includeState: useOptions.stateType === 'variables',
-        }),
-    });
+        },
+      ),
+  });
 
-    const getterString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: true,
-      functions: false,
-      format: 'variables',
-      keyPrefix: '$: ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(
-          code
-            .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-            .replace(/\)/, ') => '),
-          {
-            includeState: useOptions.stateType === 'variables',
-          },
-        ),
-    });
+  const functionsString = getStateObjectStringFromComponent(json, {
+    data: false,
+    getters: false,
+    functions: true,
+    format: 'variables',
+    keyPrefix: 'function ',
+    valueMapper: (code) =>
+      stripStateAndPropsRefs(code, {
+        includeState: useOptions.stateType === 'variables',
+      }),
+  });
 
-    const functionsString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: false,
-      functions: true,
-      format: 'variables',
-      keyPrefix: 'function ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-    });
+  const hasData = dataString.length > 4;
 
-    const hasData = dataString.length > 4;
+  const props = Array.from(getProps(json));
 
-    const props = Array.from(getProps(json));
-
-    let str = dedent`
+  let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${
@@ -285,28 +283,28 @@ export const componentToSvelte =
     }
   `;
 
-    if (useOptions.plugins) {
-      str = runPreCodePlugins(str, useOptions.plugins);
+  if (useOptions.plugins) {
+    str = runPreCodePlugins(str, useOptions.plugins);
+  }
+  if (useOptions.prettier !== false) {
+    try {
+      str = format(str, {
+        parser: 'svelte',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-html'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-babel'),
+          require('prettier/parser-typescript'),
+          require('prettier-plugin-svelte'),
+        ],
+      });
+    } catch (err) {
+      console.warn('Could not prettify', { string: str }, err);
     }
-    if (useOptions.prettier !== false) {
-      try {
-        str = format(str, {
-          parser: 'svelte',
-          plugins: [
-            // To support running in browsers
-            require('prettier/parser-html'),
-            require('prettier/parser-postcss'),
-            require('prettier/parser-babel'),
-            require('prettier/parser-typescript'),
-            require('prettier-plugin-svelte'),
-          ],
-        });
-      } catch (err) {
-        console.warn('Could not prettify', { string: str }, err);
-      }
-    }
-    if (useOptions.plugins) {
-      str = runPostCodePlugins(str, useOptions.plugins);
-    }
-    return str;
-  };
+  }
+  if (useOptions.plugins) {
+    str = runPostCodePlugins(str, useOptions.plugins);
+  }
+  return str;
+};

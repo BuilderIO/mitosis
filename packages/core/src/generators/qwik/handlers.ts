@@ -62,7 +62,7 @@ export function renderHandlers(
 }
 
 function renderHandler(file: File, symbol: string, code: string) {
-  file.exportConst(symbol, function (this: SrcBuilder) {
+  file.exportConst(symbol, function(this: SrcBuilder) {
     this.emit([
       arrowFnBlock([], [renderUseLexicalScope(file), wrapWithUse(file, code)]),
     ]);
@@ -76,7 +76,7 @@ function wrapWithUse(
 ): string | ((this: SrcBuilder) => void) {
   const needsEvent = !!code.match(/\bevent\b/);
   if (needsEvent) {
-    return function (this: SrcBuilder) {
+    return function(this: SrcBuilder) {
       this.emit('{', NL, INDENT);
       needsEvent &&
         this.emit(
