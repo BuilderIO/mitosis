@@ -28,7 +28,7 @@ ruleTester.run('no-assign-props-to-state', rule, {
         });
       }
       `,
-    }
+    },
     // Doesn't apply to none mitosis files
     {
       ...opts,
