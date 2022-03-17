@@ -14,9 +14,9 @@ export default function SmileReviews(props: SmileReviewsProps) {
   // TODO: allow async function here
   onMount(() => {
     fetch(
-      `https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=${
-        props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'
-      }&productId=${props.productId || '2410511106127'}`,
+      `https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=${props.apiKey ||
+        'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=${props.productId ||
+        '2410511106127'}`,
     )
       .then((res) => res.json())
       .then((data) => {

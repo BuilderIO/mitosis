@@ -8,14 +8,15 @@ type MapStylesOptions = {
   map: (styles: MitosisStyles, context: TraverseContext) => MitosisStyles;
 };
 
-export const mapStyles =
-  (pluginOptions: MapStylesOptions) => (options: any) => ({
-    json: {
-      pre: (json: MitosisComponent) => {
-        tarverseNodes(json, (node, context) => {
-          const styles = getStyles(node);
-          setStyles(node, pluginOptions.map(styles || {}, context));
-        });
-      },
+export const mapStyles = (pluginOptions: MapStylesOptions) => (
+  options: any,
+) => ({
+  json: {
+    pre: (json: MitosisComponent) => {
+      tarverseNodes(json, (node, context) => {
+        const styles = getStyles(node);
+        setStyles(node, pluginOptions.map(styles || {}, context));
+      });
     },
-  });
+  },
+});

@@ -14,7 +14,7 @@ export const DIRECTIVES: Record<
   string | ((node: MitosisNode, blockFn: () => void) => void)
 > = {
   Show: (node: MitosisNode, blockFn: () => void) =>
-    function (this: SrcBuilder) {
+    function(this: SrcBuilder) {
       const expr = node.bindings.when;
       this.isJSX && this.emit('{', WS);
       this.emit(expr, WS, '?', INDENT, NL);
@@ -23,7 +23,7 @@ export const DIRECTIVES: Record<
       this.isJSX && this.emit('}', NL);
     },
   For: (node: MitosisNode, blockFn: () => void) =>
-    function (this: SrcBuilder) {
+    function(this: SrcBuilder) {
       const expr = node.bindings.each!;
       this.isJSX && this.emit('{', WS);
       this.emit('(', expr, WS, '||', WS, '[])');
@@ -93,9 +93,8 @@ export function Image(props: {
     const imgProps = {
       src: props.image,
       style:
-        `object-fit:${props.backgroundSize || 'cover'};object-position:${
-          props.backgroundPosition || 'center'
-        };` +
+        `object-fit:${props.backgroundSize ||
+          'cover'};object-position:${props.backgroundPosition || 'center'};` +
         (props.aspectRatio
           ? 'position:absolute;height:100%;width:100%;top:0;left:0'
           : ''),
@@ -127,9 +126,8 @@ export function Image(props: {
     ) {
       const sizingDiv = h('div', {
         class: 'builder-image-sizer',
-        style: `width:100%;padding-top:${
-          (props.aspectRatio || 1) * 100
-        }%;pointer-events:none;font-size:0`,
+        style: `width:100%;padding-top:${(props.aspectRatio || 1) *
+          100}%;pointer-events:none;font-size:0`,
       });
       jsx.push(sizingDiv);
     }

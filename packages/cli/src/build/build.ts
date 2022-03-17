@@ -4,6 +4,8 @@ import {
   componentToSolid,
   componentToSwift,
   componentToVue,
+  componentToHtml,
+  componentToCustomElement,
   contextToReact,
   contextToVue,
   MitosisComponent,
@@ -140,6 +142,10 @@ const getTranspilerForTarget = ({
   options: MitosisConfig;
 }): Transpiler => {
   switch (target) {
+    case 'customElement':
+      return componentToCustomElement(options.options.customElement);
+    case 'html':
+      return componentToHtml(options.options.html);
     case 'reactNative':
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
@@ -150,6 +156,8 @@ const getTranspilerForTarget = ({
       return componentToSwift();
     case 'solid':
       return componentToSolid();
+    case 'webcomponent':
+      return componentToCustomElement(options.options.webcomponent);
     default:
       // TO-DO: throw instead of `never`
       return null as never;
