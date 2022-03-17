@@ -143,9 +143,9 @@ const getTranspilerForTarget = ({
 }): Transpiler => {
   switch (target) {
     case 'customElement':
-      return componentToCustomElement(options.options.customElement)
+      return componentToCustomElement(options.options.customElement);
     case 'html':
-      return componentToHtml(options.options.html)
+      return componentToHtml(options.options.html);
     case 'reactNative':
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
@@ -155,9 +155,9 @@ const getTranspilerForTarget = ({
     case 'swift':
       return componentToSwift();
     case 'solid':
-      return componentToSolid()
+      return componentToSolid();
     case 'webcomponent':
-      return componentToCustomElement(options.options.webcomponent)
+      return componentToCustomElement(options.options.webcomponent);
     default:
       // TO-DO: throw instead of `never`
       return null as never;
