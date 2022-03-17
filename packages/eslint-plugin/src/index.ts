@@ -84,6 +84,8 @@ export const rules = {
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
-  'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
-  'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
+  'no-conditional-logic-in-component-render':
+    noConditionalLogicInComponentRender,
+  'no-var-declaration-or-assignment-in-component':
+    noVarDeclarationOrAssignmentInComponent,
 };
