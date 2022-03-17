@@ -69,9 +69,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
   return fileSet;
 }
 
-function getCommonStyles(
-  fileSet: FileSet,
-): {
+function getCommonStyles(fileSet: FileSet): {
   styles: Map<string, CssStyles>;
   symbolName: string | null;
 } {
@@ -146,7 +144,7 @@ export function addComponent(
       [],
       [
         renderUseLexicalScope(onRenderFile),
-        function(this: SrcBuilder) {
+        function (this: SrcBuilder) {
           return this.emit(
             'return ',
             renderJSXNodes(
@@ -175,7 +173,7 @@ function generateStyles(
   symbol: string,
   scoped: boolean,
 ): EmitFn {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     this.emit(
       invoke(
         componentFile.import(
@@ -189,7 +187,7 @@ function generateStyles(
 }
 
 export function renderUseLexicalScope(file: File) {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     return this.emit(
       'const state',
       WS,
@@ -216,27 +214,28 @@ function addComponentOnMount(
   component: MitosisComponent,
   useStyles: EmitFn,
 ) {
-  componentFile.exportConst(componentName + '_onMount', function(
-    this: SrcBuilder,
-  ) {
-    this.emit(
-      arrowFnValue(['state'], () =>
-        this.emit(
-          '{',
-          iif(component.hooks.onMount?.code),
-          ';',
-          useStyles,
-          NL,
-          'return ',
-          generateQrl(onRenderFile, componentName + '_onRender', ['state']),
-          ';',
-          UNINDENT,
-          NL,
-          '}',
+  componentFile.exportConst(
+    componentName + '_onMount',
+    function (this: SrcBuilder) {
+      this.emit(
+        arrowFnValue(['state'], () =>
+          this.emit(
+            '{',
+            iif(component.hooks.onMount?.code),
+            ';',
+            useStyles,
+            NL,
+            'return ',
+            generateQrl(onRenderFile, componentName + '_onRender', ['state']),
+            ';',
+            UNINDENT,
+            NL,
+            '}',
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 }
 
 function generateQrl(

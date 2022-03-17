@@ -1,5 +1,5 @@
-import { build } from 'gluegun'
-import { Toolbox } from 'gluegun/build/types/domain/toolbox'
+import { build } from 'gluegun';
+import { Toolbox } from 'gluegun/build/types/domain/toolbox';
 
 const help = (toolbox: Toolbox) =>
   toolbox.print.info(
@@ -92,8 +92,8 @@ GENERATOR OPTIONS
 	--includeIds=<include_ids>
 	--styles=<library_or_method>
 	--state=<library_or_method>
-`.trim()
-  )
+`.trim(),
+  );
 
 /**
  * Create the cli and kick it off
@@ -109,12 +109,12 @@ async function run(argv: any) {
     // enable the following method if you'd like to skip loading one of these core extensions
     // this can improve performance if they're not necessary for your project:
     .exclude([])
-    .create()
+    .create();
   // and run it
-  const toolbox = await cli.run(argv)
+  const toolbox = await cli.run(argv);
 
   // send it back (for testing, mostly)
-  return toolbox
+  return toolbox;
 }
 
-module.exports = { run }
+module.exports = { run };
