@@ -40,15 +40,12 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
 };
 
-const attributeKeyExceptionsMap: { [key: string]: string } = {
+const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
 };
 
 const updateKeyIfException = (key: string): string => {
-  return attributeKeyExceptionsMap[key] ?? key;
-};
-const normalizeAttributeKey = (key: string): string => {
-  return `"${key.replace(/\s/g, '')}"`;
+  return ATTRIBUTE_KEY_EXCEPTIONS_MAP[key] ?? key;
 };
 
 const needsSetAttribute = (key: string): boolean => {
@@ -60,7 +57,7 @@ const generateSetElementAttributeCode = (
   useValue: string,
 ): string => {
   return needsSetAttribute(key)
-    ? `;el.setAttribute(${normalizeAttributeKey(key)}, ${useValue});`
+    ? `;el.setAttribute("${key}", ${useValue});`
     : `;el.${updateKeyIfException(key)} = ${useValue}`;
 };
 
