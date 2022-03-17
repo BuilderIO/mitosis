@@ -66,7 +66,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               css={{ height: '30px', width: '30px', marginRight: '10px' }}
               src={review.avatar}
             />
-            <div class={showReview ? 'bg-primary' : 'bg-secondary'}>
+            <div class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'}>
               <div>N: {index}</div>
               <div>{review.author}</div>
               <div>{review.reviewMessage}</div>
