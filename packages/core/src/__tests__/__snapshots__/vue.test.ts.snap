@@ -853,14 +853,20 @@ export default {
 
 exports[`Vue Stamped.io 1`] = `
 "<template>
-  <div>
+  <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
 
     <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
 
     <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
       <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div>
+      <div
+        :class=\\"
+          _classStringToObject(
+            this.showReviewPrompt ? 'bg-primary' : 'bg-secondary'
+          )
+        \\"
+      >
         <div>N: {{ index }}</div>
         <div>{{ review.author }}</div>
         <div>{{ review.reviewMessage }}</div>
@@ -874,7 +880,7 @@ export default {
 
   props: [\\"apiKey\\", \\"productId\\"],
 
-  data: () => ({ reviews: [], showReviewPrompt: false }),
+  data: () => ({ reviews: [], name: \\"test\\", showReviewPrompt: false }),
 
   mounted() {
     fetch(
@@ -886,6 +892,20 @@ export default {
       .then((data) => {
         this.reviews = data.data;
       });
+  },
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
   },
 };
 </script>

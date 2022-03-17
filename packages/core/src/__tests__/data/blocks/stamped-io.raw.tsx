@@ -8,6 +8,7 @@ type SmileReviewsProps = {
 export default function SmileReviews(props: SmileReviewsProps) {
   const state = useState({
     reviews: [] as any[],
+    name: 'test',
     showReviewPrompt: false,
   });
 
@@ -25,7 +26,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
   });
 
   return (
-    <div>
+    <div data-user={state.name}>
       <button onClick={() => (state.showReviewPrompt = true)}>
         Write a review
       </button>
@@ -65,7 +66,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               css={{ height: '30px', width: '30px', marginRight: '10px' }}
               src={review.avatar}
             />
-            <div>
+            <div class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'}>
               <div>N: {index}</div>
               <div>{review.author}</div>
               <div>{review.reviewMessage}</div>
