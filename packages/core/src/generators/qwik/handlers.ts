@@ -62,10 +62,13 @@ export function renderHandlers(
 }
 
 function renderHandler(file: File, symbol: string, code: string) {
+  const body = [wrapWithUse(file, code)];
+  const shouldRenderStateRestore = code.indexOf('state') !== -1;
+  if (shouldRenderStateRestore) {
+    body.unshift(renderUseLexicalScope(file));
+  }
   file.exportConst(symbol, function (this: SrcBuilder) {
-    this.emit([
-      arrowFnBlock([], [renderUseLexicalScope(file), wrapWithUse(file, code)]),
-    ]);
+    this.emit([arrowFnBlock([], body)]);
   });
   file.src.emit(NL);
 }
