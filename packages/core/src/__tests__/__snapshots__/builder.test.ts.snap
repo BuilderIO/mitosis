@@ -1533,7 +1533,9 @@ Object {
       Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
-        "bindings": Object {},
+        "bindings": Object {
+          "data-user": "state.name",
+        },
         "children": Array [
           Object {
             "@type": "@builder.io/sdk:Element",
@@ -1835,7 +1837,7 @@ Object {
     ],
     "jsCode": "var props = state;
 
-Object.assign(state, { reviews: [], showReviewPrompt: false });
+Object.assign(state, { reviews: [], name: \\"test\\", showReviewPrompt: false });
 
 fetch(
   \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
@@ -1849,7 +1851,7 @@ fetch(
 ",
     "tsCode": "var props = state;
 
-useState({ reviews: [], showReviewPrompt: false });
+useState({ reviews: [], name: \\"test\\", showReviewPrompt: false });
 
 onMount(() => {
   fetch(
@@ -1871,7 +1873,11 @@ exports[`Builder Stamped 2`] = `
 "import { useState, Show, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({ reviews: [], showReviewPrompt: false });
+  const state = useState({
+    reviews: [],
+    name: \\"test\\",
+    showReviewPrompt: false,
+  });
 
   onMount(() => {
     fetch(
@@ -1886,7 +1892,7 @@ export default function MyComponent(props) {
   });
 
   return (
-    <div>
+    <div data-user={state.name}>
       <button onClick={(event) => (state.showReviewPrompt = true)}>
         Write a review
       </button>

@@ -40,6 +40,7 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
 };
 
+<<<<<<< HEAD
 const attributeKeyExceptionsMap: {[key: string] : string} = {
   'class': 'className'
 }
@@ -47,6 +48,15 @@ const attributeKeyExceptionsMap: {[key: string] : string} = {
 const updateKeyIfException = (key: string): string => {
   return attributeKeyExceptionsMap[key] ?? key
 }
+=======
+const normalizeAttributeKey = (key: string): string => {
+  return `"${key.replace(/\s/g, '')}"`;
+};
+
+const needsSetAttribute = (key: string): boolean => {
+  return [key.includes('-')].some(Boolean);
+};
+>>>>>>> issue-208
 
 const addUpdateAfterSet = (
   json: MitosisComponent,
@@ -303,13 +313,18 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
             `;Object.assign(el.style, ${useValue});`,
           );
         } else {
-          const useAttribute = key.includes('-');
           addOnChangeJs(
             elId,
             options,
+<<<<<<< HEAD
             useAttribute
               ? `;el.setAttribute(${key}, ${useValue});`
               : `;el.${updateKeyIfException(key)} = ${useValue}`,
+=======
+            needsSetAttribute(key)
+              ? `;el.setAttribute(${normalizeAttributeKey(key)}, ${useValue});`
+              : `;el.${key} = ${useValue}`,
+>>>>>>> issue-208
           );
         }
       }
