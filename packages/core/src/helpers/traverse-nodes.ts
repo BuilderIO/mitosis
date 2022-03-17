@@ -7,7 +7,7 @@ export function tarverseNodes(
   component: MitosisComponent | MitosisNode,
   cb: (node: MitosisNode, context: TraverseContext) => void,
 ) {
-  traverse(component).forEach(function(item) {
+  traverse(component).forEach(function (item) {
     if (isMitosisNode(item)) {
       cb(item, this);
     }

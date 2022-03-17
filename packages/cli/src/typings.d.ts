@@ -1,1 +1,1 @@
-declare module 'de-indent'
+declare module 'de-indent';

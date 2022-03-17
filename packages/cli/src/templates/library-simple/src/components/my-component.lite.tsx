@@ -1,15 +1,15 @@
 // TODO: get the exports alias working here so this is just `import '@builder.io/mitosis/jsx'
-import '@builder.io/mitosis/dist/src/jsx-types'
-import { useState, Show } from '@builder.io/mitosis'
+import '@builder.io/mitosis/dist/src/jsx-types';
+import { useState, Show } from '@builder.io/mitosis';
 
 type MyProps = {
-  showInput?: boolean
-}
+  showInput?: boolean;
+};
 
 export default function MyComponent(props: MyProps) {
   const state = useState({
-    name: 'Steve'
-  })
+    name: 'Steve',
+  });
 
   return (
     <div>
@@ -17,10 +17,10 @@ export default function MyComponent(props: MyProps) {
         <input
           css={{ color: 'red' }}
           value={state.name}
-          onChange={event => (state.name = event.target.value)}
+          onChange={(event) => (state.name = event.target.value)}
         />
       </Show>
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
-  )
+  );
 }

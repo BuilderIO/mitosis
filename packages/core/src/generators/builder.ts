@@ -133,11 +133,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id:
-      'builder-' +
-      Math.random()
-        .toString(36)
-        .split('.')[1],
+    id: 'builder-' + Math.random().toString(36).split('.')[1],
   }),
   ...options,
 });
@@ -201,9 +197,8 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey = key.match(
-      eventBindingKeyRegex,
-    )?.[1];
+    const firstCharMatchForEventBindingKey =
+      key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
       actions[
         key.replace(
@@ -308,15 +303,15 @@ export const blockToBuilder = (
   );
 };
 
-export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
-  component,
-}: TranspilerArgs) => {
-  const hasState = Boolean(Object.keys(component.state).length);
+export const componentToBuilder =
+  (options: ToBuilderOptions = {}) =>
+  ({ component }: TranspilerArgs) => {
+    const hasState = Boolean(Object.keys(component.state).length);
 
-  const result = fastClone({
-    data: {
-      httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
-      jsCode: tryFormat(dedent`
+    const result = fastClone({
+      data: {
+        httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
+        jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
@@ -329,7 +324,7 @@ export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
         
         ${!component.hooks.onMount?.code ? '' : component.hooks.onMount.code}
       `),
-      tsCode: tryFormat(dedent`
+        tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
         ${
@@ -346,30 +341,30 @@ export const componentToBuilder = (options: ToBuilderOptions = {}) => ({
               })`
         }
       `),
-      blocks: component.children
-        .filter(filterEmptyTextNodes)
-        .map((child) => blockToBuilder(child, options)),
-    },
-  });
-
-  const subComponentMap: Record<string, BuilderContent> = {};
-
-  for (const subComponent of component.subComponents) {
-    const name = subComponent.name;
-    subComponentMap[name] = componentToBuilder(options)({
-      component: subComponent,
+        blocks: component.children
+          .filter(filterEmptyTextNodes)
+          .map((child) => blockToBuilder(child, options)),
+      },
     });
-  }
 
-  traverse([result, subComponentMap]).forEach(function(el) {
-    if (isBuilderElement(el)) {
-      const value = subComponentMap[el.component?.name!];
-      if (value) {
-        console.log('applied?');
-        set(el, 'component.options.symbol.content', value);
-      }
+    const subComponentMap: Record<string, BuilderContent> = {};
+
+    for (const subComponent of component.subComponents) {
+      const name = subComponent.name;
+      subComponentMap[name] = componentToBuilder(options)({
+        component: subComponent,
+      });
     }
-  });
 
-  return result;
-};
+    traverse([result, subComponentMap]).forEach(function (el) {
+      if (isBuilderElement(el)) {
+        const value = subComponentMap[el.component?.name!];
+        if (value) {
+          console.log('applied?');
+          set(el, 'component.options.symbol.content', value);
+        }
+      }
+    });
+
+    return result;
+  };

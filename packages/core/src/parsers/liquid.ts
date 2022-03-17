@@ -337,11 +337,7 @@ export function blockToLiquid(
   let collectionName =
     block.repeat &&
     last(
-      (block.repeat.collection || '')
-        .trim()
-        .split('(')[0]
-        .trim()
-        .split('.'),
+      (block.repeat.collection || '').trim().split('(')[0].trim().split('.'),
     );
 
   if (collectionName) {
@@ -355,11 +351,9 @@ export function blockToLiquid(
       block.repeat &&
       block.repeat.collection &&
       isValidLiquidBinding(block.repeat.collection)
-        ? `{% for ${block.repeat.itemName ||
-            collectionName + '_item'} in ${convertBinding(
-            block.repeat.collection,
-            options,
-          )} %}`
+        ? `{% for ${
+            block.repeat.itemName || collectionName + '_item'
+          } in ${convertBinding(block.repeat.collection, options)} %}`
         : ''
     }
     ${
@@ -420,8 +414,9 @@ function blockCss(block: BuilderElement, options: Options = {}) {
         // e.g. width
         css += `\n@media only screen and (max-width: ${
           sizes[size].max
-        }px) { \n${options.emailMode ? '.' : '.builder-block.'}${self.id +
-          (options.emailMode ? '-subject' : '')} {${mapToCss(
+        }px) { \n${options.emailMode ? '.' : '.builder-block.'}${
+          self.id + (options.emailMode ? '-subject' : '')
+        } {${mapToCss(
           self.responsiveStyles[size] as any,
           4,
           options.emailMode,
@@ -433,11 +428,7 @@ function blockCss(block: BuilderElement, options: Options = {}) {
 }
 
 export function humanCase(str: string) {
-  return capitalize(
-    kebabCase(str)
-      .replace(/[- ]+/g, ' ')
-      .trim(),
-  );
+  return capitalize(kebabCase(str).replace(/[- ]+/g, ' ').trim());
 }
 
 const { setupCache } = require('axios-cache-adapter/dist/cache.node.js');
@@ -1035,9 +1026,8 @@ export const parsedLiquidToHtml = async (
               themeSettings.current.sections[path].settings,
             );
 
-            themeSettings.current.sections[
-              path
-            ].settings = sectionSettingsState;
+            themeSettings.current.sections[path].settings =
+              sectionSettingsState;
 
             if (options.importSections === false) {
               html += serializeBlock({
@@ -1591,10 +1581,8 @@ export const htmlNodeToBuilder = async (
   // throw new Error('Unhandled node type');
 };
 
-const assets: Record<
-  string,
-  Promise<string | Error | undefined> | undefined
-> = {};
+const assets: Record<string, Promise<string | Error | undefined> | undefined> =
+  {};
 
 const getShopifyAsset = async (
   assetKey: string,
@@ -1875,7 +1863,7 @@ export const postProcessHtmlAstNodes = (nodes: compiler.ASTNode[]) => {
     }
     updated = false;
     // tslint:disable-next-line:ter-prefer-arrow-callback
-    latest = traverse(latest).forEach(function(current) {
+    latest = traverse(latest).forEach(function (current) {
       if (current?.name && current.name.startsWith(bindingsPlaceholder)) {
         this.update({
           ...current,
@@ -1939,7 +1927,7 @@ const moveCondtionalTagsUp = (nodes: BuilderElement[]) => {
     }
     updated = false;
     // tslint:disable-next-line:ter-prefer-arrow-callback
-    nodes = traverse(nodes).forEach(function(current) {
+    nodes = traverse(nodes).forEach(function (current) {
       if (!isBuilderElementArray(current)) {
         return;
       }
@@ -1961,7 +1949,7 @@ const moveCondtionalTagsUp = (nodes: BuilderElement[]) => {
         let branchIndex = -1;
         for (const branch of branches) {
           branchIndex++;
-          const ejectedIndex = branch.blocks!.findIndex(function(
+          const ejectedIndex = branch.blocks!.findIndex(function (
             block,
             blockIndex,
           ) {
@@ -2038,7 +2026,7 @@ const matchConditionalTagsWithEndings = (nodes: BuilderElement[]) => {
     }
     updated = false;
     // tslint:disable-next-line:ter-prefer-arrow-callback
-    nodes = traverse(nodes).forEach(function(current) {
+    nodes = traverse(nodes).forEach(function (current) {
       if (!isBuilderElementArray(current)) {
         return;
       }
@@ -2198,7 +2186,7 @@ export const postProcessBuilderTree = async (
     }
     updated = false;
     // tslint:disable-next-line:ter-prefer-arrow-callback
-    latest = traverse(latest).forEach(function(current) {
+    latest = traverse(latest).forEach(function (current) {
       if (!isBuilderElementArray(current)) {
         return;
       }
@@ -2370,9 +2358,8 @@ export const postProcessBuilderTree = async (
                     break;
                   }
                   const parsedValue = info.value && JSON.parse(info.value);
-                  const [expression, limit] = parsedValue.args.split(
-                    /\s+by\s*/,
-                  );
+                  const [expression, limit] =
+                    parsedValue.args.split(/\s+by\s*/);
                   options.expression = expression;
                   options.limit = limit;
                 }
@@ -2652,7 +2639,8 @@ export const preprocessLiquid = async (
    * instead of it just getting render via a liquid string
    */
   // Grab the contents and variable name of capture tags, i.e. {% capture ... %} ... {% endcapture %}
-  const captureGroupRegex = /{%-?\s*capture\s*(.+?)-?%}([\s\S]*?){%-?\s*endcapture\s*-?%}/gi;
+  const captureGroupRegex =
+    /{%-?\s*capture\s*(.+?)-?%}([\s\S]*?){%-?\s*endcapture\s*-?%}/gi;
   let matchedCaptureGroup;
 
   const allCaptureGroupMatches: any[] = [];
@@ -2661,9 +2649,8 @@ export const preprocessLiquid = async (
   ) {
     const [match, capturedVariableName, capturedContents] = matchedCaptureGroup;
     const capturedContentsHasLiquid = capturedContents?.match(/\{%/gim);
-    const capturedContentContainsCaptureTag = capturedContents?.match(
-      /{%-?\s*capture/gim,
-    );
+    const capturedContentContainsCaptureTag =
+      capturedContents?.match(/{%-?\s*capture/gim);
 
     if (
       capturedVariableName &&
@@ -2715,7 +2702,8 @@ export const preprocessLiquid = async (
   /**
    * Transform any `with` statements inside of {% include %} tags to be key/values instead
    */
-  const includesWithRegex = /{%-?\s*include\s*([\S]+?)\s*with\s*([\S]+?)\s*-?%}/gi;
+  const includesWithRegex =
+    /{%-?\s*include\s*([\S]+?)\s*with\s*([\S]+?)\s*-?%}/gi;
   processedLiquid = processedLiquid.replace(
     includesWithRegex,
     (fullIncludesMatch, templateName, withMatch) => {
@@ -2732,7 +2720,8 @@ export const preprocessLiquid = async (
    *
    * e.g {%include 'responsive-image' with image: image_object, max_width: 480 }
    */
-  const includesWithAndValuesRegex = /{%-?\s*include\s*([\S]+?)\s*with\s*(([\S]+?:\s*[\S]+?,?\s*)+)-?%}/gi;
+  const includesWithAndValuesRegex =
+    /{%-?\s*include\s*([\S]+?)\s*with\s*(([\S]+?:\s*[\S]+?,?\s*)+)-?%}/gi;
   processedLiquid = processedLiquid.replace(
     includesWithAndValuesRegex,
     (fullIncludesMatch, templateName, allKeysAndValues) => {
@@ -2965,12 +2954,16 @@ export const bindingsFromAttrs = async (
     defaultValue: string,
   ) => {
     return conditions.length > 0
-      ? `/*start*/${conditions
-          .map(
-            (c) =>
-              `${c.negate ? '!' : ''}${liquidConditionTemplate(c.expression)}`,
-          )
-          .join('&&') + ` ? ${value} : (${defaultValue})`}/*end*/`
+      ? `/*start*/${
+          conditions
+            .map(
+              (c) =>
+                `${c.negate ? '!' : ''}${liquidConditionTemplate(
+                  c.expression,
+                )}`,
+            )
+            .join('&&') + ` ? ${value} : (${defaultValue})`
+        }/*end*/`
       : value;
   };
 
