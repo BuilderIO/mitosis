@@ -1,4 +1,4 @@
-# css-no-vars (css-no-vars)
+# no-var-name-same-as-state-property (no-var-name-same-as-state-property)
 
 This rule warns about a Mitosis limitation.
 

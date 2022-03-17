@@ -1,4 +1,4 @@
-# css-no-vars (css-no-vars)
+# no-state-destructuring (no-state-destructuring)
 
 This rule warns about a Mitosis limitation.
 

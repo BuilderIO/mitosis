@@ -1,4 +1,4 @@
-# css-no-vars (css-no-vars)
+# no-assign-props-to-state (no-assign-props-to-state)
 
 This rule warns about a Mitosis limitation.
 

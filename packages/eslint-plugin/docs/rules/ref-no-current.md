@@ -1,4 +1,4 @@
-# css-no-vars (css-no-vars)
+# ref-no-current (ref-no-current)
 
 This rule warns about a Mitosis limitation.
 

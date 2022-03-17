@@ -1,4 +1,4 @@
-# css-no-vars (css-no-vars)
+# no-async-methods-on-state (no-async-methods-on-state)
 
 This rule warns about a Mitosis limitation.
 
