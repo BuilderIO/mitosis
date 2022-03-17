@@ -40,6 +40,14 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
 };
 
+const normalizeAttributeKey = (key: string): string => {
+  return `"${key.replace(/\s/g, '')}"`;
+};
+
+const needsSetAttribute = (key: string): boolean => {
+  return [key.includes('-')].some(Boolean);
+};
+
 const addUpdateAfterSet = (
   json: MitosisComponent,
   options: InternalToHtmlOptions,
@@ -295,12 +303,11 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
             `;Object.assign(el.style, ${useValue});`,
           );
         } else {
-          const useAttribute = key.includes('-');
           addOnChangeJs(
             elId,
             options,
-            useAttribute
-              ? `;el.setAttribute("${key.replace(/\s/g, '')}", ${useValue});`
+            needsSetAttribute(key)
+              ? `;el.setAttribute(${normalizeAttributeKey(key)}, ${useValue});`
               : `;el.${key} = ${useValue}`,
           );
         }
