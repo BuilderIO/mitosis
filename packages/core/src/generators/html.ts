@@ -40,6 +40,14 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
 };
 
+const attributeKeyExceptionsMap: {[key: string] : string} = {
+  'class': 'className'
+}
+
+const updateKeyIfException = (key: string): string => {
+  return attributeKeyExceptionsMap[key] ?? key
+}
+
 const addUpdateAfterSet = (
   json: MitosisComponent,
   options: InternalToHtmlOptions,
@@ -301,7 +309,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
             options,
             useAttribute
               ? `;el.setAttribute(${key}, ${useValue});`
-              : `;el.${key} = ${useValue}`,
+              : `;el.${updateKeyIfException(key)} = ${useValue}`,
           );
         }
       }

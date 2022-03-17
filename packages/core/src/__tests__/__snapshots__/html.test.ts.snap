@@ -22,18 +22,18 @@ exports[`Html Stamped 1`] = `
     <div class=\\"review\\" data-name=\\"review\\">
       <img class=\\"img\\" data-name=\\"img-1\\" />
 
-      <div>
+      <div data-name=\\"div-1\\">
         <div>
           N:
-          <span data-name=\\"div-1\\"><!-- index --></span>
+          <span data-name=\\"div-2\\"><!-- index --></span>
         </div>
 
         <div>
-          <span data-name=\\"div-2\\"><!-- review.author --></span>
+          <span data-name=\\"div-3\\"><!-- review.author --></span>
         </div>
 
         <div>
-          <span data-name=\\"div-3\\"><!-- review.reviewMessage --></span>
+          <span data-name=\\"div-4\\"><!-- review.reviewMessage --></span>
         </div>
       </div>
     </div>
@@ -101,14 +101,18 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = index;
+        el.className = showReview ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.innerText = getContext(el, \\"review\\").author;
+        el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").author;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }

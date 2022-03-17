@@ -860,7 +860,11 @@ exports[`Vue Stamped.io 1`] = `
 
     <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
       <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div>
+      <div
+        :class=\\"
+          _classStringToObject(showReview ? 'bg-primary' : 'bg-secondary')
+        \\"
+      >
         <div>N: {{ index }}</div>
         <div>{{ review.author }}</div>
         <div>{{ review.reviewMessage }}</div>
@@ -886,6 +890,20 @@ export default {
       .then((data) => {
         this.reviews = data.data;
       });
+  },
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
   },
 };
 </script>
