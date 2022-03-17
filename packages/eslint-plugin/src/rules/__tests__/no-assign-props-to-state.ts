@@ -28,20 +28,7 @@ ruleTester.run('no-assign-props-to-state', rule, {
         });
       }
       `,
-    },
-    {
-      ...opts,
-      code: `
-      import { useState } from '@builder.io/mitosis';
-      export default function MyComponent({ text }) {
-        const state = useState({ text: null });
-      
-        onMount(() => {
-          state.text = text;
-        });
-      }
-      `,
-    },
+    }
     // Doesn't apply to none mitosis files
     {
       ...opts,
