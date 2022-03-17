@@ -23,7 +23,7 @@ export default function MyComponent(props) {
     newItemName: 'New item',
     list: ['hello', 'world'],
     addItem() {
-      state.list = [...state.list, state.newItemName];
+      this.list = [...this.list, this.newItemName];
     },
   });
 
@@ -144,7 +144,7 @@ export default function MyComponent() {
   const state = useState({
     name: 'Steve',
     updateName(newName) {
-      state.name = newName;
+      this.name = newName;
     },
   });
 
