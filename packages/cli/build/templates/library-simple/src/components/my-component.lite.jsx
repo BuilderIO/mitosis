@@ -13,7 +13,7 @@ function MyComponent(props) {
         <input
           css={{ color: 'red' }}
           value={state.name}
-          onChange={function(event) {
+          onChange={function (event) {
             return (state.name = event.target.value);
           }}
         />

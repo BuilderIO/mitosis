@@ -24,7 +24,7 @@ export const collectReactNativeStyles = (
 
   const componentIndexes: { [className: string]: number | undefined } = {};
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (!isMitosisNode(item) || typeof item.bindings.css !== 'string') {
       return;
     }
@@ -117,15 +117,15 @@ function processReactNative() {
   });
 }
 
-export const componentToReactNative = (
-  options: ToReactNativeOptions = {},
-): Transpiler => ({ component, path }) => {
-  const json = fastClone(component);
+export const componentToReactNative =
+  (options: ToReactNativeOptions = {}): Transpiler =>
+  ({ component, path }) => {
+    const json = fastClone(component);
 
-  return componentToReact({
-    ...options,
-    plugins: (options.plugins || []).concat([processReactNative()]),
-    stylesType: options.stylesType || 'react-native',
-    type: 'native',
-  })({ component: json, path });
-};
+    return componentToReact({
+      ...options,
+      plugins: (options.plugins || []).concat([processReactNative()]),
+      stylesType: options.stylesType || 'react-native',
+      type: 'native',
+    })({ component: json, path });
+  };
