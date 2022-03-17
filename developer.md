@@ -13,7 +13,7 @@ Mitosis is structured as a mono-repo. The packages live under `packages/`:
 
 ## Installation
 
-First, you should run `npm install` in the root of the project.
+First, you should run `npm install` in the root of the project, followed by `npm run setup` to bootstrap all the dependencies across packages.
 
 For all packages, the below steps to develop locally are the same:
 

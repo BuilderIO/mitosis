@@ -1,4 +1,4 @@
-import { transpileBindingExpression } from './transpile-vue-binding-expression'
+import { transpileBindingExpression } from './transpile-vue-binding-expression';
 
 export function transpileOptionalChaining(template: string): string {
   return (
@@ -11,12 +11,12 @@ export function transpileOptionalChaining(template: string): string {
       .replace(
         /v-for="(.+?) in ([^"]+?)"/g,
         (_match, group1, group2) =>
-          `v-for="${group1} in ${transpileBindingExpression(group2)}"`
+          `v-for="${group1} in ${transpileBindingExpression(group2)}"`,
       )
       // Transpile out the ?. operator which Vue 2 templates don't support
       .replace(
         /="([^"]*?\?\.[^"]*?)"/g,
-        (_match, group) => `="${transpileBindingExpression(group)}"`
+        (_match, group) => `="${transpileBindingExpression(group)}"`,
       )
-  )
+  );
 }

@@ -1,72 +1,74 @@
-import { GluegunCommand } from 'gluegun'
+import { GluegunCommand } from 'gluegun';
 
 const command: GluegunCommand = {
   name: 'new',
   alias: 'n',
   description: 'mitosis new [options]',
   async run(toolbox) {
-    const sys = toolbox.system
-    const pkg = toolbox.packageManager
-    const print = toolbox.print
+    const sys = toolbox.system;
+    const pkg = toolbox.packageManager;
+    const print = toolbox.print;
 
     async function exec(cmd, opts?) {
       try {
-        const result = await sys.exec(cmd, opts)
-        result.stdout && print.info(result.stdout)
+        const result = await sys.exec(cmd, opts);
+        result.stdout && print.info(result.stdout);
       } catch (e) {
-        print.error(`Command failed with exit code ${e.exitCode}: ${e.command}`)
-        e.stdout && print.error(e.stdout)
-        e.stderr && print.error(e.stderr)
-        process.exit(1)
+        print.error(
+          `Command failed with exit code ${e.exitCode}: ${e.command}`,
+        );
+        e.stdout && print.error(e.stdout);
+        e.stderr && print.error(e.stderr);
+        process.exit(1);
       }
     }
 
     // npm init
-    const spinner = print.spin({})
+    const spinner = print.spin({});
 
-    spinner.start('Creating new project')
+    spinner.start('Creating new project');
 
-    await exec('npm init -y')
+    await exec('npm init -y');
 
-    spinner.succeed('Wrote package.json')
+    spinner.succeed('Wrote package.json');
 
-    spinner.start('Installing packages')
+    spinner.start('Installing packages');
 
     await pkg.add(
       ['@builder.io/mitosis', '@builder.io/mitosis-cli', 'typescript'],
       {
         dev: true,
-        force: 'npm'
-      }
-    )
+        force: 'npm',
+      },
+    );
 
-    spinner.succeed('Installed packages')
+    spinner.succeed('Installed packages');
 
     toolbox.template.generate({
       template: 'tsconfig.json.ejs',
-      target: 'tsconfig.json'
-    })
+      target: 'tsconfig.json',
+    });
 
-    spinner.succeed('Wrote tsconfig.json')
+    spinner.succeed('Wrote tsconfig.json');
 
     toolbox.template.generate({
       template: 'mitosis.config.js.ejs',
-      target: 'mitosis.config.js'
-    })
+      target: 'mitosis.config.js',
+    });
 
-    spinner.succeed('Wrote mitosis.config.js ')
+    spinner.succeed('Wrote mitosis.config.js ');
 
     toolbox.template.generate({
       template: 'component.lite.tsx.ejs',
-      target: 'src/component.lite.tsx'
-    })
+      target: 'src/component.lite.tsx',
+    });
 
-    spinner.succeed('Wrote src/component.lite.tsx')
+    spinner.succeed('Wrote src/component.lite.tsx');
 
-    spinner.stopAndPersist({ text: 'Done!' })
+    spinner.stopAndPersist({ text: 'Done!' });
 
-    return
-  }
-}
+    return;
+  },
+};
 
-export default command
+export default command;

@@ -17,13 +17,13 @@ A command is a file that looks something like this:
 // commands/foo.js
 
 module.exports = {
-  run: toolbox => {
-    const { print, filesystem } = toolbox
+  run: (toolbox) => {
+    const { print, filesystem } = toolbox;
 
-    const desktopDirectories = filesystem.subdirectories(`~/Desktop`)
-    print.info(desktopDirectories)
-  }
-}
+    const desktopDirectories = filesystem.subdirectories(`~/Desktop`);
+    print.info(desktopDirectories);
+  },
+};
 ```
 
 An extension lets you add additional features to the `toolbox`.
@@ -31,13 +31,13 @@ An extension lets you add additional features to the `toolbox`.
 ```js
 // extensions/bar-extension.js
 
-module.exports = toolbox => {
-  const { print } = toolbox
+module.exports = (toolbox) => {
+  const { print } = toolbox;
 
   toolbox.bar = () => {
-    print.info('Bar!')
-  }
-}
+    print.info('Bar!');
+  };
+};
 ```
 
 This is then accessible in your plugin's commands as `toolbox.bar`.

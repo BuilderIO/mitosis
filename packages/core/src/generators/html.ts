@@ -44,7 +44,7 @@ const addUpdateAfterSet = (
   json: MitosisComponent,
   options: InternalToHtmlOptions,
 ) => {
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key] as string;
@@ -60,7 +60,7 @@ const addUpdateAfterSet = (
 
 const getForNames = (json: MitosisComponent) => {
   const names: string[] = [];
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (item.name === 'For') {
         names.push(item.properties._forName as string);
@@ -177,11 +177,9 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
   if (json.bindings._text) {
     addOnChangeJs(elId, options, `el.innerText = ${json.bindings._text};`);
 
-    return `<span data-name="${elId}"><!-- ${(json.bindings
-      ._text as string).replace(
-      /getContext\(el, "([^"]+)"\)/g,
-      '$1',
-    )} --></span>`;
+    return `<span data-name="${elId}"><!-- ${(
+      json.bindings._text as string
+    ).replace(/getContext\(el, "([^"]+)"\)/g, '$1')} --></span>`;
   }
 
   let str = '';
@@ -374,54 +372,54 @@ function addUpdateAfterSetInCode(
 const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 
 // TODO: props support via custom elements
-export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
-  component,
-}) => {
-  const useOptions: InternalToHtmlOptions = {
-    ...options,
-    onChangeJsById: {},
-    js: '',
-    namesMap: {},
-    format: 'script',
-  };
-  let json = fastClone(component);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  replaceForNameIdentifiers(json, useOptions);
-  addUpdateAfterSet(json, useOptions);
-  const componentHasProps = hasProps(json);
+export const componentToHtml =
+  (options: ToHtmlOptions = {}): Transpiler =>
+  ({ component }) => {
+    const useOptions: InternalToHtmlOptions = {
+      ...options,
+      onChangeJsById: {},
+      js: '',
+      namesMap: {},
+      format: 'script',
+    };
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
+    }
+    replaceForNameIdentifiers(json, useOptions);
+    addUpdateAfterSet(json, useOptions);
+    const componentHasProps = hasProps(json);
 
-  const hasLoop = hasComponent('For', json);
+    const hasLoop = hasComponent('For', json);
 
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  const css = collectCss(json, {
-    prefix: options.prefix,
-  });
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    const css = collectCss(json, {
+      prefix: options.prefix,
+    });
 
-  let str = json.children
-    .map((item) => blockToHtml(item, useOptions))
-    .join('\n');
+    let str = json.children
+      .map((item) => blockToHtml(item, useOptions))
+      .join('\n');
 
-  if (css.trim().length) {
-    str += `<style>${css}</style>`;
-  }
+    if (css.trim().length) {
+      str += `<style>${css}</style>`;
+    }
 
-  const hasChangeListeners = Boolean(
-    Object.keys(useOptions.onChangeJsById).length,
-  );
-  const hasGeneratedJs = Boolean(useOptions.js.trim().length);
+    const hasChangeListeners = Boolean(
+      Object.keys(useOptions.onChangeJsById).length,
+    );
+    const hasGeneratedJs = Boolean(useOptions.js.trim().length);
 
-  if (
-    hasChangeListeners ||
-    hasGeneratedJs ||
-    json.hooks.onMount?.code ||
-    hasLoop
-  ) {
-    // TODO: collectJs helper for here and liquid
-    str += `
+    if (
+      hasChangeListeners ||
+      hasGeneratedJs ||
+      json.hooks.onMount?.code ||
+      hasLoop
+    ) {
+      // TODO: collectJs helper for here and liquid
+      str += `
       <script>
       (() => {
         const state = ${getStateObjectStringFromComponent(json, {
@@ -525,93 +523,93 @@ export const componentToHtml = (options: ToHtmlOptions = {}): Transpiler => ({
       })()
       </script>
     `;
-  }
-
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'html',
-        htmlWhitespaceSensitivity: 'ignore',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-html'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-        ],
-      });
-    } catch (err) {
-      console.warn('Could not prettify', { string: str }, err);
     }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
+    }
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'html',
+          htmlWhitespaceSensitivity: 'ignore',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-html'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+          ],
+        });
+      } catch (err) {
+        console.warn('Could not prettify', { string: str }, err);
+      }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };
 
 // TODO: props support via custom elements
-export const componentToCustomElement = (
-  options: ToHtmlOptions = {},
-): Transpiler => ({ component }) => {
-  const useOptions: InternalToHtmlOptions = {
-    ...options,
-    onChangeJsById: {},
-    js: '',
-    namesMap: {},
-    format: 'class',
-  };
-  let json = fastClone(component);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  const componentHasProps = hasProps(json);
-  replaceForNameIdentifiers(json, useOptions);
-  addUpdateAfterSet(json, useOptions);
-
-  const hasLoop = hasComponent('For', json);
-
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-
-  const css = collectCss(json, {
-    prefix: options.prefix,
-  });
-  stripMetaProperties(json);
-
-  let html = json.children
-    .map((item) => blockToHtml(item, useOptions))
-    .join('\n');
-
-  html += `<style>${css}</style>`;
-
-  if (options.prettier !== false) {
-    try {
-      html = format(html, {
-        parser: 'html',
-        htmlWhitespaceSensitivity: 'ignore',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-html'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-          require('prettier/parser-typescript'),
-        ],
-      });
-      html = html.trim().replace(/\n/g, '\n      ');
-    } catch (err) {
-      console.warn('Could not prettify', { string: html }, err);
+export const componentToCustomElement =
+  (options: ToHtmlOptions = {}): Transpiler =>
+  ({ component }) => {
+    const useOptions: InternalToHtmlOptions = {
+      ...options,
+      onChangeJsById: {},
+      js: '',
+      namesMap: {},
+      format: 'class',
+    };
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
     }
-  }
+    const componentHasProps = hasProps(json);
+    replaceForNameIdentifiers(json, useOptions);
+    addUpdateAfterSet(json, useOptions);
 
-  const kebabName = component.name
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .toLowerCase();
+    const hasLoop = hasComponent('For', json);
 
-  let str = `
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+
+    const css = collectCss(json, {
+      prefix: options.prefix,
+    });
+    stripMetaProperties(json);
+
+    let html = json.children
+      .map((item) => blockToHtml(item, useOptions))
+      .join('\n');
+
+    html += `<style>${css}</style>`;
+
+    if (options.prettier !== false) {
+      try {
+        html = format(html, {
+          parser: 'html',
+          htmlWhitespaceSensitivity: 'ignore',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-html'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+            require('prettier/parser-typescript'),
+          ],
+        });
+        html = html.trim().replace(/\n/g, '\n      ');
+      } catch (err) {
+        console.warn('Could not prettify', { string: html }, err);
+      }
+    }
+
+    const kebabName = component.name
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase();
+
+    let str = `
       /**
        * Usage:
        * 
@@ -759,27 +757,27 @@ export const componentToCustomElement = (
       customElements.define('${kebabName}', ${component.name});
     `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-html'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-babel'),
-          require('prettier/parser-typescript'),
-        ],
-      });
-    } catch (err) {
-      console.warn('Could not prettify', { string: str }, err);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'typescript',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-html'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-babel'),
+            require('prettier/parser-typescript'),
+          ],
+        });
+      } catch (err) {
+        console.warn('Could not prettify', { string: str }, err);
+      }
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };

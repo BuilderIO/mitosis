@@ -119,7 +119,7 @@ export class SrcBuilder {
       );
     } else {
       symbols.forEach((symbol) => {
-        this.const(symbol, function(this: SrcBuilder) {
+        this.const(symbol, function (this: SrcBuilder) {
           this.emit(invoke('require', [quote(module)]), '.', symbol);
         });
       });
@@ -414,7 +414,7 @@ export function invoke(
   args: any[],
   typeParameters?: string[],
 ) {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     this.emit(typeof symbol == 'string' ? symbol : symbol.name);
     this.typeParameters(typeParameters);
     this.emit('(', args, ')');
@@ -422,7 +422,7 @@ export function invoke(
 }
 
 export function arrowFnBlock(args: string[], statements: any[]) {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     this.emit('(', args, ')', WS, '=>', WS);
     this.emit('{', INDENT, NL)
       .emitList(statements, ';')
@@ -431,13 +431,13 @@ export function arrowFnBlock(args: string[], statements: any[]) {
 }
 
 export function arrowFnValue(args: string[], expression: any) {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     this.emit('(', args, ')', WS, '=>', WS, expression);
   };
 }
 
 export function iif(code: any) {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     code && this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
   };
 }
