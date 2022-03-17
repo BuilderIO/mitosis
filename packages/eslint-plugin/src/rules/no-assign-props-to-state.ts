@@ -71,49 +71,22 @@ const rule: Rule.RuleModule = {
 
         const { params } = component.declaration;
 
-        if (types.isIdentifier(params[0])) {
-          const { name } = params[0];
+        if (!types.isIdentifier(params[0])) return;
+        const { name } = params[0];
 
-          for (const prop of node.arguments[0].properties) {
-            if (!types.isProperty(prop)) return;
+        for (const prop of node.arguments[0].properties) {
+          if (!types.isProperty(prop)) return;
 
-            const { object } = (prop as types.Property)
-              .value as types.MemberExpression;
+          const { object } = (prop as types.Property)
+            .value as types.MemberExpression;
 
-            if (!types.isIdentifier(object)) return;
+          if (!types.isIdentifier(object)) return;
 
-            if (object.name === name) {
-              context.report({
-                node: prop,
-                message: '"props" can\'t be assign to  to "state"',
-              });
-            }
-          }
-        } else if (types.isObjectPattern(params[0])) {
-          for (const property of params[0].properties) {
-            if (
-              !types.isProperty(property) ||
-              !types.isIdentifier((property as types.Property).key)
-            )
-              continue;
-
-            const { name } = (property as types.Property)
-              .key as types.Identifier;
-
-            for (const prop of node.arguments[0].properties) {
-              if (!types.isProperty(prop)) return;
-
-              const { value } = prop as types.Property;
-
-              if (!types.isIdentifier(value)) return;
-
-              if (value.name === name) {
-                context.report({
-                  node: prop,
-                  message: '"props" can\'t be assign to  to "state"',
-                });
-              }
-            }
+          if (object.name === name) {
+            context.report({
+              node: prop,
+              message: '"props" can\'t be assign to  to "state"',
+            });
           }
         }
       },

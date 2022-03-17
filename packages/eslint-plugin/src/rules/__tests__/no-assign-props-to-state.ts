@@ -67,16 +67,5 @@ ruleTester.run('no-assign-props-to-state', rule, {
       `,
       errors: ['"props" can\'t be assign to  to "state"'],
     },
-    {
-      ...opts,
-      code: `
-      import { useState } from '@builder.io/mitosis';
-
-      export default function MyComponent({ text }) {
-        const state = useState({ text: text });
-      }
-      `,
-      errors: ['"props" can\'t be assign to  to "state"'],
-    },
   ],
 });
