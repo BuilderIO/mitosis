@@ -44,7 +44,7 @@ const rule: Rule.RuleModule = {
         context.report({
           node,
           message:
-            "destructuring state isn't allowed, use standard assignment instead",
+            "destructuring state isn't allowed: use standard assignment instead",
         });
       },
     };
