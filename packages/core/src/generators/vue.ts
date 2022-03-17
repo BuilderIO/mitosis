@@ -166,42 +166,41 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
   });
 }
 
-const stringifyBinding = (node: MitosisNode) => ([key, value]: [
-  string,
-  string | undefined,
-]) => {
-  if (key === '_spread') {
-    return '';
-  } else if (key === 'class') {
-    return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
-      replaceWith: 'this.',
-    })})" `;
-    // TODO: support dynamic classes as objects somehow like Vue requires
-    // https://vuejs.org/v2/guide/class-and-style.html
-  } else {
-    // TODO: proper babel transform to replace. Util for this
-    const useValue = stripStateAndPropsRefs(value);
-
-    if (key.startsWith('on')) {
-      let event = key.replace('on', '').toLowerCase();
-      if (event === 'change' && node.name === 'input') {
-        event = 'input';
-      }
-      // TODO: proper babel transform to replace. Util for this
-      return ` @${event}="${removeSurroundingBlock(
-        useValue
-          // TODO: proper reference parse and replacing
-          .replace(/event\./g, '$event.'),
-      )}" `;
-    } else if (key === 'ref') {
-      return ` ref="${useValue}" `;
-    } else if (BINDING_MAPPERS[key]) {
-      return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+const stringifyBinding =
+  (node: MitosisNode) =>
+  ([key, value]: [string, string | undefined]) => {
+    if (key === '_spread') {
+      return '';
+    } else if (key === 'class') {
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
+        replaceWith: 'this.',
+      })})" `;
+      // TODO: support dynamic classes as objects somehow like Vue requires
+      // https://vuejs.org/v2/guide/class-and-style.html
     } else {
-      return ` :${key}="${useValue}" `;
+      // TODO: proper babel transform to replace. Util for this
+      const useValue = stripStateAndPropsRefs(value);
+
+      if (key.startsWith('on')) {
+        let event = key.replace('on', '').toLowerCase();
+        if (event === 'change' && node.name === 'input') {
+          event = 'input';
+        }
+        // TODO: proper babel transform to replace. Util for this
+        return ` @${event}="${removeSurroundingBlock(
+          useValue
+            // TODO: proper reference parse and replacing
+            .replace(/event\./g, '$event.'),
+        )}" `;
+      } else if (key === 'ref') {
+        return ` ref="${useValue}" `;
+      } else if (BINDING_MAPPERS[key]) {
+        return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+      } else {
+        return ` :${key}="${useValue}" `;
+      }
     }
-  }
-};
+  };
 
 export const blockToVue = (
   node: MitosisNode,
@@ -304,7 +303,8 @@ function getContextProvideString(
   return str;
 }
 
-export const componentToVue = (options: ToVueOptions = {}) =>
+export const componentToVue =
+  (options: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {

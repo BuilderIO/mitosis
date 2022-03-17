@@ -128,48 +128,48 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
 
 const mitosisCoreComponents = ['Show', 'For'];
 
-export const componentToMitosis = (
-  toMitosisOptions: Partial<ToMitosisOptions> = {},
-): Transpiler => ({ component }) => {
-  const options: ToMitosisOptions = {
-    format: DEFAULT_FORMAT,
-    ...toMitosisOptions,
-  };
+export const componentToMitosis =
+  (toMitosisOptions: Partial<ToMitosisOptions> = {}): Transpiler =>
+  ({ component }) => {
+    const options: ToMitosisOptions = {
+      format: DEFAULT_FORMAT,
+      ...toMitosisOptions,
+    };
 
-  if (options.format === 'react') {
-    return componentToReact({
-      format: 'lite',
-      stateType: 'useState',
-      stylesType: 'emotion',
-      prettier: options.prettier,
-    })({ component });
-  }
+    if (options.format === 'react') {
+      return componentToReact({
+        format: 'lite',
+        stateType: 'useState',
+        stylesType: 'emotion',
+        prettier: options.prettier,
+      })({ component });
+    }
 
-  const json = fastClone(component);
+    const json = fastClone(component);
 
-  const refs = getRefs(json);
+    const refs = getRefs(json);
 
-  mapRefs(json, (refName) => `${refName}.current`);
+    mapRefs(json, (refName) => `${refName}.current`);
 
-  const addWrapper = json.children.length !== 1;
+    const addWrapper = json.children.length !== 1;
 
-  const components = Array.from(getComponents(json));
+    const components = Array.from(getComponents(json));
 
-  const mitosisComponents = components.filter((item) =>
-    mitosisCoreComponents.includes(item),
-  );
-  const otherComponents = components.filter(
-    (item) => !mitosisCoreComponents.includes(item),
-  );
+    const mitosisComponents = components.filter((item) =>
+      mitosisCoreComponents.includes(item),
+    );
+    const otherComponents = components.filter(
+      (item) => !mitosisCoreComponents.includes(item),
+    );
 
-  const hasState = Boolean(Object.keys(component.state).length);
+    const hasState = Boolean(Object.keys(component.state).length);
 
-  const needsMitosisCoreImport = Boolean(
-    hasState || refs.size || mitosisComponents.length,
-  );
+    const needsMitosisCoreImport = Boolean(
+      hasState || refs.size || mitosisComponents.length,
+    );
 
-  // TODO: smart only pull in imports as needed
-  let str = dedent`
+    // TODO: smart only pull in imports as needed
+    let str = dedent`
     ${
       !needsMitosisCoreImport
         ? ''
@@ -221,22 +221,22 @@ export const componentToMitosis = (
 
   `;
 
-  if (options.prettier !== false) {
-    try {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [
-          require('prettier/parser-typescript'), // To support running in browsers
-        ],
-      });
-    } catch (err) {
-      console.error(
-        'Format error for file:',
-        str,
-        JSON.stringify(json, null, 2),
-      );
-      throw err;
+    if (options.prettier !== false) {
+      try {
+        str = format(str, {
+          parser: 'typescript',
+          plugins: [
+            require('prettier/parser-typescript'), // To support running in browsers
+          ],
+        });
+      } catch (err) {
+        console.error(
+          'Format error for file:',
+          str,
+          JSON.stringify(json, null, 2),
+        );
+        throw err;
+      }
     }
-  }
-  return str;
-};
+    return str;
+  };
