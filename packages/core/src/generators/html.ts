@@ -300,7 +300,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
             elId,
             options,
             useAttribute
-              ? `;el.setAttribute(${key}, ${useValue});`
+              ? `;el.setAttribute("${key.replace(/\s/g, '')}", ${useValue});`
               : `;el.${key} = ${useValue}`,
           );
         }
