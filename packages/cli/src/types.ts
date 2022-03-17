@@ -7,4 +7,4 @@ export type UnionToIntersection<Union> =
   ? (_: Union) => any
   : never) extends (_: infer Intersection) => any
     ? Intersection
-    : never
+    : never;
