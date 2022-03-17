@@ -2,6 +2,7 @@ import { componentToAngular as angular } from './generators/angular';
 import { componentToBuilder as builder } from './generators/builder';
 import {
   componentToCustomElement as customElement,
+  componentToCustomElement as webcomponent,
   componentToHtml as html,
 } from './generators/html';
 import { componentToMitosis as mitosis } from './generators/mitosis';
@@ -27,5 +28,6 @@ export const targets = {
   svelte,
   swift,
   template,
+  webcomponent,
   vue,
 };

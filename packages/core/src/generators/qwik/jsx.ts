@@ -21,7 +21,7 @@ export function renderJSXNodes(
   parentSymbolBindings: Record<string, string>,
   root = true,
 ): any {
-  return function(this: SrcBuilder) {
+  return function (this: SrcBuilder) {
     if (children.length == 0) return;
     if (root) this.emit('(', INDENT, NL);
     const needsFragment = root && children.length > 1;
