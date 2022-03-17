@@ -9,31 +9,25 @@ This rule aims to warn you if you use and async method as a value for state prop
 Examples of **incorrect** code for this rule:
 
 ```js
-import { useState } from '@builder.io/mitosis';
-
-export default function MyComponent(props) {
+export default function MyComponent() {
   const state = useState({
-    foo: 'bar',
+    async doSomethingAsync(event) {
+      return;
+    },
   });
-
-  const foo = bar;
-
-  return <div />;
 }
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-import { useState } from '@builder.io/mitosis';
-
-export default function MyComponent(props) {
+export default function MyComponent() {
   const state = useState({
-    foo: 'bar',
+    doSomethingAsync(event) {
+      void (async function() {
+        const response = await fetch();
+      })();
+    },
   });
-
-  const foo_ = bar;
-
-  return <div />;
 }
 ```
