@@ -52,7 +52,7 @@ ruleTester.run('no-assign-props-to-state', rule, {
         const state = useState({ text: props.text });
       }
       `,
-      errors: ['"props" can\'t be assign to  to "state"'],
+      errors: ['"props" can\'t be assign to  to "state" directly'],
     },
   ],
 });

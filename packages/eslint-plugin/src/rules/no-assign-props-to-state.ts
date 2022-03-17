@@ -85,7 +85,7 @@ const rule: Rule.RuleModule = {
           if (object.name === name) {
             context.report({
               node: prop,
-              message: '"props" can\'t be assign to  to "state"',
+              message: '"props" can\'t be assign to  to "state" directly',
             });
           }
         }
