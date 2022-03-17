@@ -55,7 +55,10 @@ const needsSetAttribute = (key: string): boolean => {
   return [key.includes('-')].some(Boolean);
 };
 
-const setElementAttribute = (key: string, useValue: string): string => {
+const generateSetElementAttributeCode = (
+  key: string,
+  useValue: string,
+): string => {
   return needsSetAttribute(key)
     ? `;el.setAttribute(${normalizeAttributeKey(key)}, ${useValue});`
     : `;el.${updateKeyIfException(key)} = ${useValue}`;
@@ -314,7 +317,11 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
             `;Object.assign(el.style, ${useValue});`,
           );
         } else {
-          addOnChangeJs(elId, options, setElementAttribute(key, useValue));
+          addOnChangeJs(
+            elId,
+            options,
+            generateSetElementAttributeCode(key, useValue),
+          );
         }
       }
     }
