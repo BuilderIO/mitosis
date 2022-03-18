@@ -121,54 +121,54 @@ function processBinding(code: string) {
   return stripStateAndPropsRefs(code, { replaceWith: 'this.' });
 }
 
-export const componentToStencil = (
-  options: ToStencilOptions = {},
-): Transpiler => ({ component }) => {
-  let json = fastClone(component);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  const props = getProps(component);
-  let css = collectCss(json, { classProperty: 'class' });
-
-  mapRefs(component, (refName) => `this.${refName}`);
-
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  stripMetaProperties(json);
-
-  const dataString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    data: true,
-    functions: false,
-    getters: false,
-    keyPrefix: '@State() ',
-    valueMapper: (code) => processBinding(code),
-  });
-
-  const methodsString = getStateObjectStringFromComponent(json, {
-    format: 'class',
-    data: false,
-    functions: true,
-    getters: true,
-    valueMapper: (code) => processBinding(code),
-  });
-
-  const wrap = json.children.length !== 1;
-
-  if (options.prettier !== false) {
-    try {
-      css = format(css, {
-        parser: 'css',
-        plugins: [require('prettier/parser-postcss')],
-      });
-    } catch (err) {
-      console.warn('Could not format css', err);
+export const componentToStencil =
+  (options: ToStencilOptions = {}): Transpiler =>
+  ({ component }) => {
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
     }
-  }
+    const props = getProps(component);
+    let css = collectCss(json, { classProperty: 'class' });
 
-  let str = dedent`
+    mapRefs(component, (refName) => `this.${refName}`);
+
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    stripMetaProperties(json);
+
+    const dataString = getStateObjectStringFromComponent(json, {
+      format: 'class',
+      data: true,
+      functions: false,
+      getters: false,
+      keyPrefix: '@State() ',
+      valueMapper: (code) => processBinding(code),
+    });
+
+    const methodsString = getStateObjectStringFromComponent(json, {
+      format: 'class',
+      data: false,
+      functions: true,
+      getters: true,
+      valueMapper: (code) => processBinding(code),
+    });
+
+    const wrap = json.children.length !== 1;
+
+    if (options.prettier !== false) {
+      try {
+        css = format(css, {
+          parser: 'css',
+          plugins: [require('prettier/parser-postcss')],
+        });
+      } catch (err) {
+        console.warn('Could not format css', err);
+      }
+    }
+
+    let str = dedent`
     ${renderPreComponent(json)}
 
     import { Component, Prop, h, State, Fragment } from '@stencil/core';
@@ -236,17 +236,17 @@ export const componentToStencil = (
     }
   `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'typescript',
-      plugins: [require('prettier/parser-typescript')],
-    });
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
+    }
+    if (options.prettier !== false) {
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [require('prettier/parser-typescript')],
+      });
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };
