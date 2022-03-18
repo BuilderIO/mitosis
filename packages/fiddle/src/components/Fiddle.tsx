@@ -8,6 +8,7 @@ import {
   componentToMitosis,
   componentToLiquid,
   componentToReact,
+  componentToStencil,
   componentToReactNative,
   componentToSolid,
   componentToSvelte,
@@ -342,6 +343,10 @@ export default function Fiddle() {
             ? componentToReact({
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
+                plugins,
+              })({ component: json })
+            : state.outputTab === 'stencil'
+            ? componentToStencil({
                 plugins,
               })({ component: json })
             : state.outputTab === 'swift'
@@ -980,6 +985,10 @@ export default function Fiddle() {
                   value="solid"
                 />
                 <Tab
+                  label={<TabLabelWithIcon label="Stencil" />}
+                  value="stencil"
+                />
+                <Tab
                   label={<TabLabelWithIcon label="Webcomponents" />}
                   value="webcomponents"
                 />
@@ -1227,6 +1236,7 @@ export default function Fiddle() {
                         state.outputTab === 'angular' ||
                         state.outputTab === 'webcomponents' ||
                         state.outputTab === 'qwik' ||
+                        state.outputTab === 'stencil' ||
                         state.outputTab === 'solid'
                       ? 'typescript'
                       : 'html'

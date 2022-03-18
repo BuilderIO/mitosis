@@ -21,6 +21,7 @@ import { kebabCase } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { indent } from '../helpers/indent';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
@@ -133,9 +134,6 @@ export const blockToAngular = (
   }
   return str;
 };
-
-const indent = (str: string, spaces = 4) =>
-  str.replace(/\n([^\n])/g, `\n${' '.repeat(spaces)}$1`);
 
 export const componentToAngular =
   (options: ToAngularOptions = {}): Transpiler =>

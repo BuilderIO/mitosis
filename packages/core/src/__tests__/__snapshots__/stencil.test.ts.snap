@@ -1,0 +1,990 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Solid Basic 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @State() name = \\"Steve\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Button 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() link: any;
+  @Prop() attributes: any;
+  @Prop() openLinkInNewTab: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <Fragment>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
+
+        {!this.link ? (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </Fragment>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Columns 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"column\\",
+  styles: \`
+       .div {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+         line-height: normal;
+       }
+       @media (max-width: 999px) {
+         .div {
+           flex-direction: row;
+         }
+       }
+       @media (max-width: 639px) {
+         .div {
+           flex-direction: row-reverse;
+         }
+       }
+       .div-2 {
+         flex-grow: 1;
+       }
+\`,
+})
+export default class Column {
+  @Prop() columns: any;
+  @Prop() space: any;
+
+  getColumns() {
+    return this.columns || [];
+  }
+  getGutterSize() {
+    return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+  }
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+
+  render() {
+    return (
+      <div>
+        {this.columns?.map((column, index) => (
+          <div>
+            {column.content}
+
+            {index}
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid CustomCode 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"custom-code\\",
+})
+export default class CustomCode {
+  @Prop() replaceNodes: any;
+  @Prop() code: any;
+
+  @State() scriptsInserted = [];
+  @State() scriptsRun = [];
+
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.findAndRunScripts();
+  }
+
+  render() {
+    return (
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={(el) => (this.elem = el)}
+        innerHTML={this.code}
+      ></div>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Embed 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"custom-code\\",
+})
+export default class CustomCode {
+  @Prop() replaceNodes: any;
+  @Prop() code: any;
+
+  @State() scriptsInserted = [];
+  @State() scriptsRun = [];
+
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  componentDidLoad() {
+    this.findAndRunScripts();
+  }
+
+  render() {
+    return (
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={(el) => (this.elem = el)}
+        innerHTML={this.code}
+      ></div>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Form block 1`] = `
+"import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"form-component\\",
+  styles: \`
+       .pre {
+         padding: 10px;
+         color: red;
+         text-align: center;
+       }
+\`,
+})
+export default class FormComponent {
+  @Prop() previewState: any;
+  @Prop() sendWithJs: any;
+  @Prop() sendSubmissionsTo: any;
+  @Prop() action: any;
+  @Prop() customHeaders: any;
+  @Prop() contentType: any;
+  @Prop() sendSubmissionsToEmail: any;
+  @Prop() name: any;
+  @Prop() method: any;
+  @Prop() errorMessagePath: any;
+  @Prop() resetFormOnSubmit: any;
+  @Prop() successUrl: any;
+  @Prop() validate: any;
+  @Prop() attributes: any;
+  @Prop() builderBlock: any;
+  @Prop() errorMessage: any;
+  @Prop() sendingMessage: any;
+  @Prop() successMessage: any;
+
+  @State() state = \\"unsubmitted\\";
+  @State() responseData = null;
+  @State() formErrorMessage = \\"\\";
+
+  get submissionState() {
+    return (Builder.isEditing && this.previewState) || this.state;
+  }
+  onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
+    const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+
+    if (this.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = this.customHeaders || {};
+      let body: any;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!(el as HTMLInputElement).name)
+        .map((el) => {
+          let value: any;
+          const key = (el as HTMLImageElement).name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = (el as HTMLInputElement).value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = this.contentType;
+
+      if (this.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      this.state = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        this.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+      fetch(
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: this.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && this.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, this.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              this.formErrorMessage = message;
+            }
+          }
+
+          this.responseData = body;
+          this.state = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (this.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (this.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: this.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = this.successUrl;
+                }
+              } else {
+                location.href = this.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.responseData = err;
+          this.state = \\"error\\";
+        }
+      );
+    }
+  }
+
+  render() {
+    return (
+      <form
+        {...props.attributes}
+        validate={this.validate}
+        ref={(el) => (this.formRef = el)}
+        action={!this.sendWithJs && this.action}
+        method={this.method}
+        name={this.name}
+        onSubmit={(event) => this.this.onSubmit(event)}
+      >
+        {this.builderBlock && this.builderBlock.children ? (
+          <>
+            {this.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            ))}
+          </>
+        ) : null}
+
+        {this.this.submissionState === \\"error\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={this.errorMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
+
+        {this.this.submissionState === \\"sending\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={this.sendingMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
+
+        {this.this.submissionState === \\"error\\" && this.this.responseData ? (
+          <>
+            <pre>{JSON.stringify(this.this.responseData, null, 2)}</pre>
+          </>
+        ) : null}
+
+        {this.this.submissionState === \\"success\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={this.successMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
+      </form>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Image 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"image\\",
+  styles: \`
+       .img {
+         opacity: 1;
+         transition: opacity 0.2s ease-in-out;
+         object-fit: cover;
+         object-position: center;
+       }
+\`,
+})
+export default class Image {
+  @Prop() lazy: any;
+  @Prop() altText: any;
+  @Prop() class: any;
+  @Prop() image: any;
+  @Prop() srcset: any;
+  @Prop() sizes: any;
+  @Prop() children: any;
+
+  @State() scrollListener = null;
+  @State() imageLoaded = false;
+  @State() load = false;
+
+  setLoaded() {
+    this.imageLoaded = true;
+  }
+  isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && this.isBrowser();
+  }
+
+  componentDidLoad() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            this.load = true;
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  disconnectedCallback() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  }
+
+  render() {
+    return (
+      <Fragment>
+        <picture ref={(el) => (this.pictureRef = el)}>
+          {!this.useLazyLoading() || this.load ? (
+            <>
+              <img
+                class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+                alt={this.altText}
+                aria-role={this.altText ? \\"presentation\\" : undefined}
+                src={this.image}
+                onLoad={(event) => this.setLoaded()}
+                srcset={this.srcset}
+                sizes={this.sizes}
+              />
+            </>
+          ) : null}
+
+          <source srcset={this.srcset} />
+        </picture>
+
+        {this.children}
+      </Fragment>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Img 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"img-component\\",
+})
+export default class ImgComponent {
+  @Prop() backgroundSize: any;
+  @Prop() backgroundPosition: any;
+  @Prop() attributes: any;
+  @Prop() imgSrc: any;
+  @Prop() altText: any;
+
+  render() {
+    return (
+      <img
+        {...props.attributes}
+        style={{
+          objectFit: this.backgroundSize || \\"cover\\",
+          objectPosition: this.backgroundPosition || \\"center\\",
+        }}
+        key={(Builder.isEditing && this.imgSrc) || \\"default-key\\"}
+        alt={this.altText}
+        src={this.imgSrc}
+      />
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Input block 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"form-input-component\\",
+})
+export default class FormInputComponent {
+  @Prop() attributes: any;
+  @Prop() defaultValue: any;
+  @Prop() placeholder: any;
+  @Prop() type: any;
+  @Prop() name: any;
+  @Prop() value: any;
+  @Prop() required: any;
+
+  render() {
+    return (
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && this.defaultValue
+            ? this.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={this.placeholder}
+        type={this.type}
+        name={this.name}
+        value={this.value}
+        defaultValue={this.defaultValue}
+        required={this.required}
+      />
+    );
+  }
+}
+"
+`;
+
+exports[`Solid RawText 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"raw-text\\",
+})
+export default class RawText {
+  @Prop() attributes: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <span
+        class={props.attributes?.class || props.attributes?.className}
+        innerHTML={this.text || \\"\\"}
+      ></span>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Section 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"section-component\\",
+})
+export default class SectionComponent {
+  @Prop() attributes: any;
+  @Prop() maxWidth: any;
+  @Prop() children: any;
+
+  render() {
+    return (
+      <section
+        {...props.attributes}
+        style={
+          this.maxWidth && typeof this.maxWidth === \\"number\\"
+            ? {
+                maxWidth: this.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {this.children}
+      </section>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Select block 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"select-component\\",
+})
+export default class SelectComponent {
+  @Prop() attributes: any;
+  @Prop() value: any;
+  @Prop() defaultValue: any;
+  @Prop() name: any;
+  @Prop() options: any;
+
+  render() {
+    return (
+      <select
+        {...props.attributes}
+        value={this.value}
+        key={
+          Builder.isEditing && this.defaultValue
+            ? this.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={this.defaultValue}
+        name={this.name}
+      >
+        {this.options?.map((option, index) => (
+          <option value={option.value} data-index={index}>
+            {option.name || option.value}
+          </option>
+        ))}
+      </select>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Submit button block 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"submit-button\\",
+})
+export default class SubmitButton {
+  @Prop() attributes: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <button {...props.attributes} type=\\"submit\\">
+        {this.text}
+      </button>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"text\\",
+})
+export default class Text {
+  @Prop() text: any;
+  @Prop() content: any;
+
+  render() {
+    return (
+      <div
+        contentEditable={allowEditingText || undefined}
+        innerHTML={this.text || this.content || \\"\\"}
+      ></div>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Textarea 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"textarea\\",
+})
+export default class Textarea {
+  @Prop() attributes: any;
+  @Prop() placeholder: any;
+  @Prop() name: any;
+  @Prop() value: any;
+  @Prop() defaultValue: any;
+
+  render() {
+    return (
+      <textarea
+        {...props.attributes}
+        placeholder={this.placeholder}
+        name={this.name}
+        value={this.value}
+        defaultValue={this.defaultValue}
+      ></textarea>
+    );
+  }
+}
+"
+`;
+
+exports[`Solid Video 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"video\\",
+})
+export default class Video {
+  @Prop() attributes: any;
+  @Prop() fit: any;
+  @Prop() position: any;
+  @Prop() video: any;
+  @Prop() posterImage: any;
+  @Prop() autoPlay: any;
+  @Prop() muted: any;
+  @Prop() controls: any;
+  @Prop() loop: any;
+
+  render() {
+    return (
+      <video
+        {...props.attributes}
+        preload=\\"none\\"
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...this.attributes?.style,
+          objectFit: this.fit,
+          objectPosition: this.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          borderRadius: 1,
+        }}
+        key={this.video || \\"no-src\\"}
+        poster={this.posterImage}
+        autoPlay={this.autoPlay}
+        muted={this.muted}
+        controls={this.controls}
+        loop={this.loop}
+      ></video>
+    );
+  }
+}
+"
+`;
