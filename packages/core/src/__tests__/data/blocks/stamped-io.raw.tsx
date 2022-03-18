@@ -1,4 +1,6 @@
 import { useState, onMount, For, Show } from '@builder.io/mitosis';
+import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
 
 type SmileReviewsProps = {
   productId: string;
@@ -6,6 +8,9 @@ type SmileReviewsProps = {
 };
 
 export default function SmileReviews(props: SmileReviewsProps) {
+  kebabCase('testThat');
+  snakeCase('testThis');
+
   const state = useState({
     reviews: [] as any[],
     name: 'test',

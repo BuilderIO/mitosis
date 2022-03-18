@@ -1,5 +1,6 @@
 import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
+import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
@@ -25,6 +26,8 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { renderPreComponent } from '../helpers/render-imports';
+
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -797,5 +800,6 @@ export const componentToCustomElement =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
-    return str;
+
+    return dedent(renderPreComponent(json)) + '\n' + str;
   };
