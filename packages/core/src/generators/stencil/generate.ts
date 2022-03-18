@@ -22,6 +22,7 @@ import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { dashCase } from '../../helpers/dash-case';
 import { collectCss } from '../../helpers/collect-styles';
 import { indent } from '../../helpers/indent';
+import { mapRefs } from '../../helpers/map-refs';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
@@ -81,7 +82,9 @@ const blockToStencil = (
       continue;
     }
 
-    if (key.startsWith('on')) {
+    if (key === 'ref') {
+      str += ` ref={(el) => this.${value} = el} `;
+    } else if (key.startsWith('on')) {
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${useKey}={event => ${processBinding(value)}} `;
@@ -118,52 +121,54 @@ function processBinding(code: string) {
   return stripStateAndPropsRefs(code, { replaceWith: 'this.' });
 }
 
-export const componentToStencil =
-  (options: ToStencilOptions = {}): Transpiler =>
-  ({ component }) => {
-    let json = fastClone(component);
-    if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+export const componentToStencil = (
+  options: ToStencilOptions = {},
+): Transpiler => ({ component }) => {
+  let json = fastClone(component);
+  if (options.plugins) {
+    json = runPreJsonPlugins(json, options.plugins);
+  }
+  const props = getProps(component);
+  let css = collectCss(json, { classProperty: 'class' });
+
+  mapRefs(component, (refName) => `this.${refName}`);
+
+  if (options.plugins) {
+    json = runPostJsonPlugins(json, options.plugins);
+  }
+  stripMetaProperties(json);
+
+  const dataString = getStateObjectStringFromComponent(json, {
+    format: 'class',
+    data: true,
+    functions: false,
+    getters: false,
+    keyPrefix: '@State() ',
+    valueMapper: (code) => processBinding(code),
+  });
+
+  const methodsString = getStateObjectStringFromComponent(json, {
+    format: 'class',
+    data: false,
+    functions: true,
+    getters: true,
+    valueMapper: (code) => processBinding(code),
+  });
+
+  const wrap = json.children.length !== 1;
+
+  if (options.prettier !== false) {
+    try {
+      css = format(css, {
+        parser: 'css',
+        plugins: [require('prettier/parser-postcss')],
+      });
+    } catch (err) {
+      console.warn('Could not format css', err);
     }
-    const props = getProps(component);
-    let css = collectCss(json, { classProperty: 'class' });
+  }
 
-    if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
-    }
-    stripMetaProperties(json);
-
-    const dataString = getStateObjectStringFromComponent(json, {
-      format: 'class',
-      data: true,
-      functions: false,
-      getters: false,
-      keyPrefix: '@State() ',
-      valueMapper: (code) => processBinding(code),
-    });
-
-    const methodsString = getStateObjectStringFromComponent(json, {
-      format: 'class',
-      data: false,
-      functions: true,
-      getters: true,
-      valueMapper: (code) => processBinding(code),
-    });
-
-    const wrap = json.children.length !== 1;
-
-    if (options.prettier !== false) {
-      try {
-        css = format(css, {
-          parser: 'css',
-          plugins: [require('prettier/parser-postcss')],
-        });
-      } catch (err) {
-        console.warn('Could not format css', err);
-      }
-    }
-
-    let str = dedent`
+  let str = dedent`
     ${renderPreComponent(json)}
 
     import { Component, Prop, h, State, Fragment } from '@stencil/core';
@@ -204,6 +209,20 @@ export const componentToStencil =
                 json.hooks.onMount.code,
               )} }`
         }
+        ${
+          !json.hooks.onUnMount?.code
+            ? ''
+            : `disconnectedCallback() { ${processBinding(
+                json.hooks.onUnMount.code,
+              )} }`
+        }
+        ${
+          !json.hooks.onUpdate?.code
+            ? ''
+            : `componentDidUpdate() { ${processBinding(
+                json.hooks.onUpdate.code,
+              )} }`
+        }
     
       render() {
         return (${wrap ? '<>' : ''}
@@ -217,17 +236,17 @@ export const componentToStencil =
     }
   `;
 
-    if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
-    }
-    if (options.prettier !== false) {
-      str = format(str, {
-        parser: 'typescript',
-        plugins: [require('prettier/parser-typescript')],
-      });
-    }
-    if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
-    }
-    return str;
-  };
+  if (options.plugins) {
+    str = runPreCodePlugins(str, options.plugins);
+  }
+  if (options.prettier !== false) {
+    str = format(str, {
+      parser: 'typescript',
+      plugins: [require('prettier/parser-typescript')],
+    });
+  }
+  if (options.plugins) {
+    str = runPostCodePlugins(str, options.plugins);
+  }
+  return str;
+};

@@ -195,7 +195,7 @@ export default class CustomCode {
         class={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={elem}
+        ref={(el) => (this.elem = el)}
         innerHTML={this.code}
       ></div>
     );
@@ -269,7 +269,7 @@ export default class CustomCode {
         class={
           \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
         }
-        ref={elem}
+        ref={(el) => (this.elem = el)}
         innerHTML={this.code}
       ></div>
     );
@@ -550,7 +550,7 @@ export default class FormComponent {
       <form
         {...props.attributes}
         validate={this.validate}
-        ref={formRef}
+        ref={(el) => (this.formRef = el)}
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
@@ -671,11 +671,16 @@ export default class Image {
       listener();
     }
   }
+  disconnectedCallback() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  }
 
   render() {
     return (
       <Fragment>
-        <picture ref={pictureRef}>
+        <picture ref={(el) => (this.pictureRef = el)}>
           {!this.useLazyLoading() || this.load ? (
             <>
               <img
