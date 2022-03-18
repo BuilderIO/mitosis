@@ -24,7 +24,7 @@ Examples of **correct** code for this rule:
 export default function MyComponent() {
   const state = useState({
     doSomethingAsync(event) {
-      void (async function () {
+      void (async function() {
         const response = await fetch();
       })();
     },

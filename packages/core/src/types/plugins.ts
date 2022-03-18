@@ -1,6 +1,8 @@
 import { MitosisComponent } from './mitosis-component';
 
-export type Plugin = (options?: any) => {
+export type Plugin = (
+  options?: any,
+) => {
   json?: {
     // Happens before any modifiers
     pre?: (json: MitosisComponent) => MitosisComponent | void;

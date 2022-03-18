@@ -21,6 +21,7 @@ import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { dashCase } from '../../helpers/dash-case';
 import { collectCss } from '../../helpers/collect-styles';
+import { indent } from '../../helpers/indent';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
@@ -125,7 +126,7 @@ export const componentToStencil = (
     json = runPreJsonPlugins(json, options.plugins);
   }
   const props = getProps(component);
-  const css = collectCss(json, { classProperty: 'class' });
+  let css = collectCss(json, { classProperty: 'class' });
 
   if (options.plugins) {
     json = runPostJsonPlugins(json, options.plugins);
@@ -149,6 +150,19 @@ export const componentToStencil = (
     valueMapper: (code) => processBinding(code),
   });
 
+  const wrap = json.children.length !== 1;
+
+  if (options.prettier !== false) {
+    try {
+      css = format(css, {
+        parser: 'css',
+        plugins: [require('prettier/parser-postcss')],
+      });
+    } catch (err) {
+      console.warn('Could not format css', err);
+    }
+  }
+
   let str = dedent`
     ${renderPreComponent(json)}
 
@@ -167,6 +181,12 @@ export const componentToStencil = (
          */
         json.meta.metadataHook?.tagName || dashCase(json.name)
       }',
+      ${
+        css.length
+          ? `styles: \`
+        ${indent(css, 8)}\`,`
+          : ''
+      }
     })
     export default class ${json.name} {
     
@@ -186,14 +206,13 @@ export const componentToStencil = (
         }
     
       render() {
-        return <>
+        return (${wrap ? '<>' : ''}
         
           ${json.children
             .map((item) => blockToStencil(item, options))
             .join('\n')}
 
-          <style>{\`${css}\`}</style>
-        </>
+        ${wrap ? '</>' : ''})
       }
     }
   `;

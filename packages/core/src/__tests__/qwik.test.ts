@@ -194,8 +194,9 @@ describe('qwik', () => {
       expect(state).toMatchSnapshot();
       const fileSet = createFileSet({ output: 'mjs', jsx: true });
       hierarchy.depthFirstSymbols.forEach((builderComponent) => {
-        const mitosisComponent =
-          convertBuilderElementToMitosisComponent(builderComponent);
+        const mitosisComponent = convertBuilderElementToMitosisComponent(
+          builderComponent,
+        );
         mitosisComponent &&
           addComponent(fileSet, mitosisComponent, { isRoot: false });
       });

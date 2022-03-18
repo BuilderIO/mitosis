@@ -11,17 +11,13 @@ export default class MyBasicComponent {
 
   render() {
     return (
-      <>
-        <div>
-          <input
-            value={this.name}
-            onInput={(event) => (this.name = event.target.value)}
-          />
-          Hello! I can run in React, Vue, Solid, or Liquid!
-        </div>
-
-        <style>{\`\`}</style>
-      </>
+      <div>
+        <input
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
     );
   }
 }
@@ -42,31 +38,27 @@ export default class Button {
 
   render() {
     return (
-      <>
-        <Fragment>
-          {this.link ? (
-            <>
-              <a
-                {...props.attributes}
-                href={this.link}
-                target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
-              >
-                {this.text}
-              </a>
-            </>
-          ) : null}
+      <Fragment>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
 
-          {!this.link ? (
-            <>
-              <button {...props.attributes} type=\\"button\\">
-                {this.text}
-              </button>
-            </>
-          ) : null}
-        </Fragment>
-
-        <style>{\`\`}</style>
-      </>
+        {!this.link ? (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </Fragment>
     );
   }
 }
@@ -78,6 +70,27 @@ exports[`Solid Columns 1`] = `
 
 @Component({
   tag: \\"column\\",
+  styles: \`
+       .div {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+         line-height: normal;
+       }
+       @media (max-width: 999px) {
+         .div {
+           flex-direction: row;
+         }
+       }
+       @media (max-width: 639px) {
+         .div {
+           flex-direction: row-reverse;
+         }
+       }
+       .div-2 {
+         flex-grow: 1;
+       }
+\`,
 })
 export default class Column {
   @Prop() columns: any;
@@ -102,26 +115,15 @@ export default class Column {
 
   render() {
     return (
-      <>
-        <div>
-          {this.columns?.map((column, index) => (
-            <div>
-              {column.content}
+      <div>
+        {this.columns?.map((column, index) => (
+          <div>
+            {column.content}
 
-              {index}
-            </div>
-          ))}
-        </div>
-
-        <style>{\`.div { 
-display: flex;
-flex-direction: column;
-align-items: stretch;
-line-height: normal; }@media (max-width: 999px) { .div { 
-flex-direction: row; } }@media (max-width: 639px) { .div { 
-flex-direction: row-reverse; } }.div-2 { 
-flex-grow: 1; }\`}</style>
-      </>
+            {index}
+          </div>
+        ))}
+      </div>
     );
   }
 }
@@ -189,17 +191,13 @@ export default class CustomCode {
 
   render() {
     return (
-      <>
-        <div
-          class={
-            \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-          }
-          ref={elem}
-          innerHTML={this.code}
-        ></div>
-
-        <style>{\`\`}</style>
-      </>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={this.code}
+      ></div>
     );
   }
 }
@@ -267,17 +265,13 @@ export default class CustomCode {
 
   render() {
     return (
-      <>
-        <div
-          class={
-            \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
-          }
-          ref={elem}
-          innerHTML={this.code}
-        ></div>
-
-        <style>{\`\`}</style>
-      </>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={this.code}
+      ></div>
     );
   }
 }
@@ -295,6 +289,13 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"form-component\\",
+  styles: \`
+       .pre {
+         padding: 10px;
+         color: red;
+         text-align: center;
+       }
+\`,
 })
 export default class FormComponent {
   @Prop() previewState: any;
@@ -546,67 +547,60 @@ export default class FormComponent {
 
   render() {
     return (
-      <>
-        <form
-          {...props.attributes}
-          validate={this.validate}
-          ref={formRef}
-          action={!this.sendWithJs && this.action}
-          method={this.method}
-          name={this.name}
-          onSubmit={(event) => this.this.onSubmit(event)}
-        >
-          {this.builderBlock && this.builderBlock.children ? (
-            <>
-              {this.builderBlock?.children?.map((block, index) => (
-                <BuilderBlockComponent
-                  key={block.id}
-                  block={block}
-                  index={index}
-                ></BuilderBlockComponent>
-              ))}
-            </>
-          ) : null}
+      <form
+        {...props.attributes}
+        validate={this.validate}
+        ref={formRef}
+        action={!this.sendWithJs && this.action}
+        method={this.method}
+        name={this.name}
+        onSubmit={(event) => this.this.onSubmit(event)}
+      >
+        {this.builderBlock && this.builderBlock.children ? (
+          <>
+            {this.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            ))}
+          </>
+        ) : null}
 
-          {this.this.submissionState === \\"error\\" ? (
-            <>
-              <BuilderBlocks
-                dataPath=\\"errorMessage\\"
-                blocks={this.errorMessage}
-              ></BuilderBlocks>
-            </>
-          ) : null}
+        {this.this.submissionState === \\"error\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={this.errorMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
 
-          {this.this.submissionState === \\"sending\\" ? (
-            <>
-              <BuilderBlocks
-                dataPath=\\"sendingMessage\\"
-                blocks={this.sendingMessage}
-              ></BuilderBlocks>
-            </>
-          ) : null}
+        {this.this.submissionState === \\"sending\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={this.sendingMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
 
-          {this.this.submissionState === \\"error\\" && this.this.responseData ? (
-            <>
-              <pre>{JSON.stringify(this.this.responseData, null, 2)}</pre>
-            </>
-          ) : null}
+        {this.this.submissionState === \\"error\\" && this.this.responseData ? (
+          <>
+            <pre>{JSON.stringify(this.this.responseData, null, 2)}</pre>
+          </>
+        ) : null}
 
-          {this.this.submissionState === \\"success\\" ? (
-            <>
-              <BuilderBlocks
-                dataPath=\\"successMessage\\"
-                blocks={this.successMessage}
-              ></BuilderBlocks>
-            </>
-          ) : null}
-        </form>
-
-        <style>{\`.pre { 
-padding: 10px;
-color: red;
-text-align: center; }\`}</style>
-      </>
+        {this.this.submissionState === \\"success\\" ? (
+          <>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={this.successMessage}
+            ></BuilderBlocks>
+          </>
+        ) : null}
+      </form>
     );
   }
 }
@@ -618,6 +612,14 @@ exports[`Solid Image 1`] = `
 
 @Component({
   tag: \\"image\\",
+  styles: \`
+       .img {
+         opacity: 1;
+         transition: opacity 0.2s ease-in-out;
+         object-fit: cover;
+         object-position: center;
+       }
+\`,
 })
 export default class Image {
   @Prop() lazy: any;
@@ -672,37 +674,27 @@ export default class Image {
 
   render() {
     return (
-      <>
-        <Fragment>
-          <picture ref={pictureRef}>
-            {!this.useLazyLoading() || this.load ? (
-              <>
-                <img
-                  class={
-                    \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-                  }
-                  alt={this.altText}
-                  aria-role={this.altText ? \\"presentation\\" : undefined}
-                  src={this.image}
-                  onLoad={(event) => this.setLoaded()}
-                  srcset={this.srcset}
-                  sizes={this.sizes}
-                />
-              </>
-            ) : null}
+      <Fragment>
+        <picture ref={pictureRef}>
+          {!this.useLazyLoading() || this.load ? (
+            <>
+              <img
+                class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+                alt={this.altText}
+                aria-role={this.altText ? \\"presentation\\" : undefined}
+                src={this.image}
+                onLoad={(event) => this.setLoaded()}
+                srcset={this.srcset}
+                sizes={this.sizes}
+              />
+            </>
+          ) : null}
 
-            <source srcset={this.srcset} />
-          </picture>
+          <source srcset={this.srcset} />
+        </picture>
 
-          {this.children}
-        </Fragment>
-
-        <style>{\`.img { 
-opacity: 1;
-transition: opacity 0.2s ease-in-out;
-object-fit: cover;
-object-position: center; }\`}</style>
-      </>
+        {this.children}
+      </Fragment>
     );
   }
 }
@@ -726,20 +718,16 @@ export default class ImgComponent {
 
   render() {
     return (
-      <>
-        <img
-          {...props.attributes}
-          style={{
-            objectFit: this.backgroundSize || \\"cover\\",
-            objectPosition: this.backgroundPosition || \\"center\\",
-          }}
-          key={(Builder.isEditing && this.imgSrc) || \\"default-key\\"}
-          alt={this.altText}
-          src={this.imgSrc}
-        />
-
-        <style>{\`\`}</style>
-      </>
+      <img
+        {...props.attributes}
+        style={{
+          objectFit: this.backgroundSize || \\"cover\\",
+          objectPosition: this.backgroundPosition || \\"center\\",
+        }}
+        key={(Builder.isEditing && this.imgSrc) || \\"default-key\\"}
+        alt={this.altText}
+        src={this.imgSrc}
+      />
     );
   }
 }
@@ -765,24 +753,20 @@ export default class FormInputComponent {
 
   render() {
     return (
-      <>
-        <input
-          {...props.attributes}
-          key={
-            Builder.isEditing && this.defaultValue
-              ? this.defaultValue
-              : \\"default-key\\"
-          }
-          placeholder={this.placeholder}
-          type={this.type}
-          name={this.name}
-          value={this.value}
-          defaultValue={this.defaultValue}
-          required={this.required}
-        />
-
-        <style>{\`\`}</style>
-      </>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && this.defaultValue
+            ? this.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={this.placeholder}
+        type={this.type}
+        name={this.name}
+        value={this.value}
+        defaultValue={this.defaultValue}
+        required={this.required}
+      />
     );
   }
 }
@@ -801,14 +785,10 @@ export default class RawText {
 
   render() {
     return (
-      <>
-        <span
-          class={props.attributes?.class || props.attributes?.className}
-          innerHTML={this.text || \\"\\"}
-        ></span>
-
-        <style>{\`\`}</style>
-      </>
+      <span
+        class={props.attributes?.class || props.attributes?.className}
+        innerHTML={this.text || \\"\\"}
+      ></span>
     );
   }
 }
@@ -828,22 +808,18 @@ export default class SectionComponent {
 
   render() {
     return (
-      <>
-        <section
-          {...props.attributes}
-          style={
-            this.maxWidth && typeof this.maxWidth === \\"number\\"
-              ? {
-                  maxWidth: this.maxWidth,
-                }
-              : undefined
-          }
-        >
-          {this.children}
-        </section>
-
-        <style>{\`\`}</style>
-      </>
+      <section
+        {...props.attributes}
+        style={
+          this.maxWidth && typeof this.maxWidth === \\"number\\"
+            ? {
+                maxWidth: this.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {this.children}
+      </section>
     );
   }
 }
@@ -867,27 +843,23 @@ export default class SelectComponent {
 
   render() {
     return (
-      <>
-        <select
-          {...props.attributes}
-          value={this.value}
-          key={
-            Builder.isEditing && this.defaultValue
-              ? this.defaultValue
-              : \\"default-key\\"
-          }
-          defaultValue={this.defaultValue}
-          name={this.name}
-        >
-          {this.options?.map((option, index) => (
-            <option value={option.value} data-index={index}>
-              {option.name || option.value}
-            </option>
-          ))}
-        </select>
-
-        <style>{\`\`}</style>
-      </>
+      <select
+        {...props.attributes}
+        value={this.value}
+        key={
+          Builder.isEditing && this.defaultValue
+            ? this.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={this.defaultValue}
+        name={this.name}
+      >
+        {this.options?.map((option, index) => (
+          <option value={option.value} data-index={index}>
+            {option.name || option.value}
+          </option>
+        ))}
+      </select>
     );
   }
 }
@@ -906,13 +878,9 @@ export default class SubmitButton {
 
   render() {
     return (
-      <>
-        <button {...props.attributes} type=\\"submit\\">
-          {this.text}
-        </button>
-
-        <style>{\`\`}</style>
-      </>
+      <button {...props.attributes} type=\\"submit\\">
+        {this.text}
+      </button>
     );
   }
 }
@@ -933,14 +901,10 @@ export default class Text {
 
   render() {
     return (
-      <>
-        <div
-          contentEditable={allowEditingText || undefined}
-          innerHTML={this.text || this.content || \\"\\"}
-        ></div>
-
-        <style>{\`\`}</style>
-      </>
+      <div
+        contentEditable={allowEditingText || undefined}
+        innerHTML={this.text || this.content || \\"\\"}
+      ></div>
     );
   }
 }
@@ -962,17 +926,13 @@ export default class Textarea {
 
   render() {
     return (
-      <>
-        <textarea
-          {...props.attributes}
-          placeholder={this.placeholder}
-          name={this.name}
-          value={this.value}
-          defaultValue={this.defaultValue}
-        ></textarea>
-
-        <style>{\`\`}</style>
-      </>
+      <textarea
+        {...props.attributes}
+        placeholder={this.placeholder}
+        name={this.name}
+        value={this.value}
+        defaultValue={this.defaultValue}
+      ></textarea>
     );
   }
 }
@@ -998,30 +958,26 @@ export default class Video {
 
   render() {
     return (
-      <>
-        <video
-          {...props.attributes}
-          preload=\\"none\\"
-          style={{
-            width: \\"100%\\",
-            height: \\"100%\\",
-            ...this.attributes?.style,
-            objectFit: this.fit,
-            objectPosition: this.position,
-            // Hack to get object fit to work as expected and
-            // not have the video overflow
-            borderRadius: 1,
-          }}
-          key={this.video || \\"no-src\\"}
-          poster={this.posterImage}
-          autoPlay={this.autoPlay}
-          muted={this.muted}
-          controls={this.controls}
-          loop={this.loop}
-        ></video>
-
-        <style>{\`\`}</style>
-      </>
+      <video
+        {...props.attributes}
+        preload=\\"none\\"
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...this.attributes?.style,
+          objectFit: this.fit,
+          objectPosition: this.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          borderRadius: 1,
+        }}
+        key={this.video || \\"no-src\\"}
+        poster={this.posterImage}
+        autoPlay={this.autoPlay}
+        muted={this.muted}
+        controls={this.controls}
+        loop={this.loop}
+      ></video>
     );
   }
 }

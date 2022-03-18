@@ -9,7 +9,7 @@ const allPropsMatchesRegex = new RegExp(propsRegex, 'g');
  */
 export const getProps = (json: MitosisComponent) => {
   const props = new Set<string>();
-  traverse(json).forEach(function (item) {
+  traverse(json).forEach(function(item) {
     if (typeof item === 'string') {
       // TODO: proper babel ref matching
       const matches = item.match(allPropsMatchesRegex);

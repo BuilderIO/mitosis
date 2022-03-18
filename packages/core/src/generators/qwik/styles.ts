@@ -38,7 +38,7 @@ function hashCode(text: string) {
 }
 
 export function renderStyles(styles: Map<string, CssStyles>) {
-  return function (this: SrcBuilder) {
+  return function(this: SrcBuilder) {
     this.emit('`', NL, INDENT);
     const mediaStyles: (string | object)[] = [];
     styles.forEach((styles) => {
