@@ -111,8 +111,9 @@ const getStyleStringFromBlock = (
     for (const key in block.bindings) {
       if (key.includes('style') && key.includes('.')) {
         const styleProperty = key.split('.')[1];
-        styleBindings[styleProperty] =
-          block.code?.bindings?.[key] || block.bindings[key];
+        styleBindings[styleProperty] = convertExportDefaultToReturn(
+          block.code?.bindings?.[key] || block.bindings[key],
+        );
       }
     }
   }
@@ -790,7 +791,10 @@ export function convertExportDefaultToReturn(code: string) {
   for (let i = 0; i < body.length; i++) {
     const statement = body[i];
     if (types.isExportDefaultDeclaration(statement)) {
-      if (types.isCallExpression(statement.declaration)) {
+      if (
+        types.isCallExpression(statement.declaration) ||
+        types.isExpression(statement.declaration)
+      ) {
         newBody[i] = types.returnStatement(statement.declaration);
       }
     }

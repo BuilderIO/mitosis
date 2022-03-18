@@ -194,7 +194,7 @@ export function renderUseLexicalScope(file: File) {
       '=',
       WS,
       file.import(file.qwikModule, 'useLexicalScope').name,
-      '()[0];',
+      '()[0]',
     );
   };
 }
