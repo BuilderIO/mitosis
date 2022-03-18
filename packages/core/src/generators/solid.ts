@@ -179,29 +179,29 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   return str;
 };
 
-export const componentToSolid = (options: ToSolidOptions = {}): Transpiler => ({
-  component,
-}) => {
-  let json = fastClone(component);
-  if (options.plugins) {
-    json = runPreJsonPlugins(json, options.plugins);
-  }
-  const componentHasStyles = hasStyles(json);
-  const addWrapper = json.children.length > 1;
-  if (options.plugins) {
-    json = runPostJsonPlugins(json, options.plugins);
-  }
-  stripMetaProperties(json);
-  const foundDynamicComponents = processDynamicComponents(json, options);
+export const componentToSolid =
+  (options: ToSolidOptions = {}): Transpiler =>
+  ({ component }) => {
+    let json = fastClone(component);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
+    }
+    const componentHasStyles = hasStyles(json);
+    const addWrapper = json.children.length > 1;
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
+    }
+    stripMetaProperties(json);
+    const foundDynamicComponents = processDynamicComponents(json, options);
 
-  const stateString = getStateObjectStringFromComponent(json);
-  const hasState = Boolean(Object.keys(component.state).length);
-  const componentsUsed = getComponentsUsed(json);
+    const stateString = getStateObjectStringFromComponent(json);
+    const hasState = Boolean(Object.keys(component.state).length);
+    const componentsUsed = getComponentsUsed(json);
 
-  const hasShowComponent = componentsUsed.has('Show');
-  const hasForComponent = componentsUsed.has('For');
+    const hasShowComponent = componentsUsed.has('Show');
+    const hasForComponent = componentsUsed.has('For');
 
-  let str = dedent`
+    let str = dedent`
     ${
       !(hasShowComponent || hasForComponent)
         ? ''
@@ -238,17 +238,17 @@ export const componentToSolid = (options: ToSolidOptions = {}): Transpiler => ({
 
   `;
 
-  if (options.plugins) {
-    str = runPreCodePlugins(str, options.plugins);
-  }
-  if (options.prettier !== false) {
-    str = format(str, {
-      parser: 'typescript',
-      plugins: [require('prettier/parser-typescript')],
-    });
-  }
-  if (options.plugins) {
-    str = runPostCodePlugins(str, options.plugins);
-  }
-  return str;
-};
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
+    }
+    if (options.prettier !== false) {
+      str = format(str, {
+        parser: 'typescript',
+        plugins: [require('prettier/parser-typescript')],
+      });
+    }
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
+    }
+    return str;
+  };
