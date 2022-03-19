@@ -239,7 +239,7 @@ const wrapBinding = (value: string) => {
     return value;
   }
   return `(() => {
-    try { ${value} }
+    try { ${isExpression(value) ? 'return ' : ''}${value} }
     catch (err) {
       console.warn('Builder code error', err);
     }
@@ -723,15 +723,7 @@ const getHooks = (content: BuilderContent) => {
 export function extractStateHook(code: string) {
   const { types } = babel;
   let state: any = {};
-  const ast = babel.parse(code, {
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
-  });
-  const body = types.isFile(ast)
-    ? ast.program.body
-    : types.isProgram(ast)
-    ? ast.body
-    : [];
+  const body = parseCode(code);
   const newBody = body.slice();
   for (let i = 0; i < body.length; i++) {
     const statement = body[i];
@@ -778,15 +770,7 @@ export function extractStateHook(code: string) {
 
 export function convertExportDefaultToReturn(code: string) {
   const { types } = babel;
-  const ast = babel.parse(code, {
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
-  });
-  const body = types.isFile(ast)
-    ? ast.program.body
-    : types.isProgram(ast)
-    ? ast.body
-    : [];
+  const body = parseCode(code);
   const newBody = body.slice();
   for (let i = 0; i < body.length; i++) {
     const statement = body[i];
@@ -801,6 +785,35 @@ export function convertExportDefaultToReturn(code: string) {
   }
 
   return generate(types.program(newBody)).code || '';
+}
+
+function parseCode(code: string) {
+  const ast = babel.parse(code, {
+    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    plugins: [[decorators, { legacy: true }], jsxPlugin],
+  });
+  const body = babel.types.isFile(ast)
+    ? ast.program.body
+    : babel.types.isProgram(ast)
+    ? ast.body
+    : [];
+  return body;
+}
+
+/**
+ * Returns `true` if the `code` is a valid expression. (vs a statement)
+ */
+function isExpression(code: string): boolean {
+  try {
+    const body = parseCode(code);
+    return (
+      body.length == 1 &&
+      (babel.types.isExpression(body[0]) ||
+        babel.types.isExpressionStatement(body[0]))
+    );
+  } catch (e) {
+    return false;
+  }
 }
 
 // TODO: maybe this should be part of the builder -> Mitosis part

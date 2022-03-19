@@ -297,6 +297,74 @@ export const Image = function Image(props){var jsx = props.children || [];var im
 }
 `;
 
+exports[`qwik bindings 1`] = `Object {}`;
+
+exports[`qwik bindings 2`] = `
+Object {
+  "high.cjs": "
+",
+  "low.cjs": "const h = require(\\"@builder.io/qwik\\").h;
+const qrl = require(\\"@builder.io/qwik\\").qrl;
+const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
+
+
+exports.MyComponent_styles = \`
+  .cjrqfb1{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    margin-top: 20px;
+    line-height: normal;
+    height: auto;
+    text-align: center;
+  }
+\`;
+
+exports.MyComponent_onRender = () => {
+  const state = useLexicalScope()[0];
+  return (
+    h(
+      \\"div\\",
+      {
+        class: \\"cjrqfb1\\",
+        style: { backgroundColor: (() => {
+    try { return state.hilitTitle ? \\"red\\" : \\"gray\\"; }
+    catch (err) {
+      console.warn('Builder code error', err);
+    }
+  })(), }
+      },
+      h(
+        \\"div\\",
+        {
+          class: \\"builder-text\\",
+          innerHTML: (() => {
+    try { var _virtual_index=state.title;return _virtual_index }
+    catch (err) {
+      console.warn('Builder code error', err);
+    }
+  })()
+        }
+      )
+    )
+  );
+};
+",
+  "med.cjs": "const componentFromQrl = require(\\"@builder.io/qwik\\").componentFromQrl;
+const qrl = require(\\"@builder.io/qwik\\").qrl;
+const withScopedStylesFromQrl = require(\\"@builder.io/qwik\\").withScopedStylesFromQrl;
+
+
+exports.MyComponent_onMount = (state) => {;withScopedStylesFromQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []))
+return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
+};
+exports.MyComponent = componentFromQrl(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
+",
+}
+`;
+
 exports[`qwik button 1`] = `
 Object {
   "high.js": "
@@ -353,7 +421,7 @@ export const MyComponent_onMount = (state) => {;withScopedStylesFromQrl(qrl(\\".
 return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
 };
 export const MyComponent = componentFromQrl(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
-export const CoreButton = function CoreButton(props){var hasLink = !!props.link;var hProps ={innerHTML:props.text || '',href:props.link,target:props.openInNewTab ? '_blank':'_self',class:props.class,};return h(hasLink ? 'a':props.tagName$ || 'span',hProps);};
+export const CoreButton = function CoreButton(props){var hasLink = !!props.link;var hProps ={innerHTML:props.text || '',href:props.link,target:props.openInNewTab ? '_blank':'_self',class:props.class,};for(var key in props){if(Object.prototype.hasOwnProperty.call(props,key)&& key.startsWith('on:')){hProps[key] = props[key];}}return h(hasLink ? 'a':props.tagName$ || 'span',hProps);};
 ",
 }
 `;
