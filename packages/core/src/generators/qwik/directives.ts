@@ -169,5 +169,13 @@ export function CoreButton(props: {
     target: props.openInNewTab ? '_blank' : '_self',
     class: props.class,
   };
+  for (const key in props) {
+    if (
+      Object.prototype.hasOwnProperty.call(props, key) &&
+      key.startsWith('on:')
+    ) {
+      (hProps as any)[key] = (props as any)[key];
+    }
+  }
   return h(hasLink ? 'a' : props.tagName$ || 'span', hProps);
 }
