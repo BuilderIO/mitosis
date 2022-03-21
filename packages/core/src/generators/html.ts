@@ -198,6 +198,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
     return json.properties._text;
   }
   if (json.bindings._text) {
+    // TO-DO: textContent might be better performance-wise
     addOnChangeJs(elId, options, `el.innerText = ${json.bindings._text};`);
 
     return `<span data-name="${elId}"><!-- ${(
@@ -679,7 +680,12 @@ export const componentToCustomElement =
           }
 
           ${useOptions.js}
+
+          if (${json.meta.isAttachedToShadowDom}) {
+            this.attachShadow({ mode: 'open' })
+          }
         }
+
 
         ${
           !json.hooks.onUnMount?.code
@@ -695,8 +701,12 @@ export const componentToCustomElement =
           `
         }
 
+        get _root() {
+          return this.shadowRoot || this;
+        }
+
         connectedCallback() {
-          this.innerHTML = \`
+          this._root.innerHTML = \`
       ${html}\`;
           this.update();
 
@@ -722,7 +732,7 @@ export const componentToCustomElement =
                 return '';
               }
               return `
-              this.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              this._root.querySelectorAll("[data-name='${key}']").forEach((el) => {
                 ${updateReferencesInCode(value, useOptions)}
               })
             `;
@@ -769,7 +779,7 @@ export const componentToCustomElement =
               if (context && name in context) {
                 return context[name];
               }
-            } while (parent = parent.parentNode)
+            } while (parent = parent.parentNode || parent.host)
           }
         `
         }
