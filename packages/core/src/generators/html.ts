@@ -1,6 +1,5 @@
 import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
-import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
