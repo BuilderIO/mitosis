@@ -726,6 +726,8 @@ import { useState, useEffect } from \\"react\\";
 export default function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
 
+  const [name, setName] = useState(() => \\"test\\");
+
   const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
 
   useEffect(() => {
@@ -741,7 +743,7 @@ export default function SmileReviews(props) {
   }, []);
 
   return (
-    <div>
+    <div data-user={name}>
       <button onClick={(event) => setShowReviewPrompt(true)}>
         Write a review
       </button>
@@ -765,7 +767,7 @@ export default function SmileReviews(props) {
         <Review key={review.id}>
           <Img src={review.avatar} />
 
-          <div>
+          <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
             <div>
               N:
               {index}

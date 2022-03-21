@@ -18,7 +18,7 @@ export const gettersToFunctions = (json: MitosisComponent) => {
     return false;
   });
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     // TODO: not all strings are expressions!
     if (typeof item === 'string') {
       let value = item;

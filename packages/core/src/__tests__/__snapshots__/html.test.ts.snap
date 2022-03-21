@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Html Stamped 1`] = `
-"<div>
+"<div data-name=\\"div-1\\">
   <button data-name=\\"button-1\\">Write a review</button>
 
   <span data-name=\\"show\\">
@@ -22,18 +22,18 @@ exports[`Html Stamped 1`] = `
     <div class=\\"review\\" data-name=\\"review\\">
       <img class=\\"img\\" data-name=\\"img-1\\" />
 
-      <div>
+      <div data-name=\\"div-2\\">
         <div>
           N:
-          <span data-name=\\"div-1\\"><!-- index --></span>
+          <span data-name=\\"div-3\\"><!-- index --></span>
         </div>
 
         <div>
-          <span data-name=\\"div-2\\"><!-- review.author --></span>
+          <span data-name=\\"div-4\\"><!-- review.author --></span>
         </div>
 
         <div>
-          <span data-name=\\"div-3\\"><!-- review.reviewMessage --></span>
+          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
         </div>
       </div>
     </div>
@@ -65,13 +65,17 @@ exports[`Html Stamped 1`] = `
 </style>
 <script>
   (() => {
-    const state = { reviews: [], showReviewPrompt: false };
+    const state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
     let props = {};
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"data-user\\", state.name);
+      });
+
       document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton1Click);
         el.addEventListener(\\"click\\", onButton1Click);
@@ -100,15 +104,19 @@ exports[`Html Stamped 1`] = `
         el.src = getContext(el, \\"review\\").avatar;
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = index;
-      });
-
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.innerText = getContext(el, \\"review\\").author;
+        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+        el.innerText = index;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+        el.innerText = getContext(el, \\"review\\").author;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }
