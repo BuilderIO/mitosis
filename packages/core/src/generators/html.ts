@@ -468,7 +468,7 @@ export const componentToHtml =
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              document.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
                 ${value}
               })
             `;
@@ -732,7 +732,7 @@ export const componentToCustomElement =
                 return '';
               }
               return `
-              this._root.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              this._root.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
                 ${updateReferencesInCode(value, useOptions)}
               })
             `;

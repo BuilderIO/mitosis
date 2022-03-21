@@ -82,51 +82,55 @@ exports[`Html Stamped 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
-        el.removeEventListener(\\"click\\", onButton1Click);
-        el.addEventListener(\\"click\\", onButton1Click);
-      });
+      document
+        .querySelectorAll(\\"[data-name='button-1']\\")
+        .forEach((el, index) => {
+          el.removeEventListener(\\"click\\", onButton1Click);
+          el.addEventListener(\\"click\\", onButton1Click);
+        });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
       });
 
-      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
-        el.removeEventListener(\\"click\\", onButton2Click);
-        el.addEventListener(\\"click\\", onButton2Click);
-      });
+      document
+        .querySelectorAll(\\"[data-name='button-2']\\")
+        .forEach((el, index) => {
+          el.removeEventListener(\\"click\\", onButton2Click);
+          el.addEventListener(\\"click\\", onButton2Click);
+        });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"review\\");
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
         el.key = getContext(el, \\"review\\").id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
         el.src = getContext(el, \\"review\\").avatar;
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
         el.innerText = index;
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
         el.innerText = getContext(el, \\"review\\").author;
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }
