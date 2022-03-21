@@ -631,6 +631,7 @@ export const componentToCustomElement =
       .toLowerCase();
 
     let str = `
+      ${renderPreComponent(json)}
       /**
        * Usage:
        * 
@@ -801,5 +802,5 @@ export const componentToCustomElement =
       str = runPostCodePlugins(str, options.plugins);
     }
 
-    return dedent(renderPreComponent(json)) + '\n' + str;
+    return str;
   };
