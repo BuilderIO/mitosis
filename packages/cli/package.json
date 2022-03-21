@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/mitosis-cli",
-  "version": "0.0.12",
+  "version": "0.0.13-0",
   "description": "mitosis CLI",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -18,6 +18,7 @@
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
+    "release:dev": "npm run build && npm version prerelease --no-git-tag-version && ALLOW_PUBLISH=true npm publish --tag dev",
     "release:patch": "npm version patch && npm publish",
     "test": "jest",
     "watch": "jest --watch",
