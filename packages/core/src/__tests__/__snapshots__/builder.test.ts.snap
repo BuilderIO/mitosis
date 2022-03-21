@@ -1837,7 +1837,17 @@ Object {
     ],
     "jsCode": "var props = state;
 
-Object.assign(state, { reviews: [], name: \\"test\\", showReviewPrompt: false });
+Object.assign(state, {
+  reviews: [],
+  name: \\"test\\",
+  showReviewPrompt: false,
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  },
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  },
+});
 
 fetch(
   \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
@@ -1851,7 +1861,17 @@ fetch(
 ",
     "tsCode": "var props = state;
 
-useState({ reviews: [], name: \\"test\\", showReviewPrompt: false });
+useState({
+  reviews: [],
+  name: \\"test\\",
+  showReviewPrompt: false,
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  },
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  },
+});
 
 onMount(() => {
   fetch(
@@ -1877,6 +1897,12 @@ export default function MyComponent(props) {
     reviews: [],
     name: \\"test\\",
     showReviewPrompt: false,
+    kebabCaseValue() {
+      return kebabCase(\\"testThat\\");
+    },
+    snakeCaseValue() {
+      return snakeCase(\\"testThis\\");
+    },
   });
 
   onMount(() => {
