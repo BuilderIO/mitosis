@@ -8,7 +8,8 @@
   - [Async methods can't be defined on "state"](#async-methods-cant-be-defined-on-state)
   - [Callback implicitly have an "event" arg](#callback-implicitly-have-an-event-arg)
   - [Functions can't be passed by reference to JSX callbacks](#functions-cant-be-passed-by-reference-to-jsx-callbacks)
-  - [Can't assign to "params" to "state"](#cant-assign-to-params-to-state)
+  - [Can't assign "params" to "state"](#cant-assign-"params"-to-"state")
+  - [Can't assign function output to "state"](#cant-assign-function-output-to-"state")
   - [Can't destructure assignment from state](#cant-destructure-assignment-from-state)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -239,7 +240,7 @@ export default function MyComponent(props) {
 }
 ```
 
-### Can't assign to "params" to "state"
+### Can't assign "params" to "state"
 
 JSX lite parsing fails on referencing `props` in a call to `useState`.
 
@@ -282,6 +283,77 @@ export default function MyComponent(props) {
   }, []);
 
   return <></>;
+}
+```
+
+### Can't assign function output to "state"
+
+JSX lite parsing fails if a state value isn't valid JSON
+
+If the initial state value is a computed value (whether based on `props` or the output of some function), then you cannot inline it. Instead, use a getter method:
+
+_Mitosis input_
+
+```jsx
+import { kebabCase } from 'lodash';
+
+export default function MyComponent(props) {
+  const state = useState({
+    name: kebabCase('Steve'),
+    //    ^^^^^^^^^
+    //    Could not JSON5 parse object
+  });
+
+  return (
+    <div>
+      <h2>Hello, {state.name}</h2>
+    </div>
+  );
+}
+```
+
+**Work around**
+
+Use a getter method:
+
+_Mitosis input_
+
+```jsx
+import { kebabCase } from 'lodash';
+
+export default function MyComponent(props) {
+  const state = useState({
+    get name() {
+      return kebabCase('Steve');
+    },
+  });
+
+  return (
+    <div>
+      <h2>Hello, {state.name}</h2>
+    </div>
+  );
+}
+```
+
+_Mitosis output_
+
+```jsx
+import { kebabCase } from 'lodash';
+
+export default function MyComponent(props) {
+  function name() {
+    return kebabCase('Steve');
+  }
+
+  return (
+    <div>
+      <h2>
+        Hello,
+        {name()}
+      </h2>
+    </div>
+  );
 }
 ```
 

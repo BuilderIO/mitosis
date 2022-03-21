@@ -23,7 +23,7 @@ export default function MyComponent(props) {
     newItemName: 'New item',
     list: ['hello', 'world'],
     addItem() {
-      state.list = [...state.list, state.newItemName];
+      this.list = [...this.list, this.newItemName];
     },
   });
 
@@ -105,6 +105,34 @@ export default function MyComponent() {
 }
 ```
 
+If the initial state value is a computed value (whether based on `props` or the output of some function), then you cannot inline it. Instead, use a getter method:
+
+```jsx
+import { kebabCase } from 'lodash';
+
+export default function MyComponent(props) {
+  const state = useState({
+    name: 'Steve',
+    get transformedName() {
+      return kebabCase('Steve');
+    },
+    get transformedName() {
+      return props.name;
+    },
+  });
+
+  return (
+    <div>
+      <h2>Hello, {state.name}</h2>
+      <input
+        onInput={(event) => (state.name = event.target.value)}
+        value={state.name}
+      />
+    </div>
+  );
+}
+```
+
 Components automatically update when state values change
 
 ## Methods
@@ -116,7 +144,7 @@ export default function MyComponent() {
   const state = useState({
     name: 'Steve',
     updateName(newName) {
-      state.name = newName;
+      this.name = newName;
     },
   });
 
