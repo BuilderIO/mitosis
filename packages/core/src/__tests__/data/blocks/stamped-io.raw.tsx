@@ -1,6 +1,7 @@
 import { useState, onMount, For, Show } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';
+import { reduce } from 'lodash';
 
 type SmileReviewsProps = {
   productId: string;
@@ -8,13 +9,16 @@ type SmileReviewsProps = {
 };
 
 export default function SmileReviews(props: SmileReviewsProps) {
-  kebabCase('testThat');
-  snakeCase('testThis');
-
   const state = useState({
     reviews: [] as any[],
     name: 'test',
     showReviewPrompt: false,
+    kebabCaseValue() {
+      return kebabCase('testThat');
+    },
+    snakeCaseValue() {
+      return snakeCase('testThis');
+    },
   });
 
   // TODO: allow async function here
