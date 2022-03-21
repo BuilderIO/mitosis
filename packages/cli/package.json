@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/mitosis-cli",
-  "version": "0.0.12",
+  "version": "0.0.13-1",
   "description": "mitosis CLI",
   "types": "build/types/types.d.ts",
   "bin": {
@@ -10,7 +10,7 @@
     "symlink-rm": "rm -rf ./node_modules/@builder.io/mitosis",
     "symlink-core": "ln -sf ../../../../packages/core ./node_modules/@builder.io/mitosis",
     "symlink": "npm run symlink-rm && npm run symlink-core",
-    "format": "prettier --write **/*.{js,ts,tsx,json}",
+    "format": "npx prettier --write **/*.{js,ts,tsx,json}",
     "clean-build": "tsc --build --clean && rm -rf ./dist",
     "clean": "tsc --build --clean",
     "compile": "tsc --build --verbose --pretty",
@@ -18,6 +18,7 @@
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
     "prepublishOnly": "npm run build",
+    "release:dev": "npm run build && npm version prerelease --no-git-tag-version && ALLOW_PUBLISH=true npm publish --tag dev",
     "release:patch": "npm version patch && npm publish",
     "test": "jest",
     "watch": "jest --watch",
@@ -35,7 +36,7 @@
   "license": "MIT",
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
-    "@builder.io/mitosis": "0.0.48",
+    "@builder.io/mitosis": "0.0.50-6",
     "@types/fs-extra": "^9.0.8",
     "@types/lodash": "^4.14.171",
     "@vue/compiler-sfc": "^3.1.5",

@@ -1,0 +1,207 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`webcomponent Stamped 1`] = `
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+/**
+ * Usage:
+ *
+ *  <smile-reviews></smile-reviews>
+ *
+ */
+class SmileReviews extends HTMLElement {
+  constructor() {
+    super();
+
+    const self = this;
+    this.state = {
+      reviews: [],
+      name: \\"test\\",
+      showReviewPrompt: false,
+      kebabCaseValue() {
+        return kebabCase(\\"testThat\\");
+      },
+      snakeCaseValue() {
+        return snakeCase(\\"testThis\\");
+      },
+    };
+    this.props = {};
+
+    // Helper to pass context down for loops
+    this.contextMap = new WeakMap();
+
+    // Event handler for 'click' event on button-1
+    this.onButton1Click = (event) => {
+      this.state.showReviewPrompt = true;
+      this.update();
+    };
+
+    // Event handler for 'click' event on button-2
+    this.onButton2Click = (event) => {
+      this.state.showReviewPrompt = false;
+      this.update();
+    };
+  }
+
+  connectedCallback() {
+    this.innerHTML = \`
+      <div data-name=\\"div-1\\">
+        <button data-name=\\"button-1\\">Write a review</button>
+      
+        <span data-name=\\"show\\">
+          <input placeholder=\\"Email\\" />
+      
+          <input placeholder=\\"Title\\" class=\\"input\\" />
+      
+          <textarea
+            placeholder=\\"How was your experience?\\"
+            class=\\"textarea\\"
+          ></textarea>
+      
+          <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+        </span>
+      
+        <span data-name=\\"for\\"></span>
+        <template data-template-for=\\"for\\">
+          <div class=\\"review\\" data-name=\\"div-2\\">
+            <img class=\\"img\\" data-name=\\"img-1\\" />
+      
+            <div data-name=\\"div-3\\">
+              <div>
+                N:
+                <span data-name=\\"div-4\\"><!-- index --></span>
+              </div>
+      
+              <div>
+                <span data-name=\\"div-5\\"><!-- this.review.author --></span>
+              </div>
+      
+              <div>
+                <span data-name=\\"div-6\\"><!-- this.review.reviewMessage --></span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      <style>
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      </style>\`;
+    this.update();
+
+    // onMount
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.state.reviews = data.data;
+        this.update();
+      });
+  }
+
+  update() {
+    this.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      el.setAttribute(\\"data-user\\", this.state.name);
+    });
+
+    this.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButton1Click);
+      el.addEventListener(\\"click\\", this.onButton1Click);
+    });
+
+    this.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      el.style.display = this.state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+    });
+
+    this.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+      el.removeEventListener(\\"click\\", this.onButton2Click);
+      el.addEventListener(\\"click\\", this.onButton2Click);
+    });
+
+    this.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      let array = this.state.reviews;
+      let template = this.querySelector('[data-template-for=\\"for\\"]');
+      this.renderLoop(el, array, template, \\"review\\");
+    });
+
+    this.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      el.key = this.getContext(el, \\"review\\").id;
+    });
+
+    this.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      el.src = this.getContext(el, \\"review\\").avatar;
+    });
+
+    this.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+      el.className = this.state.showReviewPrompt
+        ? \\"bg-primary\\"
+        : \\"bg-secondary\\";
+    });
+
+    this.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+      el.innerText = index;
+    });
+
+    this.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
+      el.innerText = this.getContext(el, \\"review\\").author;
+    });
+
+    this.querySelectorAll(\\"[data-name='div-6']\\").forEach((el) => {
+      el.innerText = this.getContext(el, \\"review\\").reviewMessage;
+    });
+  }
+
+  // Helper to render loops
+  renderLoop(el, array, template, itemName) {
+    el.innerHTML = \\"\\";
+    for (let value of array) {
+      let tmp = document.createElement(\\"span\\");
+      tmp.innerHTML = template.innerHTML;
+      Array.from(tmp.children).forEach((child) => {
+        this.contextMap.set(child, {
+          ...this.contextMap.get(child),
+          [itemName]: value,
+        });
+        el.appendChild(child);
+      });
+    }
+  }
+
+  getContext(el, name) {
+    let parent = el;
+    do {
+      let context = this.contextMap.get(parent);
+      if (context && name in context) {
+        return context[name];
+      }
+    } while ((parent = parent.parentNode));
+  }
+}
+
+customElements.define(\\"smile-reviews\\", SmileReviews);
+"
+`;

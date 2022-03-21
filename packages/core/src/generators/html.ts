@@ -25,6 +25,8 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
+import { renderPreComponent } from '../helpers/render-imports';
+
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
@@ -628,6 +630,7 @@ export const componentToCustomElement =
       .toLowerCase();
 
     let str = `
+      ${renderPreComponent(json)}
       /**
        * Usage:
        * 
@@ -797,5 +800,6 @@ export const componentToCustomElement =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
+
     return str;
   };

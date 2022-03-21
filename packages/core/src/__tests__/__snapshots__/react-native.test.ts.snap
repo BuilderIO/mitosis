@@ -694,6 +694,8 @@ exports[`React Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
 export default function SmileReviews(props) {
   const [reviews, setReviews] = useState(() => []);
@@ -701,6 +703,14 @@ export default function SmileReviews(props) {
   const [name, setName] = useState(() => \\"test\\");
 
   const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
 
   useEffect(() => {
     fetch(
