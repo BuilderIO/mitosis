@@ -29,9 +29,9 @@ const styleOmitList: (
 ];
 
 const getCssFromBlock = (block: BuilderElement) => {
-  const blockSizes: Size[] = Object.keys(
-    block.responsiveStyles || {},
-  ).filter((size) => sizeNames.includes(size as Size)) as Size[];
+  const blockSizes: Size[] = Object.keys(block.responsiveStyles || {}).filter(
+    (size) => sizeNames.includes(size as Size),
+  ) as Size[];
   let css: { [key: string]: Partial<CSSStyleDeclaration> } = {};
   for (const size of blockSizes) {
     if (size === 'large') {
@@ -111,8 +111,9 @@ const getStyleStringFromBlock = (
     for (const key in block.bindings) {
       if (key.includes('style') && key.includes('.')) {
         const styleProperty = key.split('.')[1];
-        styleBindings[styleProperty] =
-          block.code?.bindings?.[key] || block.bindings[key];
+        styleBindings[styleProperty] = convertExportDefaultToReturn(
+          block.code?.bindings?.[key] || block.bindings[key],
+        );
       }
     }
   }
@@ -238,7 +239,7 @@ const wrapBinding = (value: string) => {
     return value;
   }
   return `(() => {
-    try { ${value} }
+    try { ${isExpression(value) ? 'return ' : ''}${value} }
     catch (err) {
       console.warn('Builder code error', err);
     }
@@ -417,8 +418,8 @@ const componentMappers: {
       ),
     };
     const innerProperties = {
-      [options.preserveTextBlocks ? 'innerHTML' : '_text']: block.component!
-        .options.text,
+      [options.preserveTextBlocks ? 'innerHTML' : '_text']:
+        block.component!.options.text,
     };
 
     if (options.preserveTextBlocks) {
@@ -722,15 +723,7 @@ const getHooks = (content: BuilderContent) => {
 export function extractStateHook(code: string) {
   const { types } = babel;
   let state: any = {};
-  const ast = babel.parse(code, {
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
-  });
-  const body = types.isFile(ast)
-    ? ast.program.body
-    : types.isProgram(ast)
-    ? ast.body
-    : [];
+  const body = parseCode(code);
   const newBody = body.slice();
   for (let i = 0; i < body.length; i++) {
     const statement = body[i];
@@ -777,20 +770,15 @@ export function extractStateHook(code: string) {
 
 export function convertExportDefaultToReturn(code: string) {
   const { types } = babel;
-  const ast = babel.parse(code, {
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
-  });
-  const body = types.isFile(ast)
-    ? ast.program.body
-    : types.isProgram(ast)
-    ? ast.body
-    : [];
+  const body = parseCode(code);
   const newBody = body.slice();
   for (let i = 0; i < body.length; i++) {
     const statement = body[i];
     if (types.isExportDefaultDeclaration(statement)) {
-      if (types.isCallExpression(statement.declaration)) {
+      if (
+        types.isCallExpression(statement.declaration) ||
+        types.isExpression(statement.declaration)
+      ) {
         newBody[i] = types.returnStatement(statement.declaration);
       }
     }
@@ -799,13 +787,42 @@ export function convertExportDefaultToReturn(code: string) {
   return generate(types.program(newBody)).code || '';
 }
 
+function parseCode(code: string) {
+  const ast = babel.parse(code, {
+    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    plugins: [[decorators, { legacy: true }], jsxPlugin],
+  });
+  const body = babel.types.isFile(ast)
+    ? ast.program.body
+    : babel.types.isProgram(ast)
+    ? ast.body
+    : [];
+  return body;
+}
+
+/**
+ * Returns `true` if the `code` is a valid expression. (vs a statement)
+ */
+function isExpression(code: string): boolean {
+  try {
+    const body = parseCode(code);
+    return (
+      body.length == 1 &&
+      (babel.types.isExpression(body[0]) ||
+        babel.types.isExpressionStatement(body[0]))
+    );
+  } catch (e) {
+    return false;
+  }
+}
+
 // TODO: maybe this should be part of the builder -> Mitosis part
 function extractSymbols(json: BuilderContent) {
   const subComponents: { content: BuilderContent; name: string }[] = [];
 
   const symbols: { element: BuilderElement; depth: number; id: string }[] = [];
 
-  traverse(json).forEach(function(item) {
+  traverse(json).forEach(function (item) {
     if (isBuilderElement(item)) {
       if (item.component?.name === 'Symbol') {
         symbols.push({ element: item, depth: this.path.length, id: item.id! });
@@ -851,11 +868,7 @@ export const createBuilderElement = (
   options?: Partial<BuilderElement>,
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
-  id:
-    'builder-' +
-    Math.random()
-      .toString(36)
-      .split('.')[1],
+  id: 'builder-' + Math.random().toString(36).split('.')[1],
   ...options,
 });
 
@@ -867,13 +880,14 @@ const builderContentPartToMitosisComponent = (
   options: BuilderToMitosisOptions = {},
 ) => {
   builderContent = fastClone(builderContent);
-  traverse(builderContent).forEach(function(elem) {
+  traverse(builderContent).forEach(function (elem) {
     if (isBuilderElement(elem)) {
       // Try adding self-closing tags to void elements, since Builder Text
       // blocks can contain arbitrary HTML
       // List taken from https://developer.mozilla.org/en-US/docs/Glossary/Empty_element
       // TODO: Maybe this should be using something more robust than a regular expression
-      const voidElemRegex = /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
+      const voidElemRegex =
+        /(<area|base|br|col|embed|hr|img|input|keygen|link|meta|param|source|track|wbr[^>]+)>/gm;
 
       try {
         if (elem.component?.name === 'Text') {

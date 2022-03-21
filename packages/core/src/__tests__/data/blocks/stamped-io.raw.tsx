@@ -8,15 +8,16 @@ type SmileReviewsProps = {
 export default function SmileReviews(props: SmileReviewsProps) {
   const state = useState({
     reviews: [] as any[],
+    name: 'test',
     showReviewPrompt: false,
   });
 
   // TODO: allow async function here
   onMount(() => {
     fetch(
-      `https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=${props.apiKey ||
-        'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=${props.productId ||
-        '2410511106127'}`,
+      `https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=${
+        props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'
+      }&productId=${props.productId || '2410511106127'}`,
     )
       .then((res) => res.json())
       .then((data) => {
@@ -25,7 +26,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
   });
 
   return (
-    <div>
+    <div data-user={state.name}>
       <button onClick={() => (state.showReviewPrompt = true)}>
         Write a review
       </button>
@@ -65,7 +66,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               css={{ height: '30px', width: '30px', marginRight: '10px' }}
               src={review.avatar}
             />
-            <div>
+            <div class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'}>
               <div>N: {index}</div>
               <div>{review.author}</div>
               <div>{review.reviewMessage}</div>

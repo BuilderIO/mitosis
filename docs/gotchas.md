@@ -108,7 +108,7 @@ _Mitosis input_
 export default function MyComponent() {
   const state = useState({
     doSomethingAsync(event) {
-      void (async function() {
+      void (async function () {
         const response = await fetch(); /* ... */
       })();
     },
@@ -123,7 +123,7 @@ import { useState } from 'react';
 
 export default function MyComponent(props) {
   function doSomethingAsync(event) {
-    void (async function() {
+    void (async function () {
       const response = await fetch();
     })();
   }
