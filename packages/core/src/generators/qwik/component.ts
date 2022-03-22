@@ -11,6 +11,7 @@ import {
   EmitFn,
   File,
   iif,
+  INDENT,
   invoke,
   NL,
   quote,
@@ -214,6 +215,30 @@ function addComponentOnMount(
   component: MitosisComponent,
   useStyles: EmitFn,
 ) {
+  const inputInitializer: any[] = [];
+  if (component.inputs) {
+    component.inputs.forEach((input) => {
+      inputInitializer.push(
+        'if',
+        WS,
+        '(state.',
+        input.name,
+        WS,
+        '===',
+        WS,
+        'undefined)',
+        WS,
+        'state.',
+        input.name,
+        WS,
+        '=',
+        WS,
+        JSON.stringify(input.defaultValue),
+        ';',
+        NL,
+      );
+    });
+  }
   componentFile.exportConst(
     componentName + '_onMount',
     function (this: SrcBuilder) {
@@ -221,8 +246,10 @@ function addComponentOnMount(
         arrowFnValue(['state'], () =>
           this.emit(
             '{',
+            NL,
+            INDENT,
+            ...inputInitializer,
             iif(component.hooks.onMount?.code),
-            ';',
             useStyles,
             NL,
             'return ',
