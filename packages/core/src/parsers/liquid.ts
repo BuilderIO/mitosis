@@ -118,7 +118,7 @@ const getConditionalAttr = (value: string, noEnd = false): string => {
         const index = statement.indexOf('&&');
         const branchValue =
           index > -1
-            ? getConditionalAttr(statement.substr(index + 2), true)
+            ? getConditionalAttr(statement.slice(index + 2), true)
             : getValue(statement);
 
         if (expression) {

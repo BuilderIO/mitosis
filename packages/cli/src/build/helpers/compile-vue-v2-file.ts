@@ -192,7 +192,7 @@ function parseTemplate(code) {
 
     nodes[name].push({
       node: fragment.childNodes[i],
-      code: code.substr(start, end - start),
+      code: code.slice(start, end),
       attrs: getNodeAttrs(fragment.childNodes[i]),
     });
   }

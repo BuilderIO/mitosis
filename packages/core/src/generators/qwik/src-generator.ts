@@ -23,7 +23,7 @@ export class File {
   exports: Map<string, string> = new Map();
 
   get module() {
-    return this.filename.substr(0, this.filename.lastIndexOf('.'));
+    return this.filename.substring(0, this.filename.lastIndexOf('.'));
   }
   get path() {
     return this.filename;
@@ -77,7 +77,7 @@ export class File {
 
 function removeExt(filename: string): string {
   const indx = filename.lastIndexOf('.');
-  return indx == -1 ? filename : filename.substr(0, indx);
+  return indx == -1 ? filename : filename.slice(0, indx);
 }
 
 const spaces: string[] = [''];
