@@ -218,7 +218,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
       `
         let array = ${json.bindings.each};
         let template = ${
-          options.format === 'class' ? 'this' : 'document'
+          options.format === 'class' ? 'this._root' : 'document'
         }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
@@ -681,7 +681,7 @@ export const componentToCustomElement =
 
           ${useOptions.js}
 
-          if (${json.meta.isAttachedToShadowDom}) {
+          if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })
           }
         }
