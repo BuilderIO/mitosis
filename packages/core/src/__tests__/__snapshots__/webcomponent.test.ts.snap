@@ -42,10 +42,18 @@ class SmileReviews extends HTMLElement {
       this.state.showReviewPrompt = false;
       this.update();
     };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
   }
 
   connectedCallback() {
-    this.innerHTML = \`
+    this._root.innerHTML = \`
       <div data-name=\\"div-1\\">
         <button data-name=\\"button-1\\">Write a review</button>
       
@@ -124,53 +132,57 @@ class SmileReviews extends HTMLElement {
   }
 
   update() {
-    this.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
       el.setAttribute(\\"data-user\\", this.state.name);
     });
 
-    this.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton1Click);
-      el.addEventListener(\\"click\\", this.onButton1Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-1']\\")
+      .forEach((el, index) => {
+        el.removeEventListener(\\"click\\", this.onButton1Click);
+        el.addEventListener(\\"click\\", this.onButton1Click);
+      });
 
-    this.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
       el.style.display = this.state.showReviewPrompt ? \\"inline\\" : \\"none\\";
     });
 
-    this.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton2Click);
-      el.addEventListener(\\"click\\", this.onButton2Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-2']\\")
+      .forEach((el, index) => {
+        el.removeEventListener(\\"click\\", this.onButton2Click);
+        el.addEventListener(\\"click\\", this.onButton2Click);
+      });
 
-    this.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
       let array = this.state.reviews;
-      let template = this.querySelector('[data-template-for=\\"for\\"]');
+      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
       this.renderLoop(el, array, template, \\"review\\");
     });
 
-    this.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
       el.key = this.getContext(el, \\"review\\").id;
     });
 
-    this.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
       el.src = this.getContext(el, \\"review\\").avatar;
     });
 
-    this.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
       el.className = this.state.showReviewPrompt
         ? \\"bg-primary\\"
         : \\"bg-secondary\\";
     });
 
-    this.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
       el.innerText = index;
     });
 
-    this.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
       el.innerText = this.getContext(el, \\"review\\").author;
     });
 
-    this.querySelectorAll(\\"[data-name='div-6']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el, index) => {
       el.innerText = this.getContext(el, \\"review\\").reviewMessage;
     });
   }
@@ -198,7 +210,7 @@ class SmileReviews extends HTMLElement {
       if (context && name in context) {
         return context[name];
       }
-    } while ((parent = parent.parentNode));
+    } while ((parent = parent.parentNode || parent.host));
   }
 }
 

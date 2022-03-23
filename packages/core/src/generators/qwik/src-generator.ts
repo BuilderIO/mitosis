@@ -438,7 +438,7 @@ export function arrowFnValue(args: string[], expression: any) {
 
 export function iif(code: any) {
   return function (this: SrcBuilder) {
-    code && this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')()');
+    code && this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')();');
   };
 }
 

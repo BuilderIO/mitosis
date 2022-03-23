@@ -11,9 +11,9 @@
     "symlink-core": "ln -sf ../../../../packages/core ./node_modules/@builder.io/mitosis",
     "symlink": "npm run symlink-rm && npm run symlink-core",
     "format": "npx prettier --write **/*.{js,ts,tsx,json}",
-    "clean-build": "tsc --build --clean && rm -rf ./dist",
-    "clean": "tsc --build --clean",
-    "compile": "tsc --build --verbose --pretty",
+    "clean-build": "tsc --build --clean tsconfig.build.json && rm -rf ./dist",
+    "clean": "tsc --build --clean tsconfig.build.json",
+    "compile": "tsc --build --verbose --pretty tsconfig.build.json",
     "start": "npm run compile -- --watch",
     "copy-templates": "if [ -e ./src/templates ]; then cp -a ./src/templates ./dist/; fi",
     "build": "npm run format && npm run clean-build && npm run compile && npm run copy-templates",
@@ -26,19 +26,13 @@
     "coverage": "jest --coverage"
   },
   "files": [
-    "tsconfig.json",
     "dist",
-    "LICENSE",
-    "readme.md",
-    "docs",
     "bin"
   ],
   "license": "MIT",
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
     "@builder.io/mitosis": "0.0.50-6",
-    "@types/fs-extra": "^9.0.8",
-    "@types/lodash": "^4.14.171",
     "@vue/compiler-sfc": "^3.1.5",
     "babel-preset-solid": "^1.0.6",
     "chalk": "^4.1.0",
@@ -54,7 +48,9 @@
     "vue-template-validator": "^1.1.5"
   },
   "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.180",
     "@types/micromatch": "^4.0.2",
     "@types/node": "^12.7.11",
     "jest": "^24.1.0",

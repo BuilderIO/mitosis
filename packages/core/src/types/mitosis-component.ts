@@ -33,13 +33,21 @@ type ContextInfo = { name: string; path: string };
 
 type extendedHook = { code: string; deps?: string };
 
+export type MitosisComponentInput = {
+  name: string;
+  defaultValue: any;
+};
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
   imports: MitosisImport[];
   meta: JSONObject & {
+    useMetadata?: JSONObject;
+    // TO-DO: remove this? seems to be legacy/outdated, and superseeded by `useMetadata`
     metadataHook?: JSONObject;
   };
+  inputs: MitosisComponentInput[];
   state: JSONObject;
   context: {
     get: { [key: string]: ContextInfo };

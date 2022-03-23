@@ -230,6 +230,21 @@ describe('qwik', () => {
     expect(toObj(fileSet)).toMatchSnapshot();
   });
 
+  test('component inputs', () => {
+    const content = require('./qwik.test.component-inputs.json');
+    const state: Record<string, any> = {};
+    expect(state).toMatchSnapshot();
+    const fileSet = createFileSet({ output: 'cjs', jsx: true });
+    const component = builderContentToMitosisComponent(content, {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
+
+    addComponent(fileSet, component);
+    debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
   describe('helper functions', () => {
     describe('isStatement', () => {
       test('is an expression', () => {
