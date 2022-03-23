@@ -3,6 +3,7 @@
 - [Refs](#refs)
 - [onMount](#onmount)
 - [onUnMount](#onunmount)
+- [useMetadata](./customizability.md#useMetadata)
 
 ## Refs
 

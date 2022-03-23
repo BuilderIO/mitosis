@@ -4,12 +4,14 @@ Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports gener
 
 **Table of contents**
 
+- [How Does It Work](#how-does-it-work)
+- [Formatting options](#formatting-options)
 - [Project Structure](./project-structure.md)
 - [Components](./components.md)
 - [Hooks](./hooks.md)
-- [How Does It Work](#how-does-it-work)
-- [Formatting options](#formatting-options)
 - [Gotchas](./gotchas.md)
+- [Customizability](./customizability.md')
+- [Configuration](./configuration.md)
 
 ## How does it work
 
