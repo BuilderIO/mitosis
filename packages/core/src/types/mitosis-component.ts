@@ -33,6 +33,11 @@ type ContextInfo = { name: string; path: string };
 
 type extendedHook = { code: string; deps?: string };
 
+export type MitosisComponentInput = {
+  name: string;
+  defaultValue: any;
+};
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
@@ -40,6 +45,7 @@ export type MitosisComponent = {
   meta: JSONObject & {
     metadataHook?: JSONObject;
   };
+  inputs: MitosisComponentInput[];
   state: JSONObject;
   context: {
     get: { [key: string]: ContextInfo };
