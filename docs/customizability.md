@@ -3,13 +3,13 @@
 - [Plugins](#plugins)
 - [useMetadata](#useMetadata)
 
-When building Mitosis components, you might sometimes have unique & special needs. If you want to transform your Mitosis-generated output to fit your needs, by doing things like:
+When building Mitosis components, you might sometimes have unique and special needs. If you want to transform your Mitosis-generated output to fit your needs, by doing things like:
 
 - add a special import statement at the top of each mitosis file
 - remove a specific style attribute for one given target (for example, if you want your `react-native` output to omit a specific styling attribute that you rley on elsewhere.)
 - modify only _some_ of your components to be dynamically imported
 
-This (& much more) is possible thanks to Mitosis' powerful plugin system.
+This (and much more) is possible thanks to Mitosis' powerful plugin system.
 
 ## Plugins
 
@@ -43,7 +43,7 @@ The JSON plugins receive the Mitosis component's full JSON object as an argument
 
 We even use plugins internally to generate Mitosis components! Here's an example of our react-native plugin: https://github.com/BuilderIO/mitosis/blob/328572740bb3ff2f66924d431dc6360f5f4e0c62/packages/core/src/generators/react-native.ts#L82-L118
 
-You will see that we traverse the JSON nodes, and for each MitosisNode, we remove `class` and `className` values & bindings. That's because React-Native does not support class-names on mobile.
+You will see that we traverse the JSON nodes, and for each MitosisNode, we remove `class` and `className` values and bindings. That's because React-Native does not support class-names on mobile.
 
 ## useMetadata
 
@@ -61,7 +61,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
 }
 ```
 
-The metadata will be stored in your mitosis component's JSON, under `json.meta.useMetadata.mySpecialComponentType`. You can then use it in your JSON pre & post plugins:
+The metadata will be stored in your mitosis component's JSON, under `json.meta.useMetadata.mySpecialComponentType`. You can then use it in your JSON pre/post plugins:
 
 ```tsx
 const plugin = {
