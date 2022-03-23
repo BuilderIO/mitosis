@@ -11,7 +11,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
+import { extendedHook, MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
   runPostCodePlugins,
@@ -32,6 +32,7 @@ import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
 import { GETTER } from '../helpers/patterns';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
@@ -44,6 +45,8 @@ export interface ToVueOptions extends BaseTranspilerOptions {
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
+
+const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
@@ -327,6 +330,20 @@ export const componentToVue =
       prefix: options.cssNamespace?.() ?? undefined,
     });
 
+    // ATTENTION: we need to run this _before_ the `getStateObjectStringFromComponent` that handles getters.
+    if (component.hooks.onUpdate?.deps) {
+      // once we allow multiple `onUpdate` per file, we will need to iterate over them and suffix with `_${index}`.
+      component.state[
+        ON_UPDATE_HOOK_NAME
+      ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
+        return \`${component.hooks.onUpdate.deps
+          .slice(1, -1)
+          .split(',')
+          .map((dep) => `\${this.${dep.trim()}}`)
+          .join('|')}\`
+      }`;
+    }
+
     let dataString = getStateObjectStringFromComponent(component, {
       data: true,
       functions: false,
@@ -481,12 +498,24 @@ export const componentToVue =
         }
         ${
           component.hooks.onUpdate
-            ? `updated() {
+            ? !component.hooks.onUpdate.deps
+              ? `
+              updated() {
                 ${processBinding(
                   component.hooks.onUpdate.code,
                   options,
                   component,
                 )}
+              },`
+              : `
+              watch() {
+                ${ON_UPDATE_HOOK_NAME}() {
+                  ${processBinding(
+                    component.hooks.onUpdate.code,
+                    options,
+                    component,
+                  )}
+                }
               },`
             : ''
         }

@@ -24,7 +24,7 @@ const onMount = require('./data/blocks/onMount.raw');
 const path = 'test-path';
 
 describe('Vue', () => {
-  test('Basic', () => {
+  test.only('Basic', () => {
     const component = parseJsx(basic);
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
@@ -132,7 +132,7 @@ describe('Vue', () => {
     expect(output).toMatchSnapshot();
   });
 
-  test('onUpdateWithDeps', () => {
+  test.only('onUpdateWithDeps', () => {
     const component = parseJsx(onUpdateWithDeps);
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
