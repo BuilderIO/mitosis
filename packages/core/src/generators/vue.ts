@@ -14,6 +14,7 @@ import { selfClosingTags } from '../parsers/jsx';
 import { extendedHook, MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -306,11 +307,51 @@ function getContextProvideString(
   return str;
 }
 
+/**
+ * This plugin handle `onUpdate` code that watches depdendencies.
+ * We need to apply this workaround to be able to watch specific dependencies in Vue 2: https://stackoverflow.com/a/45853349
+ *
+ * We add a `computed` property for the dependencies, and a matching `watch` function for the `onUpdate` code
+ */
+const onUpdatePlugin: Plugin = (options) => ({
+  json: {
+    post: (component) => {
+      // ATTENTION: we need to run this _before_ the `getStateObjectStringFromComponent` that handles getters.
+      if (component.hooks.onUpdate?.deps) {
+        // once we allow multiple `onUpdate` per file, we will need to iterate over them and suffix with `_${index}`.
+        component.state[
+          ON_UPDATE_HOOK_NAME
+        ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
+        return \`${component.hooks.onUpdate.deps
+          .slice(1, -1)
+          .split(',')
+          .map((dep) => `\${this.${dep.trim()}}`)
+          .join('|')}\`
+      }`;
+      }
+    },
+  },
+});
+
+const BASE_OPTIONS: ToVueOptions = {
+  plugins: [onUpdatePlugin],
+};
+
+const mergeOptions = (
+  { plugins: pluginsA = [], ...a }: ToVueOptions,
+  { plugins: pluginsB = [], ...b }: ToVueOptions,
+): ToVueOptions => ({
+  ...a,
+  ...b,
+  plugins: [...pluginsA, ...pluginsB],
+});
+
 export const componentToVue =
-  (options: ToVueOptions = {}) =>
+  (userOptions: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {
+    const options = mergeOptions(userOptions, BASE_OPTIONS);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
     processHttpRequests(component);
@@ -329,20 +370,6 @@ export const componentToVue =
     const css = collectCss(component, {
       prefix: options.cssNamespace?.() ?? undefined,
     });
-
-    // ATTENTION: we need to run this _before_ the `getStateObjectStringFromComponent` that handles getters.
-    if (component.hooks.onUpdate?.deps) {
-      // once we allow multiple `onUpdate` per file, we will need to iterate over them and suffix with `_${index}`.
-      component.state[
-        ON_UPDATE_HOOK_NAME
-      ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
-        return \`${component.hooks.onUpdate.deps
-          .slice(1, -1)
-          .split(',')
-          .map((dep) => `\${this.${dep.trim()}}`)
-          .join('|')}\`
-      }`;
-    }
 
     let dataString = getStateObjectStringFromComponent(component, {
       data: true,
@@ -499,24 +526,24 @@ export const componentToVue =
         ${
           component.hooks.onUpdate
             ? !component.hooks.onUpdate.deps
-              ? `
-              updated() {
-                ${processBinding(
-                  component.hooks.onUpdate.code,
-                  options,
-                  component,
-                )}
-              },`
-              : `
-              watch() {
-                ${ON_UPDATE_HOOK_NAME}() {
+              ? // if we do not have dependencies, then we use `updated()` which re-runs on every render.
+                `updated() {
                   ${processBinding(
                     component.hooks.onUpdate.code,
                     options,
                     component,
                   )}
-                }
-              },`
+                },`
+              : // if we have dependencies, then we `watch` a computed property that combines the dependencies.
+                `watch: {
+                  ${ON_UPDATE_HOOK_NAME}() {
+                    ${processBinding(
+                      component.hooks.onUpdate.code,
+                      options,
+                      component,
+                    )}
+                  }
+                },`
             : ''
         }
         ${
