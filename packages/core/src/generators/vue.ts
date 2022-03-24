@@ -324,7 +324,7 @@ const onUpdatePlugin: Plugin = (options) => ({
         return \`${component.hooks.onUpdate.deps
           .slice(1, -1)
           .split(',')
-          .map((dep) => `\${this.${dep.trim()}}`)
+          .map((dep) => `\${${dep.trim()}}`)
           .join('|')}\`
       }`;
       }

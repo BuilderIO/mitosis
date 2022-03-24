@@ -905,12 +905,16 @@ export default function OnUpdate(props) {
 exports[`React onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+import { useState, useEffect } from \\"react\\";
 
 export default function OnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
   useEffect(() => {
-    console.log(\\"Runs when a or b changes\\");
-  }, [a, b]);
+    console.log(\\"Runs when a or b changes\\", a, b);
+  }, [state.a, state.b]);
 
   return <View />;
 }
