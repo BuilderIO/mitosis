@@ -316,9 +316,8 @@ function getContextProvideString(
 const onUpdatePlugin: Plugin = (options) => ({
   json: {
     post: (component) => {
-      // ATTENTION: we need to run this _before_ the `getStateObjectStringFromComponent` that handles getters.
       if (component.hooks.onUpdate?.deps) {
-        // once we allow multiple `onUpdate` per file, we will need to iterate over them and suffix with `_${index}`.
+        // TO-DO: once we allow multiple `onUpdate` hooks per file, we will need to iterate over them and suffix with `_${index}`.
         component.state[
           ON_UPDATE_HOOK_NAME
         ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
