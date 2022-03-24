@@ -350,7 +350,7 @@ export const componentToVue =
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {
-    const options = mergeOptions(userOptions, BASE_OPTIONS);
+    const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
     processHttpRequests(component);
