@@ -11,9 +11,10 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
+import { extendedHook, MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -32,6 +33,7 @@ import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
 import { GETTER } from '../helpers/patterns';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
@@ -44,6 +46,8 @@ export interface ToVueOptions extends BaseTranspilerOptions {
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
+
+const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
@@ -303,11 +307,50 @@ function getContextProvideString(
   return str;
 }
 
+/**
+ * This plugin handle `onUpdate` code that watches depdendencies.
+ * We need to apply this workaround to be able to watch specific dependencies in Vue 2: https://stackoverflow.com/a/45853349
+ *
+ * We add a `computed` property for the dependencies, and a matching `watch` function for the `onUpdate` code
+ */
+const onUpdatePlugin: Plugin = (options) => ({
+  json: {
+    post: (component) => {
+      if (component.hooks.onUpdate?.deps) {
+        // TO-DO: once we allow multiple `onUpdate` hooks per file, we will need to iterate over them and suffix with `_${index}`.
+        component.state[
+          ON_UPDATE_HOOK_NAME
+        ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
+        return \`${component.hooks.onUpdate.deps
+          .slice(1, -1)
+          .split(',')
+          .map((dep) => `\${${dep.trim()}}`)
+          .join('|')}\`
+      }`;
+      }
+    },
+  },
+});
+
+const BASE_OPTIONS: ToVueOptions = {
+  plugins: [onUpdatePlugin],
+};
+
+const mergeOptions = (
+  { plugins: pluginsA = [], ...a }: ToVueOptions,
+  { plugins: pluginsB = [], ...b }: ToVueOptions,
+): ToVueOptions => ({
+  ...a,
+  ...b,
+  plugins: [...pluginsA, ...pluginsB],
+});
+
 export const componentToVue =
-  (options: ToVueOptions = {}) =>
+  (userOptions: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
   // TO-DO: use `Transpiler` once possible
   ({ component, path }: TranspilerArgs & { path: string }) => {
+    const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
     processHttpRequests(component);
@@ -481,13 +524,25 @@ export const componentToVue =
         }
         ${
           component.hooks.onUpdate
-            ? `updated() {
-                ${processBinding(
-                  component.hooks.onUpdate.code,
-                  options,
-                  component,
-                )}
-              },`
+            ? !component.hooks.onUpdate.deps
+              ? // if we do not have dependencies, then we use `updated()` which re-runs on every render.
+                `updated() {
+                  ${processBinding(
+                    component.hooks.onUpdate.code,
+                    options,
+                    component,
+                  )}
+                },`
+              : // if we have dependencies, then we `watch` a computed property that combines the dependencies.
+                `watch: {
+                  ${ON_UPDATE_HOOK_NAME}() {
+                    ${processBinding(
+                      component.hooks.onUpdate.code,
+                      options,
+                      component,
+                    )}
+                  }
+                },`
             : ''
         }
         ${

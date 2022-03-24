@@ -229,11 +229,11 @@ const componentFunctionToJson = (
                   secondArg.elements.length > 0)
               ) {
                 const depsCode = secondArg ? generate(secondArg).code : '';
+
                 hooks.onUpdate = {
                   code,
+                  deps: depsCode,
                 };
-
-                hooks.onUpdate.deps = depsCode;
               }
             }
           } else if (expression.callee.name === 'onUnMount') {

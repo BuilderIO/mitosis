@@ -1087,8 +1087,18 @@ exports[`Vue onUpdateWithDeps 1`] = `
 export default {
   name: \\"on-update-with-deps\\",
 
-  updated() {
-    console.log(\\"Runs when a or b changes\\");
+  data: () => ({ a: \\"a\\", b: \\"b\\" }),
+
+  watch: {
+    onUpdateHook() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    },
+  },
+
+  computed: {
+    onUpdateHook() {
+      return \`\${this.a}|\${this.b}\`;
+    },
   },
 };
 </script>
