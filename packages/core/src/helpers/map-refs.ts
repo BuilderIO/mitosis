@@ -1,7 +1,7 @@
 import traverse from 'traverse';
 import * as babel from '@babel/core';
 
-import { MitosisComponent } from '../types/mitosis-component';
+import { extendedHook, MitosisComponent } from '../types/mitosis-component';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
@@ -75,9 +75,30 @@ export const mapRefs = (
   for (const key of Object.keys(
     component.hooks,
   ) as (keyof typeof component.hooks)[]) {
-    const hookCode = component.hooks[key]?.code;
-    if (hookCode) {
-      component.hooks[key]!.code = replaceRefsInString(hookCode, refs, mapper);
+    if (Array.isArray(component.hooks[key])) {
+      (component.hooks[key] as extendedHook[]).forEach((hook) => {
+        if (hook.code) {
+          hook.code = replaceRefsInString(hook.code, refs, mapper);
+        }
+      });
+    } else {
+      const hookCode = (component.hooks[key] as extendedHook)?.code;
+      if (hookCode) {
+        (component.hooks[key] as extendedHook)!.code = replaceRefsInString(
+          hookCode,
+          refs,
+          mapper,
+        );
+      }
     }
   }
+
+  // for (const key of Object.keys(
+  //   component.hooks,
+  // ) as (keyof typeof component.hooks)[]) {
+  //   const hookCode = component.hooks[key]?.code;
+  //   if (hookCode) {
+  //     component.hooks[key]!.code = replaceRefsInString(hookCode, refs, mapper);
+  //   }
+  // }
 };

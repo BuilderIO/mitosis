@@ -316,17 +316,18 @@ function getContextProvideString(
 const onUpdatePlugin: Plugin = (options) => ({
   json: {
     post: (component) => {
-      if (component.hooks.onUpdate?.deps) {
-        // TO-DO: once we allow multiple `onUpdate` hooks per file, we will need to iterate over them and suffix with `_${index}`.
-        component.state[
-          ON_UPDATE_HOOK_NAME
-        ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
-        return \`${component.hooks.onUpdate.deps
-          .slice(1, -1)
-          .split(',')
-          .map((dep) => `\${${dep.trim()}}`)
-          .join('|')}\`
-      }`;
+      if (component.hooks.onUpdate?.length) {
+        component.hooks.onUpdate.forEach((hook, index) => {
+          component.state[
+            ON_UPDATE_HOOK_NAME + `_${index}`
+          ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}_${index}() {
+            return \`${hook.deps
+              ?.slice(1, -1)
+              .split(',')
+              .map((dep) => `\${${dep.trim()}}`)
+              .join('|')}\`
+          }`;
+        });
       }
     },
   },
@@ -524,24 +525,22 @@ export const componentToVue =
         }
         ${
           component.hooks.onUpdate
-            ? !component.hooks.onUpdate.deps
+            ? !component.hooks.onUpdate.length
               ? // if we do not have dependencies, then we use `updated()` which re-runs on every render.
                 `updated() {
-                  ${processBinding(
-                    component.hooks.onUpdate.code,
-                    options,
-                    component,
+                  ${component.hooks.onUpdate.map((hook) =>
+                    processBinding(hook.code, options, component),
                   )}
                 },`
               : // if we have dependencies, then we `watch` a computed property that combines the dependencies.
                 `watch: {
-                  ${ON_UPDATE_HOOK_NAME}() {
-                    ${processBinding(
-                      component.hooks.onUpdate.code,
-                      options,
-                      component,
-                    )}
-                  }
+                  ${component.hooks.onUpdate.map(
+                    (hook, index) =>
+                      `${ON_UPDATE_HOOK_NAME}_${index}() {
+                        ${processBinding(hook.code, options, component)}
+                        },
+                      `,
+                  )}
                 },`
             : ''
         }

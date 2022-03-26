@@ -217,11 +217,12 @@ export const componentToStencil =
               )} }`
         }
         ${
-          !json.hooks.onUpdate?.code
+          !json.hooks.onUpdate?.length
             ? ''
-            : `componentDidUpdate() { ${processBinding(
-                json.hooks.onUpdate.code,
-              )} }`
+            : json.hooks.onUpdate.map(
+                (hook) =>
+                  `componentDidUpdate() { ${processBinding(hook.code)} }`,
+              )
         }
     
       render() {
