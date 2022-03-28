@@ -449,8 +449,10 @@ export const componentToVue =
       options.builderRegister && component.meta.registerComponent,
     );
 
-    const onUpdateWithDeps =  component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
-    const onUpdateWithoutDeps = component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
+    const onUpdateWithDeps =
+      component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    const onUpdateWithoutDeps =
+      component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
     let str = dedent`
     <template>

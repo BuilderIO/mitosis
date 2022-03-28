@@ -582,15 +582,24 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUpdate?.map(
-          (hook) =>
-            `useEffect(() => {
-              ${processBinding(
-                updateStateSettersInCode(hook.code, options),
-                options,
-              )}
-            }, ${hook.deps})`,
-        ) || ''
+        json.hooks.onUpdate?.length
+          ? json.hooks.onUpdate.map(
+              (hook) => `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(hook.code, options),
+              options,
+            )}
+          }, 
+          ${
+            hook.deps
+              ? processBinding(
+                  updateStateSettersInCode(hook.deps, options),
+                  options,
+                )
+              : ''
+          })`,
+            )
+          : ''
       }
 
       ${
