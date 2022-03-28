@@ -583,8 +583,9 @@ const _componentToReact = (
 
       ${
         json.hooks.onUpdate?.length
-          ? json.hooks.onUpdate.map(
-              (hook) => `useEffect(() => {
+          ? json.hooks.onUpdate
+              .map(
+                (hook) => `useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(hook.code, options),
               options,
@@ -598,7 +599,8 @@ const _componentToReact = (
                 )
               : ''
           })`,
-            )
+              )
+              .join(';')
           : ''
       }
 
