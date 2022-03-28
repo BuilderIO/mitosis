@@ -256,12 +256,14 @@ export const componentToSvelte =
       ${
         !json.hooks.onUpdate?.length
           ? ''
-          : json.hooks.onUpdate.map(
-              (hook) =>
-                `afterUpdate(() => { ${stripStateAndPropsRefs(hook.code, {
-                  includeState: useOptions.stateType === 'variables',
-                })} });`,
-            )
+          : json.hooks.onUpdate
+              .map(
+                (hook) =>
+                  `afterUpdate(() => { ${stripStateAndPropsRefs(hook.code, {
+                    includeState: useOptions.stateType === 'variables',
+                  })} })`,
+              )
+              .join(';')
       }
 
       ${
