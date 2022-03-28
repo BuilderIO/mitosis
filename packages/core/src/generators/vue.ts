@@ -316,18 +316,20 @@ function getContextProvideString(
 const onUpdatePlugin: Plugin = (options) => ({
   json: {
     post: (component) => {
-      if (component.hooks.onUpdate?.length) {
-        component.hooks.onUpdate.forEach((hook, index) => {
-          component.state[
-            ON_UPDATE_HOOK_NAME + `_${index}`
-          ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}_${index}() {
+      if (component.hooks.onUpdate) {
+        component.hooks.onUpdate
+          .filter((hook) => hook.deps?.length)
+          .forEach((hook, index) => {
+            component.state[
+              ON_UPDATE_HOOK_NAME + `_${index}`
+            ] = `${ON_UPDATE_HOOK_NAME}_${index} () {
             return \`${hook.deps
               ?.slice(1, -1)
               .split(',')
               .map((dep) => `\${${dep.trim()}}`)
               .join('|')}\`
           }`;
-        });
+          });
       }
     },
   },
@@ -447,6 +449,9 @@ export const componentToVue =
       options.builderRegister && component.meta.registerComponent,
     );
 
+    const onUpdateWithDeps =  component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    const onUpdateWithoutDeps = component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
+
     let str = dedent`
     <template>
       ${template}
@@ -524,24 +529,25 @@ export const componentToVue =
             : ''
         }
         ${
-          component.hooks.onUpdate
-            ? !component.hooks.onUpdate.length
-              ? // if we do not have dependencies, then we use `updated()` which re-runs on every render.
-                `updated() {
-                  ${component.hooks.onUpdate.map((hook) =>
-                    processBinding(hook.code, options, component),
-                  )}
-                },`
-              : // if we have dependencies, then we `watch` a computed property that combines the dependencies.
-                `watch: {
-                  ${component.hooks.onUpdate.map(
-                    (hook, index) =>
-                      `${ON_UPDATE_HOOK_NAME}_${index}() {
-                        ${processBinding(hook.code, options, component)}
-                        },
-                      `,
-                  )}
-                },`
+          onUpdateWithoutDeps.length
+            ? `updated() {
+            ${onUpdateWithoutDeps.map((hook) =>
+              processBinding(hook.code, options, component),
+            )}
+          },`
+            : ''
+        }
+        ${
+          onUpdateWithDeps.length
+            ? `watch: {
+            ${onUpdateWithDeps.map(
+              (hook, index) =>
+                `${ON_UPDATE_HOOK_NAME}_${index}() {
+                  ${processBinding(hook.code, options, component)}
+                  },
+                `,
+            )}
+          },`
             : ''
         }
         ${
