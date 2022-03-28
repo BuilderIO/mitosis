@@ -542,13 +542,15 @@ export const componentToVue =
         ${
           onUpdateWithDeps.length
             ? `watch: {
-            ${onUpdateWithDeps.map(
-              (hook, index) =>
-                `${ON_UPDATE_HOOK_NAME}_${index}() {
+            ${onUpdateWithDeps
+              .map(
+                (hook, index) =>
+                  `${ON_UPDATE_HOOK_NAME}_${index}() {
                   ${processBinding(hook.code, options, component)}
                   }
                 `,
-            ).join(';')}
+              )
+              .join(';')}
           },`
             : ''
         }
