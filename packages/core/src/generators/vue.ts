@@ -49,6 +49,9 @@ function getContextNames(json: MitosisComponent) {
 
 const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
+const getOnUpdateHookName = (index: number) =>
+  ON_UPDATE_HOOK_NAME + `_${index}`;
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 function processBinding(
@@ -321,8 +324,8 @@ const onUpdatePlugin: Plugin = (options) => ({
           .filter((hook) => hook.deps?.length)
           .forEach((hook, index) => {
             component.state[
-              ON_UPDATE_HOOK_NAME + `_${index}`
-            ] = `${ON_UPDATE_HOOK_NAME}_${index} () {
+              getOnUpdateHookName(index)
+            ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
             return \`${hook.deps
               ?.slice(1, -1)
               .split(',')
@@ -533,9 +536,9 @@ export const componentToVue =
         ${
           onUpdateWithoutDeps.length
             ? `updated() {
-            ${onUpdateWithoutDeps.map((hook) =>
-              processBinding(hook.code, options, component),
-            )}
+            ${onUpdateWithoutDeps
+              .map((hook) => processBinding(hook.code, options, component))
+              .join('\n')}
           },`
             : ''
         }
@@ -545,12 +548,12 @@ export const componentToVue =
             ${onUpdateWithDeps
               .map(
                 (hook, index) =>
-                  `${ON_UPDATE_HOOK_NAME}_${index}() {
+                  `${getOnUpdateHookName(index)}() {
                   ${processBinding(hook.code, options, component)}
                   }
                 `,
               )
-              .join(';')}
+              .join(',')}
           },`
             : ''
         }
