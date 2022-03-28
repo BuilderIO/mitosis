@@ -1,9 +1,4 @@
-export const WS = String.fromCharCode(29);
-export const RS = ' ';
-export const NL = '\n';
-export const INDENT = String.fromCharCode(16);
-export const UNINDENT = String.fromCharCode(17);
-
+import { format } from 'prettier/standalone';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -70,8 +65,21 @@ export class File {
         srcImports.import(module, symbols);
       }
     });
-    srcImports.emit(NL);
-    return srcImports.toString() + this.src.toString();
+    let source = srcImports.toString() + this.src.toString();
+    if (this.options.isPretty) {
+      source = format(source, {
+        parser: 'typescript',
+        plugins: [
+          // To support running in browsers
+          require('prettier/parser-typescript'),
+          require('prettier/parser-postcss'),
+          require('prettier/parser-html'),
+          require('prettier/parser-babel'),
+        ],
+        htmlWhitespaceSensitivity: 'ignore',
+      });
+    }
+    return source;
   }
 }
 
@@ -83,18 +91,13 @@ function removeExt(filename: string): string {
 const spaces: string[] = [''];
 
 export class SrcBuilder {
-  isPretty: boolean;
   isTypeScript: boolean;
   isModule: boolean;
   isJSX: boolean;
 
   buf: string[] = [];
-  wasLastNL = false;
-  nestingDepth: number = 0;
-  offset: number = 0;
 
   constructor(options: SrcBuilderOptions) {
-    this.isPretty = options.isPretty;
     this.isTypeScript = options.isTypeScript;
     this.isModule = options.isModule;
     this.isJSX = options.isJSX;
@@ -102,21 +105,7 @@ export class SrcBuilder {
 
   import(module: string, symbols: string[]) {
     if (this.isModule) {
-      this.emit(
-        'import',
-        WS,
-        '{',
-        WS,
-        symbols,
-        WS,
-        '}',
-        WS,
-        'from',
-        WS,
-        quote(module),
-        ';',
-        NL,
-      );
+      this.emit('import{', symbols, '}from', quote(module), ';');
     } else {
       symbols.forEach((symbol) => {
         this.const(symbol, function (this: SrcBuilder) {
@@ -124,7 +113,6 @@ export class SrcBuilder {
         });
       });
     }
-    this.emit(NL);
     return this;
   }
 
@@ -146,18 +134,18 @@ export class SrcBuilder {
       } else if (Array.isArray(value)) {
         this.emitList(value);
       } else if (typeof value == 'object') {
-        this.emit('{', NL, INDENT);
+        this.emit('{');
         let separator = false;
         for (const key in value) {
           if (Object.prototype.hasOwnProperty.call(value, key)) {
             if (separator) {
-              this.emit(',', NL);
+              this.emit(',');
             }
-            this.emit(possiblyQuotePropertyName(key)).emit(':', WS, value[key]);
+            this.emit(possiblyQuotePropertyName(key)).emit(':', value[key]);
             separator = true;
           }
         }
-        this.emit(NL, UNINDENT, '}');
+        this.emit('}');
       } else {
         throw new Error('Unexpected value: ' + value);
       }
@@ -166,40 +154,28 @@ export class SrcBuilder {
   }
 
   private push(value: string) {
-    if (value == UNINDENT) {
-      this.nestingDepth--;
-    } else if (value == INDENT) {
-      this.nestingDepth++;
-    } else {
-      if (value == ')' || value == ':' || value == ']' || value == '}') {
-        // clear last ',';
-        let index = this.buf.length - 1;
-        let ch: string = '';
-        while (index > 1 && isWhitespace((ch = this.buf[index]))) {
-          index--;
-        }
-        if (ch == ',') {
-          this.buf[index] = '';
-        }
-      }
-      if (this.isPretty && this.wasLastNL) {
-        while (spaces.length <= this.nestingDepth) {
-          spaces.push(spaces[spaces.length - 1] + '  ');
-        }
-        this.buf.push(spaces[this.nestingDepth]);
-      }
-      this.wasLastNL = value === NL;
-      if (this.isPretty || (value !== WS && value !== NL)) {
-        this.buf.push(value == WS ? ' ' : value);
+    if (
+      value.startsWith(')') ||
+      value.startsWith(':') ||
+      value.startsWith(']') ||
+      value.startsWith('}')
+    ) {
+      // clear last ',';
+      let index = this.buf.length - 1;
+      let ch: string = this.buf[index];
+      if (ch.endsWith(',')) {
+        ch = ch.substring(0, ch.length - 1);
+        this.buf[index] = ch;
       }
     }
+    this.buf.push(value);
   }
 
   emitList(values: any[], sep: string = ',') {
     let separator = false;
     for (const value of values) {
       if (separator) {
-        this.emit(sep, sep == ';' ? NL : WS);
+        this.emit(sep);
       }
       this.emit(value);
       separator = true;
@@ -224,9 +200,9 @@ export class SrcBuilder {
     }
     this.emit(name);
     if (value !== undefined) {
-      this.emit(WS, '=', WS, value);
+      this.emit('=', value);
     }
-    this.emit(';', NL);
+    this.emit(';');
     return this;
   }
 
@@ -255,35 +231,20 @@ export class SrcBuilder {
     if (this.isJSX) {
       this.emit('<' + symbol);
     } else {
-      this.emit(
-        'h',
-        '(',
-        INDENT,
-        NL,
-        literalTagName(symbol),
-        ',',
-        NL,
-        '{',
-        NL,
-        INDENT,
-      );
+      this.emit('h(', literalTagName(symbol), ',{');
     }
-    let first = true;
     for (const key in props) {
       if (
         Object.prototype.hasOwnProperty.call(props, key) &&
         !ignoreKey(key) &&
         !Object.prototype.hasOwnProperty.call(bindings, key)
       ) {
-        if (first) {
-          first = false;
-          this.isJSX && this.emit(RS, INDENT, INDENT);
-        } else {
-          this.isJSX ? this.emit(NL) : this.emit(',', NL);
-        }
-        this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
-        this.isJSX ? this.emit('=') : this.emit(':', WS);
+        this.isJSX
+          ? this.emit(' ', key)
+          : this.emit(possiblyQuotePropertyName(key));
+        this.isJSX ? this.emit('=') : this.emit(':');
         this.emit(quote(props[key]));
+        !this.isJSX && this.emit(',');
       }
     }
     for (const rawKey in bindings) {
@@ -293,14 +254,10 @@ export class SrcBuilder {
       ) {
         let binding = bindings[rawKey];
         const key = lastProperty(rawKey);
-        if (first) {
-          first = false;
-          this.isJSX && this.emit(RS, INDENT, INDENT);
-        } else {
-          this.isJSX ? this.emit(NL) : this.emit(',', NL);
-        }
-        this.isJSX ? this.emit(key) : this.emit(possiblyQuotePropertyName(key));
-        this.isJSX ? this.emit('={') : this.emit(':', WS);
+        this.isJSX
+          ? this.emit(' ', key)
+          : this.emit(possiblyQuotePropertyName(key));
+        this.isJSX ? this.emit('={') : this.emit(':');
         if (binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
           // We assume that when the binding content equals prop content.
@@ -309,47 +266,44 @@ export class SrcBuilder {
           binding = iif(binding);
         }
         this.emit(binding);
-        this.isJSX ? this.emit('}') : this.emit();
+        this.isJSX ? this.emit('}') : this.emit(',');
       }
     }
-    if (!first) {
-      this.isJSX && this.emit(UNINDENT, UNINDENT);
-    }
     if (this.isJSX) {
-      this.emit('>', INDENT, NL);
+      this.emit('>');
     } else {
-      this.emit(NL, UNINDENT, '}', ',', NL);
+      this.emit('},');
     }
   }
 
   jsxEnd(symbol: Symbol | string) {
     if (this.isJSX) {
-      this.emit(UNINDENT, '</', symbol, '>', NL);
+      this.emit('</', symbol, '>');
     } else {
-      this.emit(UNINDENT, ')', ',', NL);
+      this.emit('),');
     }
   }
 
   jsxBeginFragment(symbol: Symbol) {
     if (this.isJSX) {
-      this.emit('<>', INDENT, NL);
+      this.emit('<>');
     } else {
-      this.emit('h', '(', symbol.name, ',', WS, 'null', ',', INDENT, NL);
+      this.emit('h(', symbol.name, ',null,');
     }
   }
   jsxEndFragment() {
     if (this.isJSX) {
-      this.emit(UNINDENT, NL, '</>');
+      this.emit('</>');
     } else {
-      this.emit(UNINDENT, ')', NL);
+      this.emit(')');
     }
   }
 
   jsxTextBinding(exp: string) {
     if (this.isJSX) {
-      this.emit('{', exp, '}', NL);
+      this.emit('{', exp, '}');
     } else {
-      this.emit(exp, NL);
+      this.emit(exp);
     }
   }
 
@@ -423,22 +377,19 @@ export function invoke(
 
 export function arrowFnBlock(args: string[], statements: any[]) {
   return function (this: SrcBuilder) {
-    this.emit('(', args, ')', WS, '=>', WS);
-    this.emit('{', INDENT, NL)
-      .emitList(statements, ';')
-      .emit(UNINDENT, NL, '}');
+    this.emit('(', args, ')=>{').emitList(statements, ';').emit('}');
   };
 }
 
 export function arrowFnValue(args: string[], expression: any) {
   return function (this: SrcBuilder) {
-    this.emit('(', args, ')', WS, '=>', WS, expression);
+    this.emit('(', args, ')=>', expression);
   };
 }
 
 export function iif(code: any) {
   return function (this: SrcBuilder) {
-    code && this.emit('(()', WS, '=>', WS, '{', WS, NL, code, NL, '}', ')();');
+    code && this.emit('(()=>{', code, '})();');
   };
 }
 
@@ -453,9 +404,6 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
     return quote(symbol);
   }
   return symbol;
-}
-function isWhitespace(ch: string) {
-  return ch == '' || ch == RS || ch == NL;
 }
 
 /**

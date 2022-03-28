@@ -245,6 +245,24 @@ describe('qwik', () => {
     expect(toObj(fileSet)).toMatchSnapshot();
   });
 
+  describe('src-generator', () => {
+    test('should format code', () => {
+      const file = new File(
+        'test.js',
+        {
+          isPretty: true,
+          isTypeScript: false,
+          isJSX: true,
+          isModule: true,
+        },
+        '',
+        '',
+      );
+      file.src.emit('const x=1');
+      expect(file.toString()).toEqual('const x = 1;\n');
+    });
+  });
+
   describe('helper functions', () => {
     describe('isStatement', () => {
       test('is an expression', () => {

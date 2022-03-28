@@ -11,14 +11,10 @@ import {
   EmitFn,
   File,
   iif,
-  INDENT,
   invoke,
-  NL,
   quote,
   SrcBuilder,
   SrcBuilderOptions,
-  UNINDENT,
-  WS,
 } from './src-generator';
 import { collectStyles, CssStyles, renderStyles } from './styles';
 
@@ -131,13 +127,12 @@ export function addComponent(
   componentFile.exportConst(
     componentName,
     invoke(
-      componentFile.import(componentFile.qwikModule, 'componentFromQrl'),
+      componentFile.import(componentFile.qwikModule, 'componentQrl'),
       [generateQrl(componentFile, componentName + '_onMount')],
       ['any', 'any'],
     ),
   );
 
-  onRenderFile.src.emit(NL);
   const directives: Map<string, string> = new Map();
   onRenderFile.exportConst(
     componentName + '_onRender',
@@ -179,10 +174,11 @@ function generateStyles(
       invoke(
         componentFile.import(
           componentFile.qwikModule,
-          scoped ? 'withScopedStylesFromQrl' : 'useStylesFromQrl',
+          scoped ? 'withScopedStylesQrl' : 'useStylesQrl',
         ),
         [generateQrl(styleFile, symbol)],
       ),
+      ';',
     );
   };
 }
@@ -190,10 +186,7 @@ function generateStyles(
 export function renderUseLexicalScope(file: File) {
   return function (this: SrcBuilder) {
     return this.emit(
-      'const state',
-      WS,
-      '=',
-      WS,
+      'const state=',
       file.import(file.qwikModule, 'useLexicalScope').name,
       '()[0]',
     );
@@ -218,25 +211,16 @@ function addComponentOnMount(
   const inputInitializer: any[] = [];
   if (component.inputs) {
     component.inputs.forEach((input) => {
-      inputInitializer.push(
-        'if',
-        WS,
-        '(state.',
-        input.name,
-        WS,
-        '===',
-        WS,
-        'undefined)',
-        WS,
-        'state.',
-        input.name,
-        WS,
-        '=',
-        WS,
-        JSON.stringify(input.defaultValue),
-        ';',
-        NL,
-      );
+      input.defaultValue !== undefined &&
+        inputInitializer.push(
+          'if(state.',
+          input.name,
+          '===undefined)state.',
+          input.name,
+          '=',
+          JSON.stringify(input.defaultValue),
+          ';',
+        );
     });
   }
   componentFile.exportConst(
@@ -246,18 +230,12 @@ function addComponentOnMount(
         arrowFnValue(['state'], () =>
           this.emit(
             '{',
-            NL,
-            INDENT,
             ...inputInitializer,
             iif(component.hooks.onMount?.code),
             useStyles,
-            NL,
             'return ',
             generateQrl(onRenderFile, componentName + '_onRender', ['state']),
-            ';',
-            UNINDENT,
-            NL,
-            '}',
+            ';}',
           ),
         ),
       );
