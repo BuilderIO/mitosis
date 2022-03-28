@@ -588,7 +588,8 @@ const _componentToReact = (
               updateStateSettersInCode(json.hooks.onUpdate.code, options),
               options,
             )}
-          }, ${
+          }, 
+          ${
             json.hooks.onUpdate.deps
               ? processBinding(
                   updateStateSettersInCode(json.hooks.onUpdate.deps, options),
