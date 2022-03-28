@@ -1,13 +1,6 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { minify } from '../minify';
-import {
-  INDENT,
-  SrcBuilder,
-  NL,
-  WS,
-  UNINDENT,
-  iteratorProperty,
-} from './src-generator';
+import { SrcBuilder, iteratorProperty } from './src-generator';
 
 export const DIRECTIVES: Record<
   string,
@@ -16,52 +9,26 @@ export const DIRECTIVES: Record<
   Show: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
       const expr = node.bindings.when;
-      this.isJSX && this.emit('{', WS);
-      this.emit(expr, WS, '?', INDENT, NL);
+      this.isJSX && this.emit('{');
+      this.emit(expr, '?');
       blockFn();
-      this.emit(':', WS, 'null', UNINDENT, NL);
-      this.isJSX && this.emit('}', NL);
+      this.emit(':null');
+      this.isJSX && this.emit('}');
     },
   For: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
       const expr = node.bindings.each!;
-      this.isJSX && this.emit('{', WS);
-      this.emit('(', expr, WS, '||', WS, '[])');
-      this.emit('.map(', '(function(__value__)', WS, '{', INDENT, NL);
+      this.isJSX && this.emit('{');
+      this.emit('(', expr, '||[]).map(', '(function(__value__){');
       this.emit(
-        'var state',
-        WS,
-        '=',
-        WS,
-        'Object.assign({},',
-        WS,
-        'this,',
-        WS,
-        '{',
+        'var state=Object.assign({},this,{',
         iteratorProperty(expr),
-        ':',
-        WS,
-        '__value__',
-        WS,
-        '==',
-        WS,
-        'null',
-        WS,
-        '?',
-        WS,
-        '{}',
-        WS,
-        ':',
-        WS,
-        '__value__',
-        '});',
-        NL,
+        ':__value__==null?{}:__value__});',
       );
-      this.emit('return', WS, '(');
+      this.emit('return(');
       blockFn();
-      this.emit(')', ';', UNINDENT, NL);
-      this.emit('}', ').bind(state))', NL);
-      this.isJSX && this.emit('}', NL);
+      this.emit(');}).bind(state))');
+      this.isJSX && this.emit('}');
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
@@ -172,7 +139,8 @@ export function CoreButton(props: {
   for (const key in props) {
     if (
       Object.prototype.hasOwnProperty.call(props, key) &&
-      key.startsWith('on:')
+      key.startsWith('on') &&
+      key.endsWith('Qrl')
     ) {
       (hProps as any)[key] = (props as any)[key];
     }

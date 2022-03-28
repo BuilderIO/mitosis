@@ -1,15 +1,6 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
-import {
-  File,
-  INDENT,
-  invoke,
-  NL,
-  SrcBuilder,
-  quote,
-  UNINDENT,
-  lastProperty,
-} from './src-generator';
+import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
 import { CssStyles } from './styles';
 
 export function renderJSXNodes(
@@ -23,7 +14,7 @@ export function renderJSXNodes(
 ): any {
   return function (this: SrcBuilder) {
     if (children.length == 0) return;
-    if (root) this.emit('(', INDENT, NL);
+    if (root) this.emit('(');
     const needsFragment = root && children.length > 1;
     file.import(file.qwikModule, 'h');
     if (needsFragment) {
@@ -105,7 +96,7 @@ export function renderJSXNodes(
     if (needsFragment) {
       this.jsxEndFragment();
     }
-    if (root) this.emit(UNINDENT, ')');
+    if (root) this.emit(')');
   };
 }
 
@@ -159,7 +150,7 @@ function rewriteHandlers(
         if (key == 'css') {
           continue;
         } else if ((handlerBlock = handlers.get(binding))) {
-          key = `on:${key.substring(2).toLowerCase()}`;
+          key = `${key}Qrl`;
           binding = invoke(file.import(file.qwikModule, 'qrl'), [
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),

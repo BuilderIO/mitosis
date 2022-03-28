@@ -1,7 +1,7 @@
 import json5 from 'json5';
 import { MitosisNode } from '../..';
 import { dashCase } from '../../helpers/dash-case';
-import { INDENT, NL, SrcBuilder, UNINDENT, WS } from './src-generator';
+import { SrcBuilder } from './src-generator';
 
 export type CssStyles = {
   CLASS_NAME: string;
@@ -39,10 +39,10 @@ function hashCode(text: string) {
 
 export function renderStyles(styles: Map<string, CssStyles>) {
   return function (this: SrcBuilder) {
-    this.emit('`', NL, INDENT);
+    this.emit('`');
     const mediaStyles: (string | object)[] = [];
     styles.forEach((styles) => {
-      this.emit('.', styles.CLASS_NAME, /*'.🏷️�', WS,*/ '{', NL, INDENT);
+      this.emit('.', styles.CLASS_NAME, /*'.🏷️�', WS,*/ '{');
       for (const key in styles) {
         if (
           key !== 'CLASS_NAME' &&
@@ -52,11 +52,11 @@ export function renderStyles(styles: Map<string, CssStyles>) {
           if (value && typeof value == 'object') {
             mediaStyles.push(styles.CLASS_NAME, key, value);
           } else {
-            this.emit(dashCase(key), ':', WS, value, ';', NL);
+            this.emit(dashCase(key), ':', value, ';');
           }
         }
       }
-      this.emit(UNINDENT, '}', NL);
+      this.emit('}');
     });
     while (mediaStyles.length) {
       const className: string = mediaStyles.shift() as string;
@@ -65,17 +65,15 @@ export function renderStyles(styles: Map<string, CssStyles>) {
         string,
         string
       >;
-      this.emit(mediaKey, WS, '{', INDENT, NL);
-      this.emit('.', className, /*'.🏷️�', WS,*/ '{', NL, INDENT);
+      this.emit(mediaKey, '{.', className, /*'.🏷️�',*/ '{');
       for (const key in mediaObj) {
         if (Object.prototype.hasOwnProperty.call(mediaObj, key)) {
           const value = mediaObj[key];
-          this.emit(dashCase(key), ':', WS, value, ';', NL);
+          this.emit(dashCase(key), ':', value, ';');
         }
       }
-      this.emit(UNINDENT, '}', NL);
-      this.emit(UNINDENT, '}', NL);
+      this.emit('}}');
     }
-    this.emit(UNINDENT, '`');
+    this.emit('`');
   };
 }

@@ -1,15 +1,6 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { renderUseLexicalScope } from './component';
-import {
-  arrowFnBlock,
-  File,
-  INDENT,
-  invoke,
-  NL,
-  SrcBuilder,
-  UNINDENT,
-  WS,
-} from './src-generator';
+import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 
 const IIF_START = '(() => {';
 const IIF_END = '})()';
@@ -70,7 +61,6 @@ function renderHandler(file: File, symbol: string, code: string) {
   file.exportConst(symbol, function (this: SrcBuilder) {
     this.emit([arrowFnBlock([], body)]);
   });
-  file.src.emit(NL);
 }
 
 function wrapWithUse(
@@ -80,20 +70,16 @@ function wrapWithUse(
   const needsEvent = !!code.match(/\bevent\b/);
   if (needsEvent) {
     return function (this: SrcBuilder) {
-      this.emit('{', NL, INDENT);
+      this.emit('{');
       needsEvent &&
         this.emit(
-          'const event',
-          WS,
-          '=',
-          WS,
+          'const event=',
           invoke(file.import(file.qwikModule, 'useEvent'), []),
           ';',
-          NL,
         );
       const blockContent = stripBlock(code);
       this.emit(blockContent);
-      this.emit(UNINDENT, NL, '}');
+      this.emit('}');
     };
   } else {
     return code;
