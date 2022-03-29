@@ -1043,6 +1043,55 @@ export default {
 "
 `;
 
+exports[`Vue multipleOnUpdate 1`] = `
+"<template>
+  <div></div>
+</template>
+<script>
+export default {
+  name: \\"multiple-on-update\\",
+
+  updated() {
+    console.log(\\"Runs on every update/rerender\\");
+    console.log(\\"Runs on every update/rerender as well\\");
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue multipleOnUpdateWithDeps 1`] = `
+"<template>
+  <div></div>
+</template>
+<script>
+export default {
+  name: \\"multiple-on-update-with-deps\\",
+
+  data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
+
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    },
+    onUpdateHook1() {
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return \`\${this.a}|\${this.b}\`;
+    },
+    onUpdateHook1() {
+      return \`\${this.c}|\${this.d}\`;
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue onMount & onUnMount 1`] = `
 "<template>
   <div></div>
@@ -1090,13 +1139,13 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-    onUpdateHook() {
+    onUpdateHook0() {
       console.log(\\"Runs when a or b changes\\", this.a, this.b);
     },
   },
 
   computed: {
-    onUpdateHook() {
+    onUpdateHook0() {
       return \`\${this.a}|\${this.b}\`;
     },
   },

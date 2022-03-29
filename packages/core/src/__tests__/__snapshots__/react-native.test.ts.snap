@@ -866,6 +866,50 @@ export default function Video(props) {
 "
 `;
 
+exports[`React multipleOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function MultipleOnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender as well\\");
+  });
+
+  return <View />;
+}
+"
+`;
+
+exports[`React multipleOnnUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MultipleOnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  const [c, setC] = useState(() => \\"c\\");
+
+  const [d, setD] = useState(() => \\"d\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\", a, b);
+  }, [a, b]);
+  useEffect(() => {
+    console.log(\\"Runs when c or d changes\\", c, d);
+  }, [c, d]);
+
+  return <View />;
+}
+"
+`;
+
 exports[`React onMount & onUnMount 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";

@@ -20,6 +20,8 @@ const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
+const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
+const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 
 const path = 'test-path';
 
@@ -134,6 +136,18 @@ describe('Vue', () => {
 
   test('onUpdateWithDeps', () => {
     const component = parseJsx(onUpdateWithDeps);
+    const output = componentToVue()({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('multipleOnUpdate', () => {
+    const component = parseJsx(multipleOnUpdate);
+    const output = componentToVue()({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('multipleOnUpdateWithDeps', () => {
+    const component = parseJsx(multipleOnUpdateWithDeps);
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
   });

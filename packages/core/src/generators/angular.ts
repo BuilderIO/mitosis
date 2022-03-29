@@ -209,12 +209,14 @@ export const componentToAngular =
       }
 
       ${
-        !component.hooks.onUpdate
+        !component.hooks.onUpdate?.length
           ? ''
           : `ngAfterContentChecked() {
-              ${stripStateAndPropsRefs(component.hooks.onUpdate.code, {
-                replaceWith: 'this.',
-              })}
+              ${component.hooks.onUpdate.map((hook) =>
+                stripStateAndPropsRefs(hook.code, {
+                  replaceWith: 'this.',
+                }),
+              )}
             }`
       }
 

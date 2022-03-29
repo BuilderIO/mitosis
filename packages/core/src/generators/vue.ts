@@ -49,6 +49,8 @@ function getContextNames(json: MitosisComponent) {
 
 const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
+const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 function processBinding(
@@ -316,17 +318,20 @@ function getContextProvideString(
 const onUpdatePlugin: Plugin = (options) => ({
   json: {
     post: (component) => {
-      if (component.hooks.onUpdate?.deps) {
-        // TO-DO: once we allow multiple `onUpdate` hooks per file, we will need to iterate over them and suffix with `_${index}`.
-        component.state[
-          ON_UPDATE_HOOK_NAME
-        ] = `${methodLiteralPrefix}get ${ON_UPDATE_HOOK_NAME}() {
-        return \`${component.hooks.onUpdate.deps
-          .slice(1, -1)
-          .split(',')
-          .map((dep) => `\${${dep.trim()}}`)
-          .join('|')}\`
-      }`;
+      if (component.hooks.onUpdate) {
+        component.hooks.onUpdate
+          .filter((hook) => hook.deps?.length)
+          .forEach((hook, index) => {
+            component.state[
+              getOnUpdateHookName(index)
+            ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
+            return \`${hook.deps
+              ?.slice(1, -1)
+              .split(',')
+              .map((dep) => `\${${dep.trim()}}`)
+              .join('|')}\`
+          }`;
+          });
       }
     },
   },
@@ -446,6 +451,11 @@ export const componentToVue =
       options.builderRegister && component.meta.registerComponent,
     );
 
+    const onUpdateWithDeps =
+      component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    const onUpdateWithoutDeps =
+      component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
+
     let str = dedent`
     <template>
       ${template}
@@ -523,26 +533,27 @@ export const componentToVue =
             : ''
         }
         ${
-          component.hooks.onUpdate
-            ? !component.hooks.onUpdate.deps
-              ? // if we do not have dependencies, then we use `updated()` which re-runs on every render.
-                `updated() {
-                  ${processBinding(
-                    component.hooks.onUpdate.code,
-                    options,
-                    component,
-                  )}
-                },`
-              : // if we have dependencies, then we `watch` a computed property that combines the dependencies.
-                `watch: {
-                  ${ON_UPDATE_HOOK_NAME}() {
-                    ${processBinding(
-                      component.hooks.onUpdate.code,
-                      options,
-                      component,
-                    )}
+          onUpdateWithoutDeps.length
+            ? `updated() {
+            ${onUpdateWithoutDeps
+              .map((hook) => processBinding(hook.code, options, component))
+              .join('\n')}
+          },`
+            : ''
+        }
+        ${
+          onUpdateWithDeps.length
+            ? `watch: {
+            ${onUpdateWithDeps
+              .map(
+                (hook, index) =>
+                  `${getOnUpdateHookName(index)}() {
+                  ${processBinding(hook.code, options, component)}
                   }
-                },`
+                `,
+              )
+              .join(',')}
+          },`
             : ''
         }
         ${

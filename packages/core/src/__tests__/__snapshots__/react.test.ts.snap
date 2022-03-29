@@ -890,6 +890,46 @@ exports[`React Video 1`] = `
 "
 `;
 
+exports[`React multipleOnUpdate 1`] = `
+"import { useEffect } from \\"react\\";
+
+export default function MultipleOnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender as well\\");
+  });
+
+  return <div />;
+}
+"
+`;
+
+exports[`React multipleOnnUpdateWithDeps 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MultipleOnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  const [c, setC] = useState(() => \\"c\\");
+
+  const [d, setD] = useState(() => \\"d\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\", a, b);
+  }, [a, b]);
+  useEffect(() => {
+    console.log(\\"Runs when c or d changes\\", c, d);
+  }, [c, d]);
+
+  return <div />;
+}
+"
+`;
+
 exports[`React onMount & onUnMount 1`] = `
 "import { useEffect } from \\"react\\";
 

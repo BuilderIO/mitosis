@@ -491,7 +491,7 @@ const _componentToReact = (
   if (
     json.hooks.onMount?.code ||
     json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.code
+    json.hooks.onUpdate?.length
   ) {
     reactLibImports.add('useEffect');
   }
@@ -582,21 +582,25 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUpdate?.code
-          ? `useEffect(() => {
+        json.hooks.onUpdate?.length
+          ? json.hooks.onUpdate
+              .map(
+                (hook) => `useEffect(() => {
             ${processBinding(
-              updateStateSettersInCode(json.hooks.onUpdate.code, options),
+              updateStateSettersInCode(hook.code, options),
               options,
             )}
           }, 
           ${
-            json.hooks.onUpdate.deps
+            hook.deps
               ? processBinding(
-                  updateStateSettersInCode(json.hooks.onUpdate.deps, options),
+                  updateStateSettersInCode(hook.deps, options),
                   options,
                 )
               : ''
-          })`
+          })`,
+              )
+              .join(';')
           : ''
       }
 

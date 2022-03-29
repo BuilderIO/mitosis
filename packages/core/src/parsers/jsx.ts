@@ -230,10 +230,13 @@ const componentFunctionToJson = (
               ) {
                 const depsCode = secondArg ? generate(secondArg).code : '';
 
-                hooks.onUpdate = {
-                  code,
-                  deps: depsCode,
-                };
+                hooks.onUpdate = [
+                  ...(hooks.onUpdate || []),
+                  {
+                    code,
+                    deps: depsCode,
+                  },
+                ];
               }
             }
           } else if (expression.callee.name === 'onUnMount') {

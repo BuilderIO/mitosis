@@ -476,12 +476,11 @@ export const componentToHtml =
             .join('\n\n')}
 
             ${
-              !json.hooks.onUpdate?.code
+              !json.hooks.onUpdate?.length
                 ? ''
                 : `
-                  ${updateReferencesInCode(
-                    json.hooks.onUpdate.code,
-                    useOptions,
+                  ${json.hooks.onUpdate.map((hook) =>
+                    updateReferencesInCode(hook.code, useOptions),
                   )} 
                   `
             }
@@ -740,12 +739,11 @@ export const componentToCustomElement =
             .join('\n\n')}
 
             ${
-              !json.hooks.onUpdate?.code
+              !json.hooks.onUpdate?.length
                 ? ''
                 : `
-                  ${updateReferencesInCode(
-                    json.hooks.onUpdate.code,
-                    useOptions,
+                  ${json.hooks.onUpdate.map((hook) =>
+                    updateReferencesInCode(hook.code, useOptions),
                   )} 
                   `
             } 
