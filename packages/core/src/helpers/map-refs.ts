@@ -75,30 +75,18 @@ export const mapRefs = (
   for (const key of Object.keys(
     component.hooks,
   ) as (keyof typeof component.hooks)[]) {
-    if (Array.isArray(component.hooks[key])) {
-      (component.hooks[key] as extendedHook[]).forEach((hook) => {
+    const hooks = component.hooks[key];
+    if (Array.isArray(hooks)) {
+      hooks.forEach((hook) => {
         if (hook.code) {
           hook.code = replaceRefsInString(hook.code, refs, mapper);
         }
       });
     } else {
-      const hookCode = (component.hooks[key] as extendedHook)?.code;
+      const hookCode = hooks?.code;
       if (hookCode) {
-        (component.hooks[key] as extendedHook)!.code = replaceRefsInString(
-          hookCode,
-          refs,
-          mapper,
-        );
+        hooks.code = replaceRefsInString(hookCode, refs, mapper);
       }
     }
   }
-
-  // for (const key of Object.keys(
-  //   component.hooks,
-  // ) as (keyof typeof component.hooks)[]) {
-  //   const hookCode = component.hooks[key]?.code;
-  //   if (hookCode) {
-  //     component.hooks[key]!.code = replaceRefsInString(hookCode, refs, mapper);
-  //   }
-  // }
 };
