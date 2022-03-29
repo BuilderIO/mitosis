@@ -49,8 +49,7 @@ function getContextNames(json: MitosisComponent) {
 
 const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
-const getOnUpdateHookName = (index: number) =>
-  ON_UPDATE_HOOK_NAME + `_${index}`;
+const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs

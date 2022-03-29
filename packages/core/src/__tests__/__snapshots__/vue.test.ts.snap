@@ -1065,43 +1065,29 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script>
-
-
-
-
-
-
 export default {
-  name: 'multiple-on-update-with-deps',
+  name: \\"multiple-on-update-with-deps\\",
 
-
-
-  data: () => ({ a: 'a', b: 'b', c: 'c', d: 'd', onUpdateHook_0: 'onUpdateHook_0 () {
-          return \`\${state.a}|\${state.b}\`
-        }', onUpdateHook_1: 'onUpdateHook_1 () {
-          return \`\${state.c}|\${state.d}\`
-        }',}),
-
-
-
-
-
-
+  data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
   watch: {
-      onUpdateHook_0() {
-            console.log('Runs when a or b changes', this.a, this.b)
-            }
-          ;onUpdateHook_1() {
-            console.log('Runs when c or d changes', this.c, this.d)
-            }
-
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
     },
+    onUpdateHook1() {
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    },
+  },
 
-
-
-
-}
+  computed: {
+    onUpdateHook0() {
+      return \`\${this.a}|\${this.b}\`;
+    },
+    onUpdateHook1() {
+      return \`\${this.c}|\${this.d}\`;
+    },
+  },
+};
 </script>
 "
 `;
@@ -1147,38 +1133,23 @@ exports[`Vue onUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script>
-
-
-
-
-
-
 export default {
-  name: 'on-update-with-deps',
+  name: \\"on-update-with-deps\\",
 
-
-
-  data: () => ({ a: 'a', b: 'b', onUpdateHook_0: 'onUpdateHook_0 () {
-          return \`\${state.a}|\${state.b}\`
-        }',}),
-
-
-
-
-
-
+  data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-      onUpdateHook_0() {
-            console.log('Runs when a or b changes', this.a, this.b)
-            }
-
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
     },
+  },
 
-
-
-
-}
+  computed: {
+    onUpdateHook0() {
+      return \`\${this.a}|\${this.b}\`;
+    },
+  },
+};
 </script>
 "
 `;
