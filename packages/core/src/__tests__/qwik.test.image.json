@@ -1,22 +1,67 @@
 {
   "data": {
+    "inputs": [
+      {
+        "@type": "@builder.io/core:Field",
+        "name": "myState",
+        "type": "text",
+        "defaultValue": "initialValue",
+        "required": false,
+        "subFields": [],
+        "helperText": "",
+        "autoFocus": false,
+        "simpleTextOnly": false,
+        "disallowRemove": false,
+        "broadcast": false,
+        "bubble": false,
+        "hideFromUI": false,
+        "hideFromFieldsEditor": false,
+        "showTemplatePicker": true,
+        "permissionsRequiredToEdit": "",
+        "advanced": false,
+        "copyOnAdd": true,
+        "onChange": "",
+        "showIf": "",
+        "mandatory": false,
+        "hidden": false,
+        "noPhotoPicker": false,
+        "model": ""
+      }
+    ],
     "title": "Builtin: Image",
     "blocks": [
       {
         "@type": "@builder.io/sdk:Element",
         "@version": 2,
+        "actions": { "click": "state.myState=\"changed value\"" },
+        "code": {
+          "actions": { "click": "state.myState = \"changed value\";\n" }
+        },
         "id": "builder-fa4480d2f48a44a7a2e98cf07c54927b",
+        "meta": {
+          "eventActions": {
+            "click": [
+              {
+                "@type": "@builder.io/core:Action",
+                "action": "@builder.io:setState",
+                "options": { "value": "changed value", "name": "myState" }
+              }
+            ]
+          }
+        },
         "component": {
           "name": "Image",
           "options": {
-            "image": "https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b",
+            "image": "https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160",
             "backgroundSize": "cover",
             "backgroundPosition": "center",
-            "lazy": true,
+            "lazy": false,
             "fitContent": true,
             "aspectRatio": 1,
             "height": 1300,
-            "width": 1300
+            "width": 1300,
+            "srcset": "https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w",
+            "sizes": "(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw"
           }
         },
         "responsiveStyles": {
@@ -30,6 +75,32 @@
             "minHeight": "20px",
             "minWidth": "20px",
             "overflow": "hidden"
+          }
+        }
+      },
+      {
+        "@type": "@builder.io/sdk:Element",
+        "@version": 2,
+        "bindings": {
+          "component.options.text": "var _virtual_index=state.myState;return _virtual_index"
+        },
+        "code": { "bindings": { "component.options.text": "state.myState" } },
+        "id": "builder-1072afed47764e7cb37d088fd66f3a67",
+        "component": {
+          "name": "Text",
+          "options": { "text": "Enter some text..." }
+        },
+        "responsiveStyles": {
+          "large": {
+            "display": "flex",
+            "flexDirection": "column",
+            "position": "relative",
+            "flexShrink": "0",
+            "boxSizing": "border-box",
+            "marginTop": "20px",
+            "lineHeight": "normal",
+            "height": "auto",
+            "textAlign": "center"
           }
         }
       }

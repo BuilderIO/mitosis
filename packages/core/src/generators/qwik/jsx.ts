@@ -51,6 +51,11 @@ export function renderJSXNodes(
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
+            Array.from(directive.matchAll(/(__[^_]+__)/g)).forEach((match) => {
+              const name = match[0];
+              const code = DIRECTIVES[name];
+              typeof code == 'string' && directives.set(name, code);
+            });
             if (file.module !== 'med') {
               file.import('./med.js', childName);
             }

@@ -32,6 +32,7 @@ export const DIRECTIVES: Record<
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
+  __passThroughProps__: minify`${__passThroughProps__}`,
 };
 
 declare const h: (
@@ -104,7 +105,7 @@ export function Image(props: {
   const children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? 'a' : 'div',
-    { href: props.href, class: props.class },
+    __passThroughProps__({ href: props.href, class: props.class }, props),
     children,
   );
 
@@ -122,6 +123,21 @@ export function Image(props: {
   }
 }
 
+export function __passThroughProps__(
+  dstProps: Record<string, any>,
+  srcProps: Record<string, any>,
+): Record<string, any> {
+  for (const key in srcProps) {
+    if (
+      Object.prototype.hasOwnProperty.call(srcProps, key) &&
+      ((key.startsWith('on') && key.endsWith('Qrl')) || key == 'style')
+    ) {
+      (dstProps as any)[key] = (srcProps as any)[key];
+    }
+  }
+  return dstProps;
+}
+
 export function CoreButton(props: {
   text?: string;
   link?: string;
@@ -136,14 +152,8 @@ export function CoreButton(props: {
     target: props.openInNewTab ? '_blank' : '_self',
     class: props.class,
   };
-  for (const key in props) {
-    if (
-      Object.prototype.hasOwnProperty.call(props, key) &&
-      key.startsWith('on') &&
-      key.endsWith('Qrl')
-    ) {
-      (hProps as any)[key] = (props as any)[key];
-    }
-  }
-  return h(hasLink ? 'a' : props.tagName$ || 'span', hProps);
+  return h(
+    hasLink ? 'a' : props.tagName$ || 'span',
+    __passThroughProps__(hProps, props),
+  );
 }
