@@ -743,7 +743,7 @@ export const componentToCustomElement =
           this.updateBindings();
         }
 
-        updateBindings {
+        updateBindings() {
                     ${Object.keys(useOptions.onChangeJsById)
                       .map((key) => {
                         const value = useOptions.onChangeJsById[key];
