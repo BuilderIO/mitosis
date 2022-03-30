@@ -707,8 +707,11 @@ export const componentToCustomElement =
         connectedCallback() {
           this._root.innerHTML = \`
       ${html}\`;
+          this.onMount();
           this.update();
+        }
 
+        onMount() {
           ${
             !json.hooks.onMount?.code
               ? ''
@@ -723,30 +726,37 @@ export const componentToCustomElement =
           }
         }
 
+        onUpdate() {
+          ${
+            !json.hooks.onUpdate?.length
+              ? ''
+              : `
+      ${json.hooks.onUpdate.map((hook) =>
+        updateReferencesInCode(hook.code, useOptions),
+      )} 
+      `
+          } 
+        }
+
         update() {
-          ${Object.keys(useOptions.onChangeJsById)
-            .map((key) => {
-              const value = useOptions.onChangeJsById[key];
-              if (!value) {
-                return '';
-              }
-              return `
+          this.onUpdate();
+          this.updateBindings();
+        }
+
+        updateBindings() {
+                    ${Object.keys(useOptions.onChangeJsById)
+                      .map((key) => {
+                        const value = useOptions.onChangeJsById[key];
+                        if (!value) {
+                          return '';
+                        }
+                        return `
               this._root.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
                 ${updateReferencesInCode(value, useOptions)}
               })
             `;
-            })
-            .join('\n\n')}
-
-            ${
-              !json.hooks.onUpdate?.length
-                ? ''
-                : `
-                  ${json.hooks.onUpdate.map((hook) =>
-                    updateReferencesInCode(hook.code, useOptions),
-                  )} 
-                  `
-            } 
+                      })
+                      .join('\n\n')}
         }
 
         ${

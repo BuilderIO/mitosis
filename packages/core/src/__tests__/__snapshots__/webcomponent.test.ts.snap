@@ -116,8 +116,11 @@ class SmileReviews extends HTMLElement {
           margin-right: 10px;
         }
       </style>\`;
+    this.onMount();
     this.update();
+  }
 
+  onMount() {
     // onMount
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
@@ -131,7 +134,14 @@ class SmileReviews extends HTMLElement {
       });
   }
 
+  onUpdate() {}
+
   update() {
+    this.onUpdate();
+    this.updateBindings();
+  }
+
+  updateBindings() {
     this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
       el.setAttribute(\\"data-user\\", this.state.name);
     });
