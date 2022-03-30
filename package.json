@@ -5,24 +5,22 @@
   ],
   "private": true,
   "engines": {
-    "node": ">=14",
-    "npm": "v7"
+    "node": ">=14"
   },
   "scripts": {
-    "setup": "lerna bootstrap",
     "lerna": "lerna",
-    "ci:build": "lerna run build --ignore @builder.io/mitosis-fiddle",
-    "ci:lint": "npm run lint:prettier",
-    "ci:test": "lerna run test --stream",
+    "ci:build": "yarn workspaces foreach -pt --exclude @builder.io/mitosis-fiddle --verbose run build",
+    "ci:lint": "yarn lint:prettier",
+    "ci:test": "yarn workspaces foreach run test",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
-    "fmt": "npm run fmt:prettier",
-    "fmt:prettier": "npm run lint:prettier -- --write",
+    "fmt": "yarn fmt:prettier",
+    "fmt:prettier": "yarn lint:prettier --write",
     "lint": "run-p -c lint:*",
     "lint:css": "stylelint 'packages/**/*.ts{,x}'",
     "lint:eslint": "eslint 'packages/**/*.ts{,x}'",
-    "lint:prettier": "npm run prettier -- --check",
-    "prerelease": "npm run build",
+    "lint:prettier": "yarn prettier --check",
+    "prerelease": "yarn build",
     "prettier": "prettier '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
     "release": "lerna publish"
   },
@@ -42,5 +40,9 @@
     "prettier": "^2.3.2",
     "stylelint": "^14.6.0",
     "typescript": "^4.2.3"
+  },
+  "packageManager": "yarn@3.2.0",
+  "dependencies": {
+    "@babel/core": "7.14.5"
   }
 }

@@ -11,29 +11,18 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Use Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: '14.x'
-
-      - name: Restore node_modules
-        id: restore-node_modules
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            */*/node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          cache: 'yarn'
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Install dependencies core
-        run: cd packages/core; npm install
+        run: yarn
 
       - name: build
-        run: cd packages/core; npm run build
+        run: yarn workspace @builder.io/mitosis run build
 
       - name: save artifact
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        run: cd packages/core; npm run mitosis-save-artifacts
+        run: yarn workspace @builder.io/mitosis run mitosis-save-artifacts

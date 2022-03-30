@@ -1,4 +1,4 @@
-import { types } from '@babel/core';
+import * as types from '@babel/types';
 import { Rule, AST } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
