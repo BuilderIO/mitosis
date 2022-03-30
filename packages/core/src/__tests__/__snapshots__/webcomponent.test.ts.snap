@@ -1,66 +1,59 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`webcomponent Stamped 1`] = `
-"
-      
-    import  {  kebabCase  }  from 'lodash';
-import  {  snakeCase  }  from 'lodash';
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
-    
-  
-      /**
-       * Usage:
-       * 
-       *  <smile-reviews></smile-reviews>
-       * 
-       */
-      class SmileReviews extends HTMLElement {
-        constructor() {
-          super();
+/**
+ * Usage:
+ *
+ *  <smile-reviews></smile-reviews>
+ *
+ */
+class SmileReviews extends HTMLElement {
+  constructor() {
+    super();
 
-          const self = this;
-          this.state = { reviews: [], name: 'test', showReviewPrompt: false,  kebabCaseValue() {
-  return kebabCase('testThat');
-},  snakeCaseValue() {
-  return snakeCase('testThis');
-},};
-          this.props = {};
+    const self = this;
+    this.state = {
+      reviews: [],
+      name: \\"test\\",
+      showReviewPrompt: false,
+      kebabCaseValue() {
+        return kebabCase(\\"testThat\\");
+      },
+      snakeCaseValue() {
+        return snakeCase(\\"testThis\\");
+      },
+    };
+    this.props = {};
 
-          
-            // Helper to pass context down for loops
-            this.contextMap = new WeakMap();
-          
+    // Helper to pass context down for loops
+    this.contextMap = new WeakMap();
 
-          
-          // Event handler for 'click' event on button-1
-          this.onButton1Click = (event) => {
-            this.state.showReviewPrompt = true;
-this.update()
-          }
-        
-          // Event handler for 'click' event on button-2
-          this.onButton2Click = (event) => {
-            
-  this.state.showReviewPrompt = false;
-  this.update();
+    // Event handler for 'click' event on button-1
+    this.onButton1Click = (event) => {
+      this.state.showReviewPrompt = true;
+      this.update();
+    };
 
-          }
-        
+    // Event handler for 'click' event on button-2
+    this.onButton2Click = (event) => {
+      this.state.showReviewPrompt = false;
+      this.update();
+    };
 
-          if (undefined) {
-            this.attachShadow({ mode: 'open' })
-          }
-        }
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
 
+  get _root() {
+    return this.shadowRoot || this;
+  }
 
-        
-
-        get _root() {
-          return this.shadowRoot || this;
-        }
-
-        connectedCallback() {
-          this._root.innerHTML = \`
+  connectedCallback() {
+    this._root.innerHTML = \`
       <div data-name=\\"div-1\\">
         <button data-name=\\"button-1\\">Write a review</button>
       
@@ -123,137 +116,114 @@ this.update()
           margin-right: 10px;
         }
       </style>\`;
-          this.onMount();
-          this.update();
-        }
+    this.onMount();
+    this.update();
+  }
 
-        onMount() {
-          
-                // onMount
-                fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-  this.state.reviews = data.data;
-  this.update();
-})
-                
-        }
+  onMount() {
+    // onMount
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.state.reviews = data.data;
+        this.update();
+      });
+  }
 
-        onUpdate() {
-           
-        }
+  onUpdate() {}
 
-        update() {
-          this.onUpdate();
-          this.updateBindings();
-        }
+  update() {
+    this.onUpdate();
+    this.updateBindings();
+  }
 
-        updateBindings {
-                    
-              this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
-                ;el.setAttribute(\\"data-user\\", this.state.name);
-              })
-            
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      el.setAttribute(\\"data-user\\", this.state.name);
+    });
 
+    this._root
+      .querySelectorAll(\\"[data-name='button-1']\\")
+      .forEach((el, index) => {
+        el.removeEventListener(\\"click\\", this.onButton1Click);
+        el.addEventListener(\\"click\\", this.onButton1Click);
+      });
 
-              this._root.querySelectorAll(\\"[data-name='button-1']\\").forEach((el, index) => {
-                
-            ;el.removeEventListener('click', this.onButton1Click);
-            ;el.addEventListener('click', this.onButton1Click);
-          
-              })
-            
+    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      el.style.display = this.state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+    });
 
+    this._root
+      .querySelectorAll(\\"[data-name='button-2']\\")
+      .forEach((el, index) => {
+        el.removeEventListener(\\"click\\", this.onButton2Click);
+        el.addEventListener(\\"click\\", this.onButton2Click);
+      });
 
-              this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-                el.style.display = this.state.showReviewPrompt ? 'inline' : 'none'
-              })
-            
+    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      let array = this.state.reviews;
+      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
+      this.renderLoop(el, array, template, \\"review\\");
+    });
 
+    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+      el.key = this.getContext(el, \\"review\\").id;
+    });
 
-              this._root.querySelectorAll(\\"[data-name='button-2']\\").forEach((el, index) => {
-                
-            ;el.removeEventListener('click', this.onButton2Click);
-            ;el.addEventListener('click', this.onButton2Click);
-          
-              })
-            
+    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+      el.src = this.getContext(el, \\"review\\").avatar;
+    });
 
+    this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+      el.className = this.state.showReviewPrompt
+        ? \\"bg-primary\\"
+        : \\"bg-secondary\\";
+    });
 
-              this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
-                
-        let array = this.state.reviews;
-        let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-        this.renderLoop(el, array, template, \\"review\\");
-      
-              })
-            
+    this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+      el.innerText = index;
+    });
 
+    this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
+      el.innerText = this.getContext(el, \\"review\\").author;
+    });
 
-              this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
-                ;el.key = this.getContext(el, \\"review\\").id
-              })
-            
+    this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el, index) => {
+      el.innerText = this.getContext(el, \\"review\\").reviewMessage;
+    });
+  }
 
+  // Helper to render loops
+  renderLoop(el, array, template, itemName) {
+    el.innerHTML = \\"\\";
+    for (let value of array) {
+      let tmp = document.createElement(\\"span\\");
+      tmp.innerHTML = template.innerHTML;
+      Array.from(tmp.children).forEach((child) => {
+        this.contextMap.set(child, {
+          ...this.contextMap.get(child),
+          [itemName]: value,
+        });
+        el.appendChild(child);
+      });
+    }
+  }
 
-              this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-                ;el.src = this.getContext(el, \\"review\\").avatar
-              })
-            
-
-
-              this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
-                ;el.className = this.state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-              })
-            
-
-
-              this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
-                el.innerText = index;
-              })
-            
-
-
-              this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-                el.innerText = this.getContext(el, \\"review\\").author;
-              })
-            
-
-
-              this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el, index) => {
-                el.innerText = this.getContext(el, \\"review\\").reviewMessage;
-              })
-            
-        }
-
-        
-
-          // Helper to render loops
-          renderLoop(el, array, template, itemName) {
-            el.innerHTML = '';
-            for (let value of array) {
-              let tmp = document.createElement('span');
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
-                this.contextMap.set(child, {
-                  ...this.contextMap.get(child),
-                  [itemName]: value
-                });
-                el.appendChild(child);
-              });
-            }
-          }
-
-          getContext(el, name) {
-            let parent = el;
-            do {
-              let context = this.contextMap.get(parent);
-              if (context && name in context) {
-                return context[name];
-              }
-            } while (parent = parent.parentNode || parent.host)
-          }
-        
+  getContext(el, name) {
+    let parent = el;
+    do {
+      let context = this.contextMap.get(parent);
+      if (context && name in context) {
+        return context[name];
       }
+    } while ((parent = parent.parentNode || parent.host));
+  }
+}
 
-      customElements.define('smile-reviews', SmileReviews);
-    "
+customElements.define(\\"smile-reviews\\", SmileReviews);
+"
 `;
