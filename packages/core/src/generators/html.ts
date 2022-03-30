@@ -707,9 +707,8 @@ export const componentToCustomElement =
         connectedCallback() {
           this._root.innerHTML = \`
       ${html}\`;
-          this.onUpdate();
           this.onMount();
-          this.updateBindings();
+          this.update();
         }
 
         onMount() {
