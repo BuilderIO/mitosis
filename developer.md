@@ -13,19 +13,16 @@ Mitosis is structured as a mono-repo. The packages live under `packages/`:
 
 ## Installation
 
-First, you should run `npm install` in the root of the project, followed by `npm run setup` to bootstrap all the dependencies across packages.
+First, you should run `yarn` in the root of the project to install all the dependencies.
 
 For all packages, the below steps to develop locally are the same:
 
 ```bash
-# install dependencies
-npm install
-
 # run local development server
-npm run start
+yarn start
 
 # run tests
-npm run test
+yarn test
 ```
 
 ## Submitting Issues And Writing Tests
@@ -38,6 +35,6 @@ In `core`, we use jest snapshots for testing. If you are solving a problem that 
 
 - copy your component from the fiddle into a file in `packages/core/src/__tests__/data`. See[packages/core/src/**tests**/data/blocks/builder-render-block.raw.tsx](packages/core/src/__tests__/data/blocks/builder-render-block.raw.tsx) as an example.
 - Create a test that shows how compiling this component to a certain target causes the bug. See [context.test.ts](packages/core/src/__tests__/context.test.ts) as an example of using `builder-render-block.raw.tsx`
-- run `jest` in watch mode: `npm run test --watch`
-- run the development server: `npm run start`
+- run `jest` in watch mode: `yarn test --watch`
+- run the development server: `yarn start`
 - keep iterating until your test passes!
