@@ -16,6 +16,8 @@
 
 ## Gotchas and limitations
 
+We have put together ESLint rules that will warn you when encountering these limitations (and many more). The rules themselves are a great source of documentation. Make sure to read up on them [here](../packages/eslint-plugin/docs/rules/)
+
 ### Defining variables with the same name as a state property will shadow it
 
 _Mitosis input_
