@@ -3,6 +3,7 @@
 - [Refs](#refs)
 - [onMount](#onmount)
 - [onUnMount](#onunmount)
+- [onUpdate](#onUpdate)
 - [useMetadata](./customizability.md#useMetadata)
 
 ## Refs
@@ -70,3 +71,30 @@ export default function MyComponent() {
   return <div>Hello world</div>;
 }
 ```
+
+## onUpdate
+
+The onUpdate hook is the best place to put custom code that will either:
+
+- if no `dependencies` array is provided: execute on every render
+- if a non-empty `dependencies` array is provided: execute whenever any value in `dependencies` changes
+
+````jsx
+export default function OnUpdateWithDeps() {
+  const state = useState({
+    a: 'a',
+    b: 'b',
+  });
+
+  onUpdate(() => {
+    console.log('Runs on every update/rerender');
+  });
+
+  onUpdate(() => {
+    console.log('Runs when a or b changes', state.a, state.b);
+  }, [state.a, state.b]);
+
+  return <div />;
+}```
+
+````

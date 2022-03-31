@@ -23,10 +23,7 @@ export default function MyComponent(props) {
     newItemName: 'New item',
     list: ['hello', 'world'],
     addItem() {
-      state.list = [
-        ...state.list,
-        state.newItemName
-      ];
+      state.list = [...state.list, state.newItemName];
     },
   });
 

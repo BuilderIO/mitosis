@@ -46,7 +46,7 @@ The best way to learn Mitosis is to clone our [example project](./examples/basic
 
 ## Docs
 
-Curious about how Mitosis code works under the hood, and how to use it? Learn more [in the overview](docs/overview.md).
+Curious about how Mitosis code works under the hood, and how to use it? Learn more [in our in-depth docs](docs/).
 
 ## Why use Mitosis?
 
