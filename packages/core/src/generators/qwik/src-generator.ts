@@ -158,12 +158,13 @@ export class SrcBuilder {
       value.startsWith(')') ||
       value.startsWith(':') ||
       value.startsWith(']') ||
-      value.startsWith('}')
+      value.startsWith('}') ||
+      value.startsWith('?')
     ) {
-      // clear last ',';
+      // clear last ',' or ';';
       let index = this.buf.length - 1;
       let ch: string = this.buf[index];
-      if (ch.endsWith(',')) {
+      if (ch.endsWith(',') || ch.endsWith(';')) {
         ch = ch.substring(0, ch.length - 1);
         this.buf[index] = ch;
       }
@@ -224,6 +225,7 @@ export class SrcBuilder {
     props: Record<string, any>,
     bindings: Record<string, any>,
   ) {
+    const self = this;
     if (symbol == 'div' && ('href' in props || 'href' in bindings)) {
       // HACK: if we contain href then we are `a` not `div`
       symbol = 'a';
@@ -239,12 +241,7 @@ export class SrcBuilder {
         !ignoreKey(key) &&
         !Object.prototype.hasOwnProperty.call(bindings, key)
       ) {
-        this.isJSX
-          ? this.emit(' ', key)
-          : this.emit(possiblyQuotePropertyName(key));
-        this.isJSX ? this.emit('=') : this.emit(':');
-        this.emit(quote(props[key]));
-        !this.isJSX && this.emit(',');
+        emitJsxProp(possiblyQuotePropertyName(key), quote(props[key]));
       }
     }
     for (const rawKey in bindings) {
@@ -254,10 +251,6 @@ export class SrcBuilder {
       ) {
         let binding = bindings[rawKey];
         const key = lastProperty(rawKey);
-        this.isJSX
-          ? this.emit(' ', key)
-          : this.emit(possiblyQuotePropertyName(key));
-        this.isJSX ? this.emit('={') : this.emit(':');
         if (binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
           // We assume that when the binding content equals prop content.
@@ -265,14 +258,34 @@ export class SrcBuilder {
         } else if (typeof binding == 'string' && isStatement(binding)) {
           binding = iif(binding);
         }
-        this.emit(binding);
-        this.isJSX ? this.emit('}') : this.emit(',');
+        if (key === 'hide' || key === 'show') {
+          let [truthy, falsy] =
+            key == 'hide' ? ['"none"', '"inherit"'] : ['"inherit"', '"none"'];
+          emitJsxProp('style', function (this: SrcBuilder) {
+            this.emit('{display:', binding, '?', truthy, ':', falsy, '}');
+          });
+        } else {
+          emitJsxProp(possiblyQuotePropertyName(key), binding);
+        }
       }
     }
     if (this.isJSX) {
       this.emit('>');
     } else {
       this.emit('},');
+    }
+
+    function emitJsxProp(key: string, value: any) {
+      if (self.isJSX) {
+        self.emit(' ', key, '=');
+        if (typeof value == 'string' && value.startsWith('"')) {
+          self.emit(value);
+        } else {
+          self.emit('{', value, '}');
+        }
+      } else {
+        self.emit(key, ':', value, ',');
+      }
     }
   }
 

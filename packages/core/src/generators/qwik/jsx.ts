@@ -51,6 +51,11 @@ export function renderJSXNodes(
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
+            Array.from(directive.matchAll(/(__[^_]+__)/g)).forEach((match) => {
+              const name = match[0];
+              const code = DIRECTIVES[name];
+              typeof code == 'string' && directives.set(name, code);
+            });
             if (file.module !== 'med') {
               file.import('./med.js', childName);
             }
@@ -65,9 +70,16 @@ export function renderJSXNodes(
           }
           let props: Record<string, any> = child.properties;
           const css = child.bindings.css;
+          const specialBindings: Record<string, any> = {};
           if (css) {
             props = { ...props };
-            props.class = addClass(styles.get(css)!.CLASS_NAME, props.class);
+            const styleProps = styles.get(css)!;
+            const imageMaxWidth = childName == 'Image' && styleProps.maxWidth;
+            if (imageMaxWidth && imageMaxWidth.endsWith('px')) {
+              // special case for Images. We want to make sure that we include the maxWidth in a srcset
+              specialBindings.srcsetSizes = Number.parseInt(imageMaxWidth);
+            }
+            props.class = addClass(styleProps.CLASS_NAME, props.class);
           }
           const symbolBindings: Record<string, string> = {};
           const bindings = rewriteHandlers(
@@ -79,6 +91,7 @@ export function renderJSXNodes(
           this.jsxBegin(childName, props, {
             ...bindings,
             ...parentSymbolBindings,
+            ...specialBindings,
           });
           renderJSXNodes(
             file,

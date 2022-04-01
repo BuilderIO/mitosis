@@ -4,7 +4,7 @@ exports[`qwik Accordion 1`] = `
 Object {
   "high.jsx": "",
   "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.csw5022{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;align-items:stretch;}.csanagh{margin-top:10px;position:relative;display:flex;align-items:stretch;flex-direction:column;padding-bottom:10px;}.c4qyc1p{position:relative;display:flex;align-items:stretch;flex-direction:column;margin-top:10px;padding-bottom:10px;}.crwdrpw{text-align:left;display:flex;flex-direction:column;}.ctcw2m4{padding-top:50px;text-align:left;display:flex;flex-direction:column;padding-bottom:50px;}\`;
+export const MyComponent_styles = \`.csw5022{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;align-items:stretch}.csanagh{margin-top:10px;position:relative;display:flex;align-items:stretch;flex-direction:column;padding-bottom:10px}.c4qyc1p{position:relative;display:flex;align-items:stretch;flex-direction:column;margin-top:10px;padding-bottom:10px}.crwdrpw{text-align:left;display:flex;flex-direction:column}.ctcw2m4{padding-top:50px;text-align:left;display:flex;flex-direction:column;padding-bottom:50px}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return (
@@ -227,7 +227,7 @@ exports[`qwik For 1`] = `
 Object {
   "high.jsx": "",
   "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.cvdfnp5{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:0px;padding-left:20px;padding-right:20px;padding-top:50px;padding-bottom:50px;width:100vw;margin-left:calc(50% - 50vw);}.cz5wnof{width:100%;align-self:stretch;flex-grow:1;box-sizing:border-box;max-width:1200px;display:flex;flex-direction:column;align-items:stretch;margin-left:auto;margin-right:auto;}.cdrk993{text-align:center;}\`;
+export const MyComponent_styles = \`.cvdfnp5{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:0px;padding-left:20px;padding-right:20px;padding-top:50px;padding-bottom:50px;width:100vw;margin-left:calc(50% - 50vw)}.cz5wnof{width:100%;align-self:stretch;flex-grow:1;box-sizing:border-box;max-width:1200px;display:flex;flex-direction:column;align-items:stretch;margin-left:auto;margin-right:auto}.cdrk993{text-align:center}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return (
@@ -274,39 +274,82 @@ export const MyComponent = componentQrl(
 
 exports[`qwik Image 1`] = `
 Object {
-  "high.js": "",
-  "low.js": "import { Image } from \\"./med.js\\";
-import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden;}\`;
-export const MyComponent_onRender = () => {
+  "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+export const MyComponent_onClick_0 = () => {
   const state = useLexicalScope()[0];
-  return h(Image, {
-    image:
-      \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b\\",
-    backgroundSize: \\"cover\\",
-    backgroundPosition: \\"center\\",
-    class: \\"cvk52jt\\",
-    lazy: true,
-    fitContent: true,
-    aspectRatio: 1,
-    height: 1300,
-    width: 1300,
-  });
+  try {
+    return (state.myState = \\"changed value\\");
+  } catch (err) {
+    console.warn(\\"Builder code error\\", err);
+  }
 };
 ",
-  "med.js": "import { componentQrl, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
+  "low.js": "",
+  "med.js": "import {
+  Fragment,
+  componentQrl,
+  h,
+  qrl,
+  useLexicalScope,
+  withScopedStylesQrl,
+} from \\"@builder.io/qwik\\";
+export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const MyComponent_onMount = (state) => {
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
+  if (state.myState === undefined) state.myState = \\"initialValue\\";
+  withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
+  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
 };
 export const MyComponent = componentQrl(
   qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
 );
+export const MyComponent_onRender = () => {
+  const state = useLexicalScope()[0];
+  return h(
+    Fragment,
+    null,
+    h(Image, {
+      image:
+        \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160\\",
+      backgroundSize: \\"cover\\",
+      backgroundPosition: \\"center\\",
+      srcset:
+        \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w\\",
+      sizes: \\"(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw\\",
+      class: \\"cvk52jt\\",
+      onClickQrl: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [state]),
+      lazy: false,
+      fitContent: true,
+      aspectRatio: 1,
+      height: 1300,
+      width: 1300,
+    }),
+    h(
+      \\"div\\",
+      { class: \\"cjrqfb1\\" },
+      h(\\"div\\", {
+        class: \\"builder-text\\",
+        innerHTML: (() => {
+          try {
+            var _virtual_index = state.myState;
+            return _virtual_index;
+          } catch (err) {
+            console.warn(\\"Builder code error\\", err);
+          }
+        })(),
+      })
+    )
+  );
+};
 export const Image = function Image(props) {
+  var _a;
   var jsx = props.children || [];
   var image = props.image;
   if (image) {
-    var isBuilderIoImage = !!(image || \\"\\").match(/builder\\\\.io/);
+    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isPixel =
+      (_a = props.builderBlock) === null || _a === void 0
+        ? void 0
+        : _a.id.startsWith(\\"builder-pixel-\\");
     var imgProps = {
       src: props.image,
       style:
@@ -318,15 +361,17 @@ export const Image = function Image(props) {
           : \\"\\"),
       sizes: props.sizes,
       alt: props.altText,
-      loading: props.lazy ? \\"lazy\\" : undefined,
+      role: !props.altText ? \\"presentation\\" : undefined,
+      loading: isPixel ? \\"eager\\" : \\"lazy\\",
       srcset: undefined,
     };
     if (isBuilderIoImage) {
+      image = updateQueryParam(image, \\"format\\", \\"webp\\");
       var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+        .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
         .map(function (size) {
           return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
-        .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -355,7 +400,7 @@ export const Image = function Image(props) {
   var children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? \\"a\\" : \\"div\\",
-    { href: props.href, class: props.class },
+    __passThroughProps__({ href: props.href, class: props.class }, props),
     children
   );
   function updateQueryParam(uri, key, value) {
@@ -372,6 +417,20 @@ export const Image = function Image(props) {
     }
     return uri + separator + key + \\"=\\" + encodeURIComponent(value);
   }
+};
+export const __passThroughProps__ = function __passThroughProps__(
+  dstProps,
+  srcProps
+) {
+  for (var key in srcProps) {
+    if (
+      Object.prototype.hasOwnProperty.call(srcProps, key) &&
+      ((key.startsWith(\\"on\\") && key.endsWith(\\"Qrl\\")) || key == \\"style\\")
+    ) {
+      dstProps[key] = srcProps[key];
+    }
+  }
+  return dstProps;
 };
 ",
 }
@@ -379,39 +438,82 @@ export const Image = function Image(props) {
 
 exports[`qwik Image.slow 1`] = `
 Object {
-  "high.js": "",
-  "low.js": "import { Image } from \\"./med.js\\";
-import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden;}\`;
-export const MyComponent_onRender = () => {
+  "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+export const MyComponent_onClick_0 = () => {
   const state = useLexicalScope()[0];
-  return h(Image, {
-    image:
-      \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b\\",
-    backgroundSize: \\"cover\\",
-    backgroundPosition: \\"center\\",
-    class: \\"cvk52jt\\",
-    lazy: true,
-    fitContent: true,
-    aspectRatio: 1,
-    height: 1300,
-    width: 1300,
-  });
+  try {
+    return (state.myState = \\"changed value\\");
+  } catch (err) {
+    console.warn(\\"Builder code error\\", err);
+  }
 };
 ",
-  "med.js": "import { componentQrl, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
+  "low.js": "",
+  "med.js": "import {
+  Fragment,
+  componentQrl,
+  h,
+  qrl,
+  useLexicalScope,
+  withScopedStylesQrl,
+} from \\"@builder.io/qwik\\";
+export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const MyComponent_onMount = (state) => {
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
+  if (state.myState === undefined) state.myState = \\"initialValue\\";
+  withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
+  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
 };
 export const MyComponent = componentQrl(
   qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
 );
+export const MyComponent_onRender = () => {
+  const state = useLexicalScope()[0];
+  return h(
+    Fragment,
+    null,
+    h(Image, {
+      image:
+        \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160\\",
+      backgroundSize: \\"cover\\",
+      backgroundPosition: \\"center\\",
+      srcset:
+        \\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w\\",
+      sizes: \\"(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw\\",
+      class: \\"cvk52jt\\",
+      onClickQrl: qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [state]),
+      lazy: false,
+      fitContent: true,
+      aspectRatio: 1,
+      height: 1300,
+      width: 1300,
+    }),
+    h(
+      \\"div\\",
+      { class: \\"cjrqfb1\\" },
+      h(\\"div\\", {
+        class: \\"builder-text\\",
+        innerHTML: (() => {
+          try {
+            var _virtual_index = state.myState;
+            return _virtual_index;
+          } catch (err) {
+            console.warn(\\"Builder code error\\", err);
+          }
+        })(),
+      })
+    )
+  );
+};
 export const Image = function Image(props) {
+  var _a;
   var jsx = props.children || [];
   var image = props.image;
   if (image) {
-    var isBuilderIoImage = !!(image || \\"\\").match(/builder\\\\.io/);
+    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isPixel =
+      (_a = props.builderBlock) === null || _a === void 0
+        ? void 0
+        : _a.id.startsWith(\\"builder-pixel-\\");
     var imgProps = {
       src: props.image,
       style:
@@ -423,15 +525,17 @@ export const Image = function Image(props) {
           : \\"\\"),
       sizes: props.sizes,
       alt: props.altText,
-      loading: props.lazy ? \\"lazy\\" : undefined,
+      role: !props.altText ? \\"presentation\\" : undefined,
+      loading: isPixel ? \\"eager\\" : \\"lazy\\",
       srcset: undefined,
     };
     if (isBuilderIoImage) {
+      image = updateQueryParam(image, \\"format\\", \\"webp\\");
       var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+        .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
         .map(function (size) {
           return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
-        .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -460,7 +564,7 @@ export const Image = function Image(props) {
   var children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? \\"a\\" : \\"div\\",
-    { href: props.href, class: props.class },
+    __passThroughProps__({ href: props.href, class: props.class }, props),
     children
   );
   function updateQueryParam(uri, key, value) {
@@ -477,6 +581,20 @@ export const Image = function Image(props) {
     }
     return uri + separator + key + \\"=\\" + encodeURIComponent(value);
   }
+};
+export const __passThroughProps__ = function __passThroughProps__(
+  dstProps,
+  srcProps
+) {
+  for (var key in srcProps) {
+    if (
+      Object.prototype.hasOwnProperty.call(srcProps, key) &&
+      ((key.startsWith(\\"on\\") && key.endsWith(\\"Qrl\\")) || key == \\"style\\")
+    ) {
+      dstProps[key] = srcProps[key];
+    }
+  }
+  return dstProps;
 };
 ",
 }
@@ -490,7 +608,7 @@ Object {
   "low.cjs": "const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
 const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
-exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;}\`;
+exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 exports.MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return h(
@@ -543,7 +661,7 @@ Object {
 ",
   "low.js": "import { CoreButton } from \\"./med.js\\";
 import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer;}\`;
+export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return h(CoreButton, {
@@ -569,16 +687,24 @@ export const CoreButton = function CoreButton(props) {
     target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
     class: props.class,
   };
-  for (var key in props) {
+  return h(
+    hasLink ? \\"a\\" : props.tagName$ || \\"span\\",
+    __passThroughProps__(hProps, props)
+  );
+};
+export const __passThroughProps__ = function __passThroughProps__(
+  dstProps,
+  srcProps
+) {
+  for (var key in srcProps) {
     if (
-      Object.prototype.hasOwnProperty.call(props, key) &&
-      key.startsWith(\\"on\\") &&
-      key.endsWith(\\"Qrl\\")
+      Object.prototype.hasOwnProperty.call(srcProps, key) &&
+      ((key.startsWith(\\"on\\") && key.endsWith(\\"Qrl\\")) || key == \\"style\\")
     ) {
-      hProps[key] = props[key];
+      dstProps[key] = srcProps[key];
     }
   }
-  return h(hasLink ? \\"a\\" : props.tagName$ || \\"span\\", hProps);
+  return dstProps;
 };
 ",
 }
@@ -601,7 +727,7 @@ Object {
   "high.jsx": "",
   "low.jsx": "import { ComponentD187055AF171488FAD843ACF045D6BF7 } from \\"./med.js\\";
 import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`.cj49hqu{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;height:auto;background-color:rgba(227, 227, 227, 1);border-radius:5px;border-style:solid;border-color:rgb(0, 0, 0);border-width:1px;padding-bottom:30px;}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;}\`;
+export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`.cj49hqu{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;height:auto;background-color:rgba(227, 227, 227, 1);border-radius:5px;border-style:solid;border-color:rgb(0, 0, 0);border-width:1px;padding-bottom:30px}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = () => {
   const state = useLexicalScope()[0];
   return (
@@ -622,7 +748,7 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = () => {
     </div>
   );
 };
-export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;}\`;
+export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return (
@@ -696,9 +822,9 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik component inputs 1`] = `Object {}`;
+exports[`qwik component component inputs 1`] = `Object {}`;
 
-exports[`qwik component inputs 2`] = `
+exports[`qwik component component inputs 2`] = `
 Object {
   "high.cjsx": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 exports.MyComponent_onClick_0 = () => {
@@ -717,7 +843,7 @@ const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
 const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
-exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;}.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer;}\`;
+exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
 exports.MyComponent_onMount = (state) => {
   if (state.data === undefined) state.data = 0;
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
@@ -757,17 +883,23 @@ const CoreButton = (exports.CoreButton = function CoreButton(props) {
     target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
     class: props.class,
   };
-  for (var key in props) {
-    if (
-      Object.prototype.hasOwnProperty.call(props, key) &&
-      key.startsWith(\\"on\\") &&
-      key.endsWith(\\"Qrl\\")
-    ) {
-      hProps[key] = props[key];
-    }
-  }
-  return h(hasLink ? \\"a\\" : props.tagName$ || \\"span\\", hProps);
+  return h(
+    hasLink ? \\"a\\" : props.tagName$ || \\"span\\",
+    __passThroughProps__(hProps, props)
+  );
 });
+const __passThroughProps__ = (exports.__passThroughProps__ =
+  function __passThroughProps__(dstProps, srcProps) {
+    for (var key in srcProps) {
+      if (
+        Object.prototype.hasOwnProperty.call(srcProps, key) &&
+        ((key.startsWith(\\"on\\") && key.endsWith(\\"Qrl\\")) || key == \\"style\\")
+      ) {
+        dstProps[key] = srcProps[key];
+      }
+    }
+    return dstProps;
+  });
 ",
 }
 `;
@@ -776,7 +908,7 @@ exports[`qwik hello_world stylesheet 1`] = `
 Object {
   "high.jsx": "",
   "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.crt27f8{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:123px;line-height:normal;height:auto;text-align:center;margin-left:auto;margin-right:auto;}\`;
+export const MyComponent_styles = \`.crt27f8{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:123px;line-height:normal;height:auto;text-align:center;margin-left:auto;margin-right:auto}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return (
@@ -805,7 +937,7 @@ Object {
   "high.js": "",
   "low.js": "import { Symbol1 } from \\"./med.js\\";
 import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;}.cxvcn5v{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;padding-top:1em;padding-bottom:1em;font-weight:700;font-size:24px;}\`;
+export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}.cxvcn5v{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;padding-top:1em;padding-bottom:1em;font-weight:700;font-size:24px}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return h(
@@ -835,11 +967,202 @@ export const MyComponent = componentQrl(
 }
 `;
 
+exports[`qwik show-hide 1`] = `Object {}`;
+
+exports[`qwik show-hide 2`] = `
+Object {
+  "high.jsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+export const MyComponent_onClick_0 = () => {
+  const state = useLexicalScope()[0];
+  try {
+    return (state.visible = !state.visible);
+  } catch (err) {
+    console.warn(\\"Builder code error\\", err);
+  }
+};
+",
+  "low.jsx": "",
+  "med.jsx": "import {
+  Fragment,
+  componentQrl,
+  h,
+  qrl,
+  useLexicalScope,
+  withScopedStylesQrl,
+} from \\"@builder.io/qwik\\";
+export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c837pqv{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;width:100%;min-height:20px;min-width:20px;overflow:hidden}\`;
+export const MyComponent_onMount = (state) => {
+  if (state.visible === undefined) state.visible = false;
+  withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
+  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
+};
+export const MyComponent = componentQrl(
+  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+);
+export const MyComponent_onRender = () => {
+  const state = useLexicalScope()[0];
+  return (
+    <>
+      <CoreButton
+        text=\\"Toggle\\"
+        class=\\"c9nzze9\\"
+        onClickQrl={qrl(\\"./high.js\\", \\"MyComponent_onClick_0\\", [state])}
+      ></CoreButton>
+      {state.visible ? (
+        <div class=\\"cjrqfb1\\">
+          <div
+            innerHTML=\\"<p>Show when visible=true</p>\\"
+            class=\\"builder-text\\"
+          ></div>
+        </div>
+      ) : null}
+      <div
+        class=\\"cjrqfb1\\"
+        style={{
+          display: (() => {
+            var _virtual_index = state.visible;
+            return _virtual_index;
+          })()
+            ? \\"none\\"
+            : \\"inherit\\",
+        }}
+      >
+        <div
+          innerHTML=\\"<p>Show when visible=false</p>\\"
+          class=\\"builder-text\\"
+        ></div>
+      </div>
+      <Image
+        image=\\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160\\"
+        backgroundSize=\\"cover\\"
+        backgroundPosition=\\"center\\"
+        sizes=\\"(max-width: 638px) 94vw, (max-width: 998px) 96vw, 83vw\\"
+        srcset=\\"https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=100 100w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=200 200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=400 400w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=800 800w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1200 1200w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1600 1600w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=2000 2000w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=1160 1160w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=598 598w, https://cdn.builder.io/api/v1/image/assets%2F23dfd7cef1104af59f281d58ec525923%2F4ecf7b7554464b0183ab8250f67e797b?width=958 958w\\"
+        class=\\"c837pqv\\"
+        style={{ display: visible ? \\"none\\" : \\"inherit\\" }}
+        lazy={false}
+        fitContent={true}
+        aspectRatio={1}
+        height={1300}
+        width={1300}
+      ></Image>
+    </>
+  );
+};
+export const CoreButton = function CoreButton(props) {
+  var hasLink = !!props.link;
+  var hProps = {
+    innerHTML: props.text || \\"\\",
+    href: props.link,
+    target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
+    class: props.class,
+  };
+  return h(
+    hasLink ? \\"a\\" : props.tagName$ || \\"span\\",
+    __passThroughProps__(hProps, props)
+  );
+};
+export const __passThroughProps__ = function __passThroughProps__(
+  dstProps,
+  srcProps
+) {
+  for (var key in srcProps) {
+    if (
+      Object.prototype.hasOwnProperty.call(srcProps, key) &&
+      ((key.startsWith(\\"on\\") && key.endsWith(\\"Qrl\\")) || key == \\"style\\")
+    ) {
+      dstProps[key] = srcProps[key];
+    }
+  }
+  return dstProps;
+};
+export const Image = function Image(props) {
+  var _a;
+  var jsx = props.children || [];
+  var image = props.image;
+  if (image) {
+    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isPixel =
+      (_a = props.builderBlock) === null || _a === void 0
+        ? void 0
+        : _a.id.startsWith(\\"builder-pixel-\\");
+    var imgProps = {
+      src: props.image,
+      style:
+        \\"object-fit:\\"
+          .concat(props.backgroundSize || \\"cover\\", \\";object-position:\\")
+          .concat(props.backgroundPosition || \\"center\\", \\";\\") +
+        (props.aspectRatio
+          ? \\"position:absolute;height:100%;width:100%;top:0;left:0\\"
+          : \\"\\"),
+      sizes: props.sizes,
+      alt: props.altText,
+      role: !props.altText ? \\"presentation\\" : undefined,
+      loading: isPixel ? \\"eager\\" : \\"lazy\\",
+      srcset: undefined,
+    };
+    if (isBuilderIoImage) {
+      image = updateQueryParam(image, \\"format\\", \\"webp\\");
+      var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+        .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
+        .map(function (size) {
+          return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
+        })
+        .join(\\",\\");
+      imgProps.srcset = srcset;
+      jsx = jsx = [
+        h(\\"picture\\", {}, [
+          h(\\"source\\", { type: \\"image/webp\\", srcset: srcset }),
+          h(\\"img\\", imgProps, jsx),
+        ]),
+      ];
+    } else {
+      jsx = [h(\\"img\\", imgProps, jsx)];
+    }
+    if (
+      props.aspectRatio &&
+      !(props.fitContent && props.children && props.children.length)
+    ) {
+      var sizingDiv = h(\\"div\\", {
+        class: \\"builder-image-sizer\\",
+        style: \\"width:100%;padding-top:\\".concat(
+          (props.aspectRatio || 1) * 100,
+          \\"%;pointer-events:none;font-size:0\\"
+        ),
+      });
+      jsx.push(sizingDiv);
+    }
+  }
+  var children = props.children ? [jsx].concat(props.children) : [jsx];
+  return h(
+    props.href ? \\"a\\" : \\"div\\",
+    __passThroughProps__({ href: props.href, class: props.class }, props),
+    children
+  );
+  function updateQueryParam(uri, key, value) {
+    if (uri === void 0) {
+      uri = \\"\\";
+    }
+    var re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
+    var separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
+    if (uri.match(re)) {
+      return uri.replace(
+        re,
+        \\"$1\\" + key + \\"=\\" + encodeURIComponent(value) + \\"$2\\"
+      );
+    }
+    return uri + separator + key + \\"=\\" + encodeURIComponent(value);
+  }
+};
+",
+}
+`;
+
 exports[`qwik svg 1`] = `
 Object {
   "high.js": "",
   "low.js": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_styles = \`.c8xlkz3{display:flex;flex-direction:column;align-items:stretch;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:auto;margin-bottom:auto;}\`;
+export const MyComponent_styles = \`.c8xlkz3{display:flex;flex-direction:column;align-items:stretch;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:auto;margin-bottom:auto}\`;
 export const MyComponent_onRender = () => {
   const state = useLexicalScope()[0];
   return h(
@@ -943,13 +1266,74 @@ exports.Todo_onRender = () => {
 
 exports[`qwik todo Todo.js 1`] = `
 Object {
-  "high.js": "import{useEvent,useLexicalScope}from\\"@builder.io/qwik\\";export const Todo_onClick_0=()=>{const state=useLexicalScope()[0];
-  state.toggle();};export const Todo_onDblClick_1=()=>{const state=useLexicalScope()[0];
-  state.editing = true;};export const Todo_onClick_2=()=>{
-  todosState.todos.splice(todosState.todos.indexOf(props.todo));};export const Todo_onBlur_3=()=>{const state=useLexicalScope()[0];
-  state.editing = false;};export const Todo_onKeyUp_4=()=>{{const event=useEvent();props.todo.text = event.target.value}};",
+  "high.js": "import { useEvent, useLexicalScope } from \\"@builder.io/qwik\\";
+export const Todo_onClick_0 = () => {
+  const state = useLexicalScope()[0];
+  state.toggle();
+};
+export const Todo_onDblClick_1 = () => {
+  const state = useLexicalScope()[0];
+  state.editing = true;
+};
+export const Todo_onClick_2 = () => {
+  todosState.todos.splice(todosState.todos.indexOf(props.todo));
+};
+export const Todo_onBlur_3 = () => {
+  const state = useLexicalScope()[0];
+  state.editing = false;
+};
+export const Todo_onKeyUp_4 = () => {
+  {
+    const event = useEvent();
+    props.todo.text = event.target.value;
+  }
+};
+",
   "low.js": "",
-  "med.js": "import{componentQrl,h,qrl,useLexicalScope}from\\"@builder.io/qwik\\";export const Todo_onMount=(state)=>{return qrl(\\"./med.js\\",\\"Todo_onRender\\",[state]);};export const Todo=componentQrl(qrl(\\"./med.js\\",\\"Todo_onMount\\",[]));export const Todo_onRender=()=>{const state=useLexicalScope()[0];return (h(\\"li\\",{class:\`\${props.todo.completed ? 'completed' : ''} \${state.editing ? 'editing' : ''}\`},h(\\"div\\",{class:\\"view\\"},h(\\"input\\",{type:\\"checkbox\\",class:\\"toggle\\",checked:props.todo.completed,onClickQrl:qrl(\\"./high.js\\",\\"Todo_onClick_0\\",[state])}),h(\\"label\\",{onDblClickQrl:qrl(\\"./high.js\\",\\"Todo_onDblClick_1\\",[state])},props.todo.text),h(\\"button\\",{class:\\"destroy\\",onClickQrl:qrl(\\"./high.js\\",\\"Todo_onClick_2\\",[state])})),state.editing?h(\\"input\\",{class:\\"edit\\",value:props.todo.text,onBlurQrl:qrl(\\"./high.js\\",\\"Todo_onBlur_3\\",[state]),onKeyUpQrl:qrl(\\"./high.js\\",\\"Todo_onKeyUp_4\\",[state])}):null));};",
+  "med.js": "import { componentQrl, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+export const Todo_onMount = (state) => {
+  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [state]);
+};
+export const Todo = componentQrl(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
+export const Todo_onRender = () => {
+  const state = useLexicalScope()[0];
+  return h(
+    \\"li\\",
+    {
+      class: \`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
+        state.editing ? \\"editing\\" : \\"\\"
+      }\`,
+    },
+    h(
+      \\"div\\",
+      { class: \\"view\\" },
+      h(\\"input\\", {
+        type: \\"checkbox\\",
+        class: \\"toggle\\",
+        checked: props.todo.completed,
+        onClickQrl: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [state]),
+      }),
+      h(
+        \\"label\\",
+        { onDblClickQrl: qrl(\\"./high.js\\", \\"Todo_onDblClick_1\\", [state]) },
+        props.todo.text
+      ),
+      h(\\"button\\", {
+        class: \\"destroy\\",
+        onClickQrl: qrl(\\"./high.js\\", \\"Todo_onClick_2\\", [state]),
+      })
+    ),
+    state.editing
+      ? h(\\"input\\", {
+          class: \\"edit\\",
+          value: props.todo.text,
+          onBlurQrl: qrl(\\"./high.js\\", \\"Todo_onBlur_3\\", [state]),
+          onKeyUpQrl: qrl(\\"./high.js\\", \\"Todo_onKeyUp_4\\", [state]),
+        })
+      : null
+  );
+};
+",
 }
 `;
 
