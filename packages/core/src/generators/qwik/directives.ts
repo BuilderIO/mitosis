@@ -41,23 +41,32 @@ declare const h: (
   children?: any[],
 ) => any;
 
-export function Image(props: {
-  href?: string;
+interface ImageProps {
+  altText?: string;
   image?: string;
+  href?: string;
+  height?: number;
+  width?: number;
+  builderBlock?: any;
+  attributes?: any;
+  sizes?: string;
+  srcsetSizes?: string;
+  srcset?: string;
   backgroundSize?: string;
   backgroundPosition?: string;
-  sizes?: string;
-  altText?: string;
   fitContent?: boolean;
   aspectRatio?: number;
   lazy?: boolean;
   class?: string;
   children?: any[];
-}) {
+}
+
+export function Image(props: ImageProps) {
   let jsx: any[] = props.children || [];
-  const image = props.image;
+  let image = props.image;
   if (image) {
-    const isBuilderIoImage = !!(image || '').match(/builder\.io/);
+    const isBuilderIoImage = !!(image || '').match(/\.builder\.io/);
+    const isPixel = props.builderBlock?.id.startsWith('builder-pixel-');
     const imgProps = {
       src: props.image,
       style:
@@ -69,15 +78,17 @@ export function Image(props: {
           : ''),
       sizes: props.sizes,
       alt: props.altText,
-      loading: props.lazy ? 'lazy' : undefined,
+      role: !props.altText ? 'presentation' : undefined,
+      loading: isPixel ? 'eager' : 'lazy',
       srcset: undefined as string | undefined,
     };
     if (isBuilderIoImage) {
+      image = updateQueryParam(image, 'format', 'webp');
       const srcset = ['100', '200', '400', '800', '1200', '1600', '2000']
+        .concat(props.srcsetSizes ? String(props.srcsetSizes).split(' ') : [])
         .map((size) => {
           return updateQueryParam(image, 'width', size) + ' ' + size + 'w';
         })
-        .concat([image])
         .join(', ');
       imgProps.srcset = srcset;
       jsx = jsx = [
