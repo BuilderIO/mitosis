@@ -47,7 +47,7 @@ const command: GluegunCommand = {
     }
 
     const mitosisConfig = getMitosisConfig();
-    const generatorOptions = mitosisConfig.options?.[to];
+    const generatorOptions = mitosisConfig?.options?.[to];
 
     const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
       ...generatorOptions,
