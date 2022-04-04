@@ -52,7 +52,10 @@ const command: GluegunCommand = {
     const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
       ...generatorOptions,
       prettier: opts.prettier ?? true,
-      plugins: plugins,
+      plugins: [
+        ...plugins,
+        ...generatorOptions.plugins
+      ],
       format: opts.format,
       prefix: opts.prefix,
       includeIds: opts.includeIds,
