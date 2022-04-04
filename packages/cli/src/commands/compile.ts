@@ -10,6 +10,7 @@ import {
 import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
 import { UnionToIntersection } from '../types';
+import { getMitosisConfig } from 'src/helpers/get-mitosis-config';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
@@ -45,7 +46,11 @@ const command: GluegunCommand = {
       plugins.push(compileAwayBuilderComponents());
     }
 
+    const mitosisConfig = getMitosisConfig();
+    const generatorOptions = mitosisConfig.options?.[to];
+
     const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
+      ...generatorOptions,
       prettier: opts.prettier ?? true,
       plugins: plugins,
       format: opts.format,
@@ -53,9 +58,7 @@ const command: GluegunCommand = {
       includeIds: opts.includeIds,
       stylesType: opts.styles,
       stateType: opts.state,
-      reactive: opts.reactive,
       type: opts.type,
-      vueVersion: opts.vueVersion,
       cssNamespace: opts.cssNamespace,
     };
 
