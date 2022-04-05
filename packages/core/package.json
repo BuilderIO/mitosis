@@ -39,8 +39,9 @@
     "test": "jest",
     "build": "tsc --build tsconfig.build.json",
     "clean": "tsc --build --clean tsconfig.build.json",
-    "release:dev": "yarn build && yarn version prerelease && ALLOW_PUBLISH=true yarn npm publish --tag dev",
-    "release:patch": "yarn build && yarn version patch && ALLOW_PUBLISH=true yarn npm publish",
+    "remove-stableVersion": "./scripts/remove-stableVersion.sh",
+    "release:dev": "yarn build && yarn run remove-stableVersion && yarn version prerelease && ALLOW_PUBLISH=true yarn npm publish --tag dev",
+    "release:patch": "yarn build && yarn run remove-stableVersion && yarn version patch && ALLOW_PUBLISH=true yarn npm publish",
     "mitosis-save-artifacts": "node -r esbuild-register ../../scripts/mitosis-save-artifacts.ts",
     "start": "yarn build --watch",
     "script": "ts-node -O '{\"module\": \"commonjs\"}'"
