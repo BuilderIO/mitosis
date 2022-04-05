@@ -10,7 +10,7 @@ import {
 import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
 import { UnionToIntersection } from '../types';
-import { getMitosisConfig } from 'src/helpers/get-mitosis-config';
+import { getMitosisConfig } from '../helpers/get-mitosis-config';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
