@@ -1,4 +1,4 @@
-import { JSON, JSONObject } from './json';
+import { JSONObject } from './json';
 import { MitosisNode } from './mitosis-node';
 
 /**
