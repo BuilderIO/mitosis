@@ -325,11 +325,16 @@ const onUpdatePlugin: Plugin = (options) => ({
             component.state[
               getOnUpdateHookName(index)
             ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
-            return \`${hook.deps
-              ?.slice(1, -1)
-              .split(',')
-              .map((dep) => `\${printOrStringify(${dep.trim()})}`)
-              .join('|')}\`
+            return {
+              ${hook.deps
+                ?.slice(1, -1)
+                .split(',')
+                .map((dep, k) => {
+                  const val = dep.trim();
+                  return `${k}: ${val}`;
+                })
+                .join(',')}
+            }
           }`;
           });
       }
@@ -456,29 +461,12 @@ export const componentToVue =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
-    const needsJsonStringifierHack = component.hooks.onUpdate?.some(
-      (hook) => hook.deps?.length,
-    );
-
     let str = dedent`
     <template>
       ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
-      ${
-        needsJsonStringifierHack
-          ? `
-      const printOrStringify = (x) => {
-        if (typeof x === 'object') {
-          return JSON.stringify(x)
-        } else {
-          return x.toString()
-        }
-      }      
-      `
-          : ''
-      }
       ${
         component.meta.registerComponent
           ? options.registerComponentPrepend ?? ''
