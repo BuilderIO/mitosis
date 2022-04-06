@@ -2,7 +2,7 @@ import fs from 'fs';
 import { MitosisConfig } from '@builder.io/mitosis';
 
 export function getMitosisConfig(): MitosisConfig | null {
-  const path = process.cwd() + '/mitosis.config';
+  const path = process.cwd() + '/mitosis.config.js';
 
   if (fs.existsSync(path)) {
     const module = require(path);
