@@ -1065,6 +1065,14 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script>
+const printOrStringify = (x) => {
+  if (typeof x === \\"object\\") {
+    return JSON.stringify(x);
+  } else {
+    return x.toString();
+  }
+};
+
 export default {
   name: \\"multiple-on-update-with-deps\\",
 
@@ -1081,10 +1089,10 @@ export default {
 
   computed: {
     onUpdateHook0() {
-      return \`\${this.a}|\${this.b}\`;
+      return \`\${printOrStringify(this.a)}|\${printOrStringify(this.b)}\`;
     },
     onUpdateHook1() {
-      return \`\${this.c}|\${this.d}\`;
+      return \`\${printOrStringify(this.c)}|\${printOrStringify(this.d)}\`;
     },
   },
 };
@@ -1133,6 +1141,14 @@ exports[`Vue onUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script>
+const printOrStringify = (x) => {
+  if (typeof x === \\"object\\") {
+    return JSON.stringify(x);
+  } else {
+    return x.toString();
+  }
+};
+
 export default {
   name: \\"on-update-with-deps\\",
 
@@ -1146,7 +1162,7 @@ export default {
 
   computed: {
     onUpdateHook0() {
-      return \`\${this.a}|\${this.b}\`;
+      return \`\${printOrStringify(this.a)}|\${printOrStringify(this.b)}\`;
     },
   },
 };
