@@ -328,7 +328,7 @@ const onUpdatePlugin: Plugin = (options) => ({
             return \`${hook.deps
               ?.slice(1, -1)
               .split(',')
-              .map((dep) => `\${${dep.trim()}}`)
+              .map((dep) => `\${printOrStringify(${dep.trim()})}`)
               .join('|')}\`
           }`;
           });
@@ -456,12 +456,29 @@ export const componentToVue =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
+    const needsJsonStringifierHack = component.hooks.onUpdate?.some(
+      (hook) => hook.deps?.length,
+    );
+
     let str = dedent`
     <template>
       ${template}
     </template>
     <script>
       ${renderPreComponent(component)}
+      ${
+        needsJsonStringifierHack
+          ? `
+      const printOrStringify = (x) => {
+        if (typeof x === 'object') {
+          return JSON.stringify(x)
+        } else {
+          return x.toString()
+        }
+      }      
+      `
+          : ''
+      }
       ${
         component.meta.registerComponent
           ? options.registerComponentPrepend ?? ''
