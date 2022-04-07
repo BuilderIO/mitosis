@@ -325,11 +325,16 @@ const onUpdatePlugin: Plugin = (options) => ({
             component.state[
               getOnUpdateHookName(index)
             ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
-            return \`${hook.deps
-              ?.slice(1, -1)
-              .split(',')
-              .map((dep) => `\${${dep.trim()}}`)
-              .join('|')}\`
+            return {
+              ${hook.deps
+                ?.slice(1, -1)
+                .split(',')
+                .map((dep, k) => {
+                  const val = dep.trim();
+                  return `${k}: ${val}`;
+                })
+                .join(',')}
+            }
           }`;
           });
       }
