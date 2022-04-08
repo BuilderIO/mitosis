@@ -36,6 +36,7 @@
 - [Contribute](#contribute)
 - [Coming soon](#coming-soon)
 - [Community](#community)
+- [ESLint Rules](#eslint-rules)
 - [Related Projects](#related-projects)
 
 ## Getting Started
@@ -101,6 +102,10 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 
 - [Mitosis Discord](https://discord.gg/CQZt8hzZJR)
 - [@Builderio](https://twitter.com/builderio)
+
+## ESLint rules
+
+Checkout our [ESLint plugin](./packages/eslint-plugin/) project for useful rules when developing in Mitosis.
 
 ## Related Projects
 
