@@ -1,6 +1,6 @@
 {
   "name": "@builder.io/eslint-plugin-mitosis",
-  "version": "0.0.2",
+  "version": "0.0.1-0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "license": "MIT",
@@ -19,8 +19,11 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
+    "build:declaration": "tsc --project tsconfig.build.json",
     "start": "tsc -w",
-    "build:declaration": "tsc --project tsconfig.build.json"
+    "remove-stableVersion": "./scripts/remove-stableVersion.sh",
+    "release:dev": "yarn build && yarn run remove-stableVersion && yarn version prerelease && yarn npm publish --tag dev",
+    "release:patch": "yarn build && yarn run remove-stableVersion && yarn version patch && yarn npm publish"
   },
   "files": [
     "dist"
@@ -39,5 +42,6 @@
   "dependencies": {
     "@babel/types": "7.12.6",
     "ts-pattern": "^3.3.5"
-  }
+  },
+  "stableVersion": "0.0.0"
 }
