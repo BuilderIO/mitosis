@@ -44,7 +44,7 @@ export const blockToAngular = (
   }
 
   if (isChildren(json)) {
-    return `<ng-slot></ng-slot>`;
+    return `<ng-content></ng-content>`;
   }
 
   if (json.properties._text) {
