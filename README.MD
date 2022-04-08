@@ -27,7 +27,7 @@
 
 - [Getting Started](#getting-started)
 - [Docs](#docs)
-- [Why use Mitosis?](#why-use-mitosis-)
+- [Why use Mitosis?](#why-use-mitosis)
   - [Component libraries](#component-libraries)
   - [Modern workflows for all platforms](#modern-workflows-for-all-platforms)
   - [JS framework fatigue](#js-framework-fatigue)
