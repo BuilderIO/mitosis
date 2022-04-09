@@ -79,6 +79,11 @@ const rule: Rule.RuleModule = {
                     node: prop as any,
                     message: "Css properties can't be a ternary expression",
                   });
+                } else if (prop.value && types.isMemberExpression(prop.value)) {
+                  context.report({
+                    node: prop as any,
+                    message: "Css properties can't be a member expression",
+                  });
                 }
               }
             },

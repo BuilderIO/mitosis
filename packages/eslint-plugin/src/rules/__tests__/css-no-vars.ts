@@ -63,5 +63,18 @@ ruleTester.run('css-no-vars', rule, {
       code: '<button css={{color: a ? "red" : "green" }} />',
       errors: ["Css properties can't be a ternary expression"],
     },
+    {
+      ...opts,
+      code: '<button css={{backgroundColor: state.red }} />',
+      errors: ["Css properties can't be a member expression"],
+    },
+    {
+      ...opts,
+      code: '<button css={{backgroundColor: state.red, color: red }} />',
+      errors: [
+        "Css properties can't be a member expression",
+        "Css properties can't be a variable",
+      ],
+    },
   ],
 });
