@@ -14,6 +14,7 @@ import {
   MitosisConfig,
   Target,
   Transpiler,
+  componentToSvelte,
 } from '@builder.io/mitosis';
 import dedent from 'dedent';
 import glob from 'fast-glob';
@@ -158,6 +159,8 @@ const getTranspilerForTarget = ({
       return componentToSolid();
     case 'webcomponent':
       return componentToCustomElement(options.options.webcomponent);
+    case 'svelte':
+      return componentToSvelte();
     default:
       // TO-DO: throw instead of `never`
       return null as never;
