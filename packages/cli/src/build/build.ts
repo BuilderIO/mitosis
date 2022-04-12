@@ -103,9 +103,10 @@ async function clean(options: MitosisConfig) {
 
 async function outputOverrides(target: Target, options: MitosisConfig) {
   const kebabTarget = kebabCase(target);
+  const outputDirPath = `${options.overridesDir}/${kebabTarget}`;
   const files = await glob([
-    `${options.overridesDir}/${kebabTarget}/**/*`,
-    `!${options.overridesDir}/${kebabTarget}/node_modules/**/*`,
+    `${outputDirPath}/**/*`,
+    `!${outputDirPath}/node_modules/**/*`,
   ]);
   await Promise.all(
     files.map(async (file) => {
@@ -122,10 +123,7 @@ async function outputOverrides(target: Target, options: MitosisConfig) {
         targetPaths.map((targetPath) =>
           outputFile(
             file
-              .replace(
-                `${options.overridesDir}/${kebabTarget}`,
-                `${options.dest}/${targetPath}`,
-              )
+              .replace(`${outputDirPath}`, `${options.dest}/${targetPath}`)
               .replace(/\.tsx?$/, '.js'),
             contents,
           ),
@@ -167,6 +165,25 @@ const getTranspilerForTarget = ({
   }
 };
 
+const getFileExtensionForTarget = (target: Target) => {
+  switch (target) {
+    case 'vue':
+      return '.vue';
+    case 'swift':
+      return '.swift';
+    default:
+      return '.js';
+  }
+};
+
+const replaceFileExtensionForTarget = ({
+  target,
+  path,
+}: {
+  target: Target;
+  path: string;
+}) => path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
+
 async function outputTsxLiteFiles(
   target: Target,
   files: { path: string; mitosisJson: MitosisComponent }[],
@@ -174,12 +191,12 @@ async function outputTsxLiteFiles(
 ) {
   const kebabTarget = kebabCase(target);
   const output = files.map(async ({ path, mitosisJson }) => {
+    const outputDir = `${options.dest}/${kebabTarget}`;
+
+    // get override file
     const overrideFilePath = `${
       options.overridesDir
-    }/${kebabTarget}/${path.replace(
-      /\.lite\.tsx$/,
-      target === 'vue' ? '.vue' : target === 'swift' ? '.swift' : '.js',
-    )}`;
+    }/${kebabTarget}/${replaceFileExtensionForTarget({ path, target })}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;
@@ -193,101 +210,72 @@ async function outputTsxLiteFiles(
 
     const original = transpiled;
 
-    const solidTranspile = target === 'solid';
-    if (solidTranspile) {
-      transpiled = await transpileSolidFile({
-        contents: transpiled,
-        path,
-        mitosisComponent: mitosisJson,
-      });
-    }
-
-    const esbuildTranspile = target === 'reactNative' || target === 'react';
-    if (esbuildTranspile) {
-      transpiled = await transpile({ path, content: transpiled, target });
-      const registerComponentHook = mitosisJson.meta.registerComponent;
-      if (registerComponentHook) {
-        transpiled = dedent`
+    // perform additional transpilation steps per-target
+    // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
+    switch (target) {
+      case 'solid':
+        transpiled = await transpileSolidFile({
+          contents: transpiled,
+          path,
+          mitosisComponent: mitosisJson,
+        });
+        break;
+      case 'reactNative':
+      case 'react':
+        transpiled = await transpile({ path, content: transpiled, target });
+        const registerComponentHook = mitosisJson.meta.registerComponent;
+        if (registerComponentHook) {
+          transpiled = dedent`
           import { registerComponent } from '../functions/register-component';
-
+          
           ${transpiled}
-
+          
           registerComponent(${mitosisJson.name}, ${json5.stringify(
-          registerComponentHook,
-        )});
-        `;
-      }
+            registerComponentHook,
+          )});
+            `;
+        }
+        break;
     }
-    const vueCompile = target === 'vue';
-    if (vueCompile) {
-      await Promise.all([
+
+    // output file
+    switch (target) {
+      case 'vue':
         // Nuxt
-        (async () => {
-          await outputFile(
-            `${options.dest}/${kebabTarget}/nuxt2/${path.replace(
+        await outputFile(
+          `${outputDir}/nuxt2/${replaceFileExtensionForTarget({
+            path,
+            target,
+          })}})})}`,
+          // TODO: transform to CJS (?)
+          transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1'),
+        );
+        break;
+
+      default:
+        await Promise.all([
+          // this is the default output
+          outputFile(
+            `${options.dest}/${kebabTarget}/${path.replace(
               /\.lite\.tsx$/,
-              '.vue',
+              target === 'swift' ? '.swift' : '.js',
             )}`,
-            // TODO: transform to CJS (?)
-            transpileOptionalChaining(transpiled).replace(
-              /\.lite(['"];)/g,
-              '$1',
-            ),
-          );
-        })(),
-        // Vue 2
-        // (async () => {
-        //   // TODO: subfolders for each of these
-        //   const files = await compileVueFile({
-        //     distDir: options.dest + 'vue/vue2',
-        //     contents: transpileOptionalChaining(transpiled),
-        //     path,
-        //     mitosisComponent: mitosisJson,
-        //     vueVersion: 2,
-        //     id: id,
-        //   })
-        //   await Promise.all(
-        //     files.map((file) => outputFile(file.path, file.contents))
-        //   )
-        // })(),
-        // Vue 3
-        // TODO: add back
-        // (async () => {
-        //   // TODO: subfolders for each of these
-        //   const files = await compileVueFile({
-        //     distDir: options.dest + '/vue/vue3',
-        //     contents: transpiled,
-        //     path,
-        //     mitosisComponent: mitosisJson,
-        //     vueVersion: 3,
-        //     id: id,
-        //   })
-        //   await Promise.all(
-        //     files.map((file) => outputFile(file.path, file.contents))
-        //   )
-        // })(),
-      ]);
-    } else {
-      return await Promise.all([
-        outputFile(
-          `${options.dest}/${kebabTarget}/${path.replace(
-            /\.lite\.tsx$/,
-            target === 'swift' ? '.swift' : '.js',
-          )}`,
-          transpiled,
-        ),
-        ...(target === 'swift'
-          ? []
-          : [
-              outputFile(
-                `${options.dest}/${kebabTarget}/${path.replace(
-                  /\.original\.jsx$/,
-                  '.js',
-                )}`,
-                original,
-              ),
-            ]),
-      ]);
+            transpiled,
+          ),
+          // additional output for swift target
+          ...(target === 'swift'
+            ? []
+            : [
+                outputFile(
+                  `${options.dest}/${kebabTarget}/${path.replace(
+                    /\.original\.jsx$/,
+                    '.js',
+                  )}`,
+                  original,
+                ),
+              ]),
+        ]);
+        break;
     }
   });
   await Promise.all(output);
@@ -301,6 +289,9 @@ function getTargetPaths(target: Target) {
   return targetPaths;
 }
 
+/**
+ * This function will just output the files to the destination directory, without modifying them or running any transpilation.
+ */
 async function outputTsFiles(
   target: Target,
   files: { path: string; output: string }[],
