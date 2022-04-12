@@ -194,14 +194,12 @@ async function outputTsxLiteFiles(
 ) {
   const kebabTarget = kebabCase(target);
   const output = files.map(async ({ path, mitosisJson }) => {
-    const outputDir = `${options.dest}/${kebabTarget}`;
-
     const outputFilePath = replaceFileExtensionForTarget({
       target,
       path,
     });
 
-    // get override file
+    // try to find override file
     const overrideFilePath = `${options.overridesDir}/${kebabTarget}/${outputFilePath}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
@@ -244,7 +242,9 @@ async function outputTsxLiteFiles(
         break;
     }
 
-    // output file
+    const outputDir = `${options.dest}/${kebabTarget}`;
+
+    // output files
     switch (target) {
       case 'vue':
         // Nuxt
@@ -258,19 +258,13 @@ async function outputTsxLiteFiles(
       default:
         await Promise.all([
           // this is the default output
-          outputFile(
-            `${options.dest}/${kebabTarget}/${outputFilePath}`,
-            transpiled,
-          ),
+          outputFile(`${outputDir}/${outputFilePath}`, transpiled),
           // additional output for swift target
           ...(target === 'swift'
             ? []
             : [
                 outputFile(
-                  `${options.dest}/${kebabTarget}/${path.replace(
-                    /\.original\.jsx$/,
-                    '.js',
-                  )}`,
+                  `${outputDir}/${path.replace(/\.original\.jsx$/, '.js')}`,
                   original,
                 ),
               ]),
