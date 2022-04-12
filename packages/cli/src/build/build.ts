@@ -184,6 +184,9 @@ const replaceFileExtensionForTarget = ({
   path: string;
 }) => path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
 
+/**
+ * Transpiles and outputs Mitosis component files.
+ */
 async function outputTsxLiteFiles(
   target: Target,
   files: { path: string; mitosisJson: MitosisComponent }[],
@@ -193,10 +196,13 @@ async function outputTsxLiteFiles(
   const output = files.map(async ({ path, mitosisJson }) => {
     const outputDir = `${options.dest}/${kebabTarget}`;
 
+    const outputFilePath = replaceFileExtensionForTarget({
+      target,
+      path,
+    });
+
     // get override file
-    const overrideFilePath = `${
-      options.overridesDir
-    }/${kebabTarget}/${replaceFileExtensionForTarget({ path, target })}`;
+    const overrideFilePath = `${options.overridesDir}/${kebabTarget}/${outputFilePath}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;
@@ -243,10 +249,7 @@ async function outputTsxLiteFiles(
       case 'vue':
         // Nuxt
         await outputFile(
-          `${outputDir}/nuxt2/${replaceFileExtensionForTarget({
-            path,
-            target,
-          })}})})}`,
+          `${outputDir}/nuxt2/${outputFilePath}`,
           // TODO: transform to CJS (?)
           transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1'),
         );
@@ -256,10 +259,7 @@ async function outputTsxLiteFiles(
         await Promise.all([
           // this is the default output
           outputFile(
-            `${options.dest}/${kebabTarget}/${path.replace(
-              /\.lite\.tsx$/,
-              target === 'swift' ? '.swift' : '.js',
-            )}`,
+            `${options.dest}/${kebabTarget}/${outputFilePath}`,
             transpiled,
           ),
           // additional output for swift target
@@ -290,7 +290,7 @@ function getTargetPaths(target: Target) {
 }
 
 /**
- * This function will just output the files to the destination directory, without modifying them or running any transpilation.
+ * Outputs non-component files to the destination directory, without modifying them.
  */
 async function outputTsFiles(
   target: Target,
@@ -312,6 +312,9 @@ async function outputTsFiles(
   await Promise.all(output);
 }
 
+/**
+ * Transpiles all non-component files, including Context files.
+ */
 async function buildTsFiles(target: Target, options?: MitosisConfig) {
   const tsFiles = await glob(`src/**/*.ts`, {
     cwd: cwd,
@@ -323,9 +326,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
       if (path.endsWith('.context.lite.ts')) {
         // 'foo/bar/my-thing.context.ts' -> 'MyThing'
         const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
-        const context = parseContext(await readFile(path, 'utf8'), {
-          name: name,
-        });
+        const context = parseContext(await readFile(path, 'utf8'), { name });
         if (!context) {
           console.warn('Could not parse context from file', path);
         } else {
