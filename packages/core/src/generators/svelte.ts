@@ -168,7 +168,7 @@ export const componentToSvelte =
     const css = collectCss(json);
     stripMetaProperties(json);
 
-    let dataString = getStateObjectStringFromComponent(json, {
+    const dataString = getStateObjectStringFromComponent(json, {
       data: true,
       functions: false,
       getters: false,
@@ -214,7 +214,7 @@ export const componentToSvelte =
     const props = Array.from(getProps(json));
 
     let str = dedent`
-    <script>
+    <script lang="ts">
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${
         !json.hooks.onUpdate?.length
