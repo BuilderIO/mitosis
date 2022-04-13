@@ -16,12 +16,14 @@ import {
   Transpiler,
   componentToSvelte,
 } from '@builder.io/mitosis';
+import debug from 'debug';
 import dedent from 'dedent';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import * as json5 from 'json5';
 import { camelCase, kebabCase, last, upperFirst } from 'lodash';
 import micromatch from 'micromatch';
+import { logger } from 'src/helpers/logger';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
@@ -150,15 +152,15 @@ const getTranspilerForTarget = ({
     case 'vue':
       return componentToVue(options.options.vue);
     case 'react':
-      return componentToReact();
+      return componentToReact(options.options.react);
     case 'swift':
-      return componentToSwift();
+      return componentToSwift(options.options.swift);
     case 'solid':
-      return componentToSolid();
+      return componentToSolid(options.options.solid);
     case 'webcomponent':
       return componentToCustomElement(options.options.webcomponent);
     case 'svelte':
-      return componentToSvelte();
+      return componentToSvelte(options.options.svelte);
     default:
       // TO-DO: throw instead of `never`
       return null as never;
@@ -171,6 +173,8 @@ const getFileExtensionForTarget = (target: Target) => {
       return '.vue';
     case 'swift':
       return '.swift';
+    case 'svelte':
+      return '.svelte';
     default:
       return '.js';
   }
@@ -193,6 +197,8 @@ async function outputTsxLiteFiles(
   options: MitosisConfig,
 ) {
   const kebabTarget = kebabCase(target);
+  const debugTarget = debug(`mitosis:${target}`);
+  const transpiler = getTranspilerForTarget({ options, target });
   const output = files.map(async ({ path, mitosisJson }) => {
     const outputFilePath = replaceFileExtensionForTarget({
       target,
@@ -205,12 +211,17 @@ async function outputTsxLiteFiles(
       ? await readFile(overrideFilePath, 'utf8')
       : null;
 
-    let transpiled =
-      overrideFile ??
-      getTranspilerForTarget({ options, target })({
-        path,
-        component: mitosisJson,
-      });
+    debugTarget(`transpiling ${path}...`);
+    let transpiled = '';
+
+    try {
+      transpiled = overrideFile ?? transpiler({ path, component: mitosisJson });
+      debugTarget(`Success: transpiled ${path}.`);
+    } catch (error) {
+      debugTarget(`Failure: transpiled ${path}.`);
+      // console.error(error);
+      return;
+    }
 
     const original = transpiled;
 
@@ -240,6 +251,13 @@ async function outputTsxLiteFiles(
             `;
         }
         break;
+
+      case 'vue':
+        // TODO: transform to CJS (?)
+        transpiled = transpileOptionalChaining(transpiled).replace(
+          /\.lite(['"];)/g,
+          '$1',
+        );
     }
 
     const outputDir = `${options.dest}/${kebabTarget}`;
@@ -248,26 +266,18 @@ async function outputTsxLiteFiles(
     switch (target) {
       case 'vue':
         // Nuxt
-        await outputFile(
-          `${outputDir}/nuxt2/${outputFilePath}`,
-          // TODO: transform to CJS (?)
-          transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1'),
-        );
+        await outputFile(`${outputDir}/nuxt2/${outputFilePath}`, transpiled);
         break;
 
       default:
         await Promise.all([
           // this is the default output
           outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-          // additional output for swift target
-          ...(target === 'swift'
+          // output generated component file, before it is minified and transpiled into JS.
+          // we skip these targets because the files would be invalid.
+          ...(target === 'swift' || target === 'svelte'
             ? []
-            : [
-                outputFile(
-                  `${outputDir}/${path.replace(/\.original\.jsx$/, '.js')}`,
-                  original,
-                ),
-              ]),
+            : [outputFile(`${outputDir}/${path}`, original)]),
         ]);
         break;
     }
