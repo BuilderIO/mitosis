@@ -23,6 +23,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { babelTransformCode } from '../helpers/babel-transform';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -194,46 +195,52 @@ export const componentToSvelte =
     const css = collectCss(json);
     stripMetaProperties(json);
 
-    const dataString = getStateObjectStringFromComponent(json, {
-      data: true,
-      functions: false,
-      getters: false,
-      format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
-      keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-    });
-
-    const getterString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: true,
-      functions: false,
-      format: 'variables',
-      keyPrefix: '$: ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(
-          code
-            .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-            .replace(/\)/, ') => '),
-          {
+    const dataString = babelTransformCode(
+      getStateObjectStringFromComponent(json, {
+        data: true,
+        functions: false,
+        getters: false,
+        format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
+        keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(code, {
             includeState: useOptions.stateType === 'variables',
-          },
-        ),
-    });
+          }),
+      }),
+    );
 
-    const functionsString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: false,
-      functions: true,
-      format: 'variables',
-      keyPrefix: 'function ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-    });
+    const getterString = babelTransformCode(
+      getStateObjectStringFromComponent(json, {
+        data: false,
+        getters: true,
+        functions: false,
+        format: 'variables',
+        keyPrefix: '$: ',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(
+            code
+              .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
+              .replace(/\)/, ') => '),
+            {
+              includeState: useOptions.stateType === 'variables',
+            },
+          ),
+      }),
+    );
+
+    const functionsString = babelTransformCode(
+      getStateObjectStringFromComponent(json, {
+        data: false,
+        getters: false,
+        functions: true,
+        format: 'variables',
+        keyPrefix: 'function ',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(code, {
+            includeState: useOptions.stateType === 'variables',
+          }),
+      }),
+    );
 
     const hasData = dataString.length > 4;
 
