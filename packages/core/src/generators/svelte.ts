@@ -25,6 +25,7 @@ import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 
+import { pipe } from 'fp-ts/lib/function';
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
@@ -195,7 +196,7 @@ export const componentToSvelte =
     const css = collectCss(json);
     stripMetaProperties(json);
 
-    const dataString = babelTransformCode(
+    const dataString = pipe(
       getStateObjectStringFromComponent(json, {
         data: true,
         functions: false,
@@ -207,9 +208,10 @@ export const componentToSvelte =
             includeState: useOptions.stateType === 'variables',
           }),
       }),
+      babelTransformCode,
     );
 
-    const getterString = babelTransformCode(
+    const getterString = pipe(
       getStateObjectStringFromComponent(json, {
         data: false,
         getters: true,
@@ -226,9 +228,10 @@ export const componentToSvelte =
             },
           ),
       }),
+      babelTransformCode,
     );
 
-    const functionsString = babelTransformCode(
+    const functionsString = pipe(
       getStateObjectStringFromComponent(json, {
         data: false,
         getters: false,
@@ -240,6 +243,7 @@ export const componentToSvelte =
             includeState: useOptions.stateType === 'variables',
           }),
       }),
+      babelTransformCode,
     );
 
     const hasData = dataString.length > 4;
