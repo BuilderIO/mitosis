@@ -22,6 +22,7 @@ import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { gettersToFunctions } from '../helpers/getters-to-functions';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -31,10 +32,21 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToSvelteOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `${json.children
-      .map((item) => blockToSvelte(item, options))
-      .join('\n')}`;
+    if (json.bindings.innerHTML) {
+      return BINDINGS_MAPPER.innerHTML(json, options);
+    } else if (json.children.length > 0) {
+      return `${json.children
+        .map((item) => blockToSvelte(item, options))
+        .join('\n')}`;
+    } else {
+      return '';
+    }
   },
+};
+
+const BINDINGS_MAPPER = {
+  innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
+    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML)}}`,
 };
 
 export const blockToSvelte = (
@@ -87,6 +99,9 @@ export const blockToSvelte = (
       str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
+      if (key === 'innerHTML') {
+        continue;
+      }
       if (key === '_spread') {
         continue;
       }
@@ -106,6 +121,15 @@ export const blockToSvelte = (
         str += ` ${key}={${useValue}} `;
       }
     }
+    // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
+    // we use the innerHTML content as children and don't render the self-closing tag.
+    if (json.bindings.innerHTML) {
+      str += '>';
+      str += BINDINGS_MAPPER.innerHTML(json, options);
+      str += `</${json.name}>`;
+      return str;
+    }
+
     if (selfClosingTags.has(json.name)) {
       return str + ' />';
     }
@@ -162,6 +186,8 @@ export const componentToSvelte =
     const refs = Array.from(getRefs(json));
     useBindValue(json, useOptions);
 
+    gettersToFunctions(json);
+
     if (useOptions.plugins) {
       json = runPostJsonPlugins(json, useOptions.plugins);
     }
@@ -214,7 +240,7 @@ export const componentToSvelte =
     const props = Array.from(getProps(json));
 
     let str = dedent`
-    <script lang="ts">
+    <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${
         !json.hooks.onUpdate?.length
