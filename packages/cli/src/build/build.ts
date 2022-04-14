@@ -23,7 +23,6 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import * as json5 from 'json5';
 import { camelCase, kebabCase, last, upperFirst } from 'lodash';
 import micromatch from 'micromatch';
-import { logger } from 'src/helpers/logger';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
@@ -52,6 +51,7 @@ export async function build(config?: MitosisConfig) {
     ...config,
     options: {
       ...DEFAULT_OPTIONS,
+      ...config?.options,
       vue: {
         ...DEFAULT_OPTIONS.vue,
         ...config?.options?.vue,
