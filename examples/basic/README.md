@@ -4,16 +4,16 @@
 
 ```bash
 # install
-npm install
+yarn install
 
 # build
-npm run build
+yarn run build
 
 # run dev server that watches for changes
-npm run start
+yarn run start
 
 # test
-npm run test
+yarn run test
 ```
 
 ### Project structure
