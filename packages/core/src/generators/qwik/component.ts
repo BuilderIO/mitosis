@@ -231,7 +231,9 @@ function addComponentOnMount(
           this.emit(
             '{',
             ...inputInitializer,
+            'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
             iif(component.hooks.onMount?.code),
+            ';',
             useStyles,
             'return ',
             generateQrl(onRenderFile, componentName + '_onRender', ['state']),
