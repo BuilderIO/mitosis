@@ -20,7 +20,7 @@ These are the main operations in order:
 
 General structure of a generator:
 
-Visually, it looks exactly like a component of the target framework. Each part (imports, name, styles, render body, lifecycle methods) is injected using the Mitosis JSON data, such that It is valid code for that framework.
+Visually, it looks exactly like a component of the target framework. Each part (imports, name, styles, render body, lifecycle methods) is injected using the Mitosis JSON data, such that it is valid code for that framework.
 
 ## blockTo<framework>
 
