@@ -1,6 +1,11 @@
+import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 
-const getStarImport = (theImport: MitosisImport): string | null => {
+const getStarImport = ({
+  theImport,
+}: {
+  theImport: MitosisImport;
+}): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === '*') {
@@ -9,7 +14,11 @@ const getStarImport = (theImport: MitosisImport): string | null => {
   }
   return null;
 };
-const getDefaultImport = (theImport: MitosisImport): string | null => {
+const getDefaultImport = ({
+  theImport,
+}: {
+  theImport: MitosisImport;
+}): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === 'default') {
@@ -19,14 +28,20 @@ const getDefaultImport = (theImport: MitosisImport): string | null => {
   return null;
 };
 
-export const renderImport = (theImport: MitosisImport): string => {
+const renderImport = ({
+  theImport,
+  target,
+}: {
+  theImport: MitosisImport;
+  target?: Target;
+}): string => {
   let importString = 'import ';
 
-  const starImport = getStarImport(theImport);
+  const starImport = getStarImport({ theImport });
   if (starImport) {
     importString += ` * as ${starImport} `;
   } else {
-    const defaultImport = getDefaultImport(theImport);
+    const defaultImport = getDefaultImport({ theImport });
 
     if (defaultImport) {
       importString += ` ${defaultImport}, `;
@@ -53,12 +68,23 @@ export const renderImport = (theImport: MitosisImport): string => {
     importString += ' } ';
   }
 
-  importString += ` from '${theImport.path}';`;
+  const path =
+    target === 'svelte' && theImport.path.endsWith('.lite')
+      ? theImport.path.replace('.lite', '.svelte')
+      : theImport.path;
+
+  importString += ` from '${path}';`;
 
   return importString;
 };
 
-export const renderImports = (imports: MitosisImport[]): string => {
+const renderImports = ({
+  imports,
+  target,
+}: {
+  imports: MitosisImport[];
+  target?: Target;
+}): string => {
   let importString = '';
 
   for (const theImport of imports) {
@@ -70,15 +96,16 @@ export const renderImports = (imports: MitosisImport[]): string => {
     if (theImport.path.startsWith('@builder.io/mitosis')) {
       continue;
     }
-    importString += renderImport(theImport) + '\n';
+    importString += renderImport({ theImport, target }) + '\n';
   }
 
   return importString;
 };
 
-export const renderPreComponent = (component: MitosisComponent): string => {
-  return `
-    ${renderImports(component.imports)}
+export const renderPreComponent = (
+  component: MitosisComponent,
+  target?: Target,
+): string => `
+    ${renderImports({ imports: component.imports, target })}
     ${component.hooks.preComponent || ''}
   `;
-};
