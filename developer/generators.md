@@ -1,14 +1,12 @@
 # Generators
 
-Generators are made up of 2 main functions: `contentToXYZ` and `blockToXYZ`, where XYZ is the target framework.
+Generators are made up of 2 main functions: `contentTo<framework>` and `blockTo<framework>`, where `<framework>` is the target framework.
 
-## contentToXYZ
+## contentTo<framework>
 
 is responsible for converting an entire JSON mitosis component to a component in the target framework (as a string)
 
-**ORDER matters**: fns that grab `json` or `component` often mutate it, causing side effects
-
-These are the main operations in order, for all generators:
+These are the main operations in order:
 
 - `preJsonPlugins`: stuff that runs before we do anything
 - Everything we need: like `getProps` will always be here. (What else?)
@@ -18,15 +16,13 @@ These are the main operations in order, for all generators:
 - Formatting with prettier
 - `PostCodePlugins`: options.plugins post
 
+**ORDER matters**: Functions that grab `json` or `component` often mutate it, causing side effects.
+
 General structure of a generator:
 
-Visually, it looks exactly like a component of the target framework. Each part (imports, name, styles, render body, lifecycle methods) is injected using the Mitosis JSON data, such that It is valid code for that framework
+Visually, it looks exactly like a component of the target framework. Each part (imports, name, styles, render body, lifecycle methods) is injected using the Mitosis JSON data, such that It is valid code for that framework.
 
-**getStateObjectFromString**
-
-Grabs all state data and formats it appropriately for the target framework
-
-## blockToXYZ
+## blockTo<framework>
 
 This is code that handles each individual DOM node within the overall component.
 
@@ -34,12 +30,20 @@ Compile-away-components: Show, For, etc.
 
 - These are special Mitosis components that are replaced with the appropriate target-specific logic at compile-time
 
-## Styling
+### Helpers
+
+#### Styling
 
 **collectClassString**
 
-Grabs all the styles and figures out what class-names to provide to the component?
+Grabs all the styles and figures out what class-names to provide to the component
 
 **collectCss**
 
 Grabs all the `css=` data into a style object and removes it (SIDE EFFECT) from the mitosis JSON
+
+#### State
+
+**getStateObjectFromString**
+
+Grabs all state data and formats it appropriately for the target framework
