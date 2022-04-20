@@ -78,7 +78,7 @@ export const blockToSvelte = (
   if (json.name === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
       includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName} }`;
+    })} as ${json.properties._forName}, index }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/each}`;
   } else if (json.name === 'Show') {
@@ -250,6 +250,8 @@ export const componentToSvelte =
 
     const props = Array.from(getProps(json));
 
+    console.log(`about to generate svelte code for ${json.name}`);
+
     let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
@@ -259,7 +261,7 @@ export const componentToSvelte =
           : `import { afterUpdate } from 'svelte'`
       }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
-      ${renderPreComponent(json)}
+      ${renderPreComponent(json, 'svelte')}
 
       ${
         !hasData || useOptions.stateType === 'variables'
@@ -326,9 +328,11 @@ export const componentToSvelte =
     }
   `;
 
+    console.log(`str length preCode: ${str.length}`);
     if (useOptions.plugins) {
       str = runPreCodePlugins(str, useOptions.plugins);
     }
+    console.log(`str length after preCode: ${str.length}`);
     if (useOptions.prettier !== false) {
       try {
         str = format(str, {
@@ -346,8 +350,10 @@ export const componentToSvelte =
         console.warn('Could not prettify', { string: str }, err);
       }
     }
+    console.log(`str length after prettify: ${str.length}`);
     if (useOptions.plugins) {
       str = runPostCodePlugins(str, useOptions.plugins);
     }
+    console.log(`str length after postCode: ${str.length}`);
     return str;
   };
