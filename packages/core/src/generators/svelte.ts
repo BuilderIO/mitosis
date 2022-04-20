@@ -250,8 +250,6 @@ export const componentToSvelte =
 
     const props = Array.from(getProps(json));
 
-    console.log(`about to generate svelte code for ${json.name}`);
-
     let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
@@ -328,11 +326,9 @@ export const componentToSvelte =
     }
   `;
 
-    console.log(`str length preCode: ${str.length}`);
     if (useOptions.plugins) {
       str = runPreCodePlugins(str, useOptions.plugins);
     }
-    console.log(`str length after preCode: ${str.length}`);
     if (useOptions.prettier !== false) {
       try {
         str = format(str, {
@@ -350,10 +346,8 @@ export const componentToSvelte =
         console.warn('Could not prettify', { string: str }, err);
       }
     }
-    console.log(`str length after prettify: ${str.length}`);
     if (useOptions.plugins) {
       str = runPostCodePlugins(str, useOptions.plugins);
     }
-    console.log(`str length after postCode: ${str.length}`);
     return str;
   };
