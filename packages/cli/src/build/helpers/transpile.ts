@@ -19,7 +19,10 @@ export const transpile = async ({
     const output = await esbuild.transform(useContent, {
       format:
         format ||
-        (target === 'reactNative' || target === 'solid' ? 'esm' : 'cjs'),
+        // TO-DO: grab this from the config.
+        (target === 'reactNative' || target === 'solid' || target === 'svelte'
+          ? 'esm'
+          : 'cjs'),
       loader: 'tsx',
       target: 'es6',
     });
