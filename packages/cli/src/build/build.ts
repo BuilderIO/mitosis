@@ -214,9 +214,14 @@ async function outputTsxLiteFiles(
     debugTarget(`transpiling ${path}...`);
     let transpiled = '';
 
+    if (overrideFile) {
+      debugTarget(`override exists for ${path}: ${!!overrideFile}`);
+    }
     try {
       transpiled = overrideFile ?? transpiler({ path, component: mitosisJson });
-      debugTarget(`Success: transpiled ${path}.`);
+      debugTarget(
+        `Success: transpiled ${path}. Output length: ${transpiled.length}`,
+      );
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
       debugTarget(error);
@@ -334,10 +339,21 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
         if (!context) {
           console.warn('Could not parse context from file', path);
         } else {
-          if (target === 'vue') {
-            output = contextToVue(context);
-          } else {
-            output = contextToReact()({ context });
+          switch (target) {
+            // TO-DO: proper context handling for svelte
+            case 'svelte':
+            case 'vue':
+              output = contextToVue(context);
+              break;
+            case 'react':
+            case 'reactNative':
+              output = contextToReact()({ context });
+              break;
+            default:
+              console.warn(
+                'Context files are not supported for this target. Outputting no-op',
+              );
+              contextToVue(context);
           }
         }
         path = path.replace('.lite.ts', '.ts');
