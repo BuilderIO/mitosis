@@ -724,7 +724,7 @@ const isImportOrDefaultExport = (node: babel.Node) =>
   types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
 
 /**
- * This functoin takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
+ * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
  *
  * @param jsx string representation of the Mitosis component
