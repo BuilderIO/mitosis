@@ -12,7 +12,9 @@ const opts = {
   },
 } as const;
 
-var ruleTester = new RuleTester();
+var ruleTester = new RuleTester({
+  parser: require.resolve('@typescript-eslint/parser'),
+});
 
 ruleTester.run('only-default-function-and-imports', rule, {
   valid: [
@@ -41,6 +43,24 @@ ruleTester.run('only-default-function-and-imports', rule, {
     {
       ...opts,
       code: `
+      import x from "y";
+      import {a} from "b";
+
+      export type Props = {}
+      export interface OtherProps {}
+      type Props1 = {}
+      interface OtherProps2 {}
+
+      export default function MyComponent(props) {
+        return (
+            <div />
+        );
+      }
+    `,
+    },
+    {
+      ...opts,
+      code: `
       export const x = y;
   
       export default function MyComponent(props) {
@@ -58,7 +78,6 @@ ruleTester.run('only-default-function-and-imports', rule, {
       code: `
       import {a} from "b";
       export default function MyComponent(props) {
-        
         return (
             <div />
         );
