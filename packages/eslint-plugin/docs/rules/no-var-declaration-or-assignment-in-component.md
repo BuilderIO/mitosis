@@ -44,4 +44,14 @@ export default function MyComponent(props) {
 
   return <div />;
 }
+
+export default function MyComponent(props) {
+  const context = useContext(x)
+
+  const state = useState({ name: null })
+
+  return (
+      <div />
+  );
+}
 ```
