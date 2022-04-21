@@ -31,14 +31,18 @@ export interface ToSvelteOptions extends BaseTranspilerOptions {
 }
 
 const mappers: {
-  [key: string]: (json: MitosisNode, options: ToSvelteOptions) => string;
+  [key: string]: (
+    json: MitosisNode,
+    options: ToSvelteOptions,
+    parentComponent?: MitosisComponent,
+  ) => string;
 } = {
-  Fragment: (json, options) => {
+  Fragment: (json, options, parentComponent) => {
     if (json.bindings.innerHTML) {
       return BINDINGS_MAPPER.innerHTML(json, options);
     } else if (json.children.length > 0) {
       return `${json.children
-        .map((item) => blockToSvelte(item, options))
+        .map((item) => blockToSvelte({ json: item, options, parentComponent }))
         .join('\n')}`;
     } else {
       return '';
@@ -51,12 +55,20 @@ const BINDINGS_MAPPER = {
     `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML)}}`,
 };
 
-export const blockToSvelte = (
-  json: MitosisNode,
-  options: ToSvelteOptions,
-): string => {
-  if (mappers[json.name]) {
-    return mappers[json.name](json, options);
+interface BlockToSvelteProps {
+  json: MitosisNode;
+  options: ToSvelteOptions;
+  parentComponent?: MitosisComponent;
+}
+
+export const blockToSvelte = ({
+  json,
+  options,
+  parentComponent,
+}: BlockToSvelteProps): string => {
+  let tagName = json.name;
+  if (mappers[tagName]) {
+    return mappers[tagName](json, options, parentComponent);
   }
 
   if (isChildren(json)) {
@@ -75,20 +87,27 @@ export const blockToSvelte = (
 
   let str = '';
 
-  if (json.name === 'For') {
+  if (tagName === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
       includeState: options.stateType === 'variables',
     })} as ${json.properties._forName}, index }`;
-    str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
+    str += json.children
+      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+      .join('\n');
     str += `{/each}`;
-  } else if (json.name === 'Show') {
+  } else if (tagName === 'Show') {
     str += `{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
       includeState: options.stateType === 'variables',
     })} }`;
-    str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
+    str += json.children
+      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+      .join('\n');
     str += `{/if}`;
   } else {
-    str += `<${json.name} `;
+    if (parentComponent && tagName === parentComponent.name) {
+      tagName = 'svelte:self';
+    }
+    str += `<${tagName} `;
 
     if (json.bindings._spread) {
       str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
@@ -132,17 +151,17 @@ export const blockToSvelte = (
       return str;
     }
 
-    if (selfClosingTags.has(json.name)) {
+    if (selfClosingTags.has(tagName)) {
       return str + ' />';
     }
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) => blockToSvelte(item, options))
+        .map((item) => blockToSvelte({ json: item, options, parentComponent }))
         .join('\n');
     }
 
-    str += `</${json.name}>`;
+    str += `</${tagName}>`;
   }
   return str;
 };
@@ -315,7 +334,15 @@ export const componentToSvelte =
       }
     </script>
 
-    ${json.children.map((item) => blockToSvelte(item, useOptions)).join('\n')}
+    ${json.children
+      .map((item) =>
+        blockToSvelte({
+          json: item,
+          options: useOptions,
+          parentComponent: json,
+        }),
+      )
+      .join('\n')}
 
     ${
       !css.trim().length

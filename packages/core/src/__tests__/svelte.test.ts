@@ -3,6 +3,7 @@ import { parseJsx } from '../parsers/jsx';
 
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const multipleOUpdate = require('./data/blocks/multiple-onUpdate.raw');
+const selfReferencingComponent = require('./data/blocks/self-referencing-component.raw');
 
 describe('Svelte', () => {
   test('onUpdate', () => {
@@ -13,6 +14,12 @@ describe('Svelte', () => {
 
   test('multipleOnUpdate', () => {
     const component = parseJsx(multipleOUpdate);
+    const output = componentToSvelte()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('selfReferencingComponent', () => {
+    const component = parseJsx(selfReferencingComponent);
     const output = componentToSvelte()({ component });
     expect(output).toMatchSnapshot();
   });
