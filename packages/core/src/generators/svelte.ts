@@ -250,6 +250,14 @@ export const componentToSvelte =
 
     const props = Array.from(getProps(json));
 
+    const transformHookCode = (hookCode: string) =>
+      pipe(
+        stripStateAndPropsRefs(hookCode, {
+          includeState: useOptions.stateType === 'variables',
+        }),
+        babelTransformCode,
+      );
+
     let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
@@ -285,9 +293,7 @@ export const componentToSvelte =
       ${
         !json.hooks.onMount?.code
           ? ''
-          : `onMount(() => { ${stripStateAndPropsRefs(json.hooks.onMount.code, {
-              includeState: useOptions.stateType === 'variables',
-            })} });`
+          : `onMount(() => { ${transformHookCode(json.hooks.onMount.code)} });`
       }
 
       ${
@@ -296,9 +302,7 @@ export const componentToSvelte =
           : json.hooks.onUpdate
               .map(
                 (hook) =>
-                  `afterUpdate(() => { ${stripStateAndPropsRefs(hook.code, {
-                    includeState: useOptions.stateType === 'variables',
-                  })} })`,
+                  `afterUpdate(() => { ${transformHookCode(hook.code)} })`,
               )
               .join(';')
       }
@@ -306,11 +310,8 @@ export const componentToSvelte =
       ${
         !json.hooks.onUnMount?.code
           ? ''
-          : `onDestroy(() => { ${stripStateAndPropsRefs(
+          : `onDestroy(() => { ${transformHookCode(
               json.hooks.onUnMount.code,
-              {
-                includeState: useOptions.stateType === 'variables',
-              },
             )} });`
       }
     </script>
