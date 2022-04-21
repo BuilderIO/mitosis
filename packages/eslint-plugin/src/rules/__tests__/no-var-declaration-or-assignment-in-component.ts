@@ -42,6 +42,22 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       }
     `,
     },
+    {
+      ...opts,
+      code: `
+      import x from "y";
+
+      export default function MyComponent(props) {
+        const context = useContext(x)
+
+        const state = useState({ name: null })
+
+        return (
+            <div />
+        );
+      }
+    `,
+    },
     // Doesn't apply to none mitosis files
     {
       ...opts,
@@ -92,6 +108,23 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       ],
     },
     // Doesn't accept variable declaration and assignment inside component
+    {
+      ...opts,
+      code: `
+      export default function MyComponent(props) {
+        let a;
+        a = b;
+        
+        return (
+            <div />
+        );
+      }
+    `,
+      errors: [
+        'Variable declaration inside component is ignored during compilation',
+        'Variable assignment inside component is ignored during compilation',
+      ],
+    },
     {
       ...opts,
       code: `

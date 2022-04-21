@@ -1,5 +1,5 @@
 import { Rule } from 'eslint';
-import { match } from 'ts-pattern';
+import { match, not, when } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
 
@@ -37,6 +37,17 @@ const rule: Rule.RuleModule = {
         match(node)
           .with(
             {
+              declarations: [
+                not({
+                  init: {
+                    type: 'CallExpression',
+                    callee: {
+                      type: 'Identifier',
+                      name: when((v) => v === 'useState' || v === 'useContext'),
+                    },
+                  },
+                }),
+              ],
               parent: {
                 type: 'BlockStatement',
                 parent: {
