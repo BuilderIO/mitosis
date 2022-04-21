@@ -85,5 +85,7 @@ export const getStateObjectStringFromComponent = (
   component: MitosisComponent,
   options: GetStateObjectStringOptions = {},
 ) => {
-  return getMemberObjectString(component.state, options);
+  const stateObjectStr = getMemberObjectString(component.state, options);
+
+  return stateObjectStr;
 };

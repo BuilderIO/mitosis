@@ -22,7 +22,10 @@ import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { gettersToFunctions } from '../helpers/getters-to-functions';
+import { babelTransformCode } from '../helpers/babel-transform';
 
+import { pipe } from 'fp-ts/lib/function';
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
@@ -31,10 +34,21 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToSvelteOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `${json.children
-      .map((item) => blockToSvelte(item, options))
-      .join('\n')}`;
+    if (json.bindings.innerHTML) {
+      return BINDINGS_MAPPER.innerHTML(json, options);
+    } else if (json.children.length > 0) {
+      return `${json.children
+        .map((item) => blockToSvelte(item, options))
+        .join('\n')}`;
+    } else {
+      return '';
+    }
   },
+};
+
+const BINDINGS_MAPPER = {
+  innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
+    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML)}}`,
 };
 
 export const blockToSvelte = (
@@ -64,7 +78,7 @@ export const blockToSvelte = (
   if (json.name === 'For') {
     str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
       includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName} }`;
+    })} as ${json.properties._forName}, index }`;
     str += json.children.map((item) => blockToSvelte(item, options)).join('\n');
     str += `{/each}`;
   } else if (json.name === 'Show') {
@@ -87,6 +101,9 @@ export const blockToSvelte = (
       str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
+      if (key === 'innerHTML') {
+        continue;
+      }
       if (key === '_spread') {
         continue;
       }
@@ -106,6 +123,15 @@ export const blockToSvelte = (
         str += ` ${key}={${useValue}} `;
       }
     }
+    // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
+    // we use the innerHTML content as children and don't render the self-closing tag.
+    if (json.bindings.innerHTML) {
+      str += '>';
+      str += BINDINGS_MAPPER.innerHTML(json, options);
+      str += `</${json.name}>`;
+      return str;
+    }
+
     if (selfClosingTags.has(json.name)) {
       return str + ' />';
     }
@@ -162,52 +188,63 @@ export const componentToSvelte =
     const refs = Array.from(getRefs(json));
     useBindValue(json, useOptions);
 
+    gettersToFunctions(json);
+
     if (useOptions.plugins) {
       json = runPostJsonPlugins(json, useOptions.plugins);
     }
     const css = collectCss(json);
     stripMetaProperties(json);
 
-    let dataString = getStateObjectStringFromComponent(json, {
-      data: true,
-      functions: false,
-      getters: false,
-      format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
-      keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-    });
-
-    const getterString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: true,
-      functions: false,
-      format: 'variables',
-      keyPrefix: '$: ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(
-          code
-            .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-            .replace(/\)/, ') => '),
-          {
+    const dataString = pipe(
+      getStateObjectStringFromComponent(json, {
+        data: true,
+        functions: false,
+        getters: false,
+        format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
+        keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(code, {
             includeState: useOptions.stateType === 'variables',
-          },
-        ),
-    });
+          }),
+      }),
+      babelTransformCode,
+    );
 
-    const functionsString = getStateObjectStringFromComponent(json, {
-      data: false,
-      getters: false,
-      functions: true,
-      format: 'variables',
-      keyPrefix: 'function ',
-      valueMapper: (code) =>
-        stripStateAndPropsRefs(code, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-    });
+    const getterString = pipe(
+      getStateObjectStringFromComponent(json, {
+        data: false,
+        getters: true,
+        functions: false,
+        format: 'variables',
+        keyPrefix: '$: ',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(
+            code
+              .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
+              .replace(/\)/, ') => '),
+            {
+              includeState: useOptions.stateType === 'variables',
+            },
+          ),
+      }),
+      babelTransformCode,
+    );
+
+    const functionsString = pipe(
+      getStateObjectStringFromComponent(json, {
+        data: false,
+        getters: false,
+        functions: true,
+        format: 'variables',
+        keyPrefix: 'function ',
+        valueMapper: (code) =>
+          stripStateAndPropsRefs(code, {
+            includeState: useOptions.stateType === 'variables',
+          }),
+      }),
+      babelTransformCode,
+    );
 
     const hasData = dataString.length > 4;
 
@@ -222,7 +259,7 @@ export const componentToSvelte =
           : `import { afterUpdate } from 'svelte'`
       }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
-      ${renderPreComponent(json)}
+      ${renderPreComponent(json, 'svelte')}
 
       ${
         !hasData || useOptions.stateType === 'variables'

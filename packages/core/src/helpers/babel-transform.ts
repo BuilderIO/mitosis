@@ -10,19 +10,23 @@ type Visitor<ContextType = any> = {
 
 export const babelTransform = <VisitorContextType = any>(
   code: string,
-  visitor: Visitor<VisitorContextType>,
+  visitor?: Visitor<VisitorContextType>,
 ) => {
   return babel.transform(code, {
     sourceFileName: 'file.tsx',
     configFile: false,
     babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin, () => ({ visitor })],
+    plugins: [
+      [decorators, { legacy: true }],
+      jsxPlugin,
+      ...(visitor ? [() => ({ visitor })] : []),
+    ],
   });
 };
 export const babelTransformCode = <VisitorContextType = any>(
   code: string,
-  visitor: Visitor<VisitorContextType>,
+  visitor?: Visitor<VisitorContextType>,
 ) => {
   return babelTransform(code, visitor)?.code || '';
 };
