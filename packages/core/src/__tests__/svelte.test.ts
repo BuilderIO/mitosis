@@ -5,7 +5,7 @@ const onUpdate = require('./data/blocks/onUpdate.raw');
 const multipleOUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const selfReferencingComponent = require('./data/blocks/self-referencing-component.raw');
 const selfReferencingComponentWithChildren = require('./data/blocks/self-referencing-component-with-children.raw');
-
+const builderRenderBlock = require('./data/blocks/builder-render-block.raw');
 describe('Svelte', () => {
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
@@ -27,6 +27,11 @@ describe('Svelte', () => {
 
   test('selfReferencingComponentWithChildren', () => {
     const component = parseJsx(selfReferencingComponentWithChildren);
+    const output = componentToSvelte()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('BuilderRenderBlock', () => {
+    const component = parseJsx(builderRenderBlock);
     const output = componentToSvelte()({ component });
     expect(output).toMatchSnapshot();
   });

@@ -207,7 +207,7 @@ const getBlockNonActionBindings = (
   if (options.includeBuilderExtras) {
     for (const key in obj) {
       if (!isValidBindingKey(key)) {
-        console.warn('Skipping invalid biding key:', key);
+        console.warn('Skipping invalid binding key:', key);
         continue;
       }
       const value = obj[key];

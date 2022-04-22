@@ -29,11 +29,8 @@ import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
-import {
-  isCodeBodyExpression,
-  isCodeBodyIdentifier,
-  parseCode,
-} from '../helpers/parsers';
+import { VALID_HTML_TAGS } from '../constants/html_tags';
+
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
@@ -51,6 +48,27 @@ const mappers: {
     } else {
       return '';
     }
+  },
+  For: ({ json, options, parentComponent }) => {
+    return `
+{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
+      includeState: options.stateType === 'variables',
+    })} as ${json.properties._forName}, index }
+${json.children
+  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+  .join('\n')}
+{/each}
+`;
+  },
+  Show: ({ json, options, parentComponent }) => {
+    return `
+{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
+      includeState: options.stateType === 'variables',
+    })} }
+${json.children
+  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+  .join('\n')}
+{/if}`;
   },
 };
 
@@ -93,17 +111,20 @@ const getTagName = ({
   json: MitosisNode;
   parentComponent: MitosisComponent;
 }) => {
-  const parsedName = parseCode(json.name);
   if (parentComponent && json.name === parentComponent.name) {
     return 'svelte:self';
-  } else if (
-    isCodeBodyExpression(parsedName) ||
-    isCodeBodyIdentifier(parsedName)
-  ) {
-    return SVELTE_DYNAMIC_COMPONENT_TAG;
-  } else {
-    return json.name;
   }
+
+  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+  // Check if any import matches `json.name`
+  const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
+    Object.keys(imports).some((name) => name === json.name),
+  );
+  if (!isValidHtmlTag && !hasMatchingImport) {
+    return SVELTE_DYNAMIC_COMPONENT_TAG;
+  }
+
+  return json.name;
 };
 
 type BlockToSvelte = (props: BlockToSvelteProps) => string;
@@ -113,10 +134,11 @@ export const blockToSvelte: BlockToSvelte = ({
   options,
   parentComponent,
 }) => {
-  const tagName = getTagName({ json, parentComponent });
-  if (mappers[tagName]) {
-    return mappers[tagName]({ json, options, parentComponent });
+  if (mappers[json.name]) {
+    return mappers[json.name]({ json, options, parentComponent });
   }
+
+  const tagName = getTagName({ json, parentComponent });
 
   if (isChildren(json)) {
     return `<slot></slot>`;
@@ -134,83 +156,66 @@ export const blockToSvelte: BlockToSvelte = ({
 
   let str = '';
 
-  if (tagName === 'For') {
-    str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
-      includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName}, index }`;
-    str += json.children
-      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
-    str += `{/each}`;
-  } else if (tagName === 'Show') {
-    str += `{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
-      includeState: options.stateType === 'variables',
-    })} }`;
-    str += json.children
-      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
-    str += `{/if}`;
-  } else {
-    str += `<${tagName} `;
+  str += `<${tagName} `;
 
-    if (tagName === SVELTE_DYNAMIC_COMPONENT_TAG) {
-      str += ` this={${json.name}} `;
-    }
-
-    if (json.bindings._spread) {
-      str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
-        includeState: options.stateType === 'variables',
-      })}}`;
-    }
-
-    for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${value}" `;
-    }
-    for (const key in json.bindings) {
-      if (key === 'innerHTML') {
-        continue;
-      }
-      if (key === '_spread') {
-        continue;
-      }
-      const value = json.bindings[key] as string;
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value, {
-        includeState: options.stateType === 'variables',
-      });
-
-      if (key.startsWith('on')) {
-        const event = key.replace('on', '').toLowerCase();
-        // TODO: handle quotes in event handler values
-        str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
-      } else if (key === 'ref') {
-        str += ` bind:this={${useValue}} `;
-      } else {
-        str += ` ${key}={${useValue}} `;
-      }
-    }
-    // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
-    // we use the innerHTML content as children and don't render the self-closing tag.
-    if (json.bindings.innerHTML) {
-      str += '>';
-      str += BINDINGS_MAPPER.innerHTML(json, options);
-      str += `</${tagName}>`;
-      return str;
-    }
-
-    if (selfClosingTags.has(tagName)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children
-        .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-        .join('\n');
-    }
-
-    str += `</${tagName}>`;
+  if (tagName === SVELTE_DYNAMIC_COMPONENT_TAG) {
+    str += ` this={${json.name}} `;
   }
+
+  if (json.bindings._spread) {
+    str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
+      includeState: options.stateType === 'variables',
+    })}}`;
+  }
+
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+  for (const key in json.bindings) {
+    if (key === 'innerHTML') {
+      continue;
+    }
+    if (key === '_spread') {
+      continue;
+    }
+    const value = json.bindings[key] as string;
+    // TODO: proper babel transform to replace. Util for this
+    const useValue = stripStateAndPropsRefs(value, {
+      includeState: options.stateType === 'variables',
+    });
+
+    if (key.startsWith('on')) {
+      const event = key.replace('on', '').toLowerCase();
+      // TODO: handle quotes in event handler values
+      str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
+    } else if (key === 'ref') {
+      str += ` bind:this={${useValue}} `;
+    } else {
+      str += ` ${key}={${useValue}} `;
+    }
+  }
+  // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
+  // we use the innerHTML content as children and don't render the self-closing tag.
+  if (json.bindings.innerHTML) {
+    str += '>';
+    str += BINDINGS_MAPPER.innerHTML(json, options);
+    str += `</${tagName}>`;
+    return str;
+  }
+
+  if (selfClosingTags.has(tagName)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children
+      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+      .join('\n');
+  }
+
+  str += `</${tagName}>`;
+
   return str;
 };
 
