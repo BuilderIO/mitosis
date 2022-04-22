@@ -342,7 +342,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
         } else {
           switch (target) {
             case 'svelte':
-              output = contextToSvelte()({ context });
+              output = contextToSvelte(options.options.svelte)({ context });
               break;
             case 'vue':
               output = contextToVue(context);
