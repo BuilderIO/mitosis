@@ -168,6 +168,8 @@ export const componentToMitosis =
       hasState || refs.size || mitosisComponents.length,
     );
 
+    const stringifiedUseMetadata = json5.stringify(component.meta.useMetadata);
+
     // TODO: smart only pull in imports as needed
     let str = dedent`
     ${
@@ -185,11 +187,9 @@ export const componentToMitosis =
     ${renderPreComponent(json)}
 
     ${
-      !component.meta.useMetadata
-        ? ''
-        : `${METADATA_HOOK_NAME}(${json5.stringify(
-            component.meta.useMetadata,
-          )})`
+      stringifiedUseMetadata !== '{}'
+        ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
+        : ''
     }
 
     export default function ${component.name}(props) {
