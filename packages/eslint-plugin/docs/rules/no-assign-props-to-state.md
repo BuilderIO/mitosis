@@ -28,4 +28,20 @@ export default function MyComponent(props) {
     state.text = props.text;
   });
 }
+
+export default function MyComponent(props) {
+  const state = useState({
+    text: null,
+    fn1() {
+      return foo(props.text);
+    },
+    fn2() {
+      return foo({ text: props.text });
+    }
+  });
+
+  onMount(() => {
+    state.text = props.text;
+  });
+}
 ```
