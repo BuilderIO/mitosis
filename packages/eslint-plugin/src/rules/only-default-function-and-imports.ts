@@ -41,7 +41,17 @@ const rule: Rule.RuleModule = {
             !types.isImportDeclaration(child) &&
             !types.isExportDefaultDeclaration(child) &&
             !types.isTypeAlias(child) &&
-            !types.isInterfaceDeclaration(child)
+            !types.isInterfaceDeclaration(child) &&
+            !types.isTSInterfaceDeclaration(child) &&
+            !types.isTSTypeAliasDeclaration(child) &&
+            !(
+              types.isExportNamedDeclaration(child) &&
+              types.isTSInterfaceDeclaration(child.declaration)
+            ) &&
+            !(
+              types.isExportNamedDeclaration(child) &&
+              types.isTSTypeAliasDeclaration(child.declaration)
+            )
           ) {
             context.report({
               node: child as any,
