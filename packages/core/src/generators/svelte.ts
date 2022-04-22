@@ -80,6 +80,20 @@ interface BlockToSvelteProps {
   parentComponent: MitosisComponent;
 }
 
+const getTagName = ({
+  json,
+  parentComponent,
+}: {
+  json: MitosisNode;
+  parentComponent: MitosisComponent;
+}) => {
+  if (parentComponent && json.name === parentComponent.name) {
+    return 'svelte:self';
+  } else {
+    return json.name;
+  }
+};
+
 type BlockToSvelte = (props: BlockToSvelteProps) => string;
 
 export const blockToSvelte: BlockToSvelte = ({
@@ -87,7 +101,7 @@ export const blockToSvelte: BlockToSvelte = ({
   options,
   parentComponent,
 }) => {
-  let tagName = json.name;
+  const tagName = getTagName({ json, parentComponent });
   if (mappers[tagName]) {
     return mappers[tagName]({ json, options, parentComponent });
   }
@@ -125,9 +139,6 @@ export const blockToSvelte: BlockToSvelte = ({
       .join('\n');
     str += `{/if}`;
   } else {
-    if (parentComponent && tagName === parentComponent.name) {
-      tagName = 'svelte:self';
-    }
     str += `<${tagName} `;
 
     if (json.bindings._spread) {
