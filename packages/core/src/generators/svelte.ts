@@ -27,9 +27,13 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
-
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
+import {
+  isCodeBodyExpression,
+  isCodeBodyIdentifier,
+  parseCode,
+} from '../helpers/parsers';
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
@@ -80,6 +84,8 @@ interface BlockToSvelteProps {
   parentComponent: MitosisComponent;
 }
 
+const SVELTE_DYNAMIC_COMPONENT_TAG = 'svelte:component';
+
 const getTagName = ({
   json,
   parentComponent,
@@ -87,8 +93,14 @@ const getTagName = ({
   json: MitosisNode;
   parentComponent: MitosisComponent;
 }) => {
+  const parsedName = parseCode(json.name);
   if (parentComponent && json.name === parentComponent.name) {
     return 'svelte:self';
+  } else if (
+    isCodeBodyExpression(parsedName) ||
+    isCodeBodyIdentifier(parsedName)
+  ) {
+    return SVELTE_DYNAMIC_COMPONENT_TAG;
   } else {
     return json.name;
   }
@@ -141,6 +153,10 @@ export const blockToSvelte: BlockToSvelte = ({
   } else {
     str += `<${tagName} `;
 
+    if (tagName === SVELTE_DYNAMIC_COMPONENT_TAG) {
+      str += ` this={${json.name}} `;
+    }
+
     if (json.bindings._spread) {
       str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
         includeState: options.stateType === 'variables',
@@ -179,7 +195,7 @@ export const blockToSvelte: BlockToSvelte = ({
     if (json.bindings.innerHTML) {
       str += '>';
       str += BINDINGS_MAPPER.innerHTML(json, options);
-      str += `</${json.name}>`;
+      str += `</${tagName}>`;
       return str;
     }
 

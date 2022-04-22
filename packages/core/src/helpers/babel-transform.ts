@@ -3,10 +3,7 @@ import { attempt, isError } from 'lodash';
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 const decorators = require('@babel/plugin-syntax-decorators');
-
-type Visitor<ContextType = any> = {
-  [key: string]: (path: any, context: ContextType) => void;
-};
+import type { Visitor } from '@babel/traverse';
 
 export const babelTransform = <VisitorContextType = any>(
   code: string,
