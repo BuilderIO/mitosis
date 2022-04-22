@@ -287,7 +287,12 @@ export const componentToSvelte =
       }
       ${refs
         .concat(props)
-        .map((name) => `export let ${name};`)
+        .map((name) => {
+          if (name === 'children') {
+            return '';
+          }
+          return `export let ${name};`;
+        })
         .join('\n')}
 
       ${functionsString.length < 4 ? '' : functionsString}

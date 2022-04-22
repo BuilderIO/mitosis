@@ -46,3 +46,23 @@ exports[`Svelte selfReferencingComponent 1`] = `
 </div>
 "
 `;
+
+exports[`Svelte selfReferencingComponentWithChildren 1`] = `
+"<script>
+  export let name;
+
+</script>
+
+<div>
+  {name}
+
+  <slot />
+
+  {#if name === 'Batman'}
+    <svelte:self name={'Bruce'}>
+      <div>Wayne</div>
+    </svelte:self>
+  {/if}
+</div>
+"
+`;
