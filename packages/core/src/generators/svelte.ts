@@ -102,8 +102,11 @@ interface BlockToSvelteProps {
   parentComponent: MitosisComponent;
 }
 
-const SVELTE_DYNAMIC_COMPONENT_TAG = 'svelte:component';
-
+const SVELTE_SPECIAL_TAGS = {
+  COMPONENT: 'svelte:component',
+  ELEMENT: 'svelte:element',
+  SELF: 'svelte:self',
+};
 const getTagName = ({
   json,
   parentComponent,
@@ -112,16 +115,20 @@ const getTagName = ({
   parentComponent: MitosisComponent;
 }) => {
   if (parentComponent && json.name === parentComponent.name) {
-    return 'svelte:self';
+    return SVELTE_SPECIAL_TAGS.SELF;
   }
 
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+  const isSpecialSvelteTag = json.name.startsWith('svelte:');
   // Check if any import matches `json.name`
   const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
     Object.keys(imports).some((name) => name === json.name),
   );
-  if (!isValidHtmlTag && !hasMatchingImport) {
-    return SVELTE_DYNAMIC_COMPONENT_TAG;
+  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
+  // overrides for now
+  if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
+    json.bindings.this = json.name;
+    return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
   return json.name;
@@ -157,10 +164,6 @@ export const blockToSvelte: BlockToSvelte = ({
   let str = '';
 
   str += `<${tagName} `;
-
-  if (tagName === SVELTE_DYNAMIC_COMPONENT_TAG) {
-    str += ` this={${json.name}} `;
-  }
 
   if (json.bindings._spread) {
     str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
@@ -243,6 +246,12 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
     }
   });
 };
+/**
+ * Removes all `this.` references.
+ */
+const stripThisRefs = (str: string) => {
+  return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
+};
 
 export const componentToSvelte =
   (options: ToSvelteOptions = {}): Transpiler =>
@@ -291,13 +300,16 @@ export const componentToSvelte =
         format: 'variables',
         keyPrefix: '$: ',
         valueMapper: (code) =>
-          stripStateAndPropsRefs(
-            code
-              .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-              .replace(/\)/, ') => '),
-            {
-              includeState: useOptions.stateType === 'variables',
-            },
+          pipe(
+            stripStateAndPropsRefs(
+              code
+                .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
+                .replace(/\)/, ') => '),
+              {
+                includeState: useOptions.stateType === 'variables',
+              },
+            ),
+            stripThisRefs,
           ),
       }),
       babelTransformCode,
@@ -311,9 +323,12 @@ export const componentToSvelte =
         format: 'variables',
         keyPrefix: 'function ',
         valueMapper: (code) =>
-          stripStateAndPropsRefs(code, {
-            includeState: useOptions.stateType === 'variables',
-          }),
+          pipe(
+            stripStateAndPropsRefs(code, {
+              includeState: useOptions.stateType === 'variables',
+            }),
+            stripThisRefs,
+          ),
       }),
       babelTransformCode,
     );
