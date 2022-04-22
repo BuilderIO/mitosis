@@ -185,10 +185,10 @@ export const componentToMitosis =
     ${renderPreComponent(json)}
 
     ${
-      !component.meta.metadataHook
+      !component.meta.useMetadata
         ? ''
         : `${METADATA_HOOK_NAME}(${json5.stringify(
-            component.meta.metadataHook,
+            component.meta.useMetadata,
           )})`
     }
 

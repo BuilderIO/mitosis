@@ -184,7 +184,7 @@ export const componentToStencil =
          *
          *    export default function ...
          */
-        json.meta.metadataHook?.tagName || dashCase(json.name)
+        json.meta.useMetadata?.tagName || dashCase(json.name)
       }',
       ${
         css.length

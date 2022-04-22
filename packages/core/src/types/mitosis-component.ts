@@ -44,8 +44,6 @@ export type MitosisComponent = {
   imports: MitosisImport[];
   meta: JSONObject & {
     useMetadata?: JSONObject;
-    // TO-DO: remove this? seems to be legacy/outdated, and superseeded by `useMetadata`
-    metadataHook?: JSONObject;
   };
   inputs: MitosisComponentInput[];
   state: JSONObject;
