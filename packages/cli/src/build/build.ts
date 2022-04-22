@@ -7,6 +7,7 @@ import {
   componentToHtml,
   componentToCustomElement,
   contextToReact,
+  contextToSolid,
   contextToVue,
   contextToSvelte,
   MitosisComponent,
@@ -346,6 +347,9 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
               break;
             case 'vue':
               output = contextToVue(context);
+              break;
+            case 'solid':
+              output = contextToSolid()({ context });
               break;
             case 'react':
             case 'reactNative':

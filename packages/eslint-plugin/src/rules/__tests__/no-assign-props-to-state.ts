@@ -22,7 +22,30 @@ ruleTester.run('no-assign-props-to-state', rule, {
       import { useState } from '@builder.io/mitosis';
       export default function MyComponent(props) {
         const state = useState({ text: null });
-      
+
+        onMount(() => {
+          state.text = props.text;
+        });
+      }
+      `,
+    },
+    {
+      ...opts,
+      code: `
+      import { useState } from '@builder.io/mitosis';
+      import { foo } from '../helpers';
+
+      export default function MyComponent(props) {
+        const state = useState({ 
+          text: null,
+          fn1() {
+            return foo(props.text);
+          },
+          fn2() {
+            return foo({ text: props.text });
+          }
+        });
+
         onMount(() => {
           state.text = props.text;
         });
@@ -47,7 +70,6 @@ ruleTester.run('no-assign-props-to-state', rule, {
       ...opts,
       code: `
       import { useState } from '@builder.io/mitosis';
-
       export default function MyComponent(props) {
         const state = useState({ text: props.text });
       }

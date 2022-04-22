@@ -24,4 +24,18 @@ import { a } from 'b';
 export default function MyComponent(props) {
   return <div />;
 }
+
+import x from "y";
+import {a} from "b";
+
+export type Props = {}
+export interface OtherProps {}
+type Props1 = {}
+interface OtherProps2 {}
+
+export default function MyComponent(props) {
+  return (
+      <div />
+  );
+}
 ```

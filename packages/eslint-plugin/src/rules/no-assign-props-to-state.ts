@@ -50,6 +50,10 @@ const rule: Rule.RuleModule = {
           }
         });
 
+        if (!types.isImportSpecifier(useState)) return;
+        if (!types.isIdentifier(node.callee)) return;
+        if (node.callee.name !== useState.imported.name) return;
+
         if (
           !useState ||
           !types.isIdentifier(node.callee) ||

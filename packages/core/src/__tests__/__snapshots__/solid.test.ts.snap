@@ -34,7 +34,6 @@ export default function Button(props) {
           {props.text}
         </a>
       </Show>
-
       <Show when={!props.link}>
         <button {...props.attributes} type=\\"button\\">
           {props.text}
@@ -96,7 +95,6 @@ export default function Column(props) {
             })}
           >
             {column.content}
-
             {index}
           </div>
         )}
@@ -511,21 +509,18 @@ export default function FormComponent(props) {
           )}
         </For>
       </Show>
-
       <Show when={state.state.submissionState === \\"error\\"}>
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage}
         ></BuilderBlocks>
       </Show>
-
       <Show when={state.state.submissionState === \\"sending\\"}>
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage}
         ></BuilderBlocks>
       </Show>
-
       <Show
         when={
           state.state.submissionState === \\"error\\" && state.state.responseData
@@ -541,7 +536,6 @@ export default function FormComponent(props) {
           {JSON.stringify(state.state.responseData, null, 2)}
         </pre>
       </Show>
-
       <Show when={state.state.submissionState === \\"success\\"}>
         <BuilderBlocks
           dataPath=\\"successMessage\\"
@@ -631,10 +625,8 @@ export default function Image(props) {
             sizes={props.sizes}
           />
         </Show>
-
         <source srcset={props.srcset} />
       </picture>
-
       {props.children}
     </>
   );
