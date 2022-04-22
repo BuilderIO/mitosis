@@ -35,13 +35,9 @@ export interface ToSvelteOptions extends BaseTranspilerOptions {
 }
 
 const mappers: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToSvelteOptions,
-    parentComponent?: MitosisComponent,
-  ) => string;
+  [key: string]: BlockToSvelte;
 } = {
-  Fragment: (json, options, parentComponent) => {
+  Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML) {
       return BINDINGS_MAPPER.innerHTML(json, options);
     } else if (json.children.length > 0) {
@@ -81,17 +77,19 @@ const BINDINGS_MAPPER = {
 interface BlockToSvelteProps {
   json: MitosisNode;
   options: ToSvelteOptions;
-  parentComponent?: MitosisComponent;
+  parentComponent: MitosisComponent;
 }
 
-export const blockToSvelte = ({
+type BlockToSvelte = (props: BlockToSvelteProps) => string;
+
+export const blockToSvelte: BlockToSvelte = ({
   json,
   options,
   parentComponent,
-}: BlockToSvelteProps): string => {
+}) => {
   let tagName = json.name;
   if (mappers[tagName]) {
-    return mappers[tagName](json, options, parentComponent);
+    return mappers[tagName]({ json, options, parentComponent });
   }
 
   if (isChildren(json)) {
