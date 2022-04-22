@@ -84,7 +84,7 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     options.targets.map(async (target) => {
-      const jsFiles = await buildTsFiles(target);
+      const jsFiles = await buildTsFiles({ target, options });
       await Promise.all([
         outputTsFiles(target, jsFiles, options),
         outputTsxLiteFiles(target, tsLiteFiles, options),
@@ -326,7 +326,13 @@ async function outputTsFiles(
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildTsFiles(target: Target, options?: MitosisConfig) {
+async function buildTsFiles({
+  target,
+  options,
+}: {
+  target: Target;
+  options: MitosisConfig;
+}) {
   const tsFiles = await glob(`src/**/*.ts`, {
     cwd: cwd,
   });
