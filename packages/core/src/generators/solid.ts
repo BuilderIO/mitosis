@@ -2,7 +2,10 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { hasStyles } from '../helpers/collect-styles';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -19,6 +22,8 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import traverse from 'traverse';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
+import { createMitosisNode } from '../helpers/create-mitosis-node';
 
 export interface ToSolidOptions extends BaseTranspilerOptions {}
 
@@ -38,6 +43,20 @@ function processDynamicComponents(
     }
   });
   return found;
+}
+
+function getContextString(
+  component: MitosisComponent,
+  options: ToSolidOptions,
+) {
+  let str = '';
+  for (const key in component.context.get) {
+    str += `
+      const ${key} = useContext(${component.context.get[key].name});
+    `;
+  }
+
+  return str;
 }
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
@@ -112,7 +131,9 @@ const blockToSolid = (
     return `<For each={${json.bindings.each}}>
     {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
-        ${json.children.map((child) => blockToSolid(child, options))}}
+        ${json.children
+          .filter(filterEmptyTextNodes)
+          .map((child) => blockToSolid(child, options))}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -157,7 +178,10 @@ const blockToSolid = (
   }
   str += '>';
   if (json.children) {
-    str += json.children.map((item) => blockToSolid(item, options)).join('\n');
+    str += json.children
+      .filter(filterEmptyTextNodes)
+      .map((item) => blockToSolid(item, options))
+      .join('\n');
   }
 
   if (json.name === 'Fragment') {
@@ -179,6 +203,26 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   return str;
 };
 
+function addProviderComponents(
+  json: MitosisComponent,
+  options: ToSolidOptions,
+) {
+  for (const key in json.context.set) {
+    const { name, value } = json.context.set[key];
+    json.children = [
+      createMitosisNode({
+        name: `${name}.Provider`,
+        children: json.children,
+        ...(value && {
+          bindings: {
+            value: getMemberObjectString(value),
+          },
+        }),
+      }),
+    ];
+  }
+}
+
 export const componentToSolid =
   (options: ToSolidOptions = {}): Transpiler =>
   ({ component }) => {
@@ -186,8 +230,9 @@ export const componentToSolid =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    addProviderComponents(json, options);
     const componentHasStyles = hasStyles(json);
-    const addWrapper = json.children.length > 1;
+    const addWrapper = json.children.filter(filterEmptyTextNodes).length !== 1;
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
@@ -224,6 +269,7 @@ export const componentToSolid =
       ${!hasState ? '' : `const state = createMutable(${stateString});`}
       
       ${getRefsString(json)}
+      ${getContextString(json, options)}
 
       ${
         !json.hooks.onMount?.code
@@ -232,7 +278,10 @@ export const componentToSolid =
       }
 
       return (${addWrapper ? '<>' : ''}
-        ${json.children.map((item) => blockToSolid(item, options)).join('\n')}
+        ${json.children
+          .filter(filterEmptyTextNodes)
+          .map((item) => blockToSolid(item, options))
+          .join('\n')}
         ${addWrapper ? '</>' : ''})
     }
 
