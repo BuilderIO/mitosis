@@ -53,7 +53,6 @@ const rule: Rule.RuleModule = {
               types.isTSTypeAliasDeclaration(child.declaration)
             )
           ) {
-            console.log(child);
             context.report({
               node: child as any,
               message:
