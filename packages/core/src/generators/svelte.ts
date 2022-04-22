@@ -5,7 +5,10 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -26,6 +29,7 @@ import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 
 import { pipe } from 'fp-ts/lib/function';
+import { hasContext } from './helpers/context';
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
@@ -44,6 +48,25 @@ const mappers: {
       return '';
     }
   },
+};
+
+const getContextCode = (json: MitosisComponent) => {
+  const contextGetters = json.context.get;
+  return Object.keys(contextGetters)
+    .map((key) => `let ${key} = getContext(${contextGetters[key].name}.key);`)
+    .join('\n');
+};
+
+const setContextCode = (json: MitosisComponent) => {
+  const contextSetters = json.context.set;
+  return Object.keys(contextSetters)
+    .map((key) => {
+      const { value, name } = contextSetters[key];
+      return `setContext(${name}.key, ${
+        value ? getMemberObjectString(value) : 'undefined'
+      });`;
+    })
+    .join('\n');
 };
 
 const BINDINGS_MAPPER = {
@@ -268,6 +291,11 @@ export const componentToSvelte =
       }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
       ${renderPreComponent(json, 'svelte')}
+      ${
+        hasContext(component)
+          ? 'import { getContext, setContext } from "svelte";'
+          : ''
+      }
 
       ${
         !hasData || useOptions.stateType === 'variables'
@@ -278,10 +306,12 @@ export const componentToSvelte =
         .concat(props)
         .map((name) => `export let ${name};`)
         .join('\n')}
-
+      
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
+      ${getContextCode(json)}
+      ${setContextCode(json)}
       ${
         useOptions.stateType === 'proxies'
           ? dataString.length < 4

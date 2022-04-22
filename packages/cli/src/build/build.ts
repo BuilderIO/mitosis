@@ -8,6 +8,7 @@ import {
   componentToCustomElement,
   contextToReact,
   contextToVue,
+  contextToSvelte,
   MitosisComponent,
   parseContext,
   parseJsx,
@@ -340,8 +341,9 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
           console.warn('Could not parse context from file', path);
         } else {
           switch (target) {
-            // TO-DO: proper context handling for svelte
             case 'svelte':
+              output = contextToSvelte()({ context });
+              break;
             case 'vue':
               output = contextToVue(context);
               break;
@@ -356,6 +358,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
               contextToVue(context);
           }
         }
+        // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }
       output = await transpile({ path, target, content: output });
