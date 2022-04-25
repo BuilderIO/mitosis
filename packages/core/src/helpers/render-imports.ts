@@ -28,6 +28,25 @@ const getDefaultImport = ({
   return null;
 };
 
+const transformImportPath = (theImport: MitosisImport, target?: Target) => {
+  // We need to drop the `.lite` from context files, because the context generator does so as well.
+  if (theImport.path.endsWith('.context.lite')) {
+    return theImport.path.replace('.lite', '');
+  }
+
+  switch (target) {
+    case 'svelte':
+      if (theImport.path.endsWith('.lite'))
+        // all svelte components have `.svelte` extension
+        return theImport.path.replace('.lite', '.svelte');
+      else {
+        return theImport.path;
+      }
+    default:
+      return theImport.path;
+  }
+};
+
 const renderImport = ({
   theImport,
   target,
@@ -68,10 +87,7 @@ const renderImport = ({
     importString += ' } ';
   }
 
-  const path =
-    target === 'svelte' && theImport.path.endsWith('.lite')
-      ? theImport.path.replace('.lite', '.svelte')
-      : theImport.path;
+  const path = transformImportPath(theImport, target);
 
   importString += ` from '${path}';`;
 

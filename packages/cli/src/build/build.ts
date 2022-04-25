@@ -9,6 +9,7 @@ import {
   contextToReact,
   contextToSolid,
   contextToVue,
+  contextToSvelte,
   MitosisComponent,
   parseContext,
   parseJsx,
@@ -83,7 +84,7 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     options.targets.map(async (target) => {
-      const jsFiles = await buildTsFiles(target);
+      const jsFiles = await buildTsFiles({ target, options });
       await Promise.all([
         outputTsFiles(target, jsFiles, options),
         outputTsxLiteFiles(target, tsLiteFiles, options),
@@ -325,7 +326,13 @@ async function outputTsFiles(
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildTsFiles(target: Target, options?: MitosisConfig) {
+async function buildTsFiles({
+  target,
+  options,
+}: {
+  target: Target;
+  options: MitosisConfig;
+}) {
   const tsFiles = await glob(`src/**/*.ts`, {
     cwd: cwd,
   });
@@ -341,8 +348,9 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
           console.warn('Could not parse context from file', path);
         } else {
           switch (target) {
-            // TO-DO: proper context handling for svelte
             case 'svelte':
+              output = contextToSvelte(options.options.svelte)({ context });
+              break;
             case 'vue':
               output = contextToVue(context);
               break;
@@ -360,6 +368,7 @@ async function buildTsFiles(target: Target, options?: MitosisConfig) {
               contextToVue(context);
           }
         }
+        // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }
       output = await transpile({ path, target, content: output });

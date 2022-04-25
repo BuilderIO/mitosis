@@ -5,7 +5,10 @@ import { collectCss } from '../helpers/collect-styles';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
-import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
+import {
+  getMemberObjectString,
+  getStateObjectStringFromComponent,
+} from '../helpers/get-state-object-string';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
@@ -24,20 +27,18 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
-
 import { pipe } from 'fp-ts/lib/function';
+import { hasContext } from './helpers/context';
+import { VALID_HTML_TAGS } from '../constants/html_tags';
+
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
 
 const mappers: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToSvelteOptions,
-    parentComponent?: MitosisComponent,
-  ) => string;
+  [key: string]: BlockToSvelte;
 } = {
-  Fragment: (json, options, parentComponent) => {
+  Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML) {
       return BINDINGS_MAPPER.innerHTML(json, options);
     } else if (json.children.length > 0) {
@@ -48,6 +49,46 @@ const mappers: {
       return '';
     }
   },
+  For: ({ json, options, parentComponent }) => {
+    return `
+{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
+      includeState: options.stateType === 'variables',
+    })} as ${json.properties._forName}, index }
+${json.children
+  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+  .join('\n')}
+{/each}
+`;
+  },
+  Show: ({ json, options, parentComponent }) => {
+    return `
+{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
+      includeState: options.stateType === 'variables',
+    })} }
+${json.children
+  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+  .join('\n')}
+{/if}`;
+  },
+};
+
+const getContextCode = (json: MitosisComponent) => {
+  const contextGetters = json.context.get;
+  return Object.keys(contextGetters)
+    .map((key) => `let ${key} = getContext(${contextGetters[key].name}.key);`)
+    .join('\n');
+};
+
+const setContextCode = (json: MitosisComponent) => {
+  const contextSetters = json.context.set;
+  return Object.keys(contextSetters)
+    .map((key) => {
+      const { value, name } = contextSetters[key];
+      return `setContext(${name}.key, ${
+        value ? getMemberObjectString(value) : 'undefined'
+      });`;
+    })
+    .join('\n');
 };
 
 const BINDINGS_MAPPER = {
@@ -58,18 +99,53 @@ const BINDINGS_MAPPER = {
 interface BlockToSvelteProps {
   json: MitosisNode;
   options: ToSvelteOptions;
-  parentComponent?: MitosisComponent;
+  parentComponent: MitosisComponent;
 }
 
-export const blockToSvelte = ({
+const SVELTE_SPECIAL_TAGS = {
+  COMPONENT: 'svelte:component',
+  ELEMENT: 'svelte:element',
+  SELF: 'svelte:self',
+};
+const getTagName = ({
+  json,
+  parentComponent,
+}: {
+  json: MitosisNode;
+  parentComponent: MitosisComponent;
+}) => {
+  if (parentComponent && json.name === parentComponent.name) {
+    return SVELTE_SPECIAL_TAGS.SELF;
+  }
+
+  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
+  const isSpecialSvelteTag = json.name.startsWith('svelte:');
+  // Check if any import matches `json.name`
+  const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
+    Object.keys(imports).some((name) => name === json.name),
+  );
+  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
+  // overrides for now
+  if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
+    json.bindings.this = json.name;
+    return SVELTE_SPECIAL_TAGS.COMPONENT;
+  }
+
+  return json.name;
+};
+
+type BlockToSvelte = (props: BlockToSvelteProps) => string;
+
+export const blockToSvelte: BlockToSvelte = ({
   json,
   options,
   parentComponent,
-}: BlockToSvelteProps): string => {
-  let tagName = json.name;
-  if (mappers[tagName]) {
-    return mappers[tagName](json, options, parentComponent);
+}) => {
+  if (mappers[json.name]) {
+    return mappers[json.name]({ json, options, parentComponent });
   }
+
+  const tagName = getTagName({ json, parentComponent });
 
   if (isChildren(json)) {
     return `<slot></slot>`;
@@ -87,82 +163,62 @@ export const blockToSvelte = ({
 
   let str = '';
 
-  if (tagName === 'For') {
-    str += `{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
+  str += `<${tagName} `;
+
+  if (json.bindings._spread) {
+    str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
       includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName}, index }`;
-    str += json.children
-      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
-    str += `{/each}`;
-  } else if (tagName === 'Show') {
-    str += `{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
-      includeState: options.stateType === 'variables',
-    })} }`;
-    str += json.children
-      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
-    str += `{/if}`;
-  } else {
-    if (parentComponent && tagName === parentComponent.name) {
-      tagName = 'svelte:self';
-    }
-    str += `<${tagName} `;
-
-    if (json.bindings._spread) {
-      str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
-        includeState: options.stateType === 'variables',
-      })}}`;
-    }
-
-    for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${value}" `;
-    }
-    for (const key in json.bindings) {
-      if (key === 'innerHTML') {
-        continue;
-      }
-      if (key === '_spread') {
-        continue;
-      }
-      const value = json.bindings[key] as string;
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value, {
-        includeState: options.stateType === 'variables',
-      });
-
-      if (key.startsWith('on')) {
-        const event = key.replace('on', '').toLowerCase();
-        // TODO: handle quotes in event handler values
-        str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
-      } else if (key === 'ref') {
-        str += ` bind:this={${useValue}} `;
-      } else {
-        str += ` ${key}={${useValue}} `;
-      }
-    }
-    // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
-    // we use the innerHTML content as children and don't render the self-closing tag.
-    if (json.bindings.innerHTML) {
-      str += '>';
-      str += BINDINGS_MAPPER.innerHTML(json, options);
-      str += `</${json.name}>`;
-      return str;
-    }
-
-    if (selfClosingTags.has(tagName)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children
-        .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-        .join('\n');
-    }
-
-    str += `</${tagName}>`;
+    })}}`;
   }
+
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+  for (const key in json.bindings) {
+    if (key === 'innerHTML') {
+      continue;
+    }
+    if (key === '_spread') {
+      continue;
+    }
+    const value = json.bindings[key] as string;
+    // TODO: proper babel transform to replace. Util for this
+    const useValue = stripStateAndPropsRefs(value, {
+      includeState: options.stateType === 'variables',
+    });
+
+    if (key.startsWith('on')) {
+      const event = key.replace('on', '').toLowerCase();
+      // TODO: handle quotes in event handler values
+      str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
+    } else if (key === 'ref') {
+      str += ` bind:this={${useValue}} `;
+    } else {
+      str += ` ${key}={${useValue}} `;
+    }
+  }
+  // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
+  // we use the innerHTML content as children and don't render the self-closing tag.
+  if (json.bindings.innerHTML) {
+    str += '>';
+    str += BINDINGS_MAPPER.innerHTML(json, options);
+    str += `</${tagName}>`;
+    return str;
+  }
+
+  if (selfClosingTags.has(tagName)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children
+      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
+      .join('\n');
+  }
+
+  str += `</${tagName}>`;
+
   return str;
 };
 
@@ -189,6 +245,12 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
       }
     }
   });
+};
+/**
+ * Removes all `this.` references.
+ */
+const stripThisRefs = (str: string) => {
+  return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
 };
 
 export const componentToSvelte =
@@ -238,13 +300,16 @@ export const componentToSvelte =
         format: 'variables',
         keyPrefix: '$: ',
         valueMapper: (code) =>
-          stripStateAndPropsRefs(
-            code
-              .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-              .replace(/\)/, ') => '),
-            {
-              includeState: useOptions.stateType === 'variables',
-            },
+          pipe(
+            stripStateAndPropsRefs(
+              code
+                .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
+                .replace(/\)/, ') => '),
+              {
+                includeState: useOptions.stateType === 'variables',
+              },
+            ),
+            stripThisRefs,
           ),
       }),
       babelTransformCode,
@@ -258,9 +323,12 @@ export const componentToSvelte =
         format: 'variables',
         keyPrefix: 'function ',
         valueMapper: (code) =>
-          stripStateAndPropsRefs(code, {
-            includeState: useOptions.stateType === 'variables',
-          }),
+          pipe(
+            stripStateAndPropsRefs(code, {
+              includeState: useOptions.stateType === 'variables',
+            }),
+            stripThisRefs,
+          ),
       }),
       babelTransformCode,
     );
@@ -268,6 +336,14 @@ export const componentToSvelte =
     const hasData = dataString.length > 4;
 
     const props = Array.from(getProps(json));
+
+    const transformHookCode = (hookCode: string) =>
+      pipe(
+        stripStateAndPropsRefs(hookCode, {
+          includeState: useOptions.stateType === 'variables',
+        }),
+        babelTransformCode,
+      );
 
     let str = dedent`
     <script>
@@ -279,6 +355,11 @@ export const componentToSvelte =
       }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
       ${renderPreComponent(json, 'svelte')}
+      ${
+        hasContext(component)
+          ? 'import { getContext, setContext } from "svelte";'
+          : ''
+      }
 
       ${
         !hasData || useOptions.stateType === 'variables'
@@ -294,10 +375,12 @@ export const componentToSvelte =
           return `export let ${name};`;
         })
         .join('\n')}
-
+      
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
+      ${getContextCode(json)}
+      ${setContextCode(json)}
       ${
         useOptions.stateType === 'proxies'
           ? dataString.length < 4
@@ -309,9 +392,7 @@ export const componentToSvelte =
       ${
         !json.hooks.onMount?.code
           ? ''
-          : `onMount(() => { ${stripStateAndPropsRefs(json.hooks.onMount.code, {
-              includeState: useOptions.stateType === 'variables',
-            })} });`
+          : `onMount(() => { ${transformHookCode(json.hooks.onMount.code)} });`
       }
 
       ${
@@ -320,9 +401,7 @@ export const componentToSvelte =
           : json.hooks.onUpdate
               .map(
                 (hook) =>
-                  `afterUpdate(() => { ${stripStateAndPropsRefs(hook.code, {
-                    includeState: useOptions.stateType === 'variables',
-                  })} })`,
+                  `afterUpdate(() => { ${transformHookCode(hook.code)} })`,
               )
               .join(';')
       }
@@ -330,11 +409,8 @@ export const componentToSvelte =
       ${
         !json.hooks.onUnMount?.code
           ? ''
-          : `onDestroy(() => { ${stripStateAndPropsRefs(
+          : `onDestroy(() => { ${transformHookCode(
               json.hooks.onUnMount.code,
-              {
-                includeState: useOptions.stateType === 'variables',
-              },
             )} });`
       }
     </script>

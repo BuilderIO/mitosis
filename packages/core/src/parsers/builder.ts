@@ -11,10 +11,7 @@ import { createMitosisComponent } from '../helpers/create-mitosis-component';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { MitosisNode } from '../types/mitosis-node';
 import { parseJsx, parseStateObject } from './jsx';
-
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-const decorators = require('@babel/plugin-syntax-decorators');
+import { parseCode, isExpression } from '../helpers/parsers';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (
@@ -210,7 +207,7 @@ const getBlockNonActionBindings = (
   if (options.includeBuilderExtras) {
     for (const key in obj) {
       if (!isValidBindingKey(key)) {
-        console.warn('Skipping invalid biding key:', key);
+        console.warn('Skipping invalid binding key:', key);
         continue;
       }
       const value = obj[key];
@@ -785,35 +782,6 @@ export function convertExportDefaultToReturn(code: string) {
   }
 
   return generate(types.program(newBody)).code || '';
-}
-
-function parseCode(code: string) {
-  const ast = babel.parse(code, {
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [[decorators, { legacy: true }], jsxPlugin],
-  });
-  const body = babel.types.isFile(ast)
-    ? ast.program.body
-    : babel.types.isProgram(ast)
-    ? ast.body
-    : [];
-  return body;
-}
-
-/**
- * Returns `true` if the `code` is a valid expression. (vs a statement)
- */
-function isExpression(code: string): boolean {
-  try {
-    const body = parseCode(code);
-    return (
-      body.length == 1 &&
-      (babel.types.isExpression(body[0]) ||
-        babel.types.isExpressionStatement(body[0]))
-    );
-  } catch (e) {
-    return false;
-  }
 }
 
 // TODO: maybe this should be part of the builder -> Mitosis part

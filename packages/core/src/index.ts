@@ -33,6 +33,7 @@ export * from './generators/angular';
 export * from './generators/context/react';
 export * from './generators/context/solid';
 export * from './generators/context/vue';
+export * from './generators/context/svelte';
 export * from './generators/react';
 export * from './generators/solid';
 export * from './generators/liquid';
