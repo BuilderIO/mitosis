@@ -76,14 +76,15 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${processBinding(json.bindings.when as string, options)} ? (
+    // We have to wrap the whole thing in fragments, in case `<Show/> is a single child of a component.
+    return `<>{${processBinding(json.bindings.when as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? '</>' : ''}
     ) : ${
       !json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)
-    }}`;
+    }}</>`;
   },
 };
 
