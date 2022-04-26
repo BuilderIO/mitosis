@@ -2,6 +2,7 @@
 
 - [Plugins](#plugins)
 - [useMetadata](#useMetadata)
+- [Component JSON](#Component-JSON)
 
 When building Mitosis components, you might sometimes have unique and special needs. If you want to transform your Mitosis-generated output to fit your needs, by doing things like:
 
@@ -75,3 +76,16 @@ const plugin = {
   },
 };
 ```
+
+## Component JSON
+
+The way Mitosis' engine works is:
+
+- you write a `.lite.jsx` component
+- the mitosis JSX parser converts it to a `MitosisComponent` JSON
+- that JSON is fed to the generator(s) of your choice, which provide it to the plugins.
+
+For more information on what the JSON contains, check out the documented types:
+
+- [MitosisComponent](../packages/core/src/types/mitosis-component.ts)
+- [MitosisNode](../packages/core/src/types/mitosis-node.ts): Each `MitosisComponent` will have multiple `MitosisNode` under `component.children`. Each node represents a DOM/JSX node
