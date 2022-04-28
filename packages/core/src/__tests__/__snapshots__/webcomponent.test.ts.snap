@@ -57,7 +57,7 @@ class SmileReviews extends HTMLElement {
       <div data-name=\\"div-1\\">
         <button data-name=\\"button-1\\">Write a review</button>
       
-        <span data-name=\\"show\\">
+        <template data-name=\\"show\\">
           <input placeholder=\\"Email\\" />
       
           <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -68,7 +68,7 @@ class SmileReviews extends HTMLElement {
           ></textarea>
       
           <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
-        </span>
+        </template>
       
         <span data-name=\\"for\\"></span>
         <template data-template-for=\\"for\\">
@@ -154,7 +154,29 @@ class SmileReviews extends HTMLElement {
       });
 
     this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-      el.style.display = this.state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+      if (this.state.showReviewPrompt) {
+        const clonedElement = el.content.cloneNode(true);
+        const endTag = document.createElement(\\"template\\");
+        endTag.setAttribute(\\"data-show\\", \\"show-end\\");
+
+        el.after(endTag);
+        el.after(clonedElement);
+      } else {
+        if (this.querySelector(\\"[data-show='show-end']\\") === null) {
+          return;
+        }
+
+        let sibling = el.nextSibling;
+        const toBeRemoved = [];
+        while (sibling) {
+          toBeRemoved.push(sibling);
+          if (sibling?.dataset?.show === \\"show-end\\") {
+            toBeRemoved.forEach((sib) => sib.remove());
+            return;
+          }
+          sibling = sibling.nextSibling;
+        }
+      }
     });
 
     this._root

@@ -4,7 +4,7 @@ exports[`Html Shadow DOM 1`] = `
 "<div data-name=\\"div-1\\">
   <button data-name=\\"button-1\\">Write a review</button>
 
-  <span data-name=\\"show\\">
+  <template data-name=\\"show\\">
     <input placeholder=\\"Email\\" />
 
     <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -15,7 +15,7 @@ exports[`Html Shadow DOM 1`] = `
     ></textarea>
 
     <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
-  </span>
+  </template>
 
   <span data-name=\\"for\\"></span>
   <template data-template-for=\\"for\\">
@@ -84,7 +84,29 @@ exports[`Html Shadow DOM 1`] = `
         });
 
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-        el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+        if (state.showReviewPrompt) {
+          const clonedElement = el.content.cloneNode(true);
+          const endTag = document.createElement(\\"template\\");
+          endTag.setAttribute(\\"data-show\\", \\"show-end\\");
+
+          el.after(endTag);
+          el.after(clonedElement);
+        } else {
+          if (this.querySelector(\\"[data-show='show-end']\\") === null) {
+            return;
+          }
+
+          let sibling = el.nextSibling;
+          const toBeRemoved = [];
+          while (sibling) {
+            toBeRemoved.push(sibling);
+            if (sibling?.dataset?.show === \\"show-end\\") {
+              toBeRemoved.forEach((sib) => sib.remove());
+              return;
+            }
+            sibling = sibling.nextSibling;
+          }
+        }
       });
 
       document
@@ -188,7 +210,7 @@ exports[`Html Stamped 1`] = `
 "<div data-name=\\"div-1\\">
   <button data-name=\\"button-1\\">Write a review</button>
 
-  <span data-name=\\"show\\">
+  <template data-name=\\"show\\">
     <input placeholder=\\"Email\\" />
 
     <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -199,7 +221,7 @@ exports[`Html Stamped 1`] = `
     ></textarea>
 
     <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
-  </span>
+  </template>
 
   <span data-name=\\"for\\"></span>
   <template data-template-for=\\"for\\">
@@ -278,7 +300,29 @@ exports[`Html Stamped 1`] = `
         });
 
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-        el.style.display = state.showReviewPrompt ? \\"inline\\" : \\"none\\";
+        if (state.showReviewPrompt) {
+          const clonedElement = el.content.cloneNode(true);
+          const endTag = document.createElement(\\"template\\");
+          endTag.setAttribute(\\"data-show\\", \\"show-end\\");
+
+          el.after(endTag);
+          el.after(clonedElement);
+        } else {
+          if (this.querySelector(\\"[data-show='show-end']\\") === null) {
+            return;
+          }
+
+          let sibling = el.nextSibling;
+          const toBeRemoved = [];
+          while (sibling) {
+            toBeRemoved.push(sibling);
+            if (sibling?.dataset?.show === \\"show-end\\") {
+              toBeRemoved.forEach((sib) => sib.remove());
+              return;
+            }
+            sibling = sibling.nextSibling;
+          }
+        }
       });
 
       document
