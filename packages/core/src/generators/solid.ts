@@ -24,6 +24,10 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
+import { hasContext } from './helpers/context';
+import { babelTransformExpression } from '../helpers/babel-transform';
+import { types } from '@babel/core';
+import { kebabCase } from 'lodash';
 
 export interface ToSolidOptions extends BaseTranspilerOptions {}
 
@@ -170,7 +174,33 @@ const blockToSolid = (
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${useKey}={event => ${value}} `;
     } else {
-      str += ` ${key}={${value}} `;
+      let useValue = value;
+      if (key === 'style') {
+        // Convert camelCase keys to kebab-case
+        // TODO: support more than top level objects, may need
+        // a runtime helper for expressions that are not a direct
+        // object literal, such as ternaries and other expression
+        // types
+        useValue = babelTransformExpression(value, {
+          ObjectExpression(path: babel.NodePath<babel.types.ObjectExpression>) {
+            // TODO: limit to top level objects only
+            for (const property of path.node.properties) {
+              if (types.isObjectProperty(property)) {
+                if (
+                  types.isIdentifier(property.key) ||
+                  types.isStringLiteral(property.key)
+                ) {
+                  const key = types.isIdentifier(property.key)
+                    ? property.key.name
+                    : property.key.value;
+                  property.key = types.stringLiteral(kebabCase(key));
+                }
+              }
+            }
+          },
+        });
+      }
+      str += ` ${key}={${useValue}} `;
     }
   }
   if (selfClosingTags.has(json.name)) {
@@ -242,6 +272,7 @@ export const componentToSolid =
     const stateString = getStateObjectStringFromComponent(json);
     const hasState = Boolean(Object.keys(component.state).length);
     const componentsUsed = getComponentsUsed(json);
+    const componentHasContext = hasContext(json);
 
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
@@ -251,6 +282,7 @@ export const componentToSolid =
       !(hasShowComponent || hasForComponent)
         ? ''
         : `import { 
+          ${!componentHasContext ? '' : 'useContext, '}
           ${!hasShowComponent ? '' : 'Show, '}
           ${!hasForComponent ? '' : 'For, '}
           ${!json.hooks.onMount?.code ? '' : 'onMount, '}
@@ -286,6 +318,10 @@ export const componentToSolid =
     }
 
   `;
+
+    // HACK: for some reason we are generating `state.state.foo` instead of `state.foo`
+    // need a full fix, but this unblocks a lot in the short term
+    str = str.replace(/state\.state\./g, 'state.');
 
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
