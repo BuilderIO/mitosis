@@ -20,25 +20,29 @@ exports[`React Button 1`] = `
 "export default function Button(props) {
   return (
     <>
-      {props.link ? (
-        <>
-          <a
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            {props.text}
-          </a>
-        </>
-      ) : null}
+      <>
+        {props.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={props.link}
+              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {props.text}
+            </a>
+          </>
+        ) : null}
+      </>
 
-      {!props.link ? (
-        <>
-          <button {...props.attributes} type=\\"button\\">
-            {props.text}
-          </button>
-        </>
-      ) : null}
+      <>
+        {!props.link ? (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {props.text}
+            </button>
+          </>
+        ) : null}
+      </>
     </>
   );
 }
@@ -459,49 +463,59 @@ export default function FormComponent(props) {
         onSubmit={(event) => onSubmit(event)}
       >
         {\\" \\"}
-        {props.builderBlock && props.builderBlock.children ? (
-          <>
-            {props.builderBlock?.children?.map((block, index) => (
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-                index={index}
+        <>
+          {props.builderBlock && props.builderBlock.children ? (
+            <>
+              {props.builderBlock?.children?.map((block, index) => (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                />
+              ))}
+            </>
+          ) : null}
+        </>{\\" \\"}
+        <>
+          {submissionState() === \\"error\\" ? (
+            <>
+              <BuilderBlocks
+                dataPath=\\"errorMessage\\"
+                blocks={props.errorMessage}
               />
-            ))}
-          </>
-        ) : null}{\\" \\"}
-        {submissionState() === \\"error\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
-        {submissionState() === \\"sending\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
-        {submissionState() === \\"error\\" && responseData ? (
-          <>
-            <pre className=\\"builder-form-error-text pre\\">
-              {\\" \\"}
-              {JSON.stringify(responseData, null, 2)}{\\" \\"}
-            </pre>
-          </>
-        ) : null}{\\" \\"}
-        {submissionState() === \\"success\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            />
-          </>
-        ) : null}{\\" \\"}
+            </>
+          ) : null}
+        </>{\\" \\"}
+        <>
+          {submissionState() === \\"sending\\" ? (
+            <>
+              <BuilderBlocks
+                dataPath=\\"sendingMessage\\"
+                blocks={props.sendingMessage}
+              />
+            </>
+          ) : null}
+        </>{\\" \\"}
+        <>
+          {submissionState() === \\"error\\" && responseData ? (
+            <>
+              <pre className=\\"builder-form-error-text pre\\">
+                {\\" \\"}
+                {JSON.stringify(responseData, null, 2)}{\\" \\"}
+              </pre>
+            </>
+          ) : null}
+        </>{\\" \\"}
+        <>
+          {submissionState() === \\"success\\" ? (
+            <>
+              <BuilderBlocks
+                dataPath=\\"successMessage\\"
+                blocks={props.successMessage}
+              />
+            </>
+          ) : null}
+        </>{\\" \\"}
       </form>{\\" \\"}
       <style jsx>{\`
         .pre {
@@ -580,22 +594,24 @@ export default function Image(props) {
     <>
       <>
         <picture ref={pictureRef}>
-          {!useLazyLoading() || load ? (
-            <>
-              <img
-                className=\\"img\\"
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                className={
-                  \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-                }
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-              />
-            </>
-          ) : null}
+          <>
+            {!useLazyLoading() || load ? (
+              <>
+                <img
+                  className=\\"img\\"
+                  alt={props.altText}
+                  aria-role={props.altText ? \\"presentation\\" : undefined}
+                  className={
+                    \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+                  }
+                  src={props.image}
+                  onLoad={(event) => setLoaded()}
+                  srcset={props.srcset}
+                  sizes={props.sizes}
+                />
+              </>
+            ) : null}
+          </>
 
           <source srcset={props.srcset} />
         </picture>
@@ -758,20 +774,22 @@ export default function SmileReviews(props) {
         Write a review
       </button>
 
-      {showReviewPrompt ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\" />
-          <Textarea placeholder=\\"How was your experience?\\" />
-          <Button
-            onClick={(event) => {
-              setShowReviewPrompt(false);
-            }}
-          >
-            Submit
-          </Button>
-        </>
-      ) : null}
+      <>
+        {showReviewPrompt ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <Input placeholder=\\"Title\\" />
+            <Textarea placeholder=\\"How was your experience?\\" />
+            <Button
+              onClick={(event) => {
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </Button>
+          </>
+        ) : null}
+      </>
 
       {reviews?.map((review, index) => (
         <Review key={review.id}>
