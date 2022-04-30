@@ -136,8 +136,8 @@ const blockToSolid = (
     {(${json.properties._forName}, _index) => {
       const index = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
-          .filter(filterEmptyTextNodes)
-          .map((child) => blockToSolid(child, options))}}}
+      .filter(filterEmptyTextNodes)
+      .map((child) => blockToSolid(child, options))}}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
