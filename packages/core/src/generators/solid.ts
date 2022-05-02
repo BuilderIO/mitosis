@@ -132,10 +132,10 @@ const blockToSolid = (
 
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
+    // The SolidJS `<For>` component has a special index() signal function.
+    // https://www.solidjs.com/docs/latest#%3Cfor%3E
     return `<For each={${json.bindings.each}}>
     {(${json.properties._forName}, _index) => {
-      // The SolidJS `<For>` component has a special index() signal function.
-      // https://www.solidjs.com/docs/latest#%3Cfor%3E
       const index = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
