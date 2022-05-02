@@ -325,6 +325,40 @@ async function outputTsFiles(
   await Promise.all(output);
 }
 
+const buildContextFile = async ({
+  path,
+  options,
+  target,
+}: {
+  path: string;
+  options: MitosisConfig;
+  target: Target;
+}) => {
+  // 'foo/bar/my-thing.context.ts' -> 'MyThing'
+  const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
+  const context = parseContext(await readFile(path, 'utf8'), { name });
+  if (!context) {
+    console.warn('Could not parse context from file', path);
+  } else {
+    switch (target) {
+      case 'svelte':
+        return contextToSvelte(options.options.svelte)({ context });
+      case 'vue':
+        return contextToVue(context);
+      case 'solid':
+        return contextToSolid()({ context });
+      case 'react':
+      case 'reactNative':
+        return contextToReact()({ context });
+      default:
+        console.warn(
+          'Context files are not supported for this target. Outputting no-op',
+        );
+        return contextToVue(context);
+    }
+  }
+};
+
 /**
  * Transpiles all non-component files, including Context files.
  */
@@ -343,33 +377,7 @@ async function buildTsFiles({
     tsFiles.map(async (path) => {
       let output: string;
       if (path.endsWith('.context.lite.ts')) {
-        // 'foo/bar/my-thing.context.ts' -> 'MyThing'
-        const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
-        const context = parseContext(await readFile(path, 'utf8'), { name });
-        if (!context) {
-          console.warn('Could not parse context from file', path);
-        } else {
-          switch (target) {
-            case 'svelte':
-              output = contextToSvelte(options.options.svelte)({ context });
-              break;
-            case 'vue':
-              output = contextToVue(context);
-              break;
-            case 'solid':
-              output = contextToSolid()({ context });
-              break;
-            case 'react':
-            case 'reactNative':
-              output = contextToReact()({ context });
-              break;
-            default:
-              console.warn(
-                'Context files are not supported for this target. Outputting no-op',
-              );
-              contextToVue(context);
-          }
-        }
+        output = await buildContextFile({ path, options, target });
         // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }

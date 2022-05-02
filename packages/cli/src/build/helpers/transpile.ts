@@ -2,6 +2,19 @@ import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { Target } from '@builder.io/mitosis';
 
+const getImportFileExtensionForTarget = (target: Target) => {
+  switch (target) {
+    case 'vue':
+      return '.vue';
+    case 'swift':
+      return '.swift';
+    case 'svelte':
+      return '.svelte';
+    default:
+      return '';
+  }
+};
+
 export const transpile = async ({
   path,
   content,
@@ -42,8 +55,17 @@ export const transpile = async ({
 
     // Remove .lite extensions from imports without having to load a slow parser like babel
     // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
-    contents = contents.replace(/\.lite(['"][;\)])/g, '$1');
-
+    contents = contents
+      .replace(
+        // we start by replacing all `context.lite` imports with `context`
+        /\.context\.lite(['"][;\)])/g,
+        `$1`,
+      )
+      .replace(
+        // afterwards, we replace all `.lite` imports with the correct file extension
+        /\.lite(['"][;\)])/g,
+        `${getImportFileExtensionForTarget(target)}$1`,
+      );
     return contents;
   } catch (e) {
     console.error(`Error found in file: ${path}`);

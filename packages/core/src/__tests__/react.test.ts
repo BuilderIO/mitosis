@@ -22,6 +22,7 @@ const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
+const rootShow = require('./data/blocks/rootShow.raw');
 
 describe('React', () => {
   test('Basic', () => {
@@ -156,6 +157,12 @@ describe('React', () => {
   test('onMount & onUnMount', () => {
     const component = parseJsx(onMount);
     const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('rootShow', () => {
+    const component = parseJsx(rootShow);
+    const output = componentToReact({ prettier: false })({ component });
     expect(output).toMatchSnapshot();
   });
 });
