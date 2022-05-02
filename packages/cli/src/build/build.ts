@@ -177,6 +177,8 @@ const getFileExtensionForTarget = (target: Target) => {
       return '.swift';
     case 'svelte':
       return '.svelte';
+    case 'solid':
+      return '.jsx';
     default:
       return '.js';
   }

@@ -3,7 +3,7 @@
 exports[`Solid Basic 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
-export default function MyBasicComponent(props) {
+function MyBasicComponent(props) {
   const state = createMutable({ name: \\"Steve\\" });
 
   return (
@@ -16,13 +16,15 @@ export default function MyBasicComponent(props) {
     </div>
   );
 }
+
+export default MyBasicComponent;
 "
 `;
 
 exports[`Solid Button 1`] = `
 "import { Show } from \\"solid-js\\";
 
-export default function Button(props) {
+function Button(props) {
   return (
     <>
       <Show when={props.link}>
@@ -42,6 +44,8 @@ export default function Button(props) {
     </>
   );
 }
+
+export default Button;
 "
 `;
 
@@ -51,7 +55,7 @@ exports[`Solid Columns 1`] = `
 import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
-export default function Column(props) {
+function Column(props) {
   const state = createMutable({
     getColumns() {
       return props.columns || [];
@@ -88,27 +92,32 @@ export default function Column(props) {
       })}
     >
       <For each={props.columns}>
-        {(column, index) => (
-          <div
-            class={css({
-              flexGrow: \\"1\\",
-            })}
-          >
-            {column.content}
-            {index}
-          </div>
-        )}
+        {(column, _index) => {
+          const index = _index();
+          return (
+            <div
+              class={css({
+                flexGrow: \\"1\\",
+              })}
+            >
+              {column.content}
+              {index}
+            </div>
+          );
+        }}
       </For>
     </div>
   );
 }
+
+export default Column;
 "
 `;
 
 exports[`Solid CustomCode 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
-export default function CustomCode(props) {
+function CustomCode(props) {
   const state = createMutable({
     scriptsInserted: [],
     scriptsRun: [],
@@ -171,13 +180,15 @@ export default function CustomCode(props) {
     ></div>
   );
 }
+
+export default CustomCode;
 "
 `;
 
 exports[`Solid Embed 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
-export default function CustomCode(props) {
+function CustomCode(props) {
   const state = createMutable({
     scriptsInserted: [],
     scriptsRun: [],
@@ -240,6 +251,8 @@ export default function CustomCode(props) {
     ></div>
   );
 }
+
+export default CustomCode;
 "
 `;
 
@@ -255,7 +268,7 @@ import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default function FormComponent(props) {
+function FormComponent(props) {
   const state = createMutable({
     state: \\"unsubmitted\\",
     responseData: null,
@@ -500,13 +513,16 @@ export default function FormComponent(props) {
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
-          {(block, index) => (
-            <BuilderBlockComponent
-              key={block.id}
-              block={block}
-              index={index}
-            ></BuilderBlockComponent>
-          )}
+          {(block, _index) => {
+            const index = _index();
+            return (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            );
+          }}
         </For>
       </Show>
       <Show when={state.submissionState === \\"error\\"}>
@@ -541,6 +557,8 @@ export default function FormComponent(props) {
     </form>
   );
 }
+
+export default FormComponent;
 "
 `;
 
@@ -550,7 +568,7 @@ exports[`Solid Image 1`] = `
 import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
-export default function Image(props) {
+function Image(props) {
   const state = createMutable({
     scrollListener: null,
     imageLoaded: false,
@@ -627,13 +645,15 @@ export default function Image(props) {
     </>
   );
 }
+
+export default Image;
 "
 `;
 
 exports[`Solid Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props) {
+function ImgComponent(props) {
   return (
     <img
       {...props.attributes}
@@ -647,13 +667,15 @@ export default function ImgComponent(props) {
     />
   );
 }
+
+export default ImgComponent;
 "
 `;
 
 exports[`Solid Input block 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props) {
+function FormInputComponent(props) {
   return (
     <input
       {...props.attributes}
@@ -671,11 +693,13 @@ export default function FormInputComponent(props) {
     />
   );
 }
+
+export default FormInputComponent;
 "
 `;
 
 exports[`Solid RawText 1`] = `
-"export default function RawText(props) {
+"function RawText(props) {
   return (
     <span
       class={props.attributes?.class || props.attributes?.className}
@@ -683,11 +707,13 @@ exports[`Solid RawText 1`] = `
     ></span>
   );
 }
+
+export default RawText;
 "
 `;
 
 exports[`Solid Section 1`] = `
-"export default function SectionComponent(props) {
+"function SectionComponent(props) {
   return (
     <section
       {...props.attributes}
@@ -703,6 +729,8 @@ exports[`Solid Section 1`] = `
     </section>
   );
 }
+
+export default SectionComponent;
 "
 `;
 
@@ -711,7 +739,7 @@ exports[`Solid Select block 1`] = `
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props) {
+function SelectComponent(props) {
   return (
     <select
       {...props.attributes}
@@ -725,33 +753,40 @@ export default function SelectComponent(props) {
       name={props.name}
     >
       <For each={props.options}>
-        {(option, index) => (
-          <option value={option.value} data-index={index}>
-            {option.name || option.value}
-          </option>
-        )}
+        {(option, _index) => {
+          const index = _index();
+          return (
+            <option value={option.value} data-index={index}>
+              {option.name || option.value}
+            </option>
+          );
+        }}
       </For>
     </select>
   );
 }
+
+export default SelectComponent;
 "
 `;
 
 exports[`Solid Submit button block 1`] = `
-"export default function SubmitButton(props) {
+"function SubmitButton(props) {
   return (
     <button {...props.attributes} type=\\"submit\\">
       {props.text}
     </button>
   );
 }
+
+export default SubmitButton;
 "
 `;
 
 exports[`Solid Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props) {
+function Text(props) {
   return (
     <div
       contentEditable={allowEditingText || undefined}
@@ -759,11 +794,13 @@ export default function Text(props) {
     ></div>
   );
 }
+
+export default Text;
 "
 `;
 
 exports[`Solid Textarea 1`] = `
-"export default function Textarea(props) {
+"function Textarea(props) {
   return (
     <textarea
       {...props.attributes}
@@ -774,11 +811,13 @@ exports[`Solid Textarea 1`] = `
     ></textarea>
   );
 }
+
+export default Textarea;
 "
 `;
 
 exports[`Solid Video 1`] = `
-"export default function Video(props) {
+"function Video(props) {
   return (
     <video
       {...props.attributes}
@@ -802,5 +841,7 @@ exports[`Solid Video 1`] = `
     ></video>
   );
 }
+
+export default Video;
 "
 `;
