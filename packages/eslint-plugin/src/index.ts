@@ -43,7 +43,7 @@ export const staticControlFlow: Rule.RuleModule = {
             node.callee.name === 'useEffect'
           ) {
             const useEffectMessage =
-              'Only useEffect with an empty array second argument is allowed. E.g. useEfffect(...) must be useEffect(..., [])';
+              'Only useEffect with an empty array second argument is allowed. E.g. useEffect(...) must be useEffect(..., [])';
             const secondArg = node.arguments[1];
             if (
               !(
