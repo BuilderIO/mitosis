@@ -25,29 +25,25 @@ import { View, StyleSheet, Image, Text } from \\"react-native\\";
 export default function Button(props) {
   return (
     <>
-      <>
-        {props.link ? (
-          <>
-            <View
-              {...props.attributes}
-              href={props.link}
-              target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-            >
-              <Text>{props.text}</Text>
-            </View>
-          </>
-        ) : null}
-      </>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
 
-      <>
-        {!props.link ? (
-          <>
-            <View {...props.attributes} type=\\"button\\">
-              <Text>{props.text}</Text>
-            </View>
-          </>
-        ) : null}
-      </>
+      {!props.link ? (
+        <>
+          <View {...props.attributes} type=\\"button\\">
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
     </>
   );
 }
@@ -441,59 +437,42 @@ export default function FormComponent(props) {
       onSubmit={(event) => onSubmit(event)}
     >
       {\\" \\"}
-      <>
-        {props.builderBlock && props.builderBlock.children ? (
-          <>
-            {props.builderBlock?.children?.map((block, index) => (
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-                index={index}
-              />
-            ))}
-          </>
-        ) : null}
-      </>{\\" \\"}
-      <>
-        {submissionState() === \\"error\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"errorMessage\\"
-              blocks={props.errorMessage}
-            />
-          </>
-        ) : null}
-      </>{\\" \\"}
-      <>
-        {submissionState() === \\"sending\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"sendingMessage\\"
-              blocks={props.sendingMessage}
-            />
-          </>
-        ) : null}
-      </>{\\" \\"}
-      <>
-        {submissionState() === \\"error\\" && responseData ? (
-          <>
-            <View style={styles.view1}>
-              {\\" \\"}
-              <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
-            </View>
-          </>
-        ) : null}
-      </>{\\" \\"}
-      <>
-        {submissionState() === \\"success\\" ? (
-          <>
-            <BuilderBlocks
-              dataPath=\\"successMessage\\"
-              blocks={props.successMessage}
-            />
-          </>
-        ) : null}
-      </>{\\" \\"}
+      {props.builderBlock && props.builderBlock.children ? (
+        <>
+          {props.builderBlock?.children?.map((block, index) => (
+            <BuilderBlockComponent key={block.id} block={block} index={index} />
+          ))}
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" ? (
+        <>
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"sending\\" ? (
+        <>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          />
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" && responseData ? (
+        <>
+          <View style={styles.view1}>
+            {\\" \\"}
+            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
+          </View>
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"success\\" ? (
+        <>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          />
+        </>
+      ) : null}{\\" \\"}
     </View>
   );
 }
@@ -568,21 +547,19 @@ export default function Image(props) {
   return (
     <>
       <View ref={pictureRef}>
-        <>
-          {!useLazyLoading() || load ? (
-            <>
-              <View
-                alt={props.altText}
-                aria-role={props.altText ? \\"presentation\\" : undefined}
-                src={props.image}
-                onLoad={(event) => setLoaded()}
-                srcset={props.srcset}
-                sizes={props.sizes}
-                style={styles.view1}
-              />
-            </>
-          ) : null}
-        </>
+        {!useLazyLoading() || load ? (
+          <>
+            <View
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+              style={styles.view1}
+            />
+          </>
+        ) : null}
 
         <View srcset={props.srcset} />
       </View>
@@ -753,23 +730,21 @@ export default function SmileReviews(props) {
         <Text>Write a review</Text>
       </View>
 
-      <>
-        {showReviewPrompt ? (
-          <>
-            <View placeholder=\\"Email\\" />
-            <View placeholder=\\"Title\\" style={styles.view1} />
-            <View placeholder=\\"How was your experience?\\" style={styles.view2} />
-            <View
-              onClick={(event) => {
-                setShowReviewPrompt(false);
-              }}
-              style={styles.view3}
-            >
-              <Text>Submit</Text>
-            </View>
-          </>
-        ) : null}
-      </>
+      {showReviewPrompt ? (
+        <>
+          <View placeholder=\\"Email\\" />
+          <View placeholder=\\"Title\\" style={styles.view1} />
+          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View
+            onClick={(event) => {
+              setShowReviewPrompt(false);
+            }}
+            style={styles.view3}
+          >
+            <Text>Submit</Text>
+          </View>
+        </>
+      ) : null}
 
       {reviews?.map((review, index) => (
         <View key={review.id} style={styles.view4}>
