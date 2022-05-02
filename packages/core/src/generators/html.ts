@@ -237,18 +237,39 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
     addOnChangeJs(
       elId,
       options,
-      `el.style.display = ${(json.bindings.when as string).replace(
-        /;$/,
-        '',
-      )} ? 'inline' : 'none'`,
+      `
+      if(${(json.bindings.when as string).replace(/;$/, '')}) {
+      	const clonedElement = el.content.cloneNode(true);
+        const endTag = document.createElement('template');
+        endTag.setAttribute('data-show', '${elId}-end');
+				
+        el.after(endTag);
+        el.after(clonedElement)
+      } else {
+        if (this.querySelector("[data-show='${elId}-end']") === null) {
+        	return;
+        }
+
+        let sibling = el.nextSibling;
+        const toBeRemoved = [];
+        while (sibling) {
+          toBeRemoved.push(sibling);
+          if (sibling?.dataset?.show === '${elId}-end') {
+          	toBeRemoved.forEach(sib => sib.remove());
+            return;
+          }        
+          sibling = sibling.nextSibling;
+        }
+      }     
+      `,
     );
 
-    str += `<span data-name="${elId}">`;
+    str += `<template data-name="${elId}">`;
     if (json.children) {
       str += json.children.map((item) => blockToHtml(item, options)).join('\n');
     }
 
-    str += '</span>';
+    str += '</template>';
   } else {
     str += `<${json.name} `;
 
