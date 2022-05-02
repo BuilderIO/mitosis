@@ -92,7 +92,7 @@ export const rules = {
   'use-state-var-declarator': useStateVarDeclarator,
   'no-async-methods-on-state': noAsyncMethodsOnState,
   'no-var-declaration-in-jsx': notVarDeclarationInJSX,
-  'no-var-name-as-prop-name': noVarNameSameAsPropName,
+  'no-var-name-same-as-prop-name': noVarNameSameAsPropName,
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
   'no-var-name-same-as-state-property': noVarNameSameAsStateProperty,
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
