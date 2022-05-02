@@ -51,6 +51,14 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   type?: 'dom' | 'native';
 }
 
+/**
+ * If the root Mitosis component only has 1 child, and it is a `Show` node, then we need to wrap it in a fragment.
+ * Otherwise, we end up with invalid React render code.
+ *
+ */
+const isRootShowNode = (json: MitosisComponent) =>
+  json.children.length === 1 && ['Show'].includes(json.children[0].name);
+
 const wrapInFragment = (json: MitosisComponent | MitosisNode) =>
   json.children.length !== 1;
 
@@ -76,15 +84,14 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    // We have to wrap the whole thing in fragments, in case `<Show/> is a single child of a component.
-    return `<>{${processBinding(json.bindings.when as string, options)} ? (
+    return `{${processBinding(json.bindings.when as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? '</>' : ''}
     ) : ${
       !json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)
-    }}</>`;
+    }}`;
   },
 };
 
@@ -492,7 +499,9 @@ const _componentToReact = (
   }
 
   const wrap =
-    wrapInFragment(json) || (componentHasStyles && stylesType === 'styled-jsx');
+    wrapInFragment(json) ||
+    (componentHasStyles && stylesType === 'styled-jsx') ||
+    isRootShowNode(json);
 
   const nativeStyles =
     stylesType === 'react-native' &&
