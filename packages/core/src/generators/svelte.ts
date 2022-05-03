@@ -68,6 +68,19 @@ ${json.children
 ${json.children
   .map((item) => blockToSvelte({ json: item, options, parentComponent }))
   .join('\n')}
+
+  ${
+    json.meta.else
+      ? `
+  {:else}
+  ${blockToSvelte({
+    json: json.meta.else as MitosisNode,
+    options,
+    parentComponent,
+  })}
+  `
+      : ''
+  }
 {/if}`;
   },
 };
