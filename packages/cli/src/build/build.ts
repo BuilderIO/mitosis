@@ -97,7 +97,7 @@ export async function build(config?: MitosisConfig) {
 }
 
 async function clean(options: MitosisConfig) {
-  const files = await glob(`${options.dest}/*/${options.files}`);
+  const files = await glob(`${options.dest}/**/*/${options.files}`);
   await Promise.all(
     files.map(async (file) => {
       await remove(file);
