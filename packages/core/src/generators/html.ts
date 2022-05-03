@@ -366,13 +366,32 @@ const blockToHtml = (
           addOnChangeJs(
             elId,
             options,
-            `;Object.assign(el.style, ${useValue});`,
+            `
+            ${parentScopeVars
+              .filter((scopeVar) => {
+                return new RegExp(scopeVar).test(useValue as string);
+              })
+              .map((scopeVars) => {
+                return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
+              })
+              .join('\n')}
+            ;Object.assign(el.style, ${useValue});`,
           );
         } else {
           addOnChangeJs(
             elId,
             options,
-            generateSetElementAttributeCode(key, useValue),
+            `
+            ${parentScopeVars
+              .filter((scopeVar) => {
+                return new RegExp(scopeVar).test(useValue as string);
+              })
+              .map((scopeVars) => {
+                return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
+              })
+              .join('\n')}
+            ${generateSetElementAttributeCode(key, useValue)}
+            `,
           );
         }
       }
