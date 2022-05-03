@@ -98,7 +98,9 @@ const setContextCode = (json: MitosisComponent) => {
     .map((key) => {
       const { value, name } = contextSetters[key];
       return `setContext(${name}.key, ${
-        value ? getMemberObjectString(value) : 'undefined'
+        value
+          ? stripStateAndPropsRefs(getMemberObjectString(value))
+          : 'undefined'
       });`;
     })
     .join('\n');
