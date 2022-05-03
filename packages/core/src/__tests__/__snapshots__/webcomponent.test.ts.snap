@@ -91,11 +91,11 @@ class SmileReviews extends HTMLElement {
               </div>
       
               <div>
-                <span data-name=\\"div-5\\"><!-- this.review.author --></span>
+                <span data-name=\\"div-5\\"><!-- review.author --></span>
               </div>
       
               <div>
-                <span data-name=\\"div-6\\"><!-- this.review.reviewMessage --></span>
+                <span data-name=\\"div-6\\"><!-- review.reviewMessage --></span>
               </div>
             </div>
           </div>
@@ -195,15 +195,15 @@ class SmileReviews extends HTMLElement {
     this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
       let array = this.state.reviews;
       let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"review\\");
+      this.renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
     });
 
     this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
-      el.key = this.getContext(el, \\"review\\").id;
+      el.key = review.id;
     });
 
     this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-      el.src = this.getContext(el, \\"review\\").avatar;
+      el.src = review.avatar;
     });
 
     this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
@@ -213,42 +213,49 @@ class SmileReviews extends HTMLElement {
     });
 
     this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+      const index = this.getContext(el, \\"index\\");
       el.innerText = index;
     });
 
     this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-      el.innerText = this.getContext(el, \\"review\\").author;
+      const review = this.getContext(el, \\"review\\");
+      el.innerText = review.author;
     });
 
     this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el, index) => {
-      el.innerText = this.getContext(el, \\"review\\").reviewMessage;
+      const review = this.getContext(el, \\"review\\");
+      el.innerText = review.reviewMessage;
     });
   }
 
   // Helper to render loops
-  renderLoop(el, array, template, itemName) {
+  renderLoop(el, array, template, itemName, itemIndex, collectionName) {
     el.innerHTML = \\"\\";
-    for (let value of array) {
+    for (let [index, value] of array.entries()) {
       let tmp = document.createElement(\\"span\\");
       tmp.innerHTML = template.innerHTML;
       Array.from(tmp.children).forEach((child) => {
-        this.contextMap.set(child, {
-          ...this.contextMap.get(child),
-          [itemName]: value,
-        });
+        if (itemName !== undefined) {
+          child[\\"__\\" + itemName] = value;
+        }
+        if (itemIndex !== undefined) {
+          child[\\"__\\" + itemIndex] = index;
+        }
+        if (collectionName !== undefined) {
+          child[\\"__\\" + collectionName] = array;
+        }
         el.appendChild(child);
       });
     }
   }
 
   getContext(el, name) {
-    let parent = el;
     do {
-      let context = this.contextMap.get(parent);
-      if (context && name in context) {
-        return context[name];
+      let value = el[\\"__\\" + name];
+      if (value !== undefined) {
+        return value;
       }
-    } while ((parent = parent.parentNode || parent.host));
+    } while ((el = el.parentNode));
   }
 }
 

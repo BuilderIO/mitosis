@@ -29,11 +29,15 @@ exports[`Html Shadow DOM 1`] = `
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <span data-name=\\"div-4\\">
+            <!-- getContext(el, \\"review\\").author -->
+          </span>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <span data-name=\\"div-5\\">
+            <!-- getContext(el, \\"review\\").reviewMessage -->
+          </span>
         </div>
       </div>
     </div>
@@ -100,7 +104,7 @@ exports[`Html Shadow DOM 1`] = `
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\");
+        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
@@ -116,14 +120,17 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+        const index = this.getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+        const review = this.getContext(el, \\"review\\");
         el.innerText = getContext(el, \\"review\\").author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
+        const review = this.getContext(el, \\"review\\");
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }
@@ -216,11 +223,15 @@ exports[`Html Stamped 1`] = `
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <span data-name=\\"div-4\\">
+            <!-- getContext(el, \\"review\\").author -->
+          </span>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <span data-name=\\"div-5\\">
+            <!-- getContext(el, \\"review\\").reviewMessage -->
+          </span>
         </div>
       </div>
     </div>
@@ -297,7 +308,7 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\");
+        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
@@ -313,14 +324,17 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+        const index = this.getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+        const review = this.getContext(el, \\"review\\");
         el.innerText = getContext(el, \\"review\\").author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
+        const review = this.getContext(el, \\"review\\");
         el.innerText = getContext(el, \\"review\\").reviewMessage;
       });
     }
