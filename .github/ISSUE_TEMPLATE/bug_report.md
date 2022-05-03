@@ -9,6 +9,8 @@ assignees: ''
 
 <!-- If you have a question or need help regarding how the Builder product works, then https://forum.builder.io is a much better place to ask your question. -->
 
+- [ ] I am interested in helping provide a fix
+
 **Describe the bug**
 A clear and concise description of what the bug is.
 
