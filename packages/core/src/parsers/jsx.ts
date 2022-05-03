@@ -488,9 +488,10 @@ const jsxElementToJson = (
 
       if (types.isArrowFunctionExpression(childExpression)) {
         const forName = (childExpression.params[0] as babel.types.Identifier)
-        .name;
-        const indexName = (childExpression.params?.[1] as babel.types.Identifier)
-          ?.name;
+          .name;
+        const indexName = (
+          childExpression.params?.[1] as babel.types.Identifier
+        )?.name;
         const collectionName = (
           childExpression.params?.[2] as babel.types.Identifier
         )?.name;
@@ -510,9 +511,7 @@ const jsxElementToJson = (
             _indexName: indexName,
             _collectionName: collectionName,
           },
-          children: [
-            jsxElementToJson(childExpression.body as any)!
-          ],
+          children: [jsxElementToJson(childExpression.body as any)!],
         });
       }
     }

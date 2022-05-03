@@ -179,7 +179,11 @@ const addOnChangeJs = (
 };
 
 // TODO: spread support
-const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentScopeVars: ScopeVars = []) => {
+const blockToHtml = (
+  json: MitosisNode,
+  options: InternalToHtmlOptions,
+  parentScopeVars: ScopeVars = [],
+) => {
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
@@ -196,7 +200,6 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
   }
 
   if (json.properties._text) {
-    
     return json.properties._text;
   }
   if (json.bindings._text) {
@@ -205,21 +208,20 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
       elId,
       options,
       `
-      ${
-        parentScopeVars
-          .filter(scopeVar => {
-            return (new RegExp(scopeVar)).test(json.bindings._text as string)
-          })
-          .map(scopeVars => {
-            return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`
-          }).join('\n')
-      }
-      el.innerText = ${json.bindings._text};`
+      ${parentScopeVars
+        .filter((scopeVar) => {
+          return new RegExp(scopeVar).test(json.bindings._text as string);
+        })
+        .map((scopeVars) => {
+          return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
+        })
+        .join('\n')}
+      el.innerText = ${json.bindings._text};`,
     );
 
-    return `<span data-name="${elId}"><!-- ${(
+    return `<span data-name="${elId}"><!-- ${
       json.bindings._text as string
-    )} --></span>`;
+    } --></span>`;
   }
 
   let str = '';
@@ -247,7 +249,11 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
         }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, ${itemName ? `"${itemName}"` : 'undefined'}, ${indexName ? `"${indexName}"` : 'undefined'}, ${collectionName ? `"${collectionName}"` : 'undefined'});
+        }renderLoop(el, array, template, ${
+        itemName ? `"${itemName}"` : 'undefined'
+      }, ${indexName ? `"${indexName}"` : 'undefined'}, ${
+        collectionName ? `"${collectionName}"` : 'undefined'
+      });
       `,
     );
     // TODO: decide on how to handle this...
@@ -255,7 +261,9 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
       <span data-name="${elId}"></span>
       <template data-template-for="${elId}">`;
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options, scopedVars)).join('\n');
+      str += json.children
+        .map((item) => blockToHtml(item, options, scopedVars))
+        .join('\n');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
@@ -275,7 +283,9 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
 
     str += `<template data-name="${elId}">`;
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options, parentScopeVars)).join('\n');
+      str += json.children
+        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .join('\n');
     }
 
     str += '</template>';
@@ -318,7 +328,9 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
           event = 'input';
         }
         const fnName = camelCase(`on-${elId}-${event}`);
-        const content = removeSurroundingBlock(updateReferencesInCode(useValue, options))
+        const content = removeSurroundingBlock(
+          updateReferencesInCode(useValue, options),
+        );
         options.js += `
           // Event handler for '${event}' event on ${elId}
           ${
@@ -326,15 +338,14 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
               ? `this.${fnName} = (event) => {`
               : `function ${fnName} (event) {`
           }
-            ${
-              parentScopeVars
-                .filter(scopeVar => {
-                  return (new RegExp(scopeVar)).test(content as string)
-                })
-                .map(scopeVars => {
-                  return `const ${scopeVars} = this.getContext(event.currentTarget, "${scopeVars}")`
-                }).join('\n')
-            }
+            ${parentScopeVars
+              .filter((scopeVar) => {
+                return new RegExp(scopeVar).test(content as string);
+              })
+              .map((scopeVars) => {
+                return `const ${scopeVars} = this.getContext(event.currentTarget, "${scopeVars}")`;
+              })
+              .join('\n')}
             ${content}
           }
         `;
@@ -371,7 +382,9 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentSc
     }
     str += '>';
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options, parentScopeVars)).join('\n');
+      str += json.children
+        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .join('\n');
     }
     if (json.properties.innerHTML) {
       // Maybe put some kind of safety here for broken HTML such as no close tag
