@@ -34,6 +34,7 @@ export interface ToHtmlOptions extends BaseTranspilerOptions {
   prefix?: string;
 }
 
+type ScopeVars = Array<string>;
 type StringRecord = { [key: string]: string };
 type NumberRecord = { [key: string]: number };
 type InternalToHtmlOptions = ToHtmlOptions & {
@@ -178,7 +179,7 @@ const addOnChangeJs = (
 };
 
 // TODO: spread support
-const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
+const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions, parentScopeVars: ScopeVars = []) => {
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
@@ -195,21 +196,45 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
   }
 
   if (json.properties._text) {
+    
     return json.properties._text;
   }
   if (json.bindings._text) {
     // TO-DO: textContent might be better performance-wise
-    addOnChangeJs(elId, options, `el.innerText = ${json.bindings._text};`);
+    addOnChangeJs(
+      elId,
+      options,
+      `
+      ${
+        parentScopeVars
+          .filter(scopeVar => {
+            return (new RegExp(scopeVar)).test(json.bindings._text as string)
+          })
+          .map(scopeVars => {
+            return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`
+          }).join('\n')
+      }
+      el.innerText = ${json.bindings._text};`
+    );
 
     return `<span data-name="${elId}"><!-- ${(
       json.bindings._text as string
-    ).replace(/getContext\(el, "([^"]+)"\)/g, '$1')} --></span>`;
+    )} --></span>`;
   }
 
   let str = '';
 
   if (json.name === 'For') {
     const itemName = json.properties._forName;
+    const indexName = json.properties._indexName;
+    const collectionName = json.properties._collectionName;
+    const scopedVars: ScopeVars = [
+      ...parentScopeVars,
+      itemName as string,
+      indexName as string,
+      collectionName as string,
+    ].filter(Boolean);
+
     addOnChangeJs(
       elId,
       options,
@@ -222,7 +247,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
         }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, "${itemName}");
+        }renderLoop(el, array, template, ${itemName ? `"${itemName}"` : 'undefined'}, ${indexName ? `"${indexName}"` : 'undefined'}, ${collectionName ? `"${collectionName}"` : 'undefined'});
       `,
     );
     // TODO: decide on how to handle this...
@@ -230,7 +255,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
       <span data-name="${elId}"></span>
       <template data-template-for="${elId}">`;
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options)).join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, scopedVars)).join('\n');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
@@ -250,7 +275,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
 
     str += `<template data-name="${elId}">`;
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options)).join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, parentScopeVars)).join('\n');
     }
 
     str += '</template>';
@@ -293,6 +318,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
           event = 'input';
         }
         const fnName = camelCase(`on-${elId}-${event}`);
+        const content = removeSurroundingBlock(updateReferencesInCode(useValue, options))
         options.js += `
           // Event handler for '${event}' event on ${elId}
           ${
@@ -300,12 +326,22 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
               ? `this.${fnName} = (event) => {`
               : `function ${fnName} (event) {`
           }
-            ${removeSurroundingBlock(updateReferencesInCode(useValue, options))}
+            ${
+              parentScopeVars
+                .filter(scopeVar => {
+                  return (new RegExp(scopeVar)).test(content as string)
+                })
+                .map(scopeVars => {
+                  return `const ${scopeVars} = this.getContext(event.currentTarget, "${scopeVars}")`
+                }).join('\n')
+            }
+            ${content}
           }
         `;
         const fnIdentifier = `${
           options.format === 'class' ? 'this.' : ''
         }${fnName}`;
+
         addOnChangeJs(
           elId,
           options,
@@ -335,7 +371,7 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
     }
     str += '>';
     if (json.children) {
-      str += json.children.map((item) => blockToHtml(item, options)).join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, parentScopeVars)).join('\n');
     }
     if (json.properties.innerHTML) {
       // Maybe put some kind of safety here for broken HTML such as no close tag
@@ -590,7 +626,6 @@ export const componentToCustomElement =
       json = runPreJsonPlugins(json, options.plugins);
     }
     const componentHasProps = hasProps(json);
-    replaceForNameIdentifiers(json, useOptions);
     addUpdateAfterSet(json, useOptions);
 
     const hasLoop = hasComponent('For', json);
@@ -797,29 +832,33 @@ export const componentToCustomElement =
             : `
 
           // Helper to render loops
-          renderLoop(el, array, template, itemName) {
-            el.innerHTML = '';
-            for (let value of array) {
-              let tmp = document.createElement('span');
+          renderLoop(el, array, template, itemName, itemIndex, collectionName) {
+            el.innerHTML = "";
+            for (let [index, value] of array.entries()) {
+              let tmp = document.createElement("span");
               tmp.innerHTML = template.innerHTML;
               Array.from(tmp.children).forEach((child) => {
-                this.contextMap.set(child, {
-                  ...this.contextMap.get(child),
-                  [itemName]: value
-                });
+                if (itemName !== undefined) {
+                  child['__' + itemName] = value;
+                }
+                if (itemIndex !== undefined) {
+                  child['__' + itemIndex] = index;
+                }
+                if (collectionName !== undefined) {
+                  child['__' + collectionName] = array;
+                }
                 el.appendChild(child);
               });
             }
           }
-
+        
           getContext(el, name) {
-            let parent = el;
             do {
-              let context = this.contextMap.get(parent);
-              if (context && name in context) {
-                return context[name];
+              let value = el['__' + name]
+              if (value !== undefined) {
+                return value
               }
-            } while (parent = parent.parentNode || parent.host)
+            } while ((el = el.parentNode));
           }
         `
         }
