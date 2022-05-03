@@ -511,7 +511,9 @@ const jsxElementToJson = (
             _indexName: indexName,
             _collectionName: collectionName,
           },
-          children: [jsxElementToJson(childExpression.body as any)!],
+          children: [
+            jsxElementToJson(childExpression.body as any)!
+          ],
         });
       }
     }

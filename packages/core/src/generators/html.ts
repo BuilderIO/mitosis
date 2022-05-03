@@ -180,6 +180,7 @@ const blockToHtml = (
   }
 
   if (json.properties._text) {
+    
     return json.properties._text;
   }
   if (json.bindings._text) {
