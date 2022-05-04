@@ -238,29 +238,13 @@ const blockToHtml = (json: MitosisNode, options: InternalToHtmlOptions) => {
       elId,
       options,
       `
-      if(${(json.bindings.when as string).replace(/;$/, '')}) {
-      	const clonedElement = el.content.cloneNode(true);
-        const endTag = document.createElement('template');
-        endTag.setAttribute('data-show', '${elId}-end');
-				
-        el.after(endTag);
-        el.after(clonedElement)
-      } else {
-        if (this.querySelector("[data-show='${elId}-end']") === null) {
-        	return;
+        const whenCondition = ${(json.bindings.when as string).replace(
+          /;$/,
+          '',
+        )};
+        if (whenCondition) {
+          this.showContent(el)
         }
-
-        let sibling = el.nextSibling;
-        const toBeRemoved = [];
-        while (sibling) {
-          toBeRemoved.push(sibling);
-          if (sibling?.dataset?.show === '${elId}-end') {
-          	toBeRemoved.forEach(sib => sib.remove());
-            return;
-          }        
-          sibling = sibling.nextSibling;
-        }
-      }     
       `,
     );
 
@@ -531,7 +515,6 @@ export const componentToHtml =
           !hasLoop
             ? ''
             : `
-
           // Helper to render loops
           function renderLoop(el, array, template, itemName) {
             el.innerHTML = '';
@@ -699,6 +682,8 @@ export const componentToCustomElement =
           `
           }
 
+          this.destroyNodes = [];
+
           ${useOptions.js}
 
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
@@ -717,8 +702,15 @@ export const componentToCustomElement =
               addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
             )}
+            this.destroyAnyNodes();
           }
           `
+        }
+
+        destroyAnyNodes() {
+          // destroy current view template refs before rendering again
+          this.destroyNodes.forEach(el => el.remove()) 
+          this.destroyNodes = [];
         }
 
         get _root() {
@@ -731,6 +723,16 @@ export const componentToCustomElement =
           this.onMount();
           this.update();
         }
+
+
+  showContent(el) {
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes)
+    children.forEach(child => {
+      this.destroyNodes.push(child);
+    });
+    el.after(elementFragment);
+  }
 
         onMount() {
           ${
@@ -761,6 +763,7 @@ export const componentToCustomElement =
 
         update() {
           this.onUpdate();
+          this.destroyAnyNodes();
           this.updateBindings();
         }
 
