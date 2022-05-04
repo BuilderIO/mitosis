@@ -14,6 +14,7 @@ const section = require('./data/blocks/section.raw');
 const text = require('./data/blocks/text.raw');
 
 const image = require('./data/blocks/image.raw');
+// const imageState = require('./data/blocks/img-state.raw');
 const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
@@ -95,6 +96,12 @@ describe('webcomponent', () => {
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });
+
+  // test('ImageState', () => {
+  //   const component = parseJsx(imageState);
+  //   const output = componentToCustomElement()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
 
   test('Columns', () => {
     const component = parseJsx(columns);

@@ -14,6 +14,7 @@ const section = require('./data/blocks/section.raw');
 const text = require('./data/blocks/text.raw');
 
 const image = require('./data/blocks/image.raw');
+// const imageState = require('./data/blocks/img-state.raw');
 const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
@@ -73,6 +74,12 @@ describe('Html', () => {
     expect(output).toMatchSnapshot();
   });
 
+  // test('ImageState', () => {
+  //   const component = parseJsx(imageState);
+  //   const output = componentToHtml()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
+
   test('Video', () => {
     const component = parseJsx(video);
     const output = componentToHtml()({ component });
@@ -90,7 +97,6 @@ describe('Html', () => {
     const output = componentToHtml()({ component });
     expect(output).toMatchSnapshot();
   });
-
 
   test('Image', () => {
     const component = parseJsx(image);
