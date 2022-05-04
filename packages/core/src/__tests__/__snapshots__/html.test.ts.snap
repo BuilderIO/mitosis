@@ -426,6 +426,91 @@ exports[`Html Section 1`] = `
 "
 `;
 
+exports[`Html SectionState 1`] = `
+"<template data-name=\\"show\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <section data-name=\\"section-1\\">
+      <slot></slot>
+    </section>
+  </template>
+</template>
+<script>
+  (() => {
+    const state = { max: 42 };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = state.max;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = [42];
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"item\\", undefined, undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='section-1']\\")
+        .forEach((el, index) => {
+          const item = getContext(el, \\"item\\");
+          Object.assign(el.style, {
+            maxWidth: item + state.max,
+          });
+        });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Select block 1`] = `
 "<select data-name=\\"select-1\\">
   <span data-name=\\"for\\"></span>

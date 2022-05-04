@@ -11,6 +11,7 @@ const textarea = require('./data/blocks/textarea.raw');
 const img = require('./data/blocks/img.raw');
 const video = require('./data/blocks/video.raw');
 const section = require('./data/blocks/section.raw');
+const sectionState = require('./data/blocks/section-state.raw');
 const text = require('./data/blocks/text.raw');
 
 const image = require('./data/blocks/image.raw');
@@ -81,6 +82,12 @@ describe('webcomponent', () => {
 
   test('Section', () => {
     const component = parseJsx(section);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('SectionState', () => {
+    const component = parseJsx(sectionState);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });
