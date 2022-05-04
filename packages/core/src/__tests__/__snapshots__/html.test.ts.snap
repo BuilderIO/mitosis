@@ -1,5 +1,527 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Html Basic 1`] = `
+"<div>
+  <input data-name=\\"input-1\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  (() => {
+    const state = { name: \\"Steve\\" };
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.value = state.name;
+          el.removeEventListener(\\"input\\", onInput1Input);
+          el.addEventListener(\\"input\\", onInput1Input);
+        });
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Button 1`] = `
+"<template data-name=\\"show\\">
+  <a data-name=\\"a-1\\">
+    <span data-name=\\"div-1\\"><!-- props.text --></span>
+  </a>
+</template>
+
+<template data-name=\\"show-2\\">
+  <button type=\\"button\\" data-name=\\"button-1\\">
+    <span data-name=\\"div-2\\"><!-- props.text --></span>
+  </button>
+</template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = props.link;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el, index) => {
+        el.href = props.link;
+        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+
+      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el, index) => {
+        const whenCondition = !props.link;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Columns 1`] = `
+"<div class=\\"builder-columns div\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <div class=\\"builder-column div-2\\">
+      <span data-name=\\"div-1\\"><!-- column.content --></span>
+
+      <span data-name=\\"div-2\\"><!-- index --></span>
+    </div>
+  </template>
+</div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  @media (max-width: 999px) {
+    .div {
+      flex-direction: row;
+    }
+  }
+  @media (max-width: 639px) {
+    .div {
+      flex-direction: row-reverse;
+    }
+  }
+  .div-2 {
+    flex-grow: 1;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      getColumns() {
+        return props.columns || [];
+      },
+      getGutterSize() {
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      },
+      getWidth(index) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+      getColumnCssWidth(index) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = props.columns;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const column = getContext(el, \\"column\\");
+        el.innerText = column.content;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+        const index = getContext(el, \\"index\\");
+        el.innerText = index;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Image 1`] = `
+"<picture data-name=\\"picture-1\\">
+  <template data-name=\\"show\\">
+    <img class=\\"img\\" data-name=\\"img-1\\" />
+  </template>
+
+  <source data-name=\\"source-1\\" />
+</picture>
+
+<slot></slot>
+
+<style>
+  .img {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      scrollListener: null,
+      imageLoaded: false,
+      load: false,
+      setLoaded() {
+        state.imageLoaded = true;
+        update();
+      },
+      isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && state.isBrowser();
+      },
+    };
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = !state.useLazyLoading() || state.load;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+        el.alt = props.altText;
+        el.setAttribute(
+          \\"aria-role\\",
+          props.altText ? \\"presentation\\" : undefined
+        );
+
+        el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+        el.src = props.image;
+        el.removeEventListener(\\"load\\", onImg1Load);
+        el.addEventListener(\\"load\\", onImg1Load);
+
+        el.srcset = props.srcset;
+        el.sizes = props.sizes;
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='source-1']\\")
+        .forEach((el, index) => {
+          el.srcset = props.srcset;
+        });
+    }
+
+    // Event handler for 'load' event on img-1
+    function onImg1Load(event) {
+      state.setLoaded();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            update();
+            state.scrollListener = null;
+            update();
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      update();
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Img 1`] = `
+"<img data-name=\\"img-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+        Object.assign(el.style, {
+          objectFit: props.backgroundSize || \\"cover\\",
+          objectPosition: props.backgroundPosition || \\"center\\",
+        });
+
+        el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
+        el.alt = props.altText;
+        el.src = props.imgSrc;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Input block 1`] = `
+"<input data-name=\\"input-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+          el.placeholder = props.placeholder;
+          el.type = props.type;
+          el.name = props.name;
+          el.value = props.value;
+          el.defaultValue = props.defaultValue;
+          el.required = props.required;
+        });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Section 1`] = `
+"<section data-name=\\"section-1\\">
+  <slot></slot>
+</section>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='section-1']\\")
+        .forEach((el, index) => {
+          Object.assign(
+            el.style,
+            props.maxWidth && typeof props.maxWidth === \\"number\\"
+              ? {
+                  maxWidth: props.maxWidth,
+                }
+              : undefined
+          );
+        });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Select block 1`] = `
+"<select data-name=\\"select-1\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <option data-name=\\"option-1\\">
+      <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+    </option>
+  </template>
+</select>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='select-1']\\")
+        .forEach((el, index) => {
+          el.value = props.value;
+          el.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+          el.defaultValue = props.defaultValue;
+          el.name = props.name;
+        });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = props.options;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='option-1']\\")
+        .forEach((el, index) => {
+          const option = getContext(el, \\"option\\");
+          el.value = option.value;
+
+          const index = getContext(el, \\"index\\");
+          el.setAttribute(\\"data-index\\", index);
+        });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const option = getContext(el, \\"option\\");
+        el.innerText = option.name || option.value;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Shadow DOM 1`] = `
 "<div data-name=\\"div-1\\">
   <button data-name=\\"button-1\\">Write a review</button>
@@ -409,5 +931,156 @@ exports[`Html Stamped 1`] = `
     }
   })();
 </script>
+"
+`;
+
+exports[`Html Submit button block 1`] = `
+"<button type=\\"submit\\" data-name=\\"button-1\\">
+  <span data-name=\\"div-1\\"><!-- props.text --></span>
+</button>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Text 1`] = `
+"<div data-name=\\"div-1\\"></div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.contentEditable = allowEditingText || undefined;
+        el.innerHTML = props.text || props.content || \\"\\";
+      });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Textarea 1`] = `
+"<textarea data-name=\\"textarea-1\\"></textarea>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='textarea-1']\\")
+        .forEach((el, index) => {
+          el.placeholder = props.placeholder;
+          el.name = props.name;
+          el.value = props.value;
+          el.defaultValue = props.defaultValue;
+        });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Video 1`] = `
+"<video preload=\\"none\\" data-name=\\"video-1\\"></video>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='video-1']\\")
+        .forEach((el, index) => {
+          Object.assign(el.style, {
+            width: \\"100%\\",
+            height: \\"100%\\",
+            ...props.attributes?.style,
+            objectFit: props.fit,
+            objectPosition: props.position,
+            // Hack to get object fit to work as expected and
+            // not have the video overflow
+            borderRadius: 1,
+          });
+
+          el.key = props.video || \\"no-src\\";
+          el.poster = props.posterImage;
+          el.autoPlay = props.autoPlay;
+          el.muted = props.muted;
+          el.controls = props.controls;
+          el.loop = props.loop;
+        });
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html multipleOnUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html multipleOnnUpdateWithDeps 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html onMount & onUnMount 1`] = `
+"<div></div>
+<script>
+  (() => {
+    const state = {};
+
+    // onMount
+    console.log(\\"Runs on mount\\");
+  })();
+</script>
+"
+`;
+
+exports[`Html onUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html onUpdateWithDeps 1`] = `
+"<div></div>
 "
 `;
