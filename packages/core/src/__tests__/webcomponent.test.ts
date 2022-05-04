@@ -2,6 +2,7 @@ import { componentToCustomElement } from '../generators/html';
 import { parseJsx } from '../parsers/jsx';
 
 const basic = require('./data/basic.raw');
+const basicFor = require('./data/basic-for.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -28,6 +29,12 @@ const shadowDom = require('./data/blocks/shadow-dom.raw');
 describe('webcomponent', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('BasicFor', () => {
+    const component = parseJsx(basicFor);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

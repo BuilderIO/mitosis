@@ -36,6 +36,95 @@ exports[`Html Basic 1`] = `
 "
 `;
 
+exports[`Html BasicFor 1`] = `
+"<div>
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <input data-name=\\"input-1\\" />
+
+    Hello
+    <span data-name=\\"div-1\\"><!-- person --></span>
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  </template>
+</div>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = state.names;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"person\\", undefined, undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.value = state.name;
+          el.removeEventListener(\\"input\\", onInput1Input);
+          el.addEventListener(\\"input\\", onInput1Input);
+        });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const person = getContext(el, \\"person\\");
+        el.innerText = person;
+      });
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Button 1`] = `
 "<template data-name=\\"show\\">
   <a data-name=\\"a-1\\">
