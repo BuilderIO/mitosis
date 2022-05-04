@@ -98,6 +98,610 @@ exports[`Svelte BuilderRenderBlock 1`] = `
 "
 `;
 
+exports[`Svelte Context Parse context 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/context",
+  "name": "SimpleExample",
+  "value": Object {
+    "content": null,
+    "context": Object {},
+    "foo": "bar",
+    "fooUpperCase": "@builder.io/mitosis/method:get fooUpperCase() {
+  return this.foo.toUpperCase();
+}",
+    "someMethod": "@builder.io/mitosis/method:someMethod() {
+  return this.fooUpperCase.toLowercase();
+}",
+    "state": Object {},
+  },
+}
+`;
+
+exports[`Svelte Context Parse context 2`] = `
+"const key = Symbol();
+
+export default {
+  SimpleExample: {
+    foo: \\"bar\\",
+    get fooUpperCase() {
+      return this.foo.toUpperCase();
+    },
+    someMethod() {
+      return this.fooUpperCase.toLowercase();
+    },
+    content: null,
+    context: {},
+    state: {},
+  },
+  key,
+};
+"
+`;
+
+exports[`Svelte Context Use and set context in complex components 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {
+            "_spread": "state.properties",
+            "style": "state.css",
+          },
+          "children": Array [
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "block": "state.useBlock",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "BlockStyles",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "when": "state.componentRef",
+              },
+              "children": Array [
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {
+                    "_spread": "state.componentOptions",
+                    "children": "state.useBlock.children",
+                  },
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "state.componentRef",
+                  "properties": Object {},
+                },
+              ],
+              "meta": Object {},
+              "name": "Show",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+        ",
+              },
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "when": "!state.componentRef && state.useBlock.children && state.useBlock.children.length",
+              },
+              "children": Array [
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {},
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "div",
+                  "properties": Object {
+                    "_text": "
+          ",
+                  },
+                },
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {
+                    "each": "state.useBlock.children",
+                  },
+                  "children": Array [
+                    Object {
+                      "@type": "@builder.io/mitosis/node",
+                      "bindings": Object {
+                        "block": "child",
+                        "index": "index",
+                      },
+                      "children": Array [],
+                      "meta": Object {},
+                      "name": "RenderBlock",
+                      "properties": Object {},
+                    },
+                  ],
+                  "meta": Object {},
+                  "name": "For",
+                  "properties": Object {
+                    "_forName": "child",
+                  },
+                },
+                Object {
+                  "@type": "@builder.io/mitosis/node",
+                  "bindings": Object {},
+                  "children": Array [],
+                  "meta": Object {},
+                  "name": "div",
+                  "properties": Object {
+                    "_text": "
+        ",
+                  },
+                },
+              ],
+              "meta": Object {},
+              "name": "Show",
+              "properties": Object {},
+            },
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {},
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {
+                "_text": "
+      ",
+              },
+            },
+          ],
+          "meta": Object {},
+          "name": "state.tagName",
+          "properties": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "Fragment",
+      "properties": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {
+      "builderContext": Object {
+        "name": "BuilderContext",
+        "path": "../context/builder.context.lite:default",
+      },
+    },
+    "set": Object {},
+  },
+  "hooks": Object {},
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "getBlockComponentOptions": "getBlockComponentOptions",
+      },
+      "path": "../functions/get-block-component-options",
+    },
+    Object {
+      "imports": Object {
+        "getBlockProperties": "getBlockProperties",
+      },
+      "path": "../functions/get-block-properties",
+    },
+    Object {
+      "imports": Object {
+        "getBlockStyles": "getBlockStyles",
+      },
+      "path": "../functions/get-block-styles",
+    },
+    Object {
+      "imports": Object {
+        "getBlockTag": "getBlockTag",
+      },
+      "path": "../functions/get-block-tag",
+    },
+    Object {
+      "imports": Object {
+        "components": "components",
+      },
+      "path": "../functions/register-component",
+    },
+    Object {
+      "imports": Object {
+        "BuilderContext": "default",
+      },
+      "path": "../context/builder.context.lite",
+    },
+    Object {
+      "imports": Object {
+        "getBlockActions": "getBlockActions",
+      },
+      "path": "../functions/get-block-actions",
+    },
+    Object {
+      "imports": Object {
+        "getProcessedBlock": "getProcessedBlock",
+      },
+      "path": "../functions/get-processed-block",
+    },
+    Object {
+      "imports": Object {
+        "BlockStyles": "default",
+      },
+      "path": "./block-styles.lite",
+    },
+  ],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "RenderBlock",
+  "state": Object {
+    "actions": "@builder.io/mitosis/method:get actions() {
+  return getBlockActions({
+    block: state.useBlock,
+    state: builderContext.state,
+    context: builderContext.context
+  });
+}",
+    "component": "@builder.io/mitosis/method:get component() {
+  const componentName = state.useBlock.component?.name;
+
+  if (!componentName) {
+    return null;
+  }
+
+  const ref = components[state.useBlock.component?.name!];
+
+  if (componentName && !ref) {
+    // TODO: Public doc page with more info about this message
+    console.warn(\`
+          Could not find a registered component named \\"\${componentName}\\".
+          If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+  }
+
+  return ref;
+}",
+    "componentInfo": "@builder.io/mitosis/method:get componentInfo() {
+  return state.component?.info;
+}",
+    "componentOptions": "@builder.io/mitosis/method:get componentOptions() {
+  return getBlockComponentOptions(state.useBlock);
+}",
+    "componentRef": "@builder.io/mitosis/method:get componentRef() {
+  return state.component?.component;
+}",
+    "css": "@builder.io/mitosis/method:get css() {
+  return getBlockStyles(state.useBlock);
+}",
+    "properties": "@builder.io/mitosis/method:get properties() {
+  return getBlockProperties(state.useBlock);
+}",
+    "tagName": "@builder.io/mitosis/method:get tagName() {
+  return (getBlockTag(state.useBlock) as any);
+}",
+    "useBlock": "@builder.io/mitosis/method:get useBlock() {
+  return getProcessedBlock({
+    block: props.block,
+    state: builderContext.state,
+    context: builderContext.context
+  });
+}",
+  },
+  "subComponents": Array [],
+}
+`;
+
+exports[`Svelte Context Use and set context in complex components 2`] = `
+"<script>
+  import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
+  import { getBlockProperties } from \\"../functions/get-block-properties\\";
+  import { getBlockStyles } from \\"../functions/get-block-styles\\";
+  import { getBlockTag } from \\"../functions/get-block-tag\\";
+  import { components } from \\"../functions/register-component\\";
+  import BuilderContext from \\"../context/builder.context\\";
+  import { getBlockActions } from \\"../functions/get-block-actions\\";
+  import { getProcessedBlock } from \\"../functions/get-processed-block\\";
+  import BlockStyles from \\"./block-styles.svelte\\";
+
+  import { getContext, setContext } from \\"svelte\\";
+
+  export let block;
+
+  $: component = () => {
+    const componentName = useBlock().component?.name;
+
+    if (!componentName) {
+      return null;
+    }
+
+    const ref = components[useBlock().component?.name];
+
+    if (componentName && !ref) {
+      // TODO: Public doc page with more info about this message
+      console.warn(\`
+        Could not find a registered component named \\"\${componentName}\\".
+        If you registered it, is the file that registered it imported by the file that needs to render it?\`);
+    }
+
+    return ref;
+  };
+
+  $: componentInfo = () => {
+    return component?.()?.info;
+  };
+
+  $: componentRef = () => {
+    return component?.()?.component;
+  };
+
+  $: tagName = () => {
+    return getBlockTag(useBlock());
+  };
+
+  $: properties = () => {
+    return getBlockProperties(useBlock());
+  };
+
+  $: useBlock = () => {
+    return getProcessedBlock({
+      block: block,
+      state: builderContext.state,
+      context: builderContext.context,
+    });
+  };
+
+  $: actions = () => {
+    return getBlockActions({
+      block: useBlock(),
+      state: builderContext.state,
+      context: builderContext.context,
+    });
+  };
+
+  $: css = () => {
+    return getBlockStyles(useBlock());
+  };
+
+  $: componentOptions = () => {
+    return getBlockComponentOptions(useBlock());
+  };
+
+  let builderContext = getContext(BuilderContext.key);
+
+</script>
+
+<svelte:component this={tagName()} {...properties()} style={css()}>
+  <BlockStyles block={useBlock()} />
+
+  {#if componentRef()}
+    <svelte:component
+      this={componentRef()}
+      {...componentOptions()}
+      children={useBlock().children} />
+  {/if}
+
+  {#if !componentRef() && useBlock().children && useBlock().children.length}
+    {#each useBlock().children as child, index}
+      <svelte:self {index} block={child} />
+    {/each}
+  {/if}
+</svelte:component>
+"
+`;
+
+exports[`Svelte Context Use and set context in components 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "_text": "foo.value",
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {},
+            },
+          ],
+          "meta": Object {},
+          "name": "Fragment",
+          "properties": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+        },
+      ],
+      "meta": Object {},
+      "name": "Fragment",
+      "properties": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {
+      "foo": Object {
+        "name": "Context1",
+        "path": "@dummy/1:default",
+      },
+    },
+    "set": Object {
+      "@dummy/1:default": Object {
+        "name": "Context1",
+        "value": Object {
+          "content": "@builder.io/mitosis/method:content() {
+  return props.content;
+}",
+          "foo": "bar",
+        },
+      },
+      "@dummy/2:default": Object {
+        "name": "Context2",
+        "value": Object {
+          "bar": "baz",
+        },
+      },
+    },
+  },
+  "hooks": Object {},
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "Context1": "default",
+      },
+      "path": "@dummy/1",
+    },
+    Object {
+      "imports": Object {
+        "Context2": "default",
+      },
+      "path": "@dummy/2",
+    },
+  ],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "ComponentWithContext",
+  "state": Object {},
+  "subComponents": Array [],
+}
+`;
+
+exports[`Svelte Context Use and set context in components 2`] = `
+"<script>
+  import Context1 from \\"@dummy/1\\";
+  import Context2 from \\"@dummy/2\\";
+
+  import { getContext, setContext } from \\"svelte\\";
+
+  export let content;
+
+  let foo = getContext(Context1.key);
+  setContext(Context1.key, {
+    foo: \\"bar\\",
+    content() {
+      return content;
+    },
+  });
+  setContext(Context2.key, { bar: \\"baz\\" });
+
+</script>
+
+{foo.value}
+"
+`;
+
 exports[`Svelte multipleOnUpdate 1`] = `
 "<script>
   import { afterUpdate } from \\"svelte\\";
@@ -126,6 +730,20 @@ exports[`Svelte onUpdate 1`] = `
 </script>
 
 <div />
+"
+`;
+
+exports[`Svelte rootShow 1`] = `
+"<script>
+  export let foo;
+
+</script>
+
+{#if foo === 'bar'}
+  <div>Bar</div>
+{:else}
+  <div>Foo</div>
+{/if}
 "
 `;
 

@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
-import { Target } from '@builder.io/mitosis';
+import { Format, MitosisConfig, Target } from '@builder.io/mitosis';
 
 const getImportFileExtensionForTarget = (target: Target) => {
   switch (target) {
@@ -15,27 +15,37 @@ const getImportFileExtensionForTarget = (target: Target) => {
   }
 };
 
+const getDefaultFormatForTarget = (target: Target): Format => {
+  switch (target) {
+    case 'reactNative':
+    case 'solid':
+    case 'svelte':
+      return 'esm';
+    default:
+      return 'cjs';
+  }
+};
+
 export const transpile = async ({
   path,
   content,
   target,
-  format,
+  options,
 }: {
   path: string;
   content?: string | null;
-  target?: Target;
-  format?: 'esm' | 'cjs';
+  target: Target;
+  options: MitosisConfig;
 }) => {
   try {
+    const transpilerOptions = options.options[target]?.transpiler;
+    const format =
+      transpilerOptions?.format || getDefaultFormatForTarget(target);
+
     let useContent = content ?? (await readFile(path, 'utf8'));
     useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);
     const output = await esbuild.transform(useContent, {
-      format:
-        format ||
-        // TO-DO: grab this from the config.
-        (target === 'reactNative' || target === 'solid' || target === 'svelte'
-          ? 'esm'
-          : 'cjs'),
+      format: format,
       loader: 'tsx',
       target: 'es6',
     });

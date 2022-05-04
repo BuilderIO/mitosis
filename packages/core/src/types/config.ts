@@ -1,10 +1,17 @@
 import { MitosisComponent } from '..';
 import { Plugin } from './plugins';
 
+export type Format = 'esm' | 'cjs';
+export interface TranspilerOptions {
+  format?: Format;
+}
+
 type Targets = typeof import('../targets').targets;
 export type Target = keyof Targets;
 export type GeneratorOptions = {
-  [K in keyof Targets]: NonNullable<Parameters<Targets[K]>[0]>;
+  [K in keyof Targets]: NonNullable<Parameters<Targets[K]>[0]> & {
+    transpiler?: TranspilerOptions;
+  };
 };
 
 type FileInfo = {

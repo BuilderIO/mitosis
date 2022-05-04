@@ -97,7 +97,7 @@ export async function build(config?: MitosisConfig) {
 }
 
 async function clean(options: MitosisConfig) {
-  const files = await glob(`${options.dest}/*/${options.files}`);
+  const files = await glob(`${options.dest}/**/*/${options.files}`);
   await Promise.all(
     files.map(async (file) => {
       await remove(file);
@@ -118,7 +118,7 @@ async function outputOverrides(target: Target, options: MitosisConfig) {
 
       const esbuildTranspile = file.match(/\.tsx?$/);
       if (esbuildTranspile) {
-        contents = await transpile({ path: file, target });
+        contents = await transpile({ path: file, target, options });
       }
 
       const targetPaths = getTargetPaths(target);
@@ -246,7 +246,12 @@ async function outputTsxLiteFiles(
         break;
       case 'reactNative':
       case 'react':
-        transpiled = await transpile({ path, content: transpiled, target });
+        transpiled = await transpile({
+          path,
+          content: transpiled,
+          target,
+          options,
+        });
         const registerComponentHook = mitosisJson.meta.registerComponent;
         if (registerComponentHook) {
           transpiled = dedent`
@@ -381,7 +386,12 @@ async function buildTsFiles({
         // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }
-      output = await transpile({ path, target, content: output });
+      output = await transpile({
+        path,
+        target,
+        content: output,
+        options,
+      });
 
       return {
         path,

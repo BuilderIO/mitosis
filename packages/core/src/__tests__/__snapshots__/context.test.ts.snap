@@ -547,6 +547,9 @@ Object {
       "@dummy/1:default": Object {
         "name": "Context1",
         "value": Object {
+          "content": "@builder.io/mitosis/method:content() {
+  return props.content;
+}",
           "foo": "bar",
         },
       },
@@ -598,6 +601,10 @@ export default function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
         <>{foo.value}</>
@@ -627,6 +634,10 @@ export default function ComponentWithContext(props) {
       <Context1.Provider
         value={{
           foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
         }}
       >
         <>
