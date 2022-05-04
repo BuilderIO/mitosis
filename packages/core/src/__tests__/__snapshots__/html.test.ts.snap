@@ -104,12 +104,12 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.src = review.avatar;
       });
 
@@ -118,17 +118,17 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
-        const index = this.getContext(el, \\"index\\");
+        const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.innerText = review.author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
     }
@@ -161,31 +161,40 @@ exports[`Html Shadow DOM 1`] = `
       });
 
     // Helper to render loops
-    function renderLoop(el, array, template, itemName) {
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
       el.innerHTML = \\"\\";
-      for (let value of array) {
+      for (let [index, value] of array.entries()) {
         let tmp = document.createElement(\\"span\\");
         tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach(function (child) {
-          contextMap.set(child, {
-            ...contextMap.get(child),
-            [itemName]: value,
-          });
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
           el.appendChild(child);
         });
       }
     }
 
-    // Helper to pass context down for loops
-    let contextMap = new WeakMap();
     function getContext(el, name) {
-      let parent = el;
       do {
-        let context = contextMap.get(parent);
-        if (context && name in context) {
-          return context[name];
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
         }
-      } while ((parent = parent.parentNode));
+      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -306,12 +315,12 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.src = review.avatar;
       });
 
@@ -320,17 +329,17 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
-        const index = this.getContext(el, \\"index\\");
+        const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.innerText = review.author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-        const review = this.getContext(el, \\"review\\");
+        const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
     }
@@ -363,31 +372,40 @@ exports[`Html Stamped 1`] = `
       });
 
     // Helper to render loops
-    function renderLoop(el, array, template, itemName) {
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
       el.innerHTML = \\"\\";
-      for (let value of array) {
+      for (let [index, value] of array.entries()) {
         let tmp = document.createElement(\\"span\\");
         tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach(function (child) {
-          contextMap.set(child, {
-            ...contextMap.get(child),
-            [itemName]: value,
-          });
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
           el.appendChild(child);
         });
       }
     }
 
-    // Helper to pass context down for loops
-    let contextMap = new WeakMap();
     function getContext(el, name) {
-      let parent = el;
       do {
-        let context = contextMap.get(parent);
-        if (context && name in context) {
-          return context[name];
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
         }
-      } while ((parent = parent.parentNode));
+      } while ((el = el.parentNode));
     }
   })();
 </script>

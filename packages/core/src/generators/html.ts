@@ -82,23 +82,32 @@ const addUpdateAfterSet = (
   });
 };
 
-const getForNames = (json: MitosisComponent) => {
-  const names: string[] = [];
-  traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
-      if (item.name === 'For') {
-        names.push(item.properties._forName as string);
-      }
-    }
-  });
-  return names;
+const addScopeVars = (
+  parentScopeVars: ScopeVars,
+  value: string,
+  fn: (scope: string) => string,
+) => {
+  return `${parentScopeVars
+    .filter((scopeVar) => {
+      return new RegExp(scopeVar).test(value);
+    })
+    .map((scopeVar) => {
+      return fn(scopeVar);
+    })
+    .join('\n')}`;
 };
 
 const mappers: {
-  [key: string]: (json: MitosisNode, options: InternalToHtmlOptions) => string;
+  [key: string]: (
+    json: MitosisNode,
+    options: InternalToHtmlOptions,
+    parentScopeVars: ScopeVars,
+  ) => string;
 } = {
-  Fragment: (json, options) => {
-    return json.children.map((item) => blockToHtml(item, options)).join('\n');
+  Fragment: (json, options, parentScopeVars) => {
+    return json.children
+      .map((item) => blockToHtml(item, options, parentScopeVars))
+      .join('\n');
   },
 };
 
@@ -163,7 +172,7 @@ const blockToHtml = (
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options);
+    return mappers[json.name](json, options, parentScopeVars);
   }
 
   if (isChildren(json)) {
@@ -179,14 +188,14 @@ const blockToHtml = (
       elId,
       options,
       `
-      ${parentScopeVars
-        .filter((scopeVar) => {
-          return new RegExp(scopeVar).test(json.bindings._text as string);
-        })
-        .map((scopeVars) => {
-          return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
-        })
-        .join('\n')}
+      ${addScopeVars(
+        parentScopeVars,
+        json.bindings._text,
+        (scopeVar: string) =>
+          `const ${scopeVar} = ${
+            options.format === 'class' ? 'this.' : ''
+          }getContext(el, "${scopeVar}")`,
+      )}
       el.innerText = ${json.bindings._text};`,
     );
 
@@ -299,7 +308,7 @@ const blockToHtml = (
           event = 'input';
         }
         const fnName = camelCase(`on-${elId}-${event}`);
-        const content = removeSurroundingBlock(
+        const codeContent: string = removeSurroundingBlock(
           updateReferencesInCode(useValue, options),
         );
         options.js += `
@@ -309,15 +318,15 @@ const blockToHtml = (
               ? `this.${fnName} = (event) => {`
               : `function ${fnName} (event) {`
           }
-            ${parentScopeVars
-              .filter((scopeVar) => {
-                return new RegExp(scopeVar).test(content as string);
-              })
-              .map((scopeVars) => {
-                return `const ${scopeVars} = this.getContext(event.currentTarget, "${scopeVars}")`;
-              })
-              .join('\n')}
-            ${content}
+              ${addScopeVars(
+                parentScopeVars,
+                codeContent,
+                (scopeVar: string) =>
+                  `const ${scopeVar} = ${
+                    options.format === 'class' ? 'this.' : ''
+                  }getContext(event.currentTarget, "${scopeVar}")`,
+              )}
+            ${codeContent}
           }
         `;
         const fnIdentifier = `${
@@ -338,14 +347,14 @@ const blockToHtml = (
             elId,
             options,
             `
-            ${parentScopeVars
-              .filter((scopeVar) => {
-                return new RegExp(scopeVar).test(useValue as string);
-              })
-              .map((scopeVars) => {
-                return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
-              })
-              .join('\n')}
+            ${addScopeVars(
+              parentScopeVars,
+              useValue as string,
+              (scopeVar: string) =>
+                `const ${scopeVar} = ${
+                  options.format === 'class' ? 'this.' : ''
+                }getContext(el, "${scopeVar}")`,
+            )}
             ;Object.assign(el.style, ${useValue});`,
           );
         } else {
@@ -353,14 +362,14 @@ const blockToHtml = (
             elId,
             options,
             `
-            ${parentScopeVars
-              .filter((scopeVar) => {
-                return new RegExp(scopeVar).test(useValue as string);
-              })
-              .map((scopeVars) => {
-                return `const ${scopeVars} = this.getContext(el, "${scopeVars}")`;
-              })
-              .join('\n')}
+            ${addScopeVars(
+              parentScopeVars,
+              useValue as string,
+              (scopeVar: string) =>
+                `const ${scopeVar} = ${
+                  options.format === 'class' ? 'this.' : ''
+                }getContext(el, "${scopeVar}")`,
+            )}
             ${generateSetElementAttributeCode(key, useValue)}
             `,
           );
@@ -554,31 +563,33 @@ export const componentToHtml =
             ? ''
             : `
           // Helper to render loops
-          function renderLoop(el, array, template, itemName) {
-            el.innerHTML = '';
-            for (let value of array) {
-              let tmp = document.createElement('span');
+          function renderLoop(el, array, template, itemName, itemIndex, collectionName) {
+            el.innerHTML = "";
+            for (let [index, value] of array.entries()) {
+              let tmp = document.createElement("span");
               tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach(function (child) {
-                contextMap.set(child, {
-                  ...contextMap.get(child),
-                  [itemName]: value
-                });
+              Array.from(tmp.children).forEach((child) => {
+                if (itemName !== undefined) {
+                  child['__' + itemName] = value;
+                }
+                if (itemIndex !== undefined) {
+                  child['__' + itemIndex] = index;
+                }
+                if (collectionName !== undefined) {
+                  child['__' + collectionName] = array;
+                }
                 el.appendChild(child);
               });
             }
           }
 
-          // Helper to pass context down for loops
-          let contextMap = new WeakMap();
           function getContext(el, name) {
-            let parent = el;
             do {
-              let context = contextMap.get(parent);
-              if (context && name in context) {
-                return context[name];
+              let value = el['__' + name]
+              if (value !== undefined) {
+                return value
               }
-            } while (parent = parent.parentNode)
+            } while ((el = el.parentNode));
           }
         `
         }
@@ -710,14 +721,6 @@ export const componentToCustomElement =
               : ''
           }
 
-          ${
-            !hasLoop
-              ? ''
-              : `
-            // Helper to pass context down for loops
-            this.contextMap = new WeakMap();
-          `
-          }
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
