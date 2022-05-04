@@ -94,35 +94,6 @@ const getForNames = (json: MitosisComponent) => {
   return names;
 };
 
-const replaceForNameIdentifiers = (
-  json: MitosisComponent,
-  options: InternalToHtmlOptions,
-) => {
-  // TODO: cache this. by reference? lru?
-  const forNames = getForNames(json);
-
-  traverse(json).forEach((item) => {
-    if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        if (key === 'css' || key === '_forName') {
-          continue;
-        }
-        const value = item.bindings[key];
-        if (typeof value === 'string') {
-          item.bindings[key] = replaceIdentifiers(
-            value,
-            forNames,
-            (name) =>
-              `${
-                options.format === 'class' ? 'this.' : ''
-              }getContext(el, "${name}")`,
-          ) as string;
-        }
-      }
-    }
-  });
-};
-
 const mappers: {
   [key: string]: (json: MitosisNode, options: InternalToHtmlOptions) => string;
 } = {
@@ -480,7 +451,6 @@ export const componentToHtml =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    replaceForNameIdentifiers(json, useOptions);
     addUpdateAfterSet(json, useOptions);
     const componentHasProps = hasProps(json);
 
