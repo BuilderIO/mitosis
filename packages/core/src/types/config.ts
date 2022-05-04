@@ -10,7 +10,7 @@ type Targets = typeof import('../targets').targets;
 export type Target = keyof Targets;
 export type GeneratorOptions = {
   [K in keyof Targets]: NonNullable<Parameters<Targets[K]>[0]> & {
-    transpiler: TranspilerOptions;
+    transpiler?: TranspilerOptions;
   };
 };
 
