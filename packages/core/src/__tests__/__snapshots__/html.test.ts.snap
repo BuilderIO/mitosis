@@ -84,28 +84,9 @@ exports[`Html Shadow DOM 1`] = `
         });
 
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-        if (state.showReviewPrompt) {
-          const clonedElement = el.content.cloneNode(true);
-          const endTag = document.createElement(\\"template\\");
-          endTag.setAttribute(\\"data-show\\", \\"show-end\\");
-
-          el.after(endTag);
-          el.after(clonedElement);
-        } else {
-          if (this.querySelector(\\"[data-show='show-end']\\") === null) {
-            return;
-          }
-
-          let sibling = el.nextSibling;
-          const toBeRemoved = [];
-          while (sibling) {
-            toBeRemoved.push(sibling);
-            if (sibling?.dataset?.show === \\"show-end\\") {
-              toBeRemoved.forEach((sib) => sib.remove());
-              return;
-            }
-            sibling = sibling.nextSibling;
-          }
+        const whenCondition = state.showReviewPrompt;
+        if (whenCondition) {
+          this.showContent(el);
         }
       });
 
@@ -300,28 +281,9 @@ exports[`Html Stamped 1`] = `
         });
 
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
-        if (state.showReviewPrompt) {
-          const clonedElement = el.content.cloneNode(true);
-          const endTag = document.createElement(\\"template\\");
-          endTag.setAttribute(\\"data-show\\", \\"show-end\\");
-
-          el.after(endTag);
-          el.after(clonedElement);
-        } else {
-          if (this.querySelector(\\"[data-show='show-end']\\") === null) {
-            return;
-          }
-
-          let sibling = el.nextSibling;
-          const toBeRemoved = [];
-          while (sibling) {
-            toBeRemoved.push(sibling);
-            if (sibling?.dataset?.show === \\"show-end\\") {
-              toBeRemoved.forEach((sib) => sib.remove());
-              return;
-            }
-            sibling = sibling.nextSibling;
-          }
+        const whenCondition = state.showReviewPrompt;
+        if (whenCondition) {
+          this.showContent(el);
         }
       });
 
