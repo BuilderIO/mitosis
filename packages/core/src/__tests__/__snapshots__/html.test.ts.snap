@@ -10,6 +10,14 @@ exports[`Html Basic 1`] = `
   (() => {
     const state = { name: \\"Steve\\" };
 
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
     // in the dom
@@ -22,6 +30,8 @@ exports[`Html Basic 1`] = `
           el.removeEventListener(\\"input\\", onInput1Input);
           el.addEventListener(\\"input\\", onInput1Input);
         });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'input' event on input-1
@@ -52,6 +62,14 @@ exports[`Html BasicFor 1`] = `
   (() => {
     const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
 
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
     // in the dom
@@ -75,6 +93,8 @@ exports[`Html BasicFor 1`] = `
         const person = getContext(el, \\"person\\");
         el.innerText = person;
       });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'input' event on input-1
@@ -144,6 +164,13 @@ exports[`Html Button 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -152,7 +179,7 @@ exports[`Html Button 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = props.link;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -169,17 +196,33 @@ exports[`Html Button 1`] = `
       document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el, index) => {
         const whenCondition = !props.link;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
         el.innerText = props.text;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
     update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
   })();
 </script>
 "
@@ -239,6 +282,13 @@ exports[`Html Columns 1`] = `
       },
     };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -259,6 +309,8 @@ exports[`Html Columns 1`] = `
         const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -346,6 +398,13 @@ exports[`Html Image 1`] = `
       },
     };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -354,7 +413,7 @@ exports[`Html Image 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = !state.useLazyLoading() || state.load;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -383,6 +442,8 @@ exports[`Html Image 1`] = `
         .forEach((el, index) => {
           el.srcset = props.srcset;
         });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'load' event on img-1
@@ -419,6 +480,20 @@ exports[`Html Image 1`] = `
       });
       listener();
     }
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
   })();
 </script>
 "
@@ -434,6 +509,14 @@ exports[`Html ImageState 1`] = `
 <script>
   (() => {
     const state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -455,6 +538,8 @@ exports[`Html ImageState 1`] = `
         var itemIndex = getContext(el, \\"itemIndex\\");
         el.key = itemIndex;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -507,6 +592,13 @@ exports[`Html Img 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -524,6 +616,8 @@ exports[`Html Img 1`] = `
 
         el.src = props.imgSrc;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -539,6 +633,13 @@ exports[`Html Input block 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -564,6 +665,8 @@ exports[`Html Input block 1`] = `
 
           el.required = props.required;
         });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -581,6 +684,13 @@ exports[`Html Section 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -598,6 +708,8 @@ exports[`Html Section 1`] = `
               : undefined
           );
         });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -620,6 +732,13 @@ exports[`Html SectionState 1`] = `
   (() => {
     const state = { max: 42, items: [42] };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -628,7 +747,7 @@ exports[`Html SectionState 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = state.max;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -646,10 +765,26 @@ exports[`Html SectionState 1`] = `
             maxWidth: item + state.max,
           });
         });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
     update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper to render loops
     function renderLoop(
@@ -705,6 +840,13 @@ exports[`Html Select block 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -745,6 +887,8 @@ exports[`Html Select block 1`] = `
         const option = getContext(el, \\"option\\");
         el.innerText = option.name || option.value;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -858,6 +1002,13 @@ exports[`Html Shadow DOM 1`] = `
   (() => {
     const state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -877,7 +1028,7 @@ exports[`Html Shadow DOM 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -922,6 +1073,8 @@ exports[`Html Shadow DOM 1`] = `
         const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'click' event on button-1
@@ -950,6 +1103,20 @@ exports[`Html Shadow DOM 1`] = `
         state.reviews = data.data;
         update();
       });
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper to render loops
     function renderLoop(
@@ -1069,6 +1236,13 @@ exports[`Html Stamped 1`] = `
       },
     };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -1088,7 +1262,7 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -1133,6 +1307,8 @@ exports[`Html Stamped 1`] = `
         const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'click' event on button-1
@@ -1161,6 +1337,20 @@ exports[`Html Stamped 1`] = `
         state.reviews = data.data;
         update();
       });
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper to render loops
     function renderLoop(
@@ -1211,6 +1401,13 @@ exports[`Html Submit button block 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -1219,6 +1416,8 @@ exports[`Html Submit button block 1`] = `
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
         el.innerText = props.text;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -1234,6 +1433,13 @@ exports[`Html Text 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -1244,6 +1450,8 @@ exports[`Html Text 1`] = `
 
         el.innerHTML = props.text || props.content || \\"\\";
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -1259,6 +1467,13 @@ exports[`Html Textarea 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -1275,6 +1490,8 @@ exports[`Html Textarea 1`] = `
 
           el.defaultValue = props.defaultValue;
         });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -1290,6 +1507,13 @@ exports[`Html Video 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -1321,6 +1545,8 @@ exports[`Html Video 1`] = `
 
           el.loop = props.loop;
         });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load
@@ -1345,6 +1571,14 @@ exports[`Html onMount & onUnMount 1`] = `
 <script>
   (() => {
     const state = {};
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // onMount
     console.log(\\"Runs on mount\\");

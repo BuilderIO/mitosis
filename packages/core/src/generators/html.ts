@@ -256,7 +256,7 @@ const blockToHtml = (
           '',
         )};
         if (whenCondition) {
-          this.showContent(el)
+          ${options.format === 'class' ? 'this.' : ''}showContent(el)
         }
       `,
     );
@@ -465,6 +465,7 @@ export const componentToHtml =
     const componentHasProps = hasProps(json);
 
     const hasLoop = hasComponent('For', json);
+    const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -504,7 +505,13 @@ export const componentToHtml =
             ),
         })};
         ${componentHasProps ? `let props = {};` : ''}
+        let nodesToDestroy = [];
 
+        function destroyAnyNodes() {
+          // destroy current view template refs before rendering again
+          nodesToDestroy.forEach(el => el.remove());
+          nodesToDestroy = [];
+        }
         ${
           !hasChangeListeners
             ? ''
@@ -527,6 +534,8 @@ export const componentToHtml =
             `;
             })
             .join('\n\n')}
+
+            destroyAnyNodes();
 
             ${
               !json.hooks.onUpdate?.length
@@ -558,7 +567,29 @@ export const componentToHtml =
               )} 
               `
         }
-
+        ${
+          !hasShow
+            ? ''
+            : `
+          function showContent(el) {
+            // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+            // grabs the content of a node that is between <template> tags
+            // iterates through child nodes to register all content including text elements
+            // attaches the content after the template
+  
+  
+            const elementFragment = el.content.cloneNode(true);
+            const children = Array.from(elementFragment.childNodes)
+            children.forEach(child => {
+              ${
+                options.format === 'class' ? 'this.' : ''
+              }nodesToDestroy.push(child);
+            });
+            el.after(elementFragment);
+          }
+  
+        `
+        }
         ${
           !hasLoop
             ? ''
@@ -643,6 +674,7 @@ export const componentToCustomElement =
     addUpdateAfterSet(json, useOptions);
 
     const hasLoop = hasComponent('For', json);
+    const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -751,7 +783,7 @@ export const componentToCustomElement =
 
         destroyAnyNodes() {
           // destroy current view template refs before rendering again
-          this.nodesToDestroy.forEach(el => el.remove()) 
+          this.nodesToDestroy.forEach(el => el.remove());
           this.nodesToDestroy = [];
         }
 
@@ -767,20 +799,25 @@ export const componentToCustomElement =
         }
 
 
-  showContent(el) {
-    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
-    // grabs the content of a node that is between <template> tags
-    // iterates through child nodes to register all content including text elements
-    // attaches the content after the template
-
-
-    const elementFragment = el.content.cloneNode(true);
-    const children = Array.from(elementFragment.childNodes)
-    children.forEach(child => {
-      this.nodesToDestroy.push(child);
-    });
-    el.after(elementFragment);
-  }
+        ${
+          !hasShow
+            ? ''
+            : `
+          showContent(el) {
+            // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+            // grabs the content of a node that is between <template> tags
+            // iterates through child nodes to register all content including text elements
+            // attaches the content after the template
+  
+  
+            const elementFragment = el.content.cloneNode(true);
+            const children = Array.from(elementFragment.childNodes)
+            children.forEach(child => {
+              this.nodesToDestroy.push(child);
+            });
+            el.after(elementFragment);
+          }`
+        }
 
         onMount() {
           ${
