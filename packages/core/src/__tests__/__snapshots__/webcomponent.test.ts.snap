@@ -96,7 +96,9 @@ class MyBasicForComponent extends HTMLElement {
 
     // Event handler for 'input' event on input-1
     this.onInput1Input = (event) => {
-      this.state.name = event.target.value;
+      const person = this.getContext(event.currentTarget, \\"person\\");
+
+      this.state.name = event.target.value + \\" and \\" + person;
       this.update();
     };
 

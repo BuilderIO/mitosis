@@ -13,7 +13,9 @@ export default function MyBasicForComponent() {
           <>
             <input
               value={state.name}
-              onChange={(event) => (state.name = event.target.value)}
+              onChange={(event) => {
+                state.name = event.target.value + ' and ' + person;
+              }}
             />
             Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
             or Liquid!
