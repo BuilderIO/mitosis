@@ -1,4 +1,5 @@
 import { useState, Show, For } from '@builder.io/mitosis';
+import { number } from 'fp-ts';
 
 export interface SectionProps {
   maxWidth?: number;
@@ -7,12 +8,15 @@ export interface SectionProps {
 }
 
 export default function SectionStateComponent(props: SectionProps) {
-  const [max, setMax] = useState(42);
+  const state = useState({
+    max: 42,
+    items: [42],
+  });
   return (
-    <Show when={max}>
-      <For each={[42]}>
+    <Show when={state.max}>
+      <For each={state.items}>
         {(item) => (
-          <section {...props.attributes} style={{ maxWidth: item + max }}>
+          <section {...props.attributes} style={{ maxWidth: item + state.max }}>
             {props.children}
           </section>
         )}

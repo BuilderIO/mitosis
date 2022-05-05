@@ -61,7 +61,7 @@ const generateSetElementAttributeCode = (
 ): string => {
   return needsSetAttribute(key)
     ? `;el.setAttribute("${key}", ${useValue});`
-    : `;el.${updateKeyIfException(key)} = ${useValue}`;
+    : `;el.${updateKeyIfException(key)} = ${useValue};`;
 };
 
 const addUpdateAfterSet = (
@@ -194,9 +194,9 @@ const blockToHtml = (
         (scopeVar: string) =>
           `const ${scopeVar} = ${
             options.format === 'class' ? 'this.' : ''
-          }getContext(el, "${scopeVar}")`,
+          }getContext(el, "${scopeVar}");`,
       )}
-      el.innerText = ${json.bindings._text};`,
+      ;el.innerText = ${json.bindings._text};`,
     );
 
     return `<span data-name="${elId}"><!-- ${
@@ -324,7 +324,7 @@ const blockToHtml = (
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
                     options.format === 'class' ? 'this.' : ''
-                  }getContext(event.currentTarget, "${scopeVar}")`,
+                  }getContext(event.currentTarget, "${scopeVar}");`,
               )}
             ${codeContent}
           }
@@ -353,7 +353,7 @@ const blockToHtml = (
               (scopeVar: string) =>
                 `const ${scopeVar} = ${
                   options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}")`,
+                }getContext(el, "${scopeVar}");`,
             )}
             ;Object.assign(el.style, ${useValue});`,
           );
@@ -366,9 +366,10 @@ const blockToHtml = (
               parentScopeVars,
               useValue as string,
               (scopeVar: string) =>
-                `const ${scopeVar} = ${
+                // TODO: multiple loops may duplicate variable declarations
+                `;var ${scopeVar} = ${
                   options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}")`,
+                }getContext(el, "${scopeVar}");`,
             )}
             ${generateSetElementAttributeCode(key, useValue)}
             `,

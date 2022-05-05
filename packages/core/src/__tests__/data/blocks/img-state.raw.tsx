@@ -9,17 +9,11 @@ export default function ImgStateComponent() {
   return (
     <div>
       <For each={state.images}>
-        {(item, itemIndex, items) => {
-          return (
-            <>
-              <img
-                class={'custom-class' + items.length}
-                src={item}
-                key={itemIndex}
-              />
-            </>
-          );
-        }}
+        {(item, itemIndex) => (
+          <>
+            <img class={'custom-class'} src={item} key={itemIndex} />
+          </>
+        )}
       </For>
     </div>
   );
