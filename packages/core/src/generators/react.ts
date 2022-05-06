@@ -75,7 +75,11 @@ const NODE_MAPPERS: {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.each as string, options)}?.map((${
       json.properties._forName
-    }, index) => (
+    }${json.properties._indexName ? ',' + json.properties._indexName : ''}${
+      json.properties._collectionName
+        ? ',' + json.properties._collectionName
+        : ''
+    }) => (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))

@@ -1,5 +1,942 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Html Basic 1`] = `
+"<div>
+  <input data-name=\\"input-1\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  (() => {
+    const state = { name: \\"Steve\\" };
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.value = state.name;
+
+          el.removeEventListener(\\"input\\", onInput1Input);
+          el.addEventListener(\\"input\\", onInput1Input);
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.name = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html BasicFor 1`] = `
+"<div>
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <input data-name=\\"input-1\\" />
+
+    Hello
+    <span data-name=\\"div-1\\"><!-- person --></span>
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  </template>
+</div>
+<script>
+  (() => {
+    const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = state.names;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"person\\", undefined, undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.value = state.name;
+
+          el.removeEventListener(\\"input\\", onInput1Input);
+          el.addEventListener(\\"input\\", onInput1Input);
+        });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const person = getContext(el, \\"person\\");
+        el.innerText = person;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      const person = getContext(event.currentTarget, \\"person\\");
+
+      state.name = event.target.value + \\" and \\" + person;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Button 1`] = `
+"<template data-name=\\"show\\">
+  <a data-name=\\"a-1\\">
+    <span data-name=\\"div-1\\"><!-- props.text --></span>
+  </a>
+</template>
+
+<template data-name=\\"show-2\\">
+  <button type=\\"button\\" data-name=\\"button-1\\">
+    <span data-name=\\"div-2\\"><!-- props.text --></span>
+  </button>
+</template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el, index) => {
+        el.href = props.link;
+
+        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+
+      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el, index) => {
+        const whenCondition = !props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Columns 1`] = `
+"<div class=\\"builder-columns div\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <div class=\\"builder-column div-2\\">
+      <span data-name=\\"div-1\\"><!-- column.content --></span>
+
+      <span data-name=\\"div-2\\"><!-- index --></span>
+    </div>
+  </template>
+</div>
+<style>
+  .div {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  @media (max-width: 999px) {
+    .div {
+      flex-direction: row;
+    }
+  }
+  @media (max-width: 639px) {
+    .div {
+      flex-direction: row-reverse;
+    }
+  }
+  .div-2 {
+    flex-grow: 1;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      getColumns() {
+        return props.columns || [];
+      },
+      getGutterSize() {
+        return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+      },
+      getWidth(index) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+      getColumnCssWidth(index) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    };
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = props.columns;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const column = getContext(el, \\"column\\");
+        el.innerText = column.content;
+      });
+
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+        const index = getContext(el, \\"index\\");
+        el.innerText = index;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Image 1`] = `
+"<picture data-name=\\"picture-1\\">
+  <template data-name=\\"show\\">
+    <img class=\\"img\\" data-name=\\"img-1\\" />
+  </template>
+
+  <source data-name=\\"source-1\\" />
+</picture>
+
+<slot></slot>
+
+<style>
+  .img {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      scrollListener: null,
+      imageLoaded: false,
+      load: false,
+      setLoaded() {
+        state.imageLoaded = true;
+        update();
+      },
+      isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && state.isBrowser();
+      },
+    };
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = !state.useLazyLoading() || state.load;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+        el.alt = props.altText;
+
+        el.setAttribute(
+          \\"aria-role\\",
+          props.altText ? \\"presentation\\" : undefined
+        );
+
+        el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+
+        el.src = props.image;
+
+        el.removeEventListener(\\"load\\", onImg1Load);
+        el.addEventListener(\\"load\\", onImg1Load);
+
+        el.srcset = props.srcset;
+
+        el.sizes = props.sizes;
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='source-1']\\")
+        .forEach((el, index) => {
+          el.srcset = props.srcset;
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Event handler for 'load' event on img-1
+    function onImg1Load(event) {
+      state.setLoaded();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // onMount
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            state.load = true;
+            update();
+            state.scrollListener = null;
+            update();
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      update();
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html ImageState 1`] = `
+"<div>
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <img data-name=\\"img-1\\" />
+  </template>
+</div>
+<script>
+  (() => {
+    const state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = state.images;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
+      });
+
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+        el.className = \\"custom-class\\";
+
+        var item = getContext(el, \\"item\\");
+        el.src = item;
+
+        var item = getContext(el, \\"item\\");
+        var itemIndex = getContext(el, \\"itemIndex\\");
+        el.key = itemIndex;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Img 1`] = `
+"<img data-name=\\"img-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+        Object.assign(el.style, {
+          objectFit: props.backgroundSize || \\"cover\\",
+          objectPosition: props.backgroundPosition || \\"center\\",
+        });
+
+        el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
+
+        el.alt = props.altText;
+
+        el.src = props.imgSrc;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Input block 1`] = `
+"<input data-name=\\"input-1\\" />
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='input-1']\\")
+        .forEach((el, index) => {
+          el.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+
+          el.placeholder = props.placeholder;
+
+          el.type = props.type;
+
+          el.name = props.name;
+
+          el.value = props.value;
+
+          el.defaultValue = props.defaultValue;
+
+          el.required = props.required;
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Section 1`] = `
+"<section data-name=\\"section-1\\">
+  <slot></slot>
+</section>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='section-1']\\")
+        .forEach((el, index) => {
+          Object.assign(
+            el.style,
+            props.maxWidth && typeof props.maxWidth === \\"number\\"
+              ? {
+                  maxWidth: props.maxWidth,
+                }
+              : undefined
+          );
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html SectionState 1`] = `
+"<template data-name=\\"show\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <section data-name=\\"section-1\\">
+      <slot></slot>
+    </section>
+  </template>
+</template>
+<script>
+  (() => {
+    const state = { max: 42, items: [42] };
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+        const whenCondition = state.max;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = state.items;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"item\\", undefined, undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='section-1']\\")
+        .forEach((el, index) => {
+          const item = getContext(el, \\"item\\");
+          Object.assign(el.style, {
+            maxWidth: item + state.max,
+          });
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Select block 1`] = `
+"<select data-name=\\"select-1\\">
+  <span data-name=\\"for\\"></span>
+  <template data-template-for=\\"for\\">
+    <option data-name=\\"option-1\\">
+      <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+    </option>
+  </template>
+</select>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='select-1']\\")
+        .forEach((el, index) => {
+          el.value = props.value;
+
+          el.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+
+          el.defaultValue = props.defaultValue;
+
+          el.name = props.name;
+        });
+
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+        let array = props.options;
+        let template = document.querySelector('[data-template-for=\\"for\\"]');
+        renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
+      });
+
+      document
+        .querySelectorAll(\\"[data-name='option-1']\\")
+        .forEach((el, index) => {
+          var option = getContext(el, \\"option\\");
+          el.value = option.value;
+
+          var index = getContext(el, \\"index\\");
+          el.setAttribute(\\"data-index\\", index);
+        });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        const option = getContext(el, \\"option\\");
+        el.innerText = option.name || option.value;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper to render loops
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
+      el.innerHTML = \\"\\";
+      for (let [index, value] of array.entries()) {
+        let tmp = document.createElement(\\"span\\");
+        tmp.innerHTML = template.innerHTML;
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
+          el.appendChild(child);
+        });
+      }
+    }
+
+    function getContext(el, name) {
+      do {
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Shadow DOM 1`] = `
 "<div data-name=\\"div-1\\">
   <button data-name=\\"button-1\\">Write a review</button>
@@ -67,6 +1004,13 @@ exports[`Html Shadow DOM 1`] = `
   (() => {
     const state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -86,7 +1030,7 @@ exports[`Html Shadow DOM 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -100,15 +1044,17 @@ exports[`Html Shadow DOM 1`] = `
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\");
+        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        el.key = getContext(el, \\"review\\").id;
+        var review = getContext(el, \\"review\\");
+        el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        el.src = getContext(el, \\"review\\").avatar;
+        var review = getContext(el, \\"review\\");
+        el.src = review.avatar;
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
@@ -116,16 +1062,21 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+        const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
-        el.innerText = getContext(el, \\"review\\").author;
+        const review = getContext(el, \\"review\\");
+        el.innerText = review.author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-        el.innerText = getContext(el, \\"review\\").reviewMessage;
+        const review = getContext(el, \\"review\\");
+        el.innerText = review.reviewMessage;
       });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'click' event on button-1
@@ -155,32 +1106,55 @@ exports[`Html Shadow DOM 1`] = `
         update();
       });
 
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
     // Helper to render loops
-    function renderLoop(el, array, template, itemName) {
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
       el.innerHTML = \\"\\";
-      for (let value of array) {
+      for (let [index, value] of array.entries()) {
         let tmp = document.createElement(\\"span\\");
         tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach(function (child) {
-          contextMap.set(child, {
-            ...contextMap.get(child),
-            [itemName]: value,
-          });
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
           el.appendChild(child);
         });
       }
     }
 
-    // Helper to pass context down for loops
-    let contextMap = new WeakMap();
     function getContext(el, name) {
-      let parent = el;
       do {
-        let context = contextMap.get(parent);
-        if (context && name in context) {
-          return context[name];
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
         }
-      } while ((parent = parent.parentNode));
+      } while ((el = el.parentNode));
     }
   })();
 </script>
@@ -264,6 +1238,13 @@ exports[`Html Stamped 1`] = `
       },
     };
     let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -283,7 +1264,7 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
-          this.showContent(el);
+          showContent(el);
         }
       });
 
@@ -297,15 +1278,17 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\");
+        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        el.key = getContext(el, \\"review\\").id;
+        var review = getContext(el, \\"review\\");
+        el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        el.src = getContext(el, \\"review\\").avatar;
+        var review = getContext(el, \\"review\\");
+        el.src = review.avatar;
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
@@ -313,16 +1296,21 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+        const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
-        el.innerText = getContext(el, \\"review\\").author;
+        const review = getContext(el, \\"review\\");
+        el.innerText = review.author;
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
-        el.innerText = getContext(el, \\"review\\").reviewMessage;
+        const review = getContext(el, \\"review\\");
+        el.innerText = review.reviewMessage;
       });
+
+      destroyAnyNodes();
     }
 
     // Event handler for 'click' event on button-1
@@ -352,34 +1340,261 @@ exports[`Html Stamped 1`] = `
         update();
       });
 
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+
     // Helper to render loops
-    function renderLoop(el, array, template, itemName) {
+    function renderLoop(
+      el,
+      array,
+      template,
+      itemName,
+      itemIndex,
+      collectionName
+    ) {
       el.innerHTML = \\"\\";
-      for (let value of array) {
+      for (let [index, value] of array.entries()) {
         let tmp = document.createElement(\\"span\\");
         tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach(function (child) {
-          contextMap.set(child, {
-            ...contextMap.get(child),
-            [itemName]: value,
-          });
+        Array.from(tmp.children).forEach((child) => {
+          if (itemName !== undefined) {
+            child[\\"__\\" + itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            child[\\"__\\" + itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            child[\\"__\\" + collectionName] = array;
+          }
           el.appendChild(child);
         });
       }
     }
 
-    // Helper to pass context down for loops
-    let contextMap = new WeakMap();
     function getContext(el, name) {
-      let parent = el;
       do {
-        let context = contextMap.get(parent);
-        if (context && name in context) {
-          return context[name];
+        let value = el[\\"__\\" + name];
+        if (value !== undefined) {
+          return value;
         }
-      } while ((parent = parent.parentNode));
+      } while ((el = el.parentNode));
     }
   })();
 </script>
+"
+`;
+
+exports[`Html Submit button block 1`] = `
+"<button type=\\"submit\\" data-name=\\"button-1\\">
+  <span data-name=\\"div-1\\"><!-- props.text --></span>
+</button>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.innerText = props.text;
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Text 1`] = `
+"<div data-name=\\"div-1\\"></div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.contentEditable = allowEditingText || undefined;
+
+        el.innerHTML = props.text || props.content || \\"\\";
+      });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Textarea 1`] = `
+"<textarea data-name=\\"textarea-1\\"></textarea>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='textarea-1']\\")
+        .forEach((el, index) => {
+          el.placeholder = props.placeholder;
+
+          el.name = props.name;
+
+          el.value = props.value;
+
+          el.defaultValue = props.defaultValue;
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Video 1`] = `
+"<video preload=\\"none\\" data-name=\\"video-1\\"></video>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      document
+        .querySelectorAll(\\"[data-name='video-1']\\")
+        .forEach((el, index) => {
+          Object.assign(el.style, {
+            width: \\"100%\\",
+            height: \\"100%\\",
+            ...props.attributes?.style,
+            objectFit: props.fit,
+            objectPosition: props.position,
+            // Hack to get object fit to work as expected and
+            // not have the video overflow
+            borderRadius: 1,
+          });
+
+          el.key = props.video || \\"no-src\\";
+
+          el.poster = props.posterImage;
+
+          el.autoPlay = props.autoPlay;
+
+          el.muted = props.muted;
+
+          el.controls = props.controls;
+
+          el.loop = props.loop;
+        });
+
+      destroyAnyNodes();
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html multipleOnUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html multipleOnnUpdateWithDeps 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html onMount & onUnMount 1`] = `
+"<div></div>
+<script>
+  (() => {
+    const state = {};
+
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // onMount
+    console.log(\\"Runs on mount\\");
+  })();
+</script>
+"
+`;
+
+exports[`Html onUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Html onUpdateWithDeps 1`] = `
+"<div></div>
 "
 `;

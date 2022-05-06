@@ -1511,14 +1511,25 @@ exports[`Builder Section 1`] = `
   (() => {
     const state = {};
 
+    let nodesToDestroy = [];
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
         el.maxWidth = 1234;
+
         el.lazyLoad = true;
       });
+
+      destroyAnyNodes();
     }
 
     // Update with initial state on first load

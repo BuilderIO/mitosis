@@ -371,7 +371,11 @@ const jsxElementToJson = (
       if (types.isArrowFunctionExpression(callback)) {
         if (types.isIdentifier(callback.params[0])) {
           const forName = callback.params[0].name;
-
+          const indexName = (callback.params?.[1] as babel.types.Identifier)
+            ?.name;
+          const collectionName = (
+            callback.params?.[2] as babel.types.Identifier
+          )?.name;
           return createMitosisNode({
             name: 'For',
             bindings: {
@@ -381,6 +385,8 @@ const jsxElementToJson = (
             },
             properties: {
               _forName: forName,
+              _indexName: indexName,
+              _collectionName: collectionName,
             },
             children: [jsxElementToJson(callback.body as any)!],
           });
@@ -481,8 +487,15 @@ const jsxElementToJson = (
       const childExpression = child.expression;
 
       if (types.isArrowFunctionExpression(childExpression)) {
-        const argName = (childExpression.params[0] as babel.types.Identifier)
+        const forName = (childExpression.params[0] as babel.types.Identifier)
           .name;
+        const indexName = (
+          childExpression.params?.[1] as babel.types.Identifier
+        )?.name;
+        const collectionName = (
+          childExpression.params?.[2] as babel.types.Identifier
+        )?.name;
+
         return createMitosisNode({
           name: 'For',
           bindings: {
@@ -494,7 +507,9 @@ const jsxElementToJson = (
             ).code,
           },
           properties: {
-            _forName: argName,
+            _forName: forName,
+            _indexName: indexName,
+            _collectionName: collectionName,
           },
           children: [jsxElementToJson(childExpression.body as any)!],
         });
