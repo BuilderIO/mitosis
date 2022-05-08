@@ -3,6 +3,7 @@ import { parseJsx } from '../parsers/jsx';
 
 const basic = require('./data/basic.raw');
 const basicFor = require('./data/basic-for.raw');
+// const basicGetter = require('./data/basic-getter.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -38,6 +39,12 @@ describe('webcomponent', () => {
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });
+
+  // test('BasicGetter', () => {
+  //   const component = parseJsx(basicGetter);
+  //   const output = componentToCustomElement()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
 
   test('Input block', () => {
     const component = parseJsx(inputBlock);
