@@ -1,6 +1,7 @@
 import { componentToSolid } from '../generators/solid';
 import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
+const basicFor = require('./data/basic-for.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -20,6 +21,12 @@ const columns = require('./data/blocks/columns.raw');
 describe('Solid', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToSolid()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('BasicFor', () => {
+    const component = parseJsx(basicFor);
     const output = componentToSolid()({ component });
     expect(output).toMatchSnapshot();
   });

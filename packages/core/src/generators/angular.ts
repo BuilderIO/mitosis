@@ -113,7 +113,8 @@ export const blockToAngular = (
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
-        const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
+        const eventName =
+          json?.properties?.['_arguments_' + key]?.[0] || 'event';
         const finalValue = removeSurroundingBlock(
           useValue.replace(new RegExp(eventName + '.', 'g'), '$event.'),
         );

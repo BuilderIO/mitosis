@@ -24,6 +24,39 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Solid BasicFor 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-component\\",
+})
+export default class MyBasicForComponent {
+  @State() name = \\"PatrickJS\\";
+  @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  render() {
+    return (
+      <div>
+        {this.names?.map((person, index) => (
+          <Fragment>
+            <input
+              value={this.name}
+              onInput={(userArgName) => {
+                this.name = userArgName.target.value + \\" and \\" + person;
+              }}
+            />
+            Hello
+            {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+            Liquid!
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Solid Button 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 

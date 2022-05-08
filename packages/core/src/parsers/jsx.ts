@@ -532,7 +532,9 @@ const jsxElementToJson = (
           if (types.isArrowFunctionExpression(expression)) {
             if (key.startsWith('on')) {
               // TODO: we need a better place to store these arguments
-              const args = expression.params.map((node) => (node as babel.types.Identifier)?.name)
+              const args = expression.params.map(
+                (node) => (node as babel.types.Identifier)?.name,
+              );
               memo['_arguments_' + key] = args;
             }
           }

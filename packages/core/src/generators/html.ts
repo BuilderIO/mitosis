@@ -306,7 +306,8 @@ const blockToHtml = (
       const useValue = value;
 
       if (key.startsWith('on')) {
-        const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
+        const eventName =
+          json?.properties?.['_arguments_' + key]?.[0] || 'event';
         let event = key.replace('on', '').toLowerCase();
         if (!isComponent(json) && event === 'change') {
           event = 'input';
@@ -319,8 +320,8 @@ const blockToHtml = (
           // Event handler for '${event}' event on ${elId}
           ${
             options.format === 'class'
-              ? `this.${fnName} = (event) => {`
-              : `function ${fnName} (event) {`
+              ? `this.${fnName} = (${eventName}) => {`
+              : `function ${fnName} (${eventName}) {`
           }
               ${addScopeVars(
                 parentScopeVars,

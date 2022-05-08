@@ -73,6 +73,9 @@ const blockToStencil = (
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
@@ -85,9 +88,10 @@ const blockToStencil = (
     if (key === 'ref') {
       str += ` ref={(el) => this.${value} = el} `;
     } else if (key.startsWith('on')) {
+      const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={event => ${processBinding(value)}} `;
+      str += ` ${useKey}={${eventName} => ${processBinding(value)}} `;
     } else {
       str += ` ${key}={${processBinding(value)}} `;
     }

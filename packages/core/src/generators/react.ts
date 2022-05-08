@@ -178,7 +178,6 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      console.log('\n\n\n\n\nreact\n', json)
       const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
       str += ` ${key}={${eventName} => ${updateStateSettersInCode(
         useBindingValue,

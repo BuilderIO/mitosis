@@ -175,9 +175,10 @@ const blockToSolid = (
     }
 
     if (key.startsWith('on')) {
+      const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={event => ${value}} `;
+      str += ` ${useKey}={${eventName} => ${value}} `;
     } else {
       let useValue = value;
       if (key === 'style') {

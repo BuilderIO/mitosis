@@ -21,6 +21,45 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid BasicFor 1`] = `
+"import { For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+
+function MyBasicForComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
+  });
+
+  return (
+    <div>
+      <For each={state.names}>
+        {(person, _index) => {
+          const index = _index();
+          return (
+            <>
+              <input
+                value={state.name}
+                onInput={(userArgName) => {
+                  state.name = userArgName.target.value + \\" and \\" + person;
+                }}
+              />
+              Hello
+              {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+              Liquid!
+            </>
+          );
+        }}
+      </For>
+    </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
+`;
+
 exports[`Solid Button 1`] = `
 "import { Show } from \\"solid-js\\";
 
