@@ -6,10 +6,10 @@
 - [Gotchas and limitations](#gotchas-and-limitations)
   - [Defining variables with the same name as a state property will shadow it](#defining-variables-with-the-same-name-as-a-state-property-will-shadow-it)
   - [Async methods can't be defined on "state"](#async-methods-cant-be-defined-on-state)
-  - [Callback implicitly have an "event" arg](#callback-implicitly-have-an-event-arg)
+  - [Callback implicitly have an "$event" arg in Angular](#callback-implicitly-have-an-event-arg-in-angular)
   - [Functions can't be passed by reference to JSX callbacks](#functions-cant-be-passed-by-reference-to-jsx-callbacks)
-  - [Can't assign "params" to "state"](#cant-assign-"params"-to-"state")
-  - [Can't assign function output to "state"](#cant-assign-function-output-to-"state")
+  - [Can't assign "params" to "state"](#cant-assign-params-to-state)
+  - [Can't assign function output to "state"](#cant-assign-function-output-to-state)
   - [Can't destructure assignment from state](#cant-destructure-assignment-from-state)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -135,32 +135,44 @@ export default function MyComponent(props) {
 }
 ```
 
-### Callback implicitly have an "event" arg
+### Callback implicitly have an "$event" arg in Angular
 
 Regardless of what you make name the argument to a callback, it will be
-renamed in the output to `event`.
+renamed in the output to `$event`.
 
 _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  return <input onClick={(e) => myCallback(e)} />;
+  const state = useState({
+    name: '',
+  });
+  return (
+    <div>
+      <input
+        value={state.name}
+        onChange={(userArgName) => {
+          state.name = userArgName.target.value;
+        }}
+      />
+    </div>
+  );
 }
 ```
 
 _Mitosis output_
 
 ```typescript
-export default function MyComponent(props) {
-  return (
-    <>
-      <input
-        onClick={(event) => {
-          myCallback(e);
-        }}
-      />
-    </>
-  );
+@Component({
+  selector: 'my-component',
+  template: /*html*/ `
+    <div>
+      <input [value]="name" (input)="name = $event.target.value" />
+    </div>
+  `,
+})
+export default class MyComponent {
+  name = 'PatrickJS';
 }
 ```
 
