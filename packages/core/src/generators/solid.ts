@@ -162,6 +162,9 @@ const blockToSolid = (
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }

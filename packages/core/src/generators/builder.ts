@@ -21,7 +21,7 @@ export interface ToBuilderOptions {
 }
 
 const omitMetaProperties = (obj: Record<string, any>) =>
-  omitBy(obj, (_value, key) => key.startsWith('$'));
+  omitBy(obj, (_value, key) => key.startsWith('$') || key.startsWith('_arguments'));
 
 const builderBlockPrefixes = ['Amp', 'Core', 'Builder', 'Raw', 'Form'];
 const mapComponentName = (name: string) => {

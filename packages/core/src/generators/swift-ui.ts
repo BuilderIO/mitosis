@@ -137,6 +137,9 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     str += `${name}(`;
 
     for (const key in json.properties) {
+      if (key.startsWith('_arguments')) {
+        continue;
+      }
       if (key === 'class' || key === 'className') {
         continue;
       }

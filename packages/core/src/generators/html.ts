@@ -288,6 +288,9 @@ const blockToHtml = (
       if (key.startsWith('$')) {
         continue;
       }
+      if (key.startsWith('_arguments')) {
+        continue;
+      }
       const value = (json.properties[key] || '')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '\\n');
@@ -303,6 +306,7 @@ const blockToHtml = (
       const useValue = value;
 
       if (key.startsWith('on')) {
+        const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
         let event = key.replace('on', '').toLowerCase();
         if (!isComponent(json) && event === 'change') {
           event = 'input';
@@ -324,7 +328,7 @@ const blockToHtml = (
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
                     options.format === 'class' ? 'this.' : ''
-                  }getContext(event.currentTarget, "${scopeVar}");`,
+                  }getContext(${eventName}.currentTarget, "${scopeVar}");`,
               )}
             ${codeContent}
           }

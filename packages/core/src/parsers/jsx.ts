@@ -527,6 +527,16 @@ const jsxElementToJson = (
           memo[key] = value;
           return memo;
         }
+        if (types.isJSXExpressionContainer(value)) {
+          const { expression } = value;
+          if (types.isArrowFunctionExpression(expression)) {
+            if (key.startsWith('on')) {
+              // TODO: we need a better place to store these arguments
+              const args = expression.params.map((node) => (node as babel.types.Identifier)?.name)
+              memo['_arguments_' + key] = args;
+            }
+          }
+        }
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,

@@ -69,6 +69,9 @@ export const blockToMitosis = (
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = (json.properties[key] || '')
       .replace(/"/g, '&quot;')
       .replace(/\n/g, '\\n');

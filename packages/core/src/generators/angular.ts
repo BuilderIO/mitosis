@@ -87,6 +87,9 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
+      if (key.startsWith('_arguments')) {
+        continue;
+      }
       const value = json.properties[key];
       str += ` ${key}="${value}" `;
     }
@@ -110,8 +113,9 @@ export const blockToAngular = (
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
+        const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
         const finalValue = removeSurroundingBlock(
-          useValue.replace(/event\./g, '$event.'),
+          useValue.replace(new RegExp(eventName + '.', 'g'), '$event.'),
         );
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'ref') {

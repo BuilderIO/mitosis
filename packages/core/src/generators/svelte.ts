@@ -187,6 +187,9 @@ export const blockToSvelte: BlockToSvelte = ({
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
@@ -206,7 +209,8 @@ export const blockToSvelte: BlockToSvelte = ({
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
-      str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
+      const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
+      str += ` on:${event}="{${eventName} => ${removeSurroundingBlock(useValue)}}" `;
     } else if (key === 'ref') {
       str += ` bind:this={${useValue}} `;
     } else {

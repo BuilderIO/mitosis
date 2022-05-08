@@ -143,6 +143,9 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
   }
 
   for (const key in json.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = (json.properties[key] || '')
       .replace(/"/g, '&quot;')
       .replace(/\n/g, '\\n');
@@ -175,7 +178,9 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${updateStateSettersInCode(
+      console.log('\n\n\n\n\nreact\n', json)
+      const eventName = json?.properties?.['_arguments_' + key]?.[0] || 'event';
+      str += ` ${key}={${eventName} => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;

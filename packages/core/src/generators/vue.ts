@@ -247,6 +247,9 @@ export const blockToVue = (
   }
 
   for (const key in node.properties) {
+    if (key.startsWith('_arguments')) {
+      continue;
+    }
     const value = node.properties[key];
     str += ` ${key}="${value}" `;
   }
