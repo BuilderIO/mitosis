@@ -229,7 +229,7 @@ async function outputTsxLiteFiles(
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
       debugTarget(error);
-      return;
+      throw error;
     }
 
     const original = transpiled;
