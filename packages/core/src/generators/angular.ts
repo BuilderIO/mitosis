@@ -199,10 +199,10 @@ export const componentToAngular =
         .join('\n')}
 
       ${
-        !component.hooks.onMount
+        !component.hooks.onInit
           ? ''
           : `ngOnInit() {
-              ${stripStateAndPropsRefs(component.hooks.onMount.code, {
+              ${stripStateAndPropsRefs(component.hooks.onInit.code, {
                 replaceWith: 'this.',
               })}
             }`

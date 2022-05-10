@@ -559,6 +559,14 @@ export const componentToHtml =
           nodesToDestroy = [];
         }
         ${
+          !json.hooks?.onInit?.code
+            ? ''
+            : updateReferencesInCode(
+                json.hooks?.onInit?.code as string,
+                useOptions,
+              )
+        }
+        ${
           !hasChangeListeners
             ? ''
             : `
@@ -831,6 +839,14 @@ export const componentToCustomElement =
 
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })
+          }
+          ${
+            !json.hooks?.onInit?.code
+              ? ''
+              : updateReferencesInCode(
+                  json.hooks?.onInit?.code as string,
+                  useOptions,
+                )
           }
         }
 
