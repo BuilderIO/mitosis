@@ -722,17 +722,29 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
+    let css = '';
+    if (useOptions?.experimental?.css) {
+      css = useOptions?.experimental?.css(json, useOptions, {
+        collectCss,
+        prefix: options.prefix,
+      });
+    } else {
+      css = collectCss(json, {
+        prefix: options.prefix,
+      });
+    }
 
-    const css = collectCss(json, {
-      prefix: options.prefix,
-    });
     stripMetaProperties(json);
 
     let html = json.children
       .map((item) => blockToHtml(item, useOptions))
       .join('\n');
 
-    html += `<style>${css}</style>`;
+    if (useOptions?.experimental?.cssHtml) {
+      html += useOptions?.experimental?.cssHtml(css);
+    } else {
+      html += `<style>${css}</style>`;
+    }
 
     if (options.prettier !== false) {
       try {
@@ -768,7 +780,6 @@ export const componentToCustomElement =
       class ${component.name} extends HTMLElement {
         constructor() {
           super();
-
           const self = this;
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
@@ -800,6 +811,11 @@ export const componentToCustomElement =
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          ${
+            useOptions?.experimental?.componentConstructor
+              ? useOptions?.experimental?.componentConstructor(json, useOptions)
+              : ''
+          }
 
           ${useOptions.js}
 
