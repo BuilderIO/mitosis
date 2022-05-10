@@ -65,6 +65,12 @@ const wrapInFragment = (json: MitosisComponent | MitosisNode) =>
 const NODE_MAPPERS: {
   [key: string]: (json: MitosisNode, options: ToReactOptions) => string;
 } = {
+  Slot(json, options) {
+    return `{${processBinding(json.bindings.name as string, options).replace(
+      'name=',
+      '',
+    )}}`;
+  },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
     return `${wrap ? '<>' : ''}${json.children
@@ -179,6 +185,11 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
         useBindingValue,
         options,
       )} } `;
+    } else if (key.startsWith('slot')) {
+      const lowercaseKey =
+        key.replace('slot', '')[0].toLowerCase() +
+        key.replace('slot', '').substring(1);
+      str += `${lowercaseKey}={${useBindingValue}}`;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -239,6 +250,13 @@ const stripThisRefs = (str: string, options: ToReactOptions) => {
 const processBinding = (str: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return str;
+  }
+
+  if (str.includes('slot')) {
+    return stripStateAndPropsRefs(str.replace('slot', ''), {
+      includeState: true,
+      includeProps: false,
+    });
   }
 
   return stripStateAndPropsRefs(str, {
