@@ -201,6 +201,7 @@ const blockToHtml = (
       options,
       elId,
       parentScopeVars,
+      blockToHtml
     );
   }
 
