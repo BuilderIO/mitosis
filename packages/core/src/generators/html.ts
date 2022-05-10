@@ -742,6 +742,9 @@ export const componentToCustomElement =
     let html = json.children
       .map((item) => blockToHtml(item, useOptions))
       .join('\n');
+    if (useOptions?.experimental?.childrenHtml) {
+      html = useOptions?.experimental?.childrenHtml(html, json, useOptions);
+    }
 
     if (useOptions?.experimental?.cssHtml) {
       html += useOptions?.experimental?.cssHtml(css);
@@ -780,7 +783,11 @@ export const componentToCustomElement =
        *  <${kebabName}></${kebabName}>
        * 
        */
-      class ${component.name} extends HTMLElement {
+      class ${component.name} extends ${
+      useOptions?.experimental?.classExtends
+        ? useOptions?.experimental?.classExtends(json, useOptions)
+        : 'HTMLElement'
+    } {
         constructor() {
           super();
           const self = this;
