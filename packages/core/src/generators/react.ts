@@ -579,6 +579,16 @@ const _componentToReact = (
       ${getInitCode(json, options)}
 
       ${
+        json.hooks.onInit?.code
+          ? `useEffect(() => {
+            ${processBinding(
+              updateStateSettersInCode(json.hooks.onInit.code, options),
+              options,
+            )}
+          }, [])`
+          : ''
+      }
+      ${
         json.hooks.onMount?.code
           ? `useEffect(() => {
             ${processBinding(

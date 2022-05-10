@@ -19,6 +19,7 @@ const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
+const onInit = require('./data/blocks/onInit.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
@@ -139,6 +140,12 @@ describe('React', () => {
 
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onInit', () => {
+    const component = parseJsx(onInit);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

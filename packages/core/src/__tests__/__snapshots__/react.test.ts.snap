@@ -17,12 +17,16 @@ export default function MyBasicComponent(props) {
 `;
 
 exports[`React BasicFor 1`] = `
-"import { useState } from \\"react\\";
+"import { useState, useEffect } from \\"react\\";
 
 export default function MyBasicForComponent(props) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
 
   return (
     <div>
@@ -959,6 +963,17 @@ export default function MultipleOnUpdateWithDeps(props) {
 "
 `;
 
+exports[`React onInit 1`] = `
+"export default function OnInit(props) {
+  useEffect(() => {
+    console.log(\\"Runs once every update/rerender\\");
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
 exports[`React onMount & onUnMount 1`] = `
 "import { useEffect } from \\"react\\";
 
@@ -1015,6 +1030,7 @@ exports[`React rootShow 1`] = `
   
   
 
+  
   
 
   
