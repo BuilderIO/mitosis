@@ -28,17 +28,15 @@ const getDefaultImport = ({
   return null;
 };
 
-const transformComponentImports = (
-  theImport: MitosisImport,
-  target?: Target,
-) => {
+const getFileExtensionForTarget = (target?: Target) => {
   switch (target) {
     case 'svelte':
-      return theImport.path.replace('.lite', '.svelte');
+      return '.svelte';
     case 'solid':
-      return theImport.path.replace('.lite', '.jsx');
+      return '.jsx';
+    // Does this ever happen? We shouldn't be keeping `.lite` imports in the output.
     default:
-      return theImport.path;
+      return '.lite';
   }
 };
 
@@ -49,7 +47,7 @@ const transformImportPath = (theImport: MitosisImport, target?: Target) => {
   }
 
   if (theImport.path.endsWith('.lite')) {
-    return transformComponentImports(theImport, target);
+    return theImport.path.replace('.lite', getFileExtensionForTarget(target));
   }
 
   return theImport.path;
