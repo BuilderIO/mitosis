@@ -22,14 +22,12 @@ exports[`Html Basic 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='input-1']\\")
-        .forEach((el, index) => {
-          el.value = state.name;
+      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+        el.value = state.name;
 
-          el.removeEventListener(\\"input\\", onInput1Input);
-          el.addEventListener(\\"input\\", onInput1Input);
-        });
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
 
       destroyAnyNodes();
     }
@@ -74,22 +72,20 @@ exports[`Html BasicFor 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.names;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"person\\", undefined, undefined);
       });
 
-      document
-        .querySelectorAll(\\"[data-name='input-1']\\")
-        .forEach((el, index) => {
-          el.value = state.name;
+      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+        el.value = state.name;
 
-          el.removeEventListener(\\"input\\", onInput1Input);
-          el.addEventListener(\\"input\\", onInput1Input);
-        });
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const person = getContext(el, \\"person\\");
         el.innerText = person;
       });
@@ -181,31 +177,31 @@ exports[`Html Button 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
         const whenCondition = props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
         el.href = props.link;
 
         el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.innerText = props.text;
       });
 
-      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
         const whenCondition = !props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.innerText = props.text;
       });
 
@@ -299,18 +295,18 @@ exports[`Html Columns 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = props.columns;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const column = getContext(el, \\"column\\");
         el.innerText = column.content;
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
@@ -415,14 +411,14 @@ exports[`Html Image 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
         const whenCondition = !state.useLazyLoading() || state.load;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         el.alt = props.altText;
 
         el.setAttribute(
@@ -442,11 +438,9 @@ exports[`Html Image 1`] = `
         el.sizes = props.sizes;
       });
 
-      document
-        .querySelectorAll(\\"[data-name='source-1']\\")
-        .forEach((el, index) => {
-          el.srcset = props.srcset;
-        });
+      document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
+        el.srcset = props.srcset;
+      });
 
       destroyAnyNodes();
     }
@@ -527,20 +521,20 @@ exports[`Html ImageState 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.images;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        const item = getContext(el, \\"item\\");
+        const itemIndex = getContext(el, \\"itemIndex\\");
+
         el.className = \\"custom-class\\";
 
-        var item = getContext(el, \\"item\\");
         el.src = item;
 
-        var item = getContext(el, \\"item\\");
-        var itemIndex = getContext(el, \\"itemIndex\\");
         el.key = itemIndex;
       });
 
@@ -609,7 +603,7 @@ exports[`Html Img 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         Object.assign(el.style, {
           objectFit: props.backgroundSize || \\"cover\\",
           objectPosition: props.backgroundPosition || \\"center\\",
@@ -650,26 +644,24 @@ exports[`Html Input block 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='input-1']\\")
-        .forEach((el, index) => {
-          el.key =
-            Builder.isEditing && props.defaultValue
-              ? props.defaultValue
-              : \\"default-key\\";
+      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+        el.key =
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\";
 
-          el.placeholder = props.placeholder;
+        el.placeholder = props.placeholder;
 
-          el.type = props.type;
+        el.type = props.type;
 
-          el.name = props.name;
+        el.name = props.name;
 
-          el.value = props.value;
+        el.value = props.value;
 
-          el.defaultValue = props.defaultValue;
+        el.defaultValue = props.defaultValue;
 
-          el.required = props.required;
-        });
+        el.required = props.required;
+      });
 
       destroyAnyNodes();
     }
@@ -701,18 +693,16 @@ exports[`Html Section 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='section-1']\\")
-        .forEach((el, index) => {
-          Object.assign(
-            el.style,
-            props.maxWidth && typeof props.maxWidth === \\"number\\"
-              ? {
-                  maxWidth: props.maxWidth,
-                }
-              : undefined
-          );
-        });
+      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+        Object.assign(
+          el.style,
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                maxWidth: props.maxWidth,
+              }
+            : undefined
+        );
+      });
 
       destroyAnyNodes();
     }
@@ -749,27 +739,25 @@ exports[`Html SectionState 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
         const whenCondition = state.max;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.items;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"item\\", undefined, undefined);
       });
 
-      document
-        .querySelectorAll(\\"[data-name='section-1']\\")
-        .forEach((el, index) => {
-          const item = getContext(el, \\"item\\");
-          Object.assign(el.style, {
-            maxWidth: item + state.max,
-          });
+      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+        const item = getContext(el, \\"item\\");
+        Object.assign(el.style, {
+          maxWidth: item + state.max,
         });
+      });
 
       destroyAnyNodes();
     }
@@ -857,38 +845,35 @@ exports[`Html Select block 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='select-1']\\")
-        .forEach((el, index) => {
-          el.value = props.value;
+      document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
+        el.value = props.value;
 
-          el.key =
-            Builder.isEditing && props.defaultValue
-              ? props.defaultValue
-              : \\"default-key\\";
+        el.key =
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\";
 
-          el.defaultValue = props.defaultValue;
+        el.defaultValue = props.defaultValue;
 
-          el.name = props.name;
-        });
+        el.name = props.name;
+      });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = props.options;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
       });
 
-      document
-        .querySelectorAll(\\"[data-name='option-1']\\")
-        .forEach((el, index) => {
-          var option = getContext(el, \\"option\\");
-          el.value = option.value;
+      document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
+        const option = getContext(el, \\"option\\");
+        const index = getContext(el, \\"index\\");
 
-          var index = getContext(el, \\"index\\");
-          el.setAttribute(\\"data-index\\", index);
-        });
+        el.value = option.value;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+        el.setAttribute(\\"data-index\\", index);
+      });
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const option = getContext(el, \\"option\\");
         el.innerText = option.name || option.value;
       });
@@ -1019,62 +1004,60 @@ exports[`Html Shadow DOM 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document
-        .querySelectorAll(\\"[data-name='button-1']\\")
-        .forEach((el, index) => {
-          el.removeEventListener(\\"click\\", onButton1Click);
-          el.addEventListener(\\"click\\", onButton1Click);
-        });
+      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document
-        .querySelectorAll(\\"[data-name='button-2']\\")
-        .forEach((el, index) => {
-          el.removeEventListener(\\"click\\", onButton2Click);
-          el.addEventListener(\\"click\\", onButton2Click);
-        });
+      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        var review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+        const review = getContext(el, \\"review\\");
+
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        var review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        const review = getContext(el, \\"review\\");
+
         el.src = review.avatar;
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
         el.innerText = review.author;
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
@@ -1253,62 +1236,60 @@ exports[`Html Stamped 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document
-        .querySelectorAll(\\"[data-name='button-1']\\")
-        .forEach((el, index) => {
-          el.removeEventListener(\\"click\\", onButton1Click);
-          el.addEventListener(\\"click\\", onButton1Click);
-        });
+      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document
-        .querySelectorAll(\\"[data-name='button-2']\\")
-        .forEach((el, index) => {
-          el.removeEventListener(\\"click\\", onButton2Click);
-          el.addEventListener(\\"click\\", onButton2Click);
-        });
+      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton2Click);
+        el.addEventListener(\\"click\\", onButton2Click);
+      });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.reviews;
         let template = document.querySelector('[data-template-for=\\"for\\"]');
         renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el, index) => {
-        var review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+        const review = getContext(el, \\"review\\");
+
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el, index) => {
-        var review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+        const review = getContext(el, \\"review\\");
+
         el.src = review.avatar;
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
         el.innerText = index;
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
         el.innerText = review.author;
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
         el.innerText = review.reviewMessage;
       });
@@ -1418,7 +1399,7 @@ exports[`Html Submit button block 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.innerText = props.text;
       });
 
@@ -1450,7 +1431,7 @@ exports[`Html Text 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el, index) => {
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.contentEditable = allowEditingText || undefined;
 
         el.innerHTML = props.text || props.content || \\"\\";
@@ -1484,17 +1465,15 @@ exports[`Html Textarea 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='textarea-1']\\")
-        .forEach((el, index) => {
-          el.placeholder = props.placeholder;
+      document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
+        el.placeholder = props.placeholder;
 
-          el.name = props.name;
+        el.name = props.name;
 
-          el.value = props.value;
+        el.value = props.value;
 
-          el.defaultValue = props.defaultValue;
-        });
+        el.defaultValue = props.defaultValue;
+      });
 
       destroyAnyNodes();
     }
@@ -1524,32 +1503,30 @@ exports[`Html Video 1`] = `
     // call update() when you mutate state and need the updates to reflect
     // in the dom
     function update() {
-      document
-        .querySelectorAll(\\"[data-name='video-1']\\")
-        .forEach((el, index) => {
-          Object.assign(el.style, {
-            width: \\"100%\\",
-            height: \\"100%\\",
-            ...props.attributes?.style,
-            objectFit: props.fit,
-            objectPosition: props.position,
-            // Hack to get object fit to work as expected and
-            // not have the video overflow
-            borderRadius: 1,
-          });
-
-          el.key = props.video || \\"no-src\\";
-
-          el.poster = props.posterImage;
-
-          el.autoPlay = props.autoPlay;
-
-          el.muted = props.muted;
-
-          el.controls = props.controls;
-
-          el.loop = props.loop;
+      document.querySelectorAll(\\"[data-name='video-1']\\").forEach((el) => {
+        Object.assign(el.style, {
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          objectFit: props.fit,
+          objectPosition: props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          borderRadius: 1,
         });
+
+        el.key = props.video || \\"no-src\\";
+
+        el.poster = props.posterImage;
+
+        el.autoPlay = props.autoPlay;
+
+        el.muted = props.muted;
+
+        el.controls = props.controls;
+
+        el.loop = props.loop;
+      });
 
       destroyAnyNodes();
     }

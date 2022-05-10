@@ -87,15 +87,20 @@ const addUpdateAfterSet = (
   });
 };
 
+const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
+  return parentScopeVars.filter((scopeVar) => {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+    return new RegExp(scopeVar).test(value);
+  });
+};
 const addScopeVars = (
   parentScopeVars: ScopeVars,
-  value: string,
+  value: string | boolean,
   fn: (scope: string) => string,
 ) => {
-  return `${parentScopeVars
-    .filter((scopeVar) => {
-      return new RegExp(scopeVar).test(value);
-    })
+  return `${getScopeVars(parentScopeVars, value)
     .map((scopeVar) => {
       return fn(scopeVar);
     })
@@ -283,14 +288,20 @@ const blockToHtml = (
     }
     str += '</template>';
   } else if (json.name === 'Show') {
+    const whenCondition = (json.bindings.when as string).replace(/;$/, '');
     addOnChangeJs(
       elId,
       options,
       `
-        const whenCondition = ${(json.bindings.when as string).replace(
-          /;$/,
-          '',
-        )};
+        ${addScopeVars(
+          parentScopeVars,
+          whenCondition,
+          (scopeVar: string) =>
+            `const ${scopeVar} = ${
+              options.format === 'class' ? 'this.' : ''
+            }getContext(el, "${scopeVar}");`,
+        )}
+        const whenCondition = ${whenCondition};
         if (whenCondition) {
           ${options.format === 'class' ? 'this.' : ''}showContent(el)
         }
@@ -329,6 +340,11 @@ const blockToHtml = (
         .replace(/\n/g, '\\n');
       str += ` ${key}="${value}" `;
     }
+
+    // batch all local vars within the bindings
+    let batchScopeVars: any = {};
+    let onceBatch = false;
+    let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
       if (key === '_spread' || key === 'ref' || key === 'css') {
@@ -394,25 +410,46 @@ const blockToHtml = (
             ;Object.assign(el.style, ${useValue});`,
           );
         } else {
+          // gather all local vars to inject later
+          getScopeVars(parentScopeVars, useValue).forEach((key) => {
+            // unique keys
+            batchScopeVars[key] = true;
+          });
           addOnChangeJs(
             elId,
             options,
             `
-            ${addScopeVars(
-              parentScopeVars,
-              useValue as string,
-              (scopeVar: string) =>
-                // TODO: multiple loops may duplicate variable declarations
-                `;var ${scopeVar} = ${
-                  options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}");`,
-            )}
+            ${onceBatch ? '' : startInjectVar}
             ${generateSetElementAttributeCode(key, useValue, options)}
             `,
           );
+          if (!onceBatch) {
+            onceBatch = true;
+          }
         }
       }
     }
+
+    // batch inject local vars in the beginning of the function block
+    const codeBlock = options.onChangeJsById[elId];
+    const testInjectVar = new RegExp(startInjectVar);
+    if (codeBlock && testInjectVar.test(codeBlock)) {
+      const localScopeVars = Object.keys(batchScopeVars);
+      options.onChangeJsById[elId] = (codeBlock as string).replace(
+        startInjectVar,
+        `
+        ${addScopeVars(
+          localScopeVars,
+          true,
+          (scopeVar: string) =>
+            `const ${scopeVar} = ${
+              options.format === 'class' ? 'this.' : ''
+            }getContext(el, "${scopeVar}");`,
+        )}
+        `,
+      );
+    }
+
     if (selfClosingTags.has(json.name)) {
       return str + ' />';
     }
@@ -575,9 +612,9 @@ export const componentToHtml =
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
+              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
                 ${value}
-              })
+              });
             `;
             })
             .join('\n\n')}
@@ -643,9 +680,7 @@ export const componentToHtml =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
-              ${
-                options.format === 'class' ? 'this.' : ''
-              }nodesToDestroy.push(child);
+              nodesToDestroy.push(child);
             });
             el.after(elementFragment);
           }
