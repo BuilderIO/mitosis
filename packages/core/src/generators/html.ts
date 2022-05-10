@@ -552,19 +552,12 @@ export const componentToHtml =
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let nodesToDestroy = [];
+        ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
 
         function destroyAnyNodes() {
           // destroy current view template refs before rendering again
           nodesToDestroy.forEach(el => el.remove());
           nodesToDestroy = [];
-        }
-        ${
-          !json.hooks?.onInit?.code
-            ? ''
-            : updateReferencesInCode(
-                json.hooks?.onInit?.code as string,
-                useOptions,
-              )
         }
         ${
           !hasChangeListeners
@@ -620,6 +613,19 @@ export const componentToHtml =
                 useOptions,
               )} 
               `
+        }
+        ${
+          !json.hooks?.onInit?.code
+            ? ''
+            : `
+            if (!onInitOnce) {
+              ${updateReferencesInCode(
+                json.hooks?.onInit?.code as string,
+                useOptions,
+              )}
+              onInitOnce = true;
+            }
+            `
         }
         ${
           !hasShow
@@ -799,6 +805,7 @@ export const componentToCustomElement =
         constructor() {
           super();
           const self = this;
+          ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(
@@ -840,14 +847,6 @@ export const componentToCustomElement =
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })
           }
-          ${
-            !json.hooks?.onInit?.code
-              ? ''
-              : updateReferencesInCode(
-                  json.hooks?.onInit?.code as string,
-                  useOptions,
-                )
-          }
         }
 
 
@@ -862,6 +861,7 @@ export const componentToCustomElement =
               useOptions,
             )}
             this.destroyAnyNodes(); // clean up nodes when component is destroyed
+            ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
           }
           `
         }
@@ -946,6 +946,18 @@ export const componentToCustomElement =
             useOptions?.experimental?.updateBindings
               ? useOptions?.experimental?.updateBindings(json, useOptions)
               : 'this.updateBindings();'
+          }
+          ${
+            !json.hooks?.onInit?.code
+              ? ''
+              : `
+              if (!this.onInitOnce) {
+                ${updateReferencesInCode(
+                  json.hooks?.onInit?.code as string,
+                  useOptions,
+                )}
+                this.onInitOnce = true;
+              }`
           }
         }
 
