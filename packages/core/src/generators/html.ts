@@ -203,7 +203,7 @@ const blockToHtml = (
       parentScopeVars,
       blockToHtml,
       addScopeVars,
-      addOnChangeJs
+      addOnChangeJs,
     );
   }
 
