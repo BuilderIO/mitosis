@@ -41,6 +41,7 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   onChangeJsById: StringRecord;
   js: string;
   namesMap: NumberRecord;
+  experimental?: any;
 };
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
@@ -58,7 +59,11 @@ const needsSetAttribute = (key: string): boolean => {
 const generateSetElementAttributeCode = (
   key: string,
   useValue: string,
+  options: InternalToHtmlOptions,
 ): string => {
+  if (options?.experimental?.props) {
+    return options?.experimental?.props(key, useValue, options);
+  }
   return needsSetAttribute(key)
     ? `;el.setAttribute("${key}", ${useValue});`
     : `;el.${updateKeyIfException(key)} = ${useValue};`;
@@ -129,6 +134,11 @@ const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
 ) => {
+  if (options?.experimental?.updateReferencesInCode) {
+    return options?.experimental?.updateReferencesInCode(code, options, {
+      stripStateAndPropsRefs,
+    });
+  }
   if (options.format === 'class') {
     return stripStateAndPropsRefs(
       stripStateAndPropsRefs(code, {
@@ -169,6 +179,32 @@ const blockToHtml = (
   if (hasData) {
     elId = getId(json, options);
     json.properties['data-name'] = elId;
+  }
+  if (options?.experimental?.getId) {
+    elId = options?.experimental?.getId(elId, json, options, {
+      hasData,
+      getId,
+    });
+    json.properties['data-name'] = options?.experimental?.dataName(
+      elId,
+      json,
+      options,
+      {
+        hasData,
+        getId,
+      },
+    );
+  }
+  if (options?.experimental?.mappers?.[json.name]) {
+    return options?.experimental?.mappers?.[json.name](
+      json,
+      options,
+      elId,
+      parentScopeVars,
+      blockToHtml,
+      addScopeVars,
+      addOnChangeJs,
+    );
   }
 
   if (mappers[json.name]) {
@@ -371,7 +407,7 @@ const blockToHtml = (
                   options.format === 'class' ? 'this.' : ''
                 }getContext(el, "${scopeVar}");`,
             )}
-            ${generateSetElementAttributeCode(key, useValue)}
+            ${generateSetElementAttributeCode(key, useValue, options)}
             `,
           );
         }
@@ -433,7 +469,17 @@ function addUpdateAfterSetInCode(
             //   console.error('Infinite assignment detected');
             //   return;
             // }
-
+            if (options?.experimental?.addUpdateAfterSetInCode) {
+              useString = options?.experimental?.addUpdateAfterSetInCode(
+                useString,
+                options,
+                {
+                  node,
+                  code,
+                  types,
+                },
+              );
+            }
             path.insertAfter(
               types.callExpression(types.identifier(useString), []),
             );
@@ -506,6 +552,7 @@ export const componentToHtml =
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let nodesToDestroy = [];
+        ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
 
         function destroyAnyNodes() {
           // destroy current view template refs before rendering again
@@ -556,6 +603,20 @@ export const componentToHtml =
         }
 
         ${
+          !json.hooks?.onInit?.code
+            ? ''
+            : `
+            if (!onInitOnce) {
+              ${updateReferencesInCode(
+                json.hooks?.onInit?.code as string,
+                useOptions,
+              )}
+              onInitOnce = true;
+            }
+            `
+        }
+
+        ${
           !json.hooks.onMount?.code
             ? ''
             : // TODO: make prettier by grabbing only the function body
@@ -567,6 +628,7 @@ export const componentToHtml =
               )} 
               `
         }
+
         ${
           !hasShow
             ? ''
@@ -679,17 +741,32 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
+    let css = '';
+    if (useOptions?.experimental?.css) {
+      css = useOptions?.experimental?.css(json, useOptions, {
+        collectCss,
+        prefix: options.prefix,
+      });
+    } else {
+      css = collectCss(json, {
+        prefix: options.prefix,
+      });
+    }
 
-    const css = collectCss(json, {
-      prefix: options.prefix,
-    });
     stripMetaProperties(json);
 
     let html = json.children
       .map((item) => blockToHtml(item, useOptions))
       .join('\n');
+    if (useOptions?.experimental?.childrenHtml) {
+      html = useOptions?.experimental?.childrenHtml(html, json, useOptions);
+    }
 
-    html += `<style>${css}</style>`;
+    if (useOptions?.experimental?.cssHtml) {
+      html += useOptions?.experimental?.cssHtml(css);
+    } else {
+      html += `<style>${css}</style>`;
+    }
 
     if (options.prettier !== false) {
       try {
@@ -722,11 +799,15 @@ export const componentToCustomElement =
        *  <${kebabName}></${kebabName}>
        * 
        */
-      class ${component.name} extends HTMLElement {
+      class ${component.name} extends ${
+      useOptions?.experimental?.classExtends
+        ? useOptions?.experimental?.classExtends(json, useOptions)
+        : 'HTMLElement'
+    } {
         constructor() {
           super();
-
           const self = this;
+          ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(
@@ -757,6 +838,11 @@ export const componentToCustomElement =
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          ${
+            useOptions?.experimental?.componentConstructor
+              ? useOptions?.experimental?.componentConstructor(json, useOptions)
+              : ''
+          }
 
           ${useOptions.js}
 
@@ -771,12 +857,22 @@ export const componentToCustomElement =
             ? ''
             : `
           disconnectedCallback() {
+            ${
+              useOptions?.experimental?.disconnectedCallback
+                ? useOptions?.experimental?.disconnectedCallback(
+                    json,
+                    useOptions,
+                  )
+                : `
             // onUnMount
             ${updateReferencesInCode(
               addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
             )}
             this.destroyAnyNodes(); // clean up nodes when component is destroyed
+            ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
+            `
+            }
           }
           `
         }
@@ -792,12 +888,43 @@ export const componentToCustomElement =
         }
 
         connectedCallback() {
-          this._root.innerHTML = \`
+          ${
+            useOptions?.experimental?.connectedCallbackUpdate
+              ? useOptions?.experimental?.connectedCallbackUpdate(
+                  json,
+                  html,
+                  useOptions,
+                )
+              : `
+              this._root.innerHTML = \`
       ${html}\`;
-          this.onMount();
-          this.update();
+              this.render();
+              ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
+              this.onMount();
+              this.onUpdate();
+              `
+          }
         }
-
+        ${
+          !json.hooks?.onInit?.code
+            ? ''
+            : `
+            onInit() {
+              ${
+                !json.hooks?.onInit?.code
+                  ? ''
+                  : `
+                  if (!this.onInitOnce) {
+                    ${updateReferencesInCode(
+                      json.hooks?.onInit?.code as string,
+                      useOptions,
+                    )}
+                    this.onInitOnce = true;
+                  }`
+              }
+            }
+            `
+        }
 
         ${
           !hasShow
@@ -817,6 +944,19 @@ export const componentToCustomElement =
             });
             el.after(elementFragment);
           }`
+        }
+        ${
+          !useOptions?.experimental?.attributeChangedCallback
+            ? ''
+            : `
+          attributeChangedCallback(name, oldValue, newValue) {
+            ${useOptions?.experimental?.attributeChangedCallback(
+              ['name', 'oldValue', 'newValue'],
+              json,
+              useOptions,
+            )}
+          }
+          `
         }
 
         onMount() {
@@ -847,26 +987,77 @@ export const componentToCustomElement =
         }
 
         update() {
+          ${
+            !useOptions?.experimental?.shouldComponentUpdateStart
+              ? ''
+              : `
+            ${useOptions?.experimental?.shouldComponentUpdateStart(
+              json,
+              useOptions,
+            )}
+            `
+          }
+          this.render();
           this.onUpdate();
+          ${
+            !useOptions?.experimental?.shouldComponentUpdateEnd
+              ? ''
+              : `
+            ${useOptions?.experimental?.shouldComponentUpdateEnd(
+              json,
+              useOptions,
+            )}
+            `
+          }
+        }
+
+        render() {
           // re-rendering needs to ensure that all nodes generated by for/show are refreshed
           this.destroyAnyNodes();
-          this.updateBindings();
+          ${
+            useOptions?.experimental?.updateBindings
+              ? useOptions?.experimental?.updateBindings(json, useOptions)
+              : 'this.updateBindings();'
+          }
         }
 
         updateBindings() {
-                    ${Object.keys(useOptions.onChangeJsById)
-                      .map((key) => {
-                        const value = useOptions.onChangeJsById[key];
-                        if (!value) {
-                          return '';
-                        }
-                        return `
-              this._root.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
-                ${updateReferencesInCode(value, useOptions)}
+          ${Object.keys(useOptions.onChangeJsById)
+            .map((key) => {
+              const value = useOptions.onChangeJsById[key];
+              if (!value) {
+                return '';
+              }
+              let code = '';
+              if (useOptions?.experimental?.updateBindings) {
+                key = useOptions?.experimental?.updateBindings?.key(
+                  key,
+                  value,
+                  useOptions,
+                );
+                code = useOptions?.experimental?.updateBindings?.code(
+                  key,
+                  value,
+                  useOptions,
+                );
+              } else {
+                code = updateReferencesInCode(value, useOptions);
+              }
+              return `
+              ${
+                useOptions?.experimental?.generateQuerySelectorAll
+                  ? `
+              ${useOptions?.experimental?.generateQuerySelectorAll(key, code)}
+              `
+                  : `              
+              this._root.querySelectorAll("[data-name='${key}']").forEach((el) => {
+                ${code}
               })
+              `
+              }
             `;
-                      })
-                      .join('\n\n')}
+            })
+            .join('\n\n')}
         }
 
         ${
@@ -907,7 +1098,15 @@ export const componentToCustomElement =
         }
       }
 
-      customElements.define('${kebabName}', ${component.name});
+      ${
+        useOptions?.experimental?.customElementsDefine
+          ? useOptions?.experimental?.customElementsDefine(
+              kebabName,
+              component,
+              useOptions,
+            )
+          : `customElements.define('${kebabName}', ${component.name});`
+      }
     `;
 
     if (options.plugins) {

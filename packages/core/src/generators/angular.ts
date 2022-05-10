@@ -145,6 +145,9 @@ export const componentToAngular =
     }
 
     const props = getProps(component);
+    const hasOnInit = Boolean(
+      component.hooks?.onInit || component.hooks?.onMount,
+    );
 
     const refs = Array.from(getRefs(json));
     mapRefs(json, (refName) => `this.${refName}.nativeElement`);
@@ -199,12 +202,27 @@ export const componentToAngular =
         .join('\n')}
 
       ${
-        !component.hooks.onMount
+        !hasOnInit
           ? ''
           : `ngOnInit() {
-              ${stripStateAndPropsRefs(component.hooks.onMount.code, {
-                replaceWith: 'this.',
-              })}
+              ${
+                !component.hooks?.onInit
+                  ? ''
+                  : `
+                ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+                  replaceWith: 'this.',
+                })}
+                `
+              }
+              ${
+                !component.hooks?.onMount
+                  ? ''
+                  : `
+                ${stripStateAndPropsRefs(component.hooks.onMount?.code, {
+                  replaceWith: 'this.',
+                })}
+                `
+              }
             }`
       }
 

@@ -1,5 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Angular BasicFor 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <div>
+          <input
+            [value]=\\"name\\"
+            (input)=\\"
+         name = $event.target.value + ' and ' + person;
+       \\"
+          />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyBasicForComponent {
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+"
+`;
+
 exports[`Angular ng-content 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -11,6 +45,63 @@ exports[`Angular ng-content 1`] = `
 })
 export default class SlotCode {
   @Input() children: any;
+}
+"
+`;
+
+exports[`Angular onInit 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInit {
+  ngOnInit() {
+    console.log(\\"Runs once every update/rerender\\");
+  }
+}
+"
+`;
+
+exports[`Angular onInit and onMount 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInit {
+  ngOnInit() {
+    console.log(\\"onInit\\");
+
+    console.log(\\"onMount\\");
+  }
+}
+"
+`;
+
+exports[`Angular onMount 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"comp\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class Comp {
+  ngOnInit() {
+    console.log(\\"Runs on mount\\");
+  }
+
+  ngOnDestroy() {
+    console.log(\\"Runs on unMount\\");
+  }
 }
 "
 `;

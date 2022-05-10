@@ -1,9 +1,13 @@
-import { useState, For } from '@builder.io/mitosis';
+import { useState, For, onMount } from '@builder.io/mitosis';
 
 export default function MyBasicForComponent() {
   const state = useState({
     name: 'PatrickJS',
     names: ['Steve', 'PatrickJS'],
+  });
+
+  onMount(() => {
+    console.log('onMount code');
   });
 
   return (

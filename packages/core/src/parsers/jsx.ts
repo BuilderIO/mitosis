@@ -207,6 +207,7 @@ const componentFunctionToJson = (
                 //  { console.log('hi') } -> console.log('hi')
                 .replace(/^{/, '')
                 .replace(/}$/, '');
+              // TODO: add arguments
               hooks.onMount = { code };
             }
           } else if (expression.callee.name === 'onUpdate') {
@@ -253,6 +254,21 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
               hooks.onUnMount = { code };
+            }
+          } else if (expression.callee.name === 'onInit') {
+            const firstArg = expression.arguments[0];
+            if (
+              types.isFunctionExpression(firstArg) ||
+              types.isArrowFunctionExpression(firstArg)
+            ) {
+              const code = generate(firstArg.body)
+                .code.trim()
+                // Remove arbitrary block wrapping if any
+                // AKA
+                //  { console.log('hi') } -> console.log('hi')
+                .replace(/^{/, '')
+                .replace(/}$/, '');
+              hooks.onInit = { code };
             }
           }
         }

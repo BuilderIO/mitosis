@@ -23,6 +23,8 @@ const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
+const onInit = require('./data/blocks/onInit.raw');
+const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 
 const stamped = require('./data/blocks/stamped-io.raw');
 const shadowDom = require('./data/blocks/shadow-dom.raw');
@@ -152,6 +154,19 @@ describe('webcomponent', () => {
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });
+
+  test('onInit', () => {
+    const component = parseJsx(onInit);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('onInit & onMount', () => {
+    const component = parseJsx(onInitonMount);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('Stamped', () => {
     const component = parseJsx(stamped);
     const html = componentToCustomElement()({ component });
