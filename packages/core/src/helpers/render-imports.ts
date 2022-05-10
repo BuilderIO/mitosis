@@ -34,7 +34,8 @@ const getFileExtensionForTarget = (target?: Target) => {
       return '.svelte';
     case 'solid':
       return '.jsx';
-    // Does this ever happen? We shouldn't be keeping `.lite` imports in the output.
+    // these `.lite` extensions are handled in the `transpile` step of the CLI.
+    // TO-DO: consolidate file-extension renaming to one place.
     default:
       return '.lite';
   }
