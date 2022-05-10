@@ -28,23 +28,31 @@ const getDefaultImport = ({
   return null;
 };
 
+const transformComponentImports = (
+  theImport: MitosisImport,
+  target?: Target,
+) => {
+  switch (target) {
+    case 'svelte':
+      return theImport.path.replace('.lite', '.svelte');
+    case 'solid':
+      return theImport.path.replace('.lite', '.jsx');
+    default:
+      return theImport.path;
+  }
+};
+
 const transformImportPath = (theImport: MitosisImport, target?: Target) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '');
   }
 
-  switch (target) {
-    case 'svelte':
-      if (theImport.path.endsWith('.lite'))
-        // all svelte components have `.svelte` extension
-        return theImport.path.replace('.lite', '.svelte');
-      else {
-        return theImport.path;
-      }
-    default:
-      return theImport.path;
+  if (theImport.path.endsWith('.lite')) {
+    return transformComponentImports(theImport, target);
   }
+
+  return theImport.path;
 };
 
 const renderImport = ({
