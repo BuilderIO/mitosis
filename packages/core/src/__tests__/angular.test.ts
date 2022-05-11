@@ -10,6 +10,7 @@ const basicFor = require('./data/basic-for.raw');
 const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
+// const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
   test('multiple onUpdate', () => {
@@ -60,9 +61,14 @@ describe('Angular', () => {
     expect(output).toMatchSnapshot();
   });
 
-  test('Slot', () => {
+  test('Slot Jsx', () => {
     const component = parseJsx(slotJsx);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
+  // test('Slot Html', () => {
+  //   const component = parseJsx(slotHtml);
+  //   const output = componentToAngular()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
 });
