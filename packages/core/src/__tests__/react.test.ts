@@ -25,8 +25,20 @@ const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const rootShow = require('./data/blocks/rootShow.raw');
+const contentSlot = require('./data/blocks/content-slot.raw');
+const slot = require('./data/blocks/slot.raw');
 
 describe('React', () => {
+  test('ContentSlot', () => {
+    const component = parseJsx(contentSlot);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('Slot', () => {
+    const component = parseJsx(slot);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
   test('Basic', () => {
     const component = parseJsx(basic);
     const output = componentToReact()({ component });

@@ -14,6 +14,12 @@ export function For<T, U extends JSX.Element>(props: {
   return null;
 }
 
+export function Slot<T, U extends JSX.Element>(props: {
+  name: JSX.Element;
+}): any {
+  return null;
+}
+
 export function Show<T>(props: {
   when: T | undefined | null | false;
   else?: JSX.Element;

@@ -33,6 +33,20 @@ const mappers: {
       .map((item) => blockToAngular(item, options))
       .join('\n')}</div>`;
   },
+  Slot: (json, options) => {
+    return `<ng-content ${Object.keys(json.bindings)
+      .map((binding) => {
+        if (binding === 'name') {
+          const selector = kebabCase(
+            json.bindings.name?.replace('props.slot', ''),
+          );
+          return `select="[${selector}]"`;
+        }
+
+        return `${json.bindings[binding]}`;
+      })
+      .join('\n')}></ng-content>`;
+  },
 };
 
 export const blockToAngular = (
@@ -56,6 +70,8 @@ export const blockToAngular = (
   }
 
   let str = '';
+
+  const needsToRenderSlots = [];
 
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
@@ -116,6 +132,13 @@ export const blockToAngular = (
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;
+      } else if (key.startsWith('slot')) {
+        const lowercaseKey =
+          key.replace('slot', '')[0].toLowerCase() +
+          key.replace('slot', '').substring(1);
+        needsToRenderSlots.push(
+          `${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`,
+        );
       } else {
         str += ` [${key}]="${useValue}" `;
       }
@@ -124,6 +147,11 @@ export const blockToAngular = (
       return str + ' />';
     }
     str += '>';
+
+    if (needsToRenderSlots.length > 0) {
+      str += needsToRenderSlots.map((el) => el).join('');
+    }
+
     if (json.children) {
       str += json.children
         .map((item) => blockToAngular(item, options))
@@ -194,6 +222,7 @@ export const componentToAngular =
     })
     export default class ${component.name} {
       ${Array.from(props)
+        .filter((item) => !item.startsWith('slot'))
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
 
@@ -230,11 +259,12 @@ export const componentToAngular =
         !component.hooks.onUpdate?.length
           ? ''
           : `ngAfterContentChecked() {
-              ${component.hooks.onUpdate.map((hook) =>
-                stripStateAndPropsRefs(hook.code, {
+              ${component.hooks.onUpdate.reduce((code, hook) => {
+                code += stripStateAndPropsRefs(hook.code, {
                   replaceWith: 'this.',
-                }),
-              )}
+                });
+                return code + '\n';
+              }, '')}
             }`
       }
 

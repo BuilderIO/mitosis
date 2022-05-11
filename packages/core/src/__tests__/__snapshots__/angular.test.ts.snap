@@ -34,16 +34,41 @@ export default class MyBasicForComponent {
 "
 `;
 
-exports[`Angular ng-content 1`] = `
-"import { Component, Input } from \\"@angular/core\\";
+exports[`Angular Slot 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import ContentSlotCode from \\"./content-slot.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
   template: \`
-    <div><ng-content></ng-content></div>
+    <div>
+      <ContentSlotCode><div testing>Hello</div></ContentSlotCode>
+    </div>
   \`,
 })
-export default class SlotCode {
+export default class SlotCode {}
+"
+`;
+
+exports[`Angular ng-content and Slot 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"content-slot-code\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[testing]\\"></ng-content>
+
+      <div>
+        <hr />
+      </div>
+
+      <div><ng-content></ng-content></div>
+    </div>
+  \`,
+})
+export default class ContentSlotCode {
   @Input() children: any;
 }
 "

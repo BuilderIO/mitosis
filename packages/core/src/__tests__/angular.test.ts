@@ -6,6 +6,7 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
+const contentSlot = require('./data/blocks/content-slot.raw');
 const slot = require('./data/blocks/slot.raw');
 
 describe('Angular', () => {
@@ -39,7 +40,13 @@ describe('Angular', () => {
     expect(output).toMatchSnapshot();
   });
 
-  test('ng-content', () => {
+  test('ng-content and Slot', () => {
+    const component = parseJsx(contentSlot);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Slot', () => {
     const component = parseJsx(slot);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
