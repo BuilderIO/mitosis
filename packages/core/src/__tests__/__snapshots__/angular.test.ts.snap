@@ -34,10 +34,27 @@ export default class MyBasicForComponent {
 "
 `;
 
-exports[`Angular Slot 1`] = `
+exports[`Angular multiple onUpdate 1`] = `
 "import { Component } from \\"@angular/core\\";
 
-import ContentSlotCode from \\"./content-slot.raw\\";
+@Component({
+  selector: \\"multiple-on-update\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MultipleOnUpdate {
+  ngAfterContentChecked() {
+    console.log(\\"Runs on every update/rerender\\");
+
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
+}
+"
+`;
+
+exports[`Angular ng-content 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"slot-code\\",

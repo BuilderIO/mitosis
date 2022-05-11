@@ -1,6 +1,7 @@
 import { componentToAngular } from '../generators/angular';
 import { parseJsx } from '../parsers/jsx';
 
+const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
@@ -10,6 +11,12 @@ const contentSlot = require('./data/blocks/content-slot.raw');
 const slot = require('./data/blocks/slot.raw');
 
 describe('Angular', () => {
+  test('multiple onUpdate', () => {
+    const component = parseJsx(multipleOnUpdate);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
     const output = componentToAngular()({ component });

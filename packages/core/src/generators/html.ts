@@ -630,12 +630,13 @@ export const componentToHtml =
             !json.hooks.onUpdate?.length
               ? ''
               : `
-                ${json.hooks.onUpdate.map((hook) =>
-                  addUpdateAfterSetInCode(
+                ${json.hooks.onUpdate.reduce((code, hook) => {
+                  code += addUpdateAfterSetInCode(
                     updateReferencesInCode(hook.code, useOptions),
                     useOptions,
-                  ),
-                )} 
+                  );
+                  return code + '\n';
+                }, '')} 
                 `
           }
 
@@ -1041,8 +1042,8 @@ export const componentToCustomElement =
               : `
             ${json.hooks.onUpdate.reduce((code, hook) => {
               code += updateReferencesInCode(hook.code, useOptions);
-              return code;
-            }, '\n')} 
+              return code + '\n';
+            }, '')} 
             `
           }
         }
