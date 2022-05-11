@@ -3,7 +3,6 @@ import { parseJsx } from '../parsers/jsx';
 
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
-const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
