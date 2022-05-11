@@ -7,8 +7,9 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
-const contentSlot = require('./data/blocks/content-slot.raw');
-const slot = require('./data/blocks/slot.raw');
+const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
+const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
+const slotJsx = require('./data/blocks/slot-jsx.raw');
 
 describe('Angular', () => {
   test('multiple onUpdate', () => {
@@ -48,13 +49,19 @@ describe('Angular', () => {
   });
 
   test('ng-content and Slot', () => {
-    const component = parseJsx(contentSlot);
+    const component = parseJsx(contentSlotHtml);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('ng-content and Slot jsx-props', () => {
+    const component = parseJsx(contentSlotJsx);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
 
   test('Slot', () => {
-    const component = parseJsx(slot);
+    const component = parseJsx(slotJsx);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });

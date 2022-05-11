@@ -25,17 +25,29 @@ const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const rootShow = require('./data/blocks/rootShow.raw');
-const contentSlot = require('./data/blocks/content-slot.raw');
-const slot = require('./data/blocks/slot.raw');
+const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
+const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
+const slotJsx = require('./data/blocks/slot-jsx.raw');
+const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('React', () => {
-  test('ContentSlot', () => {
-    const component = parseJsx(contentSlot);
+  test('ContentSlotJSX', () => {
+    const component = parseJsx(contentSlotJsx);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
-  test('Slot', () => {
-    const component = parseJsx(slot);
+  test('ContentSlotHtml', () => {
+    const component = parseJsx(contentSlotHtml);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('SlotJsx', () => {
+    const component = parseJsx(slotJsx);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('SlotHtml', () => {
+    const component = parseJsx(slotHtml);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
