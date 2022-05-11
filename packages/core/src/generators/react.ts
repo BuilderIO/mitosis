@@ -66,10 +66,11 @@ const NODE_MAPPERS: {
   [key: string]: (json: MitosisNode, options: ToReactOptions) => string;
 } = {
   Slot(json, options) {
-    return `{${processBinding(json.bindings.name as string, options).replace(
-      'name=',
-      '',
-    )}}`;
+    const slotProp = processBinding(
+      json.bindings.name as string,
+      options,
+    ).replace('name=', '');
+    return `{${slotProp}}`;
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
@@ -252,8 +253,8 @@ const processBinding = (str: string, options: ToReactOptions) => {
     return str;
   }
 
-  if (str.includes('slot')) {
-    return stripStateAndPropsRefs(str.replace('slot', ''), {
+  if (str.startsWith('slot')) {
+    return stripStateAndPropsRefs(str, {
       includeState: true,
       includeProps: false,
     });

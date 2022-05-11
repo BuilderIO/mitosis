@@ -7,7 +7,7 @@ export default function SlotCode(props: Props) {
     <div>
       <Slot name={props.slotTesting} />
       <div>
-        <hr/>
+        <hr />
       </div>
       <div>{props.children}</div>
     </div>
