@@ -221,7 +221,7 @@ When you want to register a named slot you do so using the `slot` prop similar t
 
 In this example we are registering `top`, `left`, and `center`. for the `Layout` component to project.
 
-If we the `Layout` component was also a Mitosis component then we simply use the reference in the props
+If the `Layout` component was also a Mitosis component then we simply use the reference in the props
 
 ```jsx
 function Layout(props) {
