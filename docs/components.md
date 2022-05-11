@@ -8,6 +8,7 @@
 - [Control flow](#control-flow)
   - [Show](#show)
   - [For](#for)
+  - [Slot](#slot)
 
 ## At a glance
 
@@ -190,3 +191,72 @@ export default function MyComponent(props) {
   );
 }
 ```
+
+### Slot
+When you want to register a named slot you do so using the `slot` prop similar to `on` convention. 
+
+```jsx
+<div>
+  <Layout
+    slotTop={<NavBar/>}
+    slotLeft={<Sidebar/>}
+    slotCenter={<Content/>}
+  />
+    anything else
+  </Layout>
+</div>
+```
+
+In this example we are registering `top`, `left`, and `center`. for the `Layout` component to project.
+
+If we the `Layout` component was also a Mitosis component then we simply use the reference in the props
+
+```jsx
+function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">
+        {props.slotTop}
+      </div>
+      <div className="left">
+        {props.slotLeft}
+      </div>
+      <div className="center">
+        {props.slotCenter}
+      </div>
+      {props.children}
+    </div>
+  );
+}
+```
+Mitosis compiles one component at a time and is only concern of outputting the correct method for each framework. In the two example above this is the angular output.
+```html
+<div>
+  <layout>
+    <sidebar left></sidebar>
+    <nav-bar top></nav-bar>
+    <content center></content>
+    anything else
+  </layout>
+<div>
+```
+```javascript
+@Component({
+  selector: 'layout',
+  template: `
+    <div class="layout">
+      <div class="top">
+        <ng-content select="[top]"></ng-content>
+      </div>
+      <div class="left">
+        <ng-content select="[left]"></ng-content>
+      </div>
+      <div class="center">
+        <ng-content select="[center]"></ng-content>
+      </div>
+      <ng-content></ng-content>
+    </div>
+  `
+})
+class LayoutComponent {
+}
