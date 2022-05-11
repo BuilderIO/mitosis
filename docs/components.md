@@ -194,19 +194,18 @@ export default function MyComponent(props) {
 ```
 
 ### Children
+
 We use the standard method for passing children with `props.children`
+
 ```jsx
 function MyComponent(props) {
-  return (
-    <div>
-      {props.children}
-    </div>
-  );
+  return <div>{props.children}</div>;
 }
 ```
 
 ### Slot
-When you want to register a named slot you do so using the `slot` prop similar to `on` convention. 
+
+When you want to register a named slot you do so using the `slot` prop similar to `on` convention.
 
 ```jsx
 <div>
@@ -228,21 +227,17 @@ If we the `Layout` component was also a Mitosis component then we simply use the
 function Layout(props) {
   return (
     <div className="layout">
-      <div className="top">
-        {props.slotTop}
-      </div>
-      <div className="left">
-        {props.slotLeft}
-      </div>
-      <div className="center">
-        {props.slotCenter}
-      </div>
+      <div className="top">{props.slotTop}</div>
+      <div className="left">{props.slotLeft}</div>
+      <div className="center">{props.slotCenter}</div>
       {props.children}
     </div>
   );
 }
 ```
+
 Mitosis compiles one component at a time and is only concern of outputting the correct method for each framework. In the two example above this is the angular output.
+
 ```html
 <div>
   <layout>
@@ -251,8 +246,10 @@ Mitosis compiles one component at a time and is only concern of outputting the c
     <content center></content>
     anything else
   </layout>
-<div>
+  <div></div>
+</div>
 ```
+
 ```javascript
 @Component({
   selector: 'layout',
@@ -269,8 +266,7 @@ Mitosis compiles one component at a time and is only concern of outputting the c
       </div>
       <ng-content></ng-content>
     </div>
-  `
+  `,
 })
-class LayoutComponent {
-}
+class LayoutComponent {}
 ```
