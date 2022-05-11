@@ -37,7 +37,7 @@ const mappers: {
     return `<ng-content ${Object.keys(json.bindings)
       .map((binding) => {
         if (binding === 'name') {
-          return `select="${json.bindings.name?.replace('props.', '')}`;
+          return `select="${json.bindings.name?.replace('props.', '')}"`;
         }
 
         return `${json.bindings[binding]}`;
