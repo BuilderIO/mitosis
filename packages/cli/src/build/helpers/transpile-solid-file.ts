@@ -21,15 +21,5 @@ export async function transpileSolidFile(options: TranspileSolidFileOptions) {
     // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
     .replace(/\.lite(['"];)/g, '$1');
 
-  const registerComponentHook = options.mitosisComponent.meta.registerComponent;
-  if (registerComponentHook) {
-    str += dedent`
-      import { registerComponent } from '../functions/register-component';
-      registerComponent(${options.mitosisComponent.name}, ${json5.stringify(
-      registerComponentHook,
-    )});
-    `;
-  }
-
   return str;
 }

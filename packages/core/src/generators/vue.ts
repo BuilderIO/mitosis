@@ -39,8 +39,6 @@ export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
-  builderRegister?: boolean;
-  registerComponentPrepend?: string;
 }
 
 function getContextNames(json: MitosisComponent) {
@@ -452,10 +450,6 @@ export const componentToVue =
       );
     }
 
-    const builderRegister = Boolean(
-      options.builderRegister && component.meta.registerComponent,
-    );
-
     const onUpdateWithDeps =
       component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =
@@ -467,13 +461,8 @@ export const componentToVue =
     </template>
     <script>
       ${renderPreComponent(component)}
-      ${
-        component.meta.registerComponent
-          ? options.registerComponentPrepend ?? ''
-          : ''
-      }
 
-      export default ${!builderRegister ? '' : 'registerComponent('}{
+      export default {
         ${
           !component.name
             ? ''
@@ -587,10 +576,6 @@ export const componentToVue =
           methods: ${functionsString},
         `
         }
-      }${
-        !builderRegister
-          ? ''
-          : `, ${json5.stringify(component.meta.registerComponent || {})})`
       }
     </script>
     ${
