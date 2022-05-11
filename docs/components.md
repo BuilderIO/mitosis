@@ -236,7 +236,7 @@ function Layout(props) {
 }
 ```
 
-Mitosis compiles one component at a time and is only concern of outputting the correct method for each framework. In the two example above this is the angular output.
+Mitosis compiles one component at a time and is only concerned with outputting the correct method for each framework. For the two examples above, here are the angular and html outputs.
 
 ```html
 <div>
