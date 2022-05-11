@@ -87,15 +87,20 @@ const addUpdateAfterSet = (
   });
 };
 
+const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
+  return parentScopeVars.filter((scopeVar) => {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+    return new RegExp(scopeVar).test(value);
+  });
+};
 const addScopeVars = (
   parentScopeVars: ScopeVars,
-  value: string,
+  value: string | boolean,
   fn: (scope: string) => string,
 ) => {
-  return `${parentScopeVars
-    .filter((scopeVar) => {
-      return new RegExp(scopeVar).test(value);
-    })
+  return `${getScopeVars(parentScopeVars, value)
     .map((scopeVar) => {
       return fn(scopeVar);
     })
@@ -283,14 +288,20 @@ const blockToHtml = (
     }
     str += '</template>';
   } else if (json.name === 'Show') {
+    const whenCondition = (json.bindings.when as string).replace(/;$/, '');
     addOnChangeJs(
       elId,
       options,
       `
-        const whenCondition = ${(json.bindings.when as string).replace(
-          /;$/,
-          '',
-        )};
+        ${addScopeVars(
+          parentScopeVars,
+          whenCondition,
+          (scopeVar: string) =>
+            `const ${scopeVar} = ${
+              options.format === 'class' ? 'this.' : ''
+            }getContext(el, "${scopeVar}");`,
+        )}
+        const whenCondition = ${whenCondition};
         if (whenCondition) {
           ${options.format === 'class' ? 'this.' : ''}showContent(el)
         }
@@ -329,6 +340,11 @@ const blockToHtml = (
         .replace(/\n/g, '\\n');
       str += ` ${key}="${value}" `;
     }
+
+    // batch all local vars within the bindings
+    let batchScopeVars: any = {};
+    let injectOnce = false;
+    let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
       if (key === '_spread' || key === 'ref' || key === 'css') {
@@ -394,25 +410,46 @@ const blockToHtml = (
             ;Object.assign(el.style, ${useValue});`,
           );
         } else {
+          // gather all local vars to inject later
+          getScopeVars(parentScopeVars, useValue).forEach((key) => {
+            // unique keys
+            batchScopeVars[key] = true;
+          });
           addOnChangeJs(
             elId,
             options,
             `
-            ${addScopeVars(
-              parentScopeVars,
-              useValue as string,
-              (scopeVar: string) =>
-                // TODO: multiple loops may duplicate variable declarations
-                `;var ${scopeVar} = ${
-                  options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}");`,
-            )}
+            ${injectOnce ? '' : startInjectVar}
             ${generateSetElementAttributeCode(key, useValue, options)}
             `,
           );
+          if (!injectOnce) {
+            injectOnce = true;
+          }
         }
       }
     }
+
+    // batch inject local vars in the beginning of the function block
+    const codeBlock = options.onChangeJsById[elId];
+    const testInjectVar = new RegExp(startInjectVar);
+    if (codeBlock && testInjectVar.test(codeBlock)) {
+      const localScopeVars = Object.keys(batchScopeVars);
+      options.onChangeJsById[elId] = (codeBlock as string).replace(
+        startInjectVar,
+        `
+        ${addScopeVars(
+          localScopeVars,
+          true,
+          (scopeVar: string) =>
+            `const ${scopeVar} = ${
+              options.format === 'class' ? 'this.' : ''
+            }getContext(el, "${scopeVar}");`,
+        )}
+        `,
+      );
+    }
+
     if (selfClosingTags.has(json.name)) {
       return str + ' />';
     }
@@ -552,6 +589,7 @@ export const componentToHtml =
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let nodesToDestroy = [];
+        let pendingUpdate = false;
         ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
 
         function destroyAnyNodes() {
@@ -568,6 +606,10 @@ export const componentToHtml =
         // call update() when you mutate state and need the updates to reflect
         // in the dom
         function update() {
+          if (pendingUpdate === true) {
+            return;
+          }
+          pendingUpdate = true;
           ${Object.keys(useOptions.onChangeJsById)
             .map((key) => {
               const value = useOptions.onChangeJsById[key];
@@ -575,24 +617,30 @@ export const componentToHtml =
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach((el, index) => {
+              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
                 ${value}
-              })
+              });
             `;
             })
             .join('\n\n')}
 
-            destroyAnyNodes();
+          destroyAnyNodes();
 
-            ${
-              !json.hooks.onUpdate?.length
-                ? ''
-                : `
-                  ${json.hooks.onUpdate.map((hook) =>
+          ${
+            !json.hooks.onUpdate?.length
+              ? ''
+              : `
+                ${json.hooks.onUpdate.reduce((code, hook) => {
+                  code += addUpdateAfterSetInCode(
                     updateReferencesInCode(hook.code, useOptions),
-                  )} 
-                  `
-            }
+                    useOptions,
+                  );
+                  return code + '\n';
+                }, '')} 
+                `
+          }
+
+          pendingUpdate = false;
         }
 
         ${useOptions.js}
@@ -608,7 +656,10 @@ export const componentToHtml =
             : `
             if (!onInitOnce) {
               ${updateReferencesInCode(
-                json.hooks?.onInit?.code as string,
+                addUpdateAfterSetInCode(
+                  json.hooks?.onInit?.code as string,
+                  useOptions,
+                ),
                 useOptions,
               )}
               onInitOnce = true;
@@ -643,9 +694,7 @@ export const componentToHtml =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
-              ${
-                options.format === 'class' ? 'this.' : ''
-              }nodesToDestroy.push(child);
+              nodesToDestroy.push(child);
             });
             el.after(elementFragment);
           }
@@ -721,7 +770,11 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
+    const kebabName = component.name
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase();
     const useOptions: InternalToHtmlOptions = {
+      prefix: kebabName,
       ...options,
       onChangeJsById: {},
       js: '',
@@ -759,7 +812,12 @@ export const componentToCustomElement =
       .map((item) => blockToHtml(item, useOptions))
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
-      html = useOptions?.experimental?.childrenHtml(html, json, useOptions);
+      html = useOptions?.experimental?.childrenHtml(
+        html,
+        kebabName,
+        json,
+        useOptions,
+      );
     }
 
     if (useOptions?.experimental?.cssHtml) {
@@ -786,10 +844,6 @@ export const componentToCustomElement =
         console.warn('Could not prettify', { string: html }, err);
       }
     }
-
-    const kebabName = component.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
 
     let str = `
       ${renderPreComponent(json)}
@@ -838,6 +892,8 @@ export const componentToCustomElement =
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          // batch updates
+          this.pendingUpdate = false;
           ${
             useOptions?.experimental?.componentConstructor
               ? useOptions?.experimental?.componentConstructor(json, useOptions)
@@ -898,10 +954,12 @@ export const componentToCustomElement =
               : `
               this._root.innerHTML = \`
       ${html}\`;
+              this.pendingUpdate = true;
               this.render();
               ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
               this.onMount();
-              this.onUpdate();
+              this.pendingUpdate = false;
+              this.update();
               `
           }
         }
@@ -916,7 +974,10 @@ export const componentToCustomElement =
                   : `
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
-                      json.hooks?.onInit?.code as string,
+                      addUpdateAfterSetInCode(
+                        json.hooks?.onInit?.code as string,
+                        useOptions,
+                      ),
                       useOptions,
                     )}
                     this.onInitOnce = true;
@@ -979,14 +1040,19 @@ export const componentToCustomElement =
             !json.hooks.onUpdate?.length
               ? ''
               : `
-      ${json.hooks.onUpdate.map((hook) =>
-        updateReferencesInCode(hook.code, useOptions),
-      )} 
-      `
-          } 
+            ${json.hooks.onUpdate.reduce((code, hook) => {
+              code += updateReferencesInCode(hook.code, useOptions);
+              return code + '\n';
+            }, '')} 
+            `
+          }
         }
 
         update() {
+          if (this.pendingUpdate === true) {
+            return;
+          }
+          this.pendingUpdate = true;
           ${
             !useOptions?.experimental?.shouldComponentUpdateStart
               ? ''
@@ -1009,6 +1075,7 @@ export const componentToCustomElement =
             )}
             `
           }
+          this.pendingUpdate = false;
         }
 
         render() {

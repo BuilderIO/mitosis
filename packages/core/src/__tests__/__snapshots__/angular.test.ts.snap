@@ -34,10 +34,10 @@ export default class MyBasicForComponent {
 "
 `;
 
-exports[`Angular Slot 1`] = `
+exports[`Angular Slot Jsx 1`] = `
 "import { Component } from \\"@angular/core\\";
 
-import ContentSlotCode from \\"./content-slot.raw\\";
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 @Component({
   selector: \\"slot-code\\",
@@ -48,6 +48,25 @@ import ContentSlotCode from \\"./content-slot.raw\\";
   \`,
 })
 export default class SlotCode {}
+"
+`;
+
+exports[`Angular multiple onUpdate 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"multiple-on-update\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MultipleOnUpdate {
+  ngAfterContentChecked() {
+    console.log(\\"Runs on every update/rerender\\");
+
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
+}
 "
 `;
 
@@ -64,11 +83,34 @@ exports[`Angular ng-content and Slot 1`] = `
         <hr />
       </div>
 
+      <div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  \`,
+})
+export default class ContentSlotCode {}
+"
+`;
+
+exports[`Angular ng-content and Slot jsx-props 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"content-slot-jsx-code\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[testing]\\"></ng-content>
+
+      <div>
+        <hr />
+      </div>
+
       <div><ng-content></ng-content></div>
     </div>
   \`,
 })
-export default class ContentSlotCode {
+export default class ContentSlotJsxCode {
   @Input() children: any;
 }
 "

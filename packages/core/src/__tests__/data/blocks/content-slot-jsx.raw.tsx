@@ -1,14 +1,11 @@
-import { Slot } from '@builder.io/mitosis';
-
 type Props = {
   [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
 };
 
-export default function ContentSlotCode(props: Props) {
+export default function ContentSlotJsxCode(props: Props) {
   return (
     <div>
-      <Slot name={props.slotTesting} />
+      {props.slotTesting}
       <div>
         <hr />
       </div>

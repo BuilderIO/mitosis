@@ -64,6 +64,10 @@ export const blockToAngular = (
   if (json.properties._text) {
     return json.properties._text;
   }
+  if (/props\.slot/.test(json.bindings._text as string)) {
+    const selector = kebabCase(json.bindings._text?.replace('props.slot', ''));
+    return `<ng-content select="[${selector}]"></ng-content>`;
+  }
 
   if (json.bindings._text) {
     return `{{${stripStateAndPropsRefs(json.bindings._text as string)}}}`;

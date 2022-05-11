@@ -1,15 +1,24 @@
 import { componentToAngular } from '../generators/angular';
 import { parseJsx } from '../parsers/jsx';
 
+const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
-const contentSlot = require('./data/blocks/content-slot.raw');
-const slot = require('./data/blocks/slot.raw');
+const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
+const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
+const slotJsx = require('./data/blocks/slot-jsx.raw');
+// const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
+  test('multiple onUpdate', () => {
+    const component = parseJsx(multipleOnUpdate);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
     const output = componentToAngular()({ component });
@@ -41,14 +50,25 @@ describe('Angular', () => {
   });
 
   test('ng-content and Slot', () => {
-    const component = parseJsx(contentSlot);
+    const component = parseJsx(contentSlotHtml);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
 
-  test('Slot', () => {
-    const component = parseJsx(slot);
+  test('ng-content and Slot jsx-props', () => {
+    const component = parseJsx(contentSlotJsx);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
+
+  test('Slot Jsx', () => {
+    const component = parseJsx(slotJsx);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  // test('Slot Html', () => {
+  //   const component = parseJsx(slotHtml);
+  //   const output = componentToAngular()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
 });
