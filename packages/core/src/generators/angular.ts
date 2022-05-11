@@ -72,7 +72,6 @@ export const blockToAngular = (
   let str = '';
 
   const needsToRenderSlots = [];
-  let isSlot = false;
 
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
@@ -134,7 +133,6 @@ export const blockToAngular = (
       } else if (key === 'ref') {
         str += ` #${useValue} `;
       } else if (key.startsWith('slot')) {
-        isSlot = true;
         const lowercaseKey =
           key.replace('slot', '')[0].toLowerCase() +
           key.replace('slot', '').substring(1);
@@ -154,7 +152,7 @@ export const blockToAngular = (
       str += needsToRenderSlots.map((el) => el).join('');
     }
 
-    if (!isSlot && json.children) {
+    if (json.children) {
       str += json.children
         .map((item) => blockToAngular(item, options))
         .join('\n');
