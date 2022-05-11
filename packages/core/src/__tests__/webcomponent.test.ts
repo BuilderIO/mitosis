@@ -4,6 +4,7 @@ import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicForShow = require('./data/basic-for-show.raw');
+const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -44,6 +45,12 @@ describe('webcomponent', () => {
 
   test('BasicForShow', () => {
     const component = parseJsx(basicForShow);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('BasicOnMountUpdate', () => {
+    const component = parseJsx(basicOnMountUpdate);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

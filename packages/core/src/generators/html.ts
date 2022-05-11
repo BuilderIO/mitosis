@@ -589,6 +589,7 @@ export const componentToHtml =
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let nodesToDestroy = [];
+        let pendingUpdate = false;
         ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
 
         function destroyAnyNodes() {
@@ -605,6 +606,10 @@ export const componentToHtml =
         // call update() when you mutate state and need the updates to reflect
         // in the dom
         function update() {
+          if (pendingUpdate === true) {
+            return;
+          }
+          pendingUpdate = true;
           ${Object.keys(useOptions.onChangeJsById)
             .map((key) => {
               const value = useOptions.onChangeJsById[key];
@@ -626,10 +631,14 @@ export const componentToHtml =
                 ? ''
                 : `
                   ${json.hooks.onUpdate.map((hook) =>
-                    updateReferencesInCode(hook.code, useOptions),
+                    addUpdateAfterSetInCode(
+                      updateReferencesInCode(hook.code, useOptions),
+                      useOptions,
+                    ),
                   )} 
                   `
             }
+          pendingUpdate = false;
         }
 
         ${useOptions.js}
@@ -645,7 +654,10 @@ export const componentToHtml =
             : `
             if (!onInitOnce) {
               ${updateReferencesInCode(
-                json.hooks?.onInit?.code as string,
+                addUpdateAfterSetInCode(
+                  json.hooks?.onInit?.code as string,
+                  useOptions,
+                ),
                 useOptions,
               )}
               onInitOnce = true;
@@ -873,6 +885,8 @@ export const componentToCustomElement =
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          // batch updates
+          this.pendingUpdate = false;
           ${
             useOptions?.experimental?.componentConstructor
               ? useOptions?.experimental?.componentConstructor(json, useOptions)
@@ -933,10 +947,12 @@ export const componentToCustomElement =
               : `
               this._root.innerHTML = \`
       ${html}\`;
+              this.pendingUpdate = true;
               this.render();
               ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
               this.onMount();
-              this.onUpdate();
+              this.pendingUpdate = false;
+              this.update();
               `
           }
         }
@@ -951,7 +967,10 @@ export const componentToCustomElement =
                   : `
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
-                      json.hooks?.onInit?.code as string,
+                      addUpdateAfterSetInCode(
+                        json.hooks?.onInit?.code as string,
+                        useOptions,
+                      ),
                       useOptions,
                     )}
                     this.onInitOnce = true;
@@ -1018,10 +1037,14 @@ export const componentToCustomElement =
         updateReferencesInCode(hook.code, useOptions),
       )} 
       `
-          } 
+          }
         }
 
         update() {
+          if (this.pendingUpdate === true) {
+            return;
+          }
+          this.pendingUpdate = true;
           ${
             !useOptions?.experimental?.shouldComponentUpdateStart
               ? ''
@@ -1044,6 +1067,7 @@ export const componentToCustomElement =
             )}
             `
           }
+          this.pendingUpdate = false;
         }
 
         render() {

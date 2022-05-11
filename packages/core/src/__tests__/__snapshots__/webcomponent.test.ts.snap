@@ -16,6 +16,8 @@ class MyBasicComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'input' event on input-1
     this.onInput1Input = (event) => {
@@ -46,10 +48,12 @@ class MyBasicComponent extends HTMLElement {
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -57,8 +61,15 @@ class MyBasicComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -97,6 +108,8 @@ class MyBasicForComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'input' event on input-1
     this.onInput1Input = (event) => {
@@ -134,10 +147,12 @@ class MyBasicForComponent extends HTMLElement {
         </template>
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {
@@ -148,8 +163,15 @@ class MyBasicForComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -217,10 +239,10 @@ exports[`webcomponent BasicForShow 1`] = `
 "/**
  * Usage:
  *
- *  <my-basic-for-component></my-basic-for-component>
+ *  <my-basic-for-show-component></my-basic-for-show-component>
  *
  */
-class MyBasicForComponent extends HTMLElement {
+class MyBasicForShowComponent extends HTMLElement {
   constructor() {
     super();
     const self = this;
@@ -229,6 +251,8 @@ class MyBasicForComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'input' event on input-1
     this.onInput1Input = (event) => {
@@ -268,10 +292,12 @@ class MyBasicForComponent extends HTMLElement {
         </template>
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -293,8 +319,15 @@ class MyBasicForComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -362,7 +395,104 @@ class MyBasicForComponent extends HTMLElement {
   }
 }
 
-customElements.define(\\"my-basic-for-component\\", MyBasicForComponent);
+customElements.define(\\"my-basic-for-show-component\\", MyBasicForShowComponent);
+"
+`;
+
+exports[`webcomponent BasicOnMountUpdate 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
+ *
+ */
+class MyBasicOnMountUpdateComponent extends HTMLElement {
+  constructor() {
+    super();
+    const self = this;
+    this.onInitOnce = false;
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        Hello
+        <span data-name=\\"div-1\\"><!-- state.name --></span>
+      </div>
+      <style></style>\`;
+    this.pendingUpdate = true;
+    this.render();
+    this.onInit();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onInit() {
+    if (!this.onInitOnce) {
+      this.state.name = \\"PatrickJS onInit\\";
+
+      this.onInitOnce = true;
+    }
+  }
+
+  onMount() {
+    // onMount
+    this.state.name = \\"PatrickJS onMount\\";
+    this.update();
+  }
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onUpdate();
+
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      el.innerText = this.state.name;
+    });
+  }
+}
+
+customElements.define(
+  \\"my-basic-on-mount-update-component\\",
+  MyBasicOnMountUpdateComponent
+);
 "
 `;
 
@@ -383,6 +513,8 @@ class Button extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -414,10 +546,12 @@ class Button extends HTMLElement {
       </template>
       
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -439,8 +573,15 @@ class Button extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -521,6 +662,8 @@ class Column extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -570,10 +713,12 @@ class Column extends HTMLElement {
           flex-grow: 1;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -581,8 +726,15 @@ class Column extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -679,6 +831,8 @@ class Image extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'load' event on img-1
     this.onImg1Load = (event) => {
@@ -728,10 +882,12 @@ class Image extends HTMLElement {
           object-position: center;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -780,8 +936,15 @@ class Image extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -845,6 +1008,8 @@ class ImgStateComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -870,10 +1035,12 @@ class ImgStateComponent extends HTMLElement {
         </template>
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -881,8 +1048,15 @@ class ImgStateComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -964,6 +1138,8 @@ class ImgComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -984,10 +1160,12 @@ class ImgComponent extends HTMLElement {
     this._root.innerHTML = \`
       <img data-name=\\"img-1\\" />
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -995,8 +1173,15 @@ class ImgComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1044,6 +1229,8 @@ class FormInputComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1064,10 +1251,12 @@ class FormInputComponent extends HTMLElement {
     this._root.innerHTML = \`
       <input data-name=\\"input-1\\" />
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1075,8 +1264,15 @@ class FormInputComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1128,6 +1324,8 @@ class SectionComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1150,10 +1348,12 @@ class SectionComponent extends HTMLElement {
         <slot></slot>
       </section>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1161,8 +1361,15 @@ class SectionComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1206,6 +1413,8 @@ class SectionStateComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1233,10 +1442,12 @@ class SectionStateComponent extends HTMLElement {
         </template>
       </template>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1258,8 +1469,15 @@ class SectionStateComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1344,6 +1562,8 @@ class SelectComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1371,10 +1591,12 @@ class SelectComponent extends HTMLElement {
         </template>
       </select>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1382,8 +1604,15 @@ class SelectComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1479,6 +1708,8 @@ class SmileReviews extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'click' event on button-1
     this.onButton1Click = (event) => {
@@ -1571,10 +1802,12 @@ class SmileReviews extends HTMLElement {
           margin-right: 10px;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1608,8 +1841,15 @@ class SmileReviews extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1745,6 +1985,8 @@ class SmileReviews extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     // Event handler for 'click' event on button-1
     this.onButton1Click = (event) => {
@@ -1837,10 +2079,12 @@ class SmileReviews extends HTMLElement {
           margin-right: 10px;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1874,8 +2118,15 @@ class SmileReviews extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1998,6 +2249,8 @@ class SubmitButton extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2020,10 +2273,12 @@ class SubmitButton extends HTMLElement {
         <span data-name=\\"div-1\\"><!-- props.text --></span>
       </button>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2031,8 +2286,15 @@ class SubmitButton extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2071,6 +2333,8 @@ class Text extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2091,10 +2355,12 @@ class Text extends HTMLElement {
     this._root.innerHTML = \`
       <div data-name=\\"div-1\\"></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2102,8 +2368,15 @@ class Text extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2142,6 +2415,8 @@ class Textarea extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2162,10 +2437,12 @@ class Textarea extends HTMLElement {
     this._root.innerHTML = \`
       <textarea data-name=\\"textarea-1\\"></textarea>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2173,8 +2450,15 @@ class Textarea extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2217,6 +2501,8 @@ class Video extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2237,10 +2523,12 @@ class Video extends HTMLElement {
     this._root.innerHTML = \`
       <video preload=\\"none\\" data-name=\\"video-1\\"></video>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2248,8 +2536,15 @@ class Video extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2313,6 +2608,8 @@ exports[`webcomponent multipleOnUpdate 1`] = `
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          // batch updates
+          this.pendingUpdate = false;
           
 
           
@@ -2340,10 +2637,12 @@ exports[`webcomponent multipleOnUpdate 1`] = `
               this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+              this.pendingUpdate = true;
               this.render();
               
               this.onMount();
-              this.onUpdate();
+              this.pendingUpdate = false;
+              this.update();
               
         }
         
@@ -2362,14 +2661,19 @@ exports[`webcomponent multipleOnUpdate 1`] = `
 ,
   console.log('Runs on every update/rerender as well');
  
-       
+      
         }
 
         update() {
+          if (this.pendingUpdate === true) {
+            return;
+          }
+          this.pendingUpdate = true;
           
           this.render();
           this.onUpdate();
           
+          this.pendingUpdate = false;
         }
 
         render() {
@@ -2412,6 +2716,8 @@ exports[`webcomponent multipleOnnUpdateWithDeps 1`] = `
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
+          // batch updates
+          this.pendingUpdate = false;
           
 
           
@@ -2439,10 +2745,12 @@ exports[`webcomponent multipleOnnUpdateWithDeps 1`] = `
               this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+              this.pendingUpdate = true;
               this.render();
               
               this.onMount();
-              this.onUpdate();
+              this.pendingUpdate = false;
+              this.update();
               
         }
         
@@ -2461,14 +2769,19 @@ exports[`webcomponent multipleOnnUpdateWithDeps 1`] = `
 ,
   console.log('Runs when c or d changes', this.state.c, this.state.d);
  
-       
+      
         }
 
         update() {
+          if (this.pendingUpdate === true) {
+            return;
+          }
+          this.pendingUpdate = true;
           
           this.render();
           this.onUpdate();
           
+          this.pendingUpdate = false;
         }
 
         render() {
@@ -2504,6 +2817,8 @@ class OnInit extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2524,10 +2839,12 @@ class OnInit extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
     this.onInit();
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onInit() {
@@ -2546,8 +2863,15 @@ class OnInit extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2579,6 +2903,8 @@ class OnInit extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2599,10 +2925,12 @@ class OnInit extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
     this.onInit();
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onInit() {
@@ -2618,8 +2946,15 @@ class OnInit extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2651,6 +2986,8 @@ class Comp extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2677,10 +3014,12 @@ class Comp extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {
@@ -2691,8 +3030,15 @@ class Comp extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2724,6 +3070,8 @@ class OnUpdate extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2744,10 +3092,12 @@ class OnUpdate extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2757,8 +3107,15 @@ class OnUpdate extends HTMLElement {
   }
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2790,6 +3147,8 @@ class OnUpdateWithDeps extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2810,10 +3169,12 @@ class OnUpdateWithDeps extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2823,8 +3184,15 @@ class OnUpdateWithDeps extends HTMLElement {
   }
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
