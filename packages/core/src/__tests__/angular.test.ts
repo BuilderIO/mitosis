@@ -39,7 +39,7 @@ describe('Angular', () => {
     expect(output).toMatchSnapshot();
   });
 
-  test('ng-content', () => {
+  test('ng-content and Slot', () => {
     const component = parseJsx(slot);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
