@@ -72,6 +72,7 @@ export const blockToAngular = (
   let str = '';
 
   const needsToRenderSlots = [];
+  let isSlot = false;
 
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
@@ -133,6 +134,7 @@ export const blockToAngular = (
       } else if (key === 'ref') {
         str += ` #${useValue} `;
       } else if (key.startsWith('slot')) {
+        isSlot = true;
         const lowercaseKey =
           key.replace('slot', '')[0].toLowerCase() +
           key.replace('slot', '').substring(1);
@@ -152,7 +154,7 @@ export const blockToAngular = (
       str += needsToRenderSlots.map((el) => el).join('');
     }
 
-    if (json.children) {
+    if (!isSlot && json.children) {
       str += json.children
         .map((item) => blockToAngular(item, options))
         .join('\n');
@@ -259,11 +261,12 @@ export const componentToAngular =
         !component.hooks.onUpdate?.length
           ? ''
           : `ngAfterContentChecked() {
-              ${component.hooks.onUpdate.map((hook) =>
-                stripStateAndPropsRefs(hook.code, {
+              ${component.hooks.onUpdate.reduce((code, hook) => {
+                code += stripStateAndPropsRefs(hook.code, {
                   replaceWith: 'this.',
-                }),
-              )}
+                });
+                return code + '\n';
+              }, '')}
             }`
       }
 
