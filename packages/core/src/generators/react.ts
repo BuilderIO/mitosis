@@ -179,6 +179,10 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
     if (key === 'css' && value.trim() === '{}') {
       continue;
     }
+    if (key.startsWith('slot')) {
+      // <Component slotProjected={<AnotherComponent />} />
+      continue;
+    }
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
@@ -186,11 +190,6 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
         useBindingValue,
         options,
       )} } `;
-    } else if (key.startsWith('slot')) {
-      const lowercaseKey =
-        key.replace('slot', '')[0].toLowerCase() +
-        key.replace('slot', '').substring(1);
-      str += `${lowercaseKey}={${useBindingValue}}`;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
