@@ -8,6 +8,7 @@
 - [Control flow](#control-flow)
   - [Show](#show)
   - [For](#for)
+  - [Children](#children)
   - [Slot](#slot)
 
 ## At a glance
@@ -192,6 +193,18 @@ export default function MyComponent(props) {
 }
 ```
 
+### Children
+We use the standard method for passing children with `props.children`
+```jsx
+function MyComponent(props) {
+  return (
+    <div>
+      {props.children}
+    </div>
+  );
+}
+```
+
 ### Slot
 When you want to register a named slot you do so using the `slot` prop similar to `on` convention. 
 
@@ -260,3 +273,4 @@ Mitosis compiles one component at a time and is only concern of outputting the c
 })
 class LayoutComponent {
 }
+```
