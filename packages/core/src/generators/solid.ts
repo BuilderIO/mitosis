@@ -152,6 +152,10 @@ const blockToSolid = (
     str += `<${json.name} `;
   }
 
+  if (json.name === 'Show' && json.meta.else) {
+    str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
+  }
+
   const classString = collectClassString(json);
   if (classString) {
     str += ` class=${classString} `;
