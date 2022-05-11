@@ -40,10 +40,21 @@ exports[`Angular ng-content 1`] = `
 @Component({
   selector: \\"slot-code\\",
   template: \`
-    <div><ng-content></ng-content></div>
+    <div>
+      <ng-content select=\\"testing\\"></ng-content>
+
+      <div>
+        <OtherComponentWithSlot>
+          <someContent right></someContent>
+        </OtherComponentWithSlot>
+      </div>
+
+      <div><ng-content></ng-content></div>
+    </div>
   \`,
 })
 export default class SlotCode {
+  @Input() testing: any;
   @Input() children: any;
 }
 "
