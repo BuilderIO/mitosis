@@ -222,7 +222,7 @@ export const componentToAngular =
     })
     export default class ${component.name} {
       ${Array.from(props)
-        .filter(item => !item.startsWith('slot'))
+        .filter((item) => !item.startsWith('slot'))
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
 
