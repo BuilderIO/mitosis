@@ -769,7 +769,11 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
+    const kebabName = component.name
+      .replace(/([a-z])([A-Z])/g, '$1-$2')
+      .toLowerCase();
     const useOptions: InternalToHtmlOptions = {
+      prefix: kebabName,
       ...options,
       onChangeJsById: {},
       js: '',
@@ -807,7 +811,12 @@ export const componentToCustomElement =
       .map((item) => blockToHtml(item, useOptions))
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
-      html = useOptions?.experimental?.childrenHtml(html, json, useOptions);
+      html = useOptions?.experimental?.childrenHtml(
+        html,
+        kebabName,
+        json,
+        useOptions,
+      );
     }
 
     if (useOptions?.experimental?.cssHtml) {
@@ -834,10 +843,6 @@ export const componentToCustomElement =
         console.warn('Could not prettify', { string: html }, err);
       }
     }
-
-    const kebabName = component.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
 
     let str = `
       ${renderPreComponent(json)}
