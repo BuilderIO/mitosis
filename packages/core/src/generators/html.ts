@@ -624,20 +624,21 @@ export const componentToHtml =
             })
             .join('\n\n')}
 
-            destroyAnyNodes();
+          destroyAnyNodes();
 
-            ${
-              !json.hooks.onUpdate?.length
-                ? ''
-                : `
-                  ${json.hooks.onUpdate.map((hook) =>
-                    addUpdateAfterSetInCode(
-                      updateReferencesInCode(hook.code, useOptions),
-                      useOptions,
-                    ),
-                  )} 
-                  `
-            }
+          ${
+            !json.hooks.onUpdate?.length
+              ? ''
+              : `
+                ${json.hooks.onUpdate.map((hook) =>
+                  addUpdateAfterSetInCode(
+                    updateReferencesInCode(hook.code, useOptions),
+                    useOptions,
+                  ),
+                )} 
+                `
+          }
+
           pendingUpdate = false;
         }
 
@@ -1033,10 +1034,11 @@ export const componentToCustomElement =
             !json.hooks.onUpdate?.length
               ? ''
               : `
-      ${json.hooks.onUpdate.map((hook) =>
-        updateReferencesInCode(hook.code, useOptions),
-      )} 
-      `
+            ${json.hooks.onUpdate.reduce((code, hook) => {
+              code += updateReferencesInCode(hook.code, useOptions);
+              return code;
+            }, '\n')} 
+            `
           }
         }
 
