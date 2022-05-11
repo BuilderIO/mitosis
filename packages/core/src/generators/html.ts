@@ -343,7 +343,7 @@ const blockToHtml = (
 
     // batch all local vars within the bindings
     let batchScopeVars: any = {};
-    let onceBatch = false;
+    let injectOnce = false;
     let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
@@ -419,12 +419,12 @@ const blockToHtml = (
             elId,
             options,
             `
-            ${onceBatch ? '' : startInjectVar}
+            ${injectOnce ? '' : startInjectVar}
             ${generateSetElementAttributeCode(key, useValue, options)}
             `,
           );
-          if (!onceBatch) {
-            onceBatch = true;
+          if (!injectOnce) {
+            injectOnce = true;
           }
         }
       }
