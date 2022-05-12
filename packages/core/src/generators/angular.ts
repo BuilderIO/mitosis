@@ -209,9 +209,9 @@ export const componentToAngular =
     const injectables: string[] = Object.keys(hasInjectable).map(
       (variableName) => {
         if (options?.experimental?.inject) {
-          return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) ${variableName}: ${hasInjectable[variableName].name}`;
+          return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) public ${variableName}: ${hasInjectable[variableName].name}`;
         }
-        return `${variableName} : ${hasInjectable[variableName].name}`;
+        return `public ${variableName} : ${hasInjectable[variableName].name}`;
       },
     );
 
