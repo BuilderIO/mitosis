@@ -45,6 +45,10 @@ The best way to learn Mitosis is to clone our [example project](./examples/basic
 
 - https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
 
+## Overview
+
+[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 "Mitosis Video")
+
 ## Docs
 
 Curious about how Mitosis code works under the hood, and how to use it? Learn more [in our in-depth docs](docs/).
