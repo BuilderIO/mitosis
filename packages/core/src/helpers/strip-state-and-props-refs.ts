@@ -2,6 +2,7 @@ export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
   includeState?: boolean;
+  contextVars?: string[];
 };
 
 /**
@@ -18,6 +19,7 @@ export const stripStateAndPropsRefs = (
 ): string => {
   let newCode = code || '';
   const replacer = options.replaceWith || '';
+  const contextVars = options.contextVars || [];
 
   if (options.includeProps !== false) {
     if (typeof replacer === 'string') {
@@ -37,6 +39,14 @@ export const stripStateAndPropsRefs = (
       );
     }
   }
-
+  if (contextVars.length) {
+    contextVars.forEach((_var) => {
+      newCode = newCode.replace(
+        // determine expression edge cases
+        new RegExp('( |;|(\\())' + _var, 'g'),
+        '$2this.' + _var,
+      );
+    });
+  }
   return newCode;
 };
