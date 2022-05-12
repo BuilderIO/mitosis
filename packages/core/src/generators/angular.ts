@@ -23,7 +23,9 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
 
-export interface ToAngularOptions extends BaseTranspilerOptions {
+export interface ToAngularOptions extends BaseTranspilerOptions {}
+
+interface AngularBlockOptions {
   contextVars?: string[];
 }
 
@@ -54,8 +56,9 @@ const mappers: {
 export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
+  blockOptions: AngularBlockOptions = {},
 ): string => {
-  const contextVars = options?.contextVars || [];
+  const contextVars = blockOptions?.contextVars || [];
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -89,7 +92,7 @@ export const blockToAngular = (
       contextVars,
     })}">`;
     str += json.children
-      .map((item) => blockToAngular(item, options))
+      .map((item) => blockToAngular(item, options, blockOptions))
       .join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
@@ -98,7 +101,7 @@ export const blockToAngular = (
       { contextVars },
     )}">`;
     str += json.children
-      .map((item) => blockToAngular(item, options))
+      .map((item) => blockToAngular(item, options, blockOptions))
       .join('\n');
     str += `</ng-container>`;
   } else {
@@ -183,13 +186,17 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const hasInjectable = json?.context?.get;
-    const contextVars = Object.keys(hasInjectable);
+    const contextVars = Object.keys(json?.context?.get || {});
+    const hasInjectable = Boolean(contextVars.length);
     const injectables: string[] = contextVars.map((variableName) => {
-      if (options?.experimental?.inject) {
-        return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) public ${variableName}: ${hasInjectable[variableName].name}`;
+      const variableType = json?.context?.get[variableName].name;
+      if (options?.experimental?.injectables) {
+        return options?.experimental?.injectables(variableName, variableType);
       }
-      return `public ${variableName} : ${hasInjectable[variableName].name}`;
+      if (options?.experimental?.inject) {
+        return `@Inject(forwardRef(() => ${variableType})) public ${variableName}: ${variableType}`;
+      }
+      return `public ${variableName} : ${variableType}`;
     });
 
     const props = getProps(component);
@@ -209,12 +216,7 @@ export const componentToAngular =
     }
 
     let template = json.children
-      .map((item) =>
-        blockToAngular(item, {
-          contextVars,
-          ...options,
-        }),
-      )
+      .map((item) => blockToAngular(item, options, { contextVars }))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
