@@ -23,7 +23,9 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
 
-export interface ToAngularOptions extends BaseTranspilerOptions {}
+export interface ToAngularOptions extends BaseTranspilerOptions {
+  contextVars?: string[];
+}
 
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
@@ -53,6 +55,7 @@ export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
 ): string => {
+  const contextVars = options?.contextVars || [];
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -70,7 +73,9 @@ export const blockToAngular = (
   }
 
   if (json.bindings._text) {
-    return `{{${stripStateAndPropsRefs(json.bindings._text as string)}}}`;
+    return `{{${stripStateAndPropsRefs(json.bindings._text as string, {
+      contextVars,
+    })}}}`;
   }
 
   let str = '';
@@ -80,7 +85,9 @@ export const blockToAngular = (
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
       json.properties._forName
-    } of ${stripStateAndPropsRefs(json.bindings.each as string)}">`;
+    } of ${stripStateAndPropsRefs(json.bindings.each as string, {
+      contextVars,
+    })}">`;
     str += json.children
       .map((item) => blockToAngular(item, options))
       .join('\n');
@@ -88,6 +95,7 @@ export const blockToAngular = (
   } else if (json.name === 'Show') {
     str += `<ng-container *ngIf="${stripStateAndPropsRefs(
       json.bindings.when as string,
+      { contextVars },
     )}">`;
     str += json.children
       .map((item) => blockToAngular(item, options))
@@ -119,7 +127,7 @@ export const blockToAngular = (
       }
       const value = json.bindings[key] as string;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value);
+      const useValue = stripStateAndPropsRefs(value, { contextVars });
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -175,6 +183,14 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    const hasInjectable = json?.context?.get;
+    const contextVars = Object.keys(hasInjectable);
+    const injectables: string[] = contextVars.map((variableName) => {
+      if (options?.experimental?.inject) {
+        return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) public ${variableName}: ${hasInjectable[variableName].name}`;
+      }
+      return `public ${variableName} : ${hasInjectable[variableName].name}`;
+    });
 
     const props = getProps(component);
     const hasOnInit = Boolean(
@@ -192,7 +208,14 @@ export const componentToAngular =
       css = tryFormat(css, 'css');
     }
 
-    let template = json.children.map((item) => blockToAngular(item)).join('\n');
+    let template = json.children
+      .map((item) =>
+        blockToAngular(item, {
+          contextVars,
+          ...options,
+        }),
+      )
+      .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
     }
@@ -202,18 +225,8 @@ export const componentToAngular =
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'class',
       valueMapper: (code) =>
-        stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
+        stripStateAndPropsRefs(code, { replaceWith: 'this.', contextVars }),
     });
-
-    const hasInjectable = json?.context?.get;
-    const injectables: string[] = Object.keys(hasInjectable).map(
-      (variableName) => {
-        if (options?.experimental?.inject) {
-          return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) public ${variableName}: ${hasInjectable[variableName].name}`;
-        }
-        return `public ${variableName} : ${hasInjectable[variableName].name}`;
-      },
-    );
 
     let str = dedent`
     import { ${
@@ -259,6 +272,7 @@ export const componentToAngular =
                   : `
                 ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
                   replaceWith: 'this.',
+                  contextVars,
                 })}
                 `
               }
@@ -268,6 +282,7 @@ export const componentToAngular =
                   : `
                 ${stripStateAndPropsRefs(component.hooks.onMount?.code, {
                   replaceWith: 'this.',
+                  contextVars,
                 })}
                 `
               }
@@ -281,6 +296,7 @@ export const componentToAngular =
               ${component.hooks.onUpdate.reduce((code, hook) => {
                 code += stripStateAndPropsRefs(hook.code, {
                   replaceWith: 'this.',
+                  contextVars,
                 });
                 return code + '\n';
               }, '')}
@@ -293,6 +309,7 @@ export const componentToAngular =
           : `ngOnDestroy() {
               ${stripStateAndPropsRefs(component.hooks.onUnMount.code, {
                 replaceWith: 'this.',
+                contextVars,
               })}
             }`
       }
