@@ -205,8 +205,20 @@ export const componentToAngular =
         stripStateAndPropsRefs(code, { replaceWith: 'this.' }),
     });
 
+    const hasInjectable = json?.context?.get;
+    const injectables: string[] = Object.keys(hasInjectable).map(
+      (variableName) => {
+        if (options?.experimental?.inject) {
+          return `@Inject(forwardRef(() => ${hasInjectable[variableName].name})) ${variableName}: ${hasInjectable[variableName].name}`;
+        }
+        return `${variableName} : ${hasInjectable[variableName].name}`;
+      },
+    );
+
     let str = dedent`
-    import { Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
+    import { ${
+      options?.experimental?.inject ? 'Inject, forwardRef,' : ''
+    } Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
     ${renderPreComponent(json)}
@@ -233,6 +245,9 @@ export const componentToAngular =
       ${refs
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
+
+
+      ${!hasInjectable ? '' : `constructor(\n${injectables.join(',\n')}) {}`}
 
       ${
         !hasOnInit
