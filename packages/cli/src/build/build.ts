@@ -17,6 +17,7 @@ import {
   Target,
   Transpiler,
   componentToSvelte,
+  componentToAngular,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import dedent from 'dedent';
@@ -153,6 +154,8 @@ const getTranspilerForTarget = ({
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
       return componentToVue(options.options.vue);
+    case 'angular':
+      return componentToAngular(options.options.angular);
     case 'react':
       return componentToReact(options.options.react);
     case 'swift':
