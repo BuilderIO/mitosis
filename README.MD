@@ -75,6 +75,15 @@ With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/
 <img width="80%" src="https://i.imgur.com/UlWMkRx.gif" >
 </p>
 
+## What about XKCD
+
+<img alt="XKCD comic about solving too many standards by creating new standards just making yet another standard" src="https://user-images.githubusercontent.com/844291/168342803-5599952e-a400-4918-851d-5af93dc19585.png" width="500">
+
+Yup, we've all seen it. But if this is a concern for you, you may be looking at Mitosis wrong. Mitosis is like [LLVM](https://en.wikipedia.org/wiki/LLVM) for the frontend. A toolchain that embraces that there are, and forever will be, many ways of writing components. Mitosis aims to allow you to have a common [intermediate representation](https://en.wikipedia.org/wiki/Intermediate_representation) that allows us to author components once that can compile to many frameworks, just like LLVM lets you write code that can compile to any [instruction set architecture](https://en.wikipedia.org/wiki/Instruction_set_architecture).
+
+If you look at Mitosis this way, you may more clearly see the difference. And similar to LLVM, multiple syntaxes can compile to Mitotis. We have a JSX syntax out of the box, but have explored others, such as a vue/svelte-like syntax as well. [Builder.io](https://github.com/builderio/builder) is also able to compile down to the Mitosis IR, allowing you to turn designs to code of any framework. In this case, JSX or Builder.io are the currently supported frontends of the compiler, and the frameworks we support are the different backends.
+
+
 ## Status
 
 | Framework     | Status       |
