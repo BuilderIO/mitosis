@@ -26,6 +26,7 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import * as json5 from 'json5';
 import { camelCase, kebabCase, last, upperFirst } from 'lodash';
 import micromatch from 'micromatch';
+import { getFileExtensionForTarget } from './helpers/extensions';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
@@ -169,21 +170,6 @@ const getTranspilerForTarget = ({
     default:
       // TO-DO: throw instead of `never`
       return null as never;
-  }
-};
-
-const getFileExtensionForTarget = (target: Target) => {
-  switch (target) {
-    case 'vue':
-      return '.vue';
-    case 'swift':
-      return '.swift';
-    case 'svelte':
-      return '.svelte';
-    case 'solid':
-      return '.jsx';
-    default:
-      return '.js';
   }
 };
 

@@ -1,19 +1,7 @@
 import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { Format, MitosisConfig, Target } from '@builder.io/mitosis';
-
-const getImportFileExtensionForTarget = (target: Target) => {
-  switch (target) {
-    case 'vue':
-      return '.vue';
-    case 'swift':
-      return '.swift';
-    case 'svelte':
-      return '.svelte';
-    default:
-      return '';
-  }
-};
+import { getFileExtensionForTarget } from './extensions';
 
 const getDefaultFormatForTarget = (target: Target): Format => {
   switch (target) {
@@ -74,7 +62,7 @@ export const transpile = async ({
       .replace(
         // afterwards, we replace all `.lite` imports with the correct file extension
         /\.lite(['"][;\)])/g,
-        `${getImportFileExtensionForTarget(target)}$1`,
+        `${getFileExtensionForTarget(target)}$1`,
       );
     return contents;
   } catch (e) {

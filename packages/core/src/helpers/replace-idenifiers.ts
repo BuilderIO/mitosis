@@ -9,9 +9,10 @@ export const replaceIdentifiers = (
   return babelTransformExpression(code, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       if (
-        // This is not a property access - like `foo` in `this.foo`
+        // This is not an (optional) property access - like `foo` in `this.foo` or `this?.foo`
         !(
-          types.isMemberExpression(path.parent) &&
+          (types.isMemberExpression(path.parent) ||
+            types.isOptionalMemberExpression(path.parent)) &&
           path.parent.property === path.node
         ) &&
         // This is no the function name - like `foo` in `function foo() {}`
