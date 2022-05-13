@@ -24,12 +24,12 @@ exports[`Angular BasicFor 1`] = `
   \`,
 })
 export default class MyBasicForComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+
   ngOnInit() {
     console.log(\\"onMount code\\");
   }
-
-  name = \\"PatrickJS\\";
-  names = [\\"Steve\\", \\"PatrickJS\\"];
 }
 "
 `;
@@ -48,6 +48,31 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
   \`,
 })
 export default class SlotCode {}
+"
+`;
+
+exports[`Angular basic outputs 1`] = `
+"import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-outputs-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicOutputsComponent {
+  @Output() onMessage = new EventEmitter<any>();
+  @Output() onEvent = new EventEmitter<any>();
+
+  @Input() message: any;
+
+  name = \\"PatrickJS\\";
+
+  ngOnInit() {
+    this.onMessage.emit(this.name);
+    this.onEvent.emit(this.message);
+  }
+}
 "
 `;
 

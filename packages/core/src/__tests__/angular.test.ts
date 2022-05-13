@@ -7,12 +7,18 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
+const basicOutputs = require('./data/basic-outputs.raw');
 const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
 // const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
+  test('basic outputs', () => {
+    const component = parseJsx(basicOutputs);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
   test('multiple onUpdate', () => {
     const component = parseJsx(multipleOnUpdate);
     const output = componentToAngular()({ component });
