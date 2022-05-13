@@ -1,6 +1,7 @@
 import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
+import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import traverse from 'traverse';
@@ -63,8 +64,31 @@ const wrapInFragment = (json: MitosisComponent | MitosisNode) =>
   json.children.length !== 1;
 
 const NODE_MAPPERS: {
-  [key: string]: (json: MitosisNode, options: ToReactOptions) => string;
+  [key: string]: (
+    json: MitosisNode,
+    options: ToReactOptions,
+    parentSlots?: any[],
+  ) => string;
 } = {
+  Slot(json, options, parentSlots) {
+    if (!json.bindings.name) {
+      // TODO: update MitosisNode for simple code
+      const key = Object.keys(json.bindings).find(Boolean);
+      if (key && parentSlots) {
+        const propKey = camelCase(
+          'Slot' + key[0].toUpperCase() + key.substring(1),
+        );
+        parentSlots.push({ key: propKey, value: json.bindings[key] });
+        return '';
+      }
+      return `{${processBinding('props.children', options)}}`;
+    }
+    const slotProp = processBinding(
+      json.bindings.name as string,
+      options,
+    ).replace('name=', '');
+    return `{${slotProp}}`;
+  },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
     return `${wrap ? '<>' : ''}${json.children
@@ -111,9 +135,13 @@ const BINDING_MAPPERS: {
   },
 };
 
-export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
+export const blockToReact = (
+  json: MitosisNode,
+  options: ToReactOptions,
+  parentSlots?: any[],
+) => {
   if (NODE_MAPPERS[json.name]) {
-    return NODE_MAPPERS[json.name](json, options);
+    return NODE_MAPPERS[json.name](json, options, parentSlots);
   }
 
   if (json.properties._text) {
@@ -179,6 +207,9 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
         useBindingValue,
         options,
       )} } `;
+    } else if (key.startsWith('slot')) {
+      // <Component slotProjected={<AnotherComponent />} />
+      str += ` ${key}={${value}} `;
     } else if (key === 'class') {
       str += ` className={${useBindingValue}} `;
     } else if (BINDING_MAPPERS[key]) {
@@ -206,10 +237,23 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions) => {
     return str;
   }
 
+  // TODO: update MitosisNode for simple code
+  const needsToRenderSlots: any[] = [];
+  let childrenNodes = '';
+  if (json.children) {
+    childrenNodes = json.children
+      .map((item) => blockToReact(item, options, needsToRenderSlots))
+      .join('\n');
+  }
+  if (needsToRenderSlots.length) {
+    needsToRenderSlots.forEach(({ key, value }) => {
+      str += ` ${key}={${value}} `;
+    });
+  }
   str += '>';
 
   if (json.children) {
-    str += json.children.map((item) => blockToReact(item, options)).join('\n');
+    str += childrenNodes;
   }
 
   return str + `</${json.name}>`;
@@ -239,6 +283,13 @@ const stripThisRefs = (str: string, options: ToReactOptions) => {
 const processBinding = (str: string, options: ToReactOptions) => {
   if (options.stateType !== 'useState') {
     return str;
+  }
+
+  if (str.startsWith('slot')) {
+    return stripStateAndPropsRefs(str, {
+      includeState: true,
+      includeProps: false,
+    });
   }
 
   return stripStateAndPropsRefs(str, {
