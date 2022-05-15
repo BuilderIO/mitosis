@@ -100,6 +100,7 @@ If you look at Mitosis this way, you may more clearly see the difference. And si
 | Webcomponents | Beta         |
 | React Native  | Beta         |
 | SwiftUI       | Experimental |
+| Flutter       | Experimental |
 
 ## Contribute
 
