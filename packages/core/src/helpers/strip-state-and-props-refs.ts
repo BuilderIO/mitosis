@@ -2,6 +2,8 @@ export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
   includeState?: boolean;
+  contextVars?: string[];
+  outputVars?: string[];
 };
 
 /**
@@ -18,7 +20,25 @@ export const stripStateAndPropsRefs = (
 ): string => {
   let newCode = code || '';
   const replacer = options.replaceWith || '';
-
+  const contextVars = options?.contextVars || [];
+  const outputVars = options?.outputVars || [];
+  if (contextVars.length) {
+    contextVars.forEach((_var) => {
+      newCode = newCode.replace(
+        // determine expression edge cases
+        new RegExp('( |;|(\\())' + _var, 'g'),
+        '$1this.' + _var,
+      );
+    });
+  }
+  if (outputVars.length) {
+    outputVars.forEach((_var) => {
+      // determine expression edge cases onMessage( to this.onMessage.emit(
+      const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
+      const replacer = '$1this.' + _var + '.emit(';
+      newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+    });
+  }
   if (options.includeProps !== false) {
     if (typeof replacer === 'string') {
       newCode = newCode.replace(/props\./g, replacer);
@@ -37,6 +57,5 @@ export const stripStateAndPropsRefs = (
       );
     }
   }
-
   return newCode;
 };

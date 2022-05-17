@@ -45,6 +45,10 @@ The best way to learn Mitosis is to clone our [example project](./examples/basic
 
 - https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
 
+## Overview
+
+[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 "Mitosis Video")
+
 ## Docs
 
 Curious about how Mitosis code works under the hood, and how to use it? Learn more [in our in-depth docs](docs/).
@@ -70,6 +74,14 @@ With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/
 <p align="center">
 <img width="80%" src="https://i.imgur.com/UlWMkRx.gif" >
 </p>
+
+## What about XKCD
+
+<img alt="XKCD comic about solving too many standards by creating new standards just making yet another standard" src="https://user-images.githubusercontent.com/844291/168342803-5599952e-a400-4918-851d-5af93dc19585.png" width="500">
+
+Yup, we've all seen it. But if this is a concern for you, you may be looking at Mitosis wrong. Rather than just yet-another-component-syntax, Mitosis is a compiler for the frontend, analogous to [LLVM](https://en.wikipedia.org/wiki/LLVM). A toolchain that embraces that there are, and forever will be, many ways of writing components. Mitosis defines a common [intermediate representation](https://en.wikipedia.org/wiki/Intermediate_representation) that allows us to author components once then compile to many frameworks, just like LLVM lets us write code that can compile to any [instruction set architecture](https://en.wikipedia.org/wiki/Instruction_set_architecture). If you look at Mitosis this way, you may more clearly see the value.
+
+Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the-box syntax uses JSX, but we have explored others, such as a Vue/Svelte-like syntax. [Builder.io](https://github.com/builderio/builder) emits Mitosis IR, allowing you to turn designs to code for any supported framework. JSX and Builder.io are the currently supported frontends of the compiler, and the frameworks listed below are the backends.
 
 ## Status
 

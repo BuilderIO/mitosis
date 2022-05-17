@@ -17,6 +17,7 @@ import {
   Target,
   Transpiler,
   componentToSvelte,
+  componentToAngular,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import dedent from 'dedent';
@@ -25,6 +26,7 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import * as json5 from 'json5';
 import { camelCase, kebabCase, last, upperFirst } from 'lodash';
 import micromatch from 'micromatch';
+import { getFileExtensionForTarget } from './helpers/extensions';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
@@ -150,6 +152,8 @@ const getTranspilerForTarget = ({
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
       return componentToVue(options.options.vue);
+    case 'angular':
+      return componentToAngular(options.options.angular);
     case 'react':
       return componentToReact(options.options.react);
     case 'swift':
@@ -163,21 +167,6 @@ const getTranspilerForTarget = ({
     default:
       // TO-DO: throw instead of `never`
       return null as never;
-  }
-};
-
-const getFileExtensionForTarget = (target: Target) => {
-  switch (target) {
-    case 'vue':
-      return '.vue';
-    case 'swift':
-      return '.swift';
-    case 'svelte':
-      return '.svelte';
-    case 'solid':
-      return '.jsx';
-    default:
-      return '.js';
   }
 };
 

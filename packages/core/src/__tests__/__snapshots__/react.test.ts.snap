@@ -138,8 +138,25 @@ exports[`React Columns 1`] = `
 "
 `;
 
-exports[`React ContentSlot 1`] = `
+exports[`React ContentSlotHtml 1`] = `
 "export default function ContentSlotCode(props) {
+  return (
+    <div>
+      {props.slotTesting}
+
+      <div>
+        <hr />
+      </div>
+
+      <div>{props.children}</div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React ContentSlotJSX 1`] = `
+"export default function ContentSlotJsxCode(props) {
   return (
     <div>
       {props.slotTesting}
@@ -769,8 +786,21 @@ export default function SelectComponent(props) {
 "
 `;
 
-exports[`React Slot 1`] = `
-"import ContentSlotCode from \\"./content-slot.raw\\";
+exports[`React SlotHtml 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default function SlotCode(props) {
+  return (
+    <div>
+      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React SlotJsx 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props) {
   return (

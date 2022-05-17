@@ -16,9 +16,11 @@ class MyBasicComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
-    // Event handler for 'input' event on input-1
-    this.onInput1Input = (event) => {
+    // Event handler for 'input' event on input-my-basic-component-1
+    this.onInputMyBasicComponent1Input = (event) => {
       this.state.name = event.target.value;
       this.update();
     };
@@ -41,15 +43,17 @@ class MyBasicComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <input data-name=\\"input-1\\" />
+        <input data-name=\\"input-my-basic-component-1\\" />
       
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -57,8 +61,15 @@ class MyBasicComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -68,12 +79,14 @@ class MyBasicComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-      el.value = this.state.name;
+    this._root
+      .querySelectorAll(\\"[data-name='input-my-basic-component-1']\\")
+      .forEach((el) => {
+        el.value = this.state.name;
 
-      el.removeEventListener(\\"input\\", this.onInput1Input);
-      el.addEventListener(\\"input\\", this.onInput1Input);
-    });
+        el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
+      });
   }
 }
 
@@ -97,9 +110,11 @@ class MyBasicForComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
-    // Event handler for 'input' event on input-1
-    this.onInput1Input = (event) => {
+    // Event handler for 'input' event on input-my-basic-for-component-1
+    this.onInputMyBasicForComponent1Input = (event) => {
       const person = this.getContext(event.currentTarget, \\"person\\");
 
       this.state.name = event.target.value + \\" and \\" + person;
@@ -124,20 +139,22 @@ class MyBasicForComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <input data-name=\\"input-1\\" />
+        <span data-name=\\"for-my-basic-for-component\\"></span>
+        <template data-template-for=\\"for-my-basic-for-component\\">
+          <input data-name=\\"input-my-basic-for-component-1\\" />
       
           Hello
-          <span data-name=\\"div-1\\"><!-- person --></span>
+          <span data-name=\\"div-my-basic-for-component-1\\"><!-- person --></span>
           ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
         </template>
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {
@@ -148,8 +165,15 @@ class MyBasicForComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -159,23 +183,31 @@ class MyBasicForComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.state.names;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"person\\", undefined, undefined);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='for-my-basic-for-component']\\")
+      .forEach((el) => {
+        let array = this.state.names;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-my-basic-for-component\\"]'
+        );
+        this.renderLoop(el, array, template, \\"person\\", undefined, undefined);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-      el.value = this.state.name;
+    this._root
+      .querySelectorAll(\\"[data-name='input-my-basic-for-component-1']\\")
+      .forEach((el) => {
+        el.value = this.state.name;
 
-      el.removeEventListener(\\"input\\", this.onInput1Input);
-      el.addEventListener(\\"input\\", this.onInput1Input);
-    });
+        el.removeEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      const person = this.getContext(el, \\"person\\");
-      el.innerText = person;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-my-basic-for-component-1']\\")
+      .forEach((el) => {
+        const person = this.getContext(el, \\"person\\");
+        el.innerText = person;
+      });
   }
 
   // Helper to render loops
@@ -213,23 +245,32 @@ customElements.define(\\"my-basic-for-component\\", MyBasicForComponent);
 "
 `;
 
-exports[`webcomponent Button 1`] = `
+exports[`webcomponent BasicForShow 1`] = `
 "/**
  * Usage:
  *
- *  <button></button>
+ *  <my-basic-for-show-component></my-basic-for-show-component>
  *
  */
-class Button extends HTMLElement {
+class MyBasicForShowComponent extends HTMLElement {
   constructor() {
     super();
     const self = this;
 
-    this.state = {};
-    this.props = {};
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'input' event on input-my-basic-for-show-component-1
+    this.onInputMyBasicForShowComponent1Input = (event) => {
+      const person = this.getContext(event.currentTarget, \\"person\\");
+
+      this.state.name = event.target.value + \\" and \\" + person;
+      this.update();
+    };
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -248,23 +289,25 @@ class Button extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <template data-name=\\"show\\">
-        <a data-name=\\"a-1\\">
-          <span data-name=\\"div-1\\"><!-- props.text --></span>
-        </a>
-      </template>
+      <div>
+        <span data-name=\\"for-my-basic-for-show-component\\"></span>
+        <template data-template-for=\\"for-my-basic-for-show-component\\">
+          <template data-name=\\"show-my-basic-for-show-component\\">
+            <input data-name=\\"input-my-basic-for-show-component-1\\" />
       
-      <template data-name=\\"show-2\\">
-        <button type=\\"button\\" data-name=\\"button-1\\">
-          <span data-name=\\"div-2\\"><!-- props.text --></span>
-        </button>
-      </template>
-      
+            Hello
+            <span data-name=\\"div-my-basic-for-show-component-1\\"><!-- person --></span>
+            ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+          </template>
+        </template>
+      </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -286,8 +329,15 @@ class Button extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -297,31 +347,304 @@ class Button extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+    this._root
+      .querySelectorAll(\\"[data-name='for-my-basic-for-show-component']\\")
+      .forEach((el) => {
+        let array = this.state.names;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-my-basic-for-show-component\\"]'
+        );
+        this.renderLoop(el, array, template, \\"person\\", undefined, undefined);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='show-my-basic-for-show-component']\\")
+      .forEach((el) => {
+        const person = this.getContext(el, \\"person\\");
+        const whenCondition = person === this.state.name;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='input-my-basic-for-show-component-1']\\")
+      .forEach((el) => {
+        el.value = this.state.name;
+
+        el.removeEventListener(
+          \\"input\\",
+          this.onInputMyBasicForShowComponent1Input
+        );
+        el.addEventListener(\\"input\\", this.onInputMyBasicForShowComponent1Input);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-my-basic-for-show-component-1']\\")
+      .forEach((el) => {
+        const person = this.getContext(el, \\"person\\");
+        el.innerText = person;
+      });
+  }
+
+  // Helper to render loops
+  renderLoop(el, array, template, itemName, itemIndex, collectionName) {
+    el.innerHTML = \\"\\";
+    for (let [index, value] of array.entries()) {
+      let tmp = document.createElement(\\"span\\");
+      tmp.innerHTML = template.innerHTML;
+      Array.from(tmp.children).forEach((child) => {
+        if (itemName !== undefined) {
+          child[\\"__\\" + itemName] = value;
+        }
+        if (itemIndex !== undefined) {
+          child[\\"__\\" + itemIndex] = index;
+        }
+        if (collectionName !== undefined) {
+          child[\\"__\\" + collectionName] = array;
+        }
+        el.appendChild(child);
+      });
+    }
+  }
+
+  getContext(el, name) {
+    do {
+      let value = el[\\"__\\" + name];
+      if (value !== undefined) {
+        return value;
+      }
+    } while ((el = el.parentNode));
+  }
+}
+
+customElements.define(\\"my-basic-for-show-component\\", MyBasicForShowComponent);
+"
+`;
+
+exports[`webcomponent BasicOnMountUpdate 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
+ *
+ */
+class MyBasicOnMountUpdateComponent extends HTMLElement {
+  constructor() {
+    super();
+    const self = this;
+    this.onInitOnce = false;
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        Hello
+        <span data-name=\\"div-my-basic-on-mount-update-component-1\\">
+          <!-- state.name -->
+        </span>
+      </div>
+      <style></style>\`;
+    this.pendingUpdate = true;
+    this.render();
+    this.onInit();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onInit() {
+    if (!this.onInitOnce) {
+      this.state.name = \\"PatrickJS onInit\\";
+      this.update();
+      this.onInitOnce = true;
+    }
+  }
+
+  onMount() {
+    // onMount
+    this.state.name = \\"PatrickJS onMount\\";
+    this.update();
+  }
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onUpdate();
+
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(
+        \\"[data-name='div-my-basic-on-mount-update-component-1']\\"
+      )
+      .forEach((el) => {
+        el.innerText = this.state.name;
+      });
+  }
+}
+
+customElements.define(
+  \\"my-basic-on-mount-update-component\\",
+  MyBasicOnMountUpdateComponent
+);
+"
+`;
+
+exports[`webcomponent Button 1`] = `
+"/**
+ * Usage:
+ *
+ *  <button></button>
+ *
+ */
+class Button extends HTMLElement {
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = {};
+    this.props = {};
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <template data-name=\\"show-button\\">
+        <a data-name=\\"a-button-1\\">
+          <span data-name=\\"div-button-1\\"><!-- props.text --></span>
+        </a>
+      </template>
+      
+      <template data-name=\\"show-button-2\\">
+        <button type=\\"button\\" data-name=\\"button-button-1\\">
+          <span data-name=\\"div-button-2\\"><!-- props.text --></span>
+        </button>
+      </template>
+      
+      <style></style>\`;
+    this.pendingUpdate = true;
+    this.render();
+
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
+  }
+
+  onMount() {}
+
+  onUpdate() {}
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onUpdate();
+
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-name='show-button']\\").forEach((el) => {
       const whenCondition = this.props.link;
       if (whenCondition) {
         this.showContent(el);
       }
     });
 
-    this._root.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='a-button-1']\\").forEach((el) => {
       el.href = this.props.link;
 
       el.target = this.props.openLinkInNewTab ? \\"_blank\\" : undefined;
     });
 
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-button-1']\\").forEach((el) => {
       el.innerText = this.props.text;
     });
 
-    this._root.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='show-button-2']\\").forEach((el) => {
       const whenCondition = !this.props.link;
       if (whenCondition) {
         this.showContent(el);
       }
     });
 
-    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-button-2']\\").forEach((el) => {
       el.innerText = this.props.text;
     });
   }
@@ -368,6 +691,8 @@ class Column extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -387,12 +712,12 @@ class Column extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div class=\\"builder-columns div\\">
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
+        <span data-name=\\"for-column\\"></span>
+        <template data-template-for=\\"for-column\\">
           <div class=\\"builder-column div-2\\">
-            <span data-name=\\"div-1\\"><!-- column.content --></span>
+            <span data-name=\\"div-column-1\\"><!-- column.content --></span>
       
-            <span data-name=\\"div-2\\"><!-- index --></span>
+            <span data-name=\\"div-column-2\\"><!-- index --></span>
           </div>
         </template>
       </div>
@@ -417,10 +742,12 @@ class Column extends HTMLElement {
           flex-grow: 1;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -428,8 +755,15 @@ class Column extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -439,18 +773,20 @@ class Column extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='for-column']\\").forEach((el) => {
       let array = this.props.columns;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
+      let template = this._root.querySelector(
+        '[data-template-for=\\"for-column\\"]'
+      );
       this.renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
     });
 
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-column-1']\\").forEach((el) => {
       const column = this.getContext(el, \\"column\\");
       el.innerText = column.content;
     });
 
-    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-column-2']\\").forEach((el) => {
       const index = this.getContext(el, \\"index\\");
       el.innerText = index;
     });
@@ -526,9 +862,11 @@ class Image extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
-    // Event handler for 'load' event on img-1
-    this.onImg1Load = (event) => {
+    // Event handler for 'load' event on img-image-1
+    this.onImgImage1Load = (event) => {
       this.state.setLoaded();
     };
 
@@ -557,12 +895,12 @@ class Image extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <picture data-name=\\"picture-1\\">
-        <template data-name=\\"show\\">
-          <img class=\\"img\\" data-name=\\"img-1\\" />
+      <picture data-name=\\"picture-image-1\\">
+        <template data-name=\\"show-image\\">
+          <img class=\\"img\\" data-name=\\"img-image-1\\" />
         </template>
       
-        <source data-name=\\"source-1\\" />
+        <source data-name=\\"source-image-1\\" />
       </picture>
       
       <slot></slot>
@@ -575,10 +913,12 @@ class Image extends HTMLElement {
           object-position: center;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -627,8 +967,15 @@ class Image extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -638,14 +985,14 @@ class Image extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='show-image']\\").forEach((el) => {
       const whenCondition = !this.state.useLazyLoading() || this.state.load;
       if (whenCondition) {
         this.showContent(el);
       }
     });
 
-    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='img-image-1']\\").forEach((el) => {
       el.alt = this.props.altText;
 
       el.setAttribute(
@@ -658,17 +1005,19 @@ class Image extends HTMLElement {
 
       el.src = this.props.image;
 
-      el.removeEventListener(\\"load\\", this.onImg1Load);
-      el.addEventListener(\\"load\\", this.onImg1Load);
+      el.removeEventListener(\\"load\\", this.onImgImage1Load);
+      el.addEventListener(\\"load\\", this.onImgImage1Load);
 
       el.srcset = this.props.srcset;
 
       el.sizes = this.props.sizes;
     });
 
-    this._root.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
-      el.srcset = this.props.srcset;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='source-image-1']\\")
+      .forEach((el) => {
+        el.srcset = this.props.srcset;
+      });
   }
 }
 
@@ -692,6 +1041,8 @@ class ImgStateComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -711,16 +1062,18 @@ class ImgStateComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <img data-name=\\"img-1\\" />
+        <span data-name=\\"for-img-state-component\\"></span>
+        <template data-template-for=\\"for-img-state-component\\">
+          <img data-name=\\"img-img-state-component-1\\" />
         </template>
       </div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -728,8 +1081,15 @@ class ImgStateComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -739,22 +1099,28 @@ class ImgStateComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.state.images;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='for-img-state-component']\\")
+      .forEach((el) => {
+        let array = this.state.images;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-img-state-component\\"]'
+        );
+        this.renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-      el.className = \\"custom-class\\";
+    this._root
+      .querySelectorAll(\\"[data-name='img-img-state-component-1']\\")
+      .forEach((el) => {
+        const item = this.getContext(el, \\"item\\");
+        const itemIndex = this.getContext(el, \\"itemIndex\\");
 
-      var item = this.getContext(el, \\"item\\");
-      el.src = item;
+        el.className = \\"custom-class\\";
 
-      var item = this.getContext(el, \\"item\\");
-      var itemIndex = this.getContext(el, \\"itemIndex\\");
-      el.key = itemIndex;
-    });
+        el.src = item;
+
+        el.key = itemIndex;
+      });
   }
 
   // Helper to render loops
@@ -811,6 +1177,8 @@ class ImgComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -829,12 +1197,14 @@ class ImgComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <img data-name=\\"img-1\\" />
+      <img data-name=\\"img-img-component-1\\" />
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -842,8 +1212,15 @@ class ImgComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -853,18 +1230,20 @@ class ImgComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-      Object.assign(el.style, {
-        objectFit: this.props.backgroundSize || \\"cover\\",
-        objectPosition: this.props.backgroundPosition || \\"center\\",
+    this._root
+      .querySelectorAll(\\"[data-name='img-img-component-1']\\")
+      .forEach((el) => {
+        Object.assign(el.style, {
+          objectFit: this.props.backgroundSize || \\"cover\\",
+          objectPosition: this.props.backgroundPosition || \\"center\\",
+        });
+
+        el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
+
+        el.alt = this.props.altText;
+
+        el.src = this.props.imgSrc;
       });
-
-      el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
-
-      el.alt = this.props.altText;
-
-      el.src = this.props.imgSrc;
-    });
   }
 }
 
@@ -891,6 +1270,8 @@ class FormInputComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -909,12 +1290,14 @@ class FormInputComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <input data-name=\\"input-1\\" />
+      <input data-name=\\"input-form-input-component-1\\" />
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -922,8 +1305,15 @@ class FormInputComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -933,24 +1323,26 @@ class FormInputComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-      el.key =
-        Builder.isEditing && this.props.defaultValue
-          ? this.props.defaultValue
-          : \\"default-key\\";
+    this._root
+      .querySelectorAll(\\"[data-name='input-form-input-component-1']\\")
+      .forEach((el) => {
+        el.key =
+          Builder.isEditing && this.props.defaultValue
+            ? this.props.defaultValue
+            : \\"default-key\\";
 
-      el.placeholder = this.props.placeholder;
+        el.placeholder = this.props.placeholder;
 
-      el.type = this.props.type;
+        el.type = this.props.type;
 
-      el.name = this.props.name;
+        el.name = this.props.name;
 
-      el.value = this.props.value;
+        el.value = this.props.value;
 
-      el.defaultValue = this.props.defaultValue;
+        el.defaultValue = this.props.defaultValue;
 
-      el.required = this.props.required;
-    });
+        el.required = this.props.required;
+      });
   }
 }
 
@@ -975,6 +1367,8 @@ class SectionComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -993,14 +1387,16 @@ class SectionComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <section data-name=\\"section-1\\">
+      <section data-name=\\"section-section-component-1\\">
         <slot></slot>
       </section>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1008,8 +1404,15 @@ class SectionComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1019,16 +1422,18 @@ class SectionComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
-      Object.assign(
-        el.style,
-        this.props.maxWidth && typeof this.props.maxWidth === \\"number\\"
-          ? {
-              maxWidth: this.props.maxWidth,
-            }
-          : undefined
-      );
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='section-section-component-1']\\")
+      .forEach((el) => {
+        Object.assign(
+          el.style,
+          this.props.maxWidth && typeof this.props.maxWidth === \\"number\\"
+            ? {
+                maxWidth: this.props.maxWidth,
+              }
+            : undefined
+        );
+      });
   }
 }
 
@@ -1053,6 +1458,8 @@ class SectionStateComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1071,19 +1478,21 @@ class SectionStateComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <template data-name=\\"show\\">
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <section data-name=\\"section-1\\">
+      <template data-name=\\"show-section-state-component\\">
+        <span data-name=\\"for-section-state-component\\"></span>
+        <template data-template-for=\\"for-section-state-component\\">
+          <section data-name=\\"section-section-state-component-1\\">
             <slot></slot>
           </section>
         </template>
       </template>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1105,8 +1514,15 @@ class SectionStateComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1116,25 +1532,33 @@ class SectionStateComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
-      const whenCondition = this.state.max;
-      if (whenCondition) {
-        this.showContent(el);
-      }
-    });
-
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.state.items;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"item\\", undefined, undefined);
-    });
-
-    this._root.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
-      const item = this.getContext(el, \\"item\\");
-      Object.assign(el.style, {
-        maxWidth: item + this.state.max,
+    this._root
+      .querySelectorAll(\\"[data-name='show-section-state-component']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.max;
+        if (whenCondition) {
+          this.showContent(el);
+        }
       });
-    });
+
+    this._root
+      .querySelectorAll(\\"[data-name='for-section-state-component']\\")
+      .forEach((el) => {
+        let array = this.state.items;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-section-state-component\\"]'
+        );
+        this.renderLoop(el, array, template, \\"item\\", undefined, undefined);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='section-section-state-component-1']\\")
+      .forEach((el) => {
+        const item = this.getContext(el, \\"item\\");
+        Object.assign(el.style, {
+          maxWidth: item + this.state.max,
+        });
+      });
   }
 
   // Helper to render loops
@@ -1191,6 +1615,8 @@ class SelectComponent extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1209,19 +1635,23 @@ class SelectComponent extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <select data-name=\\"select-1\\">
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <option data-name=\\"option-1\\">
-            <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+      <select data-name=\\"select-select-component-1\\">
+        <span data-name=\\"for-select-component\\"></span>
+        <template data-template-for=\\"for-select-component\\">
+          <option data-name=\\"option-select-component-1\\">
+            <span data-name=\\"div-select-component-1\\">
+              <!-- option.name || option.value -->
+            </span>
           </option>
         </template>
       </select>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1229,8 +1659,15 @@ class SelectComponent extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1240,37 +1677,48 @@ class SelectComponent extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
-      el.value = this.props.value;
+    this._root
+      .querySelectorAll(\\"[data-name='select-select-component-1']\\")
+      .forEach((el) => {
+        el.value = this.props.value;
 
-      el.key =
-        Builder.isEditing && this.props.defaultValue
-          ? this.props.defaultValue
-          : \\"default-key\\";
+        el.key =
+          Builder.isEditing && this.props.defaultValue
+            ? this.props.defaultValue
+            : \\"default-key\\";
 
-      el.defaultValue = this.props.defaultValue;
+        el.defaultValue = this.props.defaultValue;
 
-      el.name = this.props.name;
-    });
+        el.name = this.props.name;
+      });
 
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.props.options;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='for-select-component']\\")
+      .forEach((el) => {
+        let array = this.props.options;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-select-component\\"]'
+        );
+        this.renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
-      var option = this.getContext(el, \\"option\\");
-      el.value = option.value;
+    this._root
+      .querySelectorAll(\\"[data-name='option-select-component-1']\\")
+      .forEach((el) => {
+        const option = this.getContext(el, \\"option\\");
+        const index = this.getContext(el, \\"index\\");
 
-      var index = this.getContext(el, \\"index\\");
-      el.setAttribute(\\"data-index\\", index);
-    });
+        el.value = option.value;
 
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      const option = this.getContext(el, \\"option\\");
-      el.innerText = option.name || option.value;
-    });
+        el.setAttribute(\\"data-index\\", index);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-select-component-1']\\")
+      .forEach((el) => {
+        const option = this.getContext(el, \\"option\\");
+        el.innerText = option.name || option.value;
+      });
   }
 
   // Helper to render loops
@@ -1325,15 +1773,17 @@ class SmileReviews extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
-    // Event handler for 'click' event on button-1
-    this.onButton1Click = (event) => {
+    // Event handler for 'click' event on button-smile-reviews-1
+    this.onButtonSmileReviews1Click = (event) => {
       this.state.showReviewPrompt = true;
       this.update();
     };
 
-    // Event handler for 'click' event on button-2
-    this.onButton2Click = (event) => {
+    // Event handler for 'click' event on button-smile-reviews-2
+    this.onButtonSmileReviews2Click = (event) => {
       this.state.showReviewPrompt = false;
       this.update();
     };
@@ -1355,10 +1805,10 @@ class SmileReviews extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div data-name=\\"div-1\\">
-        <button data-name=\\"button-1\\">Write a review</button>
+      <div data-name=\\"div-smile-reviews-1\\">
+        <button data-name=\\"button-smile-reviews-1\\">Write a review</button>
       
-        <template data-name=\\"show\\">
+        <template data-name=\\"show-smile-reviews\\">
           <input placeholder=\\"Email\\" />
       
           <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -1368,26 +1818,28 @@ class SmileReviews extends HTMLElement {
             class=\\"textarea\\"
           ></textarea>
       
-          <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+          <button class=\\"button\\" data-name=\\"button-smile-reviews-2\\">Submit</button>
         </template>
       
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <div class=\\"review\\" data-name=\\"div-2\\">
-            <img class=\\"img\\" data-name=\\"img-1\\" />
+        <span data-name=\\"for-smile-reviews\\"></span>
+        <template data-template-for=\\"for-smile-reviews\\">
+          <div class=\\"review\\" data-name=\\"div-smile-reviews-2\\">
+            <img class=\\"img\\" data-name=\\"img-smile-reviews-1\\" />
       
-            <div data-name=\\"div-3\\">
+            <div data-name=\\"div-smile-reviews-3\\">
               <div>
                 N:
-                <span data-name=\\"div-4\\"><!-- index --></span>
+                <span data-name=\\"div-smile-reviews-4\\"><!-- index --></span>
               </div>
       
               <div>
-                <span data-name=\\"div-5\\"><!-- review.author --></span>
+                <span data-name=\\"div-smile-reviews-5\\"><!-- review.author --></span>
               </div>
       
               <div>
-                <span data-name=\\"div-6\\"><!-- review.reviewMessage --></span>
+                <span data-name=\\"div-smile-reviews-6\\">
+                  <!-- review.reviewMessage -->
+                </span>
               </div>
             </div>
           </div>
@@ -1417,10 +1869,12 @@ class SmileReviews extends HTMLElement {
           margin-right: 10px;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1454,8 +1908,15 @@ class SmileReviews extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1465,63 +1926,89 @@ class SmileReviews extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      el.setAttribute(\\"data-user\\", this.state.name);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-1']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"data-user\\", this.state.name);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton1Click);
-      el.addEventListener(\\"click\\", this.onButton1Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-smile-reviews-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonSmileReviews1Click);
+        el.addEventListener(\\"click\\", this.onButtonSmileReviews1Click);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
-      const whenCondition = this.state.showReviewPrompt;
-      if (whenCondition) {
-        this.showContent(el);
-      }
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='show-smile-reviews']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.showReviewPrompt;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
 
-    this._root.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton2Click);
-      el.addEventListener(\\"click\\", this.onButton2Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-smile-reviews-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonSmileReviews2Click);
+        el.addEventListener(\\"click\\", this.onButtonSmileReviews2Click);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.state.reviews;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='for-smile-reviews']\\")
+      .forEach((el) => {
+        let array = this.state.reviews;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-smile-reviews\\"]'
+        );
+        this.renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-      var review = this.getContext(el, \\"review\\");
-      el.key = review.id;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-2']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
 
-    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-      var review = this.getContext(el, \\"review\\");
-      el.src = review.avatar;
-    });
+        el.key = review.id;
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-      el.className = this.state.showReviewPrompt
-        ? \\"bg-primary\\"
-        : \\"bg-secondary\\";
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='img-smile-reviews-1']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
 
-    this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-      const index = this.getContext(el, \\"index\\");
-      el.innerText = index;
-    });
+        el.src = review.avatar;
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-      const review = this.getContext(el, \\"review\\");
-      el.innerText = review.author;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
+      .forEach((el) => {
+        el.className = this.state.showReviewPrompt
+          ? \\"bg-primary\\"
+          : \\"bg-secondary\\";
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el) => {
-      const review = this.getContext(el, \\"review\\");
-      el.innerText = review.reviewMessage;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-4']\\")
+      .forEach((el) => {
+        const index = this.getContext(el, \\"index\\");
+        el.innerText = index;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-5']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
+        el.innerText = review.author;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-6']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
+        el.innerText = review.reviewMessage;
+      });
   }
 
   // Helper to render loops
@@ -1589,15 +2076,17 @@ class SmileReviews extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
-    // Event handler for 'click' event on button-1
-    this.onButton1Click = (event) => {
+    // Event handler for 'click' event on button-smile-reviews-1
+    this.onButtonSmileReviews1Click = (event) => {
       this.state.showReviewPrompt = true;
       this.update();
     };
 
-    // Event handler for 'click' event on button-2
-    this.onButton2Click = (event) => {
+    // Event handler for 'click' event on button-smile-reviews-2
+    this.onButtonSmileReviews2Click = (event) => {
       this.state.showReviewPrompt = false;
       this.update();
     };
@@ -1619,10 +2108,10 @@ class SmileReviews extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div data-name=\\"div-1\\">
-        <button data-name=\\"button-1\\">Write a review</button>
+      <div data-name=\\"div-smile-reviews-1\\">
+        <button data-name=\\"button-smile-reviews-1\\">Write a review</button>
       
-        <template data-name=\\"show\\">
+        <template data-name=\\"show-smile-reviews\\">
           <input placeholder=\\"Email\\" />
       
           <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -1632,26 +2121,28 @@ class SmileReviews extends HTMLElement {
             class=\\"textarea\\"
           ></textarea>
       
-          <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+          <button class=\\"button\\" data-name=\\"button-smile-reviews-2\\">Submit</button>
         </template>
       
-        <span data-name=\\"for\\"></span>
-        <template data-template-for=\\"for\\">
-          <div class=\\"review\\" data-name=\\"div-2\\">
-            <img class=\\"img\\" data-name=\\"img-1\\" />
+        <span data-name=\\"for-smile-reviews\\"></span>
+        <template data-template-for=\\"for-smile-reviews\\">
+          <div class=\\"review\\" data-name=\\"div-smile-reviews-2\\">
+            <img class=\\"img\\" data-name=\\"img-smile-reviews-1\\" />
       
-            <div data-name=\\"div-3\\">
+            <div data-name=\\"div-smile-reviews-3\\">
               <div>
                 N:
-                <span data-name=\\"div-4\\"><!-- index --></span>
+                <span data-name=\\"div-smile-reviews-4\\"><!-- index --></span>
               </div>
       
               <div>
-                <span data-name=\\"div-5\\"><!-- review.author --></span>
+                <span data-name=\\"div-smile-reviews-5\\"><!-- review.author --></span>
               </div>
       
               <div>
-                <span data-name=\\"div-6\\"><!-- review.reviewMessage --></span>
+                <span data-name=\\"div-smile-reviews-6\\">
+                  <!-- review.reviewMessage -->
+                </span>
               </div>
             </div>
           </div>
@@ -1681,10 +2172,12 @@ class SmileReviews extends HTMLElement {
           margin-right: 10px;
         }
       </style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   showContent(el) {
@@ -1718,8 +2211,15 @@ class SmileReviews extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1729,63 +2229,89 @@ class SmileReviews extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      el.setAttribute(\\"data-user\\", this.state.name);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-1']\\")
+      .forEach((el) => {
+        el.setAttribute(\\"data-user\\", this.state.name);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton1Click);
-      el.addEventListener(\\"click\\", this.onButton1Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-smile-reviews-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonSmileReviews1Click);
+        el.addEventListener(\\"click\\", this.onButtonSmileReviews1Click);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
-      const whenCondition = this.state.showReviewPrompt;
-      if (whenCondition) {
-        this.showContent(el);
-      }
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='show-smile-reviews']\\")
+      .forEach((el) => {
+        const whenCondition = this.state.showReviewPrompt;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
 
-    this._root.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
-      el.removeEventListener(\\"click\\", this.onButton2Click);
-      el.addEventListener(\\"click\\", this.onButton2Click);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='button-smile-reviews-2']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonSmileReviews2Click);
+        el.addEventListener(\\"click\\", this.onButtonSmileReviews2Click);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
-      let array = this.state.reviews;
-      let template = this._root.querySelector('[data-template-for=\\"for\\"]');
-      this.renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='for-smile-reviews']\\")
+      .forEach((el) => {
+        let array = this.state.reviews;
+        let template = this._root.querySelector(
+          '[data-template-for=\\"for-smile-reviews\\"]'
+        );
+        this.renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-      var review = this.getContext(el, \\"review\\");
-      el.key = review.id;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-2']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
 
-    this._root.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-      var review = this.getContext(el, \\"review\\");
-      el.src = review.avatar;
-    });
+        el.key = review.id;
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-      el.className = this.state.showReviewPrompt
-        ? \\"bg-primary\\"
-        : \\"bg-secondary\\";
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='img-smile-reviews-1']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
 
-    this._root.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-      const index = this.getContext(el, \\"index\\");
-      el.innerText = index;
-    });
+        el.src = review.avatar;
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-      const review = this.getContext(el, \\"review\\");
-      el.innerText = review.author;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
+      .forEach((el) => {
+        el.className = this.state.showReviewPrompt
+          ? \\"bg-primary\\"
+          : \\"bg-secondary\\";
+      });
 
-    this._root.querySelectorAll(\\"[data-name='div-6']\\").forEach((el) => {
-      const review = this.getContext(el, \\"review\\");
-      el.innerText = review.reviewMessage;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-4']\\")
+      .forEach((el) => {
+        const index = this.getContext(el, \\"index\\");
+        el.innerText = index;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-5']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
+        el.innerText = review.author;
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-name='div-smile-reviews-6']\\")
+      .forEach((el) => {
+        const review = this.getContext(el, \\"review\\");
+        el.innerText = review.reviewMessage;
+      });
   }
 
   // Helper to render loops
@@ -1840,6 +2366,8 @@ class SubmitButton extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1858,14 +2386,16 @@ class SubmitButton extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <button type=\\"submit\\" data-name=\\"button-1\\">
-        <span data-name=\\"div-1\\"><!-- props.text --></span>
+      <button type=\\"submit\\" data-name=\\"button-submit-button-1\\">
+        <span data-name=\\"div-submit-button-1\\"><!-- props.text --></span>
       </button>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1873,8 +2403,15 @@ class SubmitButton extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1884,9 +2421,11 @@ class SubmitButton extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-      el.innerText = this.props.text;
-    });
+    this._root
+      .querySelectorAll(\\"[data-name='div-submit-button-1']\\")
+      .forEach((el) => {
+        el.innerText = this.props.text;
+      });
   }
 }
 
@@ -1913,6 +2452,8 @@ class Text extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -1931,12 +2472,14 @@ class Text extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div data-name=\\"div-1\\"></div>
+      <div data-name=\\"div-text-1\\"></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -1944,8 +2487,15 @@ class Text extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -1955,7 +2505,7 @@ class Text extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='div-text-1']\\").forEach((el) => {
       el.contentEditable = allowEditingText || undefined;
 
       el.innerHTML = this.props.text || this.props.content || \\"\\";
@@ -1984,6 +2534,8 @@ class Textarea extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2002,12 +2554,14 @@ class Textarea extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <textarea data-name=\\"textarea-1\\"></textarea>
+      <textarea data-name=\\"textarea-textarea-1\\"></textarea>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2015,8 +2569,15 @@ class Textarea extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2026,15 +2587,17 @@ class Textarea extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
-      el.placeholder = this.props.placeholder;
+    this._root
+      .querySelectorAll(\\"[data-name='textarea-textarea-1']\\")
+      .forEach((el) => {
+        el.placeholder = this.props.placeholder;
 
-      el.name = this.props.name;
+        el.name = this.props.name;
 
-      el.value = this.props.value;
+        el.value = this.props.value;
 
-      el.defaultValue = this.props.defaultValue;
-    });
+        el.defaultValue = this.props.defaultValue;
+      });
   }
 }
 
@@ -2059,6 +2622,8 @@ class Video extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2077,12 +2642,14 @@ class Video extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <video preload=\\"none\\" data-name=\\"video-1\\"></video>
+      <video preload=\\"none\\" data-name=\\"video-video-1\\"></video>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2090,8 +2657,15 @@ class Video extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2101,7 +2675,7 @@ class Video extends HTMLElement {
   }
 
   updateBindings() {
-    this._root.querySelectorAll(\\"[data-name='video-1']\\").forEach((el) => {
+    this._root.querySelectorAll(\\"[data-name='video-video-1']\\").forEach((el) => {
       Object.assign(el.style, {
         width: \\"100%\\",
         height: \\"100%\\",
@@ -2133,219 +2707,23 @@ customElements.define(\\"video\\", Video);
 `;
 
 exports[`webcomponent multipleOnUpdate 1`] = `
-"
-      
-    
-    
-  
-      /**
-       * Usage:
-       * 
-       *  <multiple-on-update></multiple-on-update>
-       * 
-       */
-      class MultipleOnUpdate extends HTMLElement {
-        constructor() {
-          super();
-          const self = this;
-          
-          this.state = {};
-          
-
-
-          // used to keep track of all nodes created by show/for
-          this.nodesToDestroy = [];
-          
-
-          
-
-          if (undefined) {
-            this.attachShadow({ mode: 'open' })
-          }
-        }
-
-
-        
-
-        destroyAnyNodes() {
-          // destroy current view template refs before rendering again
-          this.nodesToDestroy.forEach(el => el.remove());
-          this.nodesToDestroy = [];
-        }
-
-        get _root() {
-          return this.shadowRoot || this;
-        }
-
-        connectedCallback() {
-          
-              this._root.innerHTML = \`
-      <div></div>
-      <style></style>\`;
-              this.render();
-              
-              this.onMount();
-              this.onUpdate();
-              
-        }
-        
-
-        
-        
-
-        onMount() {
-          
-        }
-
-        onUpdate() {
-          
-      
-  console.log('Runs on every update/rerender');
-,
-  console.log('Runs on every update/rerender as well');
- 
-       
-        }
-
-        update() {
-          
-          this.render();
-          this.onUpdate();
-          
-        }
-
-        render() {
-          // re-rendering needs to ensure that all nodes generated by for/show are refreshed
-          this.destroyAnyNodes();
-          this.updateBindings();
-        }
-
-        updateBindings() {
-          
-        }
-
-        
-      }
-
-      customElements.define('multiple-on-update', MultipleOnUpdate);
-    "
-`;
-
-exports[`webcomponent multipleOnnUpdateWithDeps 1`] = `
-"
-      
-    
-    
-  
-      /**
-       * Usage:
-       * 
-       *  <multiple-on-update-with-deps></multiple-on-update-with-deps>
-       * 
-       */
-      class MultipleOnUpdateWithDeps extends HTMLElement {
-        constructor() {
-          super();
-          const self = this;
-          
-          this.state = { a: 'a', b: 'b', c: 'c', d: 'd',};
-          
-
-
-          // used to keep track of all nodes created by show/for
-          this.nodesToDestroy = [];
-          
-
-          
-
-          if (undefined) {
-            this.attachShadow({ mode: 'open' })
-          }
-        }
-
-
-        
-
-        destroyAnyNodes() {
-          // destroy current view template refs before rendering again
-          this.nodesToDestroy.forEach(el => el.remove());
-          this.nodesToDestroy = [];
-        }
-
-        get _root() {
-          return this.shadowRoot || this;
-        }
-
-        connectedCallback() {
-          
-              this._root.innerHTML = \`
-      <div></div>
-      <style></style>\`;
-              this.render();
-              
-              this.onMount();
-              this.onUpdate();
-              
-        }
-        
-
-        
-        
-
-        onMount() {
-          
-        }
-
-        onUpdate() {
-          
-      
-  console.log('Runs when a or b changes', this.state.a, this.state.b);
-,
-  console.log('Runs when c or d changes', this.state.c, this.state.d);
- 
-       
-        }
-
-        update() {
-          
-          this.render();
-          this.onUpdate();
-          
-        }
-
-        render() {
-          // re-rendering needs to ensure that all nodes generated by for/show are refreshed
-          this.destroyAnyNodes();
-          this.updateBindings();
-        }
-
-        updateBindings() {
-          
-        }
-
-        
-      }
-
-      customElements.define('multiple-on-update-with-deps', MultipleOnUpdateWithDeps);
-    "
-`;
-
-exports[`webcomponent onInit & onMount 1`] = `
 "/**
  * Usage:
  *
- *  <on-init></on-init>
+ *  <multiple-on-update></multiple-on-update>
  *
  */
-class OnInit extends HTMLElement {
+class MultipleOnUpdate extends HTMLElement {
   constructor() {
     super();
     const self = this;
-    this.onInitOnce = false;
+
     this.state = {};
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2366,16 +2744,175 @@ class OnInit extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
+    this.render();
+
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    console.log(\\"Runs on every update/rerender\\");
+
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onUpdate();
+
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+}
+
+customElements.define(\\"multiple-on-update\\", MultipleOnUpdate);
+"
+`;
+
+exports[`webcomponent multipleOnnUpdateWithDeps 1`] = `
+"/**
+ * Usage:
+ *
+ *  <multiple-on-update-with-deps></multiple-on-update-with-deps>
+ *
+ */
+class MultipleOnUpdateWithDeps extends HTMLElement {
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div></div>
+      <style></style>\`;
+    this.pendingUpdate = true;
+    this.render();
+
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
+
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onUpdate();
+
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {}
+}
+
+customElements.define(\\"multiple-on-update-with-deps\\", MultipleOnUpdateWithDeps);
+"
+`;
+
+exports[`webcomponent onInit & onMount 1`] = `
+"/**
+ * Usage:
+ *
+ *  <on-init></on-init>
+ *
+ */
+class OnInit extends HTMLElement {
+  constructor() {
+    super();
+    const self = this;
+    this.onInitOnce = false;
+    this.state = {};
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div></div>
+      <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
     this.onInit();
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onInit() {
     if (!this.onInitOnce) {
       console.log(\\"onInit\\");
-
       this.onInitOnce = true;
     }
   }
@@ -2388,8 +2925,15 @@ class OnInit extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2421,6 +2965,8 @@ class OnInit extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2441,16 +2987,17 @@ class OnInit extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
     this.onInit();
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onInit() {
     if (!this.onInitOnce) {
       console.log(\\"Runs once every update/rerender\\");
-
       this.onInitOnce = true;
     }
   }
@@ -2460,8 +3007,15 @@ class OnInit extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2493,6 +3047,8 @@ class Comp extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2519,10 +3075,12 @@ class Comp extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {
@@ -2533,8 +3091,15 @@ class Comp extends HTMLElement {
   onUpdate() {}
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2566,6 +3131,8 @@ class OnUpdate extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2586,10 +3153,12 @@ class OnUpdate extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2599,8 +3168,15 @@ class OnUpdate extends HTMLElement {
   }
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {
@@ -2632,6 +3208,8 @@ class OnUpdateWithDeps extends HTMLElement {
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2652,10 +3230,12 @@ class OnUpdateWithDeps extends HTMLElement {
     this._root.innerHTML = \`
       <div></div>
       <style></style>\`;
+    this.pendingUpdate = true;
     this.render();
 
     this.onMount();
-    this.onUpdate();
+    this.pendingUpdate = false;
+    this.update();
   }
 
   onMount() {}
@@ -2665,8 +3245,15 @@ class OnUpdateWithDeps extends HTMLElement {
   }
 
   update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+
     this.render();
     this.onUpdate();
+
+    this.pendingUpdate = false;
   }
 
   render() {

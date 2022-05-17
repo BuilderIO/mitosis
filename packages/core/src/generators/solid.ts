@@ -152,6 +152,10 @@ const blockToSolid = (
     str += `<${json.name} `;
   }
 
+  if (json.name === 'Show' && json.meta.else) {
+    str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
+  }
+
   const classString = collectClassString(json);
   if (classString) {
     str += ` class=${classString} `;
@@ -279,16 +283,20 @@ export const componentToSolid =
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
 
+    const solidJSImports = [
+      componentHasContext ? 'useContext' : undefined,
+      hasShowComponent ? 'Show' : undefined,
+      hasForComponent ? 'For' : undefined,
+      json.hooks.onMount?.code ? 'onMount' : undefined,
+    ].filter(Boolean);
+
     let str = dedent`
     ${
-      !(hasShowComponent || hasForComponent)
-        ? ''
-        : `import { 
-          ${!componentHasContext ? '' : 'useContext, '}
-          ${!hasShowComponent ? '' : 'Show, '}
-          ${!hasForComponent ? '' : 'For, '}
-          ${!json.hooks.onMount?.code ? '' : 'onMount, '}
+      solidJSImports.length > 0
+        ? `import { 
+          ${solidJSImports.map((item) => item).join(', ')}
          } from 'solid-js';`
+        : ''
     }
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
