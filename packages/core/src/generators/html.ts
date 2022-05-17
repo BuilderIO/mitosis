@@ -46,7 +46,7 @@ type InternalToHtmlOptions = ToHtmlOptions & {
 };
 interface BlockOptions {
   scopeVars?: ScopeVars;
-  childComponents?: string[]
+  childComponents?: string[];
 }
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
@@ -221,7 +221,7 @@ const blockToHtml = (
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, {scopeVars, childComponents});
+    return mappers[json.name](json, options, { scopeVars, childComponents });
   }
 
   if (isChildren(json)) {
@@ -291,8 +291,13 @@ const blockToHtml = (
       <template data-template-for="${elId}">`;
     if (json.children) {
       str += json.children
-      .map((item) => blockToHtml(item, options, {scopeVars: localScopeVars, childComponents}))
-      .join('\n');
+        .map((item) =>
+          blockToHtml(item, options, {
+            scopeVars: localScopeVars,
+            childComponents,
+          }),
+        )
+        .join('\n');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
@@ -319,13 +324,17 @@ const blockToHtml = (
     str += `<template data-name="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, {scopeVars, childComponents}))
+        .map((item) =>
+          blockToHtml(item, options, { scopeVars, childComponents }),
+        )
         .join('\n');
     }
 
     str += '</template>';
   } else {
-    const elSelector = childComponents.find(impName => impName === json.name) ? kebabCase(json.name) : json.name;
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
     str += `<${elSelector} `;
 
     // For now, spread is not supported
@@ -465,7 +474,9 @@ const blockToHtml = (
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, {scopeVars, childComponents}))
+        .map((item) =>
+          blockToHtml(item, options, { scopeVars, childComponents }),
+        )
         .join('\n');
     }
     if (json.properties.innerHTML) {
@@ -794,7 +805,7 @@ export const componentToCustomElement =
       json = runPreJsonPlugins(json, options.plugins);
     }
     const childComponents: string[] = [];
-    json.imports.forEach(({imports}) => {
+    json.imports.forEach(({ imports }) => {
       Object.keys(imports).forEach((key) => {
         if (imports[key] === 'default') {
           childComponents.push(key);
@@ -825,7 +836,7 @@ export const componentToCustomElement =
     stripMetaProperties(json);
 
     let html = json.children
-      .map((item) => blockToHtml(item, useOptions, {childComponents}))
+      .map((item) => blockToHtml(item, useOptions, { childComponents }))
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
       html = useOptions?.experimental?.childrenHtml(

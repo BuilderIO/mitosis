@@ -116,7 +116,9 @@ export const blockToAngular = (
       .join('\n');
     str += `</ng-container>`;
   } else {
-    const elSelector = childComponents.find(impName => impName === json.name) ? kebabCase(json.name) : json.name;
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
     str += `<${elSelector} `;
 
     // TODO: spread support for angular
@@ -209,7 +211,7 @@ export const componentToAngular =
     }
     const childComponents: string[] = [];
 
-    json.imports.forEach(({imports}) => {
+    json.imports.forEach(({ imports }) => {
       Object.keys(imports).forEach((key) => {
         if (imports[key] === 'default') {
           childComponents.push(key);
@@ -259,7 +261,13 @@ export const componentToAngular =
     }
 
     let template = json.children
-      .map((item) => blockToAngular(item, options, { contextVars, outputVars, childComponents }))
+      .map((item) =>
+        blockToAngular(item, options, {
+          contextVars,
+          outputVars,
+          childComponents,
+        }),
+      )
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
