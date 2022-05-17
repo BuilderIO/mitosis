@@ -8,6 +8,7 @@ const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
+const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
 const basicOutputs = require('./data/basic-outputs.raw');
 const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
@@ -22,11 +23,24 @@ describe('Angular', () => {
     expect(output).toMatchSnapshot();
   });
 
+  test('basic outputs meta', () => {
+    const component = parseJsx(basicOutputsMeta);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
   test('basic outputs', () => {
     const component = parseJsx(basicOutputs);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
+  test('basic outputs same as meta', () => {
+    const component = parseJsx(basicOutputs);
+    const componentMeta = parseJsx(basicOutputsMeta);
+    const output = componentToAngular()({ component });
+    const outputMeta = componentToAngular()({ component: componentMeta });
+    expect(output).toMatch(outputMeta)
+  });
+
   test('multiple onUpdate', () => {
     const component = parseJsx(multipleOnUpdate);
     const output = componentToAngular()({ component });

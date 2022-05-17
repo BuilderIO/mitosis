@@ -17,7 +17,8 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
-import { kebabCase } from 'lodash';
+import { getPropFunctions } from '../helpers/get-prop-functions';
+import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
@@ -219,14 +220,8 @@ export const componentToAngular =
       });
     });
 
-    const outputVars: string[] =
+    const metaOutputVars: string[] =
       (json.meta?.useMetadata?.outputs as string[]) || [];
-    const outputs = outputVars.map((variableName) => {
-      if (options?.experimental?.outputs) {
-        return options?.experimental?.outputs(json, variableName);
-      }
-      return `@Output() ${variableName} = new EventEmitter<any>()`;
-    });
     const contextVars = Object.keys(json?.context?.get || {});
     const hasInjectable = Boolean(contextVars.length);
     const injectables: string[] = contextVars.map((variableName) => {
@@ -241,10 +236,21 @@ export const componentToAngular =
     });
 
     const props = getProps(component);
+    const outputVars = uniq([
+      ...metaOutputVars,
+      ...getPropFunctions(component),
+    ]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
     });
+    const outputs = outputVars.map((variableName) => {
+      if (options?.experimental?.outputs) {
+        return options?.experimental?.outputs(json, variableName);
+      }
+      return `@Output() ${variableName} = new EventEmitter()`;
+    });
+
     const hasOnInit = Boolean(
       component.hooks?.onInit || component.hooks?.onMount,
     );
