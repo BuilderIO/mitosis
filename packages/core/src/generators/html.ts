@@ -256,16 +256,9 @@ const blockToHtml = (
   let str = '';
 
   if (json.name === 'For') {
-    const itemName = json.properties._forName;
-    const indexName = json.properties._indexName;
-    const collectionName = json.properties._collectionName;
-    const localScopeVars: ScopeVars = [
-      ...scopeVars,
-      itemName as string,
-      indexName as string,
-      collectionName as string,
-    ].filter(Boolean);
-
+    const forArguments = json?.scope?.For || [];
+    const localScopeVars: ScopeVars = [...scopeVars, ...forArguments];
+    const argsStr = forArguments.map((arg) => `"${arg}"`).join(',');
     addOnChangeJs(
       elId,
       options,
@@ -278,11 +271,7 @@ const blockToHtml = (
         }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, ${
-        itemName ? `"${itemName}"` : 'undefined'
-      }, ${indexName ? `"${indexName}"` : 'undefined'}, ${
-        collectionName ? `"${collectionName}"` : 'undefined'
-      });
+        }renderLoop(el, array, template, ${argsStr});
       `,
     );
     // TODO: decide on how to handle this...
