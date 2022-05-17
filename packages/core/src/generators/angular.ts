@@ -127,7 +127,11 @@ export const blockToAngular = (
         continue;
       }
       const value = json.properties[key];
-      str += ` ${key}="${value}" `;
+      if (key === 'className') {
+        str += ` class="${value}" `;
+      } else {
+        str += ` ${key}="${value}" `;
+      }
     }
     for (const key in json.bindings) {
       if (key === '_spread') {
@@ -156,6 +160,8 @@ export const blockToAngular = (
           useValue.replace(/event\./g, '$event.'),
         );
         str += ` (${event})="${finalValue}" `;
+      } else if (key === 'className') {
+        str += ` [class]="${useValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;
       } else if (key.startsWith('slot')) {
