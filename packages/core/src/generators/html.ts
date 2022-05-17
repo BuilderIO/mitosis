@@ -1,5 +1,6 @@
 import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
+import { kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
@@ -43,6 +44,10 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
   experimental?: any;
 };
+interface BlockOptions {
+  scopeVars?: ScopeVars;
+  childComponents?: string[]
+}
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
@@ -111,12 +116,12 @@ const mappers: {
   [key: string]: (
     json: MitosisNode,
     options: InternalToHtmlOptions,
-    parentScopeVars: ScopeVars,
+    blockOptions: BlockOptions,
   ) => string;
 } = {
-  Fragment: (json, options, parentScopeVars) => {
+  Fragment: (json, options, blockOptions) => {
     return json.children
-      .map((item) => blockToHtml(item, options, parentScopeVars))
+      .map((item) => blockToHtml(item, options, blockOptions))
       .join('\n');
   },
 };
@@ -177,8 +182,11 @@ const addOnChangeJs = (
 const blockToHtml = (
   json: MitosisNode,
   options: InternalToHtmlOptions,
-  parentScopeVars: ScopeVars = [],
+  blockOptions: BlockOptions = {},
 ) => {
+  const scopeVars = blockOptions?.scopeVars || [];
+  const childComponents = blockOptions?.childComponents || [];
+
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
@@ -205,7 +213,7 @@ const blockToHtml = (
       json,
       options,
       elId,
-      parentScopeVars,
+      scopeVars,
       blockToHtml,
       addScopeVars,
       addOnChangeJs,
@@ -213,7 +221,7 @@ const blockToHtml = (
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, parentScopeVars);
+    return mappers[json.name](json, options, {scopeVars, childComponents});
   }
 
   if (isChildren(json)) {
@@ -230,7 +238,7 @@ const blockToHtml = (
       options,
       `
       ${addScopeVars(
-        parentScopeVars,
+        scopeVars,
         json.bindings._text,
         (scopeVar: string) =>
           `const ${scopeVar} = ${
@@ -251,8 +259,8 @@ const blockToHtml = (
     const itemName = json.properties._forName;
     const indexName = json.properties._indexName;
     const collectionName = json.properties._collectionName;
-    const scopedVars: ScopeVars = [
-      ...parentScopeVars,
+    const localScopeVars: ScopeVars = [
+      ...scopeVars,
       itemName as string,
       indexName as string,
       collectionName as string,
@@ -283,8 +291,8 @@ const blockToHtml = (
       <template data-template-for="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, scopedVars))
-        .join('\n');
+      .map((item) => blockToHtml(item, options, {scopeVars: localScopeVars, childComponents}))
+      .join('\n');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
@@ -294,7 +302,7 @@ const blockToHtml = (
       options,
       `
         ${addScopeVars(
-          parentScopeVars,
+          scopeVars,
           whenCondition,
           (scopeVar: string) =>
             `const ${scopeVar} = ${
@@ -311,13 +319,14 @@ const blockToHtml = (
     str += `<template data-name="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) => blockToHtml(item, options, {scopeVars, childComponents}))
         .join('\n');
     }
 
     str += '</template>';
   } else {
-    str += `<${json.name} `;
+    const elSelector = childComponents.find(impName => impName === json.name) ? kebabCase(json.name) : json.name;
+    str += `<${elSelector} `;
 
     // For now, spread is not supported
     // if (json.bindings._spread === '_spread') {
@@ -371,7 +380,7 @@ const blockToHtml = (
               : `function ${fnName} (event) {`
           }
               ${addScopeVars(
-                parentScopeVars,
+                scopeVars,
                 codeContent,
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
@@ -400,7 +409,7 @@ const blockToHtml = (
             options,
             `
             ${addScopeVars(
-              parentScopeVars,
+              scopeVars,
               useValue as string,
               (scopeVar: string) =>
                 `const ${scopeVar} = ${
@@ -411,7 +420,7 @@ const blockToHtml = (
           );
         } else {
           // gather all local vars to inject later
-          getScopeVars(parentScopeVars, useValue).forEach((key) => {
+          getScopeVars(scopeVars, useValue).forEach((key) => {
             // unique keys
             batchScopeVars[key] = true;
           });
@@ -456,7 +465,7 @@ const blockToHtml = (
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) => blockToHtml(item, options, {scopeVars, childComponents}))
         .join('\n');
     }
     if (json.properties.innerHTML) {
@@ -464,7 +473,7 @@ const blockToHtml = (
       str += htmlDecode(json.properties.innerHTML);
     }
 
-    str += `</${json.name}>`;
+    str += `</${elSelector}>`;
   }
   return str;
 };
@@ -770,9 +779,8 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
-    const kebabName = component.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    const kebabName = kebabCase(component.name);
+
     const useOptions: InternalToHtmlOptions = {
       prefix: kebabName,
       ...options,
@@ -785,6 +793,14 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    const childComponents: string[] = [];
+    json.imports.forEach(({imports}) => {
+      Object.keys(imports).forEach((key) => {
+        if (imports[key] === 'default') {
+          childComponents.push(key);
+        }
+      });
+    });
     const componentHasProps = hasProps(json);
     addUpdateAfterSet(json, useOptions);
 
@@ -809,7 +825,7 @@ export const componentToCustomElement =
     stripMetaProperties(json);
 
     let html = json.children
-      .map((item) => blockToHtml(item, useOptions))
+      .map((item) => blockToHtml(item, useOptions, {childComponents}))
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
       html = useOptions?.experimental?.childrenHtml(

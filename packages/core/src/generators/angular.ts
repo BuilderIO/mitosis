@@ -22,12 +22,14 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
+import { MitosisComponent } from '..';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
 interface AngularBlockOptions {
   contextVars?: string[];
   outputVars?: string[];
+  childComponents?: string[];
 }
 
 const mappers: {
@@ -65,6 +67,7 @@ export const blockToAngular = (
 ): string => {
   const contextVars = blockOptions?.contextVars || [];
   const outputVars = blockOptions?.outputVars || [];
+  const childComponents = blockOptions?.childComponents || [];
   if (mappers[json.name]) {
     return mappers[json.name](json, options, blockOptions);
   }
@@ -113,7 +116,8 @@ export const blockToAngular = (
       .join('\n');
     str += `</ng-container>`;
   } else {
-    str += `<${json.name} `;
+    const elSelector = childComponents.find(impName => impName === json.name) ? kebabCase(json.name) : json.name;
+    str += `<${elSelector} `;
 
     // TODO: spread support for angular
     // if (json.bindings._spread) {
@@ -190,7 +194,7 @@ export const blockToAngular = (
         .join('\n');
     }
 
-    str += `</${json.name}>`;
+    str += `</${elSelector}>`;
   }
   return str;
 };
@@ -203,6 +207,16 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    const childComponents: string[] = [];
+
+    json.imports.forEach(({imports}) => {
+      Object.keys(imports).forEach((key) => {
+        if (imports[key] === 'default') {
+          childComponents.push(key);
+        }
+      });
+    });
+
     const outputVars: string[] =
       (json.meta?.useMetadata?.outputs as string[]) || [];
     const outputs = outputVars.map((variableName) => {
@@ -245,7 +259,7 @@ export const componentToAngular =
     }
 
     let template = json.children
-      .map((item) => blockToAngular(item, options, { contextVars, outputVars }))
+      .map((item) => blockToAngular(item, options, { contextVars, outputVars, childComponents }))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
