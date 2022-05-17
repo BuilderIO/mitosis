@@ -38,7 +38,7 @@ describe('Angular', () => {
     const componentMeta = parseJsx(basicOutputsMeta);
     const output = componentToAngular()({ component });
     const outputMeta = componentToAngular()({ component: componentMeta });
-    expect(output).toMatch(outputMeta)
+    expect(output).toMatch(outputMeta);
   });
 
   test('multiple onUpdate', () => {
