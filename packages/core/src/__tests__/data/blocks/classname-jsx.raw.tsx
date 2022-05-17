@@ -12,7 +12,9 @@ export default function ClassNameCode(props: Props) {
 
   return (
     <div>
+      {/*// @ts-ignore */}
       <div className="no binding">Without Binding</div>
+      {/*// @ts-ignore */}
       <div className={state.bindings}>With binding</div>
     </div>
   );
