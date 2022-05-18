@@ -47,6 +47,10 @@ export const stripStateAndPropsRefs = (
         replacer(name),
       );
     }
+    // TODO: webcomponent edge-case
+    if (/el\.this\.props/.test(newCode)) {
+      newCode = newCode.replace(/el.this.props/g, 'el.props');
+    }
   }
   if (options.includeState !== false) {
     if (typeof replacer === 'string') {

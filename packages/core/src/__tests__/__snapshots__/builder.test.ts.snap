@@ -1533,8 +1533,16 @@ exports[`Builder Section 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.maxWidth = 1234;
+        if (el.props) {
+          el.props.maxWidth = 1234;
+          el.update();
+        }
 
         el.lazyLoad = true;
+        if (el.props) {
+          el.props.lazyLoad = true;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -1544,6 +1552,13 @@ exports[`Builder Section 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "

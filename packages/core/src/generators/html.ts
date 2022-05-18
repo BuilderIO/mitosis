@@ -69,9 +69,20 @@ const generateSetElementAttributeCode = (
   if (options?.experimental?.props) {
     return options?.experimental?.props(key, useValue, options);
   }
+  // TODO: better ways to detect child components
   return needsSetAttribute(key)
-    ? `;el.setAttribute("${key}", ${useValue});`
-    : `;el.${updateKeyIfException(key)} = ${useValue};`;
+    ? `;el.setAttribute("${key}", ${useValue});
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
+    `
+    : `;el.${updateKeyIfException(key)} = ${useValue};
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
+    `;
 };
 
 const addUpdateAfterSet = (
@@ -140,6 +151,7 @@ const getId = (json: MitosisNode, options: InternalToHtmlOptions) => {
   }`;
 };
 
+// TODO: overloaded function
 const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
@@ -245,12 +257,14 @@ const blockToHtml = (
             options.format === 'class' ? 'this.' : ''
           }getContext(el, "${scopeVar}");`,
       )}
-      ;el.innerText = ${json.bindings._text};`,
+      ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
+        json.bindings._text
+      });`,
     );
 
-    return `<span data-name="${elId}"><!-- ${
+    return `<template data-name="${elId}"><!-- ${
       json.bindings._text as string
-    } --></span>`;
+    } --></template>`;
   }
 
   let str = '';
@@ -266,18 +280,14 @@ const blockToHtml = (
       // querying dom potentially
       `
         let array = ${json.bindings.each};
-        let template = ${
-          options.format === 'class' ? 'this._root' : 'document'
-        }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, ${argsStr});
+        }renderLoop(el, array, ${argsStr});
       `,
     );
     // TODO: decide on how to handle this...
     str += `
-      <span data-name="${elId}"></span>
-      <template data-template-for="${elId}">`;
+      <template data-name="${elId}">`;
     if (json.children) {
       str += json.children
         .map((item) =>
@@ -710,17 +720,21 @@ export const componentToHtml =
   
         `
         }
+        // Helper text DOM nodes
+        function renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          el.after(textNode);
+          nodesToDestroy.push(el.nextSibling);
+        }
         ${
           !hasLoop
             ? ''
             : `
           // Helper to render loops
-          function renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          function renderLoop(template, array, itemName, itemIndex, collectionName) {
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              Array.from(elementFragment.childNodes).reversrEach((child) => {
                 if (itemName !== undefined) {
                   child['__' + itemName] = value;
                 }
@@ -730,7 +744,8 @@ export const componentToHtml =
                 if (collectionName !== undefined) {
                   child['__' + collectionName] = array;
                 }
-                el.appendChild(child);
+                this.nodesToDestroy.push(child);
+                template.after(child);
               });
             }
           }
@@ -1142,6 +1157,11 @@ export const componentToCustomElement =
             })
             .join('\n\n')}
         }
+        renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          el.after(textNode);
+          this.nodesToDestroy.push(el.nextSibling);
+        }
 
         ${
           !hasLoop
@@ -1149,12 +1169,12 @@ export const componentToCustomElement =
             : `
 
           // Helper to render loops
-          renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          renderLoop(template, array, itemName, itemIndex, collectionName) {
+            const collection = [];
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              const children = Array.from(elementFragment.childNodes)
+              children.forEach((child) => {
                 if (itemName !== undefined) {
                   child['__' + itemName] = value;
                 }
@@ -1164,9 +1184,11 @@ export const componentToCustomElement =
                 if (collectionName !== undefined) {
                   child['__' + collectionName] = array;
                 }
-                el.appendChild(child);
+                this.nodesToDestroy.push(child);
+                collection.push(child)
               });
             }
+            collection.reverse().forEach(child => template.after(child));
           }
         
           getContext(el, name) {
