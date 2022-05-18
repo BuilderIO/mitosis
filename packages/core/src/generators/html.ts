@@ -744,7 +744,22 @@ export const componentToHtml =
           function renderLoop(template, array, itemName, itemIndex, collectionName) {
             for (let [index, value] of array.entries()) {
               const elementFragment = template.content.cloneNode(true);
-              const scope = {}
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
               Array.from(elementFragment.childNodes).reversrEach((child) => {
                 if (itemName !== undefined) {
                   scope[itemName] = value;
@@ -1192,7 +1207,22 @@ export const componentToCustomElement =
             for (let [index, value] of array.entries()) {
               const elementFragment = template.content.cloneNode(true);
               const children = Array.from(elementFragment.childNodes)
-              const scope = {}
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
               children.forEach((child) => {
                 if (itemName !== undefined) {
                   scope[itemName] = value;
