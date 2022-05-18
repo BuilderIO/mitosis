@@ -1556,6 +1556,9 @@ exports[`Builder Section 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }

@@ -94,6 +94,9 @@ class MyBasicComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -183,6 +186,9 @@ class MyBasicChildComponent extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -311,6 +317,9 @@ class MyBasicForComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -321,16 +330,33 @@ class MyBasicForComponent extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -340,7 +366,7 @@ class MyBasicForComponent extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -427,6 +453,9 @@ class MyBasicForShowComponent extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -497,6 +526,9 @@ class MyBasicForShowComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -507,16 +539,33 @@ class MyBasicForShowComponent extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -526,7 +575,7 @@ class MyBasicForShowComponent extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -634,6 +683,9 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -713,6 +765,9 @@ class Button extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -779,6 +834,9 @@ class Button extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -923,6 +981,9 @@ class Column extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -933,16 +994,33 @@ class Column extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -952,7 +1030,7 @@ class Column extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -1067,6 +1145,9 @@ class Image extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -1187,6 +1268,9 @@ class Image extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1303,6 +1387,9 @@ class ImgStateComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1313,16 +1400,33 @@ class ImgStateComponent extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -1332,7 +1436,7 @@ class ImgStateComponent extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -1446,6 +1550,9 @@ class ImgComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1581,6 +1688,9 @@ class FormInputComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1677,6 +1787,9 @@ class SectionComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1748,6 +1861,9 @@ class SectionStateComponent extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -1803,6 +1919,9 @@ class SectionStateComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -1813,16 +1932,33 @@ class SectionStateComponent extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -1832,7 +1968,7 @@ class SectionStateComponent extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -1993,6 +2129,9 @@ class SelectComponent extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -2003,16 +2142,33 @@ class SelectComponent extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -2022,7 +2178,7 @@ class SelectComponent extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -2165,6 +2321,9 @@ class SmileReviews extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -2306,6 +2465,9 @@ class SmileReviews extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -2316,16 +2478,33 @@ class SmileReviews extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -2335,7 +2514,7 @@ class SmileReviews extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -2491,6 +2670,9 @@ class SmileReviews extends HTMLElement {
     const elementFragment = el.content.cloneNode(true);
     const children = Array.from(elementFragment.childNodes);
     children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
       this.nodesToDestroy.push(child);
     });
     el.after(elementFragment);
@@ -2632,6 +2814,9 @@ class SmileReviews extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -2642,16 +2827,33 @@ class SmileReviews extends HTMLElement {
     for (let [index, value] of array.entries()) {
       const elementFragment = template.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
+      const localScope = {};
+      let scope = localScope;
+      if (template?.scope) {
+        const getParent = {
+          get(target, prop, receiver) {
+            if (prop in target) {
+              return target[prop];
+            }
+            if (prop in template.scope) {
+              return template.scope[prop];
+            }
+            return target[prop];
+          },
+        };
+        scope = new Proxy(localScope, getParent);
+      }
       children.forEach((child) => {
         if (itemName !== undefined) {
-          child[\\"__\\" + itemName] = value;
+          scope[itemName] = value;
         }
         if (itemIndex !== undefined) {
-          child[\\"__\\" + itemIndex] = index;
+          scope[itemIndex] = index;
         }
         if (collectionName !== undefined) {
-          child[\\"__\\" + collectionName] = array;
+          scope[collectionName] = array;
         }
+        child.scope = scope;
         this.nodesToDestroy.push(child);
         collection.push(child);
       });
@@ -2661,7 +2863,7 @@ class SmileReviews extends HTMLElement {
 
   getContext(el, name) {
     do {
-      let value = el[\\"__\\" + name];
+      let value = el?.scope?.[name];
       if (value !== undefined) {
         return value;
       }
@@ -2753,6 +2955,9 @@ class SubmitButton extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -2850,6 +3055,9 @@ class Text extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -2959,6 +3167,9 @@ class Textarea extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3089,6 +3300,9 @@ class Video extends HTMLElement {
   }
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3173,6 +3387,9 @@ class MultipleOnUpdate extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3257,6 +3474,9 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3347,6 +3567,9 @@ class OnInit extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3434,6 +3657,9 @@ class OnInit extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3523,6 +3749,9 @@ class Comp extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3605,6 +3834,9 @@ class OnUpdate extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }
@@ -3687,6 +3919,9 @@ class OnUpdateWithDeps extends HTMLElement {
   updateBindings() {}
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
     el.after(textNode);
     this.nodesToDestroy.push(el.nextSibling);
   }

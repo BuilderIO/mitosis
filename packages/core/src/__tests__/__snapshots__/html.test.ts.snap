@@ -56,6 +56,9 @@ exports[`Html Basic 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -139,6 +142,9 @@ exports[`Html BasicFor 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -147,16 +153,33 @@ exports[`Html BasicFor 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -165,7 +188,7 @@ exports[`Html BasicFor 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -264,6 +287,9 @@ exports[`Html Button 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -272,6 +298,9 @@ exports[`Html Button 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -377,6 +406,9 @@ exports[`Html Columns 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -385,16 +417,33 @@ exports[`Html Columns 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -403,7 +452,7 @@ exports[`Html Columns 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -582,6 +631,9 @@ exports[`Html Image 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -590,6 +642,9 @@ exports[`Html Image 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -665,6 +720,9 @@ exports[`Html ImageState 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -673,16 +731,33 @@ exports[`Html ImageState 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -691,7 +766,7 @@ exports[`Html ImageState 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -762,6 +837,9 @@ exports[`Html Img 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -855,6 +933,9 @@ exports[`Html Input block 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -911,6 +992,9 @@ exports[`Html Section 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -985,6 +1069,9 @@ exports[`Html SectionState 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -993,6 +1080,9 @@ exports[`Html SectionState 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1001,16 +1091,33 @@ exports[`Html SectionState 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -1019,7 +1126,7 @@ exports[`Html SectionState 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1132,6 +1239,9 @@ exports[`Html Select block 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1140,16 +1250,33 @@ exports[`Html Select block 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -1158,7 +1285,7 @@ exports[`Html Select block 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1369,6 +1496,9 @@ exports[`Html Shadow DOM 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -1377,6 +1507,9 @@ exports[`Html Shadow DOM 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1385,16 +1518,33 @@ exports[`Html Shadow DOM 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -1403,7 +1553,7 @@ exports[`Html Shadow DOM 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1624,6 +1774,9 @@ exports[`Html Stamped 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -1632,6 +1785,9 @@ exports[`Html Stamped 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1640,16 +1796,33 @@ exports[`Html Stamped 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
+          child.scope = scope;
           this.nodesToDestroy.push(child);
           template.after(child);
         });
@@ -1658,7 +1831,7 @@ exports[`Html Stamped 1`] = `
 
     function getContext(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1710,6 +1883,9 @@ exports[`Html Submit button block 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1767,6 +1943,9 @@ exports[`Html Text 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1836,6 +2015,9 @@ exports[`Html Textarea 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1928,6 +2110,9 @@ exports[`Html Video 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1967,6 +2152,9 @@ exports[`Html onMount & onUnMount 1`] = `
     // Helper text DOM nodes
     function renderTextNode(el, text) {
       const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }

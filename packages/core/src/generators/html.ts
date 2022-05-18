@@ -58,6 +58,10 @@ const updateKeyIfException = (key: string): string => {
 };
 
 const needsSetAttribute = (key: string): boolean => {
+  if (key === 'id') {
+    // we may want to set id on elements
+    return true;
+  }
   return [key.includes('-')].some(Boolean);
 };
 
@@ -713,6 +717,9 @@ export const componentToHtml =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
+              if (el?.scope) {
+                child.scope = el.scope;
+              }
               nodesToDestroy.push(child);
             });
             el.after(elementFragment);
@@ -723,6 +730,9 @@ export const componentToHtml =
         // Helper text DOM nodes
         function renderTextNode(el, text) {
           const textNode = document.createTextNode(text);
+          if (el?.scope) {
+            textNode.scope = el.scope
+          }
           el.after(textNode);
           nodesToDestroy.push(el.nextSibling);
         }
@@ -734,16 +744,33 @@ export const componentToHtml =
           function renderLoop(template, array, itemName, itemIndex, collectionName) {
             for (let [index, value] of array.entries()) {
               const elementFragment = template.content.cloneNode(true);
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
               Array.from(elementFragment.childNodes).reversrEach((child) => {
                 if (itemName !== undefined) {
-                  child['__' + itemName] = value;
+                  scope[itemName] = value;
                 }
                 if (itemIndex !== undefined) {
-                  child['__' + itemIndex] = index;
+                  scope[itemIndex] = index;
                 }
                 if (collectionName !== undefined) {
-                  child['__' + collectionName] = array;
+                  scope[collectionName] = array;
                 }
+                child.scope = scope;
                 this.nodesToDestroy.push(child);
                 template.after(child);
               });
@@ -752,7 +779,7 @@ export const componentToHtml =
 
           function getContext(el, name) {
             do {
-              let value = el['__' + name]
+              let value = el?.scope?.[name]
               if (value !== undefined) {
                 return value
               }
@@ -1032,6 +1059,9 @@ export const componentToCustomElement =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
+              if (el?.scope) {
+                child.scope = el.scope;
+              }
               this.nodesToDestroy.push(child);
             });
             el.after(elementFragment);
@@ -1159,6 +1189,9 @@ export const componentToCustomElement =
         }
         renderTextNode(el, text) {
           const textNode = document.createTextNode(text);
+          if (el?.scope) {
+            textNode.scope = el.scope;
+          }
           el.after(textNode);
           this.nodesToDestroy.push(el.nextSibling);
         }
@@ -1174,16 +1207,33 @@ export const componentToCustomElement =
             for (let [index, value] of array.entries()) {
               const elementFragment = template.content.cloneNode(true);
               const children = Array.from(elementFragment.childNodes)
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
               children.forEach((child) => {
                 if (itemName !== undefined) {
-                  child['__' + itemName] = value;
+                  scope[itemName] = value;
                 }
                 if (itemIndex !== undefined) {
-                  child['__' + itemIndex] = index;
+                  scope[itemIndex] = index;
                 }
                 if (collectionName !== undefined) {
-                  child['__' + collectionName] = array;
+                  scope[collectionName] = array;
                 }
+                child.scope = scope;
                 this.nodesToDestroy.push(child);
                 collection.push(child)
               });
@@ -1193,7 +1243,7 @@ export const componentToCustomElement =
         
           getContext(el, name) {
             do {
-              let value = el['__' + name]
+              let value = el?.scope?.[name]
               if (value !== undefined) {
                 return value
               }
