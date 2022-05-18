@@ -45,7 +45,6 @@ const DEFAULT_OPTIONS: MitosisConfig['options'] = {
   vue: {
     cssNamespace: () => getSimpleId(),
     namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
-    builderRegister: true,
   },
 };
 
@@ -69,9 +68,7 @@ export async function build(config?: MitosisConfig) {
     micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
       async (path) => {
         try {
-          const parsed = parseJsx(await readFile(path, 'utf8'), {
-            jsonHookNames: ['registerComponent'],
-          });
+          const parsed = parseJsx(await readFile(path, 'utf8'));
           return {
             path,
             mitosisJson: parsed,
@@ -241,20 +238,7 @@ async function outputTsxLiteFiles(
           target,
           options,
         });
-        const registerComponentHook = mitosisJson.meta.registerComponent;
-        if (registerComponentHook) {
-          transpiled = dedent`
-          import { registerComponent } from '../functions/register-component';
-          
-          ${transpiled}
-          
-          registerComponent(${mitosisJson.name}, ${json5.stringify(
-            registerComponentHook,
-          )});
-            `;
-        }
         break;
-
       case 'vue':
         // TODO: transform to CJS (?)
         transpiled = transpileOptionalChaining(transpiled).replace(
