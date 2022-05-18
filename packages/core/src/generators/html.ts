@@ -58,6 +58,10 @@ const updateKeyIfException = (key: string): string => {
 };
 
 const needsSetAttribute = (key: string): boolean => {
+  if (key === 'id') {
+    // we may want to set id on elements
+    return true;
+  }
   return [key.includes('-')].some(Boolean);
 };
 
