@@ -17,17 +17,20 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
-import { kebabCase } from 'lodash';
+import { getPropFunctions } from '../helpers/get-prop-functions';
+import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
+import { MitosisComponent } from '..';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
 interface AngularBlockOptions {
   contextVars?: string[];
   outputVars?: string[];
+  childComponents?: string[];
 }
 
 const mappers: {
@@ -65,6 +68,7 @@ export const blockToAngular = (
 ): string => {
   const contextVars = blockOptions?.contextVars || [];
   const outputVars = blockOptions?.outputVars || [];
+  const childComponents = blockOptions?.childComponents || [];
   if (mappers[json.name]) {
     return mappers[json.name](json, options, blockOptions);
   }
@@ -113,7 +117,10 @@ export const blockToAngular = (
       .join('\n');
     str += `</ng-container>`;
   } else {
-    str += `<${json.name} `;
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+    str += `<${elSelector} `;
 
     // TODO: spread support for angular
     // if (json.bindings._spread) {
@@ -190,7 +197,7 @@ export const blockToAngular = (
         .join('\n');
     }
 
-    str += `</${json.name}>`;
+    str += `</${elSelector}>`;
   }
   return str;
 };
@@ -203,14 +210,18 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const outputVars: string[] =
-      (json.meta?.useMetadata?.outputs as string[]) || [];
-    const outputs = outputVars.map((variableName) => {
-      if (options?.experimental?.outputs) {
-        return options?.experimental?.outputs(json, variableName);
-      }
-      return `@Output() ${variableName} = new EventEmitter<any>()`;
+    const childComponents: string[] = [];
+
+    json.imports.forEach(({ imports }) => {
+      Object.keys(imports).forEach((key) => {
+        if (imports[key] === 'default') {
+          childComponents.push(key);
+        }
+      });
     });
+
+    const metaOutputVars: string[] =
+      (json.meta?.useMetadata?.outputs as string[]) || [];
     const contextVars = Object.keys(json?.context?.get || {});
     const hasInjectable = Boolean(contextVars.length);
     const injectables: string[] = contextVars.map((variableName) => {
@@ -225,10 +236,21 @@ export const componentToAngular =
     });
 
     const props = getProps(component);
+    const outputVars = uniq([
+      ...metaOutputVars,
+      ...getPropFunctions(component),
+    ]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
     });
+    const outputs = outputVars.map((variableName) => {
+      if (options?.experimental?.outputs) {
+        return options?.experimental?.outputs(json, variableName);
+      }
+      return `@Output() ${variableName} = new EventEmitter()`;
+    });
+
     const hasOnInit = Boolean(
       component.hooks?.onInit || component.hooks?.onMount,
     );
@@ -245,7 +267,13 @@ export const componentToAngular =
     }
 
     let template = json.children
-      .map((item) => blockToAngular(item, options, { contextVars, outputVars }))
+      .map((item) =>
+        blockToAngular(item, options, {
+          contextVars,
+          outputVars,
+          childComponents,
+        }),
+      )
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');

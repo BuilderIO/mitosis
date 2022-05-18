@@ -386,12 +386,9 @@ const jsxElementToJson = (
       const callback = node.expression.arguments[0];
       if (types.isArrowFunctionExpression(callback)) {
         if (types.isIdentifier(callback.params[0])) {
-          const forName = callback.params[0].name;
-          const indexName = (callback.params?.[1] as babel.types.Identifier)
-            ?.name;
-          const collectionName = (
-            callback.params?.[2] as babel.types.Identifier
-          )?.name;
+          const forArguments = callback.params
+            .map((param) => (param as babel.types.Identifier)?.name)
+            .filter(Boolean);
           return createMitosisNode({
             name: 'For',
             bindings: {
@@ -399,10 +396,13 @@ const jsxElementToJson = (
                 .code // Remove .map or potentially ?.map
                 .replace(/\??\.map$/, ''),
             },
+            scope: {
+              For: forArguments,
+            },
             properties: {
-              _forName: forName,
-              _indexName: indexName,
-              _collectionName: collectionName,
+              _forName: forArguments[0],
+              _indexName: forArguments[1],
+              _collectionName: forArguments[2],
             },
             children: [jsxElementToJson(callback.body as any)!],
           });
@@ -503,14 +503,9 @@ const jsxElementToJson = (
       const childExpression = child.expression;
 
       if (types.isArrowFunctionExpression(childExpression)) {
-        const forName = (childExpression.params[0] as babel.types.Identifier)
-          .name;
-        const indexName = (
-          childExpression.params?.[1] as babel.types.Identifier
-        )?.name;
-        const collectionName = (
-          childExpression.params?.[2] as babel.types.Identifier
-        )?.name;
+        const forArguments = childExpression?.params
+          .map((param) => (param as babel.types.Identifier)?.name)
+          .filter(Boolean);
 
         return createMitosisNode({
           name: 'For',
@@ -522,10 +517,13 @@ const jsxElementToJson = (
               ).expression,
             ).code,
           },
+          scope: {
+            For: forArguments,
+          },
           properties: {
-            _forName: forName,
-            _indexName: indexName,
-            _collectionName: collectionName,
+            _forName: forArguments[0],
+            _indexName: forArguments[1],
+            _collectionName: forArguments[2],
           },
           children: [jsxElementToJson(childExpression.body as any)!],
         });

@@ -30,6 +30,10 @@ exports[`Html Basic 1`] = `
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
         el.value = state.name;
+        if (el.props) {
+          el.props.value = state.name;
+          el.update();
+        }
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -48,6 +52,13 @@ exports[`Html Basic 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -55,12 +66,11 @@ exports[`Html Basic 1`] = `
 
 exports[`Html BasicFor 1`] = `
 "<div>
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <input data-name=\\"input-1\\" />
 
     Hello
-    <span data-name=\\"div-1\\"><!-- person --></span>
+    <template data-name=\\"div-1\\"><!-- person --></template>
     ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
   </template>
 </div>
@@ -88,12 +98,15 @@ exports[`Html BasicFor 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.names;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"person\\", undefined, undefined);
+        renderLoop(el, array, \\"person\\");
       });
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
         el.value = state.name;
+        if (el.props) {
+          el.props.value = state.name;
+          el.update();
+        }
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -101,7 +114,7 @@ exports[`Html BasicFor 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const person = getContext(el, \\"person\\");
-        el.innerText = person;
+        renderTextNode(el, person);
       });
 
       destroyAnyNodes();
@@ -123,20 +136,18 @@ exports[`Html BasicFor 1`] = `
     // onMount
     console.log(\\"onMount code\\");
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -146,7 +157,8 @@ exports[`Html BasicFor 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -167,13 +179,13 @@ exports[`Html BasicFor 1`] = `
 exports[`Html Button 1`] = `
 "<template data-name=\\"show\\">
   <a data-name=\\"a-1\\">
-    <span data-name=\\"div-1\\"><!-- props.text --></span>
+    <template data-name=\\"div-1\\"><!-- props.text --></template>
   </a>
 </template>
 
 <template data-name=\\"show-2\\">
   <button type=\\"button\\" data-name=\\"button-1\\">
-    <span data-name=\\"div-2\\"><!-- props.text --></span>
+    <template data-name=\\"div-2\\"><!-- props.text --></template>
   </button>
 </template>
 
@@ -208,12 +220,20 @@ exports[`Html Button 1`] = `
 
       document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
         el.href = props.link;
+        if (el.props) {
+          el.props.href = props.link;
+          el.update();
+        }
 
         el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+        if (el.props) {
+          el.props.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = props.text;
+        renderTextNode(el, props.text);
       });
 
       document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
@@ -224,7 +244,7 @@ exports[`Html Button 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.innerText = props.text;
+        renderTextNode(el, props.text);
       });
 
       destroyAnyNodes();
@@ -248,6 +268,13 @@ exports[`Html Button 1`] = `
       });
       el.after(elementFragment);
     }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -255,12 +282,11 @@ exports[`Html Button 1`] = `
 
 exports[`Html Columns 1`] = `
 "<div class=\\"builder-columns div\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <div class=\\"builder-column div-2\\">
-      <span data-name=\\"div-1\\"><!-- column.content --></span>
+      <template data-name=\\"div-1\\"><!-- column.content --></template>
 
-      <span data-name=\\"div-2\\"><!-- index --></span>
+      <template data-name=\\"div-2\\"><!-- index --></template>
     </div>
   </template>
 </div>
@@ -327,18 +353,17 @@ exports[`Html Columns 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = props.columns;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"column\\", \\"index\\");
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const column = getContext(el, \\"column\\");
-        el.innerText = column.content;
+        renderTextNode(el, column.content);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
-        el.innerText = index;
+        renderTextNode(el, index);
       });
 
       destroyAnyNodes();
@@ -349,20 +374,18 @@ exports[`Html Columns 1`] = `
     // Update with initial state on first load
     update();
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -372,7 +395,8 @@ exports[`Html Columns 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -458,26 +482,55 @@ exports[`Html Image 1`] = `
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         el.alt = props.altText;
+        if (el.props) {
+          el.props.alt = props.altText;
+          el.update();
+        }
 
         el.setAttribute(
           \\"aria-role\\",
           props.altText ? \\"presentation\\" : undefined
         );
+        if (el.props) {
+          el.props.ariaRole = props.altText ? \\"presentation\\" : undefined;
+          el.update();
+        }
 
         el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+        if (el.props) {
+          el.props.class =
+            \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+          el.update();
+        }
 
         el.src = props.image;
+        if (el.props) {
+          el.props.src = props.image;
+          el.update();
+        }
 
         el.removeEventListener(\\"load\\", onImg1Load);
         el.addEventListener(\\"load\\", onImg1Load);
 
         el.srcset = props.srcset;
+        if (el.props) {
+          el.props.srcset = props.srcset;
+          el.update();
+        }
 
         el.sizes = props.sizes;
+        if (el.props) {
+          el.props.sizes = props.sizes;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
         el.srcset = props.srcset;
+        if (el.props) {
+          el.props.srcset = props.srcset;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -533,6 +586,13 @@ exports[`Html Image 1`] = `
       });
       el.after(elementFragment);
     }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -540,8 +600,7 @@ exports[`Html Image 1`] = `
 
 exports[`Html ImageState 1`] = `
 "<div>
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <img data-name=\\"img-1\\" />
   </template>
 </div>
@@ -569,8 +628,7 @@ exports[`Html ImageState 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.images;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
+        renderLoop(el, array, \\"item\\", \\"itemIndex\\");
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
@@ -578,10 +636,22 @@ exports[`Html ImageState 1`] = `
         const itemIndex = getContext(el, \\"itemIndex\\");
 
         el.className = \\"custom-class\\";
+        if (el.props) {
+          el.props.class = \\"custom-class\\";
+          el.update();
+        }
 
         el.src = item;
+        if (el.props) {
+          el.props.src = item;
+          el.update();
+        }
 
         el.key = itemIndex;
+        if (el.props) {
+          el.props.key = itemIndex;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -592,20 +662,18 @@ exports[`Html ImageState 1`] = `
     // Update with initial state on first load
     update();
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -615,7 +683,8 @@ exports[`Html ImageState 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -664,10 +733,22 @@ exports[`Html Img 1`] = `
         });
 
         el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
+        if (el.props) {
+          el.props.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
+          el.update();
+        }
 
         el.alt = props.altText;
+        if (el.props) {
+          el.props.alt = props.altText;
+          el.update();
+        }
 
         el.src = props.imgSrc;
+        if (el.props) {
+          el.props.src = props.imgSrc;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -677,6 +758,13 @@ exports[`Html Img 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -711,18 +799,49 @@ exports[`Html Input block 1`] = `
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
+        if (el.props) {
+          el.props.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+          el.update();
+        }
 
         el.placeholder = props.placeholder;
+        if (el.props) {
+          el.props.placeholder = props.placeholder;
+          el.update();
+        }
 
         el.type = props.type;
+        if (el.props) {
+          el.props.type = props.type;
+          el.update();
+        }
 
         el.name = props.name;
+        if (el.props) {
+          el.props.name = props.name;
+          el.update();
+        }
 
         el.value = props.value;
+        if (el.props) {
+          el.props.value = props.value;
+          el.update();
+        }
 
         el.defaultValue = props.defaultValue;
+        if (el.props) {
+          el.props.defaultValue = props.defaultValue;
+          el.update();
+        }
 
         el.required = props.required;
+        if (el.props) {
+          el.props.required = props.required;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -732,6 +851,13 @@ exports[`Html Input block 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -781,6 +907,13 @@ exports[`Html Section 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -788,8 +921,7 @@ exports[`Html Section 1`] = `
 
 exports[`Html SectionState 1`] = `
 "<template data-name=\\"show\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <section data-name=\\"section-1\\">
       <slot></slot>
     </section>
@@ -826,8 +958,7 @@ exports[`Html SectionState 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.items;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"item\\", undefined, undefined);
+        renderLoop(el, array, \\"item\\");
       });
 
       document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
@@ -859,20 +990,18 @@ exports[`Html SectionState 1`] = `
       el.after(elementFragment);
     }
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -882,7 +1011,8 @@ exports[`Html SectionState 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -902,10 +1032,11 @@ exports[`Html SectionState 1`] = `
 
 exports[`Html Select block 1`] = `
 "<select data-name=\\"select-1\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <option data-name=\\"option-1\\">
-      <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+      <template data-name=\\"div-1\\">
+        <!-- option.name || option.value -->
+      </template>
     </option>
   </template>
 </select>
@@ -933,21 +1064,39 @@ exports[`Html Select block 1`] = `
 
       document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
         el.value = props.value;
+        if (el.props) {
+          el.props.value = props.value;
+          el.update();
+        }
 
         el.key =
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
+        if (el.props) {
+          el.props.key =
+            Builder.isEditing && props.defaultValue
+              ? props.defaultValue
+              : \\"default-key\\";
+          el.update();
+        }
 
         el.defaultValue = props.defaultValue;
+        if (el.props) {
+          el.props.defaultValue = props.defaultValue;
+          el.update();
+        }
 
         el.name = props.name;
+        if (el.props) {
+          el.props.name = props.name;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = props.options;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"option\\", \\"index\\");
       });
 
       document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
@@ -955,13 +1104,21 @@ exports[`Html Select block 1`] = `
         const index = getContext(el, \\"index\\");
 
         el.value = option.value;
+        if (el.props) {
+          el.props.value = option.value;
+          el.update();
+        }
 
         el.setAttribute(\\"data-index\\", index);
+        if (el.props) {
+          el.props.dataIndex = index;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         const option = getContext(el, \\"option\\");
-        el.innerText = option.name || option.value;
+        renderTextNode(el, option.name || option.value);
       });
 
       destroyAnyNodes();
@@ -972,20 +1129,18 @@ exports[`Html Select block 1`] = `
     // Update with initial state on first load
     update();
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -995,7 +1150,8 @@ exports[`Html Select block 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -1030,23 +1186,22 @@ exports[`Html Shadow DOM 1`] = `
     <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
   </template>
 
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <div class=\\"review\\" data-name=\\"review\\">
       <img class=\\"img\\" data-name=\\"img-1\\" />
 
       <div data-name=\\"div-2\\">
         <div>
           N:
-          <span data-name=\\"div-3\\"><!-- index --></span>
+          <template data-name=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <template data-name=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <template data-name=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1100,6 +1255,10 @@ exports[`Html Shadow DOM 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
+        if (el.props) {
+          el.props.dataUser = state.name;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
@@ -1121,39 +1280,52 @@ exports[`Html Shadow DOM 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.reviews;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
         el.key = review.id;
+        if (el.props) {
+          el.props.key = review.id;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
         el.src = review.avatar;
+        if (el.props) {
+          el.props.src = review.avatar;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
+        if (el.props) {
+          el.props.class = state.showReviewPrompt
+            ? \\"bg-primary\\"
+            : \\"bg-secondary\\";
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
-        el.innerText = index;
+        renderTextNode(el, index);
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
-        el.innerText = review.author;
+        renderTextNode(el, review.author);
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
-        el.innerText = review.reviewMessage;
+        renderTextNode(el, review.reviewMessage);
       });
 
       destroyAnyNodes();
@@ -1202,20 +1374,18 @@ exports[`Html Shadow DOM 1`] = `
       el.after(elementFragment);
     }
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -1225,7 +1395,8 @@ exports[`Html Shadow DOM 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -1260,23 +1431,22 @@ exports[`Html Stamped 1`] = `
     <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
   </template>
 
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-name=\\"for\\">
     <div class=\\"review\\" data-name=\\"review\\">
       <img class=\\"img\\" data-name=\\"img-1\\" />
 
       <div data-name=\\"div-2\\">
         <div>
           N:
-          <span data-name=\\"div-3\\"><!-- index --></span>
+          <template data-name=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <template data-name=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <template data-name=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1340,6 +1510,10 @@ exports[`Html Stamped 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
+        if (el.props) {
+          el.props.dataUser = state.name;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
@@ -1361,39 +1535,52 @@ exports[`Html Stamped 1`] = `
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
         let array = state.reviews;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
         el.key = review.id;
+        if (el.props) {
+          el.props.key = review.id;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
         el.src = review.avatar;
+        if (el.props) {
+          el.props.src = review.avatar;
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
+        if (el.props) {
+          el.props.class = state.showReviewPrompt
+            ? \\"bg-primary\\"
+            : \\"bg-secondary\\";
+          el.update();
+        }
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
         const index = getContext(el, \\"index\\");
-        el.innerText = index;
+        renderTextNode(el, index);
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
-        el.innerText = review.author;
+        renderTextNode(el, review.author);
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
-        el.innerText = review.reviewMessage;
+        renderTextNode(el, review.reviewMessage);
       });
 
       destroyAnyNodes();
@@ -1442,20 +1629,18 @@ exports[`Html Stamped 1`] = `
       el.after(elementFragment);
     }
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             child[\\"__\\" + itemName] = value;
           }
@@ -1465,7 +1650,8 @@ exports[`Html Stamped 1`] = `
           if (collectionName !== undefined) {
             child[\\"__\\" + collectionName] = array;
           }
-          el.appendChild(child);
+          this.nodesToDestroy.push(child);
+          template.after(child);
         });
       }
     }
@@ -1485,7 +1671,7 @@ exports[`Html Stamped 1`] = `
 
 exports[`Html Submit button block 1`] = `
 "<button type=\\"submit\\" data-name=\\"button-1\\">
-  <span data-name=\\"div-1\\"><!-- props.text --></span>
+  <template data-name=\\"div-1\\"><!-- props.text --></template>
 </button>
 <script>
   (() => {
@@ -1510,7 +1696,7 @@ exports[`Html Submit button block 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = props.text;
+        renderTextNode(el, props.text);
       });
 
       destroyAnyNodes();
@@ -1520,6 +1706,13 @@ exports[`Html Submit button block 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -1551,8 +1744,16 @@ exports[`Html Text 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.contentEditable = allowEditingText || undefined;
+        if (el.props) {
+          el.props.contentEditable = allowEditingText || undefined;
+          el.update();
+        }
 
         el.innerHTML = props.text || props.content || \\"\\";
+        if (el.props) {
+          el.props.innerHtml = props.text || props.content || \\"\\";
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -1562,6 +1763,13 @@ exports[`Html Text 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -1593,12 +1801,28 @@ exports[`Html Textarea 1`] = `
 
       document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
         el.placeholder = props.placeholder;
+        if (el.props) {
+          el.props.placeholder = props.placeholder;
+          el.update();
+        }
 
         el.name = props.name;
+        if (el.props) {
+          el.props.name = props.name;
+          el.update();
+        }
 
         el.value = props.value;
+        if (el.props) {
+          el.props.value = props.value;
+          el.update();
+        }
 
         el.defaultValue = props.defaultValue;
+        if (el.props) {
+          el.props.defaultValue = props.defaultValue;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -1608,6 +1832,13 @@ exports[`Html Textarea 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -1650,16 +1881,40 @@ exports[`Html Video 1`] = `
         });
 
         el.key = props.video || \\"no-src\\";
+        if (el.props) {
+          el.props.key = props.video || \\"no-src\\";
+          el.update();
+        }
 
         el.poster = props.posterImage;
+        if (el.props) {
+          el.props.poster = props.posterImage;
+          el.update();
+        }
 
         el.autoPlay = props.autoPlay;
+        if (el.props) {
+          el.props.autoPlay = props.autoPlay;
+          el.update();
+        }
 
         el.muted = props.muted;
+        if (el.props) {
+          el.props.muted = props.muted;
+          el.update();
+        }
 
         el.controls = props.controls;
+        if (el.props) {
+          el.props.controls = props.controls;
+          el.update();
+        }
 
         el.loop = props.loop;
+        if (el.props) {
+          el.props.loop = props.loop;
+          el.update();
+        }
       });
 
       destroyAnyNodes();
@@ -1669,6 +1924,13 @@ exports[`Html Video 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
@@ -1701,6 +1963,13 @@ exports[`Html onMount & onUnMount 1`] = `
 
     // onMount
     console.log(\\"Runs on mount\\");
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "

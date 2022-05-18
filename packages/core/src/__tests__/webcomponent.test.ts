@@ -2,6 +2,7 @@ import { componentToCustomElement } from '../generators/html';
 import { parseJsx } from '../parsers/jsx';
 
 const basic = require('./data/basic.raw');
+const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicForShow = require('./data/basic-for-show.raw');
 const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
@@ -33,6 +34,12 @@ const shadowDom = require('./data/blocks/shadow-dom.raw');
 describe('webcomponent', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Child Component', () => {
+    const component = parseJsx(basicChildComponent);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

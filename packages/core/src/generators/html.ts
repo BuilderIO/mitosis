@@ -1,5 +1,6 @@
 import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
+import { kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
 import traverse from 'traverse';
@@ -43,6 +44,10 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
   experimental?: any;
 };
+interface BlockOptions {
+  scopeVars?: ScopeVars;
+  childComponents?: string[];
+}
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
@@ -64,9 +69,20 @@ const generateSetElementAttributeCode = (
   if (options?.experimental?.props) {
     return options?.experimental?.props(key, useValue, options);
   }
+  // TODO: better ways to detect child components
   return needsSetAttribute(key)
-    ? `;el.setAttribute("${key}", ${useValue});`
-    : `;el.${updateKeyIfException(key)} = ${useValue};`;
+    ? `;el.setAttribute("${key}", ${useValue});
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
+    `
+    : `;el.${updateKeyIfException(key)} = ${useValue};
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
+    `;
 };
 
 const addUpdateAfterSet = (
@@ -111,12 +127,12 @@ const mappers: {
   [key: string]: (
     json: MitosisNode,
     options: InternalToHtmlOptions,
-    parentScopeVars: ScopeVars,
+    blockOptions: BlockOptions,
   ) => string;
 } = {
-  Fragment: (json, options, parentScopeVars) => {
+  Fragment: (json, options, blockOptions) => {
     return json.children
-      .map((item) => blockToHtml(item, options, parentScopeVars))
+      .map((item) => blockToHtml(item, options, blockOptions))
       .join('\n');
   },
 };
@@ -135,6 +151,7 @@ const getId = (json: MitosisNode, options: InternalToHtmlOptions) => {
   }`;
 };
 
+// TODO: overloaded function
 const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
@@ -177,8 +194,11 @@ const addOnChangeJs = (
 const blockToHtml = (
   json: MitosisNode,
   options: InternalToHtmlOptions,
-  parentScopeVars: ScopeVars = [],
+  blockOptions: BlockOptions = {},
 ) => {
+  const scopeVars = blockOptions?.scopeVars || [];
+  const childComponents = blockOptions?.childComponents || [];
+
   const hasData = Object.keys(json.bindings).length;
   let elId = '';
   if (hasData) {
@@ -205,7 +225,7 @@ const blockToHtml = (
       json,
       options,
       elId,
-      parentScopeVars,
+      scopeVars,
       blockToHtml,
       addScopeVars,
       addOnChangeJs,
@@ -213,7 +233,7 @@ const blockToHtml = (
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, parentScopeVars);
+    return mappers[json.name](json, options, { scopeVars, childComponents });
   }
 
   if (isChildren(json)) {
@@ -230,34 +250,29 @@ const blockToHtml = (
       options,
       `
       ${addScopeVars(
-        parentScopeVars,
+        scopeVars,
         json.bindings._text,
         (scopeVar: string) =>
           `const ${scopeVar} = ${
             options.format === 'class' ? 'this.' : ''
           }getContext(el, "${scopeVar}");`,
       )}
-      ;el.innerText = ${json.bindings._text};`,
+      ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
+        json.bindings._text
+      });`,
     );
 
-    return `<span data-name="${elId}"><!-- ${
+    return `<template data-name="${elId}"><!-- ${
       json.bindings._text as string
-    } --></span>`;
+    } --></template>`;
   }
 
   let str = '';
 
   if (json.name === 'For') {
-    const itemName = json.properties._forName;
-    const indexName = json.properties._indexName;
-    const collectionName = json.properties._collectionName;
-    const scopedVars: ScopeVars = [
-      ...parentScopeVars,
-      itemName as string,
-      indexName as string,
-      collectionName as string,
-    ].filter(Boolean);
-
+    const forArguments = json?.scope?.For || [];
+    const localScopeVars: ScopeVars = [...scopeVars, ...forArguments];
+    const argsStr = forArguments.map((arg) => `"${arg}"`).join(',');
     addOnChangeJs(
       elId,
       options,
@@ -265,25 +280,22 @@ const blockToHtml = (
       // querying dom potentially
       `
         let array = ${json.bindings.each};
-        let template = ${
-          options.format === 'class' ? 'this._root' : 'document'
-        }.querySelector('[data-template-for="${elId}"]');
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, ${
-        itemName ? `"${itemName}"` : 'undefined'
-      }, ${indexName ? `"${indexName}"` : 'undefined'}, ${
-        collectionName ? `"${collectionName}"` : 'undefined'
-      });
+        }renderLoop(el, array, ${argsStr});
       `,
     );
     // TODO: decide on how to handle this...
     str += `
-      <span data-name="${elId}"></span>
-      <template data-template-for="${elId}">`;
+      <template data-name="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, scopedVars))
+        .map((item) =>
+          blockToHtml(item, options, {
+            scopeVars: localScopeVars,
+            childComponents,
+          }),
+        )
         .join('\n');
     }
     str += '</template>';
@@ -294,7 +306,7 @@ const blockToHtml = (
       options,
       `
         ${addScopeVars(
-          parentScopeVars,
+          scopeVars,
           whenCondition,
           (scopeVar: string) =>
             `const ${scopeVar} = ${
@@ -311,13 +323,18 @@ const blockToHtml = (
     str += `<template data-name="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) =>
+          blockToHtml(item, options, { scopeVars, childComponents }),
+        )
         .join('\n');
     }
 
     str += '</template>';
   } else {
-    str += `<${json.name} `;
+    const elSelector = childComponents.find((impName) => impName === json.name)
+      ? kebabCase(json.name)
+      : json.name;
+    str += `<${elSelector} `;
 
     // For now, spread is not supported
     // if (json.bindings._spread === '_spread') {
@@ -371,7 +388,7 @@ const blockToHtml = (
               : `function ${fnName} (event) {`
           }
               ${addScopeVars(
-                parentScopeVars,
+                scopeVars,
                 codeContent,
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
@@ -400,7 +417,7 @@ const blockToHtml = (
             options,
             `
             ${addScopeVars(
-              parentScopeVars,
+              scopeVars,
               useValue as string,
               (scopeVar: string) =>
                 `const ${scopeVar} = ${
@@ -411,7 +428,7 @@ const blockToHtml = (
           );
         } else {
           // gather all local vars to inject later
-          getScopeVars(parentScopeVars, useValue).forEach((key) => {
+          getScopeVars(scopeVars, useValue).forEach((key) => {
             // unique keys
             batchScopeVars[key] = true;
           });
@@ -456,7 +473,9 @@ const blockToHtml = (
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) =>
+          blockToHtml(item, options, { scopeVars, childComponents }),
+        )
         .join('\n');
     }
     if (json.properties.innerHTML) {
@@ -464,7 +483,7 @@ const blockToHtml = (
       str += htmlDecode(json.properties.innerHTML);
     }
 
-    str += `</${json.name}>`;
+    str += `</${elSelector}>`;
   }
   return str;
 };
@@ -701,17 +720,21 @@ export const componentToHtml =
   
         `
         }
+        // Helper text DOM nodes
+        function renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          el.after(textNode);
+          nodesToDestroy.push(el.nextSibling);
+        }
         ${
           !hasLoop
             ? ''
             : `
           // Helper to render loops
-          function renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          function renderLoop(template, array, itemName, itemIndex, collectionName) {
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              Array.from(elementFragment.childNodes).reversrEach((child) => {
                 if (itemName !== undefined) {
                   child['__' + itemName] = value;
                 }
@@ -721,7 +744,8 @@ export const componentToHtml =
                 if (collectionName !== undefined) {
                   child['__' + collectionName] = array;
                 }
-                el.appendChild(child);
+                this.nodesToDestroy.push(child);
+                template.after(child);
               });
             }
           }
@@ -770,9 +794,8 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
-    const kebabName = component.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    const kebabName = kebabCase(component.name);
+
     const useOptions: InternalToHtmlOptions = {
       prefix: kebabName,
       ...options,
@@ -785,6 +808,14 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    const childComponents: string[] = [];
+    json.imports.forEach(({ imports }) => {
+      Object.keys(imports).forEach((key) => {
+        if (imports[key] === 'default') {
+          childComponents.push(key);
+        }
+      });
+    });
     const componentHasProps = hasProps(json);
     addUpdateAfterSet(json, useOptions);
 
@@ -809,7 +840,7 @@ export const componentToCustomElement =
     stripMetaProperties(json);
 
     let html = json.children
-      .map((item) => blockToHtml(item, useOptions))
+      .map((item) => blockToHtml(item, useOptions, { childComponents }))
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
       html = useOptions?.experimental?.childrenHtml(
@@ -1126,6 +1157,11 @@ export const componentToCustomElement =
             })
             .join('\n\n')}
         }
+        renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          el.after(textNode);
+          this.nodesToDestroy.push(el.nextSibling);
+        }
 
         ${
           !hasLoop
@@ -1133,12 +1169,12 @@ export const componentToCustomElement =
             : `
 
           // Helper to render loops
-          renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          renderLoop(template, array, itemName, itemIndex, collectionName) {
+            const collection = [];
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              const children = Array.from(elementFragment.childNodes)
+              children.forEach((child) => {
                 if (itemName !== undefined) {
                   child['__' + itemName] = value;
                 }
@@ -1148,9 +1184,11 @@ export const componentToCustomElement =
                 if (collectionName !== undefined) {
                   child['__' + collectionName] = array;
                 }
-                el.appendChild(child);
+                this.nodesToDestroy.push(child);
+                collection.push(child)
               });
             }
+            collection.reverse().forEach(child => template.after(child));
           }
         
           getContext(el, name) {

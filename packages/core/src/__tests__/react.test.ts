@@ -1,6 +1,7 @@
 import { componentToReact } from '../generators/react';
 import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
+const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
@@ -53,6 +54,12 @@ describe('React', () => {
   });
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Child Component', () => {
+    const component = parseJsx(basicChildComponent);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
