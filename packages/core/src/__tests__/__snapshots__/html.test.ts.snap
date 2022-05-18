@@ -153,7 +153,22 @@ exports[`Html BasicFor 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -402,7 +417,22 @@ exports[`Html Columns 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -701,7 +731,22 @@ exports[`Html ImageState 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -1046,7 +1091,22 @@ exports[`Html SectionState 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -1190,7 +1250,22 @@ exports[`Html Select block 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -1443,7 +1518,22 @@ exports[`Html Shadow DOM 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
@@ -1706,7 +1796,22 @@ exports[`Html Stamped 1`] = `
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
-        const scope = {};
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
         Array.from(elementFragment.childNodes).reversrEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
