@@ -1,6 +1,11 @@
 import { useState, onInit, onMount } from '@builder.io/mitosis';
 
-export default function MyBasicOnMountUpdateComponent(props) {
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
+export default function MyBasicOnMountUpdateComponent(props: Props) {
   const state = useState({
     name: 'PatrickJS',
     names: ['Steve', 'PatrickJS'],
