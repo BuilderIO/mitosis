@@ -82,16 +82,14 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
-        if (el.props) {
-          el.props.value = this.state.name;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -121,7 +119,7 @@ class MyBasicChildComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"Steve\\" };
+    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -146,10 +144,14 @@ class MyBasicChildComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <my-basic-component></my-basic-component>
+        <my-basic-component
+          data-name=\\"my-basic-component-my-basic-child-component\\"
+        ></my-basic-component>
       
         <div>
-          <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
+          <my-basic-on-mount-update-component
+            data-name=\\"my-basic-on-mount-update-component-my-basic-child-component\\"
+          ></my-basic-on-mount-update-component>
         </div>
       </div>
       <style></style>\`;
@@ -183,7 +185,31 @@ class MyBasicChildComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(
+        \\"[data-name='my-basic-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.setAttribute(\\"id\\", this.state.dev);
+      });
+
+    this._root
+      .querySelectorAll(
+        \\"[data-name='my-basic-on-mount-update-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.setAttribute(\\"hi\\", this.state.name);
+        el.props.hi = this.state.name;
+        el.update();
+
+        el.setAttribute(\\"bye\\", this.state.dev);
+        el.props.bye = this.state.dev;
+        el.update();
+      });
+  }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -298,11 +324,7 @@ class MyBasicForComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-for-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
-        if (el.props) {
-          el.props.value = this.state.name;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
@@ -315,6 +337,8 @@ class MyBasicForComponent extends HTMLElement {
         this.renderTextNode(el, person);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -504,11 +528,7 @@ class MyBasicForShowComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-for-show-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
-        if (el.props) {
-          el.props.value = this.state.name;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(
           \\"input\\",
@@ -524,6 +544,8 @@ class MyBasicForShowComponent extends HTMLElement {
         this.renderTextNode(el, person);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -600,6 +622,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
     const self = this;
     this.onInitOnce = false;
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+    this.props = {};
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -640,7 +663,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
 
   onInit() {
     if (!this.onInitOnce) {
-      this.state.name = \\"PatrickJS onInit\\";
+      this.state.name = \\"PatrickJS onInit\\" + this.props.hi;
       this.update();
       this.onInitOnce = true;
     }
@@ -648,7 +671,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.state.name = \\"PatrickJS onMount\\";
+    this.state.name = \\"PatrickJS onMount\\" + this.props.bye;
     this.update();
   }
 
@@ -681,6 +704,8 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
         this.renderTextNode(el, this.state.name);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -804,17 +829,12 @@ class Button extends HTMLElement {
     });
 
     this._root.querySelectorAll(\\"[data-name='a-button-1']\\").forEach((el) => {
-      el.href = this.props.link;
-      if (el.props) {
-        el.props.href = this.props.link;
-        el.update();
-      }
+      el.setAttribute(\\"href\\", this.props.link);
 
-      el.target = this.props.openLinkInNewTab ? \\"_blank\\" : undefined;
-      if (el.props) {
-        el.props.target = this.props.openLinkInNewTab ? \\"_blank\\" : undefined;
-        el.update();
-      }
+      el.setAttribute(
+        \\"target\\",
+        this.props.openLinkInNewTab ? \\"_blank\\" : undefined
+      );
     });
 
     this._root.querySelectorAll(\\"[data-name='div-button-1']\\").forEach((el) => {
@@ -832,6 +852,8 @@ class Button extends HTMLElement {
       this.renderTextNode(el, this.props.text);
     });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -979,6 +1001,8 @@ class Column extends HTMLElement {
       this.renderTextNode(el, index);
     });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1211,61 +1235,36 @@ class Image extends HTMLElement {
     });
 
     this._root.querySelectorAll(\\"[data-name='img-image-1']\\").forEach((el) => {
-      el.alt = this.props.altText;
-      if (el.props) {
-        el.props.alt = this.props.altText;
-        el.update();
-      }
+      el.setAttribute(\\"alt\\", this.props.altText);
 
       el.setAttribute(
         \\"aria-role\\",
         this.props.altText ? \\"presentation\\" : undefined
       );
-      if (el.props) {
-        el.props.ariaRole = this.props.altText ? \\"presentation\\" : undefined;
-        el.update();
-      }
 
-      el.className =
-        \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\");
-      if (el.props) {
-        el.props.class =
-          \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\");
-        el.update();
-      }
+      el.setAttribute(
+        \\"class\\",
+        \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\")
+      );
 
-      el.src = this.props.image;
-      if (el.props) {
-        el.props.src = this.props.image;
-        el.update();
-      }
+      el.setAttribute(\\"src\\", this.props.image);
 
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
 
-      el.srcset = this.props.srcset;
-      if (el.props) {
-        el.props.srcset = this.props.srcset;
-        el.update();
-      }
+      el.setAttribute(\\"srcset\\", this.props.srcset);
 
-      el.sizes = this.props.sizes;
-      if (el.props) {
-        el.props.sizes = this.props.sizes;
-        el.update();
-      }
+      el.setAttribute(\\"sizes\\", this.props.sizes);
     });
 
     this._root
       .querySelectorAll(\\"[data-name='source-image-1']\\")
       .forEach((el) => {
-        el.srcset = this.props.srcset;
-        if (el.props) {
-          el.props.srcset = this.props.srcset;
-          el.update();
-        }
+        el.setAttribute(\\"srcset\\", this.props.srcset);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1366,25 +1365,15 @@ class ImgStateComponent extends HTMLElement {
         const item = this.getContext(el, \\"item\\");
         const itemIndex = this.getContext(el, \\"itemIndex\\");
 
-        el.className = \\"custom-class\\";
-        if (el.props) {
-          el.props.class = \\"custom-class\\";
-          el.update();
-        }
+        el.setAttribute(\\"class\\", \\"custom-class\\");
 
-        el.src = item;
-        if (el.props) {
-          el.props.src = item;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", item);
 
         el.key = itemIndex;
-        if (el.props) {
-          el.props.key = itemIndex;
-          el.update();
-        }
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1529,25 +1518,14 @@ class ImgComponent extends HTMLElement {
         });
 
         el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
-        if (el.props) {
-          el.props.key =
-            (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
-          el.update();
-        }
 
-        el.alt = this.props.altText;
-        if (el.props) {
-          el.props.alt = this.props.altText;
-          el.update();
-        }
+        el.setAttribute(\\"alt\\", this.props.altText);
 
-        el.src = this.props.imgSrc;
-        if (el.props) {
-          el.props.src = this.props.imgSrc;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", this.props.imgSrc);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1641,51 +1619,22 @@ class FormInputComponent extends HTMLElement {
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-        if (el.props) {
-          el.props.key =
-            Builder.isEditing && this.props.defaultValue
-              ? this.props.defaultValue
-              : \\"default-key\\";
-          el.update();
-        }
 
-        el.placeholder = this.props.placeholder;
-        if (el.props) {
-          el.props.placeholder = this.props.placeholder;
-          el.update();
-        }
+        el.setAttribute(\\"placeholder\\", this.props.placeholder);
 
-        el.type = this.props.type;
-        if (el.props) {
-          el.props.type = this.props.type;
-          el.update();
-        }
+        el.setAttribute(\\"type\\", this.props.type);
 
-        el.name = this.props.name;
-        if (el.props) {
-          el.props.name = this.props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", this.props.name);
 
-        el.value = this.props.value;
-        if (el.props) {
-          el.props.value = this.props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.props.value);
 
-        el.defaultValue = this.props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = this.props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
 
-        el.required = this.props.required;
-        if (el.props) {
-          el.props.required = this.props.required;
-          el.update();
-        }
+        el.setAttribute(\\"required\\", this.props.required);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1785,6 +1734,8 @@ class SectionComponent extends HTMLElement {
         );
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -1917,6 +1868,8 @@ class SectionStateComponent extends HTMLElement {
         });
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -2063,35 +2016,16 @@ class SelectComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='select-select-component-1']\\")
       .forEach((el) => {
-        el.value = this.props.value;
-        if (el.props) {
-          el.props.value = this.props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.props.value);
 
         el.key =
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
-        if (el.props) {
-          el.props.key =
-            Builder.isEditing && this.props.defaultValue
-              ? this.props.defaultValue
-              : \\"default-key\\";
-          el.update();
-        }
 
-        el.defaultValue = this.props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = this.props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
 
-        el.name = this.props.name;
-        if (el.props) {
-          el.props.name = this.props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", this.props.name);
       });
 
     this._root
@@ -2107,17 +2041,9 @@ class SelectComponent extends HTMLElement {
         const option = this.getContext(el, \\"option\\");
         const index = this.getContext(el, \\"index\\");
 
-        el.value = option.value;
-        if (el.props) {
-          el.props.value = option.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", option.value);
 
         el.setAttribute(\\"data-index\\", index);
-        if (el.props) {
-          el.props.dataIndex = index;
-          el.update();
-        }
       });
 
     this._root
@@ -2127,6 +2053,8 @@ class SelectComponent extends HTMLElement {
         this.renderTextNode(el, option.name || option.value);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -2368,10 +2296,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-name='div-smile-reviews-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"data-user\\", this.state.name);
-        if (el.props) {
-          el.props.dataUser = this.state.name;
-          el.update();
-        }
       });
 
     this._root
@@ -2410,10 +2334,6 @@ class SmileReviews extends HTMLElement {
         const review = this.getContext(el, \\"review\\");
 
         el.key = review.id;
-        if (el.props) {
-          el.props.key = review.id;
-          el.update();
-        }
       });
 
     this._root
@@ -2421,25 +2341,16 @@ class SmileReviews extends HTMLElement {
       .forEach((el) => {
         const review = this.getContext(el, \\"review\\");
 
-        el.src = review.avatar;
-        if (el.props) {
-          el.props.src = review.avatar;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
     this._root
       .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
       .forEach((el) => {
-        el.className = this.state.showReviewPrompt
-          ? \\"bg-primary\\"
-          : \\"bg-secondary\\";
-        if (el.props) {
-          el.props.class = this.state.showReviewPrompt
-            ? \\"bg-primary\\"
-            : \\"bg-secondary\\";
-          el.update();
-        }
+        el.setAttribute(
+          \\"class\\",
+          this.state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
     this._root
@@ -2463,6 +2374,8 @@ class SmileReviews extends HTMLElement {
         this.renderTextNode(el, review.reviewMessage);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -2717,10 +2630,6 @@ class SmileReviews extends HTMLElement {
       .querySelectorAll(\\"[data-name='div-smile-reviews-1']\\")
       .forEach((el) => {
         el.setAttribute(\\"data-user\\", this.state.name);
-        if (el.props) {
-          el.props.dataUser = this.state.name;
-          el.update();
-        }
       });
 
     this._root
@@ -2759,10 +2668,6 @@ class SmileReviews extends HTMLElement {
         const review = this.getContext(el, \\"review\\");
 
         el.key = review.id;
-        if (el.props) {
-          el.props.key = review.id;
-          el.update();
-        }
       });
 
     this._root
@@ -2770,25 +2675,16 @@ class SmileReviews extends HTMLElement {
       .forEach((el) => {
         const review = this.getContext(el, \\"review\\");
 
-        el.src = review.avatar;
-        if (el.props) {
-          el.props.src = review.avatar;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
     this._root
       .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
       .forEach((el) => {
-        el.className = this.state.showReviewPrompt
-          ? \\"bg-primary\\"
-          : \\"bg-secondary\\";
-        if (el.props) {
-          el.props.class = this.state.showReviewPrompt
-            ? \\"bg-primary\\"
-            : \\"bg-secondary\\";
-          el.update();
-        }
+        el.setAttribute(
+          \\"class\\",
+          this.state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
     this._root
@@ -2812,6 +2708,8 @@ class SmileReviews extends HTMLElement {
         this.renderTextNode(el, review.reviewMessage);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -2953,6 +2851,8 @@ class SubmitButton extends HTMLElement {
         this.renderTextNode(el, this.props.text);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3040,19 +2940,13 @@ class Text extends HTMLElement {
 
   updateBindings() {
     this._root.querySelectorAll(\\"[data-name='div-text-1']\\").forEach((el) => {
-      el.contentEditable = allowEditingText || undefined;
-      if (el.props) {
-        el.props.contentEditable = allowEditingText || undefined;
-        el.update();
-      }
+      el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-      el.innerHTML = this.props.text || this.props.content || \\"\\";
-      if (el.props) {
-        el.props.innerHtml = this.props.text || this.props.content || \\"\\";
-        el.update();
-      }
+      el.setAttribute(\\"innerHTML\\", this.props.text || this.props.content || \\"\\");
     });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3140,31 +3034,17 @@ class Textarea extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='textarea-textarea-1']\\")
       .forEach((el) => {
-        el.placeholder = this.props.placeholder;
-        if (el.props) {
-          el.props.placeholder = this.props.placeholder;
-          el.update();
-        }
+        el.setAttribute(\\"placeholder\\", this.props.placeholder);
 
-        el.name = this.props.name;
-        if (el.props) {
-          el.props.name = this.props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", this.props.name);
 
-        el.value = this.props.value;
-        if (el.props) {
-          el.props.value = this.props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", this.props.value);
 
-        el.defaultValue = this.props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = this.props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
       });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3262,42 +3142,20 @@ class Video extends HTMLElement {
       });
 
       el.key = this.props.video || \\"no-src\\";
-      if (el.props) {
-        el.props.key = this.props.video || \\"no-src\\";
-        el.update();
-      }
 
-      el.poster = this.props.posterImage;
-      if (el.props) {
-        el.props.poster = this.props.posterImage;
-        el.update();
-      }
+      el.setAttribute(\\"poster\\", this.props.posterImage);
 
-      el.autoPlay = this.props.autoPlay;
-      if (el.props) {
-        el.props.autoPlay = this.props.autoPlay;
-        el.update();
-      }
+      el.setAttribute(\\"autoplay\\", this.props.autoPlay);
 
-      el.muted = this.props.muted;
-      if (el.props) {
-        el.props.muted = this.props.muted;
-        el.update();
-      }
+      el.setAttribute(\\"muted\\", this.props.muted);
 
-      el.controls = this.props.controls;
-      if (el.props) {
-        el.props.controls = this.props.controls;
-        el.update();
-      }
+      el.setAttribute(\\"controls\\", this.props.controls);
 
-      el.loop = this.props.loop;
-      if (el.props) {
-        el.props.loop = this.props.loop;
-        el.update();
-      }
+      el.setAttribute(\\"loop\\", this.props.loop);
     });
   }
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3385,6 +3243,8 @@ class MultipleOnUpdate extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3472,6 +3332,8 @@ class MultipleOnUpdateWithDeps extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3565,6 +3427,8 @@ class OnInit extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3655,6 +3519,8 @@ class OnInit extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3747,6 +3613,8 @@ class Comp extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3832,6 +3700,8 @@ class OnUpdate extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {
@@ -3917,6 +3787,8 @@ class OnUpdateWithDeps extends HTMLElement {
   }
 
   updateBindings() {}
+
+  // Helper to render content
   renderTextNode(el, text) {
     const textNode = document.createTextNode(text);
     if (el?.scope) {

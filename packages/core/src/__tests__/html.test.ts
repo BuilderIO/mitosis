@@ -3,6 +3,7 @@ import { parseJsx } from '../parsers/jsx';
 
 const basic = require('./data/basic.raw');
 const basicFor = require('./data/basic-for.raw');
+const className = require('./data/blocks/classname-jsx.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -28,6 +29,12 @@ const stamped = require('./data/blocks/stamped-io.raw');
 const shadowDom = require('./data/blocks/shadow-dom.raw');
 
 describe('Html', () => {
+  test('className', () => {
+    const component = parseJsx(className);
+    const output = componentToHtml()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('Basic', () => {
     const component = parseJsx(basic);
     const output = componentToHtml()({ component });

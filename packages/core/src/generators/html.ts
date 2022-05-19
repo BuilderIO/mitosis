@@ -12,7 +12,11 @@ import { getStateObjectStringFromComponent } from '../helpers/get-state-object-s
 import { hasComponent } from '../helpers/has-component';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { isHtmlAttribute } from '../helpers/is-html-attribute';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { getProps } from '../helpers/get-props';
+import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
@@ -47,7 +51,13 @@ type InternalToHtmlOptions = ToHtmlOptions & {
 interface BlockOptions {
   scopeVars?: ScopeVars;
   childComponents?: string[];
+  outputs?: string[];
+  props?: Set<string>;
 }
+
+const isAttribute = (key: string): boolean => {
+  return /-/.test(key);
+};
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
@@ -57,35 +67,39 @@ const updateKeyIfException = (key: string): string => {
   return ATTRIBUTE_KEY_EXCEPTIONS_MAP[key] ?? key;
 };
 
-const needsSetAttribute = (key: string): boolean => {
-  if (key === 'id') {
-    // we may want to set id on elements
-    return true;
-  }
-  return [key.includes('-')].some(Boolean);
-};
-
 const generateSetElementAttributeCode = (
   key: string,
+  tagName: string,
   useValue: string,
   options: InternalToHtmlOptions,
+  meta: any = {},
 ): string => {
   if (options?.experimental?.props) {
     return options?.experimental?.props(key, useValue, options);
   }
-  // TODO: better ways to detect child components
-  return needsSetAttribute(key)
-    ? `;el.setAttribute("${key}", ${useValue});
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
+  const isKey = key === 'key';
+  const isComponent = meta?.component;
+  const isHtmlAttr = isHtmlAttribute(key, tagName);
+  const setAttr =
+    !isKey && (isHtmlAttr || isValidAttributeName(key) || isAttribute(key));
+  return setAttr
+    ? `;el.setAttribute("${key}", ${useValue});${
+        !isComponent || isHtmlAttr
+          ? ''
+          : `
+    ;el.props.${camelCase(key)} = ${useValue};
+    ;el.update();
     `
-    : `;el.${updateKeyIfException(key)} = ${useValue};
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
+      }
+    `
+    : `;el.${updateKeyIfException(key)} = ${useValue};${
+        !isComponent || isKey
+          ? ''
+          : `
+    ;el.props.${camelCase(key)} = ${useValue};
+    ;el.update();
+    `
+      }
     `;
 };
 
@@ -107,12 +121,46 @@ const addUpdateAfterSet = (
   });
 };
 
+const getChildComponents = (
+  json: MitosisComponent,
+  options: InternalToHtmlOptions,
+) => {
+  const childComponents: string[] = [];
+  json.imports.forEach(({ imports }) => {
+    Object.keys(imports).forEach((key) => {
+      if (imports[key] === 'default') {
+        childComponents.push(key);
+      }
+    });
+  });
+  return childComponents;
+};
+
+const replaceClassname = (
+  json: MitosisComponent,
+  options: InternalToHtmlOptions,
+) => {
+  traverse(json).forEach(function (node) {
+    if (isMitosisNode(node)) {
+      if (node.properties.className) {
+        // Change className to class in the HTML elements
+        node.properties.class = node.properties.className;
+        delete node.properties.className;
+      }
+    }
+  });
+};
+
 const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
   return parentScopeVars.filter((scopeVar) => {
     if (typeof value === 'boolean') {
       return value;
     }
-    return new RegExp(scopeVar).test(value);
+    const checkVar = new RegExp(
+      '(\\.\\.\\.|,| |;|\\(|^|!)' + scopeVar + '(\\.|,| |;|\\)|$)',
+      'g',
+    );
+    return checkVar.test(value);
   });
 };
 const addScopeVars = (
@@ -335,9 +383,8 @@ const blockToHtml = (
 
     str += '</template>';
   } else {
-    const elSelector = childComponents.find((impName) => impName === json.name)
-      ? kebabCase(json.name)
-      : json.name;
+    const component = childComponents.find((impName) => impName === json.name);
+    const elSelector = component ? kebabCase(json.name) : json.name;
     str += `<${elSelector} `;
 
     // For now, spread is not supported
@@ -441,7 +488,15 @@ const blockToHtml = (
             options,
             `
             ${injectOnce ? '' : startInjectVar}
-            ${generateSetElementAttributeCode(key, useValue, options)}
+            ${generateSetElementAttributeCode(
+              key,
+              elSelector,
+              useValue,
+              options,
+              {
+                component,
+              },
+            )}
             `,
           );
           if (!injectOnce) {
@@ -835,15 +890,11 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const childComponents: string[] = [];
-    json.imports.forEach(({ imports }) => {
-      Object.keys(imports).forEach((key) => {
-        if (imports[key] === 'default') {
-          childComponents.push(key);
-        }
-      });
-    });
+    replaceClassname(json, useOptions);
+    const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
+    const props = getProps(json);
+    const outputs = getPropFunctions(json);
     addUpdateAfterSet(json, useOptions);
 
     const hasLoop = hasComponent('For', json);
@@ -867,7 +918,9 @@ export const componentToCustomElement =
     stripMetaProperties(json);
 
     let html = json.children
-      .map((item) => blockToHtml(item, useOptions, { childComponents }))
+      .map((item) =>
+        blockToHtml(item, useOptions, { childComponents, props, outputs }),
+      )
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
       html = useOptions?.experimental?.childrenHtml(
@@ -1187,6 +1240,8 @@ export const componentToCustomElement =
             })
             .join('\n\n')}
         }
+
+        // Helper to render content
         renderTextNode(el, text) {
           const textNode = document.createTextNode(text);
           if (el?.scope) {

@@ -29,11 +29,7 @@ exports[`Html Basic 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.value = state.name;
-        if (el.props) {
-          el.props.value = state.name;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", state.name);
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -105,11 +101,7 @@ exports[`Html BasicFor 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.value = state.name;
-        if (el.props) {
-          el.props.value = state.name;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", state.name);
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -242,17 +234,12 @@ exports[`Html Button 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
-        el.href = props.link;
-        if (el.props) {
-          el.props.href = props.link;
-          el.update();
-        }
+        el.setAttribute(\\"href\\", props.link);
 
-        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
-        if (el.props) {
-          el.props.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
-          el.update();
-        }
+        el.setAttribute(
+          \\"target\\",
+          props.openLinkInNewTab ? \\"_blank\\" : undefined
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
@@ -530,56 +517,30 @@ exports[`Html Image 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        el.alt = props.altText;
-        if (el.props) {
-          el.props.alt = props.altText;
-          el.update();
-        }
+        el.setAttribute(\\"alt\\", props.altText);
 
         el.setAttribute(
           \\"aria-role\\",
           props.altText ? \\"presentation\\" : undefined
         );
-        if (el.props) {
-          el.props.ariaRole = props.altText ? \\"presentation\\" : undefined;
-          el.update();
-        }
 
-        el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
-        if (el.props) {
-          el.props.class =
-            \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
-          el.update();
-        }
+        el.setAttribute(
+          \\"class\\",
+          \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+        );
 
-        el.src = props.image;
-        if (el.props) {
-          el.props.src = props.image;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", props.image);
 
         el.removeEventListener(\\"load\\", onImg1Load);
         el.addEventListener(\\"load\\", onImg1Load);
 
-        el.srcset = props.srcset;
-        if (el.props) {
-          el.props.srcset = props.srcset;
-          el.update();
-        }
+        el.setAttribute(\\"srcset\\", props.srcset);
 
-        el.sizes = props.sizes;
-        if (el.props) {
-          el.props.sizes = props.sizes;
-          el.update();
-        }
+        el.setAttribute(\\"sizes\\", props.sizes);
       });
 
       document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
-        el.srcset = props.srcset;
-        if (el.props) {
-          el.props.srcset = props.srcset;
-          el.update();
-        }
+        el.setAttribute(\\"srcset\\", props.srcset);
       });
 
       destroyAnyNodes();
@@ -690,23 +651,11 @@ exports[`Html ImageState 1`] = `
         const item = getContext(el, \\"item\\");
         const itemIndex = getContext(el, \\"itemIndex\\");
 
-        el.className = \\"custom-class\\";
-        if (el.props) {
-          el.props.class = \\"custom-class\\";
-          el.update();
-        }
+        el.setAttribute(\\"class\\", \\"custom-class\\");
 
-        el.src = item;
-        if (el.props) {
-          el.props.src = item;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", item);
 
         el.key = itemIndex;
-        if (el.props) {
-          el.props.key = itemIndex;
-          el.update();
-        }
       });
 
       destroyAnyNodes();
@@ -808,22 +757,10 @@ exports[`Html Img 1`] = `
         });
 
         el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
-        if (el.props) {
-          el.props.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
-          el.update();
-        }
 
-        el.alt = props.altText;
-        if (el.props) {
-          el.props.alt = props.altText;
-          el.update();
-        }
+        el.setAttribute(\\"alt\\", props.altText);
 
-        el.src = props.imgSrc;
-        if (el.props) {
-          el.props.src = props.imgSrc;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", props.imgSrc);
       });
 
       destroyAnyNodes();
@@ -877,49 +814,18 @@ exports[`Html Input block 1`] = `
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
-        if (el.props) {
-          el.props.key =
-            Builder.isEditing && props.defaultValue
-              ? props.defaultValue
-              : \\"default-key\\";
-          el.update();
-        }
 
-        el.placeholder = props.placeholder;
-        if (el.props) {
-          el.props.placeholder = props.placeholder;
-          el.update();
-        }
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.type = props.type;
-        if (el.props) {
-          el.props.type = props.type;
-          el.update();
-        }
+        el.setAttribute(\\"type\\", props.type);
 
-        el.name = props.name;
-        if (el.props) {
-          el.props.name = props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", props.name);
 
-        el.value = props.value;
-        if (el.props) {
-          el.props.value = props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", props.value);
 
-        el.defaultValue = props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.required = props.required;
-        if (el.props) {
-          el.props.required = props.required;
-          el.update();
-        }
+        el.setAttribute(\\"required\\", props.required);
       });
 
       destroyAnyNodes();
@@ -1170,35 +1076,16 @@ exports[`Html Select block 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
-        el.value = props.value;
-        if (el.props) {
-          el.props.value = props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", props.value);
 
         el.key =
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
-        if (el.props) {
-          el.props.key =
-            Builder.isEditing && props.defaultValue
-              ? props.defaultValue
-              : \\"default-key\\";
-          el.update();
-        }
 
-        el.defaultValue = props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.name = props.name;
-        if (el.props) {
-          el.props.name = props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", props.name);
       });
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
@@ -1210,17 +1097,9 @@ exports[`Html Select block 1`] = `
         const option = getContext(el, \\"option\\");
         const index = getContext(el, \\"index\\");
 
-        el.value = option.value;
-        if (el.props) {
-          el.props.value = option.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", option.value);
 
         el.setAttribute(\\"data-index\\", index);
-        if (el.props) {
-          el.props.dataIndex = index;
-          el.update();
-        }
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
@@ -1382,10 +1261,6 @@ exports[`Html Shadow DOM 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
-        if (el.props) {
-          el.props.dataUser = state.name;
-          el.update();
-        }
       });
 
       document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
@@ -1414,30 +1289,19 @@ exports[`Html Shadow DOM 1`] = `
         const review = getContext(el, \\"review\\");
 
         el.key = review.id;
-        if (el.props) {
-          el.props.key = review.id;
-          el.update();
-        }
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
-        el.src = review.avatar;
-        if (el.props) {
-          el.props.src = review.avatar;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
-        if (el.props) {
-          el.props.class = state.showReviewPrompt
-            ? \\"bg-primary\\"
-            : \\"bg-secondary\\";
-          el.update();
-        }
+        el.setAttribute(
+          \\"class\\",
+          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
@@ -1660,10 +1524,6 @@ exports[`Html Stamped 1`] = `
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
-        if (el.props) {
-          el.props.dataUser = state.name;
-          el.update();
-        }
       });
 
       document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
@@ -1692,30 +1552,19 @@ exports[`Html Stamped 1`] = `
         const review = getContext(el, \\"review\\");
 
         el.key = review.id;
-        if (el.props) {
-          el.props.key = review.id;
-          el.update();
-        }
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
-        el.src = review.avatar;
-        if (el.props) {
-          el.props.src = review.avatar;
-          el.update();
-        }
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
-        if (el.props) {
-          el.props.class = state.showReviewPrompt
-            ? \\"bg-primary\\"
-            : \\"bg-secondary\\";
-          el.update();
-        }
+        el.setAttribute(
+          \\"class\\",
+          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
@@ -1919,17 +1768,9 @@ exports[`Html Text 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.contentEditable = allowEditingText || undefined;
-        if (el.props) {
-          el.props.contentEditable = allowEditingText || undefined;
-          el.update();
-        }
+        el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-        el.innerHTML = props.text || props.content || \\"\\";
-        if (el.props) {
-          el.props.innerHtml = props.text || props.content || \\"\\";
-          el.update();
-        }
+        el.setAttribute(\\"innerHTML\\", props.text || props.content || \\"\\");
       });
 
       destroyAnyNodes();
@@ -1979,29 +1820,13 @@ exports[`Html Textarea 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
-        el.placeholder = props.placeholder;
-        if (el.props) {
-          el.props.placeholder = props.placeholder;
-          el.update();
-        }
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.name = props.name;
-        if (el.props) {
-          el.props.name = props.name;
-          el.update();
-        }
+        el.setAttribute(\\"name\\", props.name);
 
-        el.value = props.value;
-        if (el.props) {
-          el.props.value = props.value;
-          el.update();
-        }
+        el.setAttribute(\\"value\\", props.value);
 
-        el.defaultValue = props.defaultValue;
-        if (el.props) {
-          el.props.defaultValue = props.defaultValue;
-          el.update();
-        }
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
       });
 
       destroyAnyNodes();
@@ -2063,40 +1888,70 @@ exports[`Html Video 1`] = `
         });
 
         el.key = props.video || \\"no-src\\";
-        if (el.props) {
-          el.props.key = props.video || \\"no-src\\";
-          el.update();
-        }
 
-        el.poster = props.posterImage;
-        if (el.props) {
-          el.props.poster = props.posterImage;
-          el.update();
-        }
+        el.setAttribute(\\"poster\\", props.posterImage);
 
-        el.autoPlay = props.autoPlay;
-        if (el.props) {
-          el.props.autoPlay = props.autoPlay;
-          el.update();
-        }
+        el.setAttribute(\\"autoplay\\", props.autoPlay);
 
-        el.muted = props.muted;
-        if (el.props) {
-          el.props.muted = props.muted;
-          el.update();
-        }
+        el.setAttribute(\\"muted\\", props.muted);
 
-        el.controls = props.controls;
-        if (el.props) {
-          el.props.controls = props.controls;
-          el.update();
-        }
+        el.setAttribute(\\"controls\\", props.controls);
 
-        el.loop = props.loop;
-        if (el.props) {
-          el.props.loop = props.loop;
-          el.update();
-        }
+        el.setAttribute(\\"loop\\", props.loop);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html className 1`] = `
+"<div>
+  <div className=\\"no binding\\">Without Binding</div>
+
+  <div data-name=\\"div-1\\">With binding</div>
+</div>
+<script>
+  (() => {
+    const state = { bindings: \\"a binding\\" };
+
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"class\\", state.bindings);
       });
 
       destroyAnyNodes();

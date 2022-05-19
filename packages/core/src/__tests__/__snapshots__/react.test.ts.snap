@@ -24,12 +24,14 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default function MyBasicChildComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
+  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+
   return (
     <div>
-      <MyBasicComponent />
+      <MyBasicComponent id={dev} />
 
       <div>
-        <MyBasicOnMountUpdateComponent />
+        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
       </div>
     </div>
   );
@@ -994,7 +996,7 @@ exports[`React Video 1`] = `
       }}
       key={props.video || \\"no-src\\"}
       poster={props.posterImage}
-      autoPlay={props.autoPlay}
+      autoplay={props.autoPlay}
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}
