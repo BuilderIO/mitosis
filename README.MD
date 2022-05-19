@@ -88,6 +88,7 @@ Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the
 | Framework     | Status       |
 | ------------- | ------------ |
 | React         | Beta         |
+| Qwik          | Beta         |
 | Vue           | Beta         |
 | Liquid        | Alpha        |
 | Builder.io    | Beta         |
