@@ -29,7 +29,7 @@ exports[`Html Basic 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.value = state.name;
+        el.setAttribute(\\"value\\", state.name);
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -101,7 +101,7 @@ exports[`Html BasicFor 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.value = state.name;
+        el.setAttribute(\\"value\\", state.name);
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -234,9 +234,12 @@ exports[`Html Button 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
-        el.href = props.link;
+        el.setAttribute(\\"href\\", props.link);
 
-        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+        el.setAttribute(
+          \\"target\\",
+          props.openLinkInNewTab ? \\"_blank\\" : undefined
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
@@ -514,27 +517,30 @@ exports[`Html Image 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        el.alt = props.altText;
+        el.setAttribute(\\"alt\\", props.altText);
 
         el.setAttribute(
           \\"aria-role\\",
           props.altText ? \\"presentation\\" : undefined
         );
 
-        el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
+        el.setAttribute(
+          \\"class\\",
+          \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
+        );
 
-        el.src = props.image;
+        el.setAttribute(\\"src\\", props.image);
 
         el.removeEventListener(\\"load\\", onImg1Load);
         el.addEventListener(\\"load\\", onImg1Load);
 
-        el.srcset = props.srcset;
+        el.setAttribute(\\"srcset\\", props.srcset);
 
-        el.sizes = props.sizes;
+        el.setAttribute(\\"sizes\\", props.sizes);
       });
 
       document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
-        el.srcset = props.srcset;
+        el.setAttribute(\\"srcset\\", props.srcset);
       });
 
       destroyAnyNodes();
@@ -645,9 +651,9 @@ exports[`Html ImageState 1`] = `
         const item = getContext(el, \\"item\\");
         const itemIndex = getContext(el, \\"itemIndex\\");
 
-        el.className = \\"custom-class\\";
+        el.setAttribute(\\"class\\", \\"custom-class\\");
 
-        el.src = item;
+        el.setAttribute(\\"src\\", item);
 
         el.key = itemIndex;
       });
@@ -752,9 +758,9 @@ exports[`Html Img 1`] = `
 
         el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
 
-        el.alt = props.altText;
+        el.setAttribute(\\"alt\\", props.altText);
 
-        el.src = props.imgSrc;
+        el.setAttribute(\\"src\\", props.imgSrc);
       });
 
       destroyAnyNodes();
@@ -809,17 +815,17 @@ exports[`Html Input block 1`] = `
             ? props.defaultValue
             : \\"default-key\\";
 
-        el.placeholder = props.placeholder;
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.type = props.type;
+        el.setAttribute(\\"type\\", props.type);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
 
-        el.value = props.value;
+        el.setAttribute(\\"value\\", props.value);
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.required = props.required;
+        el.setAttribute(\\"required\\", props.required);
       });
 
       destroyAnyNodes();
@@ -1070,16 +1076,16 @@ exports[`Html Select block 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
-        el.value = props.value;
+        el.setAttribute(\\"value\\", props.value);
 
         el.key =
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
       });
 
       document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
@@ -1091,7 +1097,7 @@ exports[`Html Select block 1`] = `
         const option = getContext(el, \\"option\\");
         const index = getContext(el, \\"index\\");
 
-        el.value = option.value;
+        el.setAttribute(\\"value\\", option.value);
 
         el.setAttribute(\\"data-index\\", index);
       });
@@ -1288,11 +1294,14 @@ exports[`Html Shadow DOM 1`] = `
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
+        el.setAttribute(
+          \\"class\\",
+          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
@@ -1548,11 +1557,14 @@ exports[`Html Stamped 1`] = `
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
         const review = getContext(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
+        el.setAttribute(
+          \\"class\\",
+          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
@@ -1756,9 +1768,9 @@ exports[`Html Text 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.contentEditable = allowEditingText || undefined;
+        el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-        el.innerHTML = props.text || props.content || \\"\\";
+        el.setAttribute(\\"innerHTML\\", props.text || props.content || \\"\\");
       });
 
       destroyAnyNodes();
@@ -1808,13 +1820,13 @@ exports[`Html Textarea 1`] = `
       pendingUpdate = true;
 
       document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
-        el.placeholder = props.placeholder;
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
 
-        el.value = props.value;
+        el.setAttribute(\\"value\\", props.value);
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
       });
 
       destroyAnyNodes();
@@ -1877,15 +1889,69 @@ exports[`Html Video 1`] = `
 
         el.key = props.video || \\"no-src\\";
 
-        el.poster = props.posterImage;
+        el.setAttribute(\\"poster\\", props.posterImage);
 
-        el.autoPlay = props.autoPlay;
+        el.setAttribute(\\"autoplay\\", props.autoPlay);
 
-        el.muted = props.muted;
+        el.setAttribute(\\"muted\\", props.muted);
 
-        el.controls = props.controls;
+        el.setAttribute(\\"controls\\", props.controls);
 
-        el.loop = props.loop;
+        el.setAttribute(\\"loop\\", props.loop);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html className 1`] = `
+"<div>
+  <div className=\\"no binding\\">Without Binding</div>
+
+  <div data-name=\\"div-1\\">With binding</div>
+</div>
+<script>
+  (() => {
+    const state = { bindings: \\"a binding\\" };
+
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"class\\", state.bindings);
       });
 
       destroyAnyNodes();

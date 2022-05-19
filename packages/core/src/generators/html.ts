@@ -12,6 +12,8 @@ import { getStateObjectStringFromComponent } from '../helpers/get-state-object-s
 import { hasComponent } from '../helpers/has-component';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { isHtmlAttribute } from '../helpers/is-html-attribute';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getProps } from '../helpers/get-props';
 import { getPropFunctions } from '../helpers/get-prop-functions';
@@ -53,6 +55,10 @@ interface BlockOptions {
   props?: Set<string>;
 }
 
+const isAttribute = (key: string): boolean => {
+  return /-/.test(key);
+};
+
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
 };
@@ -61,16 +67,9 @@ const updateKeyIfException = (key: string): string => {
   return ATTRIBUTE_KEY_EXCEPTIONS_MAP[key] ?? key;
 };
 
-const needsSetAttribute = (key: string): boolean => {
-  if (key === 'id') {
-    // we may want to set id on elements
-    return true;
-  }
-  return [key.includes('-')].some(Boolean);
-};
-
 const generateSetElementAttributeCode = (
   key: string,
+  tagName: string,
   useValue: string,
   options: InternalToHtmlOptions,
   meta: any = {},
@@ -78,31 +77,28 @@ const generateSetElementAttributeCode = (
   if (options?.experimental?.props) {
     return options?.experimental?.props(key, useValue, options);
   }
-  // TODO: better ways to detect child components
-  return needsSetAttribute(key)
-    ? `;el.setAttribute("${key}", ${useValue});
-    ${
-      !meta?.component
-        ? ''
-        : `
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
+  const isKey = key === 'key';
+  const isComponent = meta?.component;
+  const isHtmlAttr = isHtmlAttribute(key, tagName);
+  const setAttr = !isKey && (isHtmlAttr || isValidAttributeName(key) || isAttribute(key));
+  return setAttr
+    ? `;el.setAttribute("${key}", ${useValue});${
+        !isComponent || isHtmlAttr 
+          ? ''
+          : `
+    ;el.props.${camelCase(key)} = ${useValue};
+    ;el.update();
     `
-    }
+      }
     `
-    : `;el.${updateKeyIfException(key)} = ${useValue};
-    ${
-      !meta?.component
-        ? ''
-        : `
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
+    : `;el.${updateKeyIfException(key)} = ${useValue};${
+        !isComponent || isKey
+          ? ''
+          : `
+    ;el.props.${camelCase(key)} = ${useValue};
+    ;el.update();
     `
-    }
+      }
     `;
 };
 
@@ -160,7 +156,7 @@ const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
       return value;
     }
     const checkVar = new RegExp(
-      '(,| |;|\\(|^)' + scopeVar + '(\\.|,| |;|\\)|$)',
+      '(\\.\\.\\.|,| |;|\\(|^|!)' + scopeVar + '(\\.|,| |;|\\)|$)',
       'g',
     );
     return checkVar.test(value);
@@ -491,9 +487,15 @@ const blockToHtml = (
             options,
             `
             ${injectOnce ? '' : startInjectVar}
-            ${generateSetElementAttributeCode(key, useValue, options, {
-              component,
-            })}
+            ${generateSetElementAttributeCode(
+              key,
+              elSelector,
+              useValue,
+              options,
+              {
+                component,
+              },
+            )}
             `,
           );
           if (!injectOnce) {

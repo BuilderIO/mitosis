@@ -5,13 +5,15 @@ import MyBasicOnMountUpdateComponent from './basic-onMount-update.raw';
 export default function MyBasicChildComponent() {
   const state = useState({
     name: 'Steve',
+    dev: 'PatrickJS',
   });
 
   return (
     <div>
-      <MyBasicComponent />
+      {/*// @ts-ignore */}
+      <MyBasicComponent id={state.dev} />
       <div>
-        <MyBasicOnMountUpdateComponent />
+        <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
       </div>
     </div>
   );

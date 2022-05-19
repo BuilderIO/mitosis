@@ -41,7 +41,7 @@ export default function Video(props: VideoProps) {
       preload="none"
       key={props.video || 'no-src'}
       poster={props.posterImage}
-      autoPlay={props.autoPlay}
+      autoplay={props.autoPlay}
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}

@@ -82,7 +82,7 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
@@ -119,7 +119,7 @@ class MyBasicChildComponent extends HTMLElement {
     super();
     const self = this;
 
-    this.state = { name: \\"Steve\\" };
+    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -144,10 +144,14 @@ class MyBasicChildComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <my-basic-component></my-basic-component>
+        <my-basic-component
+          data-name=\\"my-basic-component-my-basic-child-component\\"
+        ></my-basic-component>
       
         <div>
-          <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
+          <my-basic-on-mount-update-component
+            data-name=\\"my-basic-on-mount-update-component-my-basic-child-component\\"
+          ></my-basic-on-mount-update-component>
         </div>
       </div>
       <style></style>\`;
@@ -181,7 +185,29 @@ class MyBasicChildComponent extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root
+      .querySelectorAll(
+        \\"[data-name='my-basic-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.setAttribute(\\"id\\", this.state.dev);
+      });
+
+    this._root
+      .querySelectorAll(
+        \\"[data-name='my-basic-on-mount-update-component-my-basic-child-component']\\"
+      )
+      .forEach((el) => {
+        el.setAttribute(\\"hi\\", this.state.name);
+        el.props.hi = this.state.name;
+        el.update();
+
+        el.setAttribute(\\"bye\\", this.state.dev);
+        el.props.bye = this.state.dev;
+        el.update();
+      });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {
@@ -298,7 +324,7 @@ class MyBasicForComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-for-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicForComponent1Input);
@@ -502,7 +528,7 @@ class MyBasicForShowComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='input-my-basic-for-show-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
+        el.setAttribute(\\"value\\", this.state.name);
 
         el.removeEventListener(
           \\"input\\",
@@ -596,6 +622,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
     const self = this;
     this.onInitOnce = false;
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+    this.props = {};
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -636,7 +663,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
 
   onInit() {
     if (!this.onInitOnce) {
-      this.state.name = \\"PatrickJS onInit\\";
+      this.state.name = \\"PatrickJS onInit\\" + this.props.hi;
       this.update();
       this.onInitOnce = true;
     }
@@ -644,7 +671,7 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
 
   onMount() {
     // onMount
-    this.state.name = \\"PatrickJS onMount\\";
+    this.state.name = \\"PatrickJS onMount\\" + this.props.bye;
     this.update();
   }
 
@@ -802,9 +829,12 @@ class Button extends HTMLElement {
     });
 
     this._root.querySelectorAll(\\"[data-name='a-button-1']\\").forEach((el) => {
-      el.href = this.props.link;
+      el.setAttribute(\\"href\\", this.props.link);
 
-      el.target = this.props.openLinkInNewTab ? \\"_blank\\" : undefined;
+      el.setAttribute(
+        \\"target\\",
+        this.props.openLinkInNewTab ? \\"_blank\\" : undefined
+      );
     });
 
     this._root.querySelectorAll(\\"[data-name='div-button-1']\\").forEach((el) => {
@@ -1205,30 +1235,32 @@ class Image extends HTMLElement {
     });
 
     this._root.querySelectorAll(\\"[data-name='img-image-1']\\").forEach((el) => {
-      el.alt = this.props.altText;
+      el.setAttribute(\\"alt\\", this.props.altText);
 
       el.setAttribute(
         \\"aria-role\\",
         this.props.altText ? \\"presentation\\" : undefined
       );
 
-      el.className =
-        \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\");
+      el.setAttribute(
+        \\"class\\",
+        \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\")
+      );
 
-      el.src = this.props.image;
+      el.setAttribute(\\"src\\", this.props.image);
 
       el.removeEventListener(\\"load\\", this.onImgImage1Load);
       el.addEventListener(\\"load\\", this.onImgImage1Load);
 
-      el.srcset = this.props.srcset;
+      el.setAttribute(\\"srcset\\", this.props.srcset);
 
-      el.sizes = this.props.sizes;
+      el.setAttribute(\\"sizes\\", this.props.sizes);
     });
 
     this._root
       .querySelectorAll(\\"[data-name='source-image-1']\\")
       .forEach((el) => {
-        el.srcset = this.props.srcset;
+        el.setAttribute(\\"srcset\\", this.props.srcset);
       });
   }
 
@@ -1333,9 +1365,9 @@ class ImgStateComponent extends HTMLElement {
         const item = this.getContext(el, \\"item\\");
         const itemIndex = this.getContext(el, \\"itemIndex\\");
 
-        el.className = \\"custom-class\\";
+        el.setAttribute(\\"class\\", \\"custom-class\\");
 
-        el.src = item;
+        el.setAttribute(\\"src\\", item);
 
         el.key = itemIndex;
       });
@@ -1487,9 +1519,9 @@ class ImgComponent extends HTMLElement {
 
         el.key = (Builder.isEditing && this.props.imgSrc) || \\"default-key\\";
 
-        el.alt = this.props.altText;
+        el.setAttribute(\\"alt\\", this.props.altText);
 
-        el.src = this.props.imgSrc;
+        el.setAttribute(\\"src\\", this.props.imgSrc);
       });
   }
 
@@ -1588,17 +1620,17 @@ class FormInputComponent extends HTMLElement {
             ? this.props.defaultValue
             : \\"default-key\\";
 
-        el.placeholder = this.props.placeholder;
+        el.setAttribute(\\"placeholder\\", this.props.placeholder);
 
-        el.type = this.props.type;
+        el.setAttribute(\\"type\\", this.props.type);
 
-        el.name = this.props.name;
+        el.setAttribute(\\"name\\", this.props.name);
 
-        el.value = this.props.value;
+        el.setAttribute(\\"value\\", this.props.value);
 
-        el.defaultValue = this.props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
 
-        el.required = this.props.required;
+        el.setAttribute(\\"required\\", this.props.required);
       });
   }
 
@@ -1984,16 +2016,16 @@ class SelectComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='select-select-component-1']\\")
       .forEach((el) => {
-        el.value = this.props.value;
+        el.setAttribute(\\"value\\", this.props.value);
 
         el.key =
           Builder.isEditing && this.props.defaultValue
             ? this.props.defaultValue
             : \\"default-key\\";
 
-        el.defaultValue = this.props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
 
-        el.name = this.props.name;
+        el.setAttribute(\\"name\\", this.props.name);
       });
 
     this._root
@@ -2009,7 +2041,7 @@ class SelectComponent extends HTMLElement {
         const option = this.getContext(el, \\"option\\");
         const index = this.getContext(el, \\"index\\");
 
-        el.value = option.value;
+        el.setAttribute(\\"value\\", option.value);
 
         el.setAttribute(\\"data-index\\", index);
       });
@@ -2309,15 +2341,16 @@ class SmileReviews extends HTMLElement {
       .forEach((el) => {
         const review = this.getContext(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
     this._root
       .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
       .forEach((el) => {
-        el.className = this.state.showReviewPrompt
-          ? \\"bg-primary\\"
-          : \\"bg-secondary\\";
+        el.setAttribute(
+          \\"class\\",
+          this.state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
     this._root
@@ -2642,15 +2675,16 @@ class SmileReviews extends HTMLElement {
       .forEach((el) => {
         const review = this.getContext(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
     this._root
       .querySelectorAll(\\"[data-name='div-smile-reviews-3']\\")
       .forEach((el) => {
-        el.className = this.state.showReviewPrompt
-          ? \\"bg-primary\\"
-          : \\"bg-secondary\\";
+        el.setAttribute(
+          \\"class\\",
+          this.state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
+        );
       });
 
     this._root
@@ -2906,9 +2940,9 @@ class Text extends HTMLElement {
 
   updateBindings() {
     this._root.querySelectorAll(\\"[data-name='div-text-1']\\").forEach((el) => {
-      el.contentEditable = allowEditingText || undefined;
+      el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-      el.innerHTML = this.props.text || this.props.content || \\"\\";
+      el.setAttribute(\\"innerHTML\\", this.props.text || this.props.content || \\"\\");
     });
   }
 
@@ -3000,13 +3034,13 @@ class Textarea extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-name='textarea-textarea-1']\\")
       .forEach((el) => {
-        el.placeholder = this.props.placeholder;
+        el.setAttribute(\\"placeholder\\", this.props.placeholder);
 
-        el.name = this.props.name;
+        el.setAttribute(\\"name\\", this.props.name);
 
-        el.value = this.props.value;
+        el.setAttribute(\\"value\\", this.props.value);
 
-        el.defaultValue = this.props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", this.props.defaultValue);
       });
   }
 
@@ -3109,15 +3143,15 @@ class Video extends HTMLElement {
 
       el.key = this.props.video || \\"no-src\\";
 
-      el.poster = this.props.posterImage;
+      el.setAttribute(\\"poster\\", this.props.posterImage);
 
-      el.autoPlay = this.props.autoPlay;
+      el.setAttribute(\\"autoplay\\", this.props.autoPlay);
 
-      el.muted = this.props.muted;
+      el.setAttribute(\\"muted\\", this.props.muted);
 
-      el.controls = this.props.controls;
+      el.setAttribute(\\"controls\\", this.props.controls);
 
-      el.loop = this.props.loop;
+      el.setAttribute(\\"loop\\", this.props.loop);
     });
   }
 
