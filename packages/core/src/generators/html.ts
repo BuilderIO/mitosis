@@ -80,10 +80,11 @@ const generateSetElementAttributeCode = (
   const isKey = key === 'key';
   const isComponent = meta?.component;
   const isHtmlAttr = isHtmlAttribute(key, tagName);
-  const setAttr = !isKey && (isHtmlAttr || isValidAttributeName(key) || isAttribute(key));
+  const setAttr =
+    !isKey && (isHtmlAttr || isValidAttributeName(key) || isAttribute(key));
   return setAttr
     ? `;el.setAttribute("${key}", ${useValue});${
-        !isComponent || isHtmlAttr 
+        !isComponent || isHtmlAttr
           ? ''
           : `
     ;el.props.${camelCase(key)} = ${useValue};
