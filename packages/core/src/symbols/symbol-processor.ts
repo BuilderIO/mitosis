@@ -81,6 +81,10 @@ export function convertBuilderContentToSymbolHierarchy(
     collectComponentState?: Record<string, any>;
   } = {},
 ): SymbolHierarchy {
+  if (collectComponentState && content.data?.state) {
+    const state = content.data?.state;
+    collectComponentState['ROOT_COMPONENT_STATE'] = state;
+  }
   const path: (string | number)[] = [-1, content.id!];
   const hierarchy: SymbolHierarchy = {
     depthFirstSymbols: [],
