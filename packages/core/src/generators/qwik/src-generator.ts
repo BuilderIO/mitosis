@@ -249,7 +249,7 @@ export class SrcBuilder {
         Object.prototype.hasOwnProperty.call(bindings, rawKey) &&
         !ignoreKey(rawKey)
       ) {
-        let binding = bindings[rawKey];
+        let { code: binding } = bindings[rawKey];
         const key = lastProperty(rawKey);
         if (binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals

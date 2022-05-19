@@ -12,8 +12,8 @@ import hash from 'object-hash';
 
 export const nodeHasStyles = (node: MitosisNode) => {
   return Boolean(
-    typeof node.bindings.css === 'string' &&
-      node.bindings.css.trim().length > 6,
+    typeof node.bindings.css?.code === 'string' &&
+      node.bindings.css.code.trim().length > 6,
   );
 };
 
@@ -65,7 +65,7 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (nodeHasStyles(item)) {
-        const value = parseCssObject(item.bindings.css as string);
+        const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
 
         const normalizedNameProperty = item.properties.$name
@@ -141,7 +141,7 @@ export const collectStyles = (
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (nodeHasStyles(item)) {
-        const value = parseCssObject(item.bindings.css as string);
+        const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
         const componentName = item.properties.$name
           ? dashCase(item.properties.$name)

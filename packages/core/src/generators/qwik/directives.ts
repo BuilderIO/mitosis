@@ -8,7 +8,7 @@ export const DIRECTIVES: Record<
 > = {
   Show: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
-      const expr = node.bindings.when;
+      const expr = node.bindings.when?.code;
       this.isJSX && this.emit('{');
       this.emit(expr, '?');
       blockFn();
@@ -17,7 +17,7 @@ export const DIRECTIVES: Record<
     },
   For: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
-      const expr = node.bindings.each!;
+      const expr = node.bindings.each?.code!;
       this.isJSX && this.emit('{');
       this.emit('(', expr, '||[]).map(', '(function(__value__){');
       this.emit(

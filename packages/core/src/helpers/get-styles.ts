@@ -10,9 +10,9 @@ export const getStyles = (json: MitosisNode) => {
   }
   let css: MitosisStyles;
   try {
-    css = json5.parse(json.bindings.css as string);
+    css = json5.parse(json.bindings.css?.code as string);
   } catch (err) {
-    console.warn('Could not json 5 parse css', err, json.bindings.css);
+    console.warn('Could not json 5 parse css', err, json.bindings.css.code);
     return null;
   }
   return css;
@@ -22,6 +22,6 @@ export const setStyles = (json: MitosisNode, styles: MitosisStyles | null) => {
   if (!size(styles)) {
     delete json.bindings.css;
   } else {
-    json.bindings.css = json5.stringify(styles);
+    json.bindings.css = { code: json5.stringify(styles) };
   }
 };

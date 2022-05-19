@@ -110,11 +110,11 @@ const addUpdateAfterSet = (
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        const value = item.bindings[key] as string;
+        const value = item.bindings[key]?.code as string;
 
         const newValue = addUpdateAfterSetInCode(value, options);
         if (newValue !== value) {
-          item.bindings[key] = newValue;
+          item.bindings[key] = { code: newValue };
         }
       }
     }
@@ -295,7 +295,7 @@ const blockToHtml = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (json.bindings._text) {
+  if (json.bindings._text?.code) {
     // TO-DO: textContent might be better performance-wise
     addOnChangeJs(
       elId,
@@ -303,19 +303,19 @@ const blockToHtml = (
       `
       ${addScopeVars(
         scopeVars,
-        json.bindings._text,
+        json.bindings._text.code as string,
         (scopeVar: string) =>
           `const ${scopeVar} = ${
             options.format === 'class' ? 'this.' : ''
           }getContext(el, "${scopeVar}");`,
       )}
       ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
-        json.bindings._text
+        json.bindings._text.code
       });`,
     );
 
     return `<template data-name="${elId}"><!-- ${
-      json.bindings._text as string
+      json.bindings._text?.code as string
     } --></template>`;
   }
 
@@ -331,7 +331,7 @@ const blockToHtml = (
       // TODO: be smarter about rendering, deleting old items and adding new ones by
       // querying dom potentially
       `
-        let array = ${json.bindings.each};
+        let array = ${json.bindings.each?.code};
         ${
           options.format === 'class' ? 'this.' : ''
         }renderLoop(el, array, ${argsStr});
@@ -352,7 +352,10 @@ const blockToHtml = (
     }
     str += '</template>';
   } else if (json.name === 'Show') {
-    const whenCondition = (json.bindings.when as string).replace(/;$/, '');
+    const whenCondition = (json.bindings.when?.code as string).replace(
+      /;$/,
+      '',
+    );
     addOnChangeJs(
       elId,
       options,
@@ -418,7 +421,7 @@ const blockToHtml = (
       if (key === '_spread' || key === 'ref' || key === 'css') {
         continue;
       }
-      const value = json.bindings[key] as string;
+      const value = json.bindings[key]?.code as string;
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 

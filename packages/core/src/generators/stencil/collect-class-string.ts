@@ -16,16 +16,12 @@ export function collectClassString(json: MitosisNode): string | null {
   }
 
   const dynamicClasses: string[] = [];
-  if (typeof json.bindings.class === 'string') {
-    dynamicClasses.push(json.bindings.class as any);
+  if (typeof json.bindings.class?.code === 'string') {
+    dynamicClasses.push(json.bindings.class.code as any);
     delete json.bindings.class;
   }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
-    delete json.bindings.className;
-  }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
+  if (typeof json.bindings.className?.code === 'string') {
+    dynamicClasses.push(json.bindings.className.code as any);
     delete json.bindings.className;
   }
 

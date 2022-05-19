@@ -33,7 +33,7 @@ const mappers: {
   Image: (json, options) => {
     return (
       `Image(${
-        processBinding(json.bindings.image as string, options) ||
+        processBinding(json.bindings.image?.code as string, options) ||
         `"${json.properties.image}"`
       })` +
       getStyleString(json, options) +
@@ -45,9 +45,9 @@ const mappers: {
     let str =
       `TextField(${
         json.bindings.placeholder
-          ? processBinding(json.bindings.placeholder as string, options)
+          ? processBinding(json.bindings.placeholder?.code as string, options)
           : json.properties.placeholder
-          ? JSON.stringify(json.bindings.placeholder)
+          ? JSON.stringify(json.bindings.placeholder!.code)
           : '""'
       }, text: $${name})` +
       getStyleString(json, options) +
@@ -59,7 +59,7 @@ const mappers: {
           ${processBinding(
             wrapAction(
               `var event = { target: { value: "\\(${name})" } };
-              ${json.bindings.onChange as string}`,
+              ${json.bindings.onChange?.code as string}`,
             ),
             options,
           )} 
@@ -90,7 +90,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
   }
   if (json.bindings._text) {
     return `Text(${processBinding(
-      json.bindings._text as string,
+      json.bindings._text.code as string,
       options,
     )}.toString())`;
   }
@@ -124,13 +124,13 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
 
   if (json.name === 'For') {
     str += `ForEach(${processBinding(
-      json.bindings.each as string,
+      json.bindings.each?.code as string,
       options,
     )}, id: \\.self) { ${json.properties._forName} in ${children
       .map((item) => blockToSwift(item, options))
       .join('\n')} }`;
   } else if (json.name === 'Show') {
-    str += `if ${processBinding(json.bindings.when as string, options)} {
+    str += `if ${processBinding(json.bindings.when?.code as string, options)} {
       ${children.map((item) => blockToSwift(item, options)).join('\n')}
     }`;
   } else {
@@ -193,7 +193,10 @@ function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
   let str = '';
   if (json.bindings.onClick) {
     str += `\n.onTapGesture {
-      ${processBinding(wrapAction(json.bindings.onClick as string), options)}
+      ${processBinding(
+        wrapAction(json.bindings.onClick.code as string),
+        options,
+      )}
     }`;
   }
   return str;
@@ -284,7 +287,7 @@ function mapDataForSwiftCompatability(json: MitosisComponent) {
         }
         (json.meta.inputNames as Record<string, string>)[
           node.properties.$name
-        ] = node.bindings.value || '';
+        ] = node.bindings.value?.code || '';
       }
     }
   });

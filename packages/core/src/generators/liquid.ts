@@ -63,11 +63,11 @@ const blockToLiquid = (
     return json.properties._text;
   }
 
-  if (json.bindings._text) {
-    if (!isValidLiquidBinding(json.bindings._text as string)) {
+  if (json.bindings._text?.code) {
+    if (!isValidLiquidBinding(json.bindings._text.code as string)) {
       return '';
     }
-    return `{{${stripStateAndPropsRefs(json.bindings._text as string)}}}`;
+    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string)}}}`;
   }
 
   let str = '';
@@ -75,14 +75,14 @@ const blockToLiquid = (
   if (json.name === 'For') {
     if (
       !(
-        isValidLiquidBinding(json.bindings.each as string) &&
+        isValidLiquidBinding(json.bindings.each?.code as string) &&
         isValidLiquidBinding(json.properties._forName as string)
       )
     ) {
       return str;
     }
     str += `{% for ${json.properties._forName} in ${stripStateAndPropsRefs(
-      json.bindings.each as string,
+      json.bindings.each?.code as string,
     )} %}`;
     if (json.children) {
       str += json.children
@@ -92,10 +92,12 @@ const blockToLiquid = (
 
     str += '{% endfor %}';
   } else if (json.name === 'Show') {
-    if (!isValidLiquidBinding(json.bindings.when as string)) {
+    if (!isValidLiquidBinding(json.bindings.when?.code as string)) {
       return str;
     }
-    str += `{% if ${stripStateAndPropsRefs(json.bindings.when as string)} %}`;
+    str += `{% if ${stripStateAndPropsRefs(
+      json.bindings.when?.code as string,
+    )} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))
@@ -107,11 +109,11 @@ const blockToLiquid = (
     str += `<${json.name} `;
 
     if (
-      json.bindings._spread === '_spread' &&
-      isValidLiquidBinding(json.bindings._spread)
+      json.bindings._spread?.code === '_spread' &&
+      isValidLiquidBinding(json.bindings._spread.code)
     ) {
       str += `
-          {% for _attr in ${json.bindings._spread} %}
+          {% for _attr in ${json.bindings._spread.code} %}
             {{ _attr[0] }}="{{ _attr[1] }}"
           {% endfor %}
         `;
@@ -126,7 +128,7 @@ const blockToLiquid = (
       if (key === '_spread' || key === 'ref' || key === 'css') {
         continue;
       }
-      const value = json.bindings[key] as string;
+      const { code: value } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
       const useValue = stripStateAndPropsRefs(value);
 

@@ -50,12 +50,12 @@ const mappers: {
       .map((binding) => {
         if (binding === 'name') {
           const selector = kebabCase(
-            json.bindings.name?.replace('props.slot', ''),
+            json.bindings.name?.code?.replace('props.slot', ''),
           );
           return `select="[${selector}]"`;
         }
 
-        return `${json.bindings[binding]}`;
+        return `${json.bindings[binding]?.code}`;
       })
       .join('\n')}></ng-content>`;
   },
@@ -80,13 +80,15 @@ export const blockToAngular = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (/props\.slot/.test(json.bindings._text as string)) {
-    const selector = kebabCase(json.bindings._text?.replace('props.slot', ''));
+  if (/props\.slot/.test(json.bindings._text?.code as string)) {
+    const selector = kebabCase(
+      json.bindings._text?.code?.replace('props.slot', ''),
+    );
     return `<ng-content select="[${selector}]"></ng-content>`;
   }
 
-  if (json.bindings._text) {
-    return `{{${stripStateAndPropsRefs(json.bindings._text as string, {
+  if (json.bindings._text?.code) {
+    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
       contextVars,
       outputVars,
     })}}}`;
@@ -99,7 +101,7 @@ export const blockToAngular = (
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
       json.properties._forName
-    } of ${stripStateAndPropsRefs(json.bindings.each as string, {
+    } of ${stripStateAndPropsRefs(json.bindings.each?.code as string, {
       contextVars,
       outputVars,
     })}">`;
@@ -109,7 +111,7 @@ export const blockToAngular = (
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
     str += `<ng-container *ngIf="${stripStateAndPropsRefs(
-      json.bindings.when as string,
+      json.bindings.when?.code as string,
       { contextVars, outputVars },
     )}">`;
     str += json.children
@@ -147,7 +149,7 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
-      const value = json.bindings[key] as string;
+      const value = json.bindings[key]?.code as string;
       // TODO: proper babel transform to replace. Util for this
       const useValue = stripStateAndPropsRefs(value, {
         contextVars,

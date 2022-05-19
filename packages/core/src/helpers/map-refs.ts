@@ -65,8 +65,12 @@ export const mapRefs = (
     if (isMitosisNode(item)) {
       for (const key of Object.keys(item.bindings)) {
         const value = item.bindings[key];
-        if (typeof value === 'string' && key !== 'ref') {
-          item.bindings[key] = replaceRefsInString(value, refs, mapper);
+        if (typeof value === 'object' && key !== 'ref') {
+          (item.bindings[key] as { code: string }).code = replaceRefsInString(
+            value.code as string,
+            refs,
+            mapper,
+          );
         }
       }
     }

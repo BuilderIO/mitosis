@@ -73,10 +73,12 @@ const angularTemplateNodeToMitosisNode = (
       return createMitosisNode({
         name: 'Show',
         bindings: {
-          when: transformBinding(
-            (ngIf.value as ASTWithSource).source!,
-            options,
-          ),
+          when: {
+            code: transformBinding(
+              (ngIf.value as ASTWithSource).source!,
+              options,
+            ),
+          },
         },
         children: [
           angularTemplateNodeToMitosisNode(
@@ -94,7 +96,7 @@ const angularTemplateNodeToMitosisNode = (
       return createMitosisNode({
         name: 'For',
         bindings: {
-          each: transformBinding(expression, options),
+          each: { code: transformBinding(expression, options) },
         },
         properties: {
           _forName: itemName,
@@ -111,21 +113,22 @@ const angularTemplateNodeToMitosisNode = (
 
   if (isElement(node)) {
     const properties: Record<string, string> = {};
-    const bindings: Record<string, string> = {};
+    const bindings: Record<string, { code: string; arguments?: string[] }> = {};
 
     for (const input of node.inputs) {
-      bindings[input.name] = transformBinding(
-        (input.value as ASTWithSource).source!,
-        options,
-      );
+      bindings[input.name] = {
+        code: transformBinding((input.value as ASTWithSource).source!, options),
+      };
     }
     for (const output of node.outputs) {
-      bindings['on' + capitalize(output.name)] = transformBinding(
-        (output.handler as ASTWithSource)
-          .source! // TODO: proper reference replace
-          .replace(/\$event/g, 'event'),
-        options,
-      );
+      bindings['on' + capitalize(output.name)] = {
+        code: transformBinding(
+          (output.handler as ASTWithSource)
+            .source! // TODO: proper reference replace
+            .replace(/\$event/g, 'event'),
+          options,
+        ),
+      };
     }
     for (const attribute of node.attributes) {
       properties[attribute.name] = attribute.value;

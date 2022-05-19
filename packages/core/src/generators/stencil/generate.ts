@@ -33,13 +33,13 @@ const blockToStencil = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (json.bindings._text) {
-    return `{${processBinding(json.bindings._text)}}`;
+  if (json.bindings._text?.code) {
+    return `{${processBinding(json.bindings?._text.code as string)}}`;
   }
 
   if (json.name === 'For') {
     const wrap = json.children.length !== 1;
-    return `{${processBinding(json.bindings.each as string)}?.map((${
+    return `{${processBinding(json.bindings.each?.code as string)}?.map((${
       json.properties._forName
     }, index) => (
       ${wrap ? '<>' : ''}${json.children
@@ -49,7 +49,7 @@ const blockToStencil = (
     ))}`;
   } else if (json.name === 'Show') {
     const wrap = json.children.length !== 1;
-    return `{${processBinding(json.bindings.when as string)} ? (
+    return `{${processBinding(json.bindings.when?.code as string)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToStencil(item, options))
@@ -68,8 +68,8 @@ const blockToStencil = (
     str += ` class=${classString} `;
   }
 
-  if (json.bindings._spread) {
-    str += ` {...(${json.bindings._spread})} `;
+  if (json.bindings._spread?.code) {
+    str += ` {...(${json.bindings._spread.code})} `;
   }
 
   for (const key in json.properties) {
@@ -77,7 +77,7 @@ const blockToStencil = (
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const value = json.bindings[key] as string;
+    const value = json.bindings[key]?.code as string;
     if (key === '_spread' || key === '_forName') {
       continue;
     }

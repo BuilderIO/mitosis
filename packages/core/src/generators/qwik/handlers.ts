@@ -36,7 +36,7 @@ export function renderHandlers(
     const bindings = node.bindings;
     for (const key in bindings) {
       if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-        const binding = bindings[key]!;
+        const { code: binding } = bindings[key]!;
         if (binding != null) {
           if (key.startsWith('on')) {
             let block = extractJSBlock(binding) || binding;
