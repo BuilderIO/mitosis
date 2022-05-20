@@ -1,7 +1,13 @@
 import { useState, useRef } from '@builder.io/mitosis';
 
-export default function MyMasicRefComponent(props) {
-  const [name, setName] = useState('PatrickJS');
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyMasicRefComponent(props: Props) {
+  const state = useState({
+    name: 'PatrickJS',
+  });
 
   function onBlur() {
     // Maintain focus
@@ -9,7 +15,7 @@ export default function MyMasicRefComponent(props) {
   }
 
   function lowerCaseName() {
-    return name.toLowerCase();
+    return state.name.toLowerCase();
   }
 
   const inputRef = useRef();
@@ -23,9 +29,9 @@ export default function MyMasicRefComponent(props) {
             css={{
               color: 'red',
             }}
-            value={name}
+            value={state.name}
             onBlur={(event) => onBlur()}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => (state.name = event.target.value)}
           />
         </>
       )}
