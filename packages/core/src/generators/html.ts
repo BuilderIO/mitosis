@@ -262,7 +262,7 @@ const blockToHtml = (
   const childComponents = blockOptions?.childComponents || [];
 
   const hasData = Object.keys(json.bindings).length;
-  const hasDomState = /input|textarea/.test(json.name);
+  const hasDomState = /input|textarea|select/.test(json.name);
   let elId = '';
   if (hasData) {
     elId = getId(json, options);

@@ -5,6 +5,8 @@ export interface Props {
 }
 
 export default function MyMasicRefComponent(props: Props) {
+  const inputRef = useRef();
+
   const state = useState({
     name: 'PatrickJS',
   });
@@ -17,8 +19,6 @@ export default function MyMasicRefComponent(props: Props) {
   function lowerCaseName() {
     return state.name.toLowerCase();
   }
-
-  const inputRef = useRef();
 
   return (
     <div>
@@ -33,10 +33,17 @@ export default function MyMasicRefComponent(props: Props) {
             onBlur={(event) => onBlur()}
             onChange={(event) => (state.name = event.target.value)}
           />
+
+          <label for="cars">Choose a car:</label>
+
+          <select name="cars" id="cars">
+            <option value="supra">GR Supra</option>
+            <option value="86">GR 86</option>
+          </select>
         </>
       )}
       Hello
-      {lowerCaseName()}! I can run in React, Vue, Solid, or Liquid!
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
     </div>
   );
 }
