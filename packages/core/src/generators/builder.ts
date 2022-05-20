@@ -53,7 +53,7 @@ const componentMappers: {
           const child = node.children[0];
           const symbolOptions =
             (node.bindings.symbol &&
-              json5.parse(node.bindings.symbol as string)) ||
+              json5.parse(node.bindings.symbol.code as string)) ||
             {};
 
           if (child) {
@@ -98,7 +98,7 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         repeat: {
-          collection: node.bindings.each as string,
+          collection: node.bindings.each?.code as string,
           itemName: node.properties._forName as string,
         },
         children: node.children
@@ -116,7 +116,7 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         bindings: {
-          show: node.bindings.when as string,
+          show: node.bindings.when?.code as string,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
@@ -167,15 +167,15 @@ export const blockToBuilder = (
   if (mapper) {
     return mapper(json, options);
   }
-  if (json.properties._text || json.bindings._text) {
+  if (json.properties._text || json.bindings._text?.code) {
     return el(
       {
         tagName: 'span',
         bindings: {
-          ...(json.bindings._text
+          ...(json.bindings._text?.code
             ? {
-                'component.options.text': json.bindings._text as string,
-                'json.bindings._text': undefined as any,
+                'component.options.text': json.bindings._text.code as string,
+                'json.bindings._text.code': undefined as any,
               }
             : {}),
         },
@@ -205,7 +205,7 @@ export const blockToBuilder = (
           eventBindingKeyRegex,
           firstCharMatchForEventBindingKey.toLowerCase(),
         )
-      ] = removeSurroundingBlock(bindings[key] as string) as string;
+      ] = removeSurroundingBlock(bindings[key]?.code as string) as string;
       delete bindings[key];
     }
   }
@@ -221,7 +221,7 @@ export const blockToBuilder = (
         continue;
       }
       const value = bindings[key];
-      const parsed = attempt(() => json5.parse(value as string));
+      const parsed = attempt(() => json5.parse(value?.code as string));
 
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
@@ -231,7 +231,7 @@ export const blockToBuilder = (
     }
   }
 
-  const hasCss = !!bindings.css;
+  const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
@@ -242,7 +242,7 @@ export const blockToBuilder = (
   };
 
   if (hasCss) {
-    const cssRules = json5.parse(bindings.css as string);
+    const cssRules = json5.parse(bindings.css?.code as string);
     const cssRuleKeys = Object.keys(cssRules);
     for (const ruleKey of cssRuleKeys) {
       const mediaQueryMatch = ruleKey.match(mediaQueryRegex);

@@ -392,9 +392,11 @@ const jsxElementToJson = (
           return createMitosisNode({
             name: 'For',
             bindings: {
-              each: generate(node.expression.callee)
-                .code // Remove .map or potentially ?.map
-                .replace(/\??\.map$/, ''),
+              each: {
+                code: generate(node.expression.callee)
+                  .code // Remove .map or potentially ?.map
+                  .replace(/\??\.map$/, ''),
+              },
             },
             scope: {
               For: forArguments,
@@ -416,7 +418,7 @@ const jsxElementToJson = (
         return createMitosisNode({
           name: 'Show',
           bindings: {
-            when: generate(node.expression.left).code!,
+            when: { code: generate(node.expression.left).code! },
           },
           children: [jsxElementToJson(node.expression.right as any)!],
         });
@@ -433,7 +435,7 @@ const jsxElementToJson = (
           else: jsxElementToJson(node.expression.alternate as any)!,
         },
         bindings: {
-          when: generate(node.expression.test).code!,
+          when: { code: generate(node.expression.test).code! },
         },
         children: [jsxElementToJson(node.expression.consequent as any)!],
       });
@@ -443,7 +445,7 @@ const jsxElementToJson = (
 
     return createMitosisNode({
       bindings: {
-        _text: generate(node.expression).code,
+        _text: { code: generate(node.expression).code },
       },
     });
   }
@@ -486,7 +488,7 @@ const jsxElementToJson = (
         else: elseValue || undefined,
       },
       bindings: {
-        when: whenValue || undefined,
+        when: { code: whenValue || undefined },
       },
       children: node.children
         .map((item) => jsxElementToJson(item as any))
@@ -510,12 +512,16 @@ const jsxElementToJson = (
         return createMitosisNode({
           name: 'For',
           bindings: {
-            each: generate(
-              (
-                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                  .value as babel.types.JSXExpressionContainer
-              ).expression,
-            ).code,
+            each: {
+              code: generate(
+                (
+                  (
+                    node.openingElement
+                      .attributes[0] as babel.types.JSXAttribute
+                  ).value as babel.types.JSXExpressionContainer
+                ).expression,
+              ).code,
+            },
           },
           scope: {
             For: forArguments,
@@ -552,9 +558,12 @@ const jsxElementToJson = (
         if (types.isJSXExpressionContainer(value)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
-            memo[key] = generate(expression.body).code;
+            memo[key] = { code: generate(expression.body).code };
           } else {
-            memo[key] = generate(expression).code;
+            memo[key] = { code: generate(expression).code };
+          }
+          if (key === '_spread') {
+            debugger;
           }
           return memo;
         }
@@ -562,7 +571,9 @@ const jsxElementToJson = (
         // TODO: potentially like Vue store bindings and properties as array of key value pairs
         // too so can do this accurately when order matters. Also tempting to not support spread,
         // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
-        memo._spread = types.stringLiteral(generate(item.argument).code);
+        memo._spread = {
+          code: types.stringLiteral(generate(item.argument).code),
+        };
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
@@ -686,10 +697,12 @@ function mapReactIdentifiers(json: MitosisComponent) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
         if (value) {
-          item.bindings[key] = mapReactIdentifiersInExpression(
-            value,
-            stateProperties,
-          );
+          item.bindings[key] = {
+            code: mapReactIdentifiersInExpression(
+              value.code as string,
+              stateProperties,
+            ),
+          };
         }
         if (key === 'className') {
           const currentValue = item.bindings[key];
@@ -724,7 +737,7 @@ function extractContextComponents(json: MitosisComponent) {
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (item.name.endsWith('.Provider')) {
-        const value = item.bindings.value;
+        const value = item.bindings?.value?.code as string;
         const name = item.name.split('.')[0];
         const refPath = traceReferenceToModulePath(json.imports, name)!;
         json.context.set[refPath] = {

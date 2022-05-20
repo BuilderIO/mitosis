@@ -24,8 +24,8 @@ export function renderJSXNodes(
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
-        if (child.bindings._text !== undefined) {
-          this.jsxTextBinding(child.bindings._text);
+        if (child.bindings._text?.code !== undefined) {
+          this.jsxTextBinding(child.bindings._text.code);
         } else {
           this.isJSX
             ? this.emit(child.properties._text)
@@ -69,7 +69,7 @@ export function renderJSXNodes(
             }
           }
           let props: Record<string, any> = child.properties;
-          const css = child.bindings.css;
+          const css = child.bindings.css?.code;
           const specialBindings: Record<string, any> = {};
           if (css) {
             props = { ...props };
@@ -85,7 +85,9 @@ export function renderJSXNodes(
           const bindings = rewriteHandlers(
             file,
             handlers,
-            child.bindings,
+            child.bindings as {
+              [key: string]: { code: string | undefined; arguments?: string[] };
+            },
             symbolBindings,
           );
           this.jsxBegin(childName, props, {
@@ -132,7 +134,8 @@ function isEmptyTextNode(child: MitosisNode) {
 
 function isTextNode(child: MitosisNode) {
   return (
-    child.properties._text !== undefined || child.bindings._text !== undefined
+    child.properties._text !== undefined ||
+    child.bindings._text?.code !== undefined
   );
 }
 
@@ -151,13 +154,16 @@ function isTextNode(child: MitosisNode) {
 function rewriteHandlers(
   file: File,
   handlers: Map<string, string>,
-  bindings: Record<string, string | undefined>,
+  bindings: {
+    [key: string]: { code: string | undefined; arguments?: string[] };
+  },
   symbolBindings: Record<string, string>,
-): Record<string, string> {
-  const outBindings: Record<string, string> = {};
+): { [key: string]: { code: string; arguments?: string[] } } {
+  const outBindings: { [key: string]: { code: string; arguments?: string[] } } =
+    {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-      let binding: any = bindings[key]!;
+      let { code: binding } = bindings[key]!;
       let handlerBlock: string | undefined;
       if (binding != null) {
         if (key == 'css') {
@@ -168,11 +174,11 @@ function rewriteHandlers(
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),
             '[state]',
-          ]);
+          ]) as any;
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
           symbolBindings[lastProperty(key)] = binding;
         }
-        outBindings[key] = binding;
+        outBindings[key] = { code: binding as string };
       }
     }
   }

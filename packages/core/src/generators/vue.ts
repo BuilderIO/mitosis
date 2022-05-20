@@ -77,10 +77,10 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    const keyValue = json.bindings.key || 'index';
+    const keyValue = json.bindings.key || { code: 'index' };
     const forValue = `(${
       json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}`;
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code as string)}`;
 
     if (options.vueVersion! >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
@@ -98,7 +98,7 @@ const NODE_MAPPERS: {
     return blockToVue(firstChild, options);
   },
   Show(json, options) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when as string);
+    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code as string);
     if (options.vueVersion! >= 3) {
       return `
       <template v-if="${ifValue}">
@@ -149,7 +149,7 @@ function processDynamicComponents(
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
-        node.bindings.is = node.name;
+        node.bindings.is = { code: node.name };
         node.name = 'component';
       }
     }
@@ -172,18 +172,24 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, string | undefined]) => {
+  ([key, value]: [
+    string,
+    { code: string; arguments?: string[] } | undefined,
+  ]) => {
     if (key === '_spread') {
       return '';
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
-        replaceWith: 'this.',
-      })})" `;
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(
+        value?.code,
+        {
+          replaceWith: 'this.',
+        },
+      )})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value);
+      const useValue = stripStateAndPropsRefs(value?.code);
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -223,24 +229,24 @@ export const blockToVue = (
     // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
     // <component is="'style'">...</component>
     node.name = 'component';
-    node.bindings.is = "'style'";
+    node.bindings.is = { code: "'style'" };
   }
 
   if (node.properties._text) {
     return `${node.properties._text}`;
   }
 
-  if (node.bindings._text) {
-    return `{{${stripStateAndPropsRefs(node.bindings._text as string)}}}`;
+  if (node.bindings._text?.code) {
+    return `{{${stripStateAndPropsRefs(node.bindings._text.code as string)}}}`;
   }
 
   let str = '';
 
   str += `<${node.name} `;
 
-  if (node.bindings._spread) {
+  if (node.bindings._spread?.code) {
     str += `v-bind="${stripStateAndPropsRefs(
-      node.bindings._spread as string,
+      node.bindings._spread.code as string,
     )}"`;
   }
 
@@ -250,7 +256,12 @@ export const blockToVue = (
   }
 
   const stringifiedBindings = Object.entries(node.bindings)
-    .map(stringifyBinding(node))
+    .map(([k, v]) =>
+      stringifyBinding(node)([k, v] as [
+        string,
+        { code: string; arguments?: string[] } | undefined,
+      ]),
+    )
     .join('');
 
   str += stringifiedBindings;

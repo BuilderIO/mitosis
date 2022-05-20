@@ -78,13 +78,13 @@ const NODE_MAPPERS: {
         const propKey = camelCase(
           'Slot' + key[0].toUpperCase() + key.substring(1),
         );
-        parentSlots.push({ key: propKey, value: json.bindings[key] });
+        parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
         return '';
       }
       return `{${processBinding('props.children', options)}}`;
     }
     const slotProp = processBinding(
-      json.bindings.name as string,
+      json.bindings.name.code as string,
       options,
     ).replace('name=', '');
     return `{${slotProp}}`;
@@ -99,7 +99,7 @@ const NODE_MAPPERS: {
     const wrap = wrapInFragment(json);
     const forArguments = (json?.scope?.For || []).join(',');
     return `{${processBinding(
-      json.bindings.each as string,
+      json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
       ${wrap ? '<>' : ''}${json.children
@@ -110,7 +110,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${processBinding(json.bindings.when as string, options)} ? (
+    return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
@@ -149,8 +149,11 @@ export const blockToReact = (
     }
     return text;
   }
-  if (json.bindings._text) {
-    const processed = processBinding(json.bindings._text as string, options);
+  if (json.bindings._text?.code) {
+    const processed = processBinding(
+      json.bindings._text.code as string,
+      options,
+    );
     if (options.type === 'native') {
       return `<Text>{${processed}}</Text>`;
     }
@@ -161,9 +164,9 @@ export const blockToReact = (
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread) {
+  if (json.bindings._spread?.code) {
     str += ` {...(${processBinding(
-      json.bindings._spread as string,
+      json.bindings._spread.code as string,
       options,
     )})} `;
   }
@@ -191,7 +194,7 @@ export const blockToReact = (
   }
 
   for (const key in json.bindings) {
-    const value = String(json.bindings[key]);
+    const value = String(json.bindings[key]?.code);
     if (key === '_spread') {
       continue;
     }
@@ -348,10 +351,16 @@ const updateStateSetters = (
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        const value = item.bindings[key] as string;
-        const newValue = updateStateSettersInCode(value, options);
-        if (newValue !== value) {
-          item.bindings[key] = newValue;
+        let values = item.bindings[key];
+        const newValue = updateStateSettersInCode(
+          values?.code as string,
+          options,
+        );
+        if (newValue !== values?.code) {
+          item.bindings[key] = {
+            code: newValue,
+            arguments: values?.arguments,
+          };
         }
       }
     }
@@ -370,7 +379,9 @@ function addProviderComponents(
         children: json.children,
         ...(value && {
           bindings: {
-            value: getMemberObjectString(value),
+            value: {
+              code: getMemberObjectString(value),
+            },
           },
         }),
       }),

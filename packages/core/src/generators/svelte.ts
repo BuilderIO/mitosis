@@ -39,7 +39,7 @@ const mappers: {
   [key: string]: BlockToSvelte;
 } = {
   Fragment: ({ json, options, parentComponent }) => {
-    if (json.bindings.innerHTML) {
+    if (json.bindings.innerHTML?.code) {
       return BINDINGS_MAPPER.innerHTML(json, options);
     } else if (json.children.length > 0) {
       return `${json.children
@@ -51,7 +51,7 @@ const mappers: {
   },
   For: ({ json, options, parentComponent }) => {
     return `
-{#each ${stripStateAndPropsRefs(json.bindings.each as string, {
+{#each ${stripStateAndPropsRefs(json.bindings.each?.code as string, {
       includeState: options.stateType === 'variables',
     })} as ${json.properties._forName}, index }
 ${json.children
@@ -62,7 +62,7 @@ ${json.children
   },
   Show: ({ json, options, parentComponent }) => {
     return `
-{#if ${stripStateAndPropsRefs(json.bindings.when as string, {
+{#if ${stripStateAndPropsRefs(json.bindings.when?.code as string, {
       includeState: options.stateType === 'variables',
     })} }
 ${json.children
@@ -108,7 +108,9 @@ const setContextCode = (json: MitosisComponent) => {
 
 const BINDINGS_MAPPER = {
   innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
-    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML)}}`,
+    `{@html ${stripStateAndPropsRefs(
+      json.bindings.innerHTML?.code as string,
+    )}}`,
 };
 
 interface BlockToSvelteProps {
@@ -142,7 +144,7 @@ const getTagName = ({
   // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
   // overrides for now
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
-    json.bindings.this = json.name;
+    json.bindings.this = { code: json.name };
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
@@ -170,8 +172,8 @@ export const blockToSvelte: BlockToSvelte = ({
     return json.properties._text;
   }
 
-  if (json.bindings._text) {
-    return `{${stripStateAndPropsRefs(json.bindings._text as string, {
+  if (json.bindings._text?.code) {
+    return `{${stripStateAndPropsRefs(json.bindings._text.code as string, {
       includeState: options.stateType === 'variables',
     })}}`;
   }
@@ -180,8 +182,8 @@ export const blockToSvelte: BlockToSvelte = ({
 
   str += `<${tagName} `;
 
-  if (json.bindings._spread) {
-    str += `{...${stripStateAndPropsRefs(json.bindings._spread as string, {
+  if (json.bindings._spread?.code) {
+    str += `{...${stripStateAndPropsRefs(json.bindings._spread.code as string, {
       includeState: options.stateType === 'variables',
     })}}`;
   }
@@ -197,7 +199,7 @@ export const blockToSvelte: BlockToSvelte = ({
     if (key === '_spread') {
       continue;
     }
-    const value = json.bindings[key] as string;
+    const { code: value } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value, {
       includeState: options.stateType === 'variables',
@@ -215,7 +217,7 @@ export const blockToSvelte: BlockToSvelte = ({
   }
   // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
   // we use the innerHTML content as children and don't render the self-closing tag.
-  if (json.bindings.innerHTML) {
+  if (json.bindings.innerHTML?.code) {
     str += '>';
     str += BINDINGS_MAPPER.innerHTML(json, options);
     str += `</${tagName}>`;
@@ -250,8 +252,8 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
         if (
-          (onChange as string).replace(/\s+/g, '') ===
-          `${value}=event.target.value`
+          (onChange.code as string).replace(/\s+/g, '') ===
+          `${value.code}=event.target.value`
         ) {
           delete item.bindings.value;
           delete item.bindings.onChange;

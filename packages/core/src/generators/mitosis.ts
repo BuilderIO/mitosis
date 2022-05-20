@@ -44,7 +44,7 @@ export const blockToMitosis = (
 
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
-    return `<For each={${json.bindings.each}}>
+    return `<For each={${json.bindings.each?.code}}>
     {(${json.properties._forName}, index) =>
       ${needsWrapper ? '<>' : ''}
         ${json.children.map((child) => blockToMitosis(child, options))}}
@@ -56,16 +56,16 @@ export const blockToMitosis = (
     return json.properties._text as string;
   }
 
-  if (json.bindings._text) {
-    return `{${json.bindings._text}}`;
+  if (json.bindings._text?.code) {
+    return `{${json.bindings._text?.code}}`;
   }
 
   let str = '';
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread) {
-    str += ` {...(${json.bindings._spread})} `;
+  if (json.bindings._spread?.code) {
+    str += ` {...(${json.bindings._spread.code})} `;
   }
 
   for (const key in json.properties) {
@@ -80,7 +80,7 @@ export const blockToMitosis = (
     }
   }
   for (const key in json.bindings) {
-    const value = json.bindings[key] as string;
+    const value = json.bindings[key]?.code as string;
     if (key === '_spread') {
       continue;
     }

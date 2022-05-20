@@ -38,13 +38,13 @@ const blockToTemplate = (
     return json.properties._text;
   }
   if (json.bindings._text) {
-    return `\${${json.bindings._text as string}}`;
+    return `\${${json.bindings._text?.code as string}}`;
   }
 
   let str = '';
 
   if (json.name === 'For') {
-    str += `\${${json.bindings.each as string}?.map(${
+    str += `\${${json.bindings.each?.code as string}?.map(${
       json.properties._forName
     } => \``;
     if (json.children) {
@@ -55,7 +55,7 @@ const blockToTemplate = (
 
     str += '`).join("")}';
   } else if (json.name === 'Show') {
-    str += `\${!(${json.bindings.when as string}) ? '' : \``;
+    str += `\${!(${json.bindings.when?.code as string}) ? '' : \``;
     if (json.children) {
       str += json.children
         .map((item) => blockToTemplate(item, options))
@@ -84,7 +84,7 @@ const blockToTemplate = (
       if (key === '_spread' || key === 'ref' || key === 'css') {
         continue;
       }
-      const value = json.bindings[key] as string;
+      const value = json.bindings[key]?.code as string;
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 
