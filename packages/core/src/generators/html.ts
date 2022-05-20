@@ -3,6 +3,8 @@ import { camelCase } from 'lodash';
 import { kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
+import { getRefs } from '../helpers/get-refs';
+import { mapRefs } from '../helpers/map-refs';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
@@ -53,6 +55,7 @@ interface BlockOptions {
   childComponents?: string[];
   outputs?: string[];
   props?: Set<string>;
+  ComponentName?: string;
 }
 
 const isAttribute = (key: string): boolean => {
@@ -248,6 +251,7 @@ const blockToHtml = (
   options: InternalToHtmlOptions,
   blockOptions: BlockOptions = {},
 ) => {
+  const ComponentName = blockOptions.ComponentName;
   const scopeVars = blockOptions?.scopeVars || [];
   const childComponents = blockOptions?.childComponents || [];
 
@@ -285,7 +289,7 @@ const blockToHtml = (
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, { scopeVars, childComponents });
+    return mappers[json.name](json, options, blockOptions);
   }
 
   if (isChildren(json)) {
@@ -342,8 +346,8 @@ const blockToHtml = (
       str += json.children
         .map((item) =>
           blockToHtml(item, options, {
+            ...blockOptions,
             scopeVars: localScopeVars,
-            childComponents,
           }),
         )
         .join('\n');
@@ -376,9 +380,7 @@ const blockToHtml = (
     str += `<template data-name="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) =>
-          blockToHtml(item, options, { scopeVars, childComponents }),
-        )
+        .map((item) => blockToHtml(item, options, blockOptions))
         .join('\n');
     }
 
@@ -423,7 +425,7 @@ const blockToHtml = (
     let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
-      if (key === '_spread' || key === 'ref' || key === 'css') {
+      if (key === '_spread' || key === 'css') {
         continue;
       }
       const value = json.bindings[key]?.code as string;
@@ -470,6 +472,8 @@ const blockToHtml = (
             ;el.addEventListener('${event}', ${fnIdentifier});
           `,
         );
+      } else if (key === 'ref') {
+        str += ` data-ref="${ComponentName}-${useValue}" `;
       } else {
         if (key === 'style') {
           addOnChangeJs(
@@ -541,9 +545,7 @@ const blockToHtml = (
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) =>
-          blockToHtml(item, options, { scopeVars, childComponents }),
-        )
+        .map((item) => blockToHtml(item, options, blockOptions))
         .join('\n');
     }
     if (json.properties.innerHTML) {
@@ -882,7 +884,8 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
-    const kebabName = kebabCase(component.name);
+    const ComponentName = component.name;
+    const kebabName = kebabCase(ComponentName);
 
     const useOptions: InternalToHtmlOptions = {
       prefix: kebabName,
@@ -901,6 +904,9 @@ export const componentToCustomElement =
     const componentHasProps = hasProps(json);
     const props = getProps(json);
     const outputs = getPropFunctions(json);
+    const refs = Array.from(getRefs(json));
+    mapRefs(json, (refName) => `this.${refName}`);
+
     addUpdateAfterSet(json, useOptions);
 
     const hasLoop = hasComponent('For', json);
@@ -925,7 +931,12 @@ export const componentToCustomElement =
 
     let html = json.children
       .map((item) =>
-        blockToHtml(item, useOptions, { childComponents, props, outputs }),
+        blockToHtml(item, useOptions, {
+          childComponents,
+          props,
+          outputs,
+          ComponentName,
+        }),
       )
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
@@ -970,11 +981,18 @@ export const componentToCustomElement =
        *  <${kebabName}></${kebabName}>
        * 
        */
-      class ${component.name} extends ${
+      class ${ComponentName} extends ${
       useOptions?.experimental?.classExtends
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
+        ${refs.map((ref) => {
+          return `
+        get ${ref}() {
+          return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
+        }
+            `;
+        })}
         constructor() {
           super();
           const self = this;
@@ -1321,7 +1339,7 @@ export const componentToCustomElement =
               component,
               useOptions,
             )
-          : `customElements.define('${kebabName}', ${component.name});`
+          : `customElements.define('${kebabName}', ${ComponentName});`
       }
     `;
 

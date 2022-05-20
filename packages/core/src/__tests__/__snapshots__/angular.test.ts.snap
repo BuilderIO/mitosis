@@ -54,6 +54,53 @@ export default class MyBasicChildComponent {
 "
 `;
 
+exports[`Angular Basic Ref 1`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-masic-ref-component\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"showInput\\">
+        <div>
+          <input
+            class=\\"input\\"
+            #inputRef
+            [value]=\\"name\\"
+            (blur)=\\"onBlur()\\"
+            (input)=\\"name = $event.target.value\\"
+          />
+        </div>
+      </ng-container>
+
+      Hello {{lowerCaseName()}} ! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyMasicRefComponent {
+  @Input() showInput: any;
+
+  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+
+  name = \\"PatrickJS\\";
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.nativeElement.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+}
+"
+`;
+
 exports[`Angular BasicFor 1`] = `
 "import { Component } from \\"@angular/core\\";
 

@@ -49,6 +49,51 @@ export default function MyBasicChildComponent(props) {
 "
 `;
 
+exports[`React Basic Ref 1`] = `
+"import { useState, useRef } from \\"react\\";
+
+export default function MyMasicRefComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  const inputRef = useRef();
+
+  return (
+    <>
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React BasicFor 1`] = `
 "import { useState, useEffect } from \\"react\\";
 
