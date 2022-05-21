@@ -938,7 +938,7 @@ export const componentToCustomElement =
       if (options?.experimental?.htmlContext) {
         return options?.experimental?.htmlContext(variableName, token);
       }
-      return `this.${variableName} = this.getContext(this_root, ${token})`;
+      return `this.${variableName} = this.getContext(this._root, ${token})`;
     });
 
     addUpdateAfterSet(json, useOptions);
