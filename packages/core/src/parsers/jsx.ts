@@ -185,6 +185,8 @@ const componentFunctionToJson = (
               const valueNode = expression.arguments[1];
               setContext[keyPath] = {
                 name: keyNode.name,
+                // allow for ref injector
+                ref: generate(valueNode).code,
                 value:
                   valueNode && types.isObjectExpression(valueNode)
                     ? parseStateObject(valueNode)

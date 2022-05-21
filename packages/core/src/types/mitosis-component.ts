@@ -49,7 +49,13 @@ export type MitosisComponent = {
   state: JSONObject;
   context: {
     get: { [key: string]: ContextInfo };
-    set: { [key: string]: { name: string; value?: JSONObject } }; // TODO: support non object values
+    set: {
+      [key: string]: {
+        name: string;
+        value?: JSONObject;
+        ref?: any;
+      };
+    }; // TODO: support non object values
   };
   hooks: {
     init?: extendedHook;

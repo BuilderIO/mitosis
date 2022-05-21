@@ -678,6 +678,7 @@ export const componentToHtml =
             ),
         })};
         ${componentHasProps ? `let props = {};` : ''}
+        let context = null;
         let nodesToDestroy = [];
         let pendingUpdate = false;
         ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
@@ -842,7 +843,7 @@ export const componentToHtml =
                 }
                 child.scope = scope;
                 if (template.context) {
-                  child.context = context;
+                  child.context = template.context;
                 }
                 this.nodesToDestroy.push(child);
                 template.after(child);
@@ -925,6 +926,12 @@ export const componentToCustomElement =
       }
       return `this.${variableName} = this.getContext(this._root, ${token})`;
     });
+
+    const setContext = [];
+    for (const key in json.context.set) {
+      const { name, value, ref } = json.context.set[key];
+      setContext.push({ name, value, ref });
+    }
 
     addUpdateAfterSet(json, useOptions);
 
@@ -1023,7 +1030,13 @@ export const componentToCustomElement =
         constructor() {
           super();
           const self = this;
+          ${
+            // TODO: more than one context not injector
+            setContext.length === 1 ? `this.context = ${setContext[0].ref}` : ''
+          }
+
           ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
+
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(

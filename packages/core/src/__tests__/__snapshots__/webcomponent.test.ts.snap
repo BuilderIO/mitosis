@@ -273,7 +273,7 @@ customElements.define(\\"my-basic-child-component\\", MyBasicChildComponent);
 `;
 
 exports[`webcomponent Basic Context 1`] = `
-"import { Injector } from \\"@dummy/injection-js\\";
+"import { Injector, createInjector } from \\"@dummy/injection-js\\";
 
 /**
  * Usage:
@@ -289,7 +289,10 @@ class MyBasicComponent extends HTMLElement {
   constructor() {
     super();
     const self = this;
+    this.context = createInjector();
+
     this.onInitOnce = false;
+
     this.state = { name: \\"PatrickJS\\" };
 
     this.injector = this.getContext(this._root, Injector);
@@ -1121,7 +1124,9 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
   constructor() {
     super();
     const self = this;
+
     this.onInitOnce = false;
+
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
     this.props = {};
 
@@ -4155,7 +4160,9 @@ class OnInit extends HTMLElement {
   constructor() {
     super();
     const self = this;
+
     this.onInitOnce = false;
+
     this.state = {};
 
     // used to keep track of all nodes created by show/for
@@ -4252,7 +4259,9 @@ class OnInit extends HTMLElement {
   constructor() {
     super();
     const self = this;
+
     this.onInitOnce = false;
+
     this.state = {};
 
     // used to keep track of all nodes created by show/for

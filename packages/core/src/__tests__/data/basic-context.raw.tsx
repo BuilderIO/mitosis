@@ -1,7 +1,9 @@
-import { useState, useContext, onInit } from '@builder.io/mitosis';
-import { Injector } from '@dummy/injection-js';
+import { useState, useContext, onInit, setContext } from '@builder.io/mitosis';
+import { Injector, createInjector } from '@dummy/injection-js';
 
 export default function MyBasicComponent() {
+  setContext(Injector, createInjector());
+
   const injector = useContext(Injector);
   const state = useState({
     name: 'PatrickJS',
