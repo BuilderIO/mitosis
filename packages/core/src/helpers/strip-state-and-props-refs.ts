@@ -29,7 +29,7 @@ export const stripStateAndPropsRefs = (
       newCode = newCode.replace(
         // determine expression edge cases
         new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
           'g',
         ),
         '$1' + context + _var + '$2',
