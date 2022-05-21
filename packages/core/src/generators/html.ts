@@ -66,6 +66,7 @@ const isAttribute = (key: string): boolean => {
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
+  innerHtml: 'innerHTML',
 };
 
 const updateKeyIfException = (key: string): string => {
@@ -100,10 +101,13 @@ const generateSetElementAttributeCode = (
 
     // is component but not html attribute
     isComponent && !isHtmlAttr
-      ? `
+      ? // custom-element is created but we're in the middle of the update loop
+        `
       if (el.props) {
         ;el.props.${camelCase(key)} = ${useValue};
-        ;el.update();
+        if (el.update) {
+          ;el.update();
+        }
       } else {
         ;el.props = {};
         ;el.props.${camelCase(key)} = ${useValue};
@@ -1042,10 +1046,8 @@ export const componentToCustomElement =
               );
             },
           })};
-          ${
-            componentHasProps /* TODO: accept these as attributes/properties on the custom element */
-              ? `this.props = {};`
-              : ''
+          if (!this.props) {
+            this.props = {};
           }
           ${context.join('\n')}
 
