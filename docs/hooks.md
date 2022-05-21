@@ -11,7 +11,7 @@
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
 ```jsx
-import { useState } from '@builder.io/mitosis';
+import { useState, useRef, Show } from '@builder.io/mitosis';
 
 export default function MyComponent() {
   const state = useState({
