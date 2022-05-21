@@ -1055,6 +1055,8 @@ export const componentToCustomElement =
                   includeState: false,
                   replaceWith: 'self.props.',
                   contextVars,
+                  // correctly ref the class not state object
+                  context: 'self.',
                 },
               );
             },

@@ -330,6 +330,13 @@ const componentFunctionToJson = (
                     name,
                   )!,
                 };
+              } else {
+                const varName = declaration.id.name;
+                const name = generate(firstArg).code;
+                accessedContext[varName] = {
+                  name,
+                  path: '',
+                };
               }
             }
           }

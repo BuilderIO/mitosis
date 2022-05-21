@@ -4,6 +4,7 @@ export type StripStateAndPropsRefsOptions = {
   includeState?: boolean;
   contextVars?: string[];
   outputVars?: string[];
+  context?: string;
 };
 
 /**
@@ -22,12 +23,16 @@ export const stripStateAndPropsRefs = (
   const replacer = options.replaceWith || '';
   const contextVars = options?.contextVars || [];
   const outputVars = options?.outputVars || [];
+  const context = options?.context || 'this.';
   if (contextVars.length) {
     contextVars.forEach((_var) => {
       newCode = newCode.replace(
         // determine expression edge cases
-        new RegExp('( |;|(\\())' + _var, 'g'),
-        '$1this.' + _var,
+        new RegExp(
+          '(^|\\n|\\r| |;|\\()' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        ),
+        '$1' + context + _var + '$2',
       );
     });
   }

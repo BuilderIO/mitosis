@@ -57,25 +57,34 @@ export default class MyBasicChildComponent {
 exports[`Angular Basic Context 1`] = `
 "import { Component } from \\"@angular/core\\";
 
-import { Injector, createInjector } from \\"@dummy/injection-js\\";
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
     <div>
-      {{injector.get('hello') + name}} Hello! I can run in React, Vue, Solid, or
-      Liquid!
+      {{myService.method('hello') + name}} Hello! I can run in React, Vue,
+      Solid, or Liquid!
+
+      <input (input)=\\"onChange\\" />
     </div>
   \`,
 })
 export default class MyBasicComponent {
   name = \\"PatrickJS\\";
+  onChange = function onChange() {
+    const change = this.myService.method(\\"change\\");
+    console.log(change);
+  };
 
-  constructor(public injector: Injector) {}
+  constructor(public myService: MyService) {}
 
   ngOnInit() {
-    const hi = this.injector.get(\\"hi\\");
+    const hi = this.myService.method(\\"hi\\");
     console.log(hi);
+
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
   }
 }
 "

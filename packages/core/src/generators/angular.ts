@@ -94,7 +94,8 @@ export const blockToAngular = (
 
   if (json.bindings._text?.code) {
     return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
-      contextVars,
+      // the context is the class
+      contextVars: [],
       outputVars,
     })}}}`;
   }
