@@ -934,11 +934,11 @@ export const componentToCustomElement =
     const refs = Array.from(getRefs(json));
     mapRefs(json, (refName) => `self.${refName}`);
     const context: string[] = contextVars.map((variableName) => {
-      const variableType = json?.context?.get[variableName].name;
+      const token = json?.context?.get[variableName].name;
       if (options?.experimental?.htmlContext) {
-        return options?.experimental?.htmlContext(variableName, variableType);
+        return options?.experimental?.htmlContext(variableName, token);
       }
-      return `this.${variableName} = this.getContext(this_root, ${variableType})`;
+      return `this.${variableName} = this.getContext(this_root, ${token})`;
     });
 
     addUpdateAfterSet(json, useOptions);
@@ -987,7 +987,7 @@ export const componentToCustomElement =
 
     if (useOptions?.experimental?.cssHtml) {
       html += useOptions?.experimental?.cssHtml(css);
-    } else {
+    } else if (css.length) {
       html += `<style>${css}</style>`;
     }
 
