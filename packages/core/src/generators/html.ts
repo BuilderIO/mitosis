@@ -1037,7 +1037,6 @@ export const componentToCustomElement =
               );
             },
           })};
-          this.prevState = {};
           ${
             componentHasProps /* TODO: accept these as attributes/properties on the custom element */
               ? `this.props = {};`
@@ -1110,7 +1109,6 @@ export const componentToCustomElement =
       ${html}\`;
               this.pendingUpdate = true;
               this.render();
-              this.prevState = JSON.parse(JSON.stringify(this.state));
               ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
               this.onMount();
               this.pendingUpdate = false;
@@ -1219,11 +1217,6 @@ export const componentToCustomElement =
           if (this.pendingUpdate === true) {
             return;
           }
-          const nextState = JSON.parse(JSON.stringify(this.state));
-          if (nextState === this.prevState) {
-            return;
-          }
-          this.prevState = nextState;
           this.pendingUpdate = true;
           this.render();
           this.onUpdate();
