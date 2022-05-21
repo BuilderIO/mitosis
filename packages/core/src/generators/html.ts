@@ -1358,9 +1358,14 @@ export const componentToCustomElement =
             // get Context Helper
             getContext(el, token) {
               do {
-                let value = el?.context?.get?.(token)
+                let value;
+                if (el?.context?.get) {
+                  value = el.context.get(token);
+                } else if (el?.context?.[token]) {
+                  value = el.context[token];
+                }
                 if (value !== undefined) {
-                  return value
+                  return value;
                 }
               } while ((el = el.parentNode));
             }
