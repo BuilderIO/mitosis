@@ -83,26 +83,38 @@ const generateSetElementAttributeCode = (
     return options?.experimental?.props(key, useValue, options);
   }
   const isKey = key === 'key';
+  const ignoreKey = /^(innerHTML|key|class|value)$/.test(key);
+  const isTextarea = key === 'value' && tagName === 'textarea';
   const isComponent = meta?.component;
   const isHtmlAttr = isHtmlAttribute(key, tagName);
-  const setAttr =
-    !isKey && (isHtmlAttr || isValidAttributeName(key) || isAttribute(key));
+  const setAttr = !ignoreKey && (isHtmlAttr || !isTextarea || isAttribute(key));
   return setAttr
-    ? `;el.setAttribute("${key}", ${useValue});${
-        !isComponent || isHtmlAttr
-          ? ''
-          : `
-    ;el.props.${camelCase(key)} = ${useValue};
-    ;el.update();
+    ? `
+    ;el.setAttribute("${key}", ${useValue});
+    ${
+      isHtmlAttr
+        ? ''
+        : `el.${updateKeyIfException(camelCase(key))} = ${useValue};`
+    };
+    ${
+      !isComponent || isHtmlAttr
+        ? ''
+        : `
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
     `
-      }
+    }
     `
     : `;el.${updateKeyIfException(key)} = ${useValue};${
         !isComponent || isKey
           ? ''
           : `
-    ;el.props.${camelCase(key)} = ${useValue};
-    ;el.update();
+    if (el.props) {
+      ;el.props.${camelCase(key)} = ${useValue};
+      ;el.update();
+    }
     `
       }
     `;
