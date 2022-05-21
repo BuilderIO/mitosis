@@ -51,6 +51,7 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   experimental?: any;
 };
 interface BlockOptions {
+  contextVars?: string[];
   scopeVars?: ScopeVars;
   childComponents?: string[];
   outputs?: string[];
@@ -216,7 +217,9 @@ const createGlobalId = (name: string, options: InternalToHtmlOptions) => {
 const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
+  blockOptions: BlockOptions = {},
 ) => {
+  const contextVars = blockOptions.contextVars || [];
   if (options?.experimental?.updateReferencesInCode) {
     return options?.experimental?.updateReferencesInCode(code, options, {
       stripStateAndPropsRefs,
@@ -234,6 +237,7 @@ const updateReferencesInCode = (
         includeProps: true,
         includeState: false,
         replaceWith: 'this.props.',
+        contextVars,
       },
     );
   }
@@ -324,7 +328,7 @@ const blockToHtml = (
         (scopeVar: string) =>
           `const ${scopeVar} = ${
             options.format === 'class' ? 'this.' : ''
-          }getContext(el, "${scopeVar}");`,
+          }getScope(el, "${scopeVar}");`,
       )}
       ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
         json.bindings._text.code
@@ -381,7 +385,7 @@ const blockToHtml = (
           (scopeVar: string) =>
             `const ${scopeVar} = ${
               options.format === 'class' ? 'this.' : ''
-            }getContext(el, "${scopeVar}");`,
+            }getScope(el, "${scopeVar}");`,
         )}
         const whenCondition = ${whenCondition};
         if (whenCondition) {
@@ -453,7 +457,7 @@ const blockToHtml = (
         }
         const fnName = camelCase(`on-${elId}-${event}`);
         const codeContent: string = removeSurroundingBlock(
-          updateReferencesInCode(useValue, options),
+          updateReferencesInCode(useValue, options, blockOptions),
         );
         options.js += `
           // Event handler for '${event}' event on ${elId}
@@ -468,7 +472,7 @@ const blockToHtml = (
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
                     options.format === 'class' ? 'this.' : ''
-                  }getContext(event.currentTarget, "${scopeVar}");`,
+                  }getScope(event.currentTarget, "${scopeVar}");`,
               )}
             ${codeContent}
           }
@@ -499,7 +503,7 @@ const blockToHtml = (
               (scopeVar: string) =>
                 `const ${scopeVar} = ${
                   options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}");`,
+                }getScope(el, "${scopeVar}");`,
             )}
             ;Object.assign(el.style, ${useValue});`,
           );
@@ -546,7 +550,7 @@ const blockToHtml = (
           (scopeVar: string) =>
             `const ${scopeVar} = ${
               options.format === 'class' ? 'this.' : ''
-            }getContext(el, "${scopeVar}");`,
+            }getScope(el, "${scopeVar}");`,
         )}
         `,
       );
@@ -796,6 +800,9 @@ export const componentToHtml =
               if (el?.scope) {
                 child.scope = el.scope;
               }
+              if (el?.context) {
+                child.context = el.context;
+              }
               nodesToDestroy.push(child);
             });
             el.after(elementFragment);
@@ -808,6 +815,9 @@ export const componentToHtml =
           const textNode = document.createTextNode(text);
           if (el?.scope) {
             textNode.scope = el.scope
+          }
+          if (el?.context) {
+            child.context = el.context;
           }
           el.after(textNode);
           nodesToDestroy.push(el.nextSibling);
@@ -847,13 +857,16 @@ export const componentToHtml =
                   scope[collectionName] = array;
                 }
                 child.scope = scope;
+                if (template.context) {
+                  child.context = context;
+                }
                 this.nodesToDestroy.push(child);
                 template.after(child);
               });
             }
           }
 
-          function getContext(el, name) {
+          function getScope(el, name) {
             do {
               let value = el?.scope?.[name]
               if (value !== undefined) {
@@ -913,16 +926,26 @@ export const componentToCustomElement =
       json = runPreJsonPlugins(json, options.plugins);
     }
     replaceClassname(json, useOptions);
+    const contextVars = Object.keys(json?.context?.get || {});
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const props = getProps(json);
     const outputs = getPropFunctions(json);
     const refs = Array.from(getRefs(json));
     mapRefs(json, (refName) => `self.${refName}`);
+    const context: string[] = contextVars.map((variableName) => {
+      const variableType = json?.context?.get[variableName].name;
+      if (options?.experimental?.htmlContext) {
+        return options?.experimental?.htmlContext(variableName, variableType);
+      }
+      return `this.${variableName} = this.getContext(this_root, ${variableType})`;
+    });
 
     addUpdateAfterSet(json, useOptions);
 
+    const hasContext = context.length;
     const hasLoop = hasComponent('For', json);
+    const hasScope = hasLoop;
     const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
@@ -949,6 +972,7 @@ export const componentToCustomElement =
           props,
           outputs,
           ComponentName,
+          contextVars,
         }),
       )
       .join('\n');
@@ -1032,6 +1056,7 @@ export const componentToCustomElement =
                   includeProps: true,
                   includeState: false,
                   replaceWith: 'self.props.',
+                  contextVars,
                 },
               );
             },
@@ -1041,7 +1066,7 @@ export const componentToCustomElement =
               ? `this.props = {};`
               : ''
           }
-
+          ${context.join('\n')}
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
@@ -1077,6 +1102,9 @@ export const componentToCustomElement =
             ${updateReferencesInCode(
               addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
+              {
+                contextVars,
+              },
             )}
             this.destroyAnyNodes(); // clean up nodes when component is destroyed
             ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
@@ -1128,6 +1156,9 @@ export const componentToCustomElement =
                         useOptions,
                       ),
                       useOptions,
+                      {
+                        contextVars,
+                      },
                     )}
                     this.onInitOnce = true;
                   }`
@@ -1152,6 +1183,9 @@ export const componentToCustomElement =
             children.forEach(child => {
               if (el?.scope) {
                 child.scope = el.scope;
+              }
+              if (el?.context) {
+                child.context = el.context;
               }
               this.nodesToDestroy.push(child);
             });
@@ -1182,6 +1216,7 @@ export const componentToCustomElement =
                 ${updateReferencesInCode(
                   addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                   useOptions,
+                  { contextVars },
                 )}
                 `
           }
@@ -1193,7 +1228,9 @@ export const componentToCustomElement =
               ? ''
               : `
             ${json.hooks.onUpdate.reduce((code, hook) => {
-              code += updateReferencesInCode(hook.code, useOptions);
+              code += updateReferencesInCode(hook.code, useOptions, {
+                contextVars,
+              });
               return code + '\n';
             }, '')} 
             `
@@ -1281,7 +1318,9 @@ export const componentToCustomElement =
                   useOptions,
                 );
               } else {
-                code = updateReferencesInCode(value, useOptions);
+                code = updateReferencesInCode(value, useOptions, {
+                  contextVars,
+                });
               }
               return `
               ${
@@ -1306,8 +1345,41 @@ export const componentToCustomElement =
           if (el?.scope) {
             textNode.scope = el.scope;
           }
+          if (el?.context) {
+            textNode.context = el.context;
+          }
           el.after(textNode);
           this.nodesToDestroy.push(el.nextSibling);
+        }
+        ${
+          !hasContext
+            ? ''
+            : `
+            // get Context Helper
+            getContext(el, token) {
+              do {
+                let value = el?.context?.get?.(token)
+                if (value !== undefined) {
+                  return value
+                }
+              } while ((el = el.parentNode));
+            }
+            `
+        }
+        ${
+          !hasScope
+            ? ''
+            : `
+            // scope helper
+            getScope(el, name) {
+              do {
+                let value = el?.scope?.[name]
+                if (value !== undefined) {
+                  return value
+                }
+              } while ((el = el.parentNode));
+            }
+            `
         }
 
         ${
@@ -1348,20 +1420,14 @@ export const componentToCustomElement =
                   scope[collectionName] = array;
                 }
                 child.scope = scope;
+                if (template.context) {
+                  child.context = context;
+                }
                 this.nodesToDestroy.push(child);
                 collection.push(child)
               });
             }
             collection.reverse().forEach(child => template.after(child));
-          }
-        
-          getContext(el, name) {
-            do {
-              let value = el?.scope?.[name]
-              if (value !== undefined) {
-                return value
-              }
-            } while ((el = el.parentNode));
           }
         `
         }

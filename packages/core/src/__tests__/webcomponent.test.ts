@@ -5,6 +5,7 @@ const basic = require('./data/basic.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicContext = require('./data/basic-Context.raw');
 const basicForShow = require('./data/basic-for-show.raw');
 const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
@@ -41,6 +42,12 @@ describe('webcomponent', () => {
 
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Context', () => {
+    const component = parseJsx(basicContext);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

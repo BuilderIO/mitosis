@@ -54,6 +54,33 @@ export default class MyBasicChildComponent {
 "
 `;
 
+exports[`Angular Basic Context 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import { Injector } from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>
+      {{injector.get('hello') + name}} Hello! I can run in React, Vue, Solid, or
+      Liquid!
+    </div>
+  \`,
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+
+  constructor(public injector: Injector) {}
+
+  ngOnInit() {
+    const hi = this.injector.get(\\"hi\\");
+    console.log(hi);
+  }
+}
+"
+`;
+
 exports[`Angular Basic Ref 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 

@@ -60,6 +60,9 @@ exports[`Html Basic 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -113,7 +116,7 @@ exports[`Html BasicFor 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const person = getContext(el, \\"person\\");
+        const person = getScope(el, \\"person\\");
         renderTextNode(el, person);
       });
 
@@ -124,7 +127,7 @@ exports[`Html BasicFor 1`] = `
 
     // Event handler for 'input' event on input-1
     function onInput1Input(event) {
-      const person = getContext(event.currentTarget, \\"person\\");
+      const person = getScope(event.currentTarget, \\"person\\");
 
       state.name = event.target.value + \\" and \\" + person;
       update();
@@ -141,6 +144,9 @@ exports[`Html BasicFor 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -177,13 +183,16 @@ exports[`Html BasicFor 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -282,6 +291,9 @@ exports[`Html Button 1`] = `
         if (el?.scope) {
           child.scope = el.scope;
         }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -292,6 +304,9 @@ exports[`Html Button 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -378,12 +393,12 @@ exports[`Html Columns 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const column = getContext(el, \\"column\\");
+        const column = getScope(el, \\"column\\");
         renderTextNode(el, column.content);
       });
 
       document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
+        const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
 
@@ -400,6 +415,9 @@ exports[`Html Columns 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -436,13 +454,16 @@ exports[`Html Columns 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -600,6 +621,9 @@ exports[`Html Image 1`] = `
         if (el?.scope) {
           child.scope = el.scope;
         }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -610,6 +634,9 @@ exports[`Html Image 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -653,8 +680,8 @@ exports[`Html ImageState 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const item = getContext(el, \\"item\\");
-        const itemIndex = getContext(el, \\"itemIndex\\");
+        const item = getScope(el, \\"item\\");
+        const itemIndex = getScope(el, \\"itemIndex\\");
 
         el.setAttribute(\\"class\\", \\"custom-class\\");
 
@@ -676,6 +703,9 @@ exports[`Html ImageState 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -712,13 +742,16 @@ exports[`Html ImageState 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -781,6 +814,9 @@ exports[`Html Img 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -847,6 +883,9 @@ exports[`Html Input block 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -906,6 +945,9 @@ exports[`Html Section 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -957,7 +999,7 @@ exports[`Html SectionState 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
-        const item = getContext(el, \\"item\\");
+        const item = getScope(el, \\"item\\");
         Object.assign(el.style, {
           maxWidth: item + state.max,
         });
@@ -983,6 +1025,9 @@ exports[`Html SectionState 1`] = `
         if (el?.scope) {
           child.scope = el.scope;
         }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -993,6 +1038,9 @@ exports[`Html SectionState 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1029,13 +1077,16 @@ exports[`Html SectionState 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -1099,8 +1150,8 @@ exports[`Html Select block 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
-        const option = getContext(el, \\"option\\");
-        const index = getContext(el, \\"index\\");
+        const option = getScope(el, \\"option\\");
+        const index = getScope(el, \\"index\\");
 
         el.setAttribute(\\"value\\", option.value);
 
@@ -1108,7 +1159,7 @@ exports[`Html Select block 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const option = getContext(el, \\"option\\");
+        const option = getScope(el, \\"option\\");
         renderTextNode(el, option.name || option.value);
       });
 
@@ -1125,6 +1176,9 @@ exports[`Html Select block 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1161,13 +1215,16 @@ exports[`Html Select block 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -1292,13 +1349,13 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
 
         el.setAttribute(\\"src\\", review.avatar);
       });
@@ -1311,17 +1368,17 @@ exports[`Html Shadow DOM 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
+        const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
         renderTextNode(el, review.author);
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
         renderTextNode(el, review.reviewMessage);
       });
 
@@ -1369,6 +1426,9 @@ exports[`Html Shadow DOM 1`] = `
         if (el?.scope) {
           child.scope = el.scope;
         }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -1379,6 +1439,9 @@ exports[`Html Shadow DOM 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1415,13 +1478,16 @@ exports[`Html Shadow DOM 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -1556,13 +1622,13 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
       document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
 
         el.setAttribute(\\"src\\", review.avatar);
       });
@@ -1575,17 +1641,17 @@ exports[`Html Stamped 1`] = `
       });
 
       document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
+        const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
 
       document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
         renderTextNode(el, review.author);
       });
 
       document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+        const review = getScope(el, \\"review\\");
         renderTextNode(el, review.reviewMessage);
       });
 
@@ -1633,6 +1699,9 @@ exports[`Html Stamped 1`] = `
         if (el?.scope) {
           child.scope = el.scope;
         }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -1643,6 +1712,9 @@ exports[`Html Stamped 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1679,13 +1751,16 @@ exports[`Html Stamped 1`] = `
             scope[collectionName] = array;
           }
           child.scope = scope;
+          if (template.context) {
+            child.context = context;
+          }
           this.nodesToDestroy.push(child);
           template.after(child);
         });
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
         let value = el?.scope?.[name];
         if (value !== undefined) {
@@ -1741,6 +1816,9 @@ exports[`Html Submit button block 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1804,6 +1882,9 @@ exports[`Html Text 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1859,6 +1940,9 @@ exports[`Html Textarea 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
@@ -1931,6 +2015,9 @@ exports[`Html Video 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -1985,6 +2072,9 @@ exports[`Html className 1`] = `
       if (el?.scope) {
         textNode.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
     }
@@ -2026,6 +2116,9 @@ exports[`Html onMount & onUnMount 1`] = `
       const textNode = document.createTextNode(text);
       if (el?.scope) {
         textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
       }
       el.after(textNode);
       nodesToDestroy.push(el.nextSibling);
