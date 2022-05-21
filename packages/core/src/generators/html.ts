@@ -85,39 +85,32 @@ const generateSetElementAttributeCode = (
   const isKey = key === 'key';
   const ignoreKey = /^(innerHTML|key|class|value)$/.test(key);
   const isTextarea = key === 'value' && tagName === 'textarea';
-  const isComponent = meta?.component;
+  const isDataSet = /^data-/.test(key);
+  const isComponent = Boolean(meta?.component);
   const isHtmlAttr = isHtmlAttribute(key, tagName);
   const setAttr = !ignoreKey && (isHtmlAttr || !isTextarea || isAttribute(key));
-  return setAttr
-    ? `
-    ;el.setAttribute("${key}", ${useValue});
-    ${
-      isHtmlAttr
-        ? ''
-        : `el.${updateKeyIfException(camelCase(key))} = ${useValue};`
-    };
-    ${
-      !isComponent || isHtmlAttr
-        ? ''
-        : `
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
-    `
-    }
-    `
-    : `;el.${updateKeyIfException(key)} = ${useValue};${
-        !isComponent || isKey
-          ? ''
-          : `
-    if (el.props) {
-      ;el.props.${camelCase(key)} = ${useValue};
-      ;el.update();
-    }
-    `
+  return [
+    // is html attribute or dash-case
+    setAttr ? `;el.setAttribute("${key}", ${useValue});` : '',
+
+    // not attr or dataset or html attr
+    !setAttr || !(isHtmlAttr || isDataSet || !isComponent || isKey)
+      ? `el.${updateKeyIfException(camelCase(key))} = ${useValue};`
+      : '',
+
+    // is component but not html attribute
+    isComponent && !isHtmlAttr
+      ? `
+      if (el.props) {
+        ;el.props.${camelCase(key)} = ${useValue};
+        ;el.update();
+      } else {
+        ;el.props = {};
+        ;el.props.${camelCase(key)} = ${useValue};
       }
-    `;
+      `
+      : '',
+  ].join('\n');
 };
 
 const addUpdateAfterSet = (
@@ -283,7 +276,7 @@ const blockToHtml = (
   let elId = '';
   if (hasData) {
     elId = getId(json, options);
-    json.properties['data-name'] = elId;
+    json.properties['data-el'] = elId;
   }
   if (hasDomState) {
     json.properties['data-dom-state'] = createGlobalId(
@@ -322,7 +315,7 @@ const blockToHtml = (
       });`,
     );
 
-    return `<template data-name="${elId}"><!-- ${json.bindings._text?.code} --></template>`;
+    return `<template data-el="${elId}"><!-- ${json.bindings._text?.code} --></template>`;
   }
 
   let str = '';
@@ -345,7 +338,7 @@ const blockToHtml = (
     );
     // TODO: decide on how to handle this...
     str += `
-      <template data-name="${elId}">`;
+      <template data-el="${elId}">`;
     if (json.children) {
       str += json.children
         .map((item) =>
@@ -381,7 +374,7 @@ const blockToHtml = (
       `,
     );
 
-    str += `<template data-name="${elId}">`;
+    str += `<template data-el="${elId}">`;
     if (json.children) {
       str += json.children
         .map((item) => blockToHtml(item, options, blockOptions))
@@ -710,7 +703,7 @@ export const componentToHtml =
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              document.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${value}
               });
             `;
@@ -1326,7 +1319,7 @@ export const componentToCustomElement =
               ${useOptions?.experimental?.generateQuerySelectorAll(key, code)}
               `
                   : `              
-              this._root.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              this._root.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${code}
               })
               `

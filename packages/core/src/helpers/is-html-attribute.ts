@@ -1,3 +1,5 @@
+import { booleanAlgebraBoolean } from 'fp-ts/lib/BooleanAlgebra';
+
 export const htmlElementAttributes: { [key: string]: string[] } = {
   '*': [
     'accesskey',
@@ -379,8 +381,9 @@ export const isHtmlAttribute = (attr: string, tagName: string) => {
   if (/role|aria-/.test(attr)) {
     return true;
   }
-  return [
+  const getAttr = [
     ...htmlElementAttributes['*'],
     ...(htmlElementAttributes[tagName] || []),
   ].find((attribute) => attr === attribute);
+  return Boolean(getAttr);
 };
