@@ -75,14 +75,14 @@ const blockToLiquid = (
   if (json.name === 'For') {
     if (
       !(
-        isValidLiquidBinding(json.bindings.each?.code as string) &&
+        isValidLiquidBinding(json.bindings.each?.code) &&
         isValidLiquidBinding(json.properties._forName as string)
       )
     ) {
       return str;
     }
     str += `{% for ${json.properties._forName} in ${stripStateAndPropsRefs(
-      json.bindings.each?.code as string,
+      json.bindings.each?.code,
     )} %}`;
     if (json.children) {
       str += json.children
@@ -92,12 +92,10 @@ const blockToLiquid = (
 
     str += '{% endfor %}';
   } else if (json.name === 'Show') {
-    if (!isValidLiquidBinding(json.bindings.when?.code as string)) {
+    if (!isValidLiquidBinding(json.bindings.when?.code)) {
       return str;
     }
-    str += `{% if ${stripStateAndPropsRefs(
-      json.bindings.when?.code as string,
-    )} %}`;
+    str += `{% if ${stripStateAndPropsRefs(json.bindings.when?.code)} %}`;
     if (json.children) {
       str += json.children
         .map((item) => blockToLiquid(item, options))

@@ -10,7 +10,7 @@ export const getStyles = (json: MitosisNode) => {
   }
   let css: MitosisStyles;
   try {
-    css = json5.parse(json.bindings.css?.code as string);
+    css = json5.parse(json.bindings.css?.code);
   } catch (err) {
     console.warn('Could not json 5 parse css', err, json.bindings.css.code);
     return null;

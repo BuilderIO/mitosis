@@ -80,7 +80,7 @@ const NODE_MAPPERS: {
     const keyValue = json.bindings.key || { code: 'index' };
     const forValue = `(${
       json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code as string)}`;
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
 
     if (options.vueVersion! >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
@@ -98,7 +98,7 @@ const NODE_MAPPERS: {
     return blockToVue(firstChild, options);
   },
   Show(json, options) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code as string);
+    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
     if (options.vueVersion! >= 3) {
       return `
       <template v-if="${ifValue}">

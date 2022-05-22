@@ -59,7 +59,7 @@ const mappers: {
           ${processBinding(
             wrapAction(
               `var event = { target: { value: "\\(${name})" } };
-              ${json.bindings.onChange?.code as string}`,
+              ${json.bindings.onChange?.code}`,
             ),
             options,
           )} 

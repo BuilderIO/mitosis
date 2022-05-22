@@ -101,7 +101,7 @@ export const blockToAngular = (
   if (json.name === 'For') {
     str += `<ng-container *ngFor="let ${
       json.properties._forName
-    } of ${stripStateAndPropsRefs(json.bindings.each?.code as string, {
+    } of ${stripStateAndPropsRefs(json.bindings.each?.code, {
       contextVars,
       outputVars,
     })}">`;
@@ -111,7 +111,7 @@ export const blockToAngular = (
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
     str += `<ng-container *ngIf="${stripStateAndPropsRefs(
-      json.bindings.when?.code as string,
+      json.bindings.when?.code,
       { contextVars, outputVars },
     )}">`;
     str += json.children
@@ -149,9 +149,9 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
-      const value = json.bindings[key]?.code as string;
+      const { code } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value, {
+      const useValue = stripStateAndPropsRefs(code, {
         contextVars,
         outputVars,
       });

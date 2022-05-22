@@ -314,9 +314,7 @@ const blockToHtml = (
       });`,
     );
 
-    return `<template data-name="${elId}"><!-- ${
-      json.bindings._text?.code as string
-    } --></template>`;
+    return `<template data-name="${elId}"><!-- ${json.bindings._text?.code} --></template>`;
   }
 
   let str = '';
@@ -737,10 +735,7 @@ export const componentToHtml =
             : `
             if (!onInitOnce) {
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(
-                  json.hooks?.onInit?.code as string,
-                  useOptions,
-                ),
+                addUpdateAfterSetInCode(json.hooks?.onInit?.code, useOptions),
                 useOptions,
               )}
               onInitOnce = true;
@@ -1089,7 +1084,7 @@ export const componentToCustomElement =
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
                       addUpdateAfterSetInCode(
-                        json.hooks?.onInit?.code as string,
+                        json.hooks?.onInit?.code,
                         useOptions,
                       ),
                       useOptions,
