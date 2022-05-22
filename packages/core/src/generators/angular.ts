@@ -149,9 +149,9 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
-      const value = json.bindings[key]?.code as string;
+      const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value, {
+      const useValue = stripStateAndPropsRefs(code as string, {
         contextVars,
         outputVars,
       });
@@ -166,7 +166,7 @@ export const blockToAngular = (
         }
         // TODO: proper babel transform to replace. Util for this
         const finalValue = removeSurroundingBlock(
-          useValue.replace(/event\./g, '$event.'),
+          useValue.replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
         );
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'className') {

@@ -9,7 +9,7 @@ export default function MyBasicComponent() {
     <div>
       <input
         value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
+        onChange={(myEvent) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>

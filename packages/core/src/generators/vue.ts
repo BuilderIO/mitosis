@@ -192,16 +192,26 @@ const stringifyBinding =
       const useValue = stripStateAndPropsRefs(value?.code);
 
       if (key.startsWith('on')) {
+        const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
           event = 'input';
         }
+        const isAssignmentExpression = useValue.includes('=');
         // TODO: proper babel transform to replace. Util for this
-        return ` @${event}="${removeSurroundingBlock(
-          useValue
-            // TODO: proper reference parse and replacing
-            .replace(/event\./g, '$event.'),
-        )}" `;
+        if (isAssignmentExpression) {
+          return ` @${event}="${removeSurroundingBlock(
+            useValue
+              // TODO: proper reference parse and replacing
+              .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+          )}" `;
+        } else {
+          return ` @${event}="${removeSurroundingBlock(
+            useValue
+              // TODO: proper reference parse and replacing
+              .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+          )}" `;
+        }
       } else if (key === 'ref') {
         return ` ref="${useValue}" `;
       } else if (BINDING_MAPPERS[key]) {
