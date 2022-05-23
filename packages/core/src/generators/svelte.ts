@@ -197,7 +197,7 @@ export const blockToSvelte: BlockToSvelte = ({
     if (key === '_spread') {
       continue;
     }
-    const { code: value } = json.bindings[key]!;
+    const { code: value, arguments: cusArgs = ['event'] } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value, {
       includeState: options.stateType === 'variables',
@@ -206,7 +206,9 @@ export const blockToSvelte: BlockToSvelte = ({
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
-      str += ` on:${event}="{event => ${removeSurroundingBlock(useValue)}}" `;
+      str += ` on:${event}="{${cusArgs.join(',')} => ${removeSurroundingBlock(
+        useValue,
+      )}}" `;
     } else if (key === 'ref') {
       str += ` bind:this={${useValue}} `;
     } else {

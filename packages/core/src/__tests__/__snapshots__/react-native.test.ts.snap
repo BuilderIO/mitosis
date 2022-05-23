@@ -10,7 +10,10 @@ export default function MyBasicComponent(props) {
 
   return (
     <View>
-      <View value={name} onChange={(event) => setName(event.target.value)} />
+      <View
+        value={name}
+        onChange={(myEvent) => setName(myEvent.target.value)}
+      />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
@@ -153,7 +156,7 @@ export default function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 "
 `;
@@ -216,7 +219,7 @@ export default function CustomCode(props) {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 "
 `;
@@ -633,7 +636,7 @@ exports[`React Native RawText 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
 export default function RawText(props) {
-  return <View dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }} />;
+  return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
 "
 `;
@@ -804,13 +807,25 @@ export default function SubmitButton(props) {
 exports[`React Native Text 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function Text(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
   return (
     <View
       contentEditable={allowEditingText || undefined}
-      dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
     />
   );
 }

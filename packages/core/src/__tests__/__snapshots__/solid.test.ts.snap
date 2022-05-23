@@ -10,7 +10,7 @@ function MyBasicComponent(props) {
     <div>
       <input
         value={state.name}
-        onInput={(event) => (state.name = event.target.value)}
+        onInput={(myEvent) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -803,13 +803,25 @@ export default SubmitButton;
 `;
 
 exports[`Solid Text 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"import { createMutable } from \\"solid-js/store\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
+  const state = createMutable({ name: \\"Decadef20\\" });
+
   return (
     <div
       contentEditable={allowEditingText || undefined}
-      innerHTML={props.text || props.content || \\"\\"}
+      data-name={{
+        test: state.name || \\"any name\\",
+      }}
+      innerHTML={
+        props.text ||
+        props.content ||
+        state.name ||
+        '<p class=\\"text-lg\\">my name</p>'
+      }
     ></div>
   );
 }

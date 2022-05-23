@@ -1,4 +1,5 @@
 import { Builder } from '@builder.io/sdk';
+import { useState } from '@builder.io/mitosis';
 
 export interface TextProps {
   attributes?: any;
@@ -18,6 +19,7 @@ export default function Text(props: TextProps) {
       props.builderBlock?.bindings?.['options.text'] ||
       props.builderBlock?.bindings?.['text']
     );
+  const state = useState({ name: 'Decadef20' });
 
   // TODO: Add back dynamic `direction` CSS prop when we add support for some
   //       sort of dynamic CSS
@@ -25,7 +27,13 @@ export default function Text(props: TextProps) {
   return (
     <div
       contentEditable={allowEditingText || undefined}
-      innerHTML={props.text || props.content || ''}
+      data-name={{ test: state.name || 'any name' }}
+      innerHTML={
+        props.text ||
+        props.content ||
+        state.name ||
+        '<p class="text-lg">my name</p>'
+      }
     />
   );
 }

@@ -128,7 +128,7 @@ const BINDING_MAPPERS: {
   innerHTML(_key, value) {
     return [
       'dangerouslySetInnerHTML',
-      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+      `{__html: ${value.replace(/\s+/g, ' ')}}`,
     ];
   },
 };
@@ -204,7 +204,8 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${updateStateSettersInCode(
+      const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
+      str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;

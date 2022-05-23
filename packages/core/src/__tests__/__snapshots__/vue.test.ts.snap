@@ -280,7 +280,7 @@ exports[`Vue Form block 1`] = `
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
-    @submit=\\"onSubmit(event)\\"
+    @submit=\\"onSubmit($event)\\"
   >
     <builder-block-component
       v-for=\\"(block, index) in builderBlock?.children\\"
@@ -963,21 +963,37 @@ export default {
 
 exports[`Vue Text 1`] = `
 "<template>
-  <div
-    :contentEditable=\\"allowEditingText || undefined\\"
-    v-html=\\"text || content || ''\\"
-  ></div>
-</template>
-<script>
-import { Builder } from \\"@builder.io/sdk\\";
+    <div  :contentEditable=\\"allowEditingText || undefined\\"  :data-name=\\"{
+test: name || 'any name'
+}\\"  v-html=\\"text || content || name || '<p class=\\"text-lg\\">my name</p>'\\" ></div>
+  </template>
+  <script>
+    
+  import  {  Builder  }  from '@builder.io/sdk';
 
-export default {
-  name: \\"text\\",
+  
 
-  props: [\\"text\\", \\"content\\"],
-};
-</script>
-"
+
+    export default {
+      name: 'text',
+      
+      props: [\\"text\\",\\"content\\"],
+      
+      data: () => ({ name: 'Decadef20',}),
+      
+
+      
+      
+
+      
+      
+      
+      
+
+      
+      
+    }
+  </script>"
 `;
 
 exports[`Vue Textarea 1`] = `
