@@ -257,7 +257,7 @@ export default function CustomCode(props) {
       className={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
-      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+      dangerouslySetInnerHTML={{ __html: props.code }}
     />
   );
 }
@@ -326,7 +326,7 @@ export default function CustomCode(props) {
       className={
         \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
       }
-      dangerouslySetInnerHTML={{ __html: \\"props.code\\" }}
+      dangerouslySetInnerHTML={{ __html: props.code }}
     />
   );
 }
@@ -755,7 +755,7 @@ exports[`React RawText 1`] = `
   return (
     <span
       className={props.attributes?.class || props.attributes?.className}
-      dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }}
+      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
     />
   );
 }
@@ -950,13 +950,25 @@ exports[`React Submit button block 1`] = `
 `;
 
 exports[`React Text 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"import { useState } from \\"react\\";
+import { Builder } from \\"@builder.io/sdk\\";
 
 export default function Text(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
   return (
     <div
       contentEditable={allowEditingText || undefined}
-      dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
     />
   );
 }

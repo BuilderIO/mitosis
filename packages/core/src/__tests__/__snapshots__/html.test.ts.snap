@@ -1747,7 +1747,7 @@ exports[`Html Text 1`] = `
 "<div data-name=\\"div-1\\"></div>
 <script>
   (() => {
-    const state = {};
+    const state = { name: \\"Decadef20\\" };
     let props = {};
     let nodesToDestroy = [];
     let pendingUpdate = false;
@@ -1770,7 +1770,17 @@ exports[`Html Text 1`] = `
       document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
         el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-        el.setAttribute(\\"innerHTML\\", props.text || props.content || \\"\\");
+        el.setAttribute(\\"data-name\\", {
+          test: state.name || \\"any name\\",
+        });
+
+        el.setAttribute(
+          \\"innerHTML\\",
+          props.text ||
+            props.content ||
+            state.name ||
+            '<p class=\\"text-lg\\">my name</p>'
+        );
       });
 
       destroyAnyNodes();
