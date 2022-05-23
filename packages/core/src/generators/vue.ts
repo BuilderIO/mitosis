@@ -262,6 +262,11 @@ export const blockToVue = (
 
   for (const key in node.properties) {
     const value = node.properties[key];
+
+    if (key === 'className') {
+      continue;
+    }
+
     str += ` ${key}="${value}" `;
   }
 

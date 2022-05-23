@@ -2,12 +2,20 @@
 
 exports[`Solid Basic 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
   const state = createMutable({ name: \\"Steve\\" });
 
   return (
-    <div>
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
       <input
         value={state.name}
         onInput={(myEvent) => (state.name = myEvent.target.value)}
@@ -78,27 +86,33 @@ function Column(props) {
 
   return (
     <div
-      class={css({
-        display: \\"flex\\",
-        flexDirection: \\"column\\",
-        alignItems: \\"stretch\\",
-        lineHeight: \\"normal\\",
-        \\"@media (max-width: 999px)\\": {
-          flexDirection: \\"row\\",
-        },
-        \\"@media (max-width: 639px)\\": {
-          flexDirection: \\"row-reverse\\",
-        },
-      })}
+      class={
+        \\"builder-columns \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+          lineHeight: \\"normal\\",
+          \\"@media (max-width: 999px)\\": {
+            flexDirection: \\"row\\",
+          },
+          \\"@media (max-width: 639px)\\": {
+            flexDirection: \\"row-reverse\\",
+          },
+        })
+      }
     >
       <For each={props.columns}>
         {(column, _index) => {
           const index = _index();
           return (
             <div
-              class={css({
-                flexGrow: \\"1\\",
-              })}
+              class={
+                \\"builder-column \\" +
+                css({
+                  flexGrow: \\"1\\",
+                })
+              }
             >
               {column.content}
               {index}
@@ -543,11 +557,14 @@ function FormComponent(props) {
       </Show>
       <Show when={state.submissionState === \\"error\\" && state.responseData}>
         <pre
-          class={css({
-            padding: \\"10px\\",
-            color: \\"red\\",
-            textAlign: \\"center\\",
-          })}
+          class={
+            \\"builder-form-error-text \\" +
+            css({
+              padding: \\"10px\\",
+              color: \\"red\\",
+              textAlign: \\"center\\",
+            })
+          }
         >
           {JSON.stringify(state.responseData, null, 2)}
         </pre>
