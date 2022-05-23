@@ -904,11 +904,21 @@ export default class Text {
   @Prop() text: any;
   @Prop() content: any;
 
+  @State() name = \\"Decadef20\\";
+
   render() {
     return (
       <div
         contentEditable={allowEditingText || undefined}
-        innerHTML={this.text || this.content || \\"\\"}
+        data-name={{
+          test: this.name || \\"any name\\",
+        }}
+        innerHTML={
+          this.text ||
+          this.content ||
+          this.name ||
+          '<p class=\\"text-lg\\">my name</p>'
+        }
       ></div>
     );
   }

@@ -128,7 +128,7 @@ const BINDING_MAPPERS: {
   innerHTML(_key, value) {
     return [
       'dangerouslySetInnerHTML',
-      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+      `{__html: ${value.replace(/\s+/g, ' ')}}`,
     ];
   },
 };
