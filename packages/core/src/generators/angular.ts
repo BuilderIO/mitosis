@@ -173,8 +173,16 @@ export const blockToAngular = (
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
+        const eventName = cusArgs[0];
+        const regexp = new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' +
+            eventName +
+            '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        );
+        const replacer = '$1$event$2';
         const finalValue = removeSurroundingBlock(
-          useValue.replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+          useValue.replace(regexp, replacer),
         );
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'className') {
