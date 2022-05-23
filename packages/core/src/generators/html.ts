@@ -13,6 +13,7 @@ import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { hasComponent } from '../helpers/has-component';
+import { hasBindingsText } from '../helpers/has-bindings-text';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isHtmlAttribute } from '../helpers/is-html-attribute';
@@ -639,6 +640,7 @@ export const componentToHtml =
 
     const hasLoop = hasComponent('For', json);
     const hasShow = hasComponent('Show', json);
+    const hasTextBinding = hasBindingsText(json);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -795,17 +797,23 @@ export const componentToHtml =
   
         `
         }
-        // Helper text DOM nodes
-        function renderTextNode(el, text) {
-          const textNode = document.createTextNode(text);
-          if (el?.scope) {
-            textNode.scope = el.scope
+        ${
+          !hasTextBinding
+            ? ''
+            : `
+          // Helper text DOM nodes
+          function renderTextNode(el, text) {
+            const textNode = document.createTextNode(text);
+            if (el?.scope) {
+              textNode.scope = el.scope
+            }
+            if (el?.context) {
+              child.context = el.context;
+            }
+            el.after(textNode);
+            nodesToDestroy.push(el.nextSibling);
           }
-          if (el?.context) {
-            child.context = el.context;
-          }
-          el.after(textNode);
-          nodesToDestroy.push(el.nextSibling);
+          `
         }
         ${
           !hasLoop
