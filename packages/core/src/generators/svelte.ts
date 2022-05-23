@@ -51,7 +51,7 @@ const mappers: {
   },
   For: ({ json, options, parentComponent }) => {
     return `
-{#each ${stripStateAndPropsRefs(json.bindings.each?.code as string, {
+{#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
       includeState: options.stateType === 'variables',
     })} as ${json.properties._forName}, index }
 ${json.children
@@ -62,7 +62,7 @@ ${json.children
   },
   Show: ({ json, options, parentComponent }) => {
     return `
-{#if ${stripStateAndPropsRefs(json.bindings.when?.code as string, {
+{#if ${stripStateAndPropsRefs(json.bindings.when?.code, {
       includeState: options.stateType === 'variables',
     })} }
 ${json.children
@@ -108,9 +108,7 @@ const setContextCode = (json: MitosisComponent) => {
 
 const BINDINGS_MAPPER = {
   innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
-    `{@html ${stripStateAndPropsRefs(
-      json.bindings.innerHTML?.code as string,
-    )}}`,
+    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML?.code)}}`,
 };
 
 interface BlockToSvelteProps {

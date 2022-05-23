@@ -410,7 +410,7 @@ export const components: CompileAwayComponentsMap = {
     children && imageNodes.push(children);
 
     const href = node.properties.href;
-    const hrefBinding = node.bindings.href?.code;
+    const hrefBinding = node.bindings.href?.code as string;
     if (href || hrefBinding) {
       const aHref = createMitosisNode({
         name: 'a',
@@ -475,7 +475,7 @@ export const components: CompileAwayComponentsMap = {
               src: node.properties.video,
             },
             bindings: {
-              src: { code: node.bindings.video?.code },
+              src: { code: node.bindings.video?.code as string },
             },
           }),
         ],

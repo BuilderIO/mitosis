@@ -28,9 +28,7 @@ export type MitosisNode = {
    * ```
    */
   bindings: {
-    [key: string]:
-      | { code: string | undefined; arguments?: string[] }
-      | undefined;
+    [key: string]: { code: string; arguments?: string[] } | undefined;
   };
   children: MitosisNode[];
 };

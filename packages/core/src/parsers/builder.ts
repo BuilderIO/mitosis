@@ -681,8 +681,8 @@ export const builderElementToMitosisNode = (
       options,
     );
     const mergedCss = merge(
-      json5.parse((node.bindings.css?.code as string) || '{}'),
-      json5.parse((textProperties.bindings.css?.code as string) || '{}'),
+      json5.parse(node.bindings.css?.code || '{}'),
+      json5.parse(textProperties.bindings.css?.code || '{}'),
     );
     return merge({}, textProperties, node, {
       bindings: {

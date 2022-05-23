@@ -473,9 +473,9 @@ const jsxElementToJson = (
       ) as any;
 
     const whenValue =
-      whenAttr &&
-      types.isJSXExpressionContainer(whenAttr.value) &&
-      generate(whenAttr.value.expression).code;
+      whenAttr && types.isJSXExpressionContainer(whenAttr.value)
+        ? generate(whenAttr.value.expression).code
+        : undefined;
 
     const elseValue =
       elseAttr &&
@@ -488,7 +488,7 @@ const jsxElementToJson = (
         else: elseValue || undefined,
       },
       bindings: {
-        when: { code: whenValue || undefined },
+        ...(whenValue ? { when: { code: whenValue } } : {}),
       },
       children: node.children
         .map((item) => jsxElementToJson(item as any))
@@ -748,7 +748,7 @@ function extractContextComponents(json: MitosisComponent) {
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (item.name.endsWith('.Provider')) {
-        const value = item.bindings?.value?.code as string;
+        const value = item.bindings?.value?.code;
         const name = item.name.split('.')[0];
         const refPath = traceReferenceToModulePath(json.imports, name)!;
         json.context.set[refPath] = {
