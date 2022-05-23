@@ -215,7 +215,7 @@ const stringifyBinding =
       } else if (key === 'ref') {
         return ` ref="${useValue}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+        return ` ${BINDING_MAPPERS[key]}="${useValue.replace(/"/g, "\\'")}" `;
       } else {
         return ` :${key}="${useValue}" `;
       }
