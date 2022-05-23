@@ -3,10 +3,12 @@
 exports[`qwik Accordion 1`] = `
 Object {
   "high.jsx": "",
-  "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.csw5022{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;align-items:stretch}.csanagh{margin-top:10px;position:relative;display:flex;align-items:stretch;flex-direction:column;padding-bottom:10px}.c4qyc1p{position:relative;display:flex;align-items:stretch;flex-direction:column;margin-top:10px;padding-bottom:10px}.crwdrpw{text-align:left;display:flex;flex-direction:column}.ctcw2m4{padding-top:50px;text-align:left;display:flex;flex-direction:column;padding-bottom:50px}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div
       gridRowWidth=\\"25%\\"
@@ -211,15 +213,9 @@ export const MyComponent_onRender = () => {
   );
 };
 ",
-  "med.jsx": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.jsx": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -228,10 +224,12 @@ export const MyComponent = componentQrl(
 exports[`qwik For 1`] = `
 Object {
   "high.jsx": "",
-  "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvdfnp5{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:0px;padding-left:20px;padding-right:20px;padding-top:50px;padding-bottom:50px;width:100vw;margin-left:calc(50% - 50vw)}.cz5wnof{width:100%;align-self:stretch;flex-grow:1;box-sizing:border-box;max-width:1200px;display:flex;flex-direction:column;align-items:stretch;margin-left:auto;margin-right:auto}.cdrk993{text-align:center}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div class=\\"cvdfnp5\\" maxWidth={1200}>
       <section class=\\"cz5wnof\\">
@@ -262,15 +260,9 @@ export const MyComponent_onRender = () => {
   );
 };
 ",
-  "med.jsx": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.jsx": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -279,7 +271,7 @@ export const MyComponent = componentQrl(
 exports[`qwik Image 1`] = `
 Object {
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_onClick_0 = () => {
+export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   try {
     return (state.myState = \\"changed value\\");
@@ -294,7 +286,6 @@ export const MyComponent_onClick_0 = () => {
   componentQrl,
   h,
   qrl,
-  useLexicalScope,
   withScopedStylesQrl,
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
@@ -303,13 +294,6 @@ export const MyComponent_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
-};
-export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
-);
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
   return h(
     Fragment,
     null,
@@ -346,6 +330,9 @@ export const MyComponent_onRender = () => {
     )
   );
 };
+export const MyComponent = componentQrl(
+  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+);
 export const Image = function Image(props) {
   var _a;
   var jsx = props.children || [];
@@ -445,7 +432,7 @@ export const __passThroughProps__ = function __passThroughProps__(
 exports[`qwik Image.slow 1`] = `
 Object {
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_onClick_0 = () => {
+export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   try {
     return (state.myState = \\"changed value\\");
@@ -460,7 +447,6 @@ export const MyComponent_onClick_0 = () => {
   componentQrl,
   h,
   qrl,
-  useLexicalScope,
   withScopedStylesQrl,
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
@@ -469,13 +455,6 @@ export const MyComponent_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
-};
-export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
-);
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
   return h(
     Fragment,
     null,
@@ -512,6 +491,9 @@ export const MyComponent_onRender = () => {
     )
   );
 };
+export const MyComponent = componentQrl(
+  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+);
 export const Image = function Image(props) {
   var _a;
   var jsx = props.children || [];
@@ -615,10 +597,14 @@ Object {
   "high.cjs": "",
   "low.cjs": "const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
-const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
+const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
 exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
-exports.MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+exports.MyComponent_onMount = (state) => {
+  if (state.title === undefined) state.title = '\\"Default title value\\"';
+  if (state.hiliteTitle === undefined) state.hiliteTitle = true;
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     \\"div\\",
     {
@@ -649,31 +635,24 @@ exports.MyComponent_onRender = () => {
 ",
   "med.cjs": "const componentQrl = require(\\"@builder.io/qwik\\").componentQrl;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
-const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
-exports.MyComponent_onMount = (state) => {
-  if (state.title === undefined) state.title = '\\"Default title value\\"';
-  if (state.hiliteTitle === undefined) state.hiliteTitle = true;
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
-exports.MyComponent = componentQrl(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
+exports.MyComponent = componentQrl(qrl(\\"./low.js\\", \\"MyComponent_onMount\\", []));
 ",
 }
 `;
 
 exports[`qwik button 1`] = `
 Object {
-  "high.js": "export const MyComponent_onClick_0 = () => {
+  "high.js": "export const MyComponent_onClick_0 = (event) => {
   alert(\\"WORKS!\\");
 };
 ",
   "low.js": "import { CoreButton } from \\"./med.js\\";
-import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(CoreButton, {
     text: \\"Click me!\\",
     class: \\"c9nzze9\\",
@@ -681,15 +660,9 @@ export const MyComponent_onRender = () => {
   });
 };
 ",
-  "med.js": "import { componentQrl, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.js": "import { componentQrl, h, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 export const CoreButton = function CoreButton(props) {
   var hasLink = !!props.link;
@@ -746,10 +719,15 @@ exports[`qwik component bindings 2`] = `
 Object {
   "high.jsx": "",
   "low.jsx": "import { ComponentD187055AF171488FAD843ACF045D6BF7 } from \\"./med.js\\";
-import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+import { Fragment, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`.cj49hqu{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;height:auto;background-color:rgba(227, 227, 227, 1);border-radius:5px;border-style:solid;border-color:rgb(0, 0, 0);border-width:1px;padding-bottom:30px}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
-export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = () => {
-  const state = useLexicalScope()[0];
+export const ComponentD187055AF171488FAD843ACF045D6BF7_onMount = (state) => {
+  if (state.title === undefined) state.title = \\"default-title\\";
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(
+    qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_styles\\", [])
+  );
   return (
     <div class=\\"cj49hqu\\">
       <div class=\\"cjrqfb1\\">
@@ -769,41 +747,6 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7_onRender = () => {
   );
 };
 export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
-  return (
-    <>
-      <div class=\\"c713ty2\\">
-        <ComponentD187055AF171488FAD843ACF045D6BF7
-          title=\\"First title from parent\\"
-          serverStateId=\\"woo8b6\\"
-        ></ComponentD187055AF171488FAD843ACF045D6BF7>
-      </div>
-      <div class=\\"c713ty2\\">
-        <ComponentD187055AF171488FAD843ACF045D6BF7
-          title=\\"Second title from parent\\"
-          serverStateId=\\"woo8b6\\"
-        ></ComponentD187055AF171488FAD843ACF045D6BF7>
-      </div>
-    </>
-  );
-};
-",
-  "med.jsx": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const ComponentD187055AF171488FAD843ACF045D6BF7_onMount = (state) => {
-  if (state.title === undefined) state.title = \\"default-title\\";
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(
-    qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_styles\\", [])
-  );
-  return qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_onRender\\", [
-    state,
-  ]);
-};
-export const ComponentD187055AF171488FAD843ACF045D6BF7 = componentQrl(
-  qrl(\\"./med.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_onMount\\", [])
-);
 export const MyComponent_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
@@ -837,10 +780,30 @@ export const MyComponent_onMount = (state) => {
     return main();
   })();
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
+  return (
+    <>
+      <div class=\\"c713ty2\\">
+        <ComponentD187055AF171488FAD843ACF045D6BF7
+          title=\\"First title from parent\\"
+          serverStateId=\\"woo8b6\\"
+        ></ComponentD187055AF171488FAD843ACF045D6BF7>
+      </div>
+      <div class=\\"c713ty2\\">
+        <ComponentD187055AF171488FAD843ACF045D6BF7
+          title=\\"Second title from parent\\"
+          serverStateId=\\"woo8b6\\"
+        ></ComponentD187055AF171488FAD843ACF045D6BF7>
+      </div>
+    </>
+  );
 };
+",
+  "med.jsx": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
+export const ComponentD187055AF171488FAD843ACF045D6BF7 = componentQrl(
+  qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_onMount\\", [])
+);
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -851,7 +814,7 @@ exports[`qwik component component inputs 1`] = `Object {}`;
 exports[`qwik component component inputs 2`] = `
 Object {
   "high.cjsx": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
-exports.MyComponent_onClick_0 = () => {
+exports.MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   try {
     return (state.data = state.data + 1);
@@ -865,7 +828,6 @@ exports.MyComponent_onClick_0 = () => {
 const componentQrl = require(\\"@builder.io/qwik\\").componentQrl;
 const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
-const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
 exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
 exports.MyComponent_onMount = (state) => {
@@ -873,11 +835,6 @@ exports.MyComponent_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
-};
-exports.MyComponent = componentQrl(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
-exports.MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
   return (
     <>
       <div class=\\"cjrqfb1\\">
@@ -901,6 +858,7 @@ exports.MyComponent_onRender = () => {
     </>
   );
 };
+exports.MyComponent = componentQrl(qrl(\\"./med.js\\", \\"MyComponent_onMount\\", []));
 const CoreButton = (exports.CoreButton = function CoreButton(props) {
   var hasLink = !!props.link;
   var hProps = {
@@ -933,10 +891,12 @@ const __passThroughProps__ = (exports.__passThroughProps__ =
 exports[`qwik hello_world stylesheet 1`] = `
 Object {
   "high.jsx": "",
-  "low.jsx": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.crt27f8{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:123px;line-height:normal;height:auto;text-align:center;margin-left:auto;margin-right:auto}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div class=\\"crt27f8\\">
       <p>
@@ -946,15 +906,9 @@ export const MyComponent_onRender = () => {
   );
 };
 ",
-  "med.jsx": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.jsx": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -964,10 +918,12 @@ exports[`qwik page-with-symbol 1`] = `
 Object {
   "high.js": "",
   "low.js": "import { Symbol1 } from \\"./med.js\\";
-import { Fragment, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+import { Fragment, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}.cxvcn5v{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;padding-top:1em;padding-bottom:1em;font-weight:700;font-size:24px}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     Fragment,
     null,
@@ -983,15 +939,9 @@ export const MyComponent_onRender = () => {
   );
 };
 ",
-  "med.js": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.js": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -1002,7 +952,7 @@ exports[`qwik show-hide 1`] = `Object {}`;
 exports[`qwik show-hide 2`] = `
 Object {
   "high.jsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
-export const MyComponent_onClick_0 = () => {
+export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   try {
     return (state.visible = !state.visible);
@@ -1017,7 +967,6 @@ export const MyComponent_onClick_0 = () => {
   componentQrl,
   h,
   qrl,
-  useLexicalScope,
   withScopedStylesQrl,
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c837pqv{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;width:100%;min-height:20px;min-width:20px;overflow:hidden}\`;
@@ -1026,13 +975,6 @@ export const MyComponent_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./med.js\\", \\"MyComponent_onRender\\", [state]);
-};
-export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
-);
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
   return (
     <>
       <CoreButton
@@ -1081,6 +1023,9 @@ export const MyComponent_onRender = () => {
     </>
   );
 };
+export const MyComponent = componentQrl(
+  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+);
 export const CoreButton = function CoreButton(props) {
   var hasLink = !!props.link;
   var hProps = {
@@ -1193,10 +1138,12 @@ export const Image = function Image(props) {
 exports[`qwik svg 1`] = `
 Object {
   "high.js": "",
-  "low.js": "import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "low.js": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c8xlkz3{display:flex;flex-direction:column;align-items:stretch;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:auto;margin-bottom:auto}\`;
-export const MyComponent_onRender = () => {
-  const state = useLexicalScope()[0];
+export const MyComponent_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
+  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     \\"div\\",
     { class: \\"c8xlkz3\\" },
@@ -1207,15 +1154,9 @@ export const MyComponent_onRender = () => {
   );
 };
 ",
-  "med.js": "import { componentQrl, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
-export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
-  return qrl(\\"./low.js\\", \\"MyComponent_onRender\\", [state]);
-};
+  "med.js": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
 export const MyComponent = componentQrl(
-  qrl(\\"./med.js\\", \\"MyComponent_onMount\\", [])
+  qrl(\\"./low.js\\", \\"MyComponent_onMount\\", [])
 );
 ",
 }
@@ -1223,43 +1164,33 @@ export const MyComponent = componentQrl(
 
 exports[`qwik todo Todo.cjs 1`] = `
 Object {
-  "high.cjs": "const useEvent = require(\\"@builder.io/qwik\\").useEvent;
-const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
-exports.Todo_onClick_0 = () => {
+  "high.cjs": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
+exports.Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   state.toggle();
 };
-exports.Todo_onDblClick_1 = () => {
+exports.Todo_onDblClick_1 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = true;
 };
-exports.Todo_onClick_2 = () => {
+exports.Todo_onClick_2 = (event) => {
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
 };
-exports.Todo_onBlur_3 = () => {
+exports.Todo_onBlur_3 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = false;
 };
-exports.Todo_onKeyUp_4 = () => {
-  {
-    const event = useEvent();
-    props.todo.text = event.target.value;
-  }
+exports.Todo_onKeyUp_4 = (event) => {
+  props.todo.text = event.target.value;
 };
 ",
   "low.cjs": "",
   "med.cjs": "const componentQrl = require(\\"@builder.io/qwik\\").componentQrl;
 const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
-const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 exports.Todo_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
-  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [state]);
-};
-exports.Todo = componentQrl(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
-exports.Todo_onRender = () => {
-  const state = useLexicalScope()[0];
   return h(
     \\"li\\",
     {
@@ -1296,45 +1227,38 @@ exports.Todo_onRender = () => {
       : null
   );
 };
+exports.Todo = componentQrl(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
 ",
 }
 `;
 
 exports[`qwik todo Todo.js 1`] = `
 Object {
-  "high.js": "import { useEvent, useLexicalScope } from \\"@builder.io/qwik\\";
-export const Todo_onClick_0 = () => {
+  "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+export const Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   state.toggle();
 };
-export const Todo_onDblClick_1 = () => {
+export const Todo_onDblClick_1 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = true;
 };
-export const Todo_onClick_2 = () => {
+export const Todo_onClick_2 = (event) => {
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
 };
-export const Todo_onBlur_3 = () => {
+export const Todo_onBlur_3 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = false;
 };
-export const Todo_onKeyUp_4 = () => {
-  {
-    const event = useEvent();
-    props.todo.text = event.target.value;
-  }
+export const Todo_onKeyUp_4 = (event) => {
+  props.todo.text = event.target.value;
 };
 ",
   "low.js": "",
-  "med.js": "import { componentQrl, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "med.js": "import { componentQrl, h, qrl } from \\"@builder.io/qwik\\";
 export const Todo_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
-  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [state]);
-};
-export const Todo = componentQrl(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
-export const Todo_onRender = () => {
-  const state = useLexicalScope()[0];
   return h(
     \\"li\\",
     {
@@ -1371,45 +1295,38 @@ export const Todo_onRender = () => {
       : null
   );
 };
+export const Todo = componentQrl(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
 ",
 }
 `;
 
 exports[`qwik todo Todo.tsx 1`] = `
 Object {
-  "high.tsx": "import { useEvent, useLexicalScope } from \\"@builder.io/qwik\\";
-export const Todo_onClick_0 = () => {
+  "high.tsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
+export const Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
   state.toggle();
 };
-export const Todo_onDblClick_1 = () => {
+export const Todo_onDblClick_1 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = true;
 };
-export const Todo_onClick_2 = () => {
+export const Todo_onClick_2 = (event) => {
   todosState.todos.splice(todosState.todos.indexOf(props.todo));
 };
-export const Todo_onBlur_3 = () => {
+export const Todo_onBlur_3 = (event) => {
   const state = useLexicalScope()[0];
   state.editing = false;
 };
-export const Todo_onKeyUp_4 = () => {
-  {
-    const event = useEvent();
-    props.todo.text = event.target.value;
-  }
+export const Todo_onKeyUp_4 = (event) => {
+  props.todo.text = event.target.value;
 };
 ",
   "low.tsx": "",
-  "med.tsx": "import { componentQrl, h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
+  "med.tsx": "import { componentQrl, h, qrl } from \\"@builder.io/qwik\\";
 export const Todo_onMount = (state) => {
   typeof __STATE__ === \\"object\\" &&
     Object.assign(state, __STATE__[state.serverStateId]);
-  return qrl(\\"./med.js\\", \\"Todo_onRender\\", [state]);
-};
-export const Todo = componentQrl<any, any>(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
-export const Todo_onRender = () => {
-  const state = useLexicalScope()[0];
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
@@ -1442,13 +1359,14 @@ export const Todo_onRender = () => {
     </li>
   );
 };
+export const Todo = componentQrl<any, any>(qrl(\\"./med.js\\", \\"Todo_onMount\\", []));
 ",
 }
 `;
 
 exports[`qwik todos Todo.tsx 1`] = `
 Object {
-  "high.tsx": "export const Todos_onClick_0 = () => {
+  "high.tsx": "export const Todos_onClick_0 = (event) => {
   const newValue = !todosState.allCompleted;
 
   for (const todoItem of todosState.todos) {
@@ -1457,9 +1375,10 @@ Object {
 };
 ",
   "low.tsx": "import { Todo } from \\"./med.js\\";
-import { h, qrl, useLexicalScope } from \\"@builder.io/qwik\\";
-export const Todos_onRender = () => {
-  const state = useLexicalScope()[0];
+import { h, qrl } from \\"@builder.io/qwik\\";
+export const Todos_onMount = (state) => {
+  typeof __STATE__ === \\"object\\" &&
+    Object.assign(state, __STATE__[state.serverStateId]);
   return (
     <section class=\\"main\\">
       {todosState.todos.length ? (
@@ -1485,13 +1404,8 @@ export const Todos_onRender = () => {
 };
 ",
   "med.tsx": "import { componentQrl, qrl } from \\"@builder.io/qwik\\";
-export const Todos_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  return qrl(\\"./low.js\\", \\"Todos_onRender\\", [state]);
-};
 export const Todos = componentQrl<any, any>(
-  qrl(\\"./med.js\\", \\"Todos_onMount\\", [])
+  qrl(\\"./low.js\\", \\"Todos_onMount\\", [])
 );
 ",
 }

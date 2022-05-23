@@ -259,20 +259,31 @@ describe('qwik', () => {
   });
 
   describe('src-generator', () => {
+    let file: File;
+    beforeEach(
+      () =>
+        (file = new File(
+          'test.js',
+          {
+            isPretty: true,
+            isTypeScript: false,
+            isJSX: true,
+            isModule: true,
+          },
+          '',
+          '',
+        )),
+    );
+
     test('should format code', () => {
-      const file = new File(
-        'test.js',
-        {
-          isPretty: true,
-          isTypeScript: false,
-          isJSX: true,
-          isModule: true,
-        },
-        '',
-        '',
-      );
       file.src.emit('const x=1');
       expect(file.toString()).toEqual('const x = 1;\n');
+    });
+
+    test('should deal with empty bindings', () => {
+      file.src.jsxBegin('Image', {}, { image: '' });
+      file.src.jsxEnd('Image');
+      expect(file.toString()).toEqual('<Image></Image>;\n');
     });
   });
 
