@@ -77,19 +77,21 @@ const blockToStencil = (
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const value = json.bindings[key]?.code as string;
+    const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
     if (key === '_spread' || key === '_forName') {
       continue;
     }
 
     if (key === 'ref') {
-      str += ` ref={(el) => this.${value} = el} `;
+      str += ` ref={(el) => this.${code} = el} `;
     } else if (key.startsWith('on')) {
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={event => ${processBinding(value)}} `;
+      str += ` ${useKey}={${cusArgs.join(',')} => ${processBinding(
+        code as string,
+      )}} `;
     } else {
-      str += ` ${key}={${processBinding(value)}} `;
+      str += ` ${key}={${processBinding(code as string)}} `;
     }
   }
   if (selfClosingTags.has(json.name)) {

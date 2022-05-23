@@ -558,13 +558,20 @@ const jsxElementToJson = (
         if (types.isJSXExpressionContainer(value)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
-            memo[key] = { code: generate(expression.body).code };
+            if (key.startsWith('on')) {
+              memo[key] = {
+                code: generate(expression.body).code,
+                arguments: expression.params.map(
+                  (node) => (node as babel.types.Identifier)?.name,
+                ),
+              };
+            } else {
+              memo[key] = { code: generate(expression.body).code };
+            }
           } else {
             memo[key] = { code: generate(expression).code };
           }
-          if (key === '_spread') {
-            debugger;
-          }
+
           return memo;
         }
       } else if (types.isJSXSpreadAttribute(item)) {
@@ -696,6 +703,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
+
         if (value) {
           item.bindings[key] = {
             code: mapReactIdentifiersInExpression(
@@ -703,6 +711,9 @@ function mapReactIdentifiers(json: MitosisComponent) {
               stateProperties,
             ),
           };
+          if (value.arguments?.length) {
+            item.bindings[key]!.arguments = value.arguments;
+          }
         }
         if (key === 'className') {
           const currentValue = item.bindings[key];

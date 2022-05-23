@@ -7,6 +7,7 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
+const basic = require('./data/basic.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
 const basicOutputs = require('./data/basic-outputs.raw');
@@ -17,6 +18,12 @@ const classNameJsx = require('./data/blocks/classname-jsx.raw');
 // const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
+  test('Basic', () => {
+    const component = parseJsx(basic);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('Basic Child Component', () => {
     const component = parseJsx(basicChildComponent);
     const output = componentToAngular()({ component });

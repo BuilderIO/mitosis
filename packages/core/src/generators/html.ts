@@ -114,7 +114,7 @@ const addUpdateAfterSet = (
 
         const newValue = addUpdateAfterSetInCode(value, options);
         if (newValue !== value) {
-          item.bindings[key] = { code: newValue };
+          item.bindings[key]!.code = newValue;
         }
       }
     }
@@ -422,6 +422,7 @@ const blockToHtml = (
         continue;
       }
       const value = json.bindings[key]?.code as string;
+      const cusArg = json.bindings[key]?.arguments || ['event'];
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 
@@ -438,8 +439,8 @@ const blockToHtml = (
           // Event handler for '${event}' event on ${elId}
           ${
             options.format === 'class'
-              ? `this.${fnName} = (event) => {`
-              : `function ${fnName} (event) {`
+              ? `this.${fnName} = (${cusArg.join(',')}) => {`
+              : `function ${fnName} (${cusArg.join(',')}) {`
           }
               ${addScopeVars(
                 scopeVars,
