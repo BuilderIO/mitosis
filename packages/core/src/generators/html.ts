@@ -54,6 +54,7 @@ type InternalToHtmlOptions = ToHtmlOptions & {
 };
 interface BlockOptions {
   contextVars?: string[];
+  context?: string;
   scopeVars?: ScopeVars;
   childComponents?: string[];
   outputs?: string[];
@@ -231,6 +232,7 @@ const updateReferencesInCode = (
   blockOptions: BlockOptions = {},
 ) => {
   const contextVars = blockOptions.contextVars || [];
+  const context = blockOptions?.context || 'this.';
   if (options?.experimental?.updateReferencesInCode) {
     return options?.experimental?.updateReferencesInCode(code, options, {
       stripStateAndPropsRefs,
@@ -241,14 +243,16 @@ const updateReferencesInCode = (
       stripStateAndPropsRefs(code, {
         includeProps: false,
         includeState: true,
-        replaceWith: 'this.state.',
+        replaceWith: context + 'state.',
+        context,
       }),
       {
         // TODO: replace with `this.` and add setters that call this.update()
         includeProps: true,
         includeState: false,
-        replaceWith: 'this.props.',
+        replaceWith: context + 'props.',
         contextVars,
+        context,
       },
     );
   }
@@ -821,8 +825,10 @@ export const componentToHtml =
             : `
           // Helper to render loops
           function renderLoop(template, array, itemName, itemIndex, collectionName) {
+            const collection = [];
             for (let [index, value] of array.entries()) {
               const elementFragment = template.content.cloneNode(true);
+              const children = Array.from(elementFragment.childNodes)
               const localScope = {};
               let scope = localScope;
               if (template?.scope) {
@@ -839,7 +845,7 @@ export const componentToHtml =
                 };
                 scope = new Proxy(localScope, getParent);
               }
-              Array.from(elementFragment.childNodes).reversrEach((child) => {
+              children.forEach((child) => {
                 if (itemName !== undefined) {
                   scope[itemName] = value;
                 }
@@ -854,8 +860,9 @@ export const componentToHtml =
                   child.context = template.context;
                 }
                 this.nodesToDestroy.push(child);
-                template.after(child);
+                collection.unshift(child);
               });
+              collection.forEach(child => template.after(child));
             }
           }
 
@@ -1074,6 +1081,18 @@ export const componentToCustomElement =
           }
           ${context.join('\n')}
 
+          ${
+            !json.hooks.onUpdate?.length
+              ? ''
+              : `
+            this.updateDeps = [${json.hooks.onUpdate
+              ?.map((hook) =>
+                updateReferencesInCode(hook?.deps || '[]', useOptions),
+              )
+              .join(',')}];
+            `
+          }
+
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
           // batch updates
@@ -1233,10 +1252,37 @@ export const componentToCustomElement =
             !json.hooks.onUpdate?.length
               ? ''
               : `
-            ${json.hooks.onUpdate.reduce((code, hook) => {
-              code += updateReferencesInCode(hook.code, useOptions, {
-                contextVars,
-              });
+              const self = this;
+            ${json.hooks.onUpdate.reduce((code, hook, index) => {
+              // create check update
+              if (hook?.deps) {
+                code += `
+                ;(function (__prev, __next) {
+                  const __hasChange = __prev.find((val, index) => val !== __next[index]);
+                  if (__hasChange !== undefined) {
+                    ${updateReferencesInCode(hook.code, useOptions, {
+                      contextVars,
+                      context: 'self.',
+                    })}
+                    self.updateDeps[${index}] = __next;
+                  }
+                }(self.updateDeps[${index}], ${updateReferencesInCode(
+                  hook?.deps || '[]',
+                  useOptions,
+                  {
+                    contextVars,
+                    context: 'self.',
+                  },
+                )}));
+                `;
+              } else {
+                code += `
+                ${updateReferencesInCode(hook.code, useOptions, {
+                  contextVars,
+                  context: 'self.',
+                })}
+                `;
+              }
               return code + '\n';
             }, '')} 
             `
@@ -1444,10 +1490,10 @@ export const componentToCustomElement =
                   child.context = context;
                 }
                 this.nodesToDestroy.push(child);
-                collection.push(child)
+                collection.unshift(child)
               });
             }
-            collection.reverse().forEach(child => template.after(child));
+            collection.forEach(child => template.after(child));
           }
         `
         }
