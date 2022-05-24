@@ -143,8 +143,10 @@ exports[`Html BasicFor 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -161,7 +163,7 @@ exports[`Html BasicFor 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -176,8 +178,9 @@ exports[`Html BasicFor 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -416,8 +419,10 @@ exports[`Html Columns 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -434,7 +439,7 @@ exports[`Html Columns 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -449,8 +454,9 @@ exports[`Html Columns 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -680,8 +686,10 @@ exports[`Html ImageState 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -698,7 +706,7 @@ exports[`Html ImageState 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -713,8 +721,9 @@ exports[`Html ImageState 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -967,8 +976,10 @@ exports[`Html SectionState 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -985,7 +996,7 @@ exports[`Html SectionState 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -1000,8 +1011,9 @@ exports[`Html SectionState 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -1106,8 +1118,10 @@ exports[`Html Select block 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -1124,7 +1138,7 @@ exports[`Html Select block 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -1139,8 +1153,9 @@ exports[`Html Select block 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -1370,8 +1385,10 @@ exports[`Html Shadow DOM 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -1388,7 +1405,7 @@ exports[`Html Shadow DOM 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -1403,8 +1420,9 @@ exports[`Html Shadow DOM 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
@@ -1644,8 +1662,10 @@ exports[`Html Stamped 1`] = `
 
     // Helper to render loops
     function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
         const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
         const localScope = {};
         let scope = localScope;
         if (template?.scope) {
@@ -1662,7 +1682,7 @@ exports[`Html Stamped 1`] = `
           };
           scope = new Proxy(localScope, getParent);
         }
-        Array.from(elementFragment.childNodes).reversrEach((child) => {
+        children.forEach((child) => {
           if (itemName !== undefined) {
             scope[itemName] = value;
           }
@@ -1677,8 +1697,9 @@ exports[`Html Stamped 1`] = `
             child.context = template.context;
           }
           this.nodesToDestroy.push(child);
-          template.after(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
