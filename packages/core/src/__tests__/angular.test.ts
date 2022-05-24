@@ -15,6 +15,7 @@ const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
 const classNameJsx = require('./data/blocks/classname-jsx.raw');
+const text = require('./data/blocks/text.raw');
 // const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
@@ -109,6 +110,12 @@ describe('Angular', () => {
 
   test('className to class', () => {
     const component = parseJsx(classNameJsx);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Text', () => {
+    const component = parseJsx(text);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });

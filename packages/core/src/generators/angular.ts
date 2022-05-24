@@ -61,6 +61,11 @@ const mappers: {
   },
 };
 
+// TODO: Maybe in the future allow defining `string | function` as values
+const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
+  innerHTML: 'innerHTML',
+};
+
 export const blockToAngular = (
   json: MitosisNode,
   options: ToAngularOptions = {},
@@ -181,8 +186,13 @@ export const blockToAngular = (
         needsToRenderSlots.push(
           `${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`,
         );
+      } else if (BINDINGS_MAPPER[key]) {
+        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(
+          /"/g,
+          "\\'",
+        )}"  `;
       } else {
-        str += ` [${key}]="${useValue}" `;
+        str += ` [${key}]='${useValue}' `;
       }
     }
     if (selfClosingTags.has(json.name)) {
