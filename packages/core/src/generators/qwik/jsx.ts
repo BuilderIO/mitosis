@@ -1,3 +1,4 @@
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
@@ -15,17 +16,23 @@ export function renderJSXNodes(
   return function (this: SrcBuilder) {
     if (children.length == 0) return;
     if (root) this.emit('(');
-    const needsFragment = root && children.length > 1;
+    const needsFragment =
+      root && (children.length > 1 || isInlinedDirective(children[0]));
     file.import(file.qwikModule, 'h');
     if (needsFragment) {
-      file.import(file.qwikModule, 'Fragment');
       this.jsxBeginFragment(file.import(file.qwikModule, 'Fragment'));
     }
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
         if (child.bindings._text?.code !== undefined) {
-          this.jsxTextBinding(child.bindings._text.code);
+          if (child.bindings._text.code == 'props.children') {
+            this.file.import(this.file.qwikModule, 'Slot');
+            this.jsxBegin('Slot', {}, {});
+            this.jsxEnd('Slot');
+          } else {
+            this.jsxTextBinding(child.bindings._text.code);
+          }
         } else {
           this.isJSX
             ? this.emit(child.properties._text)
@@ -48,6 +55,7 @@ export function renderJSXNodes(
               ).call(this),
             ),
           );
+          !this.isJSX && this.emit(',');
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
@@ -79,7 +87,9 @@ export function renderJSXNodes(
               // special case for Images. We want to make sure that we include the maxWidth in a srcset
               specialBindings.srcsetSizes = Number.parseInt(imageMaxWidth);
             }
-            props.class = addClass(styleProps.CLASS_NAME, props.class);
+            if (styleProps?.CLASS_NAME) {
+              props.class = addClass(styleProps.CLASS_NAME, props.class);
+            }
           }
           const symbolBindings: Record<string, string> = {};
           const bindings = rewriteHandlers(
@@ -183,4 +193,8 @@ function rewriteHandlers(
     }
   }
   return outBindings;
+}
+
+function isInlinedDirective(node: MitosisNode) {
+  return (isMitosisNode(node) && node.name == 'Show') || node.name == 'For';
 }

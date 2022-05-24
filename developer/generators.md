@@ -1,8 +1,8 @@
 # Generators
 
-Generators are made up of 2 main functions: `contentTo<framework>` and `blockTo<framework>`, where `<framework>` is the target framework.
+Generators are made up of 2 main functions: `componentTo<framework>` and `blockTo<framework>`, where `<framework>` is the target framework.
 
-## contentTo<framework>
+## `componentTo<framework>`
 
 is responsible for converting an entire JSON mitosis component to a component in the target framework (as a string)
 
