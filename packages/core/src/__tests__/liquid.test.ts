@@ -17,6 +17,7 @@ const stamped = require('./data/blocks/stamped-io.raw');
 const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
+const classNameJsx = require('./data/blocks/classname-jsx.raw');
 
 describe('Liquid', () => {
   test('Basic', () => {
@@ -117,6 +118,12 @@ describe('Liquid', () => {
 
   test('Columns', () => {
     const component = parseJsx(columns);
+    const output = componentToLiquid()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('ClassName', () => {
+    const component = parseJsx(classNameJsx);
     const output = componentToLiquid()({ component });
     expect(output).toMatchSnapshot();
   });

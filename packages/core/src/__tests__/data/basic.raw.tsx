@@ -6,7 +6,12 @@ export default function MyBasicComponent() {
   });
 
   return (
-    <div>
+    <div
+      class="test"
+      css={{
+        padding: '10px',
+      }}
+    >
       <input
         value={state.name}
         onChange={(myEvent) => (state.name = myEvent.target.value)}
