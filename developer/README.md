@@ -9,7 +9,7 @@ Mitosis is structured as a mono-repo. The packages live under `packages/`:
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
 - `cli` (`@builder.io/mitosis-cli`): contains the Mitosis CLI, and _depends_ on `core`
 - `fiddle`: contains the code for the interactive Mitosis fiddle, which is hosted at mitosis.builder.io
-- `eslint-plugin` (package TBD): contains the Mitosis eslint rules to enforce valid Mitosis component syntax. Yet to be released.
+- `eslint-plugin` (`@builder.io/eslint-plugin-mitosis`): contains the Mitosis eslint rules to enforce valid Mitosis component syntax. Yet to be released.
 
 ## Installation
 
