@@ -1,5 +1,3 @@
-import { booleanAlgebraBoolean } from 'fp-ts/lib/BooleanAlgebra';
-
 export const htmlElementAttributes: { [key: string]: string[] } = {
   '*': [
     'accesskey',
