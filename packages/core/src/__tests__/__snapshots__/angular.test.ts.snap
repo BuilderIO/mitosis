@@ -22,6 +22,8 @@ exports[`Angular Basic 1`] = `
 })
 export default class MyBasicComponent {
   name = \\"Steve\\";
+
+  constructor() {}
 }
 "
 `;
@@ -50,6 +52,8 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
+
+  constructor() {}
 }
 "
 `;
@@ -77,12 +81,12 @@ export default class MyBasicComponent {
     console.log(change);
   };
 
-  constructor(public myService: MyService) {}
-
-  ngOnInit() {
+  constructor(public myService: MyService) {
     const hi = this.myService.method(\\"hi\\");
     console.log(hi);
+  }
 
+  ngOnInit() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
   }
@@ -142,6 +146,8 @@ export default class MyMasicRefComponent {
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
   };
+
+  constructor() {}
 }
 "
 `;
@@ -173,6 +179,8 @@ export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
+  constructor() {}
+
   ngOnInit() {
     console.log(\\"onMount code\\");
   }
@@ -193,7 +201,9 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export default class SlotCode {}
+export default class SlotCode {
+  constructor() {}
+}
 "
 `;
 
@@ -236,6 +246,8 @@ export default class MyBasicOutputsComponent {
 
   name = \\"PatrickJS\\";
 
+  constructor() {}
+
   ngOnInit() {
     this.onMessage.emit(this.name);
     this.onEvent.emit(this.message);
@@ -261,6 +273,8 @@ export default class MyBasicOutputsComponent {
 
   name = \\"PatrickJS\\";
 
+  constructor() {}
+
   ngOnInit() {
     this.onMessage.emit(this.name);
     this.onEvent.emit(this.message);
@@ -284,6 +298,8 @@ exports[`Angular className to class 1`] = `
 })
 export default class ClassNameCode {
   bindings = \\"a binding\\";
+
+  constructor() {}
 }
 "
 `;
@@ -298,6 +314,8 @@ exports[`Angular multiple onUpdate 1`] = `
   \`,
 })
 export default class MultipleOnUpdate {
+  constructor() {}
+
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
 
@@ -326,7 +344,9 @@ exports[`Angular ng-content and Slot 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotCode {}
+export default class ContentSlotCode {
+  constructor() {}
+}
 "
 `;
 
@@ -349,6 +369,8 @@ exports[`Angular ng-content and Slot jsx-props 1`] = `
 })
 export default class ContentSlotJsxCode {
   @Input() children: any;
+
+  constructor() {}
 }
 "
 `;
@@ -363,7 +385,7 @@ exports[`Angular onInit 1`] = `
   \`,
 })
 export default class OnInit {
-  ngOnInit() {
+  constructor() {
     console.log(\\"Runs once every update/rerender\\");
   }
 }
@@ -380,9 +402,11 @@ exports[`Angular onInit and onMount 1`] = `
   \`,
 })
 export default class OnInit {
-  ngOnInit() {
+  constructor() {
     console.log(\\"onInit\\");
+  }
 
+  ngOnInit() {
     console.log(\\"onMount\\");
   }
 }
@@ -399,6 +423,8 @@ exports[`Angular onMount 1`] = `
   \`,
 })
 export default class Comp {
+  constructor() {}
+
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -420,6 +446,8 @@ exports[`Angular onUpdate 1`] = `
   \`,
 })
 export default class OnUpdate {
+  constructor() {}
+
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }

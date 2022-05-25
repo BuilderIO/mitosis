@@ -1157,8 +1157,8 @@ export const componentToCustomElement =
               this._root.innerHTML = \`
       ${html}\`;
               this.pendingUpdate = true;
-              this.render();
               ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
+              this.render();
               this.onMount();
               this.pendingUpdate = false;
               this.update();

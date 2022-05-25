@@ -274,9 +274,7 @@ export const componentToAngular =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    const hasOnInit = Boolean(
-      component.hooks?.onInit || component.hooks?.onMount,
-    );
+    const hasOnMount = Boolean(component.hooks?.onMount);
 
     const refs = Array.from(getRefs(json));
     mapRefs(json, (refName) => `this.${refName}.nativeElement`);
@@ -349,23 +347,25 @@ export const componentToAngular =
 
       ${dataString}
 
-      ${!hasInjectable ? '' : `constructor(\n${injectables.join(',\n')}) {}`}
+      constructor(\n${injectables.join(',\n')}) {
+        ${
+          !component.hooks?.onInit
+            ? ''
+            : `
+          ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+            replaceWith: 'this.',
+            contextVars,
+            outputVars,
+          })}
+          `
+        }
+      }
 
       ${
-        !hasOnInit
+        !hasOnMount
           ? ''
           : `ngOnInit() {
-              ${
-                !component.hooks?.onInit
-                  ? ''
-                  : `
-                ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                })}
-                `
-              }
+              
               ${
                 !component.hooks?.onMount
                   ? ''
