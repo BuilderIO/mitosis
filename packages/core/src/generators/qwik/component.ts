@@ -220,10 +220,12 @@ function addComponentOnMount(
         arrowFnValue(['state'], () =>
           this.emit(
             '{',
+            'if(!state.__INIT__){',
+            'state.__INIT__=true;',
             ...inputInitializer,
             'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
             iif(component.hooks.onMount?.code),
-            ';',
+            '}',
             useStyles,
             onRenderEmit,
             ';}',
