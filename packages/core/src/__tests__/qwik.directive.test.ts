@@ -147,5 +147,6 @@ function srcSet(url: string, additionalSizes: string = ''): any {
       parsedUrl.searchParams.set('width', size);
       return `${parsedUrl} ${size}w`;
     })
+    .concat([url.replace('?format=webp', '')])
     .join(', ');
 }
