@@ -2,7 +2,7 @@
 
 exports[`Html Basic 1`] = `
 "<div class=\\"test div\\">
-  <input data-name=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>
@@ -34,8 +34,8 @@ exports[`Html Basic 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.setAttribute(\\"value\\", state.name);
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
@@ -61,11 +61,11 @@ exports[`Html Basic 1`] = `
 
 exports[`Html BasicFor 1`] = `
 "<div>
-  <template data-name=\\"for\\">
-    <input data-name=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <template data-el=\\"for\\">
+    <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
     Hello
-    <template data-name=\\"div-1\\"><!-- person --></template>
+    <template data-el=\\"div-1\\"><!-- person --></template>
     ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
   </template>
 </div>
@@ -92,19 +92,19 @@ exports[`Html BasicFor 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.names;
         renderLoop(el, array, \\"person\\");
       });
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
-        el.setAttribute(\\"value\\", state.name);
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.value = state.name;
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         const person = getScope(el, \\"person\\");
         renderTextNode(el, person);
       });
@@ -198,15 +198,15 @@ exports[`Html BasicFor 1`] = `
 `;
 
 exports[`Html Button 1`] = `
-"<template data-name=\\"show\\">
-  <a data-name=\\"a-1\\">
-    <template data-name=\\"div-1\\"><!-- props.text --></template>
+"<template data-el=\\"show\\">
+  <a data-el=\\"a-1\\">
+    <template data-el=\\"div-1\\"><!-- props.text --></template>
   </a>
 </template>
 
-<template data-name=\\"show-2\\">
-  <button type=\\"button\\" data-name=\\"button-1\\">
-    <template data-name=\\"div-2\\"><!-- props.text --></template>
+<template data-el=\\"show-2\\">
+  <button type=\\"button\\" data-el=\\"button-1\\">
+    <template data-el=\\"div-2\\"><!-- props.text --></template>
   </button>
 </template>
 
@@ -233,14 +233,14 @@ exports[`Html Button 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='a-1']\\").forEach((el) => {
         el.setAttribute(\\"href\\", props.link);
 
         el.setAttribute(
@@ -249,18 +249,18 @@ exports[`Html Button 1`] = `
         );
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
 
-      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
         const whenCondition = !props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
 
@@ -311,11 +311,11 @@ exports[`Html Button 1`] = `
 
 exports[`Html Columns 1`] = `
 "<div class=\\"builder-columns div\\">
-  <template data-name=\\"for\\">
+  <template data-el=\\"for\\">
     <div class=\\"builder-column div-2\\">
-      <template data-name=\\"div-1\\"><!-- column.content --></template>
+      <template data-el=\\"div-1\\"><!-- column.content --></template>
 
-      <template data-name=\\"div-2\\"><!-- index --></template>
+      <template data-el=\\"div-2\\"><!-- index --></template>
     </div>
   </template>
 </div>
@@ -381,17 +381,17 @@ exports[`Html Columns 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.columns;
         renderLoop(el, array, \\"column\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         const column = getScope(el, \\"column\\");
         renderTextNode(el, column.content);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
@@ -474,12 +474,12 @@ exports[`Html Columns 1`] = `
 `;
 
 exports[`Html Image 1`] = `
-"<picture data-name=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
-  <template data-name=\\"show\\">
-    <img class=\\"img\\" data-name=\\"img-1\\" />
+"<picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
+  <template data-el=\\"show\\">
+    <img class=\\"img\\" data-el=\\"img-1\\" />
   </template>
 
-  <source data-name=\\"source-1\\" />
+  <source data-el=\\"source-1\\" />
 </picture>
 
 <slot></slot>
@@ -533,14 +533,14 @@ exports[`Html Image 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = !state.useLazyLoading() || state.load;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         el.setAttribute(\\"alt\\", props.altText);
 
         el.setAttribute(
@@ -548,10 +548,7 @@ exports[`Html Image 1`] = `
           props.altText ? \\"presentation\\" : undefined
         );
 
-        el.setAttribute(
-          \\"class\\",
-          \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")
-        );
+        el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
 
         el.setAttribute(\\"src\\", props.image);
 
@@ -563,7 +560,7 @@ exports[`Html Image 1`] = `
         el.setAttribute(\\"sizes\\", props.sizes);
       });
 
-      document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='source-1']\\").forEach((el) => {
         el.setAttribute(\\"srcset\\", props.srcset);
       });
 
@@ -633,8 +630,8 @@ exports[`Html Image 1`] = `
 
 exports[`Html ImageState 1`] = `
 "<div>
-  <template data-name=\\"for\\">
-    <img data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <img data-el=\\"img-1\\" />
   </template>
 </div>
 <script>
@@ -660,16 +657,16 @@ exports[`Html ImageState 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.images;
         renderLoop(el, array, \\"item\\", \\"itemIndex\\");
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         const item = getScope(el, \\"item\\");
         const itemIndex = getScope(el, \\"itemIndex\\");
 
-        el.setAttribute(\\"class\\", \\"custom-class\\");
+        el.className = \\"custom-class\\";
 
         el.setAttribute(\\"src\\", item);
 
@@ -741,7 +738,7 @@ exports[`Html ImageState 1`] = `
 `;
 
 exports[`Html Img 1`] = `
-"<img data-name=\\"img-1\\" />
+"<img data-el=\\"img-1\\" />
 <script>
   (() => {
     const state = {};
@@ -765,7 +762,7 @@ exports[`Html Img 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         Object.assign(el.style, {
           objectFit: props.backgroundSize || \\"cover\\",
           objectPosition: props.backgroundPosition || \\"center\\",
@@ -791,7 +788,7 @@ exports[`Html Img 1`] = `
 `;
 
 exports[`Html Input block 1`] = `
-"<input data-name=\\"input-1\\" data-dom-state=\\"input-2\\" />
+"<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
     const state = {};
@@ -815,7 +812,7 @@ exports[`Html Input block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
         el.key =
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
@@ -827,7 +824,7 @@ exports[`Html Input block 1`] = `
 
         el.setAttribute(\\"name\\", props.name);
 
-        el.setAttribute(\\"value\\", props.value);
+        el.value = props.value;
 
         el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
@@ -847,7 +844,7 @@ exports[`Html Input block 1`] = `
 `;
 
 exports[`Html Section 1`] = `
-"<section data-name=\\"section-1\\">
+"<section data-el=\\"section-1\\">
   <slot></slot>
 </section>
 <script>
@@ -873,7 +870,7 @@ exports[`Html Section 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='section-1']\\").forEach((el) => {
         Object.assign(
           el.style,
           props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -897,9 +894,9 @@ exports[`Html Section 1`] = `
 `;
 
 exports[`Html SectionState 1`] = `
-"<template data-name=\\"show\\">
-  <template data-name=\\"for\\">
-    <section data-name=\\"section-1\\">
+"<template data-el=\\"show\\">
+  <template data-el=\\"for\\">
+    <section data-el=\\"section-1\\">
       <slot></slot>
     </section>
   </template>
@@ -927,19 +924,19 @@ exports[`Html SectionState 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.max;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.items;
         renderLoop(el, array, \\"item\\");
       });
 
-      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='section-1']\\").forEach((el) => {
         const item = getScope(el, \\"item\\");
         Object.assign(el.style, {
           maxWidth: item + state.max,
@@ -1031,12 +1028,10 @@ exports[`Html SectionState 1`] = `
 `;
 
 exports[`Html Select block 1`] = `
-"<select data-name=\\"select-1\\" data-dom-state=\\"select-2\\">
-  <template data-name=\\"for\\">
-    <option data-name=\\"option-1\\">
-      <template data-name=\\"div-1\\">
-        <!-- option.name || option.value -->
-      </template>
+"<select data-el=\\"select-1\\" data-dom-state=\\"select-2\\">
+  <template data-el=\\"for\\">
+    <option data-el=\\"option-1\\">
+      <template data-el=\\"div-1\\"><!-- option.name || option.value --></template>
     </option>
   </template>
 </select>
@@ -1063,8 +1058,8 @@ exports[`Html Select block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
-        el.setAttribute(\\"value\\", props.value);
+      document.querySelectorAll(\\"[data-el='select-1']\\").forEach((el) => {
+        el.value = props.value;
 
         el.key =
           Builder.isEditing && props.defaultValue
@@ -1076,21 +1071,21 @@ exports[`Html Select block 1`] = `
         el.setAttribute(\\"name\\", props.name);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.options;
         renderLoop(el, array, \\"option\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         const index = getScope(el, \\"index\\");
 
-        el.setAttribute(\\"value\\", option.value);
+        el.value = option.value;
 
         el.setAttribute(\\"data-index\\", index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         const option = getScope(el, \\"option\\");
         renderTextNode(el, option.name || option.value);
       });
@@ -1173,10 +1168,10 @@ exports[`Html Select block 1`] = `
 `;
 
 exports[`Html Shadow DOM 1`] = `
-"<div data-name=\\"div-1\\">
-  <button data-name=\\"button-1\\">Write a review</button>
+"<div data-el=\\"div-1\\">
+  <button data-el=\\"button-1\\">Write a review</button>
 
-  <template data-name=\\"show\\">
+  <template data-el=\\"show\\">
     <input placeholder=\\"Email\\" data-dom-state=\\"input-1\\" />
 
     <input placeholder=\\"Title\\" class=\\"input\\" data-dom-state=\\"input-2\\" />
@@ -1187,25 +1182,25 @@ exports[`Html Shadow DOM 1`] = `
       data-dom-state=\\"textarea-1\\"
     ></textarea>
 
-    <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+    <button class=\\"button\\" data-el=\\"button-2\\">Submit</button>
   </template>
 
-  <template data-name=\\"for\\">
-    <div class=\\"review\\" data-name=\\"review\\">
-      <img class=\\"img\\" data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <div class=\\"review\\" data-el=\\"review\\">
+      <img class=\\"img\\" data-el=\\"img-1\\" />
 
-      <div data-name=\\"div-2\\">
+      <div data-el=\\"div-2\\">
         <div>
           N:
-          <template data-name=\\"div-3\\"><!-- index --></template>
+          <template data-el=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <template data-name=\\"div-4\\"><!-- review.author --></template>
+          <template data-el=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <template data-name=\\"div-5\\"><!-- review.reviewMessage --></template>
+          <template data-el=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1258,62 +1253,59 @@ exports[`Html Shadow DOM 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton1Click);
         el.addEventListener(\\"click\\", onButton1Click);
       });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton2Click);
         el.addEventListener(\\"click\\", onButton2Click);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.reviews;
         renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='review']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
 
         el.setAttribute(\\"src\\", review.avatar);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.setAttribute(
-          \\"class\\",
-          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
-        );
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
         renderTextNode(el, review.author);
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
         renderTextNode(el, review.reviewMessage);
       });
@@ -1440,10 +1432,10 @@ exports[`Html Shadow DOM 1`] = `
 `;
 
 exports[`Html Stamped 1`] = `
-"<div data-name=\\"div-1\\">
-  <button data-name=\\"button-1\\">Write a review</button>
+"<div data-el=\\"div-1\\">
+  <button data-el=\\"button-1\\">Write a review</button>
 
-  <template data-name=\\"show\\">
+  <template data-el=\\"show\\">
     <input placeholder=\\"Email\\" data-dom-state=\\"input-1\\" />
 
     <input placeholder=\\"Title\\" class=\\"input\\" data-dom-state=\\"input-2\\" />
@@ -1454,25 +1446,25 @@ exports[`Html Stamped 1`] = `
       data-dom-state=\\"textarea-1\\"
     ></textarea>
 
-    <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+    <button class=\\"button\\" data-el=\\"button-2\\">Submit</button>
   </template>
 
-  <template data-name=\\"for\\">
-    <div class=\\"review\\" data-name=\\"review\\">
-      <img class=\\"img\\" data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <div class=\\"review\\" data-el=\\"review\\">
+      <img class=\\"img\\" data-el=\\"img-1\\" />
 
-      <div data-name=\\"div-2\\">
+      <div data-el=\\"div-2\\">
         <div>
           N:
-          <template data-name=\\"div-3\\"><!-- index --></template>
+          <template data-el=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <template data-name=\\"div-4\\"><!-- review.author --></template>
+          <template data-el=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <template data-name=\\"div-5\\"><!-- review.reviewMessage --></template>
+          <template data-el=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1535,62 +1527,59 @@ exports[`Html Stamped 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton1Click);
         el.addEventListener(\\"click\\", onButton1Click);
       });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton2Click);
         el.addEventListener(\\"click\\", onButton2Click);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.reviews;
         renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='review']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
 
         el.setAttribute(\\"src\\", review.avatar);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.setAttribute(
-          \\"class\\",
-          state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"
-        );
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
         const index = getScope(el, \\"index\\");
         renderTextNode(el, index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
         renderTextNode(el, review.author);
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
         const review = getScope(el, \\"review\\");
         renderTextNode(el, review.reviewMessage);
       });
@@ -1717,8 +1706,8 @@ exports[`Html Stamped 1`] = `
 `;
 
 exports[`Html Submit button block 1`] = `
-"<button type=\\"submit\\" data-name=\\"button-1\\">
-  <template data-name=\\"div-1\\"><!-- props.text --></template>
+"<button type=\\"submit\\" data-el=\\"button-1\\">
+  <template data-el=\\"div-1\\"><!-- props.text --></template>
 </button>
 <script>
   (() => {
@@ -1743,7 +1732,7 @@ exports[`Html Submit button block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.text);
       });
 
@@ -1773,7 +1762,7 @@ exports[`Html Submit button block 1`] = `
 `;
 
 exports[`Html Text 1`] = `
-"<div data-name=\\"div-1\\"></div>
+"<div data-el=\\"div-1\\"></div>
 <script>
   (() => {
     const state = { name: \\"Decadef20\\" };
@@ -1797,20 +1786,18 @@ exports[`Html Text 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
         el.setAttribute(\\"data-name\\", {
           test: state.name || \\"any name\\",
         });
 
-        el.setAttribute(
-          \\"innerHTML\\",
+        el.innerHTML =
           props.text ||
-            props.content ||
-            state.name ||
-            '<p class=\\"text-lg\\">my name</p>'
-        );
+          props.content ||
+          state.name ||
+          '<p class=\\"text-lg\\">my name</p>';
       });
 
       destroyAnyNodes();
@@ -1826,7 +1813,7 @@ exports[`Html Text 1`] = `
 `;
 
 exports[`Html Textarea 1`] = `
-"<textarea data-name=\\"textarea-1\\" data-dom-state=\\"textarea-2\\"></textarea>
+"<textarea data-el=\\"textarea-1\\" data-dom-state=\\"textarea-2\\"></textarea>
 <script>
   (() => {
     const state = {};
@@ -1850,12 +1837,12 @@ exports[`Html Textarea 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='textarea-1']\\").forEach((el) => {
         el.setAttribute(\\"placeholder\\", props.placeholder);
 
         el.setAttribute(\\"name\\", props.name);
 
-        el.setAttribute(\\"value\\", props.value);
+        el.value = props.value;
 
         el.setAttribute(\\"defaultValue\\", props.defaultValue);
       });
@@ -1873,7 +1860,7 @@ exports[`Html Textarea 1`] = `
 `;
 
 exports[`Html Video 1`] = `
-"<video preload=\\"none\\" data-name=\\"video-1\\"></video>
+"<video preload=\\"none\\" data-el=\\"video-1\\"></video>
 <script>
   (() => {
     const state = {};
@@ -1897,7 +1884,7 @@ exports[`Html Video 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='video-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='video-1']\\").forEach((el) => {
         Object.assign(el.style, {
           width: \\"100%\\",
           height: \\"100%\\",
@@ -1938,7 +1925,7 @@ exports[`Html className 1`] = `
 "<div>
   <div class=\\"no binding\\">Without Binding</div>
 
-  <div data-name=\\"div-1\\">With binding</div>
+  <div data-el=\\"div-1\\">With binding</div>
 </div>
 <script>
   (() => {
@@ -1963,8 +1950,8 @@ exports[`Html className 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.setAttribute(\\"class\\", state.bindings);
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.className = state.bindings;
       });
 
       destroyAnyNodes();
