@@ -52,8 +52,7 @@ const componentMappers: {
         Symbol(node, options) {
           const child = node.children[0];
           const symbolOptions =
-            (node.bindings.symbol &&
-              json5.parse(node.bindings.symbol.code as string)) ||
+            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) ||
             {};
 
           if (child) {
@@ -99,7 +98,7 @@ const componentMappers: {
         },
         repeat: {
           collection: node.bindings.each?.code as string,
-          itemName: node.properties._forName as string,
+          itemName: node.properties._forName,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
@@ -174,7 +173,7 @@ export const blockToBuilder = (
         bindings: {
           ...(json.bindings._text?.code
             ? {
-                'component.options.text': json.bindings._text.code as string,
+                'component.options.text': json.bindings._text.code,
                 'json.bindings._text.code': undefined as any,
               }
             : {}),
@@ -205,7 +204,7 @@ export const blockToBuilder = (
           eventBindingKeyRegex,
           firstCharMatchForEventBindingKey.toLowerCase(),
         )
-      ] = removeSurroundingBlock(bindings[key]?.code as string) as string;
+      ] = removeSurroundingBlock(bindings[key]?.code as string);
       delete bindings[key];
     }
   }
@@ -290,10 +289,8 @@ export const blockToBuilder = (
       },
       properties: thisIsComponent
         ? undefined
-        : omitMetaProperties(json.properties as any),
-      bindings: thisIsComponent
-        ? builderBindings
-        : omit(bindings as any, 'css'),
+        : omitMetaProperties(json.properties),
+      bindings: thisIsComponent ? builderBindings : omit(bindings, 'css'),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)
@@ -310,7 +307,7 @@ export const componentToBuilder =
 
     const result = fastClone({
       data: {
-        httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
+        httpRequests: component?.meta?.useMetadata?.httpRequests,
         jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
