@@ -141,11 +141,7 @@ export const blockToAngular = (
         continue;
       }
       const value = json.properties[key];
-      if (key === 'className') {
-        str += ` class="${value}" `;
-      } else {
-        str += ` ${key}="${value}" `;
-      }
+      str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
       if (key === '_spread') {
@@ -175,7 +171,7 @@ export const blockToAngular = (
           useValue.replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
         );
         str += ` (${event})="${finalValue}" `;
-      } else if (key === 'className') {
+      } else if (key === 'class') {
         str += ` [class]="${useValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;

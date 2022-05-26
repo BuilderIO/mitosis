@@ -52,7 +52,6 @@ type StyleMap = {
 export type ClassStyleMap = { [key: string]: StyleMap };
 
 type CollectStyleOptions = {
-  classProperty?: 'class' | 'className';
   prefix?: string;
 };
 
@@ -133,8 +132,6 @@ const collectStyles = (
 ): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
-  const classProperty = options.classProperty || 'class';
-
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
@@ -154,9 +151,7 @@ const collectStyles = (
           const className = `${componentName}${
             options.prefix ? `-${options.prefix}` : ''
           }`;
-          item.properties[classProperty] = `${
-            item.properties[classProperty] || ''
-          } ${className}`
+          item.properties.class = `${item.properties.class || ''} ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
           return;
@@ -172,9 +167,7 @@ const collectStyles = (
           options.prefix ? `-${options.prefix}` : ''
         }${index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${
-          item.properties[classProperty] || ''
-        } ${className}`
+        item.properties.class = `${item.properties.class || ''} ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
 

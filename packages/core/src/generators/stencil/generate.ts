@@ -131,7 +131,7 @@ export const componentToStencil =
       json = runPreJsonPlugins(json, options.plugins);
     }
     const props = getProps(component);
-    let css = collectCss(json, { classProperty: 'class' });
+    let css = collectCss(json);
 
     mapRefs(component, (refName) => `this.${refName}`);
 

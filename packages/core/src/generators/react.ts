@@ -533,8 +533,7 @@ const _componentToReact = (
     json = runPostJsonPlugins(json, options.plugins);
   }
 
-  const css =
-    stylesType === 'styled-jsx' && collectCss(json, { classProperty: 'class' });
+  const css = stylesType === 'styled-jsx' && collectCss(json);
 
   const styledComponentsCode =
     stylesType === 'styled-components' &&
