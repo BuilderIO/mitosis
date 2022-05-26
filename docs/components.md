@@ -198,7 +198,7 @@ export default function MyComponent(props) {
 We use the standard method for passing children with `props.children`
 
 ```jsx
-function MyComponent(props) {
+export default function MyComponent(props) {
   return <div>{props.children}</div>;
 }
 ```
@@ -209,10 +209,8 @@ function MyComponent(props) {
 ```jsx
 import { useMetadata } from '@builder.io/mitosis';
 
-useMetadata({
-  isAttachedToShadowDom: true
-});
-function MyComponent(props) {
+useMetadata({ isAttachedToShadowDom: true });
+export default function MyComponent(props) {
   return <div>{props.children}</div>;
 }
 ```
@@ -240,7 +238,7 @@ In this example we are registering `top`, `left`, and `center` for the `Layout` 
 If the `Layout` component was also a Mitosis component then we simply use the reference in the props.
 
 ```jsx
-function Layout(props) {
+export default function Layout(props) {
   return (
     <div className="layout">
       <div className="top">{props.slotTop}</div>
@@ -294,10 +292,8 @@ In webcomponent you need to use ShadowDom metadata for named slots
 ```jsx
 import { useMetadata } from '@builder.io/mitosis';
 
-useMetadata({
-  isAttachedToShadowDom: true
-});
-function Layout(props) {
+useMetadata({ isAttachedToShadowDom: true });
+export default function Layout(props) {
   return (
     <div className="layout">
       <div className="top">{props.slotTop}</div>
