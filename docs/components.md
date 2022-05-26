@@ -209,13 +209,15 @@ export default function MyComponent(props) {
 ```jsx
 import { useMetadata } from '@builder.io/mitosis';
 
-useMetadata({ isAttachedToShadowDom: true });
+useMetadata({
+  isAttachedToShadowDom: true,
+});
 export default function MyComponent(props) {
   return <div>{props.children}</div>;
 }
 ```
-</details>
 
+</details>
 
 ### Slot
 
@@ -286,13 +288,16 @@ class LayoutComponent {}
 ```
 
 In webcomponent you need to use ShadowDom metadata for named slots
+
 <details>
   <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata named slots</summary>
 
 ```jsx
 import { useMetadata } from '@builder.io/mitosis';
 
-useMetadata({ isAttachedToShadowDom: true });
+useMetadata({
+  isAttachedToShadowDom: true,
+});
 export default function Layout(props) {
   return (
     <div className="layout">
@@ -304,5 +309,5 @@ export default function Layout(props) {
   );
 }
 ```
-</details>
 
+</details>
