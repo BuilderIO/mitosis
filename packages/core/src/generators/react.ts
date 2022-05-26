@@ -177,10 +177,8 @@ export const blockToReact = (
       .replace(/\n/g, '\\n');
 
     if (key === 'class') {
-      continue;
-    }
-
-    if (BINDING_MAPPERS[key]) {
+      str += ` className="${value}" `;
+    } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
         const [newKey, newValue] = mapper(key, value);
@@ -536,8 +534,7 @@ const _componentToReact = (
   }
 
   const css =
-    stylesType === 'styled-jsx' &&
-    collectCss(json, { classProperty: 'className' });
+    stylesType === 'styled-jsx' && collectCss(json, { classProperty: 'class' });
 
   const styledComponentsCode =
     stylesType === 'styled-components' &&

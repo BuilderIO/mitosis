@@ -401,20 +401,13 @@ const blockToHtml = (
       if (key === 'innerHTML') {
         continue;
       }
-
       if (key.startsWith('$')) {
         continue;
       }
-
       const value = (json.properties[key] || '')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '\\n');
-
-      if (key === 'className') {
-        str += ` class="${value}" `;
-      } else {
-        str += ` ${key}="${value}" `;
-      }
+      str += ` ${key}="${value}" `;
     }
 
     // batch all local vars within the bindings

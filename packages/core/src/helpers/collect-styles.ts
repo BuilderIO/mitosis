@@ -134,7 +134,7 @@ const collectStyles = (
   const styleMap: ClassStyleMap = {};
 
   const classProperty = options.classProperty || 'class';
-  const possibleClasses = ['class', 'className'];
+
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
@@ -148,25 +148,17 @@ const collectStyles = (
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
           : dashCase(item.name || 'div');
-        const existedClass = possibleClasses
-          .map((prop) => item.properties[prop])
-          .filter(Boolean)
-          .join(' ');
 
         const stylesHash = hash(value);
         if (componentHashes[componentName] === stylesHash) {
           const className = `${componentName}${
             options.prefix ? `-${options.prefix}` : ''
           }`;
-          item.properties[classProperty] = `${existedClass} ${className}`
+          item.properties[classProperty] = `${
+            item.properties[classProperty] || ''
+          } ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
-
-          if (classProperty === 'className') {
-            delete item.properties.class;
-          } else {
-            delete item.properties.className;
-          }
           return;
         }
 
@@ -180,15 +172,11 @@ const collectStyles = (
           options.prefix ? `-${options.prefix}` : ''
         }${index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${existedClass} ${className}`
+        item.properties[classProperty] = `${
+          item.properties[classProperty] || ''
+        } ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
-
-        if (classProperty === 'className') {
-          delete item.properties.class;
-        } else {
-          delete item.properties.className;
-        }
 
         styleMap[className] = value;
       }

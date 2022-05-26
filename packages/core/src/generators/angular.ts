@@ -140,7 +140,6 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
-
       const value = json.properties[key];
       if (key === 'className') {
         str += ` class="${value}" `;
@@ -275,7 +274,7 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
-    let css = collectCss(json, { classProperty: 'className' });
+    let css = collectCss(json);
     if (options.prettier !== false) {
       css = tryFormat(css, 'css');
     }
