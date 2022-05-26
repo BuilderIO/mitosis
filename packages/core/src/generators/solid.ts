@@ -68,7 +68,6 @@ function getContextString(
 const collectClassString = (json: MitosisNode): string | null => {
   const staticClasses: string[] = [];
 
-  const hasStaticClasses = Boolean(staticClasses.length);
   if (json.properties.class) {
     staticClasses.push(json.properties.class);
     delete json.properties.class;
@@ -98,6 +97,7 @@ const collectClassString = (json: MitosisNode): string | null => {
 
   const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
 
+  const hasStaticClasses = Boolean(staticClasses.length);
   const hasDynamicClasses = Boolean(dynamicClasses.length);
 
   if (hasStaticClasses && !hasDynamicClasses) {
