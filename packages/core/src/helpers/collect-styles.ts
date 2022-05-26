@@ -10,7 +10,7 @@ import { isMitosisNode } from './is-mitosis-node';
 import { isUpperCase } from './is-upper-case';
 import hash from 'object-hash';
 
-export const nodeHasStyles = (node: MitosisNode) => {
+const nodeHasStyles = (node: MitosisNode) => {
   return Boolean(
     typeof node.bindings.css?.code === 'string' &&
       node.bindings.css.code.trim().length > 6,
@@ -42,7 +42,7 @@ export const hasStyles = (component: MitosisComponent) => {
  *  }
  * }
  */
-export type StyleMap = {
+type StyleMap = {
   [className: string]: CSS.Properties | StyleMap;
 };
 
@@ -118,7 +118,7 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
   return styledComponentsCode;
 };
 
-export const parseCssObject = (css: string) => {
+const parseCssObject = (css: string) => {
   try {
     return json5.parse(css);
   } catch (e) {
@@ -127,7 +127,7 @@ export const parseCssObject = (css: string) => {
   }
 };
 
-export const collectStyles = (
+const collectStyles = (
   json: MitosisComponent,
   options: CollectStyleOptions = {},
 ): ClassStyleMap => {
@@ -238,7 +238,7 @@ const classStyleMapToCss = (map: ClassStyleMap): string => {
   return str;
 };
 
-export const styleMapToCss = (map: StyleMap): string => {
+const styleMapToCss = (map: StyleMap): string => {
   let str = '';
 
   for (const key in map) {
