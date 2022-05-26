@@ -203,6 +203,20 @@ function MyComponent(props) {
 }
 ```
 
+In webcomponent you need to use ShadowDom metadata
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true
+})
+function MyComponent(props) {
+  return <div>{props.children}</div>;
+}
+```
+
+
 ### Slot
 
 When you want to register a named slot you do so using the `slot` prop.
@@ -270,3 +284,17 @@ Mitosis compiles one component at a time and is only concerned with outputting t
 })
 class LayoutComponent {}
 ```
+
+In webcomponent you need to use ShadowDom metadata for named slots
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true
+})
+function MyComponent(props) {
+  return <div>{props.children}</div>;
+}
+```
+
