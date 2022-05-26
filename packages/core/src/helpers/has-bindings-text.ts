@@ -9,8 +9,7 @@ export const hasBindingsText = (json: MitosisComponent) => {
     if (
       isMitosisNode(node) &&
       !isChildren(node) &&
-      node.bindings._text &&
-      node.bindings._text.code
+      node.bindings._text?.code
     ) {
       has = true;
       this.stop();
