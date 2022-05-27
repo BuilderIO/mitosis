@@ -324,6 +324,7 @@ class MyBasicComponent extends HTMLElement {
     if (!this.props) {
       this.props = {};
     }
+
     this.myService = this.getContext(this._root, MyService);
 
     // used to keep track of all nodes created by show/for
@@ -525,6 +526,8 @@ class MyMasicRefComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"showInput\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -553,6 +556,19 @@ class MyMasicRefComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div>
         <template data-el=\\"show-my-masic-ref-component\\">
@@ -741,6 +757,8 @@ class MyBasicComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"name\\"];
+
     this.updateDeps = [[this.state.name], [this.props.name]];
 
     // used to keep track of all nodes created by show/for
@@ -766,6 +784,19 @@ class MyBasicComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div>
         <input
@@ -1398,6 +1429,8 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"hi\\", \\"bye\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -1415,6 +1448,19 @@ class MyBasicOnMountUpdateComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div>
         Hello
@@ -1512,6 +1558,8 @@ class Button extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -1529,6 +1577,19 @@ class Button extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <template data-el=\\"show-button\\">
         <a data-el=\\"a-button-1\\">
@@ -1681,6 +1742,8 @@ class Column extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"columns\\", \\"space\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -1698,6 +1761,19 @@ class Column extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div class=\\"builder-columns div\\">
         <template data-el=\\"for-column\\">
@@ -1888,6 +1964,16 @@ class Image extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"lazy\\",
+      \\"altText\\",
+      \\"class\\",
+      \\"image\\",
+      \\"srcset\\",
+      \\"sizes\\",
+      \\"children\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -1918,6 +2004,19 @@ class Image extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <picture data-el=\\"picture-image-1\\" data-ref=\\"Image-pictureRef\\">
         <template data-el=\\"show-image\\">
@@ -2252,6 +2351,14 @@ class ImgComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"backgroundSize\\",
+      \\"backgroundPosition\\",
+      \\"attributes\\",
+      \\"imgSrc\\",
+      \\"altText\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -2269,6 +2376,19 @@ class ImgComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <img data-el=\\"img-img-component-1\\" />\`;
     this.pendingUpdate = true;
@@ -2357,6 +2477,16 @@ class FormInputComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"attributes\\",
+      \\"defaultValue\\",
+      \\"placeholder\\",
+      \\"type\\",
+      \\"name\\",
+      \\"value\\",
+      \\"required\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -2374,6 +2504,19 @@ class FormInputComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <input
         data-el=\\"input-form-input-component-1\\"
@@ -2506,6 +2649,8 @@ class SectionComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"attributes\\", \\"maxWidth\\", \\"children\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -2523,6 +2668,19 @@ class SectionComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <section data-el=\\"section-section-component-1\\">
         <slot></slot>
@@ -2609,6 +2767,8 @@ class SectionStateComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"attributes\\", \\"children\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -2626,6 +2786,19 @@ class SectionStateComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <template data-el=\\"show-section-state-component\\">
         <template data-el=\\"for-section-state-component\\">
@@ -2803,6 +2976,14 @@ class SelectComponent extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"attributes\\",
+      \\"value\\",
+      \\"defaultValue\\",
+      \\"name\\",
+      \\"options\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -2820,6 +3001,19 @@ class SelectComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <select
         data-el=\\"select-select-component-1\\"
@@ -3032,6 +3226,8 @@ class SmileReviews extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"apiKey\\", \\"productId\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -3061,6 +3257,19 @@ class SmileReviews extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div data-el=\\"div-smile-reviews-1\\">
         <button data-el=\\"button-smile-reviews-1\\">Write a review</button>
@@ -3420,6 +3629,8 @@ class SmileReviews extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"apiKey\\", \\"productId\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -3449,6 +3660,19 @@ class SmileReviews extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div data-el=\\"div-smile-reviews-1\\">
         <button data-el=\\"button-smile-reviews-1\\">Write a review</button>
@@ -3795,6 +4019,8 @@ class SubmitButton extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"attributes\\", \\"text\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -3812,6 +4038,19 @@ class SubmitButton extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <button type=\\"submit\\" data-el=\\"button-submit-button-1\\">
         <template data-el=\\"div-submit-button-1\\"><!-- props.text --></template>
@@ -3893,6 +4132,8 @@ class Text extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"text\\", \\"content\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -3910,6 +4151,19 @@ class Text extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div data-el=\\"div-text-1\\"></div>\`;
     this.pendingUpdate = true;
@@ -3995,6 +4249,14 @@ class Textarea extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"attributes\\",
+      \\"placeholder\\",
+      \\"name\\",
+      \\"value\\",
+      \\"defaultValue\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -4012,6 +4274,19 @@ class Textarea extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <textarea
         data-el=\\"textarea-textarea-1\\"
@@ -4135,6 +4410,18 @@ class Video extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [
+      \\"attributes\\",
+      \\"fit\\",
+      \\"position\\",
+      \\"video\\",
+      \\"posterImage\\",
+      \\"autoPlay\\",
+      \\"muted\\",
+      \\"controls\\",
+      \\"loop\\",
+    ];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -4152,6 +4439,19 @@ class Video extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <video preload=\\"none\\" data-el=\\"video-video-1\\"></video>\`;
     this.pendingUpdate = true;
@@ -4557,6 +4857,8 @@ class OnInit extends HTMLElement {
       this.props = {};
     }
 
+    this.componentProps = [\\"name\\"];
+
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -4574,6 +4876,19 @@ class OnInit extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div>
         Default name defined by parent

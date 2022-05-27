@@ -1058,6 +1058,15 @@ export const componentToCustomElement =
           if (!this.props) {
             this.props = {};
           }
+          ${
+            !componentHasProps
+              ? ''
+              : `
+          this.componentProps = [${Array.from(props)
+            .map((prop) => `"${prop}"`)
+            .join(',')}];
+          `
+          }
           ${context.join('\n')}
 
           ${
@@ -1125,6 +1134,24 @@ export const componentToCustomElement =
         }
 
         connectedCallback() {
+          ${
+            !componentHasProps
+              ? ''
+              : `
+          this.getAttributeNames().forEach((attr) => {
+            const jsVar = attr.replace(/-/g, '');
+            const regexp = new RegExp(jsVar, 'i');
+            this.componentProps.forEach(prop => {
+              if (regexp.test(prop)) {
+                const attrValue = this.getAttribute(attr);
+                if (this.props[prop] !== attrValue) {
+                  this.props[prop] = attrValue;
+                }
+              }
+            });
+          });
+          `
+          }
           ${
             useOptions?.experimental?.connectedCallbackUpdate
               ? useOptions?.experimental?.connectedCallbackUpdate(
