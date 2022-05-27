@@ -325,8 +325,6 @@ class MyBasicComponent extends HTMLElement {
       this.props = {};
     }
 
-    this.myService = this.getContext(this._root, MyService);
-
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
     // batch updates
@@ -349,6 +347,8 @@ class MyBasicComponent extends HTMLElement {
   }
 
   connectedCallback() {
+    this.myService = this.getContext(this._root, MyService);
+
     this._root.innerHTML = \`
       <div>
         <template data-el=\\"div-my-basic-component-1\\">

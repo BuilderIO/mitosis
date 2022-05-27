@@ -1067,7 +1067,6 @@ export const componentToCustomElement =
             .join(',')}];
           `
           }
-          ${context.join('\n')}
 
           ${
             !json.hooks.onUpdate?.length
@@ -1134,6 +1133,7 @@ export const componentToCustomElement =
         }
 
         connectedCallback() {
+          ${context.join('\n')}
           ${
             !componentHasProps
               ? ''
