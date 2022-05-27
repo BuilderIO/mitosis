@@ -741,6 +741,12 @@ function mapReactIdentifiers(json: MitosisComponent) {
         }
         delete item.properties.className;
       }
+
+      if (item.properties.class && item.bindings.class) {
+        console.warn(
+          `[${json.name}]: Ended up with both a property and binding for 'class'.`,
+        );
+      }
     }
   });
 }
