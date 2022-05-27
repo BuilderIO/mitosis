@@ -376,19 +376,21 @@ function addProviderComponents(
 ) {
   for (const key in json.context.set) {
     const { name, value } = json.context.set[key];
-    json.children = [
-      createMitosisNode({
-        name: `${name}.Provider`,
-        children: json.children,
-        ...(value && {
-          bindings: {
-            value: {
-              code: getMemberObjectString(value),
+    if (value) {
+      json.children = [
+        createMitosisNode({
+          name: `${name}.Provider`,
+          children: json.children,
+          ...(value && {
+            bindings: {
+              value: {
+                code: getMemberObjectString(value),
+              },
             },
-          },
+          }),
         }),
-      }),
-    ];
+      ];
+    }
   }
 }
 

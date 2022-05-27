@@ -183,15 +183,21 @@ const componentFunctionToJson = (
                 key,
               )!;
               const valueNode = expression.arguments[1];
-              setContext[keyPath] = {
-                name: keyNode.name,
-                // allow for ref injector
-                ref: generate(valueNode).code,
-                value:
-                  valueNode && types.isObjectExpression(valueNode)
-                    ? parseStateObject(valueNode)
-                    : undefined,
-              };
+              if (valueNode) {
+                if (types.isObjectExpression(valueNode)) {
+                  const value = parseStateObject(valueNode) as JSONObject;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    value,
+                  };
+                } else {
+                  const ref = generate(valueNode).code as string;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    ref,
+                  };
+                }
+              }
             }
           } else if (
             expression.callee.name === 'onMount' ||

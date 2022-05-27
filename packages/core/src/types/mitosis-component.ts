@@ -29,7 +29,18 @@ export interface MitosisImport {
   };
 }
 
-type ContextInfo = { name: string; path: string };
+export interface ContextGetInfo {
+  name: string;
+  path: string;
+}
+export interface ContextSetInfo {
+  name: string;
+  value?: JSONObject;
+  ref?: string;
+}
+
+export type ContextGet = { [key: string]: ContextGetInfo };
+export type ContextSet = { [key: string]: ContextSetInfo };
 
 export type extendedHook = { code: string; deps?: string };
 
@@ -48,14 +59,8 @@ export type MitosisComponent = {
   inputs: MitosisComponentInput[];
   state: JSONObject;
   context: {
-    get: { [key: string]: ContextInfo };
-    set: {
-      [key: string]: {
-        name: string;
-        value?: JSONObject;
-        ref?: any;
-      };
-    }; // TODO: support non object values
+    get: ContextGet;
+    set: ContextSet;
   };
   hooks: {
     init?: extendedHook;

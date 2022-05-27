@@ -1047,7 +1047,9 @@ export const componentToCustomElement =
           const self = this;
           ${
             // TODO: more than one context not injector
-            setContext.length === 1 ? `this.context = ${setContext[0].ref}` : ''
+            setContext.length === 1 && setContext?.[0]?.ref
+              ? `this.context = ${setContext[0].ref}`
+              : ''
           }
 
           ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
