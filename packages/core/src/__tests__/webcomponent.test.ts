@@ -4,6 +4,7 @@ import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
+// const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
 const basicOnUpdateDeps = require('./data/basic-onUpdate-deps.raw');
 const basicRef = require('./data/basic-ref.raw');
 const basicContext = require('./data/basic-context.raw');
@@ -46,6 +47,12 @@ describe('webcomponent', () => {
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });
+
+  // test('Basic onUpdate return', () => {
+  //   const component = parseJsx(basicOnUpdateReturn);
+  //   const output = componentToCustomElement()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
 
   test('Basic onUpdate deps', () => {
     const component = parseJsx(basicOnUpdateDeps);
