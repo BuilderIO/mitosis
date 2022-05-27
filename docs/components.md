@@ -60,6 +60,8 @@ export default function MyComponent() {
 
 ## Styling
 
+### `css`
+
 Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
 ```javascript
@@ -84,6 +86,10 @@ export default function ResponsiveExample() {
   );
 }
 ```
+
+## `class` vs `className`
+
+Mitosis prefers that you use `class` to provide class name strings, but it also allows you to provide `className`. If both are used in the same component, it will attempt to merge the two. We recommend that you only use one (preferrably `class`, as that's what is internally preferred by Mitosis).
 
 ## State
 
