@@ -191,7 +191,7 @@ const componentFunctionToJson = (
                     value,
                   };
                 } else {
-                  const ref = generate(valueNode).code as string;
+                  const ref = generate(valueNode).code;
                   setContext[keyPath] = {
                     name: keyNode.name,
                     ref,

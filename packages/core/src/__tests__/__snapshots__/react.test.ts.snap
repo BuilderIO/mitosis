@@ -1124,8 +1124,10 @@ exports[`React onInit 1`] = `
 export default function OnInit(props) {
   const [name, setName] = useState(() => \\"\\");
 
-  setName(defaultValues.name || props.name);
-  console.log(\\"set defaults with props\\");
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  }, []);
 
   return (
     <div>

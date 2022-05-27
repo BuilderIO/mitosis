@@ -50,6 +50,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  experimental?: any;
 }
 
 /**
@@ -645,12 +646,24 @@ const _componentToReact = (
 
       ${
         json.hooks.onInit?.code
-          ? `${!onInitLocalVars ? '' : ';(function () {'}
+          ? `${
+              options?.experimental?.localOnInit
+                ? onInitLocalVars
+                  ? ';(function () {'
+                  : ''
+                : 'useEffect(() => {'
+            }
             ${processBinding(
               updateStateSettersInCode(json.hooks.onInit.code, options),
               options,
             )}
-          ${!onInitLocalVars ? '' : '}());'}
+          ${
+            options?.experimental?.localOnInit
+              ? onInitLocalVars
+                ? '}());'
+                : ''
+              : '}, [])'
+          }
           `
           : ''
       }
