@@ -1,9 +1,24 @@
-import { onInit } from '@builder.io/mitosis';
+import { onInit, useState } from '@builder.io/mitosis';
 
-export default function OnInit() {
-  onInit(() => {
-    console.log('Runs once every update/rerender');
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: 'PatrickJS',
+};
+
+export default function OnInit(props: Props) {
+  const state = useState({
+    // name: props.name
+    // name: defaultValues.name || props.name,
+    name: '',
   });
 
-  return <div />;
+  onInit(() => {
+    state.name = defaultValues.name || props.name;
+    console.log('set defaults with props');
+  });
+
+  return <div>Default name defined by parent {state.name}</div>;
 }

@@ -524,6 +524,9 @@ const _componentToReact = (
 
   mapRefs(json, (refName) => `${refName}.current`);
 
+  const onInitLocalVars =
+    json.hooks?.onInit?.code && /var|const|let/.test(json.hooks?.onInit?.code);
+
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
   if (stateType === 'builder') {
@@ -646,12 +649,13 @@ const _componentToReact = (
 
       ${
         json.hooks.onInit?.code
-          ? `useEffect(() => {
+          ? `${!onInitLocalVars ? '' : ';(function () {'}
             ${processBinding(
               updateStateSettersInCode(json.hooks.onInit.code, options),
               options,
             )}
-          }, [])`
+          ${!onInitLocalVars ? '' : '}());'}
+          `
           : ''
       }
       ${

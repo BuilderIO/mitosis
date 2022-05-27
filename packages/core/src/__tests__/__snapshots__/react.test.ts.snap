@@ -1123,12 +1123,20 @@ export default function MultipleOnUpdateWithDeps(props) {
 `;
 
 exports[`React onInit 1`] = `
-"export default function OnInit(props) {
-  useEffect(() => {
-    console.log(\\"Runs once every update/rerender\\");
-  }, []);
+"import { useState } from \\"react\\";
 
-  return <div />;
+export default function OnInit(props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  setName(defaultValues.name || props.name);
+  console.log(\\"set defaults with props\\");
+
+  return (
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
+  );
 }
 "
 `;

@@ -4552,7 +4552,7 @@ class OnInit extends HTMLElement {
 
     this.onInitOnce = false;
 
-    this.state = {};
+    this.state = { name: \\"\\" };
     if (!this.props) {
       this.props = {};
     }
@@ -4575,7 +4575,10 @@ class OnInit extends HTMLElement {
 
   connectedCallback() {
     this._root.innerHTML = \`
-      <div></div>\`;
+      <div>
+        Default name defined by parent
+        <template data-el=\\"div-on-init-1\\"><!-- state.name --></template>
+      </div>\`;
     this.pendingUpdate = true;
     this.onInit();
     this.render();
@@ -4586,7 +4589,9 @@ class OnInit extends HTMLElement {
 
   onInit() {
     if (!this.onInitOnce) {
-      console.log(\\"Runs once every update/rerender\\");
+      this.state.name = defaultValues.name || this.props.name;
+      this.update();
+      console.log(\\"set defaults with props\\");
       this.onInitOnce = true;
     }
   }
@@ -4611,7 +4616,11 @@ class OnInit extends HTMLElement {
     this.updateBindings();
   }
 
-  updateBindings() {}
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-el='div-on-init-1']\\").forEach((el) => {
+      this.renderTextNode(el, this.state.name);
+    });
+  }
 
   // Helper to render content
   renderTextNode(el, text) {

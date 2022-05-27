@@ -378,17 +378,22 @@ export default class ContentSlotJsxCode {
 `;
 
 exports[`Angular onInit 1`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init\\",
   template: \`
-    <div></div>
+    <div>Default name defined by parent {{name}}</div>
   \`,
 })
 export default class OnInit {
+  @Input() name: any;
+
+  name = \\"\\";
+
   constructor() {
-    console.log(\\"Runs once every update/rerender\\");
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
   }
 }
 "
