@@ -66,11 +66,10 @@ export const mapRefs = (
       for (const key of Object.keys(item.bindings)) {
         const value = item.bindings[key];
         if (typeof value === 'object' && key !== 'ref') {
-          (item.bindings[key] as { code: string }).code = replaceRefsInString(
-            value.code as string,
-            refs,
-            mapper,
-          );
+          item.bindings[key] = {
+            ...value,
+            code: replaceRefsInString(value.code as string, refs, mapper),
+          };
         }
       }
     }

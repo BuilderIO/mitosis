@@ -6,8 +6,11 @@ Object {
   "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.csw5022{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;align-items:stretch}.csanagh{margin-top:10px;position:relative;display:flex;align-items:stretch;flex-direction:column;padding-bottom:10px}.c4qyc1p{position:relative;display:flex;align-items:stretch;flex-direction:column;margin-top:10px;padding-bottom:10px}.crwdrpw{text-align:left;display:flex;flex-direction:column}.ctcw2m4{padding-top:50px;text-align:left;display:flex;flex-direction:column;padding-bottom:50px}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div
@@ -227,8 +230,11 @@ Object {
   "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvdfnp5{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:0px;padding-left:20px;padding-right:20px;padding-top:50px;padding-bottom:50px;width:100vw;margin-left:calc(50% - 50vw)}.cz5wnof{width:100%;align-self:stretch;flex-grow:1;box-sizing:border-box;max-width:1200px;display:flex;flex-direction:column;align-items:stretch;margin-left:auto;margin-right:auto}.cdrk993{text-align:center}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div class=\\"cvdfnp5\\" maxWidth={1200}>
@@ -290,9 +296,12 @@ export const MyComponent_onClick_0 = (event) => {
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const MyComponent_onMount = (state) => {
-  if (state.myState === undefined) state.myState = \\"initialValue\\";
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.myState === undefined) state.myState = \\"initialValue\\";
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
   return h(
     Fragment,
@@ -359,12 +368,15 @@ export const Image = function Image(props) {
       srcset: undefined,
     };
     if (isBuilderIoImage) {
-      image = updateQueryParam(image, \\"format\\", \\"webp\\");
+      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
       var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
         .map(function (size) {
-          return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
+          return (
+            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
+          );
         })
+        .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -451,9 +463,12 @@ export const MyComponent_onClick_0 = (event) => {
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.cvk52jt{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;min-height:20px;min-width:20px;overflow:hidden}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const MyComponent_onMount = (state) => {
-  if (state.myState === undefined) state.myState = \\"initialValue\\";
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.myState === undefined) state.myState = \\"initialValue\\";
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
   return h(
     Fragment,
@@ -520,12 +535,15 @@ export const Image = function Image(props) {
       srcset: undefined,
     };
     if (isBuilderIoImage) {
-      image = updateQueryParam(image, \\"format\\", \\"webp\\");
+      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
       var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
         .map(function (size) {
-          return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
+          return (
+            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
+          );
         })
+        .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -600,10 +618,13 @@ const qrl = require(\\"@builder.io/qwik\\").qrl;
 const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
 exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 exports.MyComponent_onMount = (state) => {
-  if (state.title === undefined) state.title = '\\"Default title value\\"';
-  if (state.hiliteTitle === undefined) state.hiliteTitle = true;
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.title === undefined) state.title = '\\"Default title value\\"';
+    if (state.hiliteTitle === undefined) state.hiliteTitle = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     \\"div\\",
@@ -650,8 +671,11 @@ Object {
 import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(CoreButton, {
     text: \\"Click me!\\",
@@ -722,9 +746,12 @@ Object {
 import { Fragment, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const ComponentD187055AF171488FAD843ACF045D6BF7_styles = \`.cj49hqu{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;height:auto;background-color:rgba(227, 227, 227, 1);border-radius:5px;border-style:solid;border-color:rgb(0, 0, 0);border-width:1px;padding-bottom:30px}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}\`;
 export const ComponentD187055AF171488FAD843ACF045D6BF7_onMount = (state) => {
-  if (state.title === undefined) state.title = \\"default-title\\";
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.title === undefined) state.title = \\"default-title\\";
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(
     qrl(\\"./low.js\\", \\"ComponentD187055AF171488FAD843ACF045D6BF7_styles\\", [])
   );
@@ -748,37 +775,40 @@ export const ComponentD187055AF171488FAD843ACF045D6BF7_onMount = (state) => {
 };
 export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
-  (() => {
-    /*
-     * Global objects available:
-     *
-     * state - builder state object - learn about state https://www.builder.io/c/docs/guides/state-and-actions
-     * context - builder context object - learn about state https://github.com/BuilderIO/builder/tree/main/packages/react#passing-data-and-functions-down
-     * fetch - Fetch API - https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API'
-     * Builder - Builder object - useful values include: Builder.isServer, Builder.isBrowser, Builder.isPreviewing, Builder.isEditing
-     *
-     * visit https://www.builder.io/c/docs/guides/custom-code
-     * for more information on writing custom code
-     */
-    async function main() {
-      if (Builder.isServer) {
-        // Place any code here you want to only run on the server. Any
-        // data fetched on the server will be available to re-hydrate on the client
-        // if added to the state object
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+    (() => {
+      /*
+       * Global objects available:
+       *
+       * state - builder state object - learn about state https://www.builder.io/c/docs/guides/state-and-actions
+       * context - builder context object - learn about state https://github.com/BuilderIO/builder/tree/main/packages/react#passing-data-and-functions-down
+       * fetch - Fetch API - https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API'
+       * Builder - Builder object - useful values include: Builder.isServer, Builder.isBrowser, Builder.isPreviewing, Builder.isEditing
+       *
+       * visit https://www.builder.io/c/docs/guides/custom-code
+       * for more information on writing custom code
+       */
+      async function main() {
+        if (Builder.isServer) {
+          // Place any code here you want to only run on the server. Any
+          // data fetched on the server will be available to re-hydrate on the client
+          // if added to the state object
+        }
+
+        if (Builder.isBrowser) {
+          // Place code that you only want to run in the browser (client side only) here
+          // For example, anything that uses document/window access or DOM manipulation
+        }
+
+        state.something = \\"works!\\";
       }
 
-      if (Builder.isBrowser) {
-        // Place code that you only want to run in the browser (client side only) here
-        // For example, anything that uses document/window access or DOM manipulation
-      }
-
-      state.something = \\"works!\\";
-    }
-
-    return main();
-  })();
+      return main();
+    })();
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <>
@@ -831,9 +861,12 @@ const qrl = require(\\"@builder.io/qwik\\").qrl;
 const withScopedStylesQrl = require(\\"@builder.io/qwik\\").withScopedStylesQrl;
 exports.MyComponent_styles = \`.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}\`;
 exports.MyComponent_onMount = (state) => {
-  if (state.data === undefined) state.data = 0;
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.data === undefined) state.data = 0;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
   return (
     <>
@@ -894,8 +927,11 @@ Object {
   "low.jsx": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.crt27f8{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:123px;line-height:normal;height:auto;text-align:center;margin-left:auto;margin-right:auto}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return (
     <div class=\\"crt27f8\\">
@@ -921,8 +957,11 @@ Object {
 import { Fragment, h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c713ty2{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px}.cxvcn5v{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center;padding-top:1em;padding-bottom:1em;font-weight:700;font-size:24px}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     Fragment,
@@ -971,9 +1010,12 @@ export const MyComponent_onClick_0 = (event) => {
 } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c9nzze9{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;appearance:none;padding-top:15px;padding-bottom:15px;padding-left:25px;padding-right:25px;background-color:#3898EC;color:white;border-radius:4px;text-align:center;cursor:pointer}.cjrqfb1{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;line-height:normal;height:auto;text-align:center}.c837pqv{display:flex;flex-direction:column;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:20px;width:100%;min-height:20px;min-width:20px;overflow:hidden}\`;
 export const MyComponent_onMount = (state) => {
-  if (state.visible === undefined) state.visible = false;
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    if (state.visible === undefined) state.visible = false;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./med.js\\", \\"MyComponent_styles\\", []));
   return (
     <>
@@ -1079,12 +1121,15 @@ export const Image = function Image(props) {
       srcset: undefined,
     };
     if (isBuilderIoImage) {
-      image = updateQueryParam(image, \\"format\\", \\"webp\\");
+      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
       var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
         .map(function (size) {
-          return updateQueryParam(image, \\"width\\", size) + \\" \\" + size + \\"w\\";
+          return (
+            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
+          );
         })
+        .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
@@ -1141,8 +1186,11 @@ Object {
   "low.js": "import { h, qrl, withScopedStylesQrl } from \\"@builder.io/qwik\\";
 export const MyComponent_styles = \`.c8xlkz3{display:flex;flex-direction:column;align-items:stretch;position:relative;flex-shrink:0;box-sizing:border-box;margin-top:auto;margin-bottom:auto}\`;
 export const MyComponent_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   withScopedStylesQrl(qrl(\\"./low.js\\", \\"MyComponent_styles\\", []));
   return h(
     \\"div\\",
@@ -1189,8 +1237,11 @@ exports.Todo_onKeyUp_4 = (event) => {
 const h = require(\\"@builder.io/qwik\\").h;
 const qrl = require(\\"@builder.io/qwik\\").qrl;
 exports.Todo_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   return h(
     \\"li\\",
     {
@@ -1202,8 +1253,8 @@ exports.Todo_onMount = (state) => {
       \\"div\\",
       { class: \\"view\\" },
       h(\\"input\\", {
-        type: \\"checkbox\\",
         class: \\"toggle\\",
+        type: \\"checkbox\\",
         checked: props.todo.completed,
         onClickQrl: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [state]),
       }),
@@ -1257,8 +1308,11 @@ export const Todo_onKeyUp_4 = (event) => {
   "low.js": "",
   "med.js": "import { componentQrl, h, qrl } from \\"@builder.io/qwik\\";
 export const Todo_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   return h(
     \\"li\\",
     {
@@ -1270,8 +1324,8 @@ export const Todo_onMount = (state) => {
       \\"div\\",
       { class: \\"view\\" },
       h(\\"input\\", {
-        type: \\"checkbox\\",
         class: \\"toggle\\",
+        type: \\"checkbox\\",
         checked: props.todo.completed,
         onClickQrl: qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [state]),
       }),
@@ -1325,8 +1379,11 @@ export const Todo_onKeyUp_4 = (event) => {
   "low.tsx": "",
   "med.tsx": "import { componentQrl, h, qrl } from \\"@builder.io/qwik\\";
 export const Todo_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   return (
     <li
       class={\`\${props.todo.completed ? \\"completed\\" : \\"\\"} \${
@@ -1335,8 +1392,8 @@ export const Todo_onMount = (state) => {
     >
       <div class=\\"view\\">
         <input
-          type=\\"checkbox\\"
           class=\\"toggle\\"
+          type=\\"checkbox\\"
           checked={props.todo.completed}
           onClickQrl={qrl(\\"./high.js\\", \\"Todo_onClick_0\\", [state])}
         ></input>
@@ -1377,14 +1434,17 @@ Object {
   "low.tsx": "import { Todo } from \\"./med.js\\";
 import { h, qrl } from \\"@builder.io/qwik\\";
 export const Todos_onMount = (state) => {
-  typeof __STATE__ === \\"object\\" &&
-    Object.assign(state, __STATE__[state.serverStateId]);
+  if (!state.__INIT__) {
+    state.__INIT__ = true;
+    typeof __STATE__ === \\"object\\" &&
+      Object.assign(state, __STATE__[state.serverStateId]);
+  }
   return (
     <section class=\\"main\\">
       {todosState.todos.length ? (
         <input
-          type=\\"checkbox\\"
           class=\\"toggle-all\\"
+          type=\\"checkbox\\"
           checked={todosState.allCompleted}
           onClickQrl={qrl(\\"./high.js\\", \\"Todos_onClick_0\\", [state])}
         ></input>

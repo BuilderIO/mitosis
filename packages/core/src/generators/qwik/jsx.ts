@@ -95,9 +95,7 @@ export function renderJSXNodes(
           const bindings = rewriteHandlers(
             file,
             handlers,
-            child.bindings as {
-              [key: string]: { code: string | undefined; arguments?: string[] };
-            },
+            child.bindings,
             symbolBindings,
           );
           this.jsxBegin(childName, props, {
@@ -165,7 +163,7 @@ function rewriteHandlers(
   file: File,
   handlers: Map<string, string>,
   bindings: {
-    [key: string]: { code: string | undefined; arguments?: string[] };
+    [key: string]: { code: string; arguments?: string[] } | undefined;
   },
   symbolBindings: Record<string, string>,
 ): { [key: string]: { code: string; arguments?: string[] } } {

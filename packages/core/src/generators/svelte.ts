@@ -121,7 +121,8 @@ const SVELTE_SPECIAL_TAGS = {
   COMPONENT: 'svelte:component',
   ELEMENT: 'svelte:element',
   SELF: 'svelte:self',
-};
+} as const;
+
 const getTagName = ({
   json,
   parentComponent,
@@ -171,7 +172,7 @@ export const blockToSvelte: BlockToSvelte = ({
   }
 
   if (json.bindings._text?.code) {
-    return `{${stripStateAndPropsRefs(json.bindings._text.code as string, {
+    return `{${stripStateAndPropsRefs(json.bindings._text.code, {
       includeState: options.stateType === 'variables',
     })}}`;
   }
@@ -181,7 +182,7 @@ export const blockToSvelte: BlockToSvelte = ({
   str += `<${tagName} `;
 
   if (json.bindings._spread?.code) {
-    str += `{...${stripStateAndPropsRefs(json.bindings._spread.code as string, {
+    str += `{...${stripStateAndPropsRefs(json.bindings._spread.code, {
       includeState: options.stateType === 'variables',
     })}}`;
   }
@@ -252,7 +253,7 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
         if (
-          (onChange.code as string).replace(/\s+/g, '') ===
+          onChange.code.replace(/\s+/g, '') ===
           `${value.code}=event.target.value`
         ) {
           delete item.bindings.value;

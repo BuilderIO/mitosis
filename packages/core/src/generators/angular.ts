@@ -141,13 +141,8 @@ export const blockToAngular = (
       if (key.startsWith('$')) {
         continue;
       }
-
       const value = json.properties[key];
-      if (key === 'className') {
-        str += ` class="${value}" `;
-      } else {
-        str += ` ${key}="${value}" `;
-      }
+      str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
       if (key === '_spread') {
@@ -185,7 +180,7 @@ export const blockToAngular = (
           useValue.replace(regexp, replacer),
         );
         str += ` (${event})="${finalValue}" `;
-      } else if (key === 'className') {
+      } else if (key === 'class') {
         str += ` [class]="${useValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;
@@ -282,7 +277,7 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
-    let css = collectCss(json, { classProperty: 'className' });
+    let css = collectCss(json);
     if (options.prettier !== false) {
       css = tryFormat(css, 'css');
     }

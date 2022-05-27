@@ -40,7 +40,7 @@ function processDynamicComponents(
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
-        (node.bindings.component as { code: string }).code = node.name;
+        node.bindings.component = { code: node.name };
         node.name = 'Dynamic';
         found = true;
       }
@@ -93,13 +93,11 @@ const collectClassString = (json: MitosisNode): string | null => {
     dynamicClasses.push(`css(${json.bindings.css.code})`);
   }
   delete json.bindings.css;
-
-  const hasStaticClasses = Boolean(staticClasses.length);
-
   const staticClassesString = staticClasses.join(' ');
 
   const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
 
+  const hasStaticClasses = Boolean(staticClasses.length);
   const hasDynamicClasses = Boolean(dynamicClasses.length);
 
   if (hasStaticClasses && !hasDynamicClasses) {

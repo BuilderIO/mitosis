@@ -10,7 +10,7 @@ import { isMitosisNode } from './is-mitosis-node';
 import { isUpperCase } from './is-upper-case';
 import hash from 'object-hash';
 
-export const nodeHasStyles = (node: MitosisNode) => {
+const nodeHasStyles = (node: MitosisNode) => {
   return Boolean(
     typeof node.bindings.css?.code === 'string' &&
       node.bindings.css.code.trim().length > 6,
@@ -42,7 +42,7 @@ export const hasStyles = (component: MitosisComponent) => {
  *  }
  * }
  */
-export type StyleMap = {
+type StyleMap = {
   [className: string]: CSS.Properties | StyleMap;
 };
 
@@ -52,7 +52,6 @@ export type StyleMap = {
 export type ClassStyleMap = { [key: string]: StyleMap };
 
 type CollectStyleOptions = {
-  classProperty?: 'class' | 'className';
   prefix?: string;
 };
 
@@ -118,7 +117,7 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
   return styledComponentsCode;
 };
 
-export const parseCssObject = (css: string) => {
+const parseCssObject = (css: string) => {
   try {
     return json5.parse(css);
   } catch (e) {
@@ -127,14 +126,12 @@ export const parseCssObject = (css: string) => {
   }
 };
 
-export const collectStyles = (
+const collectStyles = (
   json: MitosisComponent,
   options: CollectStyleOptions = {},
 ): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
-  const classProperty = options.classProperty || 'class';
-  const possibleClasses = ['class', 'className'];
   const componentIndexes: { [className: string]: number | undefined } = {};
   const componentHashes: { [className: string]: string | undefined } = {};
 
@@ -148,25 +145,15 @@ export const collectStyles = (
           : /^h\d$/.test(item.name || '') // don't dashcase h1 into h-1
           ? item.name
           : dashCase(item.name || 'div');
-        const existedClass = possibleClasses
-          .map((prop) => item.properties[prop])
-          .filter(Boolean)
-          .join(' ');
 
         const stylesHash = hash(value);
         if (componentHashes[componentName] === stylesHash) {
           const className = `${componentName}${
             options.prefix ? `-${options.prefix}` : ''
           }`;
-          item.properties[classProperty] = `${existedClass} ${className}`
+          item.properties.class = `${item.properties.class || ''} ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
-
-          if (classProperty === 'className') {
-            delete item.properties.class;
-          } else {
-            delete item.properties.className;
-          }
           return;
         }
 
@@ -180,15 +167,9 @@ export const collectStyles = (
           options.prefix ? `-${options.prefix}` : ''
         }${index === 1 ? '' : `-${index}`}`;
 
-        item.properties[classProperty] = `${existedClass} ${className}`
+        item.properties.class = `${item.properties.class || ''} ${className}`
           .trim()
           .replace(/\s{2,}/g, ' ');
-
-        if (classProperty === 'className') {
-          delete item.properties.class;
-        } else {
-          delete item.properties.className;
-        }
 
         styleMap[className] = value;
       }
@@ -238,7 +219,7 @@ const classStyleMapToCss = (map: ClassStyleMap): string => {
   return str;
 };
 
-export const styleMapToCss = (map: StyleMap): string => {
+const styleMapToCss = (map: StyleMap): string => {
   let str = '';
 
   for (const key in map) {
