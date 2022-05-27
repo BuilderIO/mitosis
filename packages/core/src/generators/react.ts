@@ -618,6 +618,7 @@ const _componentToReact = (
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
   }(props) {
+      ${getRefsString(json)}
       ${
         hasState
           ? stateType === 'mobx'
@@ -640,7 +641,6 @@ const _componentToReact = (
           : ''
       }
       ${getContextString(json, options)}
-      ${getRefsString(json)}
       ${getInitCode(json, options)}
 
       ${
