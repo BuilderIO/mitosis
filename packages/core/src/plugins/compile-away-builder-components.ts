@@ -328,15 +328,14 @@ export const components: CompileAwayComponentsMap = {
       name: 'img',
       properties: noUndefined({
         $name: 'image',
-        loading: node.properties.lazy ? 'lazy' : undefined,
+        loading: 'lazy',
         src: node.properties.image,
         sizes: node.properties.sizes,
         srcset: srcSet || null,
       }),
       bindings: noUndefined({
-        loading: { code: node.bindings.lazy?.code && '"lazy"' },
-        src: { code: node.bindings.image?.code },
-        sizes: { code: node.bindings.sizes?.code },
+        src: node.bindings.image?.code && { code: node.bindings.image?.code },
+        sizes: node.bindings.sizes?.code && { code: node.bindings.sizes?.code },
         css: {
           code: JSON.stringify({
             objectFit: backgroundSize || 'cover',
@@ -417,9 +416,11 @@ export const components: CompileAwayComponentsMap = {
         properties: {
           href: href,
         },
-        bindings: {
-          href: { code: hrefBinding },
-        },
+        bindings: hrefBinding
+          ? {
+              href: { code: hrefBinding },
+            }
+          : undefined,
         children: imageNodes,
       });
       return wrapOutput(node, aHref, components);
@@ -450,12 +451,22 @@ export const components: CompileAwayComponentsMap = {
           preload: node.properties.lazy ? 'none' : undefined,
         }),
         bindings: noUndefined({
-          poster: { code: node.bindings.posterImage?.code },
-          autoplay: { code: node.bindings.autoPlay?.code },
-          muted: { code: node.bindings.muted?.code },
-          controls: { code: node.bindings.controls?.code },
-          playsinline: { code: node.bindings.playsInline?.code },
-          loop: { code: node.bindings.loop?.code },
+          poster: node.bindings.posterImage?.code && {
+            code: node.bindings.posterImage?.code,
+          },
+          autoplay: node.bindings.autoPlay?.code && {
+            code: node.bindings.autoPlay?.code,
+          },
+          muted: node.bindings.muted?.code && {
+            code: node.bindings.muted?.code,
+          },
+          controls: node.bindings.controls?.code && {
+            code: node.bindings.controls?.code,
+          },
+          playsinline: node.bindings.playsInline?.code && {
+            code: node.bindings.playsInline?.code,
+          },
+          loop: node.bindings.loop?.code && { code: node.bindings.loop?.code },
           css: {
             code: JSON.stringify({
               width: '100%',
@@ -474,9 +485,11 @@ export const components: CompileAwayComponentsMap = {
               type: 'video/mp4',
               src: node.properties.video,
             },
-            bindings: {
-              src: { code: node.bindings.video?.code as string },
-            },
+            bindings: noUndefined({
+              src: node.bindings.video?.code && {
+                code: node.bindings.video?.code as string,
+              },
+            }),
           }),
         ],
       }),
