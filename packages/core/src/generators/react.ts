@@ -646,24 +646,13 @@ const _componentToReact = (
 
       ${
         json.hooks.onInit?.code
-          ? `${
-              options?.experimental?.localOnInit
-                ? onInitLocalVars
-                  ? ';(function () {'
-                  : ''
-                : 'useEffect(() => {'
-            }
+          ? `
+          useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(json.hooks.onInit.code, options),
               options,
             )}
-          ${
-            options?.experimental?.localOnInit
-              ? onInitLocalVars
-                ? '}());'
-                : ''
-              : '}, [])'
-          }
+          })
           `
           : ''
       }
