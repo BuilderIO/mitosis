@@ -248,6 +248,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "Image",
+  "propsTypeRef": "ImageProps",
   "state": Object {
     "imageLoaded": false,
     "isBrowser": "@builder.io/mitosis/method:isBrowser() {
@@ -264,6 +265,26 @@ Object {
 }",
   },
   "subComponents": Array [],
+  "types": Array [
+    "// TODO: AMP Support?
+export interface ImageProps {
+  class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}",
+  ],
 }
 `;
 
@@ -520,8 +541,17 @@ Object {
     },
   },
   "name": "Button",
+  "propsTypeRef": "ButtonProps",
   "state": Object {},
   "subComponents": Array [],
+  "types": Array [
+    "export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}",
+  ],
 }
 `;
 
@@ -594,6 +624,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "MyBasicOnUpdateReturnComponent",
+  "propsTypeRef": "",
   "state": Object {
     "name": "PatrickJS",
   },
@@ -901,6 +932,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "MyMasicRefComponent",
+  "propsTypeRef": "Props",
   "state": Object {
     "lowerCaseName": "@builder.io/mitosis/function:function lowerCaseName() {
   return state.name.toLowerCase();
@@ -912,5 +944,10 @@ Object {
 }",
   },
   "subComponents": Array [],
+  "types": Array [
+    "export interface Props {
+  showInput: boolean;
+}",
+  ],
 }
 `;

@@ -576,6 +576,11 @@ const _componentToReact = (
     componentHasStyles &&
     collectReactNativeStyles(json);
 
+  let propsArgs = 'props';
+  if (json.propsTypeRef) {
+    propsArgs = `props: ${json.propsTypeRef}`;
+  }
+
   let str = dedent`
   ${
     options.type !== 'native'
@@ -612,10 +617,12 @@ const _componentToReact = (
         ? `import { useLocalObservable } from 'mobx-react-lite';`
         : ''
     }
+    ${json.types ? json.types.join('\n') : ''}
+    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent(json)}
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
-  }(props) {
+  }(${propsArgs}) {
       ${getRefsString(json)}
       ${
         hasState

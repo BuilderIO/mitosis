@@ -56,7 +56,11 @@ export default function MyBasicChildComponent(props) {
 exports[`React Basic Ref 1`] = `
 "import { useState, useRef } from \\"react\\";
 
-export default function MyMasicRefComponent(props) {
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyMasicRefComponent(props: Props) {
   const inputRef = useRef();
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
@@ -140,7 +144,14 @@ export default function MyBasicForComponent(props) {
 `;
 
 exports[`React Button 1`] = `
-"export default function Button(props) {
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
@@ -169,7 +180,22 @@ exports[`React Button 1`] = `
 `;
 
 exports[`React Columns 1`] = `
-"export default function Column(props) {
+"type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+export default function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -229,7 +255,12 @@ exports[`React Columns 1`] = `
 `;
 
 exports[`React ContentSlotHtml 1`] = `
-"export default function ContentSlotCode(props) {
+"type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+export default function ContentSlotCode(props: Props) {
   return (
     <div>
       {props.slotTesting}
@@ -246,7 +277,11 @@ exports[`React ContentSlotHtml 1`] = `
 `;
 
 exports[`React ContentSlotJSX 1`] = `
-"export default function ContentSlotJsxCode(props) {
+"type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+export default function ContentSlotJsxCode(props: Props) {
   return (
     <div>
       {props.slotTesting}
@@ -265,7 +300,12 @@ exports[`React ContentSlotJSX 1`] = `
 exports[`React CustomCode 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -333,7 +373,12 @@ export default function CustomCode(props) {
 exports[`React Embed 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -400,13 +445,37 @@ export default function CustomCode(props) {
 
 exports[`React Form block 1`] = `
 "import { useState, useRef } from \\"react\\";
+
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default function FormComponent(props) {
+export default function FormComponent(props: FormProps) {
   const formRef = useRef();
   const [state, setState] = useState(() => \\"unsubmitted\\");
 
@@ -674,7 +743,26 @@ export default function FormComponent(props) {
 exports[`React Image 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
-export default function Image(props) {
+// TODO: AMP Support?
+export interface ImageProps {
+  class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+export default function Image(props: ImageProps) {
   const pictureRef = useRef();
   const [scrollListener, setScrollListener] = useState(() => null);
 
@@ -771,9 +859,26 @@ export default function Image(props) {
 `;
 
 exports[`React Img 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
 
-export default function ImgComponent(props) {
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function ImgComponent(props: ImgProps) {
   return (
     <img
       {...props.attributes}
@@ -791,9 +896,19 @@ export default function ImgComponent(props) {
 `;
 
 exports[`React Input block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
 
-export default function FormInputComponent(props) {
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function FormInputComponent(props: FormInputProps) {
   return (
     <input
       {...props.attributes}
@@ -815,7 +930,12 @@ export default function FormInputComponent(props) {
 `;
 
 exports[`React RawText 1`] = `
-"export default function RawText(props) {
+"export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+export default function RawText(props: RawTextProps) {
   return (
     <span
       className={props.attributes?.class || props.attributes?.className}
@@ -827,7 +947,13 @@ exports[`React RawText 1`] = `
 `;
 
 exports[`React Section 1`] = `
-"export default function SectionComponent(props) {
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+export default function SectionComponent(props: SectionProps) {
   return (
     <section
       {...props.attributes}
@@ -847,9 +973,20 @@ exports[`React Section 1`] = `
 `;
 
 exports[`React Select block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
 
-export default function SelectComponent(props) {
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function SelectComponent(props: FormSelectProps) {
   return (
     <select
       {...props.attributes}
@@ -874,9 +1011,12 @@ export default function SelectComponent(props) {
 `;
 
 exports[`React SlotHtml 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props) {
+export default function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
@@ -887,9 +1027,12 @@ export default function SlotCode(props) {
 `;
 
 exports[`React SlotJsx 1`] = `
-"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+"type Props = {
+  [key: string]: string;
+};
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-export default function SlotCode(props) {
+export default function SlotCode(props: Props) {
   return (
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
@@ -902,10 +1045,15 @@ export default function SlotCode(props) {
 exports[`React Stamped.io 1`] = `
 "import styled from \\"styled-components\\";
 import { useState, useEffect } from \\"react\\";
+
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props) {
+export default function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -1003,7 +1151,12 @@ const Img = styled.img\`
 `;
 
 exports[`React Submit button block 1`] = `
-"export default function SubmitButton(props) {
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+export default function SubmitButton(props: ButtonProps) {
   return (
     <button {...props.attributes} type=\\"submit\\">
       {props.text}
@@ -1015,9 +1168,18 @@ exports[`React Submit button block 1`] = `
 
 exports[`React Text 1`] = `
 "import { useState } from \\"react\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props) {
+export default function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -1040,7 +1202,15 @@ export default function Text(props) {
 `;
 
 exports[`React Textarea 1`] = `
-"export default function Textarea(props) {
+"export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+export default function Textarea(props: TextareaProps) {
   return (
     <textarea
       {...props.attributes}
@@ -1055,7 +1225,33 @@ exports[`React Textarea 1`] = `
 `;
 
 exports[`React Video 1`] = `
-"export default function Video(props) {
+"export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+export default function Video(props: VideoProps) {
   return (
     <video
       {...props.attributes}
@@ -1129,7 +1325,11 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-export default function OnInit(props) {
+type Props = {
+  name: string;
+};
+
+export default function OnInit(props: Props) {
   const [name, setName] = useState(() => \\"\\");
 
   useEffect(() => {
@@ -1197,28 +1397,30 @@ export default function OnUpdateWithDeps(props) {
 `;
 
 exports[`React rootShow 1`] = `
-"export default function RenderStyles(props) {
-  
-  
-  
-  
-
-  
-  
-
-  
-
-  
-
-  return (
-    <>
-    {props.foo === 'bar' ? (
-  <><div >Bar</div></>
-) : <div >Foo</div>}
+"export default function RenderStyles(props: {
+foo: string
+}) {
     
-    </>
-  );
-}
+    
+    
+    
+
+    
+    
+
+    
+
+    
+
+    return (
+      <>
+      {props.foo === 'bar' ? (
+    <><div >Bar</div></>
+  ) : <div >Foo</div>}
+      
+      </>
+    );
+  }
 
 
 "
