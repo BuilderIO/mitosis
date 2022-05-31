@@ -35,6 +35,10 @@ import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
+function encodeQuotes(string: string) {
+  return string.replace(/"/g, '&quot;');
+}
+
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
   cssNamespace?: () => string;
@@ -84,7 +88,9 @@ const NODE_MAPPERS: {
 
     if (options.vueVersion! >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${keyValue}" v-for="${forValue}">
+      return `<template :key="${encodeQuotes(
+        keyValue?.code || 'index',
+      )}" v-for="${encodeQuotes(forValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
     }
@@ -101,7 +107,7 @@ const NODE_MAPPERS: {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
     if (options.vueVersion! >= 3) {
       return `
-      <template v-if="${ifValue}">
+      <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>
       ${
@@ -200,24 +206,30 @@ const stringifyBinding =
         const isAssignmentExpression = useValue.includes('=');
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
-          return ` @${event}="${removeSurroundingBlock(
-            useValue
-              // TODO: proper reference parse and replacing
-              .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+          return ` @${event}="${encodeQuotes(
+            removeSurroundingBlock(
+              useValue
+                // TODO: proper reference parse and replacing
+                .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+            ),
           )}" `;
         } else {
-          return ` @${event}="${removeSurroundingBlock(
-            useValue
-              // TODO: proper reference parse and replacing
-              .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+          return ` @${event}="${encodeQuotes(
+            removeSurroundingBlock(
+              useValue
+                // TODO: proper reference parse and replacing
+                .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+            ),
           )}" `;
         }
       } else if (key === 'ref') {
-        return ` ref="${useValue}" `;
+        return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${useValue.replace(/"/g, "\\'")}" `;
+        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(
+          useValue.replace(/"/g, "\\'"),
+        )}" `;
       } else {
-        return ` :${key}="${useValue}" `;
+        return ` :${key}="${encodeQuotes(useValue)}" `;
       }
     }
   };
@@ -255,14 +267,21 @@ export const blockToVue = (
   str += `<${node.name} `;
 
   if (node.bindings._spread?.code) {
-    str += `v-bind="${stripStateAndPropsRefs(
-      node.bindings._spread.code as string,
+    str += `v-bind="${encodeQuotes(
+      stripStateAndPropsRefs(node.bindings._spread.code as string),
     )}"`;
   }
 
   for (const key in node.properties) {
     const value = node.properties[key];
-    str += ` ${key}="${value}" `;
+
+    if (key === 'className') {
+      continue;
+    }
+
+    if (typeof value === 'string') {
+      str += ` ${key}="${encodeQuotes(value)}" `;
+    }
   }
 
   const stringifiedBindings = Object.entries(node.bindings)
@@ -296,7 +315,7 @@ function getContextInjectString(
 
   for (const key in component.context.get) {
     str += `
-      ${key}: "${component.context.get[key].name}",
+      ${key}: "${encodeQuotes(component.context.get[key].name)}",
     `;
   }
 
