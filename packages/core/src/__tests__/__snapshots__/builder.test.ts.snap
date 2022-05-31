@@ -1499,7 +1499,7 @@ Object {
 
 exports[`Builder Section 1`] = `
 "<div class=\\"div\\"><p>EAGER LOAD</p></div>
-<div class=\\"div-2\\" data-name=\\"div-2\\">
+<div class=\\"div-2\\" data-el=\\"div-2\\">
   <section lazyLoad=\\"true\\" class=\\"section\\"><p>LAZY LOAD</p></section>
 </div>
 <style>
@@ -1548,6 +1548,7 @@ exports[`Builder Section 1`] = `
   (() => {
     const state = {};
 
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1566,7 +1567,7 @@ exports[`Builder Section 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         el.setAttribute(\\"maxWidth\\", 1234);
 
         el.setAttribute(\\"lazyLoad\\", true);
@@ -1579,16 +1580,6 @@ exports[`Builder Section 1`] = `
 
     // Update with initial state on first load
     update();
-
-    // Helper text DOM nodes
-    function renderTextNode(el, text) {
-      const textNode = document.createTextNode(text);
-      if (el?.scope) {
-        textNode.scope = el.scope;
-      }
-      el.after(textNode);
-      nodesToDestroy.push(el.nextSibling);
-    }
   })();
 </script>
 "

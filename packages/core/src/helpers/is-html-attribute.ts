@@ -379,8 +379,9 @@ export const isHtmlAttribute = (attr: string, tagName: string) => {
   if (/role|aria-/.test(attr)) {
     return true;
   }
-  return [
+  const getAttr = [
     ...htmlElementAttributes['*'],
     ...(htmlElementAttributes[tagName] || []),
   ].find((attribute) => attr === attribute);
+  return Boolean(getAttr);
 };

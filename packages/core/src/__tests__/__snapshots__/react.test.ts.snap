@@ -49,6 +49,59 @@ export default function MyBasicChildComponent(props) {
 "
 `;
 
+exports[`React Basic Ref 1`] = `
+"import { useState, useRef } from \\"react\\";
+
+export default function MyMasicRefComponent(props) {
+  const inputRef = useRef();
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <>
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+
+            <label for=\\"cars\\">Choose a car:</label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React BasicFor 1`] = `
 "import { useState, useEffect } from \\"react\\";
 
@@ -209,6 +262,7 @@ exports[`React CustomCode 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
+  const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
@@ -254,8 +308,6 @@ export default function CustomCode(props) {
       }
     }
   }
-
-  const elem = useRef();
 
   useEffect(() => {
     findAndRunScripts();
@@ -278,6 +330,7 @@ exports[`React Embed 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
+  const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
@@ -323,8 +376,6 @@ export default function CustomCode(props) {
       }
     }
   }
-
-  const elem = useRef();
 
   useEffect(() => {
     findAndRunScripts();
@@ -352,6 +403,7 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 export default function FormComponent(props) {
+  const formRef = useRef();
   const [state, setState] = useState(() => \\"unsubmitted\\");
 
   const [responseData, setResponseData] = useState(() => null);
@@ -545,7 +597,6 @@ export default function FormComponent(props) {
       );
     }
   }
-  const formRef = useRef();
   return (
     <>
       {\\" \\"}
@@ -620,6 +671,7 @@ exports[`React Image 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function Image(props) {
+  const pictureRef = useRef();
   const [scrollListener, setScrollListener] = useState(() => null);
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
@@ -640,8 +692,6 @@ export default function Image(props) {
     // TODO: Add more checks here, like testing for real web browsers
     return !!props.lazy && isBrowser();
   }
-
-  const pictureRef = useRef();
 
   useEffect(() => {
     if (useLazyLoading()) {
@@ -1069,12 +1119,22 @@ export default function MultipleOnUpdateWithDeps(props) {
 `;
 
 exports[`React onInit 1`] = `
-"export default function OnInit(props) {
-  useEffect(() => {
-    console.log(\\"Runs once every update/rerender\\");
-  }, []);
+"import { useState } from \\"react\\";
 
-  return <div />;
+export default function OnInit(props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  });
+
+  return (
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
+  );
 }
 "
 `;

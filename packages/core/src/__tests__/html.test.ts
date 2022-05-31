@@ -24,7 +24,6 @@ const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
-
 const stamped = require('./data/blocks/stamped-io.raw');
 const shadowDom = require('./data/blocks/shadow-dom.raw');
 

@@ -4,6 +4,10 @@ import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
+// const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
+const basicOnUpdateDeps = require('./data/basic-onUpdate-deps.raw');
+const basicRef = require('./data/basic-ref.raw');
+const basicContext = require('./data/basic-context.raw');
 const basicForShow = require('./data/basic-for-show.raw');
 const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
@@ -34,6 +38,30 @@ const shadowDom = require('./data/blocks/shadow-dom.raw');
 describe('webcomponent', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref', () => {
+    const component = parseJsx(basicRef);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  // test('Basic onUpdate return', () => {
+  //   const component = parseJsx(basicOnUpdateReturn);
+  //   const output = componentToCustomElement()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
+
+  test('Basic onUpdate deps', () => {
+    const component = parseJsx(basicOnUpdateDeps);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Context', () => {
+    const component = parseJsx(basicContext);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

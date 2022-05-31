@@ -4,6 +4,7 @@ export type StripStateAndPropsRefsOptions = {
   includeState?: boolean;
   contextVars?: string[];
   outputVars?: string[];
+  context?: string;
 };
 
 /**
@@ -22,12 +23,16 @@ export const stripStateAndPropsRefs = (
   const replacer = options.replaceWith || '';
   const contextVars = options?.contextVars || [];
   const outputVars = options?.outputVars || [];
+  const context = options?.context || 'this.';
   if (contextVars.length) {
     contextVars.forEach((_var) => {
       newCode = newCode.replace(
         // determine expression edge cases
-        new RegExp('( |;|(\\())' + _var, 'g'),
-        '$1this.' + _var,
+        new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        ),
+        '$1' + context + _var + '$2',
       );
     });
   }
@@ -35,7 +40,7 @@ export const stripStateAndPropsRefs = (
     outputVars.forEach((_var) => {
       // determine expression edge cases onMessage( to this.onMessage.emit(
       const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
-      const replacer = '$1this.' + _var + '.emit(';
+      const replacer = '$1' + context + _var + '.emit(';
       newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
     });
   }

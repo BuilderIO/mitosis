@@ -50,6 +50,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  experimental?: any;
 }
 
 /**
@@ -374,19 +375,21 @@ function addProviderComponents(
 ) {
   for (const key in json.context.set) {
     const { name, value } = json.context.set[key];
-    json.children = [
-      createMitosisNode({
-        name: `${name}.Provider`,
-        children: json.children,
-        ...(value && {
-          bindings: {
-            value: {
-              code: getMemberObjectString(value),
+    if (value) {
+      json.children = [
+        createMitosisNode({
+          name: `${name}.Provider`,
+          children: json.children,
+          ...(value && {
+            bindings: {
+              value: {
+                code: getMemberObjectString(value),
+              },
             },
-          },
+          }),
         }),
-      }),
-    ];
+      ];
+    }
   }
 }
 
@@ -613,6 +616,7 @@ const _componentToReact = (
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
   }(props) {
+      ${getRefsString(json)}
       ${
         hasState
           ? stateType === 'mobx'
@@ -635,17 +639,18 @@ const _componentToReact = (
           : ''
       }
       ${getContextString(json, options)}
-      ${getRefsString(json)}
       ${getInitCode(json, options)}
 
       ${
         json.hooks.onInit?.code
-          ? `useEffect(() => {
+          ? `
+          useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(json.hooks.onInit.code, options),
               options,
             )}
-          }, [])`
+          })
+          `
           : ''
       }
       ${

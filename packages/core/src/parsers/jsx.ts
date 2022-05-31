@@ -183,13 +183,21 @@ const componentFunctionToJson = (
                 key,
               )!;
               const valueNode = expression.arguments[1];
-              setContext[keyPath] = {
-                name: keyNode.name,
-                value:
-                  valueNode && types.isObjectExpression(valueNode)
-                    ? parseStateObject(valueNode)
-                    : undefined,
-              };
+              if (valueNode) {
+                if (types.isObjectExpression(valueNode)) {
+                  const value = parseStateObject(valueNode) as JSONObject;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    value,
+                  };
+                } else {
+                  const ref = generate(valueNode).code;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    ref,
+                  };
+                }
+              }
             }
           } else if (
             expression.callee.name === 'onMount' ||
@@ -327,6 +335,13 @@ const componentFunctionToJson = (
                     context.builder.component.imports,
                     name,
                   )!,
+                };
+              } else {
+                const varName = declaration.id.name;
+                const name = generate(firstArg).code;
+                accessedContext[varName] = {
+                  name,
+                  path: '',
                 };
               }
             }

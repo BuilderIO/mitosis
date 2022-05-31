@@ -22,6 +22,8 @@ exports[`Angular Basic 1`] = `
 })
 export default class MyBasicComponent {
   name = \\"Steve\\";
+
+  constructor() {}
 }
 "
 `;
@@ -50,6 +52,102 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
+
+  constructor() {}
+}
+"
+`;
+
+exports[`Angular Basic Context 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>
+      {{myService.method('hello') + name}} Hello! I can run in React, Vue,
+      Solid, or Liquid!
+
+      <input (input)=\\"onChange\\" />
+    </div>
+  \`,
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+  onChange = function onChange() {
+    const change = this.myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  constructor(public myService: MyService) {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  }
+
+  ngOnInit() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  }
+}
+"
+`;
+
+exports[`Angular Basic Ref 1`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-masic-ref-component\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"showInput\\">
+        <div>
+          <input
+            class=\\"input\\"
+            #inputRef
+            [value]=\\"name\\"
+            (blur)=\\"onBlur()\\"
+            (input)=\\"name = $event.target.value\\"
+          />
+
+          <label for=\\"cars\\">Choose a car:</label>
+
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </div>
+      </ng-container>
+
+      Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyMasicRefComponent {
+  @Input() showInput: any;
+
+  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+
+  name = \\"PatrickJS\\";
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.nativeElement.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  constructor() {}
 }
 "
 `;
@@ -81,6 +179,8 @@ export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
+  constructor() {}
+
   ngOnInit() {
     console.log(\\"onMount code\\");
   }
@@ -101,7 +201,9 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export default class SlotCode {}
+export default class SlotCode {
+  constructor() {}
+}
 "
 `;
 
@@ -123,6 +225,8 @@ export default class Text {
   @Input() content: any;
 
   name = \\"Decadef20\\";
+
+  constructor() {}
 }
 "
 `;
@@ -143,6 +247,8 @@ export default class MyBasicOutputsComponent {
   @Input() message: any;
 
   name = \\"PatrickJS\\";
+
+  constructor() {}
 
   ngOnInit() {
     this.onMessage.emit(this.name);
@@ -169,6 +275,8 @@ export default class MyBasicOutputsComponent {
 
   name = \\"PatrickJS\\";
 
+  constructor() {}
+
   ngOnInit() {
     this.onMessage.emit(this.name);
     this.onEvent.emit(this.message);
@@ -192,6 +300,8 @@ exports[`Angular className to class 1`] = `
 })
 export default class ClassNameCode {
   bindings = \\"a binding\\";
+
+  constructor() {}
 }
 "
 `;
@@ -206,6 +316,8 @@ exports[`Angular multiple onUpdate 1`] = `
   \`,
 })
 export default class MultipleOnUpdate {
+  constructor() {}
+
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
 
@@ -234,7 +346,9 @@ exports[`Angular ng-content and Slot 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotCode {}
+export default class ContentSlotCode {
+  constructor() {}
+}
 "
 `;
 
@@ -257,22 +371,29 @@ exports[`Angular ng-content and Slot jsx-props 1`] = `
 })
 export default class ContentSlotJsxCode {
   @Input() children: any;
+
+  constructor() {}
 }
 "
 `;
 
 exports[`Angular onInit 1`] = `
-"import { Component } from \\"@angular/core\\";
+"import { Component, Input } from \\"@angular/core\\";
 
 @Component({
   selector: \\"on-init\\",
   template: \`
-    <div></div>
+    <div>Default name defined by parent {{name}}</div>
   \`,
 })
 export default class OnInit {
-  ngOnInit() {
-    console.log(\\"Runs once every update/rerender\\");
+  @Input() name: any;
+
+  name = \\"\\";
+
+  constructor() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
   }
 }
 "
@@ -288,9 +409,11 @@ exports[`Angular onInit and onMount 1`] = `
   \`,
 })
 export default class OnInit {
-  ngOnInit() {
+  constructor() {
     console.log(\\"onInit\\");
+  }
 
+  ngOnInit() {
     console.log(\\"onMount\\");
   }
 }
@@ -307,6 +430,8 @@ exports[`Angular onMount 1`] = `
   \`,
 })
 export default class Comp {
+  constructor() {}
+
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -328,6 +453,8 @@ exports[`Angular onUpdate 1`] = `
   \`,
 })
 export default class OnUpdate {
+  constructor() {}
+
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }

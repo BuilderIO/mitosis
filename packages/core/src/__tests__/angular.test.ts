@@ -8,9 +8,12 @@ const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
 const basic = require('./data/basic.raw');
+const basicRef = require('./data/basic-ref.raw');
+const basicContext = require('./data/basic-context.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
 const basicOutputs = require('./data/basic-outputs.raw');
+// const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
 const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
@@ -21,6 +24,24 @@ const text = require('./data/blocks/text.raw');
 describe('Angular', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref', () => {
+    const component = parseJsx(basicRef);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  // test('Basic onUpdate return', () => {
+  //   const component = parseJsx(basicOnUpdateReturn);
+  //   const output = componentToAngular()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
+
+  test('Basic Context', () => {
+    const component = parseJsx(basicContext);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });

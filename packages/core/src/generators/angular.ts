@@ -94,7 +94,8 @@ export const blockToAngular = (
 
   if (json.bindings._text?.code) {
     return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
-      contextVars,
+      // the context is the class
+      contextVars: [],
       outputVars,
     })}}}`;
   }
@@ -167,8 +168,16 @@ export const blockToAngular = (
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
+        const eventName = cusArgs[0];
+        const regexp = new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' +
+            eventName +
+            '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        );
+        const replacer = '$1$event$2';
         const finalValue = removeSurroundingBlock(
-          useValue.replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+          useValue.replace(regexp, replacer),
         );
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'class') {
@@ -260,9 +269,7 @@ export const componentToAngular =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    const hasOnInit = Boolean(
-      component.hooks?.onInit || component.hooks?.onMount,
-    );
+    const hasOnMount = Boolean(component.hooks?.onMount);
 
     const refs = Array.from(getRefs(json));
     mapRefs(json, (refName) => `this.${refName}.nativeElement`);
@@ -335,23 +342,25 @@ export const componentToAngular =
 
       ${dataString}
 
-      ${!hasInjectable ? '' : `constructor(\n${injectables.join(',\n')}) {}`}
+      constructor(\n${injectables.join(',\n')}) {
+        ${
+          !component.hooks?.onInit
+            ? ''
+            : `
+          ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+            replaceWith: 'this.',
+            contextVars,
+            outputVars,
+          })}
+          `
+        }
+      }
 
       ${
-        !hasOnInit
+        !hasOnMount
           ? ''
           : `ngOnInit() {
-              ${
-                !component.hooks?.onInit
-                  ? ''
-                  : `
-                ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                })}
-                `
-              }
+              
               ${
                 !component.hooks?.onMount
                   ? ''
