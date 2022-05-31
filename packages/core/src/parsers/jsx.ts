@@ -715,18 +715,37 @@ function mapReactIdentifiers(json: MitosisComponent) {
             item.bindings[key]!.arguments = value.arguments;
           }
         }
-        if (key === 'className') {
-          const currentValue = item.bindings[key];
-          delete item.bindings[key];
-          item.bindings.class = currentValue;
-        }
       }
-      for (const key in item.properties) {
-        if (key === 'class') {
-          const currentValue = item.properties[key];
-          delete item.properties[key];
-          item.properties.class = currentValue;
+
+      if (item.bindings.className) {
+        if (item.bindings.class) {
+          // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
+          item.bindings.class = item.bindings.className;
+          console.warn(
+            `[${json.name}]: Found both 'class' and 'className' bindings: removing 'className'.`,
+          );
+        } else {
+          item.bindings.class = item.bindings.className;
         }
+        delete item.bindings.className;
+      }
+
+      if (item.properties.className) {
+        if (item.properties.class) {
+          item.properties.class = `${item.properties.class} ${item.properties.className}`;
+          console.warn(
+            `[${json.name}]: Found both 'class' and 'className' properties: merging.`,
+          );
+        } else {
+          item.properties.class = item.properties.className;
+        }
+        delete item.properties.className;
+      }
+
+      if (item.properties.class && item.bindings.class) {
+        console.warn(
+          `[${json.name}]: Ended up with both a property and binding for 'class'.`,
+        );
       }
     }
   });

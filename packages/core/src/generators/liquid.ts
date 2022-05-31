@@ -119,12 +119,7 @@ const blockToLiquid = (
 
     for (const key in json.properties) {
       const value = json.properties[key];
-
-      if (key === 'className') {
-        str += ` class="${value}" `;
-      } else {
-        str += ` ${key}="${value}" `;
-      }
+      str += ` ${key}="${value}" `;
     }
 
     for (const key in json.bindings) {
@@ -164,7 +159,7 @@ export const componentToLiquid =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    const css = collectCss(json, { classProperty: 'className' });
+    const css = collectCss(json);
     stripMetaProperties(json);
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);

@@ -136,21 +136,6 @@ const getChildComponents = (
   return childComponents;
 };
 
-const replaceClassname = (
-  json: MitosisComponent,
-  options: InternalToHtmlOptions,
-) => {
-  traverse(json).forEach(function (node) {
-    if (isMitosisNode(node)) {
-      if (node.properties.className) {
-        // Change className to class in the HTML elements
-        node.properties.class = node.properties.className;
-        delete node.properties.className;
-      }
-    }
-  });
-};
-
 const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
   return parentScopeVars.filter((scopeVar) => {
     if (typeof value === 'boolean') {
@@ -401,20 +386,13 @@ const blockToHtml = (
       if (key === 'innerHTML') {
         continue;
       }
-
       if (key.startsWith('$')) {
         continue;
       }
-
       const value = (json.properties[key] || '')
         .replace(/"/g, '&quot;')
         .replace(/\n/g, '\\n');
-
-      if (key === 'className') {
-        str += ` class="${value}" `;
-      } else {
-        str += ` ${key}="${value}" `;
-      }
+      str += ` ${key}="${value}" `;
     }
 
     // batch all local vars within the bindings
@@ -896,7 +874,6 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    replaceClassname(json, useOptions);
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const props = getProps(json);

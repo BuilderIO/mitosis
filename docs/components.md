@@ -60,6 +60,8 @@ export default function MyComponent() {
 
 ## Styling
 
+### `css`
+
 Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
 ```javascript
@@ -84,6 +86,10 @@ export default function ResponsiveExample() {
   );
 }
 ```
+
+## `class` vs `className`
+
+Mitosis prefers that you use `class` to provide class name strings, but it also allows you to provide `className`. If both are used in the same component, it will attempt to merge the two. We recommend that you only use one (preferrably `class`, as that's what is internally preferred by Mitosis).
 
 ## State
 
@@ -198,10 +204,26 @@ export default function MyComponent(props) {
 We use the standard method for passing children with `props.children`
 
 ```jsx
-function MyComponent(props) {
+export default function MyComponent(props) {
   return <div>{props.children}</div>;
 }
 ```
+
+<details>
+  <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata</summary>
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true,
+});
+export default function MyComponent(props) {
+  return <div>{props.children}</div>;
+}
+```
+
+</details>
 
 ### Slot
 
@@ -224,7 +246,7 @@ In this example we are registering `top`, `left`, and `center` for the `Layout` 
 If the `Layout` component was also a Mitosis component then we simply use the reference in the props.
 
 ```jsx
-function Layout(props) {
+export default function Layout(props) {
   return (
     <div className="layout">
       <div className="top">{props.slotTop}</div>
@@ -270,3 +292,28 @@ Mitosis compiles one component at a time and is only concerned with outputting t
 })
 class LayoutComponent {}
 ```
+
+In webcomponent you need to use ShadowDom metadata for named slots
+
+<details>
+  <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata named slots</summary>
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true,
+});
+export default function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">{props.slotTop}</div>
+      <div className="left">{props.slotLeft}</div>
+      <div className="center">{props.slotCenter}</div>
+      {props.children}
+    </div>
+  );
+}
+```
+
+</details>
