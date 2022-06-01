@@ -65,7 +65,7 @@ interface BuilderSymbol {
   data: Record<string, any>;
   content: {
     data: {
-      state: Record<string, any>;
+      state?: Record<string, any>;
     };
   };
 }
