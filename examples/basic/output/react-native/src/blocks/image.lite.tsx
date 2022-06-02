@@ -10,7 +10,6 @@ export default function Image(props) {
           alt={props.altText}
           aria-role={props.altText ? "presentation" : undefined}
           style={styles.view2}
-          className={"class-image" + (props.class ? " " + props.class : "")}
           src={props.image}
           srcset={props.srcset}
           sizes={props.sizes}
