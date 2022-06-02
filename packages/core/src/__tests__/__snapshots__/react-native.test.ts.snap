@@ -113,9 +113,9 @@ export default function CustomCode(props) {
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
+    if (elem?.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
+      const scripts = elem?.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -175,9 +175,9 @@ export default function CustomCode(props) {
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
+    if (elem?.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
+      const scripts = elem?.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -342,8 +342,8 @@ export default function FormComponent(props) {
         }
       }
       const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
-      if (formRef.current) {
-        formRef.current.dispatchEvent(presubmitEvent);
+      if (formRef?.current) {
+        formRef?.current.dispatchEvent(presubmitEvent);
         if (presubmitEvent.defaultPrevented) {
           return;
         }
@@ -385,25 +385,25 @@ export default function FormComponent(props) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
             });
-            if (formRef.current) {
-              formRef.current.dispatchEvent(submitSuccessEvent);
+            if (formRef?.current) {
+              formRef?.current.dispatchEvent(submitSuccessEvent);
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */ if (
                 props.resetFormOnSubmit !== false
               ) {
-                formRef.current.reset();
+                formRef?.current.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */ if (
               props.successUrl
             ) {
-              if (formRef.current) {
+              if (formRef?.current) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: { url: props.successUrl },
                 });
-                formRef.current.dispatchEvent(event);
+                formRef?.current.dispatchEvent(event);
                 if (!event.defaultPrevented) {
                   location.href = props.successUrl;
                 }
@@ -417,8 +417,8 @@ export default function FormComponent(props) {
           const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
             detail: { error: err },
           });
-          if (formRef.current) {
-            formRef.current.dispatchEvent(submitErrorEvent);
+          if (formRef?.current) {
+            formRef?.current.dispatchEvent(submitErrorEvent);
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
@@ -517,8 +517,8 @@ export default function Image(props) {
     if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef.current) {
-          const rect = pictureRef.current.getBoundingClientRect();
+        if (pictureRef?.current) {
+          const rect = pictureRef?.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
