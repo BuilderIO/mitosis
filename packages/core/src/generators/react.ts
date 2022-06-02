@@ -560,7 +560,8 @@ const _componentToReact = (
   if (
     json.hooks.onMount?.code ||
     json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.length
+    json.hooks.onUpdate?.length ||
+    json.hooks.onInit?.code
   ) {
     reactLibImports.add('useEffect');
   }
