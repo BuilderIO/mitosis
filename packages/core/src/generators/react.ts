@@ -521,7 +521,7 @@ const _componentToReact = (
   const refs = getRefs(json);
   let hasState = Boolean(Object.keys(json.state).length);
 
-  mapRefs(json, (refName) => `${refName}.current`);
+  mapRefs(json, (refName) => `${refName}?.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
