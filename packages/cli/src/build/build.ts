@@ -165,8 +165,7 @@ const getTranspilerForTarget = ({
     case 'svelte':
       return componentToSvelte(options.options.svelte);
     default:
-      // TO-DO: throw instead of `never`
-      return null as never;
+      throw new Error('CLI does not support target: ' + target);
   }
 };
 
