@@ -13,8 +13,9 @@
   "scripts": {
     "lerna": "lerna",
     "ci:build": "yarn workspaces foreach -pt --exclude @builder.io/mitosis-fiddle --verbose run build",
-    "ci:lint": "yarn lint:prettier",
+    "ci:lint": "yarn run lint:prettier",
     "ci:test": "yarn workspaces foreach run test --passWithNoTests",
+    "ci": "run-s \"ci:*\"",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
     "fmt": "yarn fmt:prettier",
@@ -22,7 +23,7 @@
     "lint": "run-p -c lint:*",
     "lint:css": "stylelint 'packages/**/*.ts{,x}'",
     "lint:eslint": "eslint 'packages/**/*.ts{,x}'",
-    "lint:prettier": "yarn prettier --check",
+    "lint:prettier": "yarn run prettier --check",
     "prerelease": "yarn build",
     "prettier": "prettier '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
     "release": "lerna publish",
@@ -33,7 +34,6 @@
     "url": "https://github.com/BuilderIO/mitosis"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.6.0",
     "commitizen": "^3.0.2",
     "esbuild": "0.14.25",
     "esbuild-register": "3.3.2",
