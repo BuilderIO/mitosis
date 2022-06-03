@@ -347,7 +347,7 @@ export const componentToAngular =
       ${outputs.join('\n')}
 
       ${Array.from(props)
-        .filter((item) => !item.startsWith('slot') || item === 'children')
+        .filter((item) => !item.startsWith('slot') && item !== 'children')
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
 
