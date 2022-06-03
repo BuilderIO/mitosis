@@ -17,12 +17,19 @@ jobs:
           cache: 'yarn'
 
       - name: Install dependencies
-        run: yarn
+        run: yarn --immutable
 
       - name: build
         run: yarn workspace @builder.io/mitosis run build
 
+      - name: build basic example
+        run: yarn workspace @builder.io/basic-example run build
+
+      - name: build todo example
+        run: yarn workspace @builder.io/todo-example run build
+
       - name: save artifact
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        if: "${{ env.API_TOKEN_GITHUB != '' }}"
         run: yarn workspace @builder.io/mitosis run mitosis-save-artifacts
