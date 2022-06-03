@@ -31,6 +31,7 @@
   - [Design Systems Maintainers](#design-systems-maintainers)
   - [Teams using multiple web frameworks](#teams-using-multiple-web-frameworks)
   - [Teams building web SDKs](#teams-building-web-sdks)
+- [Status](#status)
 - [Contribute](#contribute)
 - [Coming soon](#coming-soon)
 - [Community](#community)
