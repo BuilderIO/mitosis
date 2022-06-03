@@ -8,7 +8,6 @@ import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { babelTransformExpression } from './babel-transform';
 import { GETTER, SETTER } from './patterns';
-import { forEach } from 'lodash';
 
 const tsPreset = require('@babel/preset-typescript');
 
