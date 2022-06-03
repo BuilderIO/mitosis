@@ -264,9 +264,11 @@ export const blockToReact = (
 
 const getRefsString = (
   json: MitosisComponent,
-  refs = Object.keys(json.refs),
+  refs: string[],
+  options: ToReactOptions,
 ) => {
-  let str = '';
+  let hasStateArgument = false;
+  let code = '';
   const domRefs = getRefs(json);
 
   for (const ref of refs) {
@@ -274,12 +276,16 @@ const getRefsString = (
     // domRefs must have null argument
     const argument =
       json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
-    str += `\nconst ${ref} = useRef${
+    hasStateArgument = /state\./.test(argument);
+    code += `\nconst ${ref} = useRef${
       typeParameter ? `<${typeParameter}>` : ''
-    }(${argument});`;
+    }(${processBinding(
+      updateStateSettersInCode(argument, options),
+      options,
+    )});`;
   }
 
-  return str;
+  return [hasStateArgument, code];
 };
 
 /**
@@ -528,10 +534,11 @@ const _componentToReact = (
     updateStateSetters(json, options);
   }
 
-  const refs = getRefs(json);
-  let hasState = Boolean(Object.keys(json.state).length);
-
+  // const domRefs = getRefs(json);
+  const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
+
+  let hasState = Boolean(Object.keys(json.state).length);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
@@ -564,7 +571,7 @@ const _componentToReact = (
   if (hasContext(json)) {
     reactLibImports.add('useContext');
   }
-  if (refs.size) {
+  if (allRefs.length) {
     reactLibImports.add('useRef');
   }
   if (
@@ -581,6 +588,7 @@ const _componentToReact = (
     (componentHasStyles && stylesType === 'styled-jsx') ||
     isRootShowNode(json);
 
+  const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
   const nativeStyles =
     stylesType === 'react-native' &&
     componentHasStyles &&
@@ -627,7 +635,7 @@ const _componentToReact = (
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
   }(props) {
-      ${getRefsString(json)}
+      ${hasStateArgument ? '' : refsString}
       ${
         hasState
           ? stateType === 'mobx'
@@ -649,6 +657,7 @@ const _componentToReact = (
               )});`
           : ''
       }
+      ${hasStateArgument ? refsString : ''}
       ${getContextString(json, options)}
       ${getInitCode(json, options)}
 

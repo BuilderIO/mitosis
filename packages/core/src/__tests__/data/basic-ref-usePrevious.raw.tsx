@@ -17,11 +17,11 @@ export function usePrevious(value: any) {
 }
 
 export default function MyPreviousComponent(props: Props) {
-  let prevCount = useRef(0);
-
   const state = useState({
     count: 0,
   });
+
+  let prevCount = useRef(state.count);
 
   onUpdate(() => {
     prevCount = state.count;

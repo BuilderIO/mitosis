@@ -340,7 +340,13 @@ export const componentToAngular =
           const argument = component.refs[ref].argument;
           const typeParameter = component.refs[ref].typeParameter;
           return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
-            argument ? ` = ${argument}` : ''
+            argument
+              ? ` = ${stripStateAndPropsRefs(argument, {
+                  replaceWith: 'this.',
+                  contextVars,
+                  outputVars,
+                })}`
+              : ''
           };`;
         })
         .join('\n')}
