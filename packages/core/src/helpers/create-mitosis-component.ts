@@ -7,6 +7,7 @@ export const createMitosisComponent = (
   imports: [],
   inputs: [],
   meta: {},
+  refs: {},
   state: {},
   children: [],
   hooks: {},

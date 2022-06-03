@@ -5,17 +5,17 @@ export interface Props {
 }
 
 export default function MyMasicRefComponent(props: Props) {
-  let inputRef = (useRef as any)('default value');
+  let holdValueRef = useRef('Patrick');
 
   function handlerClick(event: Event) {
     event.preventDefault();
-    console.log('current value', inputRef);
-    inputRef = 'lol';
+    console.log('current value', holdValueRef);
+    holdValueRef = holdValueRef + 'JS';
   }
 
   return (
     <div>
-      <button onClick={handlerClick}>Click</button>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
     </div>
   );
 }

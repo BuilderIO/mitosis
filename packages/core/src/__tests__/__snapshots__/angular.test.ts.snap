@@ -111,7 +111,7 @@ exports[`Angular Basic Ref 1`] = `
             (input)=\\"name = $event.target.value\\"
           />
 
-          <label for=\\"cars\\">Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
 
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
@@ -137,6 +137,7 @@ export default class MyMasicRefComponent {
   @Input() showInput: any;
 
   @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -145,6 +146,31 @@ export default class MyMasicRefComponent {
   };
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
+  };
+
+  constructor() {}
+}
+"
+`;
+
+exports[`Angular Basic Ref Assignment 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-masic-ref-component\\",
+  template: \`
+    <div>
+      <button (click)=\\"handlerClick($event)\\">Click</button>
+    </div>
+  \`,
+})
+export default class MyMasicRefComponent {
+  private _holdValueRef = \\"Patrick\\";
+
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", this._holdValueRef);
+    this._holdValueRef = this._holdValueRef + \\"JS\\";
   };
 
   constructor() {}

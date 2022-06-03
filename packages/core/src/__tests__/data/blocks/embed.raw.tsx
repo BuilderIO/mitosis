@@ -5,7 +5,7 @@ export interface EmbedProps {
 }
 
 export default function Embed(props: EmbedProps) {
-  const elem = useRef();
+  const elem = useRef<Element>();
 
   const state = useState({
     scriptsInserted: [] as string[],

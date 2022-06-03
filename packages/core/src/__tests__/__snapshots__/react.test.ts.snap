@@ -53,12 +53,13 @@ exports[`React Basic Ref 1`] = `
 "import { useState, useRef } from \\"react\\";
 
 export default function MyMasicRefComponent(props) {
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef(undefined);
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
-    inputRef?.current.focus();
+    inputRef.current.focus();
   }
 
   function lowerCaseName() {
@@ -78,7 +79,9 @@ export default function MyMasicRefComponent(props) {
               onChange={(event) => setName(event.target.value)}
             />
 
-            <label for=\\"cars\\">Choose a car:</label>
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
 
             <select name=\\"cars\\" id=\\"cars\\">
               <option value=\\"supra\\">GR Supra</option>
@@ -97,6 +100,23 @@ export default function MyMasicRefComponent(props) {
         }
       \`}</style>
     </>
+  );
+}
+"
+`;
+
+exports[`React Basic Ref Assignment 1`] = `
+"export default function MyMasicRefComponent(props) {
+  function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
   );
 }
 "
@@ -262,16 +282,16 @@ exports[`React CustomCode 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
-  const elem = useRef();
+  const elem = useRef<Element>();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem?.current && typeof window !== \\"undefined\\") {
+    if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem?.current.getElementsByTagName(\\"script\\");
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -330,16 +350,16 @@ exports[`React Embed 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
-  const elem = useRef();
+  const elem = useRef<Element>();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem?.current && typeof window !== \\"undefined\\") {
+    if (elem.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem?.current.getElementsByTagName(\\"script\\");
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -510,8 +530,8 @@ export default function FormComponent(props) {
         }
       }
       const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
-      if (formRef?.current) {
-        formRef?.current.dispatchEvent(presubmitEvent);
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
         if (presubmitEvent.defaultPrevented) {
           return;
         }
@@ -553,25 +573,25 @@ export default function FormComponent(props) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
             });
-            if (formRef?.current) {
-              formRef?.current.dispatchEvent(submitSuccessEvent);
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */ if (
                 props.resetFormOnSubmit !== false
               ) {
-                formRef?.current.reset();
+                formRef.current.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */ if (
               props.successUrl
             ) {
-              if (formRef?.current) {
+              if (formRef.current) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: { url: props.successUrl },
                 });
-                formRef?.current.dispatchEvent(event);
+                formRef.current.dispatchEvent(event);
                 if (!event.defaultPrevented) {
                   location.href = props.successUrl;
                 }
@@ -585,8 +605,8 @@ export default function FormComponent(props) {
           const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
             detail: { error: err },
           });
-          if (formRef?.current) {
-            formRef?.current.dispatchEvent(submitErrorEvent);
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
@@ -671,7 +691,7 @@ exports[`React Image 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export default function Image(props) {
-  const pictureRef = useRef();
+  const pictureRef = useRef<Element>();
   const [scrollListener, setScrollListener] = useState(() => null);
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
@@ -697,8 +717,8 @@ export default function Image(props) {
     if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef?.current) {
-          const rect = pictureRef?.current.getBoundingClientRect();
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -817,6 +837,22 @@ exports[`React RawText 1`] = `
       className={props.attributes?.class || props.attributes?.className}
       dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
     />
+  );
+}
+"
+`;
+
+exports[`React Remove Internal mitosis package 1`] = `
+"import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      Hello
+      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+    </div>
   );
 }
 "

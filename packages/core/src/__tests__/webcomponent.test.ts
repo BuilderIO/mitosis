@@ -7,6 +7,7 @@ const basicFor = require('./data/basic-for.raw');
 // const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
 const basicOnUpdateDeps = require('./data/basic-onUpdate-deps.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const basicContext = require('./data/basic-context.raw');
 const basicForShow = require('./data/basic-for-show.raw');
 const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
@@ -44,6 +45,12 @@ describe('webcomponent', () => {
 
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Assignment', () => {
+    const component = parseJsx(basicRefAssignment);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
   });

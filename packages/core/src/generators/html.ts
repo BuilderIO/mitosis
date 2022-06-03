@@ -909,7 +909,10 @@ export const componentToCustomElement =
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
     const outputs = getPropFunctions(json);
-    const refs = Array.from(getRefs(json));
+    const domRefs = Array.from(getRefs(json));
+    const jsRefs = Object.keys(json.refs).filter(
+      (ref) => !domRefs.find((domRef) => domRef !== ref),
+    );
     mapRefs(json, (refName) => `self.${refName}`);
     const context: string[] = contextVars.map((variableName) => {
       const token = json?.context?.get[variableName].name;
@@ -1007,13 +1010,15 @@ export const componentToCustomElement =
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
-        ${refs.map((ref) => {
-          return `
+        ${domRefs
+          .map((ref) => {
+            return `
         get ${ref}() {
           return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
         }
             `;
-        })}
+          })
+          .join('\n')}
 
         get _root() {
           return this.shadowRoot || this;
@@ -1091,6 +1096,14 @@ export const componentToCustomElement =
           }
 
           ${useOptions.js}
+
+          ${jsRefs
+            .map((ref) => {
+              // const typeParameter = json['refs'][ref]?.typeParameter || '';
+              const argument = json['refs'][ref]?.argument || '';
+              return `this.${ref} = ${argument}`;
+            })
+            .join('\n')}
 
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })

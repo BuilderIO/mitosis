@@ -1,9 +1,11 @@
 import { componentToReact } from '../generators/react';
 import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
+const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -33,6 +35,14 @@ const slotJsx = require('./data/blocks/slot-jsx.raw');
 const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('React', () => {
+  test('Remove Internal mitosis package', () => {
+    const component = parseJsx(basicMitosis, {
+      compileAwayPackages: ['@dummy/custom-mitosis'],
+    });
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('ContentSlotJSX', () => {
     const component = parseJsx(contentSlotJsx);
     const output = componentToReact()({ component });
@@ -58,8 +68,15 @@ describe('React', () => {
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
+
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Assignment', () => {
+    const component = parseJsx(basicRefAssignment);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

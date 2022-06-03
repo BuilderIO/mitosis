@@ -42,7 +42,7 @@ export interface ContextSetInfo {
 export type ContextGet = { [key: string]: ContextGetInfo };
 export type ContextSet = { [key: string]: ContextSetInfo };
 
-export type extendedHook = { code: string; deps?: string };
+export type extendedHook = { code: string; deps?: string; arguments?: string };
 
 export type MitosisComponentInput = {
   name: string;
@@ -61,6 +61,12 @@ export type MitosisComponent = {
   context: {
     get: ContextGet;
     set: ContextSet;
+  };
+  refs: {
+    [useRef: string]: {
+      typeParameter?: string;
+      argument: string;
+    };
   };
   hooks: {
     init?: extendedHook;

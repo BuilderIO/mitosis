@@ -6,7 +6,7 @@ export interface CustomCodeProps {
 }
 
 export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef();
+  const elem = useRef<Element>();
 
   const state = useState({
     scriptsInserted: [] as string[],

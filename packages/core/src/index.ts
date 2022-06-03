@@ -4,7 +4,7 @@ export type Context<T> = {};
 
 // These compile away
 export const useState = <T>(obj: T) => obj;
-export const useRef = () => null as any;
+export const useRef = <T>(obj?: null | undefined | T) => obj as unknown as T;
 export const useContext = <T = { [key: string]: any }>(key: Context<T>): T =>
   null as unknown as T;
 export const createContext = <T = { [key: string]: any }>(

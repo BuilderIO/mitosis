@@ -266,7 +266,11 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   let str = '';
 
   for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
+    const typeParameter = json['refs'][ref]?.typeParameter || '';
+    const argument = json['refs'][ref]?.argument || '';
+    str += `\nconst ${ref} = useRef${
+      typeParameter ? `<${typeParameter}>` : ''
+    }(${argument});`;
   }
 
   return str;
@@ -521,7 +525,7 @@ const _componentToReact = (
   const refs = getRefs(json);
   let hasState = Boolean(Object.keys(json.state).length);
 
-  mapRefs(json, (refName) => `${refName}?.current`);
+  mapRefs(json, (refName) => `${refName}.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';

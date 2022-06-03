@@ -271,8 +271,14 @@ export const componentToAngular =
 
     const hasOnMount = Boolean(component.hooks?.onMount);
 
-    const refs = Array.from(getRefs(json));
-    mapRefs(json, (refName) => `this.${refName}.nativeElement`);
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+    mapRefs(json, (refName) => {
+      const isDomRef = domRefs.has(refName);
+      return `this.${isDomRef ? '' : '_'}${refName}${
+        isDomRef ? '.nativeElement' : ''
+      }`;
+    });
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -310,7 +316,7 @@ export const componentToAngular =
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
+    } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
     ${renderPreComponent(json)}
@@ -329,6 +335,15 @@ export const componentToAngular =
       }
     })
     export default class ${component.name} {
+      ${jsRefs
+        .map((ref) => {
+          const argument = component.refs[ref].argument;
+          const typeParameter = component.refs[ref].typeParameter;
+          return `private _${ref}${
+            typeParameter ? `: ${typeParameter}` : ''
+          } = ${argument}`;
+        })
+        .join('\n')}
       ${outputs.join('\n')}
 
       ${Array.from(props)
@@ -336,7 +351,7 @@ export const componentToAngular =
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
 
-      ${refs
+      ${Array.from(domRefs)
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
 

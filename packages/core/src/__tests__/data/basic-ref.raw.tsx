@@ -5,7 +5,8 @@ export interface Props {
 }
 
 export default function MyMasicRefComponent(props: Props) {
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef(undefined);
 
   const state = useState({
     name: 'PatrickJS',
@@ -34,7 +35,9 @@ export default function MyMasicRefComponent(props: Props) {
             onChange={(event) => (state.name = event.target.value)}
           />
 
-          <label for="cars">Choose a car:</label>
+          <label ref={inputNoArgRef} for="cars">
+            Choose a car:
+          </label>
 
           <select name="cars" id="cars">
             <option value="supra">GR Supra</option>
