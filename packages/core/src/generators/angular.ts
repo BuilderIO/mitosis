@@ -339,9 +339,9 @@ export const componentToAngular =
         .map((ref) => {
           const argument = component.refs[ref].argument;
           const typeParameter = component.refs[ref].typeParameter;
-          return `private _${ref}${
-            typeParameter ? `: ${typeParameter}` : ''
-          } = ${argument}`;
+          return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
+            argument ? ` = ${argument}` : ''
+          };`;
         })
         .join('\n')}
       ${outputs.join('\n')}

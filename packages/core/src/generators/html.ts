@@ -909,10 +909,8 @@ export const componentToCustomElement =
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
     const outputs = getPropFunctions(json);
-    const domRefs = Array.from(getRefs(json));
-    const jsRefs = Object.keys(json.refs).filter(
-      (ref) => !domRefs.find((domRef) => domRef !== ref),
-    );
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
     mapRefs(json, (refName) => `self._${refName}`);
     const context: string[] = contextVars.map((variableName) => {
       const token = json?.context?.get[variableName].name;
@@ -1010,7 +1008,7 @@ export const componentToCustomElement =
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
-        ${domRefs
+        ${Array.from(domRefs)
           .map((ref) => {
             return `
         get _${ref}() {
@@ -1100,7 +1098,7 @@ export const componentToCustomElement =
           ${jsRefs
             .map((ref) => {
               // const typeParameter = json['refs'][ref]?.typeParameter || '';
-              const argument = json['refs'][ref]?.argument || '';
+              const argument = json['refs'][ref]?.argument || 'null';
               return `this._${ref} = ${argument}`;
             })
             .join('\n')}

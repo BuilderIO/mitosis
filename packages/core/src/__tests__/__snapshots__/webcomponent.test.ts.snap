@@ -2044,112 +2044,102 @@ customElements.define(\\"column\\", Column);
 `;
 
 exports[`webcomponent Image 1`] = `
-"
-      
-    
-    
-  
-      /**
-       * Usage:
-       * 
-       *  <image></image>
-       * 
-       */
-      class Image extends HTMLElement {
-        
-        get _pictureRef() {
-          return this._root.querySelector(\\"[data-ref='Image-pictureRef']\\")
-        }
-            
+"/**
+ * Usage:
+ *
+ *  <image></image>
+ *
+ */
+class Image extends HTMLElement {
+  get _pictureRef() {
+    return this._root.querySelector(\\"[data-ref='Image-pictureRef']\\");
+  }
 
-        get _root() {
-          return this.shadowRoot || this;
-        }
+  get _root() {
+    return this.shadowRoot || this;
+  }
 
-        constructor() {
-          super();
-          const self = this;
-          
+  constructor() {
+    super();
+    const self = this;
 
-          
+    this.state = {
+      scrollListener: null,
+      imageLoaded: false,
+      load: false,
+      setLoaded() {
+        self.state.imageLoaded = true;
+        self.update();
+      },
+      isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!self.props.lazy && self.state.isBrowser();
+      },
+    };
+    if (!this.props) {
+      this.props = {};
+    }
 
-          this.state = { scrollListener: null, imageLoaded: false, load: false,  setLoaded() {
-  self.state.imageLoaded = true;
-  self.update();
-},  isBrowser() {
-  return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
-},  useLazyLoading() {
-  // TODO: Add more checks here, like testing for real web browsers
-  return !!self.props.lazy && self.state.isBrowser();
-},};
-          if (!this.props) {
-            this.props = {};
+    this.componentProps = [
+      \\"lazy\\",
+      \\"altText\\",
+      \\"class\\",
+      \\"image\\",
+      \\"srcset\\",
+      \\"sizes\\",
+      \\"children\\",
+    ];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'load' event on img-image-1
+    this.onImgImage1Load = (event) => {
+      this.state.setLoaded();
+    };
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  disconnectedCallback() {
+    // onUnMount
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
+    }
+    this.destroyAnyNodes(); // clean up nodes when component is destroyed
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
           }
-          
-          this.componentProps = [\\"lazy\\",\\"altText\\",\\"class\\",\\"image\\",\\"srcset\\",\\"sizes\\",\\"children\\"];
-          
-
-          
-
-          // used to keep track of all nodes created by show/for
-          this.nodesToDestroy = [];
-          // batch updates
-          this.pendingUpdate = false;
-          
-
-          
-          // Event handler for 'load' event on img-image-1
-          this.onImgImage1Load = (event) => {
-              
-            this.state.setLoaded()
-          }
-        
-
-          this._pictureRef = 
-
-          if (undefined) {
-            this.attachShadow({ mode: 'open' })
-          }
         }
+      });
+    });
 
-
-        
-          disconnectedCallback() {
-            
-            // onUnMount
-            if (this.state.scrollListener) {
-  window.removeEventListener('scroll', this.state.scrollListener);
-}
-            this.destroyAnyNodes(); // clean up nodes when component is destroyed
-            
-            
-          }
-          
-
-        destroyAnyNodes() {
-          // destroy current view template refs before rendering again
-          this.nodesToDestroy.forEach(el => el.remove());
-          this.nodesToDestroy = [];
-        }
-
-        connectedCallback() {
-          
-          
-          this.getAttributeNames().forEach((attr) => {
-            const jsVar = attr.replace(/-/g, '');
-            const regexp = new RegExp(jsVar, 'i');
-            this.componentProps.forEach(prop => {
-              if (regexp.test(prop)) {
-                const attrValue = this.getAttribute(attr);
-                if (this.props[prop] !== attrValue) {
-                  this.props[prop] = attrValue;
-                }
-              }
-            });
-          });
-          
-          
-              this._root.innerHTML = \`
+    this._root.innerHTML = \`
       <picture data-el=\\"picture-image-1\\" data-ref=\\"Image-pictureRef\\">
         <template data-el=\\"show-image\\">
           <img class=\\"img\\" data-el=\\"img-image-1\\" />
@@ -2168,190 +2158,132 @@ exports[`webcomponent Image 1`] = `
           object-position: center;
         }
       </style>\`;
-              this.pendingUpdate = true;
-              
-              this.render();
-              this.onMount();
-              this.pendingUpdate = false;
-              this.update();
-              
-        }
-        
+    this.pendingUpdate = true;
 
-        
-          showContent(el) {
-            // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
-            // grabs the content of a node that is between <template> tags
-            // iterates through child nodes to register all content including text elements
-            // attaches the content after the template
-  
-  
-            const elementFragment = el.content.cloneNode(true);
-            const children = Array.from(elementFragment.childNodes)
-            children.forEach(child => {
-              if (el?.scope) {
-                child.scope = el.scope;
-              }
-              if (el?.context) {
-                child.context = el.context;
-              }
-              this.nodesToDestroy.push(child);
-            });
-            el.after(elementFragment);
-          }
-        
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
 
-        onMount() {
-          
-                // onMount
-                if (this.state.useLazyLoading()) {
-  // throttled scroll capture listener
-  const listener = () => {
-    if (self._pictureRef) {
-      const rect = self._pictureRef.getBoundingClientRect();
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
 
-      const buffer = window.innerHeight / 2;
-
-      if (rect.top < window.innerHeight + buffer) {
-        this.state.load = true;
-        this.update();
-        this.state.scrollListener = null;
-        this.update();
-        window.removeEventListener('scroll', listener);
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
       }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
+  }
+
+  onMount() {
+    // onMount
+    if (this.state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (self._pictureRef) {
+          const rect = self._pictureRef.getBoundingClientRect();
+
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            this.state.load = true;
+            this.update();
+            this.state.scrollListener = null;
+            this.update();
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.state.scrollListener = listener;
+      this.update();
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
     }
-  };
+  }
 
-  this.state.scrollListener = listener;
-  this.update();
-  window.addEventListener('scroll', listener, {
-    capture: true,
-    passive: true
-  });
-  listener();
-}
-                
-        }
+  onUpdate() {}
 
-        onUpdate() {
-          
-        }
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
 
-        update() {
-          if (this.pendingUpdate === true) {
-            return;
-          }
-          this.pendingUpdate = true;
-          this.render();
-          this.onUpdate();
-          this.pendingUpdate = false;
-        }
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
 
-        render() {
-          
-
-          // re-rendering needs to ensure that all nodes generated by for/show are refreshed
-          this.destroyAnyNodes();
-          this.updateBindings();
-
-          
-        }
-        
-
-        updateBindings() {
-          
-                            
-              this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
-                
-        
-        const whenCondition = !this.state.useLazyLoading() || this.state.load;
-        if (whenCondition) {
-          this.showContent(el)
-        }
-      
-              })
-              
-            
-
-
-                            
-              this._root.querySelectorAll(\\"[data-el='img-image-1']\\").forEach((el) => {
-                
-            
-        
-        
-            ;el.setAttribute(\\"alt\\", this.props.altText);
-
-
-            
-            
-            ;el.setAttribute(\\"aria-role\\", this.props.altText ? 'presentation' : undefined);
-
-
-            
-            
-            
-el.className = 'builder-image' + (this.props.class ? ' ' + this.props.class : '');
-
-            
-            
-            ;el.setAttribute(\\"src\\", this.props.image);
-
-
-            
-            ;el.removeEventListener('load', this.onImgImage1Load);
-            ;el.addEventListener('load', this.onImgImage1Load);
-          
-            
-            ;el.setAttribute(\\"srcset\\", this.props.srcset);
-
-
-            
-            
-            ;el.setAttribute(\\"sizes\\", this.props.sizes);
-
-
-            
-              })
-              
-            
-
-
-                            
-              this._root.querySelectorAll(\\"[data-el='source-image-1']\\").forEach((el) => {
-                
-            
-        
-        
-            ;el.setAttribute(\\"srcset\\", this.props.srcset);
-
-
-            
-              })
-              
-            
-        }
-
-        // Helper to render content
-        renderTextNode(el, text) {
-          const textNode = document.createTextNode(text);
-          if (el?.scope) {
-            textNode.scope = el.scope;
-          }
-          if (el?.context) {
-            textNode.context = el.context;
-          }
-          el.after(textNode);
-          this.nodesToDestroy.push(el.nextSibling);
-        }
-        
-        
-
-        
+  updateBindings() {
+    this._root.querySelectorAll(\\"[data-el='show-image']\\").forEach((el) => {
+      const whenCondition = !this.state.useLazyLoading() || this.state.load;
+      if (whenCondition) {
+        this.showContent(el);
       }
+    });
 
-      customElements.define('image', Image);
-    "
+    this._root.querySelectorAll(\\"[data-el='img-image-1']\\").forEach((el) => {
+      el.setAttribute(\\"alt\\", this.props.altText);
+
+      el.setAttribute(
+        \\"aria-role\\",
+        this.props.altText ? \\"presentation\\" : undefined
+      );
+
+      el.className =
+        \\"builder-image\\" + (this.props.class ? \\" \\" + this.props.class : \\"\\");
+
+      el.setAttribute(\\"src\\", this.props.image);
+
+      el.removeEventListener(\\"load\\", this.onImgImage1Load);
+      el.addEventListener(\\"load\\", this.onImgImage1Load);
+
+      el.setAttribute(\\"srcset\\", this.props.srcset);
+
+      el.setAttribute(\\"sizes\\", this.props.sizes);
+    });
+
+    this._root.querySelectorAll(\\"[data-el='source-image-1']\\").forEach((el) => {
+      el.setAttribute(\\"srcset\\", this.props.srcset);
+    });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"image\\", Image);
+"
 `;
 
 exports[`webcomponent ImageState 1`] = `
