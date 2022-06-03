@@ -101,7 +101,7 @@ export const createFunctionStringLiteral = (node: babel.types.Node) => {
   return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
 };
 export const createFunctionStringLiteralObjectProperty = (
-  key: babel.types.Expression | babel.types.PrivateName,
+  key: babel.types.Expression | babel.types.PrivateName | any,
   node: babel.types.Node,
 ) => {
   return types.objectProperty(key, createFunctionStringLiteral(node));

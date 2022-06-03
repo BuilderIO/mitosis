@@ -248,7 +248,7 @@ export default function FormComponent(props: FormProps) {
     },
   });
 
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <form
