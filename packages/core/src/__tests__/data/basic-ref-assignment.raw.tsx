@@ -4,7 +4,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyMasicRefComponent(props: Props) {
+export default function MyBasicRefAssignmentComponent(props: Props) {
   let holdValueRef = useRef('Patrick');
 
   function handlerClick(event: Event) {

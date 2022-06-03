@@ -52,7 +52,7 @@ export default function MyBasicChildComponent(props) {
 exports[`React Basic Ref 1`] = `
 "import { useState, useRef } from \\"react\\";
 
-export default function MyMasicRefComponent(props) {
+export default function MyBasicRefComponent(props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef(undefined);
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -106,7 +106,7 @@ export default function MyMasicRefComponent(props) {
 `;
 
 exports[`React Basic Ref Assignment 1`] = `
-"export default function MyMasicRefComponent(props) {
+"export default function MyBasicRefAssignmentComponent(props) {
   const holdValueRef = useRef(\\"Patrick\\");
   function handlerClick(event) {
     event.preventDefault();
@@ -117,6 +117,32 @@ exports[`React Basic Ref Assignment 1`] = `
   return (
     <div>
       <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React Basic Ref Previous 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MyPreviousComponent(props) {
+  const prevCount = useRef(0);
+  const [count, setCount] = useState(() => 0);
+
+  useEffect(() => {
+    prevCount.current = count;
+  }, [count]);
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {count}, before:
+        {prevCount.current}
+      </h1>
+
+      <button onClick={(event) => setCount(1)}>Increment</button>
     </div>
   );
 }

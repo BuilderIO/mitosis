@@ -5,6 +5,7 @@ const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
@@ -71,6 +72,12 @@ describe('React', () => {
 
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Previous', () => {
+    const component = parseJsx(basicRefPrevious);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

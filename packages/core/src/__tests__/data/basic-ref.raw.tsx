@@ -4,7 +4,7 @@ export interface Props {
   showInput: boolean;
 }
 
-export default function MyMasicRefComponent(props: Props) {
+export default function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const inputNoArgRef = useRef(undefined);
 

@@ -494,19 +494,19 @@ exports[`webcomponent Basic Ref 1`] = `
 "/**
  * Usage:
  *
- *  <my-masic-ref-component></my-masic-ref-component>
+ *  <my-basic-ref-component></my-basic-ref-component>
  *
  */
-class MyMasicRefComponent extends HTMLElement {
+class MyBasicRefComponent extends HTMLElement {
   get _inputRef() {
     return this._root.querySelector(
-      \\"[data-ref='MyMasicRefComponent-inputRef']\\"
+      \\"[data-ref='MyBasicRefComponent-inputRef']\\"
     );
   }
 
   get _inputNoArgRef() {
     return this._root.querySelector(
-      \\"[data-ref='MyMasicRefComponent-inputNoArgRef']\\"
+      \\"[data-ref='MyBasicRefComponent-inputNoArgRef']\\"
     );
   }
 
@@ -539,13 +539,13 @@ class MyMasicRefComponent extends HTMLElement {
     // batch updates
     this.pendingUpdate = false;
 
-    // Event handler for 'blur' event on input-my-masic-ref-component-1
-    this.onInputMyMasicRefComponent1Blur = (event) => {
+    // Event handler for 'blur' event on input-my-basic-ref-component-1
+    this.onInputMyBasicRefComponent1Blur = (event) => {
       this.state.onBlur();
     };
 
-    // Event handler for 'input' event on input-my-masic-ref-component-1
-    this.onInputMyMasicRefComponent1Input = (event) => {
+    // Event handler for 'input' event on input-my-basic-ref-component-1
+    this.onInputMyBasicRefComponent1Input = (event) => {
       this.state.name = event.target.value;
       this.update();
     };
@@ -577,18 +577,18 @@ class MyMasicRefComponent extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <template data-el=\\"show-my-masic-ref-component\\">
+        <template data-el=\\"show-my-basic-ref-component\\">
           <input
             class=\\"input\\"
-            data-el=\\"input-my-masic-ref-component-1\\"
-            data-dom-state=\\"MyMasicRefComponent-input-my-masic-ref-component-1\\"
-            data-ref=\\"MyMasicRefComponent-inputRef\\"
+            data-el=\\"input-my-basic-ref-component-1\\"
+            data-dom-state=\\"MyBasicRefComponent-input-my-basic-ref-component-1\\"
+            data-ref=\\"MyBasicRefComponent-inputRef\\"
           />
       
           <label
             for=\\"cars\\"
-            data-el=\\"label-my-masic-ref-component-1\\"
-            data-ref=\\"MyMasicRefComponent-inputNoArgRef\\"
+            data-el=\\"label-my-basic-ref-component-1\\"
+            data-ref=\\"MyBasicRefComponent-inputNoArgRef\\"
           >
             Choose a car:
           </label>
@@ -596,7 +596,7 @@ class MyMasicRefComponent extends HTMLElement {
           <select
             name=\\"cars\\"
             id=\\"cars\\"
-            data-dom-state=\\"MyMasicRefComponent-select-my-masic-ref-component-1\\"
+            data-dom-state=\\"MyBasicRefComponent-select-my-basic-ref-component-1\\"
           >
             <option value=\\"supra\\">GR Supra</option>
       
@@ -606,7 +606,7 @@ class MyMasicRefComponent extends HTMLElement {
       
         Hello
       
-        <template data-el=\\"div-my-masic-ref-component-1\\">
+        <template data-el=\\"div-my-basic-ref-component-1\\">
           <!-- state.lowerCaseName() -->
         </template>
         ! I can run in React, Qwik, Vue, Solid, or Web Component!
@@ -703,7 +703,7 @@ class MyMasicRefComponent extends HTMLElement {
 
   updateBindings() {
     this._root
-      .querySelectorAll(\\"[data-el='show-my-masic-ref-component']\\")
+      .querySelectorAll(\\"[data-el='show-my-basic-ref-component']\\")
       .forEach((el) => {
         const whenCondition = this.props.showInput;
         if (whenCondition) {
@@ -712,19 +712,19 @@ class MyMasicRefComponent extends HTMLElement {
       });
 
     this._root
-      .querySelectorAll(\\"[data-el='input-my-masic-ref-component-1']\\")
+      .querySelectorAll(\\"[data-el='input-my-basic-ref-component-1']\\")
       .forEach((el) => {
         el.value = this.state.name;
 
-        el.removeEventListener(\\"blur\\", this.onInputMyMasicRefComponent1Blur);
-        el.addEventListener(\\"blur\\", this.onInputMyMasicRefComponent1Blur);
+        el.removeEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
+        el.addEventListener(\\"blur\\", this.onInputMyBasicRefComponent1Blur);
 
-        el.removeEventListener(\\"input\\", this.onInputMyMasicRefComponent1Input);
-        el.addEventListener(\\"input\\", this.onInputMyMasicRefComponent1Input);
+        el.removeEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
+        el.addEventListener(\\"input\\", this.onInputMyBasicRefComponent1Input);
       });
 
     this._root
-      .querySelectorAll(\\"[data-el='div-my-masic-ref-component-1']\\")
+      .querySelectorAll(\\"[data-el='div-my-basic-ref-component-1']\\")
       .forEach((el) => {
         this.renderTextNode(el, this.state.lowerCaseName());
       });
@@ -744,7 +744,7 @@ class MyMasicRefComponent extends HTMLElement {
   }
 }
 
-customElements.define(\\"my-masic-ref-component\\", MyMasicRefComponent);
+customElements.define(\\"my-basic-ref-component\\", MyBasicRefComponent);
 "
 `;
 
@@ -752,10 +752,10 @@ exports[`webcomponent Basic Ref Assignment 1`] = `
 "/**
  * Usage:
  *
- *  <my-masic-ref-component></my-masic-ref-component>
+ *  <my-basic-ref-assignment-component></my-basic-ref-assignment-component>
  *
  */
-class MyMasicRefComponent extends HTMLElement {
+class MyBasicRefAssignmentComponent extends HTMLElement {
   get _root() {
     return this.shadowRoot || this;
   }
@@ -780,8 +780,8 @@ class MyMasicRefComponent extends HTMLElement {
     // batch updates
     this.pendingUpdate = false;
 
-    // Event handler for 'click' event on button-my-masic-ref-component-1
-    this.onButtonMyMasicRefComponent1Click = (evt) => {
+    // Event handler for 'click' event on button-my-basic-ref-assignment-component-1
+    this.onButtonMyBasicRefAssignmentComponent1Click = (evt) => {
       this.state.handlerClick(evt);
     };
 
@@ -801,7 +801,7 @@ class MyMasicRefComponent extends HTMLElement {
   connectedCallback() {
     this._root.innerHTML = \`
       <div>
-        <button data-el=\\"button-my-masic-ref-component-1\\">Click</button>
+        <button data-el=\\"button-my-basic-ref-assignment-component-1\\">Click</button>
       </div>\`;
     this.pendingUpdate = true;
 
@@ -833,10 +833,18 @@ class MyMasicRefComponent extends HTMLElement {
 
   updateBindings() {
     this._root
-      .querySelectorAll(\\"[data-el='button-my-masic-ref-component-1']\\")
+      .querySelectorAll(
+        \\"[data-el='button-my-basic-ref-assignment-component-1']\\"
+      )
       .forEach((el) => {
-        el.removeEventListener(\\"click\\", this.onButtonMyMasicRefComponent1Click);
-        el.addEventListener(\\"click\\", this.onButtonMyMasicRefComponent1Click);
+        el.removeEventListener(
+          \\"click\\",
+          this.onButtonMyBasicRefAssignmentComponent1Click
+        );
+        el.addEventListener(
+          \\"click\\",
+          this.onButtonMyBasicRefAssignmentComponent1Click
+        );
       });
   }
 
@@ -854,7 +862,150 @@ class MyMasicRefComponent extends HTMLElement {
   }
 }
 
-customElements.define(\\"my-masic-ref-component\\", MyMasicRefComponent);
+customElements.define(
+  \\"my-basic-ref-assignment-component\\",
+  MyBasicRefAssignmentComponent
+);
+"
+`;
+
+exports[`webcomponent Basic Ref Previous 1`] = `
+"/**
+ * Usage:
+ *
+ *  <my-previous-component></my-previous-component>
+ *
+ */
+class MyPreviousComponent extends HTMLElement {
+  get _root() {
+    return this.shadowRoot || this;
+  }
+
+  constructor() {
+    super();
+    const self = this;
+
+    this.state = { count: 0 };
+    if (!this.props) {
+      this.props = {};
+    }
+
+    this.updateDeps = [[this.state.count]];
+
+    // used to keep track of all nodes created by show/for
+    this.nodesToDestroy = [];
+    // batch updates
+    this.pendingUpdate = false;
+
+    // Event handler for 'click' event on button-my-previous-component-1
+    this.onButtonMyPreviousComponent1Click = (event) => {
+      this.state.count += 1;
+      this.update();
+    };
+
+    this._prevCount = 0;
+
+    if (undefined) {
+      this.attachShadow({ mode: \\"open\\" });
+    }
+  }
+
+  destroyAnyNodes() {
+    // destroy current view template refs before rendering again
+    this.nodesToDestroy.forEach((el) => el.remove());
+    this.nodesToDestroy = [];
+  }
+
+  connectedCallback() {
+    this._root.innerHTML = \`
+      <div>
+        <h1>
+          Now:
+          <template data-el=\\"div-my-previous-component-1\\">
+            <!-- state.count -->
+          </template>
+          , before:
+          <template data-el=\\"div-my-previous-component-2\\">
+            <!-- self._prevCount -->
+          </template>
+        </h1>
+      
+        <button data-el=\\"button-my-previous-component-1\\">Increment</button>
+      </div>\`;
+    this.pendingUpdate = true;
+
+    this.render();
+    this.onMount();
+    this.pendingUpdate = false;
+    this.update();
+  }
+
+  onMount() {}
+
+  onUpdate() {
+    const self = this;
+
+    (function (__prev, __next) {
+      const __hasChange = __prev.find((val, index) => val !== __next[index]);
+      if (__hasChange !== undefined) {
+        self._prevCount = self.state.count;
+        self.updateDeps[0] = __next;
+      }
+    })(self.updateDeps[0], [self.state.count]);
+  }
+
+  update() {
+    if (this.pendingUpdate === true) {
+      return;
+    }
+    this.pendingUpdate = true;
+    this.render();
+    this.onUpdate();
+    this.pendingUpdate = false;
+  }
+
+  render() {
+    // re-rendering needs to ensure that all nodes generated by for/show are refreshed
+    this.destroyAnyNodes();
+    this.updateBindings();
+  }
+
+  updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-previous-component-1']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, this.state.count);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='div-my-previous-component-2']\\")
+      .forEach((el) => {
+        this.renderTextNode(el, self._prevCount);
+      });
+
+    this._root
+      .querySelectorAll(\\"[data-el='button-my-previous-component-1']\\")
+      .forEach((el) => {
+        el.removeEventListener(\\"click\\", this.onButtonMyPreviousComponent1Click);
+        el.addEventListener(\\"click\\", this.onButtonMyPreviousComponent1Click);
+      });
+  }
+
+  // Helper to render content
+  renderTextNode(el, text) {
+    const textNode = document.createTextNode(text);
+    if (el?.scope) {
+      textNode.scope = el.scope;
+    }
+    if (el?.context) {
+      textNode.context = el.context;
+    }
+    el.after(textNode);
+    this.nodesToDestroy.push(el.nextSibling);
+  }
+}
+
+customElements.define(\\"my-previous-component\\", MyPreviousComponent);
 "
 `;
 

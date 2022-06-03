@@ -8,6 +8,7 @@ const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
+const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basic = require('./data/basic.raw');
 const basicRef = require('./data/basic-ref.raw');
 const basicContext = require('./data/basic-context.raw');
@@ -37,6 +38,12 @@ describe('Angular', () => {
 
   test('Basic Ref Assignment', () => {
     const component = parseJsx(basicRefAssignment);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Previous', () => {
+    const component = parseJsx(basicRefPrevious);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });
