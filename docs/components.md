@@ -8,6 +8,8 @@
 - [Control flow](#control-flow)
   - [Show](#show)
   - [For](#for)
+  - [Children](#children)
+  - [Slot](#slot)
 
 ## At a glance
 
@@ -58,6 +60,8 @@ export default function MyComponent() {
 
 ## Styling
 
+### `css`
+
 Styling is done via the `css` prop on dom elements and components. It takes CSS properties in `camelCase` (like the `style` object on DOM elements) and properties as valid CSS strings
 
 ```javascript
@@ -82,6 +86,10 @@ export default function ResponsiveExample() {
   );
 }
 ```
+
+## `class` vs `className`
+
+Mitosis prefers that you use `class` to provide class name strings, but it also allows you to provide `className`. If both are used in the same component, it will attempt to merge the two. We recommend that you only use one (preferrably `class`, as that's what is internally preferred by Mitosis).
 
 ## State
 
@@ -190,3 +198,122 @@ export default function MyComponent(props) {
   );
 }
 ```
+
+### Children
+
+We use the standard method for passing children with `props.children`
+
+```jsx
+export default function MyComponent(props) {
+  return <div>{props.children}</div>;
+}
+```
+
+<details>
+  <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata</summary>
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true,
+});
+export default function MyComponent(props) {
+  return <div>{props.children}</div>;
+}
+```
+
+</details>
+
+### Slot
+
+When you want to register a named slot you do so using the `slot` prop.
+
+```jsx
+<div>
+  <Layout
+    slotTop={<NavBar/>}
+    slotLeft={<Sidebar/>}
+    slotCenter={<Content/>}
+  />
+    anything else
+  </Layout>
+</div>
+```
+
+In this example we are registering `top`, `left`, and `center` for the `Layout` component to project.
+
+If the `Layout` component was also a Mitosis component then we simply use the reference in the props.
+
+```jsx
+export default function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">{props.slotTop}</div>
+      <div className="left">{props.slotLeft}</div>
+      <div className="center">{props.slotCenter}</div>
+      {props.children}
+    </div>
+  );
+}
+```
+
+Mitosis compiles one component at a time and is only concerned with outputting the correct method for each framework. For the two examples above, here are the angular and html outputs.
+
+```html
+<div>
+  <layout>
+    <sidebar left></sidebar>
+    <nav-bar top></nav-bar>
+    <content center></content>
+    anything else
+  </layout>
+  <div></div>
+</div>
+```
+
+```javascript
+@Component({
+  selector: 'layout',
+  template: `
+    <div class="layout">
+      <div class="top">
+        <ng-content select="[top]"></ng-content>
+      </div>
+      <div class="left">
+        <ng-content select="[left]"></ng-content>
+      </div>
+      <div class="center">
+        <ng-content select="[center]"></ng-content>
+      </div>
+      <ng-content></ng-content>
+    </div>
+  `,
+})
+class LayoutComponent {}
+```
+
+In webcomponent you need to use ShadowDom metadata for named slots
+
+<details>
+  <summary>For <strong>Web Component</strong> you need to use ShadowDom metadata named slots</summary>
+
+```jsx
+import { useMetadata } from '@builder.io/mitosis';
+
+useMetadata({
+  isAttachedToShadowDom: true,
+});
+export default function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">{props.slotTop}</div>
+      <div className="left">{props.slotLeft}</div>
+      <div className="center">{props.slotCenter}</div>
+      {props.children}
+    </div>
+  );
+}
+```
+
+</details>

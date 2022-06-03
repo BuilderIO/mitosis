@@ -7,12 +7,69 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
+const basic = require('./data/basic.raw');
+const basicRef = require('./data/basic-ref.raw');
+const basicContext = require('./data/basic-context.raw');
+const basicChildComponent = require('./data/basic-child-component.raw');
+const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
+const basicOutputs = require('./data/basic-outputs.raw');
+// const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
 const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
+const classNameJsx = require('./data/blocks/classname-jsx.raw');
+const text = require('./data/blocks/text.raw');
 // const slotHtml = require('./data/blocks/slot-html.raw');
 
 describe('Angular', () => {
+  test('Basic', () => {
+    const component = parseJsx(basic);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref', () => {
+    const component = parseJsx(basicRef);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  // test('Basic onUpdate return', () => {
+  //   const component = parseJsx(basicOnUpdateReturn);
+  //   const output = componentToAngular()({ component });
+  //   expect(output).toMatchSnapshot();
+  // });
+
+  test('Basic Context', () => {
+    const component = parseJsx(basicContext);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Child Component', () => {
+    const component = parseJsx(basicChildComponent);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('basic outputs meta', () => {
+    const component = parseJsx(basicOutputsMeta);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('basic outputs', () => {
+    const component = parseJsx(basicOutputs);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+  test('basic outputs same as meta', () => {
+    const component = parseJsx(basicOutputs);
+    const componentMeta = parseJsx(basicOutputsMeta);
+    const output = componentToAngular()({ component });
+    const outputMeta = componentToAngular()({ component: componentMeta });
+    expect(output).toMatch(outputMeta);
+  });
+
   test('multiple onUpdate', () => {
     const component = parseJsx(multipleOnUpdate);
     const output = componentToAngular()({ component });
@@ -71,4 +128,16 @@ describe('Angular', () => {
   //   const output = componentToAngular()({ component });
   //   expect(output).toMatchSnapshot();
   // });
+
+  test('className to class', () => {
+    const component = parseJsx(classNameJsx);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Text', () => {
+    const component = parseJsx(text);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
 });

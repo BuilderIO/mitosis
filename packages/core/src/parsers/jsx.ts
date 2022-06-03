@@ -101,7 +101,7 @@ export const createFunctionStringLiteral = (node: babel.types.Node) => {
   return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
 };
 export const createFunctionStringLiteralObjectProperty = (
-  key: babel.types.Expression,
+  key: babel.types.Expression | babel.types.PrivateName,
   node: babel.types.Node,
 ) => {
   return types.objectProperty(key, createFunctionStringLiteral(node));
@@ -183,13 +183,21 @@ const componentFunctionToJson = (
                 key,
               )!;
               const valueNode = expression.arguments[1];
-              setContext[keyPath] = {
-                name: keyNode.name,
-                value:
-                  valueNode && types.isObjectExpression(valueNode)
-                    ? parseStateObject(valueNode)
-                    : undefined,
-              };
+              if (valueNode) {
+                if (types.isObjectExpression(valueNode)) {
+                  const value = parseStateObject(valueNode) as JSONObject;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    value,
+                  };
+                } else {
+                  const ref = generate(valueNode).code;
+                  setContext[keyPath] = {
+                    name: keyNode.name,
+                    ref,
+                  };
+                }
+              }
             }
           } else if (
             expression.callee.name === 'onMount' ||
@@ -328,6 +336,13 @@ const componentFunctionToJson = (
                     name,
                   )!,
                 };
+              } else {
+                const varName = declaration.id.name;
+                const name = generate(firstArg).code;
+                accessedContext[varName] = {
+                  name,
+                  path: '',
+                };
               }
             }
           }
@@ -386,23 +401,25 @@ const jsxElementToJson = (
       const callback = node.expression.arguments[0];
       if (types.isArrowFunctionExpression(callback)) {
         if (types.isIdentifier(callback.params[0])) {
-          const forName = callback.params[0].name;
-          const indexName = (callback.params?.[1] as babel.types.Identifier)
-            ?.name;
-          const collectionName = (
-            callback.params?.[2] as babel.types.Identifier
-          )?.name;
+          const forArguments = callback.params
+            .map((param) => (param as babel.types.Identifier)?.name)
+            .filter(Boolean);
           return createMitosisNode({
             name: 'For',
             bindings: {
-              each: generate(node.expression.callee)
-                .code // Remove .map or potentially ?.map
-                .replace(/\??\.map$/, ''),
+              each: {
+                code: generate(node.expression.callee)
+                  .code // Remove .map or potentially ?.map
+                  .replace(/\??\.map$/, ''),
+              },
+            },
+            scope: {
+              For: forArguments,
             },
             properties: {
-              _forName: forName,
-              _indexName: indexName,
-              _collectionName: collectionName,
+              _forName: forArguments[0],
+              _indexName: forArguments[1],
+              _collectionName: forArguments[2],
             },
             children: [jsxElementToJson(callback.body as any)!],
           });
@@ -416,7 +433,7 @@ const jsxElementToJson = (
         return createMitosisNode({
           name: 'Show',
           bindings: {
-            when: generate(node.expression.left).code!,
+            when: { code: generate(node.expression.left).code! },
           },
           children: [jsxElementToJson(node.expression.right as any)!],
         });
@@ -433,7 +450,7 @@ const jsxElementToJson = (
           else: jsxElementToJson(node.expression.alternate as any)!,
         },
         bindings: {
-          when: generate(node.expression.test).code!,
+          when: { code: generate(node.expression.test).code! },
         },
         children: [jsxElementToJson(node.expression.consequent as any)!],
       });
@@ -443,7 +460,7 @@ const jsxElementToJson = (
 
     return createMitosisNode({
       bindings: {
-        _text: generate(node.expression).code,
+        _text: { code: generate(node.expression).code },
       },
     });
   }
@@ -471,9 +488,9 @@ const jsxElementToJson = (
       ) as any;
 
     const whenValue =
-      whenAttr &&
-      types.isJSXExpressionContainer(whenAttr.value) &&
-      generate(whenAttr.value.expression).code;
+      whenAttr && types.isJSXExpressionContainer(whenAttr.value)
+        ? generate(whenAttr.value.expression).code
+        : undefined;
 
     const elseValue =
       elseAttr &&
@@ -486,7 +503,7 @@ const jsxElementToJson = (
         else: elseValue || undefined,
       },
       bindings: {
-        when: whenValue || undefined,
+        ...(whenValue ? { when: { code: whenValue } } : {}),
       },
       children: node.children
         .map((item) => jsxElementToJson(item as any))
@@ -503,29 +520,31 @@ const jsxElementToJson = (
       const childExpression = child.expression;
 
       if (types.isArrowFunctionExpression(childExpression)) {
-        const forName = (childExpression.params[0] as babel.types.Identifier)
-          .name;
-        const indexName = (
-          childExpression.params?.[1] as babel.types.Identifier
-        )?.name;
-        const collectionName = (
-          childExpression.params?.[2] as babel.types.Identifier
-        )?.name;
+        const forArguments = childExpression?.params
+          .map((param) => (param as babel.types.Identifier)?.name)
+          .filter(Boolean);
 
         return createMitosisNode({
           name: 'For',
           bindings: {
-            each: generate(
-              (
-                (node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                  .value as babel.types.JSXExpressionContainer
-              ).expression,
-            ).code,
+            each: {
+              code: generate(
+                (
+                  (
+                    node.openingElement
+                      .attributes[0] as babel.types.JSXAttribute
+                  ).value as babel.types.JSXExpressionContainer
+                ).expression,
+              ).code,
+            },
+          },
+          scope: {
+            For: forArguments,
           },
           properties: {
-            _forName: forName,
-            _indexName: indexName,
-            _collectionName: collectionName,
+            _forName: forArguments[0],
+            _indexName: forArguments[1],
+            _collectionName: forArguments[2],
           },
           children: [jsxElementToJson(childExpression.body as any)!],
         });
@@ -554,17 +573,29 @@ const jsxElementToJson = (
         if (types.isJSXExpressionContainer(value)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
-            memo[key] = generate(expression.body).code;
+            if (key.startsWith('on')) {
+              memo[key] = {
+                code: generate(expression.body).code,
+                arguments: expression.params.map(
+                  (node) => (node as babel.types.Identifier)?.name,
+                ),
+              };
+            } else {
+              memo[key] = { code: generate(expression.body).code };
+            }
           } else {
-            memo[key] = generate(expression).code;
+            memo[key] = { code: generate(expression).code };
           }
+
           return memo;
         }
       } else if (types.isJSXSpreadAttribute(item)) {
         // TODO: potentially like Vue store bindings and properties as array of key value pairs
         // too so can do this accurately when order matters. Also tempting to not support spread,
         // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
-        memo._spread = types.stringLiteral(generate(item.argument).code);
+        memo._spread = {
+          code: types.stringLiteral(generate(item.argument).code),
+        };
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
@@ -687,24 +718,49 @@ function mapReactIdentifiers(json: MitosisComponent) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
         const value = item.bindings[key];
+
         if (value) {
-          item.bindings[key] = mapReactIdentifiersInExpression(
-            value,
-            stateProperties,
-          );
-        }
-        if (key === 'className') {
-          const currentValue = item.bindings[key];
-          delete item.bindings[key];
-          item.bindings.class = currentValue;
+          item.bindings[key] = {
+            code: mapReactIdentifiersInExpression(
+              value.code as string,
+              stateProperties,
+            ),
+          };
+          if (value.arguments?.length) {
+            item.bindings[key]!.arguments = value.arguments;
+          }
         }
       }
-      for (const key in item.properties) {
-        if (key === 'class') {
-          const currentValue = item.properties[key];
-          delete item.properties[key];
-          item.properties.class = currentValue;
+
+      if (item.bindings.className) {
+        if (item.bindings.class) {
+          // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
+          item.bindings.class = item.bindings.className;
+          console.warn(
+            `[${json.name}]: Found both 'class' and 'className' bindings: removing 'className'.`,
+          );
+        } else {
+          item.bindings.class = item.bindings.className;
         }
+        delete item.bindings.className;
+      }
+
+      if (item.properties.className) {
+        if (item.properties.class) {
+          item.properties.class = `${item.properties.class} ${item.properties.className}`;
+          console.warn(
+            `[${json.name}]: Found both 'class' and 'className' properties: merging.`,
+          );
+        } else {
+          item.properties.class = item.properties.className;
+        }
+        delete item.properties.className;
+      }
+
+      if (item.properties.class && item.bindings.class) {
+        console.warn(
+          `[${json.name}]: Ended up with both a property and binding for 'class'.`,
+        );
       }
     }
   });
@@ -726,7 +782,7 @@ function extractContextComponents(json: MitosisComponent) {
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       if (item.name.endsWith('.Provider')) {
-        const value = item.bindings.value;
+        const value = item.bindings?.value?.code;
         const name = item.name.split('.')[0];
         const refPath = traceReferenceToModulePath(json.imports, name)!;
         json.context.set[refPath] = {

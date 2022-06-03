@@ -108,18 +108,32 @@ export function addComponent(
     if (_opts.isRoot) {
       const symbolName = componentName + '_styles';
       getCommonStyles(fileSet).symbolName = symbolName;
-      useStyles = generateStyles(componentFile, fileSet.low, symbolName, false);
+      useStyles = generateStyles(onRenderFile, fileSet.low, symbolName, false);
     }
   } else {
     if (styles.size) {
       const symbolName = componentName + '_styles';
       onRenderFile.exportConst(symbolName, renderStyles(styles));
-      useStyles = generateStyles(componentFile, onRenderFile, symbolName, true);
+      useStyles = generateStyles(onRenderFile, onRenderFile, symbolName, true);
     }
   }
+  const directives: Map<string, string> = new Map();
   addComponentOnMount(
-    componentFile,
     onRenderFile,
+    function (this: SrcBuilder) {
+      return this.emit(
+        'return ',
+        renderJSXNodes(
+          onRenderFile,
+          directives,
+          handlers,
+          component.children,
+          styles,
+          {},
+        ),
+        ';',
+      );
+    },
     componentName,
     component,
     useStyles,
@@ -128,35 +142,11 @@ export function addComponent(
     componentName,
     invoke(
       componentFile.import(componentFile.qwikModule, 'componentQrl'),
-      [generateQrl(componentFile, componentName + '_onMount')],
+      [generateQrl(componentFile, onRenderFile, componentName + '_onMount')],
       ['any', 'any'],
     ),
   );
 
-  const directives: Map<string, string> = new Map();
-  onRenderFile.exportConst(
-    componentName + '_onRender',
-    arrowFnBlock(
-      [],
-      [
-        renderUseLexicalScope(onRenderFile),
-        function (this: SrcBuilder) {
-          return this.emit(
-            'return ',
-            renderJSXNodes(
-              onRenderFile,
-              directives,
-              handlers,
-              component.children,
-              styles,
-              {},
-            ),
-            ';',
-          );
-        },
-      ],
-    ),
-  );
   directives.forEach((code, name) => {
     fileSet.med.import(fileSet.med.qwikModule, 'h');
     fileSet.med.exportConst(name, code, true);
@@ -164,19 +154,19 @@ export function addComponent(
 }
 
 function generateStyles(
-  componentFile: File,
-  styleFile: File,
+  fromFile: File,
+  dstFile: File,
   symbol: string,
   scoped: boolean,
 ): EmitFn {
   return function (this: SrcBuilder) {
     this.emit(
       invoke(
-        componentFile.import(
-          componentFile.qwikModule,
+        fromFile.import(
+          fromFile.qwikModule,
           scoped ? 'withScopedStylesQrl' : 'useStylesQrl',
         ),
-        [generateQrl(styleFile, symbol)],
+        [generateQrl(fromFile, dstFile, symbol)],
       ),
       ';',
     );
@@ -203,7 +193,7 @@ export function addCommonStyles(fileSet: FileSet) {
 
 function addComponentOnMount(
   componentFile: File,
-  onRenderFile: File,
+  onRenderEmit: EmitFn,
   componentName: string,
   component: MitosisComponent,
   useStyles: EmitFn,
@@ -230,13 +220,14 @@ function addComponentOnMount(
         arrowFnValue(['state'], () =>
           this.emit(
             '{',
+            'if(!state.__INIT__){',
+            'state.__INIT__=true;',
             ...inputInitializer,
             'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
             iif(component.hooks.onMount?.code),
-            ';',
+            '}',
             useStyles,
-            'return ',
-            generateQrl(onRenderFile, componentName + '_onRender', ['state']),
+            onRenderEmit,
             ';}',
           ),
         ),
@@ -246,12 +237,13 @@ function addComponentOnMount(
 }
 
 function generateQrl(
-  componentFile: File,
+  fromFile: File,
+  dstFile: File,
   componentName: string,
   capture: string[] = [],
 ): any {
-  return invoke(componentFile.import(componentFile.qwikModule, 'qrl'), [
-    componentFile.toQrlChunk(),
+  return invoke(fromFile.import(fromFile.qwikModule, 'qrl'), [
+    dstFile.toQrlChunk(),
     quote(componentName),
     `[${capture.join(',')}]`,
   ]);

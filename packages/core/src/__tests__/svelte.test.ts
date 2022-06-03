@@ -12,6 +12,7 @@ const rootShow = require('./data/blocks/rootShow.raw');
 const simpleExample = require('./data/context/simple.context.lite');
 const componentWithContext = require('./data/context/component-with-context.lite');
 const renderBlock = require('./data/blocks/builder-render-block.raw');
+const text = require('./data/blocks/text.raw');
 
 describe('Svelte', () => {
   test('onUpdate', () => {
@@ -74,5 +75,11 @@ describe('Svelte', () => {
       const output = componentToSvelte()({ component });
       expect(output).toMatchSnapshot();
     });
+  });
+
+  test('Text', () => {
+    const component = parseJsx(text);
+    const output = componentToSvelte()({ component });
+    expect(output).toMatchSnapshot();
   });
 });

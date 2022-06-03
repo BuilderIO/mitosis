@@ -35,12 +35,14 @@ import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
+function encodeQuotes(string: string) {
+  return string.replace(/"/g, '&quot;');
+}
+
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
-  builderRegister?: boolean;
-  registerComponentPrepend?: string;
 }
 
 function getContextNames(json: MitosisComponent) {
@@ -79,14 +81,16 @@ const NODE_MAPPERS: {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
-    const keyValue = json.bindings.key || 'index';
+    const keyValue = json.bindings.key || { code: 'index' };
     const forValue = `(${
       json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each as string)}`;
+    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
 
     if (options.vueVersion! >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${keyValue}" v-for="${forValue}">
+      return `<template :key="${encodeQuotes(
+        keyValue?.code || 'index',
+      )}" v-for="${encodeQuotes(forValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
     }
@@ -100,10 +104,10 @@ const NODE_MAPPERS: {
     return blockToVue(firstChild, options);
   },
   Show(json, options) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when as string);
+    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
     if (options.vueVersion! >= 3) {
       return `
-      <template v-if="${ifValue}">
+      <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>
       ${
@@ -151,7 +155,7 @@ function processDynamicComponents(
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
-        node.bindings.is = node.name;
+        node.bindings.is = { code: node.name };
         node.name = 'component';
       }
     }
@@ -174,36 +178,58 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, string | undefined]) => {
+  ([key, value]: [
+    string,
+    { code: string; arguments?: string[] } | undefined,
+  ]) => {
     if (key === '_spread') {
       return '';
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value, {
-        replaceWith: 'this.',
-      })})" `;
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(
+        value?.code,
+        {
+          replaceWith: 'this.',
+        },
+      )})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value);
+      const useValue = stripStateAndPropsRefs(value?.code);
 
       if (key.startsWith('on')) {
+        const { arguments: cusArgs = ['event'] } = value!;
         let event = key.replace('on', '').toLowerCase();
         if (event === 'change' && node.name === 'input') {
           event = 'input';
         }
+        const isAssignmentExpression = useValue.includes('=');
         // TODO: proper babel transform to replace. Util for this
-        return ` @${event}="${removeSurroundingBlock(
-          useValue
-            // TODO: proper reference parse and replacing
-            .replace(/event\./g, '$event.'),
-        )}" `;
+        if (isAssignmentExpression) {
+          return ` @${event}="${encodeQuotes(
+            removeSurroundingBlock(
+              useValue
+                // TODO: proper reference parse and replacing
+                .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
+            ),
+          )}" `;
+        } else {
+          return ` @${event}="${encodeQuotes(
+            removeSurroundingBlock(
+              useValue
+                // TODO: proper reference parse and replacing
+                .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+            ),
+          )}" `;
+        }
       } else if (key === 'ref') {
-        return ` ref="${useValue}" `;
+        return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${useValue}" `;
+        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(
+          useValue.replace(/"/g, "\\'"),
+        )}" `;
       } else {
-        return ` :${key}="${useValue}" `;
+        return ` :${key}="${encodeQuotes(useValue)}" `;
       }
     }
   };
@@ -225,34 +251,46 @@ export const blockToVue = (
     // Vue doesn't allow <style>...</style> in templates, but does support the synonymous
     // <component is="'style'">...</component>
     node.name = 'component';
-    node.bindings.is = "'style'";
+    node.bindings.is = { code: "'style'" };
   }
 
   if (node.properties._text) {
     return `${node.properties._text}`;
   }
 
-  if (node.bindings._text) {
-    return `{{${stripStateAndPropsRefs(node.bindings._text as string)}}}`;
+  if (node.bindings._text?.code) {
+    return `{{${stripStateAndPropsRefs(node.bindings._text.code as string)}}}`;
   }
 
   let str = '';
 
   str += `<${node.name} `;
 
-  if (node.bindings._spread) {
-    str += `v-bind="${stripStateAndPropsRefs(
-      node.bindings._spread as string,
+  if (node.bindings._spread?.code) {
+    str += `v-bind="${encodeQuotes(
+      stripStateAndPropsRefs(node.bindings._spread.code as string),
     )}"`;
   }
 
   for (const key in node.properties) {
     const value = node.properties[key];
-    str += ` ${key}="${value}" `;
+
+    if (key === 'className') {
+      continue;
+    }
+
+    if (typeof value === 'string') {
+      str += ` ${key}="${encodeQuotes(value)}" `;
+    }
   }
 
   const stringifiedBindings = Object.entries(node.bindings)
-    .map(stringifyBinding(node))
+    .map(([k, v]) =>
+      stringifyBinding(node)([k, v] as [
+        string,
+        { code: string; arguments?: string[] } | undefined,
+      ]),
+    )
     .join('');
 
   str += stringifiedBindings;
@@ -277,7 +315,7 @@ function getContextInjectString(
 
   for (const key in component.context.get) {
     str += `
-      ${key}: "${component.context.get[key].name}",
+      ${key}: "${encodeQuotes(component.context.get[key].name)}",
     `;
   }
 
@@ -452,10 +490,6 @@ export const componentToVue =
       );
     }
 
-    const builderRegister = Boolean(
-      options.builderRegister && component.meta.registerComponent,
-    );
-
     const onUpdateWithDeps =
       component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =
@@ -467,13 +501,8 @@ export const componentToVue =
     </template>
     <script>
       ${renderPreComponent(component)}
-      ${
-        component.meta.registerComponent
-          ? options.registerComponentPrepend ?? ''
-          : ''
-      }
 
-      export default ${!builderRegister ? '' : 'registerComponent('}{
+      export default {
         ${
           !component.name
             ? ''
@@ -587,10 +616,6 @@ export const componentToVue =
           methods: ${functionsString},
         `
         }
-      }${
-        !builderRegister
-          ? ''
-          : `, ${json5.stringify(component.meta.registerComponent || {})})`
       }
     </script>
     ${

@@ -25,10 +25,10 @@ export const collectReactNativeStyles = (
   const componentIndexes: { [className: string]: number | undefined } = {};
 
   traverse(json).forEach(function (item) {
-    if (!isMitosisNode(item) || typeof item.bindings.css !== 'string') {
+    if (!isMitosisNode(item) || typeof item.bindings.css?.code !== 'string') {
       return;
     }
-    const value = json5.parse(item.bindings.css);
+    const value = json5.parse(item.bindings.css.code);
     delete item.bindings.css;
     if (!size(value)) {
       return;
@@ -71,7 +71,7 @@ export const collectReactNativeStyles = (
     const index = (componentIndexes[componentName] =
       (componentIndexes[componentName] || 0) + 1);
     const className = `${componentName}${index}`;
-    item.bindings.style = `styles.${className}`;
+    item.bindings.style = { code: `styles.${className}` };
 
     styleMap[className] = value;
   });
@@ -93,7 +93,7 @@ function processReactNative() {
 
             if (
               node.properties._text?.trim().length ||
-              node.bindings._text?.trim()?.length
+              node.bindings._text?.code?.trim()?.length
             ) {
               node.name = 'Text';
             }

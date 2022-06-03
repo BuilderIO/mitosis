@@ -2,6 +2,9 @@ export type StripStateAndPropsRefsOptions = {
   replaceWith?: string | ((name: string) => string);
   includeProps?: boolean;
   includeState?: boolean;
+  contextVars?: string[];
+  outputVars?: string[];
+  context?: string;
 };
 
 /**
@@ -18,7 +21,29 @@ export const stripStateAndPropsRefs = (
 ): string => {
   let newCode = code || '';
   const replacer = options.replaceWith || '';
-
+  const contextVars = options?.contextVars || [];
+  const outputVars = options?.outputVars || [];
+  const context = options?.context || 'this.';
+  if (contextVars.length) {
+    contextVars.forEach((_var) => {
+      newCode = newCode.replace(
+        // determine expression edge cases
+        new RegExp(
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          'g',
+        ),
+        '$1' + context + _var + '$2',
+      );
+    });
+  }
+  if (outputVars.length) {
+    outputVars.forEach((_var) => {
+      // determine expression edge cases onMessage( to this.onMessage.emit(
+      const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
+      const replacer = '$1' + context + _var + '.emit(';
+      newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+    });
+  }
   if (options.includeProps !== false) {
     if (typeof replacer === 'string') {
       newCode = newCode.replace(/props\./g, replacer);
@@ -26,6 +51,10 @@ export const stripStateAndPropsRefs = (
       newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) =>
         replacer(name),
       );
+    }
+    // TODO: webcomponent edge-case
+    if (/el\.this\.props/.test(newCode)) {
+      newCode = newCode.replace(/el\.this\.props/g, 'el.props');
     }
   }
   if (options.includeState !== false) {
@@ -37,6 +66,5 @@ export const stripStateAndPropsRefs = (
       );
     }
   }
-
   return newCode;
 };

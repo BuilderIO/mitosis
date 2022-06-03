@@ -1,3 +1,4 @@
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
@@ -15,17 +16,23 @@ export function renderJSXNodes(
   return function (this: SrcBuilder) {
     if (children.length == 0) return;
     if (root) this.emit('(');
-    const needsFragment = root && children.length > 1;
+    const needsFragment =
+      root && (children.length > 1 || isInlinedDirective(children[0]));
     file.import(file.qwikModule, 'h');
     if (needsFragment) {
-      file.import(file.qwikModule, 'Fragment');
       this.jsxBeginFragment(file.import(file.qwikModule, 'Fragment'));
     }
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
-        if (child.bindings._text !== undefined) {
-          this.jsxTextBinding(child.bindings._text);
+        if (child.bindings._text?.code !== undefined) {
+          if (child.bindings._text.code == 'props.children') {
+            this.file.import(this.file.qwikModule, 'Slot');
+            this.jsxBegin('Slot', {}, {});
+            this.jsxEnd('Slot');
+          } else {
+            this.jsxTextBinding(child.bindings._text.code);
+          }
         } else {
           this.isJSX
             ? this.emit(child.properties._text)
@@ -48,6 +55,7 @@ export function renderJSXNodes(
               ).call(this),
             ),
           );
+          !this.isJSX && this.emit(',');
         } else {
           if (typeof directive == 'string') {
             directives.set(childName, directive);
@@ -69,7 +77,7 @@ export function renderJSXNodes(
             }
           }
           let props: Record<string, any> = child.properties;
-          const css = child.bindings.css;
+          const css = child.bindings.css?.code;
           const specialBindings: Record<string, any> = {};
           if (css) {
             props = { ...props };
@@ -79,7 +87,9 @@ export function renderJSXNodes(
               // special case for Images. We want to make sure that we include the maxWidth in a srcset
               specialBindings.srcsetSizes = Number.parseInt(imageMaxWidth);
             }
-            props.class = addClass(styleProps.CLASS_NAME, props.class);
+            if (styleProps?.CLASS_NAME) {
+              props.class = addClass(styleProps.CLASS_NAME, props.class);
+            }
           }
           const symbolBindings: Record<string, string> = {};
           const bindings = rewriteHandlers(
@@ -132,7 +142,8 @@ function isEmptyTextNode(child: MitosisNode) {
 
 function isTextNode(child: MitosisNode) {
   return (
-    child.properties._text !== undefined || child.bindings._text !== undefined
+    child.properties._text !== undefined ||
+    child.bindings._text?.code !== undefined
   );
 }
 
@@ -151,13 +162,16 @@ function isTextNode(child: MitosisNode) {
 function rewriteHandlers(
   file: File,
   handlers: Map<string, string>,
-  bindings: Record<string, string | undefined>,
+  bindings: {
+    [key: string]: { code: string; arguments?: string[] } | undefined;
+  },
   symbolBindings: Record<string, string>,
-): Record<string, string> {
-  const outBindings: Record<string, string> = {};
+): { [key: string]: { code: string; arguments?: string[] } } {
+  const outBindings: { [key: string]: { code: string; arguments?: string[] } } =
+    {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-      let binding: any = bindings[key]!;
+      let { code: binding } = bindings[key]!;
       let handlerBlock: string | undefined;
       if (binding != null) {
         if (key == 'css') {
@@ -168,13 +182,17 @@ function rewriteHandlers(
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),
             '[state]',
-          ]);
+          ]) as any;
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
           symbolBindings[lastProperty(key)] = binding;
         }
-        outBindings[key] = binding;
+        outBindings[key] = { code: binding as string };
       }
     }
   }
   return outBindings;
+}
+
+function isInlinedDirective(node: MitosisNode) {
+  return (isMitosisNode(node) && node.name == 'Show') || node.name == 'For';
 }

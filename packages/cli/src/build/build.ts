@@ -17,6 +17,7 @@ import {
   Target,
   Transpiler,
   componentToSvelte,
+  componentToAngular,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import dedent from 'dedent';
@@ -25,6 +26,7 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import * as json5 from 'json5';
 import { camelCase, kebabCase, last, upperFirst } from 'lodash';
 import micromatch from 'micromatch';
+import { getFileExtensionForTarget } from './helpers/extensions';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
@@ -43,7 +45,6 @@ const DEFAULT_OPTIONS: MitosisConfig['options'] = {
   vue: {
     cssNamespace: () => getSimpleId(),
     namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
-    builderRegister: true,
   },
 };
 
@@ -67,9 +68,7 @@ export async function build(config?: MitosisConfig) {
     micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
       async (path) => {
         try {
-          const parsed = parseJsx(await readFile(path, 'utf8'), {
-            jsonHookNames: ['registerComponent'],
-          });
+          const parsed = parseJsx(await readFile(path, 'utf8'));
           return {
             path,
             mitosisJson: parsed,
@@ -153,6 +152,8 @@ const getTranspilerForTarget = ({
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
       return componentToVue(options.options.vue);
+    case 'angular':
+      return componentToAngular(options.options.angular);
     case 'react':
       return componentToReact(options.options.react);
     case 'swift':
@@ -164,23 +165,7 @@ const getTranspilerForTarget = ({
     case 'svelte':
       return componentToSvelte(options.options.svelte);
     default:
-      // TO-DO: throw instead of `never`
-      return null as never;
-  }
-};
-
-const getFileExtensionForTarget = (target: Target) => {
-  switch (target) {
-    case 'vue':
-      return '.vue';
-    case 'swift':
-      return '.swift';
-    case 'svelte':
-      return '.svelte';
-    case 'solid':
-      return '.jsx';
-    default:
-      return '.js';
+      throw new Error('CLI does not support target: ' + target);
   }
 };
 
@@ -252,20 +237,7 @@ async function outputTsxLiteFiles(
           target,
           options,
         });
-        const registerComponentHook = mitosisJson.meta.registerComponent;
-        if (registerComponentHook) {
-          transpiled = dedent`
-          import { registerComponent } from '../functions/register-component';
-          
-          ${transpiled}
-          
-          registerComponent(${mitosisJson.name}, ${json5.stringify(
-            registerComponentHook,
-          )});
-            `;
-        }
         break;
-
       case 'vue':
         // TODO: transform to CJS (?)
         transpiled = transpileOptionalChaining(transpiled).replace(

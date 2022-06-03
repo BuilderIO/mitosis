@@ -40,7 +40,7 @@ function processDynamicComponents(
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
-        node.bindings.component = node.name;
+        node.bindings.component = { code: node.name };
         node.name = 'Dynamic';
         found = true;
       }
@@ -68,7 +68,6 @@ function getContextString(
 const collectClassString = (json: MitosisNode): string | null => {
   const staticClasses: string[] = [];
 
-  const hasStaticClasses = Boolean(staticClasses.length);
   if (json.properties.class) {
     staticClasses.push(json.properties.class);
     delete json.properties.class;
@@ -79,29 +78,26 @@ const collectClassString = (json: MitosisNode): string | null => {
   }
 
   const dynamicClasses: string[] = [];
-  if (typeof json.bindings.class === 'string') {
-    dynamicClasses.push(json.bindings.class as any);
+  if (typeof json.bindings.class?.code === 'string') {
+    dynamicClasses.push(json.bindings.class.code as any);
     delete json.bindings.class;
   }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
-    delete json.bindings.className;
-  }
-  if (typeof json.bindings.className === 'string') {
-    dynamicClasses.push(json.bindings.className as any);
+  if (typeof json.bindings.className?.code === 'string') {
+    dynamicClasses.push(json.bindings.className.code as any);
     delete json.bindings.className;
   }
   if (
-    typeof json.bindings.css === 'string' &&
-    json.bindings.css.trim().length > 4
+    typeof json.bindings.css?.code === 'string' &&
+    json.bindings.css.code.trim().length > 4
   ) {
-    dynamicClasses.push(`css(${json.bindings.css})`);
+    dynamicClasses.push(`css(${json.bindings.css.code})`);
   }
   delete json.bindings.css;
   const staticClassesString = staticClasses.join(' ');
 
   const dynamicClassesString = dynamicClasses.join(" + ' ' + ");
 
+  const hasStaticClasses = Boolean(staticClasses.length);
   const hasDynamicClasses = Boolean(dynamicClasses.length);
 
   if (hasStaticClasses && !hasDynamicClasses) {
@@ -126,15 +122,15 @@ const blockToSolid = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (json.bindings._text) {
-    return `{${json.bindings._text}}`;
+  if (json.bindings._text?.code) {
+    return `{${json.bindings._text.code}}`;
   }
 
   if (json.name === 'For') {
     const needsWrapper = json.children.length !== 1;
     // The SolidJS `<For>` component has a special index() signal function.
     // https://www.solidjs.com/docs/latest#%3Cfor%3E
-    return `<For each={${json.bindings.each}}>
+    return `<For each={${json.bindings.each?.code}}>
     {(${json.properties._forName}, _index) => {
       const index = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
@@ -152,13 +148,17 @@ const blockToSolid = (
     str += `<${json.name} `;
   }
 
+  if (json.name === 'Show' && json.meta.else) {
+    str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
+  }
+
   const classString = collectClassString(json);
   if (classString) {
     str += ` class=${classString} `;
   }
 
-  if (json.bindings._spread) {
-    str += ` {...(${json.bindings._spread})} `;
+  if (json.bindings._spread?.code) {
+    str += ` {...(${json.bindings._spread.code})} `;
   }
 
   for (const key in json.properties) {
@@ -166,24 +166,25 @@ const blockToSolid = (
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const value = json.bindings[key] as string;
+    const { code, arguments: cusArg = ['event'] } = json.bindings[key]!;
     if (key === '_spread' || key === '_forName') {
       continue;
     }
+    if (!code) continue;
 
     if (key.startsWith('on')) {
       const useKey =
         key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={event => ${value}} `;
+      str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
     } else {
-      let useValue = value;
+      let useValue = code;
       if (key === 'style') {
         // Convert camelCase keys to kebab-case
         // TODO: support more than top level objects, may need
         // a runtime helper for expressions that are not a direct
         // object literal, such as ternaries and other expression
         // types
-        useValue = babelTransformExpression(value, {
+        useValue = babelTransformExpression(code, {
           ObjectExpression(path: babel.NodePath<babel.types.ObjectExpression>) {
             // TODO: limit to top level objects only
             for (const property of path.node.properties) {
@@ -247,7 +248,7 @@ function addProviderComponents(
         children: json.children,
         ...(value && {
           bindings: {
-            value: getMemberObjectString(value),
+            value: { code: getMemberObjectString(value) },
           },
         }),
       }),
@@ -279,16 +280,20 @@ export const componentToSolid =
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
 
+    const solidJSImports = [
+      componentHasContext ? 'useContext' : undefined,
+      hasShowComponent ? 'Show' : undefined,
+      hasForComponent ? 'For' : undefined,
+      json.hooks.onMount?.code ? 'onMount' : undefined,
+    ].filter(Boolean);
+
     let str = dedent`
     ${
-      !(hasShowComponent || hasForComponent)
-        ? ''
-        : `import { 
-          ${!componentHasContext ? '' : 'useContext, '}
-          ${!hasShowComponent ? '' : 'Show, '}
-          ${!hasForComponent ? '' : 'For, '}
-          ${!json.hooks.onMount?.code ? '' : 'onMount, '}
+      solidJSImports.length > 0
+        ? `import { 
+          ${solidJSImports.map((item) => item).join(', ')}
          } from 'solid-js';`
+        : ''
     }
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}

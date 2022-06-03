@@ -50,6 +50,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  experimental?: any;
 }
 
 /**
@@ -78,13 +79,13 @@ const NODE_MAPPERS: {
         const propKey = camelCase(
           'Slot' + key[0].toUpperCase() + key.substring(1),
         );
-        parentSlots.push({ key: propKey, value: json.bindings[key] });
+        parentSlots.push({ key: propKey, value: json.bindings[key]?.code });
         return '';
       }
       return `{${processBinding('props.children', options)}}`;
     }
     const slotProp = processBinding(
-      json.bindings.name as string,
+      json.bindings.name.code as string,
       options,
     ).replace('name=', '');
     return `{${slotProp}}`;
@@ -97,13 +98,11 @@ const NODE_MAPPERS: {
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${processBinding(json.bindings.each as string, options)}?.map((${
-      json.properties._forName
-    }${json.properties._indexName ? ',' + json.properties._indexName : ''}${
-      json.properties._collectionName
-        ? ',' + json.properties._collectionName
-        : ''
-    }) => (
+    const forArguments = (json?.scope?.For || []).join(',');
+    return `{${processBinding(
+      json.bindings.each?.code as string,
+      options,
+    )}?.map((${forArguments}) => (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
@@ -112,7 +111,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
-    return `{${processBinding(json.bindings.when as string, options)} ? (
+    return `{${processBinding(json.bindings.when?.code as string, options)} ? (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
@@ -130,7 +129,7 @@ const BINDING_MAPPERS: {
   innerHTML(_key, value) {
     return [
       'dangerouslySetInnerHTML',
-      JSON.stringify({ __html: value.replace(/\s+/g, ' ') }),
+      `{__html: ${value.replace(/\s+/g, ' ')}}`,
     ];
   },
 };
@@ -151,8 +150,11 @@ export const blockToReact = (
     }
     return text;
   }
-  if (json.bindings._text) {
-    const processed = processBinding(json.bindings._text as string, options);
+  if (json.bindings._text?.code) {
+    const processed = processBinding(
+      json.bindings._text.code as string,
+      options,
+    );
     if (options.type === 'native') {
       return `<Text>{${processed}}</Text>`;
     }
@@ -163,9 +165,9 @@ export const blockToReact = (
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread) {
+  if (json.bindings._spread?.code) {
     str += ` {...(${processBinding(
-      json.bindings._spread as string,
+      json.bindings._spread.code as string,
       options,
     )})} `;
   }
@@ -193,7 +195,7 @@ export const blockToReact = (
   }
 
   for (const key in json.bindings) {
-    const value = String(json.bindings[key]);
+    const value = String(json.bindings[key]?.code);
     if (key === '_spread') {
       continue;
     }
@@ -203,7 +205,8 @@ export const blockToReact = (
 
     const useBindingValue = processBinding(value, options);
     if (key.startsWith('on')) {
-      str += ` ${key}={event => ${updateStateSettersInCode(
+      const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
+      str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
         options,
       )} } `;
@@ -350,10 +353,16 @@ const updateStateSetters = (
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        const value = item.bindings[key] as string;
-        const newValue = updateStateSettersInCode(value, options);
-        if (newValue !== value) {
-          item.bindings[key] = newValue;
+        let values = item.bindings[key];
+        const newValue = updateStateSettersInCode(
+          values?.code as string,
+          options,
+        );
+        if (newValue !== values?.code) {
+          item.bindings[key] = {
+            code: newValue,
+            arguments: values?.arguments,
+          };
         }
       }
     }
@@ -366,17 +375,21 @@ function addProviderComponents(
 ) {
   for (const key in json.context.set) {
     const { name, value } = json.context.set[key];
-    json.children = [
-      createMitosisNode({
-        name: `${name}.Provider`,
-        children: json.children,
-        ...(value && {
-          bindings: {
-            value: getMemberObjectString(value),
-          },
+    if (value) {
+      json.children = [
+        createMitosisNode({
+          name: `${name}.Provider`,
+          children: json.children,
+          ...(value && {
+            bindings: {
+              value: {
+                code: getMemberObjectString(value),
+              },
+            },
+          }),
         }),
-      }),
-    ];
+      ];
+    }
   }
 }
 
@@ -508,7 +521,7 @@ const _componentToReact = (
   const refs = getRefs(json);
   let hasState = Boolean(Object.keys(json.state).length);
 
-  mapRefs(json, (refName) => `${refName}.current`);
+  mapRefs(json, (refName) => `${refName}?.current`);
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
@@ -523,8 +536,7 @@ const _componentToReact = (
     json = runPostJsonPlugins(json, options.plugins);
   }
 
-  const css =
-    stylesType === 'styled-jsx' && collectCss(json, { classProperty: 'class' });
+  const css = stylesType === 'styled-jsx' && collectCss(json);
 
   const styledComponentsCode =
     stylesType === 'styled-components' &&
@@ -548,7 +560,8 @@ const _componentToReact = (
   if (
     json.hooks.onMount?.code ||
     json.hooks.onUnMount?.code ||
-    json.hooks.onUpdate?.length
+    json.hooks.onUpdate?.length ||
+    json.hooks.onInit?.code
   ) {
     reactLibImports.add('useEffect');
   }
@@ -604,6 +617,7 @@ const _componentToReact = (
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
   }(props) {
+      ${getRefsString(json)}
       ${
         hasState
           ? stateType === 'mobx'
@@ -626,17 +640,18 @@ const _componentToReact = (
           : ''
       }
       ${getContextString(json, options)}
-      ${getRefsString(json)}
       ${getInitCode(json, options)}
 
       ${
         json.hooks.onInit?.code
-          ? `useEffect(() => {
+          ? `
+          useEffect(() => {
             ${processBinding(
               updateStateSettersInCode(json.hooks.onInit.code, options),
               options,
             )}
-          }, [])`
+          })
+          `
           : ''
       }
       ${

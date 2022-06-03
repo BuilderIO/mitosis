@@ -2,13 +2,15 @@ module.exports = {
   files: 'src/**',
   targets: [
     'react',
-    'qwik',
+    // still unsupported
+    // 'qwik',
+    // 'builder',
     'vue',
     'html',
-    'svelte',
+    // TO-DO: fix error causing svelte output not to work
+    // 'svelte',
     'solid',
     'angular',
-    'builder',
-    'webcomponents',
+    'webcomponent',
   ],
 };

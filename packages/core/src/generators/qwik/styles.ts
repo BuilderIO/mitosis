@@ -15,7 +15,7 @@ export function collectStyles(
   while (nodes.length) {
     const child = nodes.shift()!;
     nodes.push(...child.children);
-    const css = child.bindings.css;
+    const css = child.bindings.css?.code;
     if (css && typeof css == 'string') {
       const value = { CLASS_NAME: 'c' + hashCode(css), ...json5.parse(css) };
       styleMap.set(css, value);

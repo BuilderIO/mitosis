@@ -23,7 +23,7 @@ const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
 
-describe('React', () => {
+describe('React Native', () => {
   test('Basic', () => {
     const component = parseJsx(basic);
     const output = componentToReactNative()({ component });

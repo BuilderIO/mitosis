@@ -45,7 +45,6 @@ export async function compileVueV2(options: CompileVueFileOptions) {
   )}`;
 
   const id = options.id || getSimpleId();
-  const registerComponentHook = options.mitosisComponent.meta.registerComponent;
 
   const fileName = rootPath.split('/').pop();
 
@@ -54,14 +53,6 @@ export async function compileVueV2(options: CompileVueFileOptions) {
     import script from './${fileName}_script'
     import './${fileName}_styles'
 
-    ${
-      !registerComponentHook
-        ? ''
-        : dedent`
-          import { registerComponent } from '../functions/register-component'
-          registerComponent(script, ${json5.stringify(registerComponentHook)})
-        `
-    }
     export default script
   `;
 
@@ -162,8 +153,6 @@ export async function compileVueFile(
     console.warn(options.contents);
   }
 
-  const registerComponentHook = options.mitosisComponent.meta.registerComponent;
-
   const fileName = rootPath.split('/').pop();
 
   // Via https://www.npmjs.com/package/@vue/compiler-sfc README
@@ -174,14 +163,6 @@ export async function compileVueFile(
 
     script.render = render
 
-    ${
-      !registerComponentHook
-        ? ''
-        : dedent`
-          import { registerComponent } from '../functions/register-component'
-          registerComponent(script, ${json5.stringify(registerComponentHook)})
-        `
-    }
     export default script
   `;
 

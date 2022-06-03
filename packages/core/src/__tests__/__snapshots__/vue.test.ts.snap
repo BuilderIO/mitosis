@@ -2,7 +2,7 @@
 
 exports[`Vue Basic 1`] = `
 "<template>
-  <div>
+  <div class=\\"test div\\">
     <input :value=\\"name\\" @input=\\"name = $event.target.value\\" />
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
@@ -14,6 +14,11 @@ export default {
   data: () => ({ name: \\"Steve\\" }),
 };
 </script>
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>
 "
 `;
 
@@ -280,7 +285,7 @@ exports[`Vue Form block 1`] = `
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
-    @submit=\\"onSubmit(event)\\"
+    @submit=\\"onSubmit($event)\\"
   >
     <builder-block-component
       v-for=\\"(block, index) in builderBlock?.children\\"
@@ -965,7 +970,10 @@ exports[`Vue Text 1`] = `
 "<template>
   <div
     :contentEditable=\\"allowEditingText || undefined\\"
-    v-html=\\"text || content || ''\\"
+    :data-name=\\"{
+      test: name || 'any name',
+    }\\"
+    v-html=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"
   ></div>
 </template>
 <script>
@@ -975,6 +983,8 @@ export default {
   name: \\"text\\",
 
   props: [\\"text\\", \\"content\\"],
+
+  data: () => ({ name: \\"Decadef20\\" }),
 };
 </script>
 "
@@ -1017,7 +1027,7 @@ exports[`Vue Video 1`] = `
     }\\"
     :key=\\"video || 'no-src'\\"
     :poster=\\"posterImage\\"
-    :autoPlay=\\"autoPlay\\"
+    :autoplay=\\"autoPlay\\"
     :muted=\\"muted\\"
     :controls=\\"controls\\"
     :loop=\\"loop\\"

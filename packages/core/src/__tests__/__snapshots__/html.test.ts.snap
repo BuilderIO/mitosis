@@ -1,15 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Html Basic 1`] = `
-"<div>
-  <input data-name=\\"input-1\\" />
+"<div class=\\"test div\\">
+  <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>
 <script>
   (() => {
     const state = { name: \\"Steve\\" };
 
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -28,7 +34,7 @@ exports[`Html Basic 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
         el.value = state.name;
 
         el.removeEventListener(\\"input\\", onInput1Input);
@@ -41,8 +47,8 @@ exports[`Html Basic 1`] = `
     }
 
     // Event handler for 'input' event on input-1
-    function onInput1Input(event) {
-      state.name = event.target.value;
+    function onInput1Input(myEvent) {
+      state.name = myEvent.target.value;
       update();
     }
 
@@ -55,12 +61,11 @@ exports[`Html Basic 1`] = `
 
 exports[`Html BasicFor 1`] = `
 "<div>
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <input data-name=\\"input-1\\" />
+  <template data-el=\\"for\\">
+    <input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 
     Hello
-    <span data-name=\\"div-1\\"><!-- person --></span>
+    <template data-el=\\"div-1\\"><!-- person --></template>
     ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
   </template>
 </div>
@@ -68,6 +73,7 @@ exports[`Html BasicFor 1`] = `
   (() => {
     const state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
 
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -86,22 +92,21 @@ exports[`Html BasicFor 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.names;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"person\\", undefined, undefined);
+        renderLoop(el, array, \\"person\\");
       });
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
         el.value = state.name;
 
         el.removeEventListener(\\"input\\", onInput1Input);
         el.addEventListener(\\"input\\", onInput1Input);
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const person = getContext(el, \\"person\\");
-        el.innerText = person;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const person = getScope(el, \\"person\\");
+        renderTextNode(el, person);
       });
 
       destroyAnyNodes();
@@ -111,7 +116,7 @@ exports[`Html BasicFor 1`] = `
 
     // Event handler for 'input' event on input-1
     function onInput1Input(event) {
-      const person = getContext(event.currentTarget, \\"person\\");
+      const person = getScope(event.currentTarget, \\"person\\");
 
       state.name = event.target.value + \\" and \\" + person;
       update();
@@ -123,37 +128,65 @@ exports[`Html BasicFor 1`] = `
     // onMount
     console.log(\\"onMount code\\");
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -165,15 +198,15 @@ exports[`Html BasicFor 1`] = `
 `;
 
 exports[`Html Button 1`] = `
-"<template data-name=\\"show\\">
-  <a data-name=\\"a-1\\">
-    <span data-name=\\"div-1\\"><!-- props.text --></span>
+"<template data-el=\\"show\\">
+  <a data-el=\\"a-1\\">
+    <template data-el=\\"div-1\\"><!-- props.text --></template>
   </a>
 </template>
 
-<template data-name=\\"show-2\\">
-  <button type=\\"button\\" data-name=\\"button-1\\">
-    <span data-name=\\"div-2\\"><!-- props.text --></span>
+<template data-el=\\"show-2\\">
+  <button type=\\"button\\" data-el=\\"button-1\\">
+    <template data-el=\\"div-2\\"><!-- props.text --></template>
   </button>
 </template>
 
@@ -181,6 +214,7 @@ exports[`Html Button 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -199,32 +233,35 @@ exports[`Html Button 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='a-1']\\").forEach((el) => {
-        el.href = props.link;
+      document.querySelectorAll(\\"[data-el='a-1']\\").forEach((el) => {
+        el.setAttribute(\\"href\\", props.link);
 
-        el.target = props.openLinkInNewTab ? \\"_blank\\" : undefined;
+        el.setAttribute(
+          \\"target\\",
+          props.openLinkInNewTab ? \\"_blank\\" : undefined
+        );
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = props.text;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.text);
       });
 
-      document.querySelectorAll(\\"[data-name='show-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
         const whenCondition = !props.link;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        el.innerText = props.text;
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.text);
       });
 
       destroyAnyNodes();
@@ -244,9 +281,28 @@ exports[`Html Button 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
+    }
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
     }
   })();
 </script>
@@ -255,12 +311,11 @@ exports[`Html Button 1`] = `
 
 exports[`Html Columns 1`] = `
 "<div class=\\"builder-columns div\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
+  <template data-el=\\"for\\">
     <div class=\\"builder-column div-2\\">
-      <span data-name=\\"div-1\\"><!-- column.content --></span>
+      <template data-el=\\"div-1\\"><!-- column.content --></template>
 
-      <span data-name=\\"div-2\\"><!-- index --></span>
+      <template data-el=\\"div-2\\"><!-- index --></template>
     </div>
   </template>
 </div>
@@ -307,6 +362,7 @@ exports[`Html Columns 1`] = `
       },
     };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -325,20 +381,19 @@ exports[`Html Columns 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.columns;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"column\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"column\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const column = getContext(el, \\"column\\");
-        el.innerText = column.content;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const column = getScope(el, \\"column\\");
+        renderTextNode(el, column.content);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
-        el.innerText = index;
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
       });
 
       destroyAnyNodes();
@@ -349,37 +404,65 @@ exports[`Html Columns 1`] = `
     // Update with initial state on first load
     update();
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -391,12 +474,12 @@ exports[`Html Columns 1`] = `
 `;
 
 exports[`Html Image 1`] = `
-"<picture data-name=\\"picture-1\\">
-  <template data-name=\\"show\\">
-    <img class=\\"img\\" data-name=\\"img-1\\" />
+"<picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
+  <template data-el=\\"show\\">
+    <img class=\\"img\\" data-el=\\"img-1\\" />
   </template>
 
-  <source data-name=\\"source-1\\" />
+  <source data-el=\\"source-1\\" />
 </picture>
 
 <slot></slot>
@@ -431,6 +514,7 @@ exports[`Html Image 1`] = `
       },
     };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -449,15 +533,15 @@ exports[`Html Image 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = !state.useLazyLoading() || state.load;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        el.alt = props.altText;
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
+        el.setAttribute(\\"alt\\", props.altText);
 
         el.setAttribute(
           \\"aria-role\\",
@@ -466,18 +550,18 @@ exports[`Html Image 1`] = `
 
         el.className = \\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\");
 
-        el.src = props.image;
+        el.setAttribute(\\"src\\", props.image);
 
         el.removeEventListener(\\"load\\", onImg1Load);
         el.addEventListener(\\"load\\", onImg1Load);
 
-        el.srcset = props.srcset;
+        el.setAttribute(\\"srcset\\", props.srcset);
 
-        el.sizes = props.sizes;
+        el.setAttribute(\\"sizes\\", props.sizes);
       });
 
-      document.querySelectorAll(\\"[data-name='source-1']\\").forEach((el) => {
-        el.srcset = props.srcset;
+      document.querySelectorAll(\\"[data-el='source-1']\\").forEach((el) => {
+        el.setAttribute(\\"srcset\\", props.srcset);
       });
 
       destroyAnyNodes();
@@ -529,6 +613,12 @@ exports[`Html Image 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
@@ -540,15 +630,15 @@ exports[`Html Image 1`] = `
 
 exports[`Html ImageState 1`] = `
 "<div>
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <img data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <img data-el=\\"img-1\\" />
   </template>
 </div>
 <script>
   (() => {
     const state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
 
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -567,19 +657,18 @@ exports[`Html ImageState 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.images;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"item\\", \\"itemIndex\\", undefined);
+        renderLoop(el, array, \\"item\\", \\"itemIndex\\");
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const item = getContext(el, \\"item\\");
-        const itemIndex = getContext(el, \\"itemIndex\\");
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
+        const item = getScope(el, \\"item\\");
+        const itemIndex = getScope(el, \\"itemIndex\\");
 
         el.className = \\"custom-class\\";
 
-        el.src = item;
+        el.setAttribute(\\"src\\", item);
 
         el.key = itemIndex;
       });
@@ -593,36 +682,51 @@ exports[`Html ImageState 1`] = `
     update();
 
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -634,11 +738,12 @@ exports[`Html ImageState 1`] = `
 `;
 
 exports[`Html Img 1`] = `
-"<img data-name=\\"img-1\\" />
+"<img data-el=\\"img-1\\" />
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -657,7 +762,7 @@ exports[`Html Img 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         Object.assign(el.style, {
           objectFit: props.backgroundSize || \\"cover\\",
           objectPosition: props.backgroundPosition || \\"center\\",
@@ -665,9 +770,9 @@ exports[`Html Img 1`] = `
 
         el.key = (Builder.isEditing && props.imgSrc) || \\"default-key\\";
 
-        el.alt = props.altText;
+        el.setAttribute(\\"alt\\", props.altText);
 
-        el.src = props.imgSrc;
+        el.setAttribute(\\"src\\", props.imgSrc);
       });
 
       destroyAnyNodes();
@@ -683,11 +788,12 @@ exports[`Html Img 1`] = `
 `;
 
 exports[`Html Input block 1`] = `
-"<input data-name=\\"input-1\\" />
+"<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -706,23 +812,23 @@ exports[`Html Input block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='input-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
         el.key =
           Builder.isEditing && props.defaultValue
             ? props.defaultValue
             : \\"default-key\\";
 
-        el.placeholder = props.placeholder;
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.type = props.type;
+        el.setAttribute(\\"type\\", props.type);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
 
         el.value = props.value;
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.required = props.required;
+        el.setAttribute(\\"required\\", props.required);
       });
 
       destroyAnyNodes();
@@ -738,13 +844,14 @@ exports[`Html Input block 1`] = `
 `;
 
 exports[`Html Section 1`] = `
-"<section data-name=\\"section-1\\">
+"<section data-el=\\"section-1\\">
   <slot></slot>
 </section>
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -763,7 +870,7 @@ exports[`Html Section 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='section-1']\\").forEach((el) => {
         Object.assign(
           el.style,
           props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -787,10 +894,9 @@ exports[`Html Section 1`] = `
 `;
 
 exports[`Html SectionState 1`] = `
-"<template data-name=\\"show\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <section data-name=\\"section-1\\">
+"<template data-el=\\"show\\">
+  <template data-el=\\"for\\">
+    <section data-el=\\"section-1\\">
       <slot></slot>
     </section>
   </template>
@@ -799,6 +905,7 @@ exports[`Html SectionState 1`] = `
   (() => {
     const state = { max: 42, items: [42] };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -817,21 +924,20 @@ exports[`Html SectionState 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.max;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.items;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"item\\", undefined, undefined);
+        renderLoop(el, array, \\"item\\");
       });
 
-      document.querySelectorAll(\\"[data-name='section-1']\\").forEach((el) => {
-        const item = getContext(el, \\"item\\");
+      document.querySelectorAll(\\"[data-el='section-1']\\").forEach((el) => {
+        const item = getScope(el, \\"item\\");
         Object.assign(el.style, {
           maxWidth: item + state.max,
         });
@@ -854,42 +960,63 @@ exports[`Html SectionState 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
     }
 
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -901,11 +1028,10 @@ exports[`Html SectionState 1`] = `
 `;
 
 exports[`Html Select block 1`] = `
-"<select data-name=\\"select-1\\">
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <option data-name=\\"option-1\\">
-      <span data-name=\\"div-1\\"><!-- option.name || option.value --></span>
+"<select data-el=\\"select-1\\" data-dom-state=\\"select-2\\">
+  <template data-el=\\"for\\">
+    <option data-el=\\"option-1\\">
+      <template data-el=\\"div-1\\"><!-- option.name || option.value --></template>
     </option>
   </template>
 </select>
@@ -913,6 +1039,7 @@ exports[`Html Select block 1`] = `
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -931,7 +1058,7 @@ exports[`Html Select block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='select-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='select-1']\\").forEach((el) => {
         el.value = props.value;
 
         el.key =
@@ -939,29 +1066,28 @@ exports[`Html Select block 1`] = `
             ? props.defaultValue
             : \\"default-key\\";
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = props.options;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"option\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"option\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='option-1']\\").forEach((el) => {
-        const option = getContext(el, \\"option\\");
-        const index = getContext(el, \\"index\\");
+      document.querySelectorAll(\\"[data-el='option-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        const index = getScope(el, \\"index\\");
 
         el.value = option.value;
 
         el.setAttribute(\\"data-index\\", index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        const option = getContext(el, \\"option\\");
-        el.innerText = option.name || option.value;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const option = getScope(el, \\"option\\");
+        renderTextNode(el, option.name || option.value);
       });
 
       destroyAnyNodes();
@@ -972,37 +1098,65 @@ exports[`Html Select block 1`] = `
     // Update with initial state on first load
     update();
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1014,39 +1168,39 @@ exports[`Html Select block 1`] = `
 `;
 
 exports[`Html Shadow DOM 1`] = `
-"<div data-name=\\"div-1\\">
-  <button data-name=\\"button-1\\">Write a review</button>
+"<div data-el=\\"div-1\\">
+  <button data-el=\\"button-1\\">Write a review</button>
 
-  <template data-name=\\"show\\">
-    <input placeholder=\\"Email\\" />
+  <template data-el=\\"show\\">
+    <input placeholder=\\"Email\\" data-dom-state=\\"input-1\\" />
 
-    <input placeholder=\\"Title\\" class=\\"input\\" />
+    <input placeholder=\\"Title\\" class=\\"input\\" data-dom-state=\\"input-2\\" />
 
     <textarea
       placeholder=\\"How was your experience?\\"
       class=\\"textarea\\"
+      data-dom-state=\\"textarea-1\\"
     ></textarea>
 
-    <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+    <button class=\\"button\\" data-el=\\"button-2\\">Submit</button>
   </template>
 
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <div class=\\"review\\" data-name=\\"review\\">
-      <img class=\\"img\\" data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <div class=\\"review\\" data-el=\\"review\\">
+      <img class=\\"img\\" data-el=\\"img-1\\" />
 
-      <div data-name=\\"div-2\\">
+      <div data-el=\\"div-2\\">
         <div>
           N:
-          <span data-name=\\"div-3\\"><!-- index --></span>
+          <template data-el=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <template data-el=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <template data-el=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1080,6 +1234,7 @@ exports[`Html Shadow DOM 1`] = `
   (() => {
     const state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1098,62 +1253,61 @@ exports[`Html Shadow DOM 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton1Click);
         el.addEventListener(\\"click\\", onButton1Click);
       });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton2Click);
         el.addEventListener(\\"click\\", onButton2Click);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.reviews;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-el='review']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
-        el.innerText = index;
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
-        el.innerText = review.author;
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
+        renderTextNode(el, review.author);
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
-        el.innerText = review.reviewMessage;
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
+        renderTextNode(el, review.reviewMessage);
       });
 
       destroyAnyNodes();
@@ -1197,42 +1351,76 @@ exports[`Html Shadow DOM 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
     }
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1244,39 +1432,39 @@ exports[`Html Shadow DOM 1`] = `
 `;
 
 exports[`Html Stamped 1`] = `
-"<div data-name=\\"div-1\\">
-  <button data-name=\\"button-1\\">Write a review</button>
+"<div data-el=\\"div-1\\">
+  <button data-el=\\"button-1\\">Write a review</button>
 
-  <template data-name=\\"show\\">
-    <input placeholder=\\"Email\\" />
+  <template data-el=\\"show\\">
+    <input placeholder=\\"Email\\" data-dom-state=\\"input-1\\" />
 
-    <input placeholder=\\"Title\\" class=\\"input\\" />
+    <input placeholder=\\"Title\\" class=\\"input\\" data-dom-state=\\"input-2\\" />
 
     <textarea
       placeholder=\\"How was your experience?\\"
       class=\\"textarea\\"
+      data-dom-state=\\"textarea-1\\"
     ></textarea>
 
-    <button class=\\"button\\" data-name=\\"button-2\\">Submit</button>
+    <button class=\\"button\\" data-el=\\"button-2\\">Submit</button>
   </template>
 
-  <span data-name=\\"for\\"></span>
-  <template data-template-for=\\"for\\">
-    <div class=\\"review\\" data-name=\\"review\\">
-      <img class=\\"img\\" data-name=\\"img-1\\" />
+  <template data-el=\\"for\\">
+    <div class=\\"review\\" data-el=\\"review\\">
+      <img class=\\"img\\" data-el=\\"img-1\\" />
 
-      <div data-name=\\"div-2\\">
+      <div data-el=\\"div-2\\">
         <div>
           N:
-          <span data-name=\\"div-3\\"><!-- index --></span>
+          <template data-el=\\"div-3\\"><!-- index --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-4\\"><!-- review.author --></span>
+          <template data-el=\\"div-4\\"><!-- review.author --></template>
         </div>
 
         <div>
-          <span data-name=\\"div-5\\"><!-- review.reviewMessage --></span>
+          <template data-el=\\"div-5\\"><!-- review.reviewMessage --></template>
         </div>
       </div>
     </div>
@@ -1320,6 +1508,7 @@ exports[`Html Stamped 1`] = `
       },
     };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1338,62 +1527,61 @@ exports[`Html Stamped 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"data-user\\", state.name);
       });
 
-      document.querySelectorAll(\\"[data-name='button-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton1Click);
         el.addEventListener(\\"click\\", onButton1Click);
       });
 
-      document.querySelectorAll(\\"[data-name='show']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
         const whenCondition = state.showReviewPrompt;
         if (whenCondition) {
           showContent(el);
         }
       });
 
-      document.querySelectorAll(\\"[data-name='button-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='button-2']\\").forEach((el) => {
         el.removeEventListener(\\"click\\", onButton2Click);
         el.addEventListener(\\"click\\", onButton2Click);
       });
 
-      document.querySelectorAll(\\"[data-name='for']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
         let array = state.reviews;
-        let template = document.querySelector('[data-template-for=\\"for\\"]');
-        renderLoop(el, array, template, \\"review\\", \\"index\\", undefined);
+        renderLoop(el, array, \\"review\\", \\"index\\");
       });
 
-      document.querySelectorAll(\\"[data-name='review']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-el='review']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
 
         el.key = review.id;
       });
 
-      document.querySelectorAll(\\"[data-name='img-1']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
+      document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
 
-        el.src = review.avatar;
+        el.setAttribute(\\"src\\", review.avatar);
       });
 
-      document.querySelectorAll(\\"[data-name='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
         el.className = state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\";
       });
 
-      document.querySelectorAll(\\"[data-name='div-3']\\").forEach((el) => {
-        const index = getContext(el, \\"index\\");
-        el.innerText = index;
+      document.querySelectorAll(\\"[data-el='div-3']\\").forEach((el) => {
+        const index = getScope(el, \\"index\\");
+        renderTextNode(el, index);
       });
 
-      document.querySelectorAll(\\"[data-name='div-4']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
-        el.innerText = review.author;
+      document.querySelectorAll(\\"[data-el='div-4']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
+        renderTextNode(el, review.author);
       });
 
-      document.querySelectorAll(\\"[data-name='div-5']\\").forEach((el) => {
-        const review = getContext(el, \\"review\\");
-        el.innerText = review.reviewMessage;
+      document.querySelectorAll(\\"[data-el='div-5']\\").forEach((el) => {
+        const review = getScope(el, \\"review\\");
+        renderTextNode(el, review.reviewMessage);
       });
 
       destroyAnyNodes();
@@ -1437,42 +1625,76 @@ exports[`Html Stamped 1`] = `
       const elementFragment = el.content.cloneNode(true);
       const children = Array.from(elementFragment.childNodes);
       children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
         nodesToDestroy.push(child);
       });
       el.after(elementFragment);
     }
 
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
     // Helper to render loops
-    function renderLoop(
-      el,
-      array,
-      template,
-      itemName,
-      itemIndex,
-      collectionName
-    ) {
-      el.innerHTML = \\"\\";
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
       for (let [index, value] of array.entries()) {
-        let tmp = document.createElement(\\"span\\");
-        tmp.innerHTML = template.innerHTML;
-        Array.from(tmp.children).forEach((child) => {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
           if (itemName !== undefined) {
-            child[\\"__\\" + itemName] = value;
+            scope[itemName] = value;
           }
           if (itemIndex !== undefined) {
-            child[\\"__\\" + itemIndex] = index;
+            scope[itemIndex] = index;
           }
           if (collectionName !== undefined) {
-            child[\\"__\\" + collectionName] = array;
+            scope[collectionName] = array;
           }
-          el.appendChild(child);
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
         });
+        collection.forEach((child) => template.after(child));
       }
     }
 
-    function getContext(el, name) {
+    function getScope(el, name) {
       do {
-        let value = el[\\"__\\" + name];
+        let value = el?.scope?.[name];
         if (value !== undefined) {
           return value;
         }
@@ -1484,13 +1706,14 @@ exports[`Html Stamped 1`] = `
 `;
 
 exports[`Html Submit button block 1`] = `
-"<button type=\\"submit\\" data-name=\\"button-1\\">
-  <span data-name=\\"div-1\\"><!-- props.text --></span>
+"<button type=\\"submit\\" data-el=\\"button-1\\">
+  <template data-el=\\"div-1\\"><!-- props.text --></template>
 </button>
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1509,8 +1732,8 @@ exports[`Html Submit button block 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.innerText = props.text;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.text);
       });
 
       destroyAnyNodes();
@@ -1520,17 +1743,31 @@ exports[`Html Submit button block 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "
 `;
 
 exports[`Html Text 1`] = `
-"<div data-name=\\"div-1\\"></div>
+"<div data-el=\\"div-1\\"></div>
 <script>
   (() => {
-    const state = {};
+    const state = { name: \\"Decadef20\\" };
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1549,10 +1786,18 @@ exports[`Html Text 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='div-1']\\").forEach((el) => {
-        el.contentEditable = allowEditingText || undefined;
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.setAttribute(\\"contentEditable\\", allowEditingText || undefined);
 
-        el.innerHTML = props.text || props.content || \\"\\";
+        el.setAttribute(\\"data-name\\", {
+          test: state.name || \\"any name\\",
+        });
+
+        el.innerHTML =
+          props.text ||
+          props.content ||
+          state.name ||
+          '<p class=\\"text-lg\\">my name</p>';
       });
 
       destroyAnyNodes();
@@ -1568,11 +1813,12 @@ exports[`Html Text 1`] = `
 `;
 
 exports[`Html Textarea 1`] = `
-"<textarea data-name=\\"textarea-1\\"></textarea>
+"<textarea data-el=\\"textarea-1\\" data-dom-state=\\"textarea-2\\"></textarea>
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1591,14 +1837,14 @@ exports[`Html Textarea 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='textarea-1']\\").forEach((el) => {
-        el.placeholder = props.placeholder;
+      document.querySelectorAll(\\"[data-el='textarea-1']\\").forEach((el) => {
+        el.setAttribute(\\"placeholder\\", props.placeholder);
 
-        el.name = props.name;
+        el.setAttribute(\\"name\\", props.name);
 
         el.value = props.value;
 
-        el.defaultValue = props.defaultValue;
+        el.setAttribute(\\"defaultValue\\", props.defaultValue);
       });
 
       destroyAnyNodes();
@@ -1614,11 +1860,12 @@ exports[`Html Textarea 1`] = `
 `;
 
 exports[`Html Video 1`] = `
-"<video preload=\\"none\\" data-name=\\"video-1\\"></video>
+"<video preload=\\"none\\" data-el=\\"video-1\\"></video>
 <script>
   (() => {
     const state = {};
     let props = {};
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
@@ -1637,7 +1884,7 @@ exports[`Html Video 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-name='video-1']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='video-1']\\").forEach((el) => {
         Object.assign(el.style, {
           width: \\"100%\\",
           height: \\"100%\\",
@@ -1651,15 +1898,60 @@ exports[`Html Video 1`] = `
 
         el.key = props.video || \\"no-src\\";
 
-        el.poster = props.posterImage;
+        el.setAttribute(\\"poster\\", props.posterImage);
 
-        el.autoPlay = props.autoPlay;
+        el.setAttribute(\\"autoplay\\", props.autoPlay);
 
-        el.muted = props.muted;
+        el.setAttribute(\\"muted\\", props.muted);
 
-        el.controls = props.controls;
+        el.setAttribute(\\"controls\\", props.controls);
 
-        el.loop = props.loop;
+        el.setAttribute(\\"loop\\", props.loop);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
+exports[`Html className 1`] = `
+"<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div data-el=\\"div-1\\">With binding</div>
+</div>
+<script>
+  (() => {
+    const state = { bindings: \\"a binding\\" };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.className = state.bindings;
       });
 
       destroyAnyNodes();
@@ -1690,6 +1982,7 @@ exports[`Html onMount & onUnMount 1`] = `
   (() => {
     const state = {};
 
+    let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 

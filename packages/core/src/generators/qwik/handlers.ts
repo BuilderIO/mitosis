@@ -1,6 +1,12 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { renderUseLexicalScope } from './component';
-import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import {
+  arrowFnBlock,
+  EmitFn,
+  File,
+  invoke,
+  SrcBuilder,
+} from './src-generator';
 
 const IIF_START = '(() => {';
 const IIF_END = '})()';
@@ -36,7 +42,7 @@ export function renderHandlers(
     const bindings = node.bindings;
     for (const key in bindings) {
       if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-        const binding = bindings[key]!;
+        const { code: binding } = bindings[key]!;
         if (binding != null) {
           if (key.startsWith('on')) {
             let block = extractJSBlock(binding) || binding;
@@ -53,37 +59,14 @@ export function renderHandlers(
 }
 
 function renderHandler(file: File, symbol: string, code: string) {
-  const body = [wrapWithUse(file, code)];
+  const body: (string | EmitFn)[] = [code];
   const shouldRenderStateRestore = code.indexOf('state') !== -1;
   if (shouldRenderStateRestore) {
     body.unshift(renderUseLexicalScope(file));
   }
   file.exportConst(symbol, function (this: SrcBuilder) {
-    this.emit([arrowFnBlock([], body)]);
+    this.emit([arrowFnBlock(['event'], body)]);
   });
-}
-
-function wrapWithUse(
-  file: File,
-  code: string,
-): string | ((this: SrcBuilder) => void) {
-  const needsEvent = !!code.match(/\bevent\b/);
-  if (needsEvent) {
-    return function (this: SrcBuilder) {
-      this.emit('{');
-      needsEvent &&
-        this.emit(
-          'const event=',
-          invoke(file.import(file.qwikModule, 'useEvent'), []),
-          ';',
-        );
-      const blockContent = stripBlock(code);
-      this.emit(blockContent);
-      this.emit('}');
-    };
-  } else {
-    return code;
-  }
 }
 
 function stripBlock(block: string) {

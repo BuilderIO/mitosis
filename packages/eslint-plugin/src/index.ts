@@ -15,7 +15,7 @@ import noVarNameSameAsStateProperty from './rules/no-var-name-same-as-state-prop
 import onlyDefaultFunctionAndImports from './rules/only-default-function-and-imports';
 import noConditionalLogicInComponentRender from './rules/no-conditional-logic-in-component-render';
 import noVarDeclarationOrAssignmentInComponent from './rules/no-var-declaration-or-assignment-in-component';
-
+import recommended from './configs/recommended';
 export const staticControlFlow: Rule.RuleModule = {
   create(context) {
     if (!isMitosisPath(context.getFilename())) return {};
@@ -100,4 +100,8 @@ export const rules = {
     noConditionalLogicInComponentRender,
   'no-var-declaration-or-assignment-in-component':
     noVarDeclarationOrAssignmentInComponent,
+};
+
+export const configs = {
+  recommended,
 };

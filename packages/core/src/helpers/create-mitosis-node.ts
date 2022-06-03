@@ -6,6 +6,7 @@ export const createMitosisNode = (
   '@type': '@builder.io/mitosis/node',
   name: 'div',
   meta: {},
+  scope: {},
   properties: {},
   bindings: {},
   children: [],

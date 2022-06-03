@@ -2,15 +2,23 @@
 
 exports[`Solid Basic 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
   const state = createMutable({ name: \\"Steve\\" });
 
   return (
-    <div>
+    <div
+      class={
+        \\"test \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+    >
       <input
         value={state.name}
-        onInput={(event) => (state.name = event.target.value)}
+        onInput={(myEvent) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -78,27 +86,33 @@ function Column(props) {
 
   return (
     <div
-      class={css({
-        display: \\"flex\\",
-        flexDirection: \\"column\\",
-        alignItems: \\"stretch\\",
-        lineHeight: \\"normal\\",
-        \\"@media (max-width: 999px)\\": {
-          flexDirection: \\"row\\",
-        },
-        \\"@media (max-width: 639px)\\": {
-          flexDirection: \\"row-reverse\\",
-        },
-      })}
+      class={
+        \\"builder-columns \\" +
+        css({
+          display: \\"flex\\",
+          flexDirection: \\"column\\",
+          alignItems: \\"stretch\\",
+          lineHeight: \\"normal\\",
+          \\"@media (max-width: 999px)\\": {
+            flexDirection: \\"row\\",
+          },
+          \\"@media (max-width: 639px)\\": {
+            flexDirection: \\"row-reverse\\",
+          },
+        })
+      }
     >
       <For each={props.columns}>
         {(column, _index) => {
           const index = _index();
           return (
             <div
-              class={css({
-                flexGrow: \\"1\\",
-              })}
+              class={
+                \\"builder-column \\" +
+                css({
+                  flexGrow: \\"1\\",
+                })
+              }
             >
               {column.content}
               {index}
@@ -115,7 +129,9 @@ export default Column;
 `;
 
 exports[`Solid CustomCode 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 
 function CustomCode(props) {
   const state = createMutable({
@@ -186,7 +202,9 @@ export default CustomCode;
 `;
 
 exports[`Solid Embed 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 
 function CustomCode(props) {
   const state = createMutable({
@@ -539,11 +557,14 @@ function FormComponent(props) {
       </Show>
       <Show when={state.submissionState === \\"error\\" && state.responseData}>
         <pre
-          class={css({
-            padding: \\"10px\\",
-            color: \\"red\\",
-            textAlign: \\"center\\",
-          })}
+          class={
+            \\"builder-form-error-text \\" +
+            css({
+              padding: \\"10px\\",
+              color: \\"red\\",
+              textAlign: \\"center\\",
+            })
+          }
         >
           {JSON.stringify(state.responseData, null, 2)}
         </pre>
@@ -770,6 +791,21 @@ export default SelectComponent;
 "
 `;
 
+exports[`Solid Show 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function RenderStyles(props) {
+  return (
+    <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
+      <div>Bar</div>
+    </Show>
+  );
+}
+
+export default RenderStyles;
+"
+`;
+
 exports[`Solid Submit button block 1`] = `
 "function SubmitButton(props) {
   return (
@@ -784,13 +820,25 @@ export default SubmitButton;
 `;
 
 exports[`Solid Text 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"import { createMutable } from \\"solid-js/store\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
+  const state = createMutable({ name: \\"Decadef20\\" });
+
   return (
     <div
       contentEditable={allowEditingText || undefined}
-      innerHTML={props.text || props.content || \\"\\"}
+      data-name={{
+        test: state.name || \\"any name\\",
+      }}
+      innerHTML={
+        props.text ||
+        props.content ||
+        state.name ||
+        '<p class=\\"text-lg\\">my name</p>'
+      }
     ></div>
   );
 }
@@ -834,7 +882,7 @@ exports[`Solid Video 1`] = `
       }}
       key={props.video || \\"no-src\\"}
       poster={props.posterImage}
-      autoPlay={props.autoPlay}
+      autoplay={props.autoPlay}
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}

@@ -16,6 +16,7 @@ const customCode = require('./data/blocks/custom-code.raw');
 const embed = require('./data/blocks/embed.raw');
 const image = require('./data/blocks/image.raw');
 const columns = require('./data/blocks/columns.raw');
+const show = require('./data/blocks/rootShow.raw');
 
 describe('Solid', () => {
   test('Basic', () => {
@@ -110,6 +111,12 @@ describe('Solid', () => {
 
   test('Columns', () => {
     const component = parseJsx(columns);
+    const output = componentToSolid()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Show', () => {
+    const component = parseJsx(show);
     const output = componentToSolid()({ component });
     expect(output).toMatchSnapshot();
   });

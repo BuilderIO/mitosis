@@ -35,7 +35,7 @@ export class File {
   ) {
     this.filename = filename;
     this.options = options;
-    this.src = new SrcBuilder(this.options);
+    this.src = new SrcBuilder(this, this.options);
     this.qwikModule = qwikModule;
     this.qrlPrefix = qrlPrefix;
   }
@@ -55,7 +55,7 @@ export class File {
   }
 
   toString() {
-    const srcImports = new SrcBuilder(this.options);
+    const srcImports = new SrcBuilder(this, this.options);
     const imports = this.imports.imports;
     const modules = Array.from(imports.keys()).sort();
     modules.forEach((module) => {
@@ -91,13 +91,15 @@ function removeExt(filename: string): string {
 const spaces: string[] = [''];
 
 export class SrcBuilder {
+  file: File;
   isTypeScript: boolean;
   isModule: boolean;
   isJSX: boolean;
 
   buf: string[] = [];
 
-  constructor(options: SrcBuilderOptions) {
+  constructor(file: File, options: SrcBuilderOptions) {
+    this.file = file;
     this.isTypeScript = options.isTypeScript;
     this.isModule = options.isModule;
     this.isJSX = options.isJSX;
@@ -241,7 +243,7 @@ export class SrcBuilder {
         !ignoreKey(key) &&
         !Object.prototype.hasOwnProperty.call(bindings, key)
       ) {
-        emitJsxProp(possiblyQuotePropertyName(key), quote(props[key]));
+        emitJsxProp(key, quote(props[key]));
       }
     }
     for (const rawKey in bindings) {
@@ -249,9 +251,9 @@ export class SrcBuilder {
         Object.prototype.hasOwnProperty.call(bindings, rawKey) &&
         !ignoreKey(rawKey)
       ) {
-        let binding = bindings[rawKey];
+        let { code: binding } = bindings[rawKey];
         const key = lastProperty(rawKey);
-        if (binding === props[key]) {
+        if (binding != null && binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
           // We assume that when the binding content equals prop content.
           binding = quote(binding);
@@ -265,7 +267,7 @@ export class SrcBuilder {
             this.emit('{display:', binding, '?', truthy, ':', falsy, '}');
           });
         } else {
-          emitJsxProp(possiblyQuotePropertyName(key), binding);
+          emitJsxProp(key, binding);
         }
       }
     }
@@ -276,15 +278,17 @@ export class SrcBuilder {
     }
 
     function emitJsxProp(key: string, value: any) {
-      if (self.isJSX) {
-        self.emit(' ', key, '=');
-        if (typeof value == 'string' && value.startsWith('"')) {
-          self.emit(value);
+      if (value) {
+        if (self.isJSX) {
+          self.emit(' ', key, '=');
+          if (typeof value == 'string' && value.startsWith('"')) {
+            self.emit(value);
+          } else {
+            self.emit('{', value, '}');
+          }
         } else {
-          self.emit('{', value, '}');
+          self.emit(possiblyQuotePropertyName(key), ':', value, ',');
         }
-      } else {
-        self.emit(key, ':', value, ',');
       }
     }
   }

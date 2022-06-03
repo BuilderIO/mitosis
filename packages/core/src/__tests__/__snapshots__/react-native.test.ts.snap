@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`React Basic 1`] = `
+exports[`React Native Basic 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -9,16 +9,21 @@ export default function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
-    <View>
-      <View value={name} onChange={(event) => setName(event.target.value)} />
+    <View style={styles.view1}>
+      <View
+        value={name}
+        onChange={(myEvent) => setName(myEvent.target.value)}
+      />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Button 1`] = `
+exports[`React Native Button 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -50,7 +55,7 @@ export default function Button(props) {
 "
 `;
 
-exports[`React Columns 1`] = `
+exports[`React Native Columns 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -95,21 +100,22 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React CustomCode 1`] = `
+exports[`React Native CustomCode 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
+  const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
+    if (elem?.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
+      const scripts = elem?.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -147,32 +153,31 @@ export default function CustomCode(props) {
     }
   }
 
-  const elem = useRef();
-
   useEffect(() => {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 "
 `;
 
-exports[`React Embed 1`] = `
+exports[`React Native Embed 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
 export default function CustomCode(props) {
+  const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
   const [scriptsRun, setScriptsRun] = useState(() => []);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
+    if (elem?.current && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
+      const scripts = elem?.current.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -210,18 +215,16 @@ export default function CustomCode(props) {
     }
   }
 
-  const elem = useRef();
-
   useEffect(() => {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: \\"props.code\\" }} />;
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
 }
 "
 `;
 
-exports[`React Form block 1`] = `
+exports[`React Native Form block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
@@ -232,6 +235,7 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 export default function FormComponent(props) {
+  const formRef = useRef();
   const [state, setState] = useState(() => \\"unsubmitted\\");
 
   const [responseData, setResponseData] = useState(() => null);
@@ -338,8 +342,8 @@ export default function FormComponent(props) {
         }
       }
       const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
-      if (formRef.current) {
-        formRef.current.dispatchEvent(presubmitEvent);
+      if (formRef?.current) {
+        formRef?.current.dispatchEvent(presubmitEvent);
         if (presubmitEvent.defaultPrevented) {
           return;
         }
@@ -381,25 +385,25 @@ export default function FormComponent(props) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
             });
-            if (formRef.current) {
-              formRef.current.dispatchEvent(submitSuccessEvent);
+            if (formRef?.current) {
+              formRef?.current.dispatchEvent(submitSuccessEvent);
               if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
               /* TODO: option to turn this on/off? */ if (
                 props.resetFormOnSubmit !== false
               ) {
-                formRef.current.reset();
+                formRef?.current.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */ if (
               props.successUrl
             ) {
-              if (formRef.current) {
+              if (formRef?.current) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: { url: props.successUrl },
                 });
-                formRef.current.dispatchEvent(event);
+                formRef?.current.dispatchEvent(event);
                 if (!event.defaultPrevented) {
                   location.href = props.successUrl;
                 }
@@ -413,8 +417,8 @@ export default function FormComponent(props) {
           const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
             detail: { error: err },
           });
-          if (formRef.current) {
-            formRef.current.dispatchEvent(submitErrorEvent);
+          if (formRef?.current) {
+            formRef?.current.dispatchEvent(submitErrorEvent);
             if (submitErrorEvent.defaultPrevented) {
               return;
             }
@@ -425,7 +429,6 @@ export default function FormComponent(props) {
       );
     }
   }
-  const formRef = useRef();
   return (
     <View
       {...props.attributes}
@@ -482,12 +485,13 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Image 1`] = `
+exports[`React Native Image 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
 export default function Image(props) {
+  const pictureRef = useRef();
   const [scrollListener, setScrollListener] = useState(() => null);
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
@@ -509,14 +513,12 @@ export default function Image(props) {
     return !!props.lazy && isBrowser();
   }
 
-  const pictureRef = useRef();
-
   useEffect(() => {
     if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef.current) {
-          const rect = pictureRef.current.getBoundingClientRect();
+        if (pictureRef?.current) {
+          const rect = pictureRef?.current.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -580,7 +582,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Img 1`] = `
+exports[`React Native Img 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
@@ -602,7 +604,7 @@ export default function ImgComponent(props) {
 "
 `;
 
-exports[`React Input block 1`] = `
+exports[`React Native Input block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
@@ -628,17 +630,17 @@ export default function FormInputComponent(props) {
 "
 `;
 
-exports[`React RawText 1`] = `
+exports[`React Native RawText 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
 export default function RawText(props) {
-  return <View dangerouslySetInnerHTML={{ __html: \\"props.text || ''\\" }} />;
+  return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
 "
 `;
 
-exports[`React Section 1`] = `
+exports[`React Native Section 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -661,7 +663,7 @@ export default function SectionComponent(props) {
 "
 `;
 
-exports[`React Select block 1`] = `
+exports[`React Native Select block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { Builder } from \\"@builder.io/sdk\\";
@@ -690,7 +692,7 @@ export default function SelectComponent(props) {
 "
 `;
 
-exports[`React Stamped.io 1`] = `
+exports[`React Native Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -787,7 +789,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Submit button block 1`] = `
+exports[`React Native Submit button block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -801,23 +803,35 @@ export default function SubmitButton(props) {
 "
 `;
 
-exports[`React Text 1`] = `
+exports[`React Native Text 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 export default function Text(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
   return (
     <View
       contentEditable={allowEditingText || undefined}
-      dangerouslySetInnerHTML={{ __html: \\"props.text || props.content || ''\\" }}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
     />
   );
 }
 "
 `;
 
-exports[`React Textarea 1`] = `
+exports[`React Native Textarea 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -835,7 +849,7 @@ export default function Textarea(props) {
 "
 `;
 
-exports[`React Video 1`] = `
+exports[`React Native Video 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -856,7 +870,7 @@ export default function Video(props) {
       }}
       key={props.video || \\"no-src\\"}
       poster={props.posterImage}
-      autoPlay={props.autoPlay}
+      autoplay={props.autoPlay}
       muted={props.muted}
       controls={props.controls}
       loop={props.loop}
@@ -866,7 +880,7 @@ export default function Video(props) {
 "
 `;
 
-exports[`React multipleOnUpdate 1`] = `
+exports[`React Native multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -884,7 +898,7 @@ export default function MultipleOnUpdate(props) {
 "
 `;
 
-exports[`React multipleOnnUpdateWithDeps 1`] = `
+exports[`React Native multipleOnnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -910,7 +924,7 @@ export default function MultipleOnUpdateWithDeps(props) {
 "
 `;
 
-exports[`React onMount & onUnMount 1`] = `
+exports[`React Native onMount & onUnMount 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -931,7 +945,7 @@ export default function Comp(props) {
 "
 `;
 
-exports[`React onUpdate 1`] = `
+exports[`React Native onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -946,7 +960,7 @@ export default function OnUpdate(props) {
 "
 `;
 
-exports[`React onUpdateWithDeps 1`] = `
+exports[`React Native onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";

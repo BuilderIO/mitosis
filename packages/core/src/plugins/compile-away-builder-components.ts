@@ -102,7 +102,7 @@ export const components: CompileAwayComponentsMap = {
     );
   },
   BuilderAccordion(node: MitosisNode, context, components) {
-    const itemsJSON = node.bindings.items || '[]';
+    const itemsJSON = node.bindings.items?.code || '[]';
     const accordionItems: AccordionItem[] = JSON5.parse(itemsJSON);
     const children: MitosisNode[] = accordionItems.map((accordionItem) => {
       const titleChildren: MitosisNode[] = accordionItem.title.map((element) =>
@@ -188,25 +188,29 @@ export const components: CompileAwayComponentsMap = {
         properties: {
           ...node.properties,
           $name: 'section',
-          ...(node.bindings.lazyLoad === 'true' && {
+          ...(node.bindings.lazyLoad?.code === 'true' && {
             lazyLoad: 'true',
           }),
         },
         bindings: {
-          css: JSON.stringify({
-            width: '100%',
-            alignSelf: 'stretch',
-            flexGrow: '1',
-            boxSizing: 'border-box',
-            maxWidth: `${
-              (node.bindings.maxWidth && Number(node.bindings.maxWidth)) || 1200
-            }px`,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-          }),
+          css: {
+            code: JSON.stringify({
+              width: '100%',
+              alignSelf: 'stretch',
+              flexGrow: '1',
+              boxSizing: 'border-box',
+              maxWidth: `${
+                (node.bindings.maxWidth?.code &&
+                  Number(node.bindings.maxWidth.code)) ||
+                1200
+              }px`,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }),
+          },
         },
         children: node.children,
       }),
@@ -216,7 +220,8 @@ export const components: CompileAwayComponentsMap = {
   Columns(node: MitosisNode, context, components) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
       width:
-        parseFloat(item.properties.width || item.bindings.width || '0') || 0,
+        parseFloat(item.properties.width || item.bindings.width?.code || '0') ||
+        0,
       children: item.children,
     }));
     const gutterSize =
@@ -242,22 +247,24 @@ export const components: CompileAwayComponentsMap = {
           class: 'builder-columns',
         },
         bindings: {
-          css: JSON.stringify({
-            display: 'flex',
-            ...(properties.stackColumnsAt === 'never'
-              ? {}
-              : {
-                  [`@media (max-width: ${
-                    properties.stackColumnsAt !== 'tablet' ? 639 : 999
-                  }px)`]: {
-                    flexDirection:
-                      properties.reverseColumnsWhenStacked === 'true'
-                        ? 'column-reverse'
-                        : 'column',
-                    alignItems: 'stretch',
-                  },
-                }),
-          }),
+          css: {
+            code: JSON.stringify({
+              display: 'flex',
+              ...(properties.stackColumnsAt === 'never'
+                ? {}
+                : {
+                    [`@media (max-width: ${
+                      properties.stackColumnsAt !== 'tablet' ? 639 : 999
+                    }px)`]: {
+                      flexDirection:
+                        properties.reverseColumnsWhenStacked === 'true'
+                          ? 'column-reverse'
+                          : 'column',
+                      alignItems: 'stretch',
+                    },
+                  }),
+            }),
+          },
         },
         children: columns.map((col, index) => {
           return createMitosisNode({
@@ -267,24 +274,26 @@ export const components: CompileAwayComponentsMap = {
               class: 'builder-column',
             },
             bindings: {
-              css: JSON.stringify({
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch',
-                lineHeight: 'normal',
-                width: `${getColumnWidth(index)}`,
-                marginLeft: `${index === 0 ? 0 : gutterSize}px`,
-                ...(properties.stackColumnsAt === 'never'
-                  ? {}
-                  : {
-                      [`@media (max-width: ${
-                        properties.stackColumnsAt !== 'tablet' ? 639 : 999
-                      }px)`]: {
-                        width: '100%',
-                        marginLeft: 0,
-                      },
-                    }),
-              }),
+              css: {
+                code: JSON.stringify({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'stretch',
+                  lineHeight: 'normal',
+                  width: `${getColumnWidth(index)}`,
+                  marginLeft: `${index === 0 ? 0 : gutterSize}px`,
+                  ...(properties.stackColumnsAt === 'never'
+                    ? {}
+                    : {
+                        [`@media (max-width: ${
+                          properties.stackColumnsAt !== 'tablet' ? 639 : 999
+                        }px)`]: {
+                          width: '100%',
+                          marginLeft: 0,
+                        },
+                      }),
+                }),
+              },
             },
             children: col.children,
           });
@@ -297,8 +306,8 @@ export const components: CompileAwayComponentsMap = {
     const { backgroundSize, backgroundPosition } = node.properties;
     const { srcset } = node.properties;
 
-    let aspectRatio = node.bindings.aspectRatio
-      ? parseFloat(node.bindings.aspectRatio as string)
+    let aspectRatio = node.bindings.aspectRatio?.code
+      ? parseFloat(node.bindings.aspectRatio.code as string)
       : null;
     if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
       aspectRatio = null;
@@ -307,7 +316,7 @@ export const components: CompileAwayComponentsMap = {
     const image = node.properties.image!;
     const srcSet = srcset || generateBuilderIoSrcSet(image);
     const source =
-      node.bindings.noWebp !== 'true' &&
+      node.bindings.noWebp?.code !== 'true' &&
       createMitosisNode({
         name: 'source',
         properties: {
@@ -319,28 +328,29 @@ export const components: CompileAwayComponentsMap = {
       name: 'img',
       properties: noUndefined({
         $name: 'image',
-        loading: node.properties.lazy ? 'lazy' : undefined,
+        loading: 'lazy',
         src: node.properties.image,
         sizes: node.properties.sizes,
         srcset: srcSet || null,
       }),
       bindings: noUndefined({
-        loading: node.bindings.lazy ? '"lazy"' : undefined,
-        src: node.bindings.image,
-        sizes: node.bindings.sizes,
-        css: JSON.stringify({
-          objectFit: backgroundSize || 'cover',
-          objectPosition: backgroundPosition || 'cover',
-          ...(aspectRatio
-            ? {
-                position: 'absolute',
-                height: '100%',
-                width: '100%',
-                top: '0',
-                left: '0',
-              }
-            : {}),
-        }),
+        src: node.bindings.image?.code && { code: node.bindings.image?.code },
+        sizes: node.bindings.sizes?.code && { code: node.bindings.sizes?.code },
+        css: {
+          code: JSON.stringify({
+            objectFit: backgroundSize || 'cover',
+            objectPosition: backgroundPosition || 'cover',
+            ...(aspectRatio
+              ? {
+                  position: 'absolute',
+                  height: '100%',
+                  width: '100%',
+                  top: '0',
+                  left: '0',
+                }
+              : {}),
+          }),
+        },
       }),
     });
 
@@ -358,12 +368,14 @@ export const components: CompileAwayComponentsMap = {
           class: 'builder-image-sizer',
         },
         bindings: {
-          css: JSON.stringify({
-            width: '100%',
-            paddingTop: aspectRatio * 100 + '%',
-            pointerEvents: 'none',
-            fontSize: '0',
-          }),
+          css: {
+            code: JSON.stringify({
+              width: '100%',
+              paddingTop: aspectRatio * 100 + '%',
+              pointerEvents: 'none',
+              fontSize: '0',
+            }),
+          },
         },
       });
 
@@ -376,16 +388,18 @@ export const components: CompileAwayComponentsMap = {
           $name: 'image-contents',
         },
         bindings: {
-          css: JSON.stringify({
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'stretch',
-            position: 'absolute',
-            top: '0',
-            left: '0',
-            width: '100%',
-            height: '100%',
-          }),
+          css: {
+            code: JSON.stringify({
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+            }),
+          },
         },
         children: node.children,
       });
@@ -395,16 +409,18 @@ export const components: CompileAwayComponentsMap = {
     children && imageNodes.push(children);
 
     const href = node.properties.href;
-    const hrefBinding = node.bindings.href;
+    const hrefBinding = node.bindings.href?.code as string;
     if (href || hrefBinding) {
       const aHref = createMitosisNode({
         name: 'a',
         properties: {
           href: href,
         },
-        bindings: {
-          href: hrefBinding,
-        },
+        bindings: hrefBinding
+          ? {
+              href: { code: hrefBinding },
+            }
+          : undefined,
         children: imageNodes,
       });
       return wrapOutput(node, aHref, components);
@@ -413,8 +429,8 @@ export const components: CompileAwayComponentsMap = {
     }
   },
   Video(node: MitosisNode, context, components) {
-    let aspectRatio = node.bindings.aspectRatio
-      ? parseFloat(node.bindings.aspectRatio as string)
+    let aspectRatio = node.bindings.aspectRatio?.code
+      ? parseFloat(node.bindings.aspectRatio.code as string)
       : null;
     if (typeof aspectRatio === 'number' && isNaN(aspectRatio)) {
       aspectRatio = null;
@@ -435,20 +451,32 @@ export const components: CompileAwayComponentsMap = {
           preload: node.properties.lazy ? 'none' : undefined,
         }),
         bindings: noUndefined({
-          poster: node.bindings.posterImage,
-          autoplay: node.bindings.autoPlay,
-          muted: node.bindings.muted,
-          controls: node.bindings.controls,
-          playsinline: node.bindings.playsInline,
-          loop: node.bindings.loop,
-          css: JSON.stringify({
-            width: '100%',
-            height: '100%',
-            objectFit: node.properties.fit,
-            objectPosition: node.properties.position,
-            borderRadius: '1',
-            position: aspectRatio ? 'absolute' : '',
-          }),
+          poster: node.bindings.posterImage?.code && {
+            code: node.bindings.posterImage?.code,
+          },
+          autoplay: node.bindings.autoPlay?.code && {
+            code: node.bindings.autoPlay?.code,
+          },
+          muted: node.bindings.muted?.code && {
+            code: node.bindings.muted?.code,
+          },
+          controls: node.bindings.controls?.code && {
+            code: node.bindings.controls?.code,
+          },
+          playsinline: node.bindings.playsInline?.code && {
+            code: node.bindings.playsInline?.code,
+          },
+          loop: node.bindings.loop?.code && { code: node.bindings.loop?.code },
+          css: {
+            code: JSON.stringify({
+              width: '100%',
+              height: '100%',
+              objectFit: node.properties.fit,
+              objectPosition: node.properties.position,
+              borderRadius: '1',
+              position: aspectRatio ? 'absolute' : '',
+            }),
+          },
         }),
         children: [
           createMitosisNode({
@@ -457,9 +485,11 @@ export const components: CompileAwayComponentsMap = {
               type: 'video/mp4',
               src: node.properties.video,
             },
-            bindings: {
-              src: node.bindings.video,
-            },
+            bindings: noUndefined({
+              src: node.bindings.video?.code && {
+                code: node.bindings.video?.code as string,
+              },
+            }),
           }),
         ],
       }),
@@ -473,12 +503,14 @@ export const components: CompileAwayComponentsMap = {
             $name: 'builder-video-sizer',
           },
           bindings: {
-            css: JSON.stringify({
-              width: '100%',
-              paddingTop: aspectRatio * 100 + '%',
-              pointerEvents: 'none',
-              fontSize: '0',
-            }),
+            css: {
+              code: JSON.stringify({
+                width: '100%',
+                paddingTop: aspectRatio * 100 + '%',
+                pointerEvents: 'none',
+                fontSize: '0',
+              }),
+            },
           },
         }),
       );
@@ -492,16 +524,18 @@ export const components: CompileAwayComponentsMap = {
             $name: 'image-contents',
           },
           bindings: {
-            css: JSON.stringify({
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'stretch',
-              position: 'absolute',
-              top: '0',
-              left: '0',
-              width: '100%',
-              height: '100%',
-            }),
+            css: {
+              code: JSON.stringify({
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'stretch',
+                position: 'absolute',
+                top: '0',
+                left: '0',
+                width: '100%',
+                height: '100%',
+              }),
+            },
           },
           children: node.children,
         }),
@@ -513,7 +547,7 @@ export const components: CompileAwayComponentsMap = {
         $name: 'video-container',
       },
       bindings: {
-        css: JSON.stringify({ position: 'relative' }),
+        css: { code: JSON.stringify({ position: 'relative' }) },
       },
       children: videoContainerNodes,
     });
@@ -592,7 +626,14 @@ function noUndefined(obj: Record<string, any>): Record<string, any> {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key];
       if (value != null) {
-        cleanObj[key] = value;
+        if (typeof value == 'object') {
+          const ret = noUndefined(value);
+          if (Object.keys(ret).length) {
+            cleanObj[key] = ret;
+          }
+        } else {
+          cleanObj[key] = value;
+        }
       }
     }
   }

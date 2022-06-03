@@ -26,19 +26,21 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const [name, setName] = useState("Steve");
-    
+      const state = useState({
+        name: "Steve"
+      });
+      
       return (
         <div>
           <input
             css={{
               color: "red",
             }}
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={state.name}
+            onChange={(event) => { state.name = event.target.value }}
           />
           Hello
-          {name}! I can run in React, Vue, Solid, or Liquid!
+          {state.name}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
     }
@@ -48,7 +50,10 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
 
     export default function MyComponent(props) {
-      const [name, setName] = useState("Steve");
+      const state = useState({
+        name: "Steve"
+      });
+
 
       return (
         <div
@@ -64,8 +69,8 @@ export const templates: { [key: string]: string } = {
           <input
             class="shadow-md rounded w-full px-4 py-2"
             placeholder="What is your name?"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={state.name}
+            onChange={(event) => { state.name = event.target.value }}
           />
 
           <h1
@@ -75,7 +80,7 @@ export const templates: { [key: string]: string } = {
             }}
           >
             Hello,
-            {name}!
+            {state.name}!
           </h1>
         </div>
       );
@@ -86,36 +91,35 @@ export const templates: { [key: string]: string } = {
     import { useState, useRef } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const [name, setName] = useState("Steve");
-    
-      function onBlur() {
-        // Maintain focus
-        inputRef.focus();
-      }
-    
-      function lowerCaseName() {
-        return name.toLowerCase();
-      }
-    
       const inputRef = useRef();
+
+      const state = useState({
+        name: "Steve",
+        onBlur() {
+          inputRef.focus()
+        },
+        get lowerCaseName() {
+          return state.name.toLowerCase();
+        }
+      });
+
+    
     
       return (
         <div>
           {props.showInput && (
-            <>
-              <input
-                ref={inputRef}
-                css={{
-                  color: "red",
-                }}
-                value={name}
-                onBlur={(event) => onBlur()}
-                onChange={(event) => setName(event.target.value)}
-              />
-            </>
+            <input
+              ref={inputRef}
+              css={{
+                color: "red",
+              }}
+              value={state.name}
+              onBlur={(event) => state.onBlur()}
+              onChange={(event) => { state.name = event.target.value }}
+            />
           )}
           Hello
-          {lowerCaseName()}! I can run in React, Vue, Solid, or Liquid!
+          {state.lowerCaseName}! I can run in React, Vue, Solid, or Liquid!
         </div>
       );
     }
@@ -124,13 +128,16 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const [list, setList] = useState(["hello", "world"]);
-    
-      const [newItemName, setNewItemName] = useState("New item");
-    
-      function addItem() {
-        setList([...list, newItemName]);
-      }
+      const state = useState({
+        list: ["hello", "world"],
+        newItemName: "New item",
+        addItem() {
+          state.list = [
+            ...state.list, 
+            state.newItemName,
+          ]
+        }
+      })
     
       return (
         <div
@@ -145,8 +152,8 @@ export const templates: { [key: string]: string } = {
     
           <input
             class="shadow-md rounded w-full px-4 py-2"
-            value={newItemName}
-            onChange={(event) => setNewItemName(event.target.value)}
+            value={state.newItemName}
+            onChange={(event) => {state.newItemName = event.target.value}}
           />
     
           <button
@@ -154,13 +161,13 @@ export const templates: { [key: string]: string } = {
             css={{
               margin: "10px 0",
             }}
-            onClick={(event) => addItem()}
+            onClick={(event) => state.addItem()}
           >
             Add list item
           </button>
     
           <div class="shadow-md rounded">
-            {list.map((item) => (
+            {state.list.map((item) => (
               <div
                 class="border-gray-200 border-b"
                 css={{

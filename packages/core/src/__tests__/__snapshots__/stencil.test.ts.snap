@@ -5,6 +5,11 @@ exports[`Solid Basic 1`] = `
 
 @Component({
   tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
 })
 export default class MyBasicComponent {
   @State() name = \\"Steve\\";
@@ -14,7 +19,7 @@ export default class MyBasicComponent {
       <div>
         <input
           value={this.name}
-          onInput={(event) => (this.name = event.target.value)}
+          onInput={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -904,11 +909,21 @@ export default class Text {
   @Prop() text: any;
   @Prop() content: any;
 
+  @State() name = \\"Decadef20\\";
+
   render() {
     return (
       <div
         contentEditable={allowEditingText || undefined}
-        innerHTML={this.text || this.content || \\"\\"}
+        data-name={{
+          test: this.name || \\"any name\\",
+        }}
+        innerHTML={
+          this.text ||
+          this.content ||
+          this.name ||
+          '<p class=\\"text-lg\\">my name</p>'
+        }
       ></div>
     );
   }
@@ -978,7 +993,7 @@ export default class Video {
         }}
         key={this.video || \\"no-src\\"}
         poster={this.posterImage}
-        autoPlay={this.autoPlay}
+        autoplay={this.autoPlay}
         muted={this.muted}
         controls={this.controls}
         loop={this.loop}

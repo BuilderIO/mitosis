@@ -6,10 +6,15 @@ export default function MyBasicComponent() {
   });
 
   return (
-    <div>
+    <div
+      class="test"
+      css={{
+        padding: '10px',
+      }}
+    >
       <input
         value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
+        onChange={(myEvent) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>

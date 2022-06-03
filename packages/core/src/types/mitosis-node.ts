@@ -13,6 +13,7 @@ export type MitosisNode = {
    * }
    * ```
    */
+  scope: { [key: string]: Array<string> };
   properties: { [key: string]: string | undefined };
   /**
    * Key-value store of expression values for DOM attributes. These are always represented as strings.
@@ -26,6 +27,8 @@ export type MitosisNode = {
    * }
    * ```
    */
-  bindings: { [key: string]: string | undefined };
+  bindings: {
+    [key: string]: { code: string; arguments?: string[] } | undefined;
+  };
   children: MitosisNode[];
 };

@@ -8,7 +8,7 @@ export const DIRECTIVES: Record<
 > = {
   Show: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
-      const expr = node.bindings.when;
+      const expr = node.bindings.when?.code;
       this.isJSX && this.emit('{');
       this.emit(expr, '?');
       blockFn();
@@ -17,7 +17,7 @@ export const DIRECTIVES: Record<
     },
   For: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
-      const expr = node.bindings.each!;
+      const expr = node.bindings.each?.code!;
       this.isJSX && this.emit('{');
       this.emit('(', expr, '||[]).map(', '(function(__value__){');
       this.emit(
@@ -83,12 +83,13 @@ export function Image(props: ImageProps) {
       srcset: undefined as string | undefined,
     };
     if (isBuilderIoImage) {
-      image = updateQueryParam(image, 'format', 'webp');
+      const webpImage = updateQueryParam(image, 'format', 'webp');
       const srcset = ['100', '200', '400', '800', '1200', '1600', '2000']
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(' ') : [])
         .map((size) => {
-          return updateQueryParam(image, 'width', size) + ' ' + size + 'w';
+          return updateQueryParam(webpImage, 'width', size) + ' ' + size + 'w';
         })
+        .concat([image])
         .join(', ');
       imgProps.srcset = srcset;
       jsx = jsx = [

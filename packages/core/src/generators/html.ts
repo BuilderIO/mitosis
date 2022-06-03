@@ -1,7 +1,11 @@
 import { NodePath, types } from '@babel/core';
 import { camelCase } from 'lodash';
+import { kebabCase } from 'lodash';
 import { format } from 'prettier/standalone';
 import { hasProps } from '../helpers/has-props';
+import { hasStatefulDom } from '../helpers/has-stateful-dom';
+import { getRefs } from '../helpers/get-refs';
+import { mapRefs } from '../helpers/map-refs';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { collectCss } from '../helpers/collect-styles';
@@ -9,9 +13,14 @@ import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { hasComponent } from '../helpers/has-component';
+import { hasBindingsText } from '../helpers/has-bindings-text';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { isHtmlAttribute } from '../helpers/is-html-attribute';
+import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { getProps } from '../helpers/get-props';
+import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
@@ -43,30 +52,71 @@ type InternalToHtmlOptions = ToHtmlOptions & {
   namesMap: NumberRecord;
   experimental?: any;
 };
+interface BlockOptions {
+  contextVars?: string[];
+  context?: string;
+  scopeVars?: ScopeVars;
+  childComponents?: string[];
+  outputs?: string[];
+  props?: Set<string>;
+  ComponentName?: string;
+}
+
+const isAttribute = (key: string): boolean => {
+  return /-/.test(key);
+};
 
 const ATTRIBUTE_KEY_EXCEPTIONS_MAP: { [key: string]: string } = {
   class: 'className',
+  innerHtml: 'innerHTML',
 };
 
 const updateKeyIfException = (key: string): string => {
   return ATTRIBUTE_KEY_EXCEPTIONS_MAP[key] ?? key;
 };
 
-const needsSetAttribute = (key: string): boolean => {
-  return [key.includes('-')].some(Boolean);
-};
-
 const generateSetElementAttributeCode = (
   key: string,
+  tagName: string,
   useValue: string,
   options: InternalToHtmlOptions,
+  meta: any = {},
 ): string => {
   if (options?.experimental?.props) {
     return options?.experimental?.props(key, useValue, options);
   }
-  return needsSetAttribute(key)
-    ? `;el.setAttribute("${key}", ${useValue});`
-    : `;el.${updateKeyIfException(key)} = ${useValue};`;
+  const isKey = key === 'key';
+  const ignoreKey = /^(innerHTML|key|class|value)$/.test(key);
+  const isTextarea = key === 'value' && tagName === 'textarea';
+  const isDataSet = /^data-/.test(key);
+  const isComponent = Boolean(meta?.component);
+  const isHtmlAttr = isHtmlAttribute(key, tagName);
+  const setAttr = !ignoreKey && (isHtmlAttr || !isTextarea || isAttribute(key));
+  return [
+    // is html attribute or dash-case
+    setAttr ? `;el.setAttribute("${key}", ${useValue});` : '',
+
+    // not attr or dataset or html attr
+    !setAttr || !(isHtmlAttr || isDataSet || !isComponent || isKey)
+      ? `el.${updateKeyIfException(camelCase(key))} = ${useValue};`
+      : '',
+
+    // is component but not html attribute
+    isComponent && !isHtmlAttr
+      ? // custom-element is created but we're in the middle of the update loop
+        `
+      if (el.props) {
+        ;el.props.${camelCase(key)} = ${useValue};
+        if (el.update) {
+          ;el.update();
+        }
+      } else {
+        ;el.props = {};
+        ;el.props.${camelCase(key)} = ${useValue};
+      }
+      `
+      : '',
+  ].join('\n');
 };
 
 const addUpdateAfterSet = (
@@ -76,15 +126,30 @@ const addUpdateAfterSet = (
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        const value = item.bindings[key] as string;
+        const value = item.bindings[key]?.code as string;
 
         const newValue = addUpdateAfterSetInCode(value, options);
         if (newValue !== value) {
-          item.bindings[key] = newValue;
+          item.bindings[key]!.code = newValue;
         }
       }
     }
   });
+};
+
+const getChildComponents = (
+  json: MitosisComponent,
+  options: InternalToHtmlOptions,
+) => {
+  const childComponents: string[] = [];
+  json.imports.forEach(({ imports }) => {
+    Object.keys(imports).forEach((key) => {
+      if (imports[key] === 'default') {
+        childComponents.push(key);
+      }
+    });
+  });
+  return childComponents;
 };
 
 const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
@@ -92,7 +157,11 @@ const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
     if (typeof value === 'boolean') {
       return value;
     }
-    return new RegExp(scopeVar).test(value);
+    const checkVar = new RegExp(
+      '(\\.\\.\\.|,| |;|\\(|^|!)' + scopeVar + '(\\.|,| |;|\\)|$)',
+      'g',
+    );
+    return checkVar.test(value);
   });
 };
 const addScopeVars = (
@@ -111,12 +180,12 @@ const mappers: {
   [key: string]: (
     json: MitosisNode,
     options: InternalToHtmlOptions,
-    parentScopeVars: ScopeVars,
+    blockOptions: BlockOptions,
   ) => string;
 } = {
-  Fragment: (json, options, parentScopeVars) => {
+  Fragment: (json, options, blockOptions) => {
     return json.children
-      .map((item) => blockToHtml(item, options, parentScopeVars))
+      .map((item) => blockToHtml(item, options, blockOptions))
       .join('\n');
   },
 };
@@ -135,10 +204,20 @@ const getId = (json: MitosisNode, options: InternalToHtmlOptions) => {
   }`;
 };
 
+const createGlobalId = (name: string, options: InternalToHtmlOptions) => {
+  const newNameNum = (options.namesMap[name] || 0) + 1;
+  options.namesMap[name] = newNameNum;
+  return `${name}${options.prefix ? `-${options.prefix}` : ''}-${newNameNum}`;
+};
+
+// TODO: overloaded function
 const updateReferencesInCode = (
   code: string,
   options: InternalToHtmlOptions,
+  blockOptions: BlockOptions = {},
 ) => {
+  const contextVars = blockOptions.contextVars || [];
+  const context = blockOptions?.context || 'this.';
   if (options?.experimental?.updateReferencesInCode) {
     return options?.experimental?.updateReferencesInCode(code, options, {
       stripStateAndPropsRefs,
@@ -149,13 +228,16 @@ const updateReferencesInCode = (
       stripStateAndPropsRefs(code, {
         includeProps: false,
         includeState: true,
-        replaceWith: 'this.state.',
+        replaceWith: context + 'state.',
+        context,
       }),
       {
         // TODO: replace with `this.` and add setters that call this.update()
         includeProps: true,
         includeState: false,
-        replaceWith: 'this.props.',
+        replaceWith: context + 'props.',
+        contextVars,
+        context,
       },
     );
   }
@@ -177,43 +259,28 @@ const addOnChangeJs = (
 const blockToHtml = (
   json: MitosisNode,
   options: InternalToHtmlOptions,
-  parentScopeVars: ScopeVars = [],
+  blockOptions: BlockOptions = {},
 ) => {
+  const ComponentName = blockOptions.ComponentName;
+  const scopeVars = blockOptions?.scopeVars || [];
+  const childComponents = blockOptions?.childComponents || [];
+
   const hasData = Object.keys(json.bindings).length;
+  const hasDomState = /input|textarea|select/.test(json.name);
   let elId = '';
   if (hasData) {
     elId = getId(json, options);
-    json.properties['data-name'] = elId;
+    json.properties['data-el'] = elId;
   }
-  if (options?.experimental?.getId) {
-    elId = options?.experimental?.getId(elId, json, options, {
-      hasData,
-      getId,
-    });
-    json.properties['data-name'] = options?.experimental?.dataName(
-      elId,
-      json,
+  if (hasDomState) {
+    json.properties['data-dom-state'] = createGlobalId(
+      (ComponentName ? ComponentName + '-' : '') + json.name,
       options,
-      {
-        hasData,
-        getId,
-      },
-    );
-  }
-  if (options?.experimental?.mappers?.[json.name]) {
-    return options?.experimental?.mappers?.[json.name](
-      json,
-      options,
-      elId,
-      parentScopeVars,
-      blockToHtml,
-      addScopeVars,
-      addOnChangeJs,
     );
   }
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, parentScopeVars);
+    return mappers[json.name](json, options, blockOptions);
   }
 
   if (isChildren(json)) {
@@ -223,83 +290,76 @@ const blockToHtml = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (json.bindings._text) {
+  if (json.bindings._text?.code) {
     // TO-DO: textContent might be better performance-wise
     addOnChangeJs(
       elId,
       options,
       `
       ${addScopeVars(
-        parentScopeVars,
-        json.bindings._text,
+        scopeVars,
+        json.bindings._text.code as string,
         (scopeVar: string) =>
           `const ${scopeVar} = ${
             options.format === 'class' ? 'this.' : ''
-          }getContext(el, "${scopeVar}");`,
+          }getScope(el, "${scopeVar}");`,
       )}
-      ;el.innerText = ${json.bindings._text};`,
+      ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
+        json.bindings._text.code
+      });`,
     );
 
-    return `<span data-name="${elId}"><!-- ${
-      json.bindings._text as string
-    } --></span>`;
+    return `<template data-el="${elId}"><!-- ${json.bindings._text?.code} --></template>`;
   }
 
   let str = '';
 
   if (json.name === 'For') {
-    const itemName = json.properties._forName;
-    const indexName = json.properties._indexName;
-    const collectionName = json.properties._collectionName;
-    const scopedVars: ScopeVars = [
-      ...parentScopeVars,
-      itemName as string,
-      indexName as string,
-      collectionName as string,
-    ].filter(Boolean);
-
+    const forArguments = json?.scope?.For || [];
+    const localScopeVars: ScopeVars = [...scopeVars, ...forArguments];
+    const argsStr = forArguments.map((arg) => `"${arg}"`).join(',');
     addOnChangeJs(
       elId,
       options,
       // TODO: be smarter about rendering, deleting old items and adding new ones by
       // querying dom potentially
       `
-        let array = ${json.bindings.each};
-        let template = ${
-          options.format === 'class' ? 'this._root' : 'document'
-        }.querySelector('[data-template-for="${elId}"]');
+        let array = ${json.bindings.each?.code};
         ${
           options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, template, ${
-        itemName ? `"${itemName}"` : 'undefined'
-      }, ${indexName ? `"${indexName}"` : 'undefined'}, ${
-        collectionName ? `"${collectionName}"` : 'undefined'
-      });
+        }renderLoop(el, array, ${argsStr});
       `,
     );
     // TODO: decide on how to handle this...
     str += `
-      <span data-name="${elId}"></span>
-      <template data-template-for="${elId}">`;
+      <template data-el="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, scopedVars))
+        .map((item) =>
+          blockToHtml(item, options, {
+            ...blockOptions,
+            scopeVars: localScopeVars,
+          }),
+        )
         .join('\n');
     }
     str += '</template>';
   } else if (json.name === 'Show') {
-    const whenCondition = (json.bindings.when as string).replace(/;$/, '');
+    const whenCondition = (json.bindings.when?.code as string).replace(
+      /;$/,
+      '',
+    );
     addOnChangeJs(
       elId,
       options,
       `
         ${addScopeVars(
-          parentScopeVars,
+          scopeVars,
           whenCondition,
           (scopeVar: string) =>
             `const ${scopeVar} = ${
               options.format === 'class' ? 'this.' : ''
-            }getContext(el, "${scopeVar}");`,
+            }getScope(el, "${scopeVar}");`,
         )}
         const whenCondition = ${whenCondition};
         if (whenCondition) {
@@ -308,16 +368,18 @@ const blockToHtml = (
       `,
     );
 
-    str += `<template data-name="${elId}">`;
+    str += `<template data-el="${elId}">`;
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) => blockToHtml(item, options, blockOptions))
         .join('\n');
     }
 
     str += '</template>';
   } else {
-    str += `<${json.name} `;
+    const component = childComponents.find((impName) => impName === json.name);
+    const elSelector = component ? kebabCase(json.name) : json.name;
+    str += `<${elSelector} `;
 
     // For now, spread is not supported
     // if (json.bindings._spread === '_spread') {
@@ -347,10 +409,11 @@ const blockToHtml = (
     let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
-      if (key === '_spread' || key === 'ref' || key === 'css') {
+      if (key === '_spread' || key === 'css') {
         continue;
       }
-      const value = json.bindings[key] as string;
+      const value = json.bindings[key]?.code as string;
+      const cusArg = json.bindings[key]?.arguments || ['event'];
       // TODO: proper babel transform to replace. Util for this
       const useValue = value;
 
@@ -361,22 +424,22 @@ const blockToHtml = (
         }
         const fnName = camelCase(`on-${elId}-${event}`);
         const codeContent: string = removeSurroundingBlock(
-          updateReferencesInCode(useValue, options),
+          updateReferencesInCode(useValue, options, blockOptions),
         );
         options.js += `
           // Event handler for '${event}' event on ${elId}
           ${
             options.format === 'class'
-              ? `this.${fnName} = (event) => {`
-              : `function ${fnName} (event) {`
+              ? `this.${fnName} = (${cusArg.join(',')}) => {`
+              : `function ${fnName} (${cusArg.join(',')}) {`
           }
               ${addScopeVars(
-                parentScopeVars,
+                scopeVars,
                 codeContent,
                 (scopeVar: string) =>
                   `const ${scopeVar} = ${
                     options.format === 'class' ? 'this.' : ''
-                  }getContext(event.currentTarget, "${scopeVar}");`,
+                  }getScope(event.currentTarget, "${scopeVar}");`,
               )}
             ${codeContent}
           }
@@ -393,6 +456,8 @@ const blockToHtml = (
             ;el.addEventListener('${event}', ${fnIdentifier});
           `,
         );
+      } else if (key === 'ref') {
+        str += ` data-ref="${ComponentName}-${useValue}" `;
       } else {
         if (key === 'style') {
           addOnChangeJs(
@@ -400,18 +465,18 @@ const blockToHtml = (
             options,
             `
             ${addScopeVars(
-              parentScopeVars,
+              scopeVars,
               useValue as string,
               (scopeVar: string) =>
                 `const ${scopeVar} = ${
                   options.format === 'class' ? 'this.' : ''
-                }getContext(el, "${scopeVar}");`,
+                }getScope(el, "${scopeVar}");`,
             )}
             ;Object.assign(el.style, ${useValue});`,
           );
         } else {
           // gather all local vars to inject later
-          getScopeVars(parentScopeVars, useValue).forEach((key) => {
+          getScopeVars(scopeVars, useValue).forEach((key) => {
             // unique keys
             batchScopeVars[key] = true;
           });
@@ -420,7 +485,15 @@ const blockToHtml = (
             options,
             `
             ${injectOnce ? '' : startInjectVar}
-            ${generateSetElementAttributeCode(key, useValue, options)}
+            ${generateSetElementAttributeCode(
+              key,
+              elSelector,
+              useValue,
+              options,
+              {
+                component,
+              },
+            )}
             `,
           );
           if (!injectOnce) {
@@ -444,7 +517,7 @@ const blockToHtml = (
           (scopeVar: string) =>
             `const ${scopeVar} = ${
               options.format === 'class' ? 'this.' : ''
-            }getContext(el, "${scopeVar}");`,
+            }getScope(el, "${scopeVar}");`,
         )}
         `,
       );
@@ -456,7 +529,7 @@ const blockToHtml = (
     str += '>';
     if (json.children) {
       str += json.children
-        .map((item) => blockToHtml(item, options, parentScopeVars))
+        .map((item) => blockToHtml(item, options, blockOptions))
         .join('\n');
     }
     if (json.properties.innerHTML) {
@@ -464,7 +537,7 @@ const blockToHtml = (
       str += htmlDecode(json.properties.innerHTML);
     }
 
-    str += `</${json.name}>`;
+    str += `</${elSelector}>`;
   }
   return str;
 };
@@ -549,6 +622,7 @@ export const componentToHtml =
 
     const hasLoop = hasComponent('For', json);
     const hasShow = hasComponent('Show', json);
+    const hasTextBinding = hasBindingsText(json);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -588,6 +662,7 @@ export const componentToHtml =
             ),
         })};
         ${componentHasProps ? `let props = {};` : ''}
+        let context = null;
         let nodesToDestroy = [];
         let pendingUpdate = false;
         ${!json.hooks?.onInit?.code ? '' : 'let onInitOnce = false;'}
@@ -617,7 +692,7 @@ export const componentToHtml =
                 return '';
               }
               return `
-              document.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              document.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${value}
               });
             `;
@@ -656,10 +731,7 @@ export const componentToHtml =
             : `
             if (!onInitOnce) {
               ${updateReferencesInCode(
-                addUpdateAfterSetInCode(
-                  json.hooks?.onInit?.code as string,
-                  useOptions,
-                ),
+                addUpdateAfterSetInCode(json.hooks?.onInit?.code, useOptions),
                 useOptions,
               )}
               onInitOnce = true;
@@ -694,6 +766,12 @@ export const componentToHtml =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
+              if (el?.scope) {
+                child.scope = el.scope;
+              }
+              if (el?.context) {
+                child.context = el.context;
+              }
               nodesToDestroy.push(child);
             });
             el.after(elementFragment);
@@ -702,33 +780,73 @@ export const componentToHtml =
         `
         }
         ${
+          !hasTextBinding
+            ? ''
+            : `
+          // Helper text DOM nodes
+          function renderTextNode(el, text) {
+            const textNode = document.createTextNode(text);
+            if (el?.scope) {
+              textNode.scope = el.scope
+            }
+            if (el?.context) {
+              child.context = el.context;
+            }
+            el.after(textNode);
+            nodesToDestroy.push(el.nextSibling);
+          }
+          `
+        }
+        ${
           !hasLoop
             ? ''
             : `
           // Helper to render loops
-          function renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          function renderLoop(template, array, itemName, itemIndex, collectionName) {
+            const collection = [];
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              const children = Array.from(elementFragment.childNodes)
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
+              children.forEach((child) => {
                 if (itemName !== undefined) {
-                  child['__' + itemName] = value;
+                  scope[itemName] = value;
                 }
                 if (itemIndex !== undefined) {
-                  child['__' + itemIndex] = index;
+                  scope[itemIndex] = index;
                 }
                 if (collectionName !== undefined) {
-                  child['__' + collectionName] = array;
+                  scope[collectionName] = array;
                 }
-                el.appendChild(child);
+                child.scope = scope;
+                if (template.context) {
+                  child.context = template.context;
+                }
+                this.nodesToDestroy.push(child);
+                collection.unshift(child);
               });
+              collection.forEach(child => template.after(child));
             }
           }
 
-          function getContext(el, name) {
+          function getScope(el, name) {
             do {
-              let value = el['__' + name]
+              let value = el?.scope?.[name]
               if (value !== undefined) {
                 return value
               }
@@ -770,9 +888,9 @@ export const componentToHtml =
 export const componentToCustomElement =
   (options: ToHtmlOptions = {}): Transpiler =>
   ({ component }) => {
-    const kebabName = component.name
-      .replace(/([a-z])([A-Z])/g, '$1-$2')
-      .toLowerCase();
+    const ComponentName = component.name;
+    const kebabName = kebabCase(ComponentName);
+
     const useOptions: InternalToHtmlOptions = {
       prefix: kebabName,
       ...options,
@@ -785,10 +903,33 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+    const contextVars = Object.keys(json?.context?.get || {});
+    const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
+    const componentHasStatefulDom = hasStatefulDom(json);
+    const props = getProps(json);
+    const outputs = getPropFunctions(json);
+    const refs = Array.from(getRefs(json));
+    mapRefs(json, (refName) => `self.${refName}`);
+    const context: string[] = contextVars.map((variableName) => {
+      const token = json?.context?.get[variableName].name;
+      if (options?.experimental?.htmlContext) {
+        return options?.experimental?.htmlContext(variableName, token);
+      }
+      return `this.${variableName} = this.getContext(this._root, ${token})`;
+    });
+
+    const setContext = [];
+    for (const key in json.context.set) {
+      const { name, value, ref } = json.context.set[key];
+      setContext.push({ name, value, ref });
+    }
+
     addUpdateAfterSet(json, useOptions);
 
+    const hasContext = context.length;
     const hasLoop = hasComponent('For', json);
+    const hasScope = hasLoop;
     const hasShow = hasComponent('Show', json);
 
     if (options.plugins) {
@@ -809,7 +950,15 @@ export const componentToCustomElement =
     stripMetaProperties(json);
 
     let html = json.children
-      .map((item) => blockToHtml(item, useOptions))
+      .map((item) =>
+        blockToHtml(item, useOptions, {
+          childComponents,
+          props,
+          outputs,
+          ComponentName,
+          contextVars,
+        }),
+      )
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
       html = useOptions?.experimental?.childrenHtml(
@@ -822,7 +971,7 @@ export const componentToCustomElement =
 
     if (useOptions?.experimental?.cssHtml) {
       html += useOptions?.experimental?.cssHtml(css);
-    } else {
+    } else if (css.length) {
       html += `<style>${css}</style>`;
     }
 
@@ -853,15 +1002,35 @@ export const componentToCustomElement =
        *  <${kebabName}></${kebabName}>
        * 
        */
-      class ${component.name} extends ${
+      class ${ComponentName} extends ${
       useOptions?.experimental?.classExtends
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
+        ${refs.map((ref) => {
+          return `
+        get ${ref}() {
+          return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
+        }
+            `;
+        })}
+
+        get _root() {
+          return this.shadowRoot || this;
+        }
+
         constructor() {
           super();
           const self = this;
+          ${
+            // TODO: more than one context not injector
+            setContext.length === 1 && setContext?.[0]?.ref
+              ? `this.context = ${setContext[0].ref}`
+              : ''
+          }
+
           ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
+
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(
@@ -879,16 +1048,37 @@ export const componentToCustomElement =
                   includeProps: true,
                   includeState: false,
                   replaceWith: 'self.props.',
+                  contextVars,
+                  // correctly ref the class not state object
+                  context: 'self.',
                 },
               );
             },
           })};
+          if (!this.props) {
+            this.props = {};
+          }
           ${
-            componentHasProps /* TODO: accept these as attributes/properties on the custom element */
-              ? `this.props = {};`
-              : ''
+            !componentHasProps
+              ? ''
+              : `
+          this.componentProps = [${Array.from(props)
+            .map((prop) => `"${prop}"`)
+            .join(',')}];
+          `
           }
 
+          ${
+            !json.hooks.onUpdate?.length
+              ? ''
+              : `
+            this.updateDeps = [${json.hooks.onUpdate
+              ?.map((hook) =>
+                updateReferencesInCode(hook?.deps || '[]', useOptions),
+              )
+              .join(',')}];
+            `
+          }
 
           // used to keep track of all nodes created by show/for
           this.nodesToDestroy = [];
@@ -924,6 +1114,9 @@ export const componentToCustomElement =
             ${updateReferencesInCode(
               addUpdateAfterSetInCode(json.hooks.onUnMount.code, useOptions),
               useOptions,
+              {
+                contextVars,
+              },
             )}
             this.destroyAnyNodes(); // clean up nodes when component is destroyed
             ${!json.hooks?.onInit?.code ? '' : 'this.onInitOnce = false;'}
@@ -939,11 +1132,26 @@ export const componentToCustomElement =
           this.nodesToDestroy = [];
         }
 
-        get _root() {
-          return this.shadowRoot || this;
-        }
-
         connectedCallback() {
+          ${context.join('\n')}
+          ${
+            !componentHasProps
+              ? ''
+              : `
+          this.getAttributeNames().forEach((attr) => {
+            const jsVar = attr.replace(/-/g, '');
+            const regexp = new RegExp(jsVar, 'i');
+            this.componentProps.forEach(prop => {
+              if (regexp.test(prop)) {
+                const attrValue = this.getAttribute(attr);
+                if (this.props[prop] !== attrValue) {
+                  this.props[prop] = attrValue;
+                }
+              }
+            });
+          });
+          `
+          }
           ${
             useOptions?.experimental?.connectedCallbackUpdate
               ? useOptions?.experimental?.connectedCallbackUpdate(
@@ -955,8 +1163,8 @@ export const componentToCustomElement =
               this._root.innerHTML = \`
       ${html}\`;
               this.pendingUpdate = true;
-              this.render();
               ${!json.hooks?.onInit?.code ? '' : 'this.onInit();'}
+              this.render();
               this.onMount();
               this.pendingUpdate = false;
               this.update();
@@ -975,10 +1183,13 @@ export const componentToCustomElement =
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
                       addUpdateAfterSetInCode(
-                        json.hooks?.onInit?.code as string,
+                        json.hooks?.onInit?.code,
                         useOptions,
                       ),
                       useOptions,
+                      {
+                        contextVars,
+                      },
                     )}
                     this.onInitOnce = true;
                   }`
@@ -1001,6 +1212,12 @@ export const componentToCustomElement =
             const elementFragment = el.content.cloneNode(true);
             const children = Array.from(elementFragment.childNodes)
             children.forEach(child => {
+              if (el?.scope) {
+                child.scope = el.scope;
+              }
+              if (el?.context) {
+                child.context = el.context;
+              }
               this.nodesToDestroy.push(child);
             });
             el.after(elementFragment);
@@ -1030,6 +1247,7 @@ export const componentToCustomElement =
                 ${updateReferencesInCode(
                   addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                   useOptions,
+                  { contextVars },
                 )}
                 `
           }
@@ -1040,8 +1258,37 @@ export const componentToCustomElement =
             !json.hooks.onUpdate?.length
               ? ''
               : `
-            ${json.hooks.onUpdate.reduce((code, hook) => {
-              code += updateReferencesInCode(hook.code, useOptions);
+              const self = this;
+            ${json.hooks.onUpdate.reduce((code, hook, index) => {
+              // create check update
+              if (hook?.deps) {
+                code += `
+                ;(function (__prev, __next) {
+                  const __hasChange = __prev.find((val, index) => val !== __next[index]);
+                  if (__hasChange !== undefined) {
+                    ${updateReferencesInCode(hook.code, useOptions, {
+                      contextVars,
+                      context: 'self.',
+                    })}
+                    self.updateDeps[${index}] = __next;
+                  }
+                }(self.updateDeps[${index}], ${updateReferencesInCode(
+                  hook?.deps || '[]',
+                  useOptions,
+                  {
+                    contextVars,
+                    context: 'self.',
+                  },
+                )}));
+                `;
+              } else {
+                code += `
+                ${updateReferencesInCode(hook.code, useOptions, {
+                  contextVars,
+                  context: 'self.',
+                })}
+                `;
+              }
               return code + '\n';
             }, '')} 
             `
@@ -1053,39 +1300,69 @@ export const componentToCustomElement =
             return;
           }
           this.pendingUpdate = true;
-          ${
-            !useOptions?.experimental?.shouldComponentUpdateStart
-              ? ''
-              : `
-            ${useOptions?.experimental?.shouldComponentUpdateStart(
-              json,
-              useOptions,
-            )}
-            `
-          }
           this.render();
           this.onUpdate();
-          ${
-            !useOptions?.experimental?.shouldComponentUpdateEnd
-              ? ''
-              : `
-            ${useOptions?.experimental?.shouldComponentUpdateEnd(
-              json,
-              useOptions,
-            )}
-            `
-          }
           this.pendingUpdate = false;
         }
 
         render() {
+          ${
+            !componentHasStatefulDom
+              ? ''
+              : `
+          // grab previous input state
+          const preStateful = this.getStateful(this._root);
+          const preValues = this.prepareHydrate(preStateful);
+          `
+          }
+
           // re-rendering needs to ensure that all nodes generated by for/show are refreshed
           this.destroyAnyNodes();
+          this.updateBindings();
+
           ${
-            useOptions?.experimental?.updateBindings
-              ? useOptions?.experimental?.updateBindings(json, useOptions)
-              : 'this.updateBindings();'
+            !componentHasStatefulDom
+              ? ''
+              : `
+          // hydrate input state
+          if (preValues.length) {
+            const nextStateful = this.getStateful(this._root);
+            this.hydrateDom(preValues, nextStateful);
           }
+          `
+          }
+        }
+        ${
+          !componentHasStatefulDom
+            ? ''
+            : `
+            getStateful(el) {
+              const stateful = el.querySelectorAll('[data-dom-state]');
+              return stateful ? Array.from(stateful) : [];
+            }
+            prepareHydrate(stateful) {
+              return stateful.map(el => {
+                return {
+                  id: el.dataset.domState,
+                  value: el.value,
+                  active: document.activeElement === el,
+                  selectionStart: el.selectionStart
+                };
+              });
+            }
+            hydrateDom(preValues, stateful) {
+              return stateful.map((el, index) => {
+                const prev = preValues.find((prev) => el.dataset.domState === prev.id);
+                if (prev) {
+                  el.value = prev.value;
+                  if (prev.active) {
+                     el.focus();
+                     el.selectionStart = prev.selectionStart;
+                  }
+                }
+              });
+            }
+          `
         }
 
         updateBindings() {
@@ -1108,7 +1385,9 @@ export const componentToCustomElement =
                   useOptions,
                 );
               } else {
-                code = updateReferencesInCode(value, useOptions);
+                code = updateReferencesInCode(value, useOptions, {
+                  contextVars,
+                });
               }
               return `
               ${
@@ -1117,7 +1396,7 @@ export const componentToCustomElement =
               ${useOptions?.experimental?.generateQuerySelectorAll(key, code)}
               `
                   : `              
-              this._root.querySelectorAll("[data-name='${key}']").forEach((el) => {
+              this._root.querySelectorAll("[data-el='${key}']").forEach((el) => {
                 ${code}
               })
               `
@@ -1127,39 +1406,100 @@ export const componentToCustomElement =
             .join('\n\n')}
         }
 
+        // Helper to render content
+        renderTextNode(el, text) {
+          const textNode = document.createTextNode(text);
+          if (el?.scope) {
+            textNode.scope = el.scope;
+          }
+          if (el?.context) {
+            textNode.context = el.context;
+          }
+          el.after(textNode);
+          this.nodesToDestroy.push(el.nextSibling);
+        }
+        ${
+          !hasContext
+            ? ''
+            : `
+            // get Context Helper
+            getContext(el, token) {
+              do {
+                let value;
+                if (el?.context?.get) {
+                  value = el.context.get(token);
+                } else if (el?.context?.[token]) {
+                  value = el.context[token];
+                }
+                if (value !== undefined) {
+                  return value;
+                }
+              } while ((el = el.parentNode));
+            }
+            `
+        }
+        ${
+          !hasScope
+            ? ''
+            : `
+            // scope helper
+            getScope(el, name) {
+              do {
+                let value = el?.scope?.[name]
+                if (value !== undefined) {
+                  return value
+                }
+              } while ((el = el.parentNode));
+            }
+            `
+        }
+
         ${
           !hasLoop
             ? ''
             : `
 
           // Helper to render loops
-          renderLoop(el, array, template, itemName, itemIndex, collectionName) {
-            el.innerHTML = "";
+          renderLoop(template, array, itemName, itemIndex, collectionName) {
+            const collection = [];
             for (let [index, value] of array.entries()) {
-              let tmp = document.createElement("span");
-              tmp.innerHTML = template.innerHTML;
-              Array.from(tmp.children).forEach((child) => {
+              const elementFragment = template.content.cloneNode(true);
+              const children = Array.from(elementFragment.childNodes)
+              const localScope = {};
+              let scope = localScope;
+              if (template?.scope) {
+                const getParent = {
+                  get(target, prop, receiver) {
+                    if (prop in target) {
+                      return target[prop];
+                    }
+                    if (prop in template.scope) {
+                      return template.scope[prop];
+                    }
+                    return target[prop];
+                  }
+                };
+                scope = new Proxy(localScope, getParent);
+              }
+              children.forEach((child) => {
                 if (itemName !== undefined) {
-                  child['__' + itemName] = value;
+                  scope[itemName] = value;
                 }
                 if (itemIndex !== undefined) {
-                  child['__' + itemIndex] = index;
+                  scope[itemIndex] = index;
                 }
                 if (collectionName !== undefined) {
-                  child['__' + collectionName] = array;
+                  scope[collectionName] = array;
                 }
-                el.appendChild(child);
+                child.scope = scope;
+                if (template.context) {
+                  child.context = context;
+                }
+                this.nodesToDestroy.push(child);
+                collection.unshift(child)
               });
             }
-          }
-        
-          getContext(el, name) {
-            do {
-              let value = el['__' + name]
-              if (value !== undefined) {
-                return value
-              }
-            } while ((el = el.parentNode));
+            collection.forEach(child => template.after(child));
           }
         `
         }
@@ -1172,7 +1512,7 @@ export const componentToCustomElement =
               component,
               useOptions,
             )
-          : `customElements.define('${kebabName}', ${component.name});`
+          : `customElements.define('${kebabName}', ${ComponentName});`
       }
     `;
 

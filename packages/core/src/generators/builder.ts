@@ -52,8 +52,7 @@ const componentMappers: {
         Symbol(node, options) {
           const child = node.children[0];
           const symbolOptions =
-            (node.bindings.symbol &&
-              json5.parse(node.bindings.symbol as string)) ||
+            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) ||
             {};
 
           if (child) {
@@ -98,8 +97,8 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         repeat: {
-          collection: node.bindings.each as string,
-          itemName: node.properties._forName as string,
+          collection: node.bindings.each?.code as string,
+          itemName: node.properties._forName,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
@@ -116,7 +115,7 @@ const componentMappers: {
           name: 'Core:Fragment',
         },
         bindings: {
-          show: node.bindings.when as string,
+          show: node.bindings.when?.code as string,
         },
         children: node.children
           .filter(filterEmptyTextNodes)
@@ -167,15 +166,15 @@ export const blockToBuilder = (
   if (mapper) {
     return mapper(json, options);
   }
-  if (json.properties._text || json.bindings._text) {
+  if (json.properties._text || json.bindings._text?.code) {
     return el(
       {
         tagName: 'span',
         bindings: {
-          ...(json.bindings._text
+          ...(json.bindings._text?.code
             ? {
-                'component.options.text': json.bindings._text as string,
-                'json.bindings._text': undefined as any,
+                'component.options.text': json.bindings._text.code,
+                'json.bindings._text.code': undefined as any,
               }
             : {}),
         },
@@ -205,7 +204,7 @@ export const blockToBuilder = (
           eventBindingKeyRegex,
           firstCharMatchForEventBindingKey.toLowerCase(),
         )
-      ] = removeSurroundingBlock(bindings[key] as string) as string;
+      ] = removeSurroundingBlock(bindings[key]?.code as string);
       delete bindings[key];
     }
   }
@@ -221,7 +220,7 @@ export const blockToBuilder = (
         continue;
       }
       const value = bindings[key];
-      const parsed = attempt(() => json5.parse(value as string));
+      const parsed = attempt(() => json5.parse(value?.code as string));
 
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
@@ -231,7 +230,7 @@ export const blockToBuilder = (
     }
   }
 
-  const hasCss = !!bindings.css;
+  const hasCss = !!bindings.css?.code;
 
   let responsiveStyles: {
     large: Partial<CSSStyleDeclaration>;
@@ -242,7 +241,7 @@ export const blockToBuilder = (
   };
 
   if (hasCss) {
-    const cssRules = json5.parse(bindings.css as string);
+    const cssRules = json5.parse(bindings.css?.code as string);
     const cssRuleKeys = Object.keys(cssRules);
     for (const ruleKey of cssRuleKeys) {
       const mediaQueryMatch = ruleKey.match(mediaQueryRegex);
@@ -290,10 +289,8 @@ export const blockToBuilder = (
       },
       properties: thisIsComponent
         ? undefined
-        : omitMetaProperties(json.properties as any),
-      bindings: thisIsComponent
-        ? builderBindings
-        : omit(bindings as any, 'css'),
+        : omitMetaProperties(json.properties),
+      bindings: thisIsComponent ? builderBindings : omit(bindings, 'css'),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)
@@ -310,7 +307,7 @@ export const componentToBuilder =
 
     const result = fastClone({
       data: {
-        httpRequests: (component?.meta?.useMetadata as any)?.httpRequests,
+        httpRequests: component?.meta?.useMetadata?.httpRequests,
         jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 

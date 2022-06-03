@@ -1,7 +1,8 @@
 {
   "name": "@builder.io/mitosis-repo",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "private": true,
   "version": "0.0.0",
@@ -13,7 +14,7 @@
     "lerna": "lerna",
     "ci:build": "yarn workspaces foreach -pt --exclude @builder.io/mitosis-fiddle --verbose run build",
     "ci:lint": "yarn lint:prettier",
-    "ci:test": "yarn workspaces foreach run test",
+    "ci:test": "yarn workspaces foreach run test --passWithNoTests",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
     "fmt": "yarn fmt:prettier",
@@ -24,7 +25,8 @@
     "lint:prettier": "yarn prettier --check",
     "prerelease": "yarn build",
     "prettier": "prettier '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
-    "release": "lerna publish"
+    "release": "lerna publish",
+    "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev"
   },
   "repository": {
     "type": "git",
