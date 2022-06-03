@@ -262,14 +262,18 @@ export const blockToReact = (
   return str + `</${json.name}>`;
 };
 
-const getRefsString = (json: MitosisComponent, refs = Object.keys(json.refs)) => {
+const getRefsString = (
+  json: MitosisComponent,
+  refs = Object.keys(json.refs),
+) => {
   let str = '';
   const domRefs = getRefs(json);
 
   for (const ref of refs) {
     const typeParameter = json['refs'][ref]?.typeParameter || '';
     // domRefs must have null argument
-    const argument = json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
+    const argument =
+      json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
     str += `\nconst ${ref} = useRef${
       typeParameter ? `<${typeParameter}>` : ''
     }(${argument});`;
