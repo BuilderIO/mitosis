@@ -498,13 +498,13 @@ exports[`webcomponent Basic Ref 1`] = `
  *
  */
 class MyMasicRefComponent extends HTMLElement {
-  get inputRef() {
+  get _inputRef() {
     return this._root.querySelector(
       \\"[data-ref='MyMasicRefComponent-inputRef']\\"
     );
   }
 
-  get inputNoArgRef() {
+  get _inputNoArgRef() {
     return this._root.querySelector(
       \\"[data-ref='MyMasicRefComponent-inputNoArgRef']\\"
     );
@@ -522,7 +522,7 @@ class MyMasicRefComponent extends HTMLElement {
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
         // Maintain focus
-        self.inputRef.focus();
+        self._inputRef.focus();
       },
       lowerCaseName: function lowerCaseName() {
         return self.state.name.toLowerCase();
@@ -767,8 +767,8 @@ class MyMasicRefComponent extends HTMLElement {
     this.state = {
       handlerClick: function handlerClick(event) {
         event.preventDefault();
-        console.log(\\"current value\\", self.holdValueRef);
-        self.holdValueRef = self.holdValueRef + \\"JS\\";
+        console.log(\\"current value\\", self._holdValueRef);
+        self._holdValueRef = self._holdValueRef + \\"JS\\";
       },
     };
     if (!this.props) {
@@ -785,7 +785,7 @@ class MyMasicRefComponent extends HTMLElement {
       this.state.handlerClick(evt);
     };
 
-    this.holdValueRef = \\"Patrick\\";
+    this._holdValueRef = \\"Patrick\\";
 
     if (undefined) {
       this.attachShadow({ mode: \\"open\\" });
@@ -2057,7 +2057,7 @@ exports[`webcomponent Image 1`] = `
        */
       class Image extends HTMLElement {
         
-        get pictureRef() {
+        get _pictureRef() {
           return this._root.querySelector(\\"[data-ref='Image-pictureRef']\\")
         }
             
@@ -2105,7 +2105,7 @@ exports[`webcomponent Image 1`] = `
           }
         
 
-          this.pictureRef = 
+          this._pictureRef = 
 
           if (undefined) {
             this.attachShadow({ mode: 'open' })
@@ -2207,8 +2207,9 @@ exports[`webcomponent Image 1`] = `
                 if (this.state.useLazyLoading()) {
   // throttled scroll capture listener
   const listener = () => {
-    if (self.pictureRef) {
-      const rect = self.pictureRef.getBoundingClientRect();
+    if (self._pictureRef) {
+      const rect = self._pictureRef.getBoundingClientRect();
+
       const buffer = window.innerHeight / 2;
 
       if (rect.top < window.innerHeight + buffer) {

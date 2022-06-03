@@ -913,7 +913,7 @@ export const componentToCustomElement =
     const jsRefs = Object.keys(json.refs).filter(
       (ref) => !domRefs.find((domRef) => domRef !== ref),
     );
-    mapRefs(json, (refName) => `self.${refName}`);
+    mapRefs(json, (refName) => `self._${refName}`);
     const context: string[] = contextVars.map((variableName) => {
       const token = json?.context?.get[variableName].name;
       if (options?.experimental?.htmlContext) {
@@ -1013,7 +1013,7 @@ export const componentToCustomElement =
         ${domRefs
           .map((ref) => {
             return `
-        get ${ref}() {
+        get _${ref}() {
           return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
         }
             `;
@@ -1101,7 +1101,7 @@ export const componentToCustomElement =
             .map((ref) => {
               // const typeParameter = json['refs'][ref]?.typeParameter || '';
               const argument = json['refs'][ref]?.argument || '';
-              return `this.${ref} = ${argument}`;
+              return `this._${ref} = ${argument}`;
             })
             .join('\n')}
 
