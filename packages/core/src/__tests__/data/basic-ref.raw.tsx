@@ -6,7 +6,7 @@ export interface Props {
 
 export default function MyBasicRefComponent(props: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef(undefined);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
 
   const state = useState({
     name: 'PatrickJS',

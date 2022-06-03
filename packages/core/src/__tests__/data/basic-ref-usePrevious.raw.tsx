@@ -4,10 +4,10 @@ export interface Props {
   showInput: boolean;
 }
 
-export function usePrevious(value: any) {
+export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef(null);
+  let ref = useRef<T>(null);
   // Store current value in ref
   onUpdate(() => {
     ref = value;
@@ -27,7 +27,7 @@ export default function MyPreviousComponent(props: Props) {
     prevCount = state.count;
   }, [state.count]); //
   // Get the previous value (was passed into hook on last render)
-  // const prevCount = usePrevious(count);
+  // const prevCount = usePrevious(state.count);
   // Display both current and previous count value
   return (
     <div>
