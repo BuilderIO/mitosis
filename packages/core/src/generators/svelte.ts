@@ -248,13 +248,23 @@ export const blockToSvelte: BlockToSvelte = ({
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
+  function normalizeStr(str: string) {
+    return str
+      .trim()
+      .replace(/\n|\r/g, '')
+      .replace(/^{/, '')
+      .replace(/}$/, '')
+      .replace(/;$/, '')
+      .replace(/\s+/g, '');
+  }
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
+        const { arguments: cusArgs = ['event'] } = onChange;
         if (
-          onChange.code.replace(/\s+/g, '') ===
-          `${value.code}=event.target.value`
+          normalizeStr(onChange.code) ===
+          `${normalizeStr(value.code)}=${cusArgs[0]}.target.value`
         ) {
           delete item.bindings.value;
           delete item.bindings.onChange;
