@@ -335,6 +335,20 @@ export const componentToAngular =
       }
     })
     export default class ${component.name} {
+
+      ${Array.from(props)
+        .filter((item) => !item.startsWith('slot') && item !== 'children')
+        .map((item) => `@Input() ${item}: any`)
+        .join('\n')}
+
+      ${outputs.join('\n')}
+
+      ${Array.from(domRefs)
+        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
+        .join('\n')}
+
+      ${dataString}
+
       ${jsRefs
         .map((ref) => {
           const argument = component.refs[ref].argument;
@@ -350,18 +364,6 @@ export const componentToAngular =
           };`;
         })
         .join('\n')}
-      ${outputs.join('\n')}
-
-      ${Array.from(props)
-        .filter((item) => !item.startsWith('slot') && item !== 'children')
-        .map((item) => `@Input() ${item}: any`)
-        .join('\n')}
-
-      ${Array.from(domRefs)
-        .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
-        .join('\n')}
-
-      ${dataString}
 
       constructor(\n${injectables.join(',\n')}) {
         ${
