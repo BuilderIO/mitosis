@@ -257,7 +257,7 @@ export class SrcBuilder {
             ? binding.code
             : binding;
         const key = lastProperty(rawKey);
-        if (!binding) {
+        if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
