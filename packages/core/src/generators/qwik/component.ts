@@ -203,9 +203,9 @@ function addComponentOnMount(
     component.inputs.forEach((input) => {
       input.defaultValue !== undefined &&
         inputInitializer.push(
-          'if(state.',
+          'if(!state.hasOwnProperty("',
           input.name,
-          '===undefined)state.',
+          '"))state.',
           input.name,
           '=',
           JSON.stringify(input.defaultValue),
