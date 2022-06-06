@@ -889,16 +889,22 @@ export function parseJsx(
             context.builder.component.exports = exportsOrLocalVariables.reduce(
               (pre, node) => {
                 let name, isFunction;
-                if (babel.types.isExportNamedDeclaration(node)) {
-                  name = (node.declaration as any).declarations[0].id.name;
+                if (
+                  babel.types.isExportNamedDeclaration(node) &&
+                  babel.types.isVariableDeclaration(node.declaration) &&
+                  babel.types.isIdentifier(node.declaration.declarations[0].id)
+                ) {
+                  name = node.declaration.declarations[0].id.name;
                   isFunction = babel.types.isFunction(
-                    (node.declaration as any).declarations[0].init,
+                    node.declaration.declarations[0].init,
                   );
-                }
-                if (babel.types.isVariableDeclaration(node)) {
-                  name = (node.declarations as any)[0].id.name;
+                } else if (
+                  babel.types.isVariableDeclaration(node) &&
+                  babel.types.isIdentifier(node.declarations[0].id)
+                ) {
+                  name = node.declarations[0].id.name;
                   isFunction = babel.types.isFunction(
-                    (node.declarations as any)[0].init,
+                    node.declarations[0].init,
                   );
                 }
                 if (name) {
