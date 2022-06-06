@@ -2,7 +2,7 @@ import { useState } from '@builder.io/mitosis';
 
 export const DEFAULT_VALUES = {
   name: 'Steve',
-}
+};
 
 export default function MyBasicComponent() {
   const state = useState({

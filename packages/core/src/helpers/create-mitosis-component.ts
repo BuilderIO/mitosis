@@ -5,6 +5,7 @@ export const createMitosisComponent = (
 ): MitosisComponent => ({
   '@type': '@builder.io/mitosis/component',
   imports: [],
+  exports: {},
   inputs: [],
   meta: {},
   state: {},

@@ -31,7 +31,7 @@ describe('Vue', () => {
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
   });
-  return
+  return;
 
   test('Input block', () => {
     const component = parseJsx(inputBlock);

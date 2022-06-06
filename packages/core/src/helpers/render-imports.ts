@@ -135,5 +135,7 @@ export const renderPreComponent = (
   `;
 
 export const renderExportAndLocal = (component: MitosisComponent): string => {
-  return  Object.keys(component.exports || {}).map(key =>  component.exports[key].code).join('\n');
-}
+  return Object.keys(component.exports || {})
+    .map((key) => component.exports![key].code)
+    .join('\n');
+};
