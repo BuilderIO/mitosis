@@ -4,8 +4,6 @@ export const DEFAULT_VALUES = {
   name: 'Steve',
 }
 
-// const log = (...args: any) => console.log(...args);
-
 export default function MyBasicComponent() {
   const state = useState({
     name: 'Steve',

@@ -1,6 +1,6 @@
 import { MitosisNode } from '../types/mitosis-node';
 
-export function getBindingsCode(children: MitosisNode[]) {
+export function getBindingsCode(children: MitosisNode[]): string[] {
     const bindings: string[] = [];
     children.forEach(child => {
         if (child.bindings) {

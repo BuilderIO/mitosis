@@ -363,10 +363,14 @@ const componentFunctionToJson = (
     }
   }
 
-  const { exports } = context.builder.component
-  if(exports) {
+  const { exports: localExports } = context.builder.component
+  if(localExports) {
     const bindingsCode = getBindingsCode(children)
-    console.log("bindingsCode", bindingsCode)
+    Object.keys(localExports).forEach(name => {
+      const found = bindingsCode.find((code: string) => code.match(new RegExp(`\\b${name}\\b`)))
+      localExports[name].usedInLocal = Boolean(found)
+    })
+    context.builder.component.exports = localExports
   }
 
   return createMitosisComponent({
@@ -867,7 +871,7 @@ export function parseJsx(
             );
 
             const exportsOrLocalVariables = path.node.body.filter((statement) => 
-              !isImportOrDefaultExport(statement) && !isTypeOrInterface(statement)
+              !isImportOrDefaultExport(statement) && !isTypeOrInterface(statement) && !types.isExpressionStatement(statement)
             )
 
             context.builder.component.exports = exportsOrLocalVariables.reduce((pre, node) => {
@@ -890,8 +894,6 @@ export function parseJsx(
               }
               return pre
             }, {} as MitosisExport)
-
-            console.log("context.builder.component.exports", context.builder.component.exports)
 
             let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
