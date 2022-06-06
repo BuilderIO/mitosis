@@ -28,10 +28,9 @@
 - [Getting Started](#getting-started)
 - [Docs](#docs)
 - [Why use Mitosis?](#why-use-mitosis)
-  - [Component libraries](#component-libraries)
-  - [Modern workflows for all platforms](#modern-workflows-for-all-platforms)
-  - [JS framework fatigue](#js-framework-fatigue)
-  - [Design to code](#design-to-code)
+  - [Design Systems Maintainers](#design-systems-maintainers)
+  - [Teams using multiple web frameworks](#teams-using-multiple-web-frameworks)
+  - [Teams building web SDKs](#teams-building-web-sdks)
 - [Status](#status)
 - [Contribute](#contribute)
 - [Coming soon](#coming-soon)
@@ -47,7 +46,7 @@ The best way to learn Mitosis is to clone our [example project](./examples/basic
 
 ## Overview
 
-[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 "Mitosis Video")
+[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
 
 ## Docs
 
@@ -55,25 +54,25 @@ Curious about how Mitosis code works under the hood, and how to use it? Learn mo
 
 ## Why use Mitosis?
 
-### Component libraries
+Mitosis is an incredibly powerful and flexible tool. So far, we have identified 3 broad categories of engineering teams that stand to benefit greatly from it:
 
-Providing a UI component library across multiple frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With Mitosis, you can write once and run everywhere while maintaining full compatibilty with the target framework.
+### Design Systems Maintainers
 
-### Modern workflows for all platforms
+If you are the maintainer of a design system library that started off in one web framework, then you have felt the tremendous amount of maintenance pain and duplication when creating new versions for subsequent frameworks. Look no further than the popular React library [Chakra UI](https://chakra-ui.com/), and how the maintainers have decided to create [Zag.js](https://zagjs.com/overview/introduction#motivation) after feeling the pain of maintaining state-logic code across both their React and Vue libraries. While Zag.js focuses on writing framework-agnostic interactions, Mitosis focuses on writing framework-specific components. (PS: We are working on building examples that combine these two together. TBD!)
 
-Mitosis allows you to incrementally adopt modern and familiar workflows for many different platforms. For instance, when working with Shopify, you can server side render to liquid and hydrate with React.
+### Teams using multiple web frameworks
 
-### JS framework fatigue
+If you are part of a team/organization that has multiple frontends built in different frameworks, then you know that coordinating your design system across all of them for a cohesive experience and feel is an absolute nightmare. Mitosis is an excellent tool to eliminate this class of problems, as it allows you to define your designs in your components once and deploy them to all of your separate frontends.
 
-If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing components at a higher level of abstraction allows you to move from one to another with ease.
+### Teams building web SDKs
 
-### Design to code
+If your team is building SDKs for a product that integrates directly into a web framework and involves providing components to the end user, then Mitosis is a _perfect_ fit for your team. Our team at Builder.io has this exact use-case: our [new generation of SDKs](https://github.com/BuilderIO/builder/tree/main/packages/sdks/) is built with Mitosis! Our engineers have received glowing praise from our sales team for speed of delivery, and all it took was a switch flip 😉
 
-With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
-
-<p align="center">
-<img width="80%" src="https://i.imgur.com/UlWMkRx.gif" >
-</p>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <img width="50%" src="imgs/kudos-1.png"/>
+  <br/>
+  <img width="50%" src="imgs/kudos-2.png"/>
+</div>
 
 ## What about XKCD
 
