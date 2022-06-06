@@ -482,7 +482,8 @@ type ReactExports =
   | 'useRef'
   | 'useCallback'
   | 'useEffect'
-  | 'useContext';
+  | 'useContext'
+  | 'forwardRef';
 
 const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
@@ -600,6 +601,9 @@ const _componentToReact = (
   if (allRefs.length) {
     reactLibImports.add('useRef');
   }
+  if (hasPropRef) {
+    reactLibImports.add('forwardRef');
+  }
   if (
     json.hooks.onMount?.code ||
     json.hooks.onUnMount?.code ||
@@ -658,7 +662,7 @@ const _componentToReact = (
     }
     ${renderPreComponent(json)}
     ${isSubComponent ? '' : 'export default '}${
-    isForwardRef ? 'React.forwardRef(' : ''
+    isForwardRef ? 'forwardRef(' : ''
   }function ${json.name || 'MyComponent'}(props${
     isForwardRef ? `, ${options.forwardRef}` : ''
   }) {
