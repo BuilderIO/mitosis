@@ -418,21 +418,6 @@ export const componentToVue =
       prefix: options.cssNamespace?.() ?? undefined,
     });
 
-    const { exports: localExports } = component;
-    const localVarAsData: string[] = [];
-    const localVarAsFunc: string[] = [];
-    if (localExports) {
-      Object.keys(localExports).forEach((key) => {
-        if (localExports[key].usedInLocal) {
-          if (localExports[key].isFunction) {
-            localVarAsFunc.push(key);
-          } else {
-            localVarAsData.push(key);
-          }
-        }
-      });
-    }
-
     let dataString = getStateObjectStringFromComponent(component, {
       data: true,
       functions: false,
@@ -481,10 +466,6 @@ export const componentToVue =
         .join(',')}}`,
     );
 
-    if (localVarAsData.length) {
-      dataString = dataString.replace(/}$/, `${localVarAsData.join(',')}}`);
-    }
-
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
@@ -506,13 +487,6 @@ export const componentToVue =
         } 
         return obj;
       }  }`,
-      );
-    }
-
-    if (localVarAsFunc.length) {
-      functionsString = functionsString.replace(
-        /}\s*$/,
-        `${localVarAsFunc.join(',')}}`,
       );
     }
 
