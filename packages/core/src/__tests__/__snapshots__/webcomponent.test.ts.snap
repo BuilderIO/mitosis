@@ -1,7 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`webcomponent Basic 1`] = `
-"/**
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -127,7 +131,7 @@ class MyBasicComponent extends HTMLElement {
     this._root
       .querySelectorAll(\\"[data-el='input-my-basic-component-1']\\")
       .forEach((el) => {
-        el.value = this.state.name;
+        el.value = DEFAULT_VALUES.name || this.state.name;
 
         el.removeEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
         el.addEventListener(\\"input\\", this.onInputMyBasicComponent1Input);
@@ -5109,7 +5113,11 @@ customElements.define(\\"on-init\\", OnInit);
 `;
 
 exports[`webcomponent onInit 1`] = `
-"/**
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+/**
  * Usage:
  *
  *  <on-init></on-init>

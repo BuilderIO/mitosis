@@ -5,13 +5,17 @@ exports[`React Native Basic 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
 export default function MyBasicComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   return (
     <View style={styles.view1}>
       <View
-        value={name}
+        value={DEFAULT_VALUES.name || name}
         onChange={(myEvent) => setName(myEvent.target.value)}
       />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>

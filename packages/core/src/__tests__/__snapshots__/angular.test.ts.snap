@@ -3,11 +3,18 @@
 exports[`Angular Basic 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
     <div class=\\"test div\\">
-      <input [value]=\\"name\\" (input)=\\"name = $event.target.value\\" />
+      <input
+        [value]=\\"DEFAULT_VALUES.name || name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -430,6 +437,10 @@ export default class ContentSlotJsxCode {
 
 exports[`Angular onInit 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
 
 @Component({
   selector: \\"on-init\\",
