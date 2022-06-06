@@ -1,5 +1,9 @@
 import { useState } from '@builder.io/mitosis';
 
+export const DEFAULT_VALUES = {
+  name: 'Steve',
+};
+
 export default function MyBasicComponent() {
   const state = useState({
     name: 'Steve',
@@ -13,7 +17,7 @@ export default function MyBasicComponent() {
       }}
     >
       <input
-        value={state.name}
+        value={DEFAULT_VALUES.name || state.name}
         onChange={(myEvent) => (state.name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!

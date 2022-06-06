@@ -1,14 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Solid Basic 1`] = `
-"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
   styles: \`
-    .div {
-      padding: 10px;
-    }
+      .div {
+        padding: 10px;
+      }
 \`,
 })
 export default class MyBasicComponent {
@@ -18,7 +22,7 @@ export default class MyBasicComponent {
     return (
       <div>
         <input
-          value={this.name}
+          value={DEFAULT_VALUES.name || this.name}
           onInput={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
