@@ -3,15 +3,22 @@
 exports[`Vue Basic 1`] = `
 "<template>
   <div class=\\"test div\\">
-    <input :value=\\"name\\" @input=\\"name = $event.target.value\\" />
+    <input
+      :value=\\"DEFAULT_VALUES.name || name\\"
+      @input=\\"name = $event.target.value\\"
+    />
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
 <script>
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
 export default {
   name: \\"my-basic-component\\",
 
-  data: () => ({ name: \\"Steve\\" }),
+  data: () => ({ name: \\"Steve\\", DEFAULT_VALUES }),
 };
 </script>
 <style scoped>
