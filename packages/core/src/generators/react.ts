@@ -613,6 +613,7 @@ const _componentToReact = (
         : ''
     }
     ${renderPreComponent(json)}
+
     ${isSubComponent ? '' : 'export default '}function ${
     json.name || 'MyComponent'
   }(props) {
