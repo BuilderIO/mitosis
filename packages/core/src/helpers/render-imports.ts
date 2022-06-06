@@ -130,5 +130,12 @@ export const renderPreComponent = (
   target?: Target,
 ): string => `
     ${renderImports({ imports: component.imports, target })}
+    ${renderExportAndLocal(component)}
     ${component.hooks.preComponent || ''}
   `;
+
+export const renderExportAndLocal = (component: MitosisComponent): string => {
+  return Object.keys(component.exports || {})
+    .map((key) => component.exports![key].code)
+    .join('\n');
+};
