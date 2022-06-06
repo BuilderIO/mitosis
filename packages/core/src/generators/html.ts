@@ -20,6 +20,7 @@ import { isHtmlAttribute } from '../helpers/is-html-attribute';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -903,11 +904,18 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
+
     const contextVars = Object.keys(json?.context?.get || {});
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
     const outputs = getPropFunctions(json);
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));

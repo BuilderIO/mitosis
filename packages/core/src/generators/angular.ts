@@ -17,13 +17,13 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
-import { MitosisComponent } from '..';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
@@ -228,6 +228,8 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
     const childComponents: string[] = [];
 
     json.imports.forEach(({ imports }) => {
@@ -254,6 +256,12 @@ export const componentToAngular =
     });
 
     const props = getProps(component);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
+    props.delete('children');
+
     const outputVars = uniq([
       ...metaOutputVars,
       ...getPropFunctions(component),
@@ -262,6 +270,7 @@ export const componentToAngular =
     outputVars.forEach((variableName) => {
       props.delete(variableName);
     });
+
     const outputs = outputVars.map((variableName) => {
       if (options?.experimental?.outputs) {
         return options?.experimental?.outputs(json, variableName);

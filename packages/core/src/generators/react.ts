@@ -18,6 +18,7 @@ import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
+import { getPropsRef } from '../helpers/get-props-ref';
 import {
   getMemberObjectString,
   getStateObjectStringFromComponent,
@@ -50,6 +51,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  forwardRef?: string;
   experimental?: any;
 }
 
@@ -124,8 +126,25 @@ const NODE_MAPPERS: {
 
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDING_MAPPERS: {
-  [key: string]: string | ((key: string, value: string) => [string, string]);
+  [key: string]:
+    | string
+    | ((
+        key: string,
+        value: string,
+        options?: ToReactOptions,
+      ) => [string, string]);
 } = {
+  ref(ref, value, options) {
+    const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
+    if (regexp.test(value)) {
+      const match = regexp.exec(value);
+      const prop = match?.[2];
+      if (prop) {
+        return [ref, prop];
+      }
+    }
+    return [ref, value];
+  },
   innerHTML(_key, value) {
     return [
       'dangerouslySetInnerHTML',
@@ -182,7 +201,7 @@ export const blockToReact = (
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, value);
+        const [newKey, newValue] = mapper(key, value, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
         str += ` ${BINDING_MAPPERS[key]}="${value}" `;
@@ -218,7 +237,7 @@ export const blockToReact = (
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, useBindingValue);
+        const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
         str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
@@ -540,6 +559,13 @@ const _componentToReact = (
 
   let hasState = Boolean(Object.keys(json.state).length);
 
+  const [forwardRef, hasPropRef] = getPropsRef(json);
+  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  if (isForwardRef) {
+    const meta = json.meta.useMetadata?.forwardRef as string;
+    options.forwardRef = meta || forwardRef;
+  }
+
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
   if (stateType === 'builder') {
@@ -631,10 +657,12 @@ const _componentToReact = (
         : ''
     }
     ${renderPreComponent(json)}
-    ${isSubComponent ? '' : 'export default '}function ${
-    json.name || 'MyComponent'
-  }(props) {
-      ${hasStateArgument ? '' : refsString}
+    ${isSubComponent ? '' : 'export default '}${
+    isForwardRef ? 'React.forwardRef(' : ''
+  }function ${json.name || 'MyComponent'}(props${
+    isForwardRef ? `, ${options.forwardRef}` : ''
+  }) {
+    ${hasStateArgument ? '' : refsString}
       ${
         hasState
           ? stateType === 'mobx'
@@ -729,7 +757,7 @@ const _componentToReact = (
         }
         ${wrap ? '</>' : ''}
       );
-    }
+    }${isForwardRef ? ')' : ''}
 
     ${
       !nativeStyles

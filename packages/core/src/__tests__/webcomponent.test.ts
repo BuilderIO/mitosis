@@ -7,6 +7,8 @@ const basicFor = require('./data/basic-for.raw');
 // const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
 const basicOnUpdateDeps = require('./data/basic-onUpdate-deps.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicForwardRef = require('./data/basic-forwardRef.raw');
+const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const basicContext = require('./data/basic-context.raw');
@@ -48,6 +50,20 @@ describe('webcomponent', () => {
     const component = parseJsx(basicRef);
     const output = componentToCustomElement()({ component });
     expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef', () => {
+    const component = parseJsx(basicForwardRef);
+    const output = componentToCustomElement()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef same as meta', () => {
+    const component = parseJsx(basicForwardRef);
+    const componentMeta = parseJsx(basicForwardRefMetadata);
+    const output = componentToCustomElement()({ component });
+    const outputMeta = componentToCustomElement()({ component: componentMeta });
+    expect(output).toMatch(outputMeta);
   });
 
   test('Basic Ref Assignment', () => {

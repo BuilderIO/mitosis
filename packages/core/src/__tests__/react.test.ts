@@ -5,6 +5,8 @@ const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicForwardRef = require('./data/basic-forwardRef.raw');
+const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
@@ -74,6 +76,20 @@ describe('React', () => {
     const component = parseJsx(basicRef);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef', () => {
+    const component = parseJsx(basicForwardRef);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef same as meta', () => {
+    const component = parseJsx(basicForwardRef);
+    const componentMeta = parseJsx(basicForwardRefMetadata);
+    const output = componentToReact()({ component });
+    const outputMeta = componentToReact()({ component: componentMeta });
+    expect(output).toMatch(outputMeta);
   });
 
   test('Basic Ref Previous', () => {
