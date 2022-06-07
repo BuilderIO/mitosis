@@ -163,6 +163,25 @@ const parseCodeJson = (node: babel.types.Node) => {
   return tryParseJson(code);
 };
 
+const getPropsTypeRef = (node: babel.types.FunctionDeclaration): string => {
+  const param = (node.params[0] || {}) as babel.types.Identifier;
+  let propsTypeRef = '';
+  // TODO: component function params name must be props
+  if (
+    param.name === 'props' &&
+    babel.types.isTSTypeAnnotation(param.typeAnnotation)
+  ) {
+    const paramIdentifier = babel.types.variableDeclaration('let', [
+      babel.types.variableDeclarator(param),
+    ]);
+    propsTypeRef = generate(paramIdentifier)
+      .code.replace(/^let\sprops:\s+/, '')
+      .replace(/;/g, '');
+  }
+
+  return propsTypeRef;
+};
+
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
@@ -377,20 +396,6 @@ const componentFunctionToJson = (
       localExports[name].usedInLocal = Boolean(found);
     });
     context.builder.component.exports = localExports;
-
-  const param: any = node.params[0] || {};
-  let propsTypeRef = '';
-  // TODO: component function params name must be props
-  if (
-    param.name === 'props' &&
-    babel.types.isTSTypeAnnotation(param.typeAnnotation)
-  ) {
-    const paramIdentifier = babel.types.variableDeclaration('let', [
-      babel.types.variableDeclarator(node.params[0]),
-    ]);
-    propsTypeRef = generate(paramIdentifier)
-      .code.replace(/^let\sprops: /, '')
-      .replace(/;/g, '');
   }
 
   return createMitosisComponent({
@@ -403,7 +408,7 @@ const componentFunctionToJson = (
       get: accessedContext,
       set: setContext,
     },
-    propsTypeRef,
+    propsTypeRef: getPropsTypeRef(node),
   }) as any;
 };
 
@@ -850,6 +855,20 @@ const isTypeOrInterface = (node: babel.Node) =>
   (types.isExportNamedDeclaration(node) &&
     types.isTSInterfaceDeclaration(node.declaration));
 
+const collectTypes = (node: babel.Node, context: Context) => {
+  const typeStr = generate(node).code;
+  const { types = [] } = context.builder.component;
+  types.push(typeStr);
+  context.builder.component.types = types.filter(Boolean);
+};
+
+const collectInterfaces = (node: babel.Node, context: Context) => {
+  const interfaceStr = generate(node).code;
+  const { interfaces = [] } = context.builder.component;
+  interfaces.push(interfaceStr);
+  context.builder.component.interfaces = interfaces.filter(Boolean);
+};
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -893,7 +912,7 @@ export function parseJsx(
             const keepStatements = path.node.body.filter(
               (statement) =>
                 isImportOrDefaultExport(statement) ||
-                isTypeOrInterface(statement)
+                isTypeOrInterface(statement),
             );
 
             const exportsOrLocalVariables = path.node.body.filter(
@@ -1012,23 +1031,18 @@ export function parseJsx(
           ExportNamedDeclaration(path, context) {
             const { node } = path;
             const newTypeStr = generate(node).code;
-            const { types = [] } = context.builder.component;
-            types.push(newTypeStr);
-            context.builder.component.types = types.filter(Boolean);
+            if (babel.types.isTSInterfaceDeclaration(node.declaration)) {
+              collectInterfaces(path.node, context);
+            }
+            if (babel.types.isTSTypeAliasDeclaration(node.declaration)) {
+              collectTypes(path.node, context);
+            }
           },
           TSTypeAliasDeclaration(path, context) {
-            const { node } = path;
-            const newTypeStr = generate(node).code;
-            const { types = [] } = context.builder.component;
-            types.push(newTypeStr);
-            context.builder.component.types = types.filter(Boolean);
+            collectTypes(path.node, context);
           },
           TSInterfaceDeclaration(path, context) {
-            const { node } = path;
-            const newInterfaceStr = generate(node).code;
-            const { interfaces = [] } = context.builder.component;
-            interfaces.push(newInterfaceStr);
-            context.builder.component.interfaces = interfaces.filter(Boolean);
+            collectInterfaces(path.node, context);
           },
         },
       }),

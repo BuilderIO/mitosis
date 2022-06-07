@@ -446,6 +446,7 @@ export default function CustomCode(props: CustomCodeProps) {
 exports[`React Form block 1`] = `
 "import { useState, useRef } from \\"react\\";
 
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -468,7 +469,7 @@ export interface FormProps {
   resetFormOnSubmit?: boolean;
   errorMessagePath?: string;
 }
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -1321,12 +1322,12 @@ export default function MultipleOnUpdateWithDeps(props) {
 exports[`React onInit 1`] = `
 "import { useState, useEffect } from \\"react\\";
 
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
 type Props = {
   name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
 };
 
 export default function OnInit(props: Props) {
@@ -1392,6 +1393,64 @@ export default function OnUpdateWithDeps(props) {
   }, [a, b]);
 
   return <div />;
+}
+"
+`;
+
+exports[`React preserveTyping 1`] = `
+"export type A = \\"test\\";
+type B = \\"test2\\";
+export interface C {
+  n: \\"test\\";
+}
+interface D {
+  n: \\"test\\";
+}
+
+export default function MyBasicComponent(props: {
+  name: string;
+  age?: number;
+}) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React propsInterface 1`] = `
+"interface Person {
+  name: string;
+  age?: number;
+}
+
+export default function MyBasicComponent(props: Person | never) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React propsType 1`] = `
+"type Person = {
+  name: string;
+  age?: number;
+};
+
+export default function MyBasicComponent(props: Person) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
 }
 "
 `;

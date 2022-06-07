@@ -31,6 +31,9 @@ const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
 const slotHtml = require('./data/blocks/slot-html.raw');
+const propsType = require('./data/types/component-props-type.raw');
+const propsInterface = require('./data/types/component-props-interface.raw');
+const preserveTyping = require('./data/types/preserve-typing.raw');
 
 describe('React', () => {
   test('ContentSlotJSX', () => {
@@ -214,6 +217,24 @@ describe('React', () => {
   test('rootShow', () => {
     const component = parseJsx(rootShow);
     const output = componentToReact({ prettier: false })({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsType', () => {
+    const component = parseJsx(propsType);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsInterface', () => {
+    const component = parseJsx(propsInterface);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('preserveTyping', () => {
+    const component = parseJsx(preserveTyping);
+    const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
 });
