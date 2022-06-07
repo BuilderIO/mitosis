@@ -10,15 +10,9 @@ export function getPropsRef(
   let prop = '';
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        if (key !== 'ref') {
-          continue;
-        }
-        const binding = item.bindings[key];
-        const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/;
-        if (!binding || !regexp.test(binding.code)) {
-          continue;
-        }
+      const binding = item.bindings.ref;
+      const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/;
+      if (binding && regexp.test(binding.code)) {
         const match = regexp.exec(binding.code);
         const _prop = match?.[2];
         if (_prop) {
