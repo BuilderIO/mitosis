@@ -273,18 +273,21 @@ export const componentToSolid =
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     const stateString = getStateObjectStringFromComponent(json);
-    const hasState = Boolean(Object.keys(component.state).length);
+    const hasState = Object.keys(component.state).length > 0;
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
+    const refs = getRefsString(json);
 
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
+    const hasRefs = refs.length > 0;
 
     const solidJSImports = [
       componentHasContext ? 'useContext' : undefined,
       hasShowComponent ? 'Show' : undefined,
       hasForComponent ? 'For' : undefined,
       json.hooks.onMount?.code ? 'onMount' : undefined,
+      hasRefs ? 'useRef' : undefined,
     ].filter(Boolean);
 
     let str = dedent`
@@ -307,7 +310,7 @@ export const componentToSolid =
     function ${json.name}(props) {
       ${!hasState ? '' : `const state = createMutable(${stateString});`}
       
-      ${getRefsString(json)}
+      ${refs}
       ${getContextString(json, options)}
 
       ${

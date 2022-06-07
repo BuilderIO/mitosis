@@ -17,13 +17,13 @@ import {
 } from '../modules/plugins';
 import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { indent } from '../helpers/indent';
-import { MitosisComponent } from '..';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
@@ -228,6 +228,8 @@ export const componentToAngular =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
     const childComponents: string[] = [];
 
     json.imports.forEach(({ imports }) => {
@@ -238,10 +240,14 @@ export const componentToAngular =
       });
     });
 
+    const { exports: localExports = {} } = component;
+    const localExportVars = Object.keys(localExports)
+      .filter((key) => localExports[key].usedInLocal)
+      .map((key) => `${key} = ${key};`);
+
     const metaOutputVars: string[] =
       (json.meta?.useMetadata?.outputs as string[]) || [];
     const contextVars = Object.keys(json?.context?.get || {});
-    const hasInjectable = Boolean(contextVars.length);
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
       if (options?.experimental?.injectables) {
@@ -252,8 +258,17 @@ export const componentToAngular =
       }
       return `public ${variableName} : ${variableType}`;
     });
+    const hasConstructor = Boolean(
+      injectables.length || component.hooks?.onInit,
+    );
 
     const props = getProps(component);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
+    props.delete('children');
+
     const outputVars = uniq([
       ...metaOutputVars,
       ...getPropFunctions(component),
@@ -262,6 +277,7 @@ export const componentToAngular =
     outputVars.forEach((variableName) => {
       props.delete(variableName);
     });
+
     const outputs = outputVars.map((variableName) => {
       if (options?.experimental?.outputs) {
         return options?.experimental?.outputs(json, variableName);
@@ -271,8 +287,14 @@ export const componentToAngular =
 
     const hasOnMount = Boolean(component.hooks?.onMount);
 
-    const refs = Array.from(getRefs(json));
-    mapRefs(json, (refName) => `this.${refName}.nativeElement`);
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+    mapRefs(json, (refName) => {
+      const isDomRef = domRefs.has(refName);
+      return `this.${isDomRef ? '' : '_'}${refName}${
+        isDomRef ? '.nativeElement' : ''
+      }`;
+    });
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -310,7 +332,7 @@ export const componentToAngular =
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${refs.length ? ', ViewChild, ElementRef' : ''}${
+    } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
     ${renderPreComponent(json)}
@@ -329,33 +351,55 @@ export const componentToAngular =
       }
     })
     export default class ${component.name} {
-      ${outputs.join('\n')}
+      ${localExportVars.join('\n')}
 
       ${Array.from(props)
-        .filter((item) => !item.startsWith('slot'))
+        .filter((item) => !item.startsWith('slot') && item !== 'children')
         .map((item) => `@Input() ${item}: any`)
         .join('\n')}
 
-      ${refs
+      ${outputs.join('\n')}
+
+      ${Array.from(domRefs)
         .map((refName) => `@ViewChild('${refName}') ${refName}: ElementRef`)
         .join('\n')}
 
       ${dataString}
 
-      constructor(\n${injectables.join(',\n')}) {
-        ${
-          !component.hooks?.onInit
-            ? ''
-            : `
-          ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
-            replaceWith: 'this.',
-            contextVars,
-            outputVars,
-          })}
-          `
-        }
-      }
+      ${jsRefs
+        .map((ref) => {
+          const argument = component.refs[ref].argument;
+          const typeParameter = component.refs[ref].typeParameter;
+          return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
+            argument
+              ? ` = ${stripStateAndPropsRefs(argument, {
+                  replaceWith: 'this.',
+                  contextVars,
+                  outputVars,
+                })}`
+              : ''
+          };`;
+        })
+        .join('\n')}
 
+      ${
+        !hasConstructor
+          ? ''
+          : `constructor(\n${injectables.join(',\n')}) {
+            ${
+              !component.hooks?.onInit
+                ? ''
+                : `
+              ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+                replaceWith: 'this.',
+                contextVars,
+                outputVars,
+              })}
+              `
+            }
+          }
+          `
+      }
       ${
         !hasOnMount
           ? ''

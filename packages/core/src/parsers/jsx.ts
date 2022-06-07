@@ -191,6 +191,7 @@ const componentFunctionToJson = (
   let state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
   const setContext: MitosisComponent['context']['set'] = {};
+  const refs: MitosisComponent['refs'] = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
@@ -370,6 +371,20 @@ const componentFunctionToJson = (
                 };
               }
             }
+          } else if (init.callee.name === 'useRef') {
+            if (types.isIdentifier(declaration.id)) {
+              const firstArg = init.arguments[0];
+              const varName = declaration.id.name;
+              refs[varName] = {
+                argument: generate(firstArg).code,
+              };
+              // Typescript Parameter
+              if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
+                refs[varName].typeParameter = generate(
+                  init.typeParameters.params[0],
+                ).code;
+              }
+            }
           }
         }
       }
@@ -404,6 +419,7 @@ const componentFunctionToJson = (
     name: node.id?.name,
     state,
     children,
+    refs: refs,
     hooks,
     context: {
       get: accessedContext,
@@ -694,6 +710,7 @@ const collectMetadata = (
 type ParseMitosisOptions = {
   format: 'react' | 'simple';
   jsonHookNames?: string[];
+  compileAwayPackages?: string[];
 };
 
 function mapReactIdentifiersInExpression(
@@ -995,10 +1012,14 @@ export function parseJsx(
           },
           ImportDeclaration(path, context) {
             // @builder.io/mitosis or React imports compile away
+            const customPackages = options?.compileAwayPackages || [];
             if (
-              ['react', '@builder.io/mitosis', '@emotion/react'].includes(
-                path.node.source.value,
-              )
+              [
+                'react',
+                '@builder.io/mitosis',
+                '@emotion/react',
+                ...customPackages,
+              ].includes(path.node.source.value)
             ) {
               path.remove();
               return;

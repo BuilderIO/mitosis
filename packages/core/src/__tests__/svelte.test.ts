@@ -3,6 +3,7 @@ import { parseContext } from '../parsers/context';
 import { componentToSvelte } from '../generators/svelte';
 import { parseJsx } from '../parsers/jsx';
 
+const basicOnChange = require('./data/basic-onChange.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const multipleOUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const selfReferencingComponent = require('./data/blocks/self-referencing-component.raw');
@@ -15,6 +16,12 @@ const renderBlock = require('./data/blocks/builder-render-block.raw');
 const text = require('./data/blocks/text.raw');
 
 describe('Svelte', () => {
+  test('Basic onChange', () => {
+    const component = parseJsx(basicOnChange);
+    const output = componentToSvelte()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('onUpdate', () => {
     const component = parseJsx(onUpdate);
     const output = componentToSvelte()({ component });

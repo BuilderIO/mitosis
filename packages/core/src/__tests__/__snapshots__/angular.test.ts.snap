@@ -28,9 +28,9 @@ export const DEFAULT_VALUES = {
   ],
 })
 export default class MyBasicComponent {
-  name = \\"Steve\\";
+  DEFAULT_VALUES = DEFAULT_VALUES;
 
-  constructor() {}
+  name = \\"Steve\\";
 }
 "
 `;
@@ -59,8 +59,6 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
-
-  constructor() {}
 }
 "
 `;
@@ -101,11 +99,39 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular Basic ForwardRef 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
 exports[`Angular Basic Ref 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
 @Component({
-  selector: \\"my-masic-ref-component\\",
+  selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
@@ -118,7 +144,7 @@ exports[`Angular Basic Ref 1`] = `
             (input)=\\"name = $event.target.value\\"
           />
 
-          <label for=\\"cars\\">Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
 
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
@@ -140,10 +166,11 @@ exports[`Angular Basic Ref 1`] = `
     \`,
   ],
 })
-export default class MyMasicRefComponent {
+export default class MyBasicRefComponent {
   @Input() showInput: any;
 
   @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -153,8 +180,54 @@ export default class MyMasicRefComponent {
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
   };
+}
+"
+`;
 
-  constructor() {}
+exports[`Angular Basic Ref Assignment 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-ref-assignment-component\\",
+  template: \`
+    <div>
+      <button (click)=\\"handlerClick($event)\\">Click</button>
+    </div>
+  \`,
+})
+export default class MyBasicRefAssignmentComponent {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", this._holdValueRef);
+    this._holdValueRef = this._holdValueRef + \\"JS\\";
+  };
+
+  private _holdValueRef = \\"Patrick\\";
+}
+"
+`;
+
+exports[`Angular Basic Ref Previous 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-previous-component\\",
+  template: \`
+    <div>
+      <h1>Now: {{count}} , before: {{this._prevCount}}</h1>
+
+      <button (click)=\\"count += 1\\">Increment</button>
+    </div>
+  \`,
+})
+export default class MyPreviousComponent {
+  count = 0;
+
+  private _prevCount = this.count;
+
+  ngAfterContentChecked() {
+    prevCount = this.count;
+  }
 }
 "
 `;
@@ -186,8 +259,6 @@ export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {}
-
   ngOnInit() {
     console.log(\\"onMount code\\");
   }
@@ -208,9 +279,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export default class SlotCode {
-  constructor() {}
-}
+export default class SlotCode {}
 "
 `;
 
@@ -232,8 +301,6 @@ export default class Text {
   @Input() content: any;
 
   name = \\"Decadef20\\";
-
-  constructor() {}
 }
 "
 `;
@@ -248,14 +315,12 @@ exports[`Angular basic outputs 1`] = `
   \`,
 })
 export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
 
-  @Input() message: any;
-
   name = \\"PatrickJS\\";
-
-  constructor() {}
 
   ngOnInit() {
     this.onMessage.emit(this.name);
@@ -275,14 +340,12 @@ exports[`Angular basic outputs meta 1`] = `
   \`,
 })
 export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
 
-  @Input() message: any;
-
   name = \\"PatrickJS\\";
-
-  constructor() {}
 
   ngOnInit() {
     this.onMessage.emit(this.name);
@@ -307,8 +370,6 @@ exports[`Angular className to class 1`] = `
 })
 export default class ClassNameCode {
   bindings = \\"a binding\\";
-
-  constructor() {}
 }
 "
 `;
@@ -323,8 +384,6 @@ exports[`Angular multiple onUpdate 1`] = `
   \`,
 })
 export default class MultipleOnUpdate {
-  constructor() {}
-
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
 
@@ -353,9 +412,7 @@ exports[`Angular ng-content and Slot 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotCode {
-  constructor() {}
-}
+export default class ContentSlotCode {}
 "
 `;
 
@@ -376,11 +433,7 @@ exports[`Angular ng-content and Slot jsx-props 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotJsxCode {
-  @Input() children: any;
-
-  constructor() {}
-}
+export default class ContentSlotJsxCode {}
 "
 `;
 
@@ -441,8 +494,6 @@ exports[`Angular onMount 1`] = `
   \`,
 })
 export default class Comp {
-  constructor() {}
-
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -464,8 +515,6 @@ exports[`Angular onUpdate 1`] = `
   \`,
 })
 export default class OnUpdate {
-  constructor() {}
-
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }

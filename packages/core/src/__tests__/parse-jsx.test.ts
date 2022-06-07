@@ -3,6 +3,7 @@ import { parseJsx } from '../parsers/jsx';
 const buttonWithMetadata = require('./data/blocks/button-with-metadata.raw');
 const image = require('./data/blocks/image.raw');
 const basicOnUpdateReturn = require('./data/basic-onUpdate-return.raw');
+const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicRef = require('./data/basic-ref.raw');
 
 describe('Parse JSX', () => {
@@ -22,6 +23,13 @@ describe('Parse JSX', () => {
 
   test('useRef', () => {
     const json = parseJsx(basicRef);
+    expect(json).toMatchSnapshot();
+  });
+
+  test('custom mitosis package', () => {
+    const json = parseJsx(basicMitosis, {
+      compileAwayPackages: ['@dummy/custom-mitosis'],
+    });
     expect(json).toMatchSnapshot();
   });
 });
