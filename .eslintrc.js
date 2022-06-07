@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@builder.io/mitosis'],
+  // plugins: ['@builder.io/mitosis'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [],
   parserOptions: {
