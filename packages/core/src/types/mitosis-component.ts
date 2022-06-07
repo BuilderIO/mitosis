@@ -88,4 +88,7 @@ export type MitosisComponent = {
   };
   children: MitosisNode[];
   subComponents: MitosisComponent[];
+  types?: string[];
+  interfaces?: string[];
+  propsTypeRef?: string;
 };

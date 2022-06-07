@@ -366,6 +366,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "RenderBlock",
+  "propsTypeRef": "RenderBlockProps",
   "refs": Object {},
   "state": Object {
     "actions": "@builder.io/mitosis/method:get actions() {
@@ -420,11 +421,22 @@ Object {
 }",
   },
   "subComponents": Array [],
+  "types": Array [
+    "export type RenderBlockProps = {
+  block: BuilderBlock;
+  index: number;
+};",
+  ],
 }
 `;
 
 exports[`Context Use and set context in complex components 2`] = `
 "import { useContext } from \\"react\\";
+
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  index: number;
+};
 import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
 import { getBlockProperties } from \\"../functions/get-block-properties\\";
 import { getBlockStyles } from \\"../functions/get-block-styles\\";
@@ -435,7 +447,7 @@ import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props) {
+export default function RenderBlock(props: RenderBlockProps) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -634,6 +646,9 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "ComponentWithContext",
+  "propsTypeRef": "{
+  content: string
+}",
   "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
@@ -645,7 +660,7 @@ exports[`Context Use and set context in components 2`] = `
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+export default function ComponentWithContext(props: { content: string }) {
   const foo = useContext(Context1);
 
   return (
@@ -678,7 +693,7 @@ import { useContext } from \\"react\\";
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+export default function ComponentWithContext(props: { content: string }) {
   const foo = useContext(Context1);
 
   return (
