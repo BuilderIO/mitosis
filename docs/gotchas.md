@@ -6,11 +6,11 @@
 - [Gotchas and limitations](#gotchas-and-limitations)
   - [Defining variables with the same name as a state property will shadow it](#defining-variables-with-the-same-name-as-a-state-property-will-shadow-it)
   - [Async methods can't be defined on "state"](#async-methods-cant-be-defined-on-state)
-  - [Callback implicitly have an "event" arg](#callback-implicitly-have-an-event-arg)
   - [Functions can't be passed by reference to JSX callbacks](#functions-cant-be-passed-by-reference-to-jsx-callbacks)
-  - [Can't assign "params" to "state"](#cant-assign-"params"-to-"state")
-  - [Can't assign function output to "state"](#cant-assign-function-output-to-"state")
+  - [Can't assign "params" to "state"](#cant-assign-params-to-state)
+  - [Can't assign function output to "state"](#cant-assign-function-output-to-state)
   - [Can't destructure assignment from state](#cant-destructure-assignment-from-state)
+  - [forwardRef in React](#forwardref-in-react)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -393,4 +393,25 @@ export default function MyComponent(props) {
 
   return <></>;
 }
+```
+
+### forwardRef in React
+In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
+
+_Mitosis input_
+
+```typescript
+export default function MyInput(props) {
+  return <input ref={props.inputRef} />
+}
+```
+
+_Mitosis output_
+
+```typescript
+import { forwardRef } from 'react';
+
+export default forwardRef(function MyInput(props, inputRef) {
+  return <input ref={inputRef} />
+})
 ```
