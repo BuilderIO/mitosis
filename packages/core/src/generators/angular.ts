@@ -240,10 +240,14 @@ export const componentToAngular =
       });
     });
 
+    const { exports: localExports = {} } = component;
+    const localExportVars = Object.keys(localExports)
+      .filter((key) => localExports[key].usedInLocal)
+      .map((key) => `${key} = ${key};`);
+
     const metaOutputVars: string[] =
       (json.meta?.useMetadata?.outputs as string[]) || [];
     const contextVars = Object.keys(json?.context?.get || {});
-    const hasInjectable = Boolean(contextVars.length);
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
       if (options?.experimental?.injectables) {
@@ -254,6 +258,9 @@ export const componentToAngular =
       }
       return `public ${variableName} : ${variableType}`;
     });
+    const hasConstructor = Boolean(
+      injectables.length || component.hooks?.onInit,
+    );
 
     const props = getProps(component);
     // prevent jsx props from showing up as @Input
@@ -344,6 +351,7 @@ export const componentToAngular =
       }
     })
     export default class ${component.name} {
+      ${localExportVars.join('\n')}
 
       ${Array.from(props)
         .filter((item) => !item.startsWith('slot') && item !== 'children')
@@ -374,20 +382,24 @@ export const componentToAngular =
         })
         .join('\n')}
 
-      constructor(\n${injectables.join(',\n')}) {
-        ${
-          !component.hooks?.onInit
-            ? ''
-            : `
-          ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
-            replaceWith: 'this.',
-            contextVars,
-            outputVars,
-          })}
+      ${
+        !hasConstructor
+          ? ''
+          : `constructor(\n${injectables.join(',\n')}) {
+            ${
+              !component.hooks?.onInit
+                ? ''
+                : `
+              ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+                replaceWith: 'this.',
+                contextVars,
+                outputVars,
+              })}
+              `
+            }
+          }
           `
-        }
       }
-
       ${
         !hasOnMount
           ? ''
