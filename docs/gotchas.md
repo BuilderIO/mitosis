@@ -396,13 +396,14 @@ export default function MyComponent(props) {
 ```
 
 ### forwardRef in React
+
 In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
 
 _Mitosis input_
 
 ```typescript
 export default function MyInput(props) {
-  return <input ref={props.inputRef} />
+  return <input ref={props.inputRef} />;
 }
 ```
 
@@ -412,6 +413,6 @@ _Mitosis output_
 import { forwardRef } from 'react';
 
 export default forwardRef(function MyInput(props, inputRef) {
-  return <input ref={inputRef} />
-})
+  return <input ref={inputRef} />;
+});
 ```
