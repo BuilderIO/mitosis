@@ -31,7 +31,14 @@ exports[`React Native Button 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function Button(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
   return (
     <>
       {props.link ? (
@@ -63,7 +70,22 @@ exports[`React Native Columns 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function Column(props) {
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+export default function Column(props: ColumnProps) {
   function getColumns() {
     return props.columns || [];
   }
@@ -109,7 +131,12 @@ exports[`React Native CustomCode 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -171,7 +198,12 @@ exports[`React Native Embed 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function CustomCode(props) {
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef();
   const [scriptsInserted, setScriptsInserted] = useState(() => []);
 
@@ -232,13 +264,38 @@ exports[`React Native Form block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
+
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+
 import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
-export default function FormComponent(props) {
+export default function FormComponent(props: FormProps) {
   const formRef = useRef();
   const [state, setState] = useState(() => \\"unsubmitted\\");
 
@@ -494,7 +551,26 @@ exports[`React Native Image 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
 
-export default function Image(props) {
+// TODO: AMP Support?
+export interface ImageProps {
+  class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+export default function Image(props: ImageProps) {
   const pictureRef = useRef();
   const [scrollListener, setScrollListener] = useState(() => null);
 
@@ -589,9 +665,27 @@ const styles = StyleSheet.create({
 exports[`React Native Img 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function ImgComponent(props) {
+export default function ImgComponent(props: ImgProps) {
   return (
     <View
       {...props.attributes}
@@ -611,9 +705,20 @@ export default function ImgComponent(props) {
 exports[`React Native Input block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function FormInputComponent(props) {
+export default function FormInputComponent(props: FormInputProps) {
   return (
     <View
       {...props.attributes}
@@ -638,7 +743,12 @@ exports[`React Native RawText 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function RawText(props) {
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+export default function RawText(props: RawTextProps) {
   return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
 }
 "
@@ -648,7 +758,13 @@ exports[`React Native Section 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function SectionComponent(props) {
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+export default function SectionComponent(props: SectionProps) {
   return (
     <View
       {...props.attributes}
@@ -670,9 +786,21 @@ export default function SectionComponent(props) {
 exports[`React Native Select block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function SelectComponent(props) {
+export default function SelectComponent(props: FormSelectProps) {
   return (
     <View
       {...props.attributes}
@@ -700,10 +828,15 @@ exports[`React Native Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
+
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props) {
+export default function SmileReviews(props: SmileReviewsProps) {
   const [reviews, setReviews] = useState(() => []);
 
   const [name, setName] = useState(() => \\"test\\");
@@ -797,7 +930,12 @@ exports[`React Native Submit button block 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function SubmitButton(props) {
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+export default function SubmitButton(props: ButtonProps) {
   return (
     <View {...props.attributes} type=\\"submit\\">
       <Text>{props.text}</Text>
@@ -811,9 +949,18 @@ exports[`React Native Text 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
-export default function Text(props) {
+export default function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
@@ -839,7 +986,15 @@ exports[`React Native Textarea 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function Textarea(props) {
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+export default function Textarea(props: TextareaProps) {
   return (
     <View
       {...props.attributes}
@@ -857,7 +1012,33 @@ exports[`React Native Video 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function Video(props) {
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+export default function Video(props: VideoProps) {
   return (
     <View
       {...props.attributes}
