@@ -4,7 +4,6 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  // plugins: ['@builder.io/mitosis'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
   extends: [],
   parserOptions: {
@@ -13,9 +12,5 @@ module.exports = {
     ecmaFeatures: {
       jsx: true, // Allows for the parsing of JSX
     },
-  },
-
-  rules: {
-    // '@builder.io/mitosis/no-conditional-render': 'warn',
   },
 };
