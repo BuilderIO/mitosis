@@ -163,23 +163,24 @@ const parseCodeJson = (node: babel.types.Node) => {
   return tryParseJson(code);
 };
 
-const getPropsTypeRef = (node: babel.types.FunctionDeclaration): string => {
-  const param = (node.params[0] || {}) as babel.types.Identifier;
-  let propsTypeRef = '';
+const getPropsTypeRef = (
+  node: babel.types.FunctionDeclaration,
+): string | undefined => {
+  const param = node.params[0];
   // TODO: component function params name must be props
   if (
+    babel.types.isIdentifier(param) &&
     param.name === 'props' &&
     babel.types.isTSTypeAnnotation(param.typeAnnotation)
   ) {
     const paramIdentifier = babel.types.variableDeclaration('let', [
       babel.types.variableDeclarator(param),
     ]);
-    propsTypeRef = generate(paramIdentifier)
+    return generate(paramIdentifier)
       .code.replace(/^let\sprops:\s+/, '')
       .replace(/;/g, '');
   }
-
-  return propsTypeRef;
+  return undefined;
 };
 
 const componentFunctionToJson = (
