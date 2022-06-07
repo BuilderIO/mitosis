@@ -84,7 +84,7 @@ export const staticControlFlow: Rule.RuleModule = {
 
 export const rules = {
   'css-no-vars': cssNoVars,
-  'res-no-current': refNoCurrent,
+  'ref-no-current': refNoCurrent,
   'static-control-flow': staticControlFlow,
   'no-state-destructuring': noStateDestructuring,
   'jsx-callback-arg-name': jsxCallbackArgNameRule,
