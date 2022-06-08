@@ -26,7 +26,7 @@ export default function MyComponent() {
     },
   });
 
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef < HTMLInputElement > null;
 
   return (
     <div>
@@ -106,7 +106,7 @@ The onUpdate hook is the best place to put custom code that will either:
 - if no `dependencies` array is provided: execute on every render
 - if a non-empty `dependencies` array is provided: execute whenever any value in `dependencies` changes
 
-````jsx
+```jsx
 export default function OnUpdateWithDeps() {
   const state = useState({
     a: 'a',
@@ -123,4 +123,4 @@ export default function OnUpdateWithDeps() {
 
   return <div />;
 }
-````
+```
