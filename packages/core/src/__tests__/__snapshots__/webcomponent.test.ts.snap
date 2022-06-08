@@ -495,7 +495,12 @@ customElements.define(\\"my-basic-component\\", MyBasicComponent);
 `;
 
 exports[`webcomponent Basic ForwardRef 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-forward-ref-component></my-basic-forward-ref-component>
@@ -655,7 +660,11 @@ customElements.define(
 `;
 
 exports[`webcomponent Basic Ref 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-ref-component></my-basic-ref-component>
@@ -913,7 +922,11 @@ customElements.define(\\"my-basic-ref-component\\", MyBasicRefComponent);
 `;
 
 exports[`webcomponent Basic Ref Assignment 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-ref-assignment-component></my-basic-ref-assignment-component>
@@ -1034,7 +1047,11 @@ customElements.define(
 `;
 
 exports[`webcomponent Basic Ref Previous 1`] = `
-"/**
+"export interface Props {
+  showInput: boolean;
+}
+
+/**
  * Usage:
  *
  *  <my-previous-component></my-previous-component>
@@ -1174,7 +1191,11 @@ customElements.define(\\"my-previous-component\\", MyPreviousComponent);
 `;
 
 exports[`webcomponent Basic onUpdate deps 1`] = `
-"/**
+"export interface Props {
+  name: string;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-component></my-basic-component>
@@ -1844,7 +1865,12 @@ customElements.define(\\"my-basic-for-show-component\\", MyBasicForShowComponent
 `;
 
 exports[`webcomponent BasicOnMountUpdate 1`] = `
-"/**
+"export interface Props {
+  hi: string;
+  bye: string;
+}
+
+/**
  * Usage:
  *
  *  <my-basic-on-mount-update-component></my-basic-on-mount-update-component>
@@ -1975,7 +2001,14 @@ customElements.define(
 `;
 
 exports[`webcomponent Button 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <button></button>
@@ -2139,7 +2172,22 @@ customElements.define(\\"button\\", Button);
 `;
 
 exports[`webcomponent Columns 1`] = `
-"/**
+"type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <column></column>
@@ -2359,7 +2407,26 @@ customElements.define(\\"column\\", Column);
 `;
 
 exports[`webcomponent Image 1`] = `
-"/**
+"// TODO: AMP Support?
+export interface ImageProps {
+  class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <image></image>
@@ -2767,7 +2834,24 @@ customElements.define(\\"img-state-component\\", ImgStateComponent);
 `;
 
 exports[`webcomponent Img 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -2893,7 +2977,17 @@ customElements.define(\\"img-component\\", ImgComponent);
 `;
 
 exports[`webcomponent Input block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -3067,7 +3161,13 @@ customElements.define(\\"form-input-component\\", FormInputComponent);
 `;
 
 exports[`webcomponent Section 1`] = `
-"/**
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <section-component></section-component>
@@ -3185,7 +3285,13 @@ customElements.define(\\"section-component\\", SectionComponent);
 `;
 
 exports[`webcomponent SectionState 1`] = `
-"/**
+"export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+/**
  * Usage:
  *
  *  <section-state-component></section-state-component>
@@ -3392,7 +3498,18 @@ customElements.define(\\"section-state-component\\", SectionStateComponent);
 `;
 
 exports[`webcomponent Select block 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -3644,7 +3761,12 @@ customElements.define(\\"select-component\\", SelectComponent);
 `;
 
 exports[`webcomponent Shadow DOM 1`] = `
-"/**
+"type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
+/**
  * Usage:
  *
  *  <smile-reviews></smile-reviews>
@@ -4034,7 +4156,12 @@ customElements.define(\\"smile-reviews\\", SmileReviews);
 `;
 
 exports[`webcomponent Stamped 1`] = `
-"import { kebabCase } from \\"lodash\\";
+"type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
+import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
 /**
@@ -4437,7 +4564,12 @@ customElements.define(\\"smile-reviews\\", SmileReviews);
 `;
 
 exports[`webcomponent Submit button block 1`] = `
-"/**
+"export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+/**
  * Usage:
  *
  *  <submit-button></submit-button>
@@ -4548,7 +4680,15 @@ customElements.define(\\"submit-button\\", SubmitButton);
 `;
 
 exports[`webcomponent Text 1`] = `
-"import { Builder } from \\"@builder.io/sdk\\";
+"export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 /**
  * Usage:
@@ -4667,7 +4807,15 @@ customElements.define(\\"text\\", Text);
 `;
 
 exports[`webcomponent Textarea 1`] = `
-"/**
+"export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+/**
  * Usage:
  *
  *  <textarea></textarea>
@@ -4828,7 +4976,33 @@ customElements.define(\\"textarea\\", Textarea);
 `;
 
 exports[`webcomponent Video 1`] = `
-"/**
+"export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+/**
  * Usage:
  *
  *  <video></video>
@@ -5273,7 +5447,11 @@ customElements.define(\\"on-init\\", OnInit);
 `;
 
 exports[`webcomponent onInit 1`] = `
-"export const defaultValues = {
+"type Props = {
+  name: string;
+};
+
+export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
