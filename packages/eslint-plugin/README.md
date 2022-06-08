@@ -30,18 +30,18 @@ Finally, add the plugin to the `plugins` array, and the rules you want to the `r
 
 ```js
 module.exports = {
-  // [...other settings]
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
   },
-  plugins: [
-    // [...other plugins]
-    '@builder.io/mitosis',
+  plugins: ['@builder.io/mitosis'],
+  extends: [
+    // Use this approach for our recommended rules configuration
+    'plugin:@builder.io/mitosis/recommended',
   ],
   rules: {
-    // example of adding one of our rules
+    // Use this to configure rules individually
     '@builder.io/mitosis/css-no-vars': 'error',
   },
 };

@@ -1,6 +1,6 @@
 import { RuleTester } from 'eslint';
 
-import { staticControlFlow } from '../index';
+import { staticControlFlow } from '../static-control-flow';
 
 const ruleTester = new RuleTester();
 
