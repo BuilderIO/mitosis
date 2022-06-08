@@ -11,11 +11,11 @@
 
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
-```jsx
+```typescript
 import { useState, useRef, Show } from '@builder.io/mitosis';
 
 export default function MyComponent() {
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const state = useState({
     name: 'Steve',
