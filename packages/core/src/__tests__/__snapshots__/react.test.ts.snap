@@ -58,33 +58,32 @@ exports[`React Basic ForwardRef 1`] = `
 
 export interface Props {
   showInput: boolean;
-  inputRef: any;
+  inputRef: HTMLInputElement;
 }
 
-export default forwardRef(function MyBasicForwardRefComponent(
-  props: Props,
-  inputRef
-) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+export default forwardRef<Props[\\"inputRef\\"]>(
+  function MyBasicForwardRefComponent(props: Props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
 
-  return (
-    <>
-      <div>
-        <input
-          className=\\"input\\"
-          ref={inputRef}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-      </div>
-      <style jsx>{\`
-        .input {
-          color: red;
-        }
-      \`}</style>
-    </>
-  );
-});
+    return (
+      <>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </>
+    );
+  }
+);
 "
 `;
 

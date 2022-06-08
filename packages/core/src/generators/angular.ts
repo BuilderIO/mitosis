@@ -231,6 +231,8 @@ export const componentToAngular =
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
     const childComponents: string[] = [];
+    const propsTypeRef =
+      json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
     json.imports.forEach(({ imports }) => {
       Object.keys(imports).forEach((key) => {
@@ -335,6 +337,9 @@ export const componentToAngular =
     } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
+
+    ${json.types ? json.types.join('\n') : ''}
+    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent(json)}
 
     @Component({
@@ -355,7 +360,10 @@ export const componentToAngular =
 
       ${Array.from(props)
         .filter((item) => !item.startsWith('slot') && item !== 'children')
-        .map((item) => `@Input() ${item}: any`)
+        .map((item) => {
+          const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
+          return `@Input() ${item}: ${propType}`;
+        })
         .join('\n')}
 
       ${outputs.join('\n')}

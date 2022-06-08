@@ -2,7 +2,7 @@ import { useState, useRef, useMetadata } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;
-  inputRef: any;
+  inputRef: HTMLInputElement;
 }
 
 useMetadata({
