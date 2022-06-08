@@ -102,6 +102,11 @@ export default class MyBasicComponent {
 exports[`Angular Basic ForwardRef 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
 @Component({
   selector: \\"my-basic-forward-ref-component\\",
   template: \`
@@ -129,6 +134,10 @@ export default class MyBasicForwardRefComponent {
 
 exports[`Angular Basic Ref 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
 
 @Component({
   selector: \\"my-basic-ref-component\\",
@@ -167,7 +176,7 @@ exports[`Angular Basic Ref 1`] = `
   ],
 })
 export default class MyBasicRefComponent {
-  @Input() showInput: any;
+  @Input() showInput: Props[\\"showInput\\"];
 
   @ViewChild(\\"inputRef\\") inputRef: ElementRef;
   @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
@@ -186,6 +195,10 @@ export default class MyBasicRefComponent {
 
 exports[`Angular Basic Ref Assignment 1`] = `
 "import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
 
 @Component({
   selector: \\"my-basic-ref-assignment-component\\",
@@ -209,6 +222,10 @@ export default class MyBasicRefAssignmentComponent {
 
 exports[`Angular Basic Ref Previous 1`] = `
 "import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
 
 @Component({
   selector: \\"my-previous-component\\",
@@ -269,6 +286,10 @@ export default class MyBasicForComponent {
 exports[`Angular Slot Jsx 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+type Props = {
+  [key: string]: string;
+};
+
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 @Component({
@@ -286,19 +307,27 @@ export default class SlotCode {}
 exports[`Angular Text 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 @Component({
   selector: \\"text\\",
   template: \`
-    <div  [contentEditable]='allowEditingText || undefined'  [data-name]='{
-      test: name || 'any name'
-    }'  [innerHTML]=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"  ></div>
-  \`,
+      <div  [contentEditable]='allowEditingText || undefined'  [data-name]='{
+        test: name || 'any name'
+      }'  [innerHTML]=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"  ></div>
+    \`,
 })
 export default class Text {
-  @Input() text: any;
-  @Input() content: any;
+  @Input() text: TextProps[\\"text\\"];
+  @Input() content: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
 }
@@ -358,6 +387,11 @@ export default class MyBasicOutputsComponent {
 exports[`Angular className to class 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
 @Component({
   selector: \\"class-name-code\\",
   template: \`
@@ -396,6 +430,11 @@ export default class MultipleOnUpdate {
 exports[`Angular ng-content and Slot 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
 @Component({
   selector: \\"content-slot-code\\",
   template: \`
@@ -419,6 +458,10 @@ export default class ContentSlotCode {}
 exports[`Angular ng-content and Slot jsx-props 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
 @Component({
   selector: \\"content-slot-jsx-code\\",
   template: \`
@@ -440,6 +483,10 @@ export default class ContentSlotJsxCode {}
 exports[`Angular onInit 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+type Props = {
+  name: string;
+};
+
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -451,7 +498,7 @@ export const defaultValues = {
   \`,
 })
 export default class OnInit {
-  @Input() name: any;
+  @Input() name: Props[\\"name\\"];
 
   name = \\"\\";
 
