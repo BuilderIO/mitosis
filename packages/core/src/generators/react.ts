@@ -567,6 +567,11 @@ const _componentToReact = (
     options.forwardRef = meta || forwardRef;
   }
 
+  const forwardRefType =
+    json.propsTypeRef && forwardRef
+      ? `${json.propsTypeRef}["${forwardRef}"]`
+      : undefined;
+
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
   if (stateType === 'builder') {
@@ -669,7 +674,9 @@ const _componentToReact = (
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent(json)}
     ${isSubComponent ? '' : 'export default '}${
-    isForwardRef ? 'forwardRef(' : ''
+    isForwardRef
+      ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(`
+      : ''
   }function ${json.name || 'MyComponent'}(${propsArgs}${
     isForwardRef ? `, ${options.forwardRef}` : ''
   }) {
