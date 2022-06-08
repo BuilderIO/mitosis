@@ -1,12 +1,13 @@
 **Table of contents**
 
-- [Refs](#refs)
+- [useRef](#useref)
+  - [forwardRef for React](#forwardref-for-react)
 - [onMount](#onmount)
 - [onUnMount](#onunmount)
-- [onUpdate](#onUpdate)
+- [onUpdate](#onupdate)
 - [useMetadata](./customizability.md#useMetadata)
 
-## Refs
+## useRef
 
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
@@ -25,7 +26,7 @@ export default function MyComponent() {
     },
   });
 
-  const inputRef = useRef();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div>
@@ -43,6 +44,32 @@ export default function MyComponent() {
   );
 }
 ```
+
+<details>
+  <summary><strong>forwardRef</strong> for <strong>React</strong></summary>
+
+In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
+
+_Mitosis input_
+
+```typescript
+export default function MyInput(props) {
+  return <input ref={props.inputRef} />;
+}
+```
+
+_Mitosis output_
+
+```typescript
+import { forwardRef } from 'react';
+
+export default forwardRef(function MyInput(props, inputRef) {
+  return <input ref={inputRef} />;
+});
+```
+
+<hr />
+</details>
 
 ## onMount
 
@@ -95,6 +122,5 @@ export default function OnUpdateWithDeps() {
   }, [state.a, state.b]);
 
   return <div />;
-}```
-
+}
 ````
