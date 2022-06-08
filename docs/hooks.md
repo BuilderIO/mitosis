@@ -15,6 +15,8 @@ Use the `useRef` hook to hold a reference to a rendered DOM element.
 import { useState, useRef, Show } from '@builder.io/mitosis';
 
 export default function MyComponent() {
+  const inputRef = useRef(null);
+
   const state = useState({
     name: 'Steve',
     onBlur() {
@@ -25,8 +27,6 @@ export default function MyComponent() {
       return state.name.toLowerCase();
     },
   });
-
-  const inputRef = useRef < HTMLInputElement > null;
 
   return (
     <div>
