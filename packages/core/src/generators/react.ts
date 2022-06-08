@@ -566,6 +566,10 @@ const _componentToReact = (
     const meta = json.meta.useMetadata?.forwardRef as string;
     options.forwardRef = meta || forwardRef;
   }
+  const forwardRefType =
+    json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
+      ? `${json.propsTypeRef}["${forwardRef}"]`
+      : undefined;
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
@@ -669,7 +673,9 @@ const _componentToReact = (
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent(json)}
     ${isSubComponent ? '' : 'export default '}${
-    isForwardRef ? 'forwardRef(' : ''
+    isForwardRef
+      ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(`
+      : ''
   }function ${json.name || 'MyComponent'}(${propsArgs}${
     isForwardRef ? `, ${options.forwardRef}` : ''
   }) {
