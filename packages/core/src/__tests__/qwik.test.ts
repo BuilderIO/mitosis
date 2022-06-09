@@ -244,8 +244,29 @@ describe('qwik', () => {
     // https://builder.io/content/5d5a2d612df542978577d83c0aefad1e
     // https://cdn.builder.io/api/v2/content/page/5d5a2d612df542978577d83c0aefad1e?apiKey=23dfd7cef1104af59f281d58ec525923
     const content = require('./qwik.test.bindings.json');
-    const state: Record<string, any> = {};
-    expect(state).toMatchSnapshot();
+    const fileSet = createFileSet({ output: 'cjs', jsx: false });
+    const component = builderContentToMitosisComponent(content, {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+
+    addComponent(fileSet, component);
+    await debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('for-loop.bindings', async () => {
+    const component = require('./qwik.test.for-loop.binding.json');
+    const fileSet = createFileSet({ output: 'cjs', jsx: false });
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+    addComponent(fileSet, component);
+    await debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('mount', async () => {
+    const content = require('./qwik.test.mount.json');
     const fileSet = createFileSet({ output: 'cjs', jsx: false });
     const component = builderContentToMitosisComponent(content, {
       includeBuilderExtras: true,

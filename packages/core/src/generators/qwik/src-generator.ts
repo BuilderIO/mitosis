@@ -251,9 +251,15 @@ export class SrcBuilder {
         Object.prototype.hasOwnProperty.call(bindings, rawKey) &&
         !ignoreKey(rawKey)
       ) {
-        let { code: binding } = bindings[rawKey];
+        let binding = bindings[rawKey];
+        binding =
+          binding && typeof binding == 'object' && 'code' in binding
+            ? binding.code
+            : binding;
         const key = lastProperty(rawKey);
-        if (binding != null && binding === props[key]) {
+        if (!binding && rawKey in props) {
+          binding = quote(props[rawKey]);
+        } else if (binding != null && binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
           // We assume that when the binding content equals prop content.
           binding = quote(binding);
@@ -410,7 +416,17 @@ export function arrowFnValue(args: string[], expression: any) {
   };
 }
 
+const _virtual_index = '_virtual_index;';
+const return_virtual_index = 'return _virtual_index;';
+
 export function iif(code: any) {
+  if (!code) return;
+  code = code.trim();
+  if (code.endsWith(_virtual_index) && !code.endsWith(return_virtual_index)) {
+    code =
+      code.substr(0, code.length - _virtual_index.length) +
+      return_virtual_index;
+  }
   return function (this: SrcBuilder) {
     code && this.emit('(()=>{', code, '})()');
   };
