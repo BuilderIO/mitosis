@@ -26,11 +26,17 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
 
-      - name: Run prettier
-        run: yarn ci:lint
-
       - name: Build
         run: yarn ci:build
 
       - name: Run tests
         run: yarn ci:test
+
+      - name: Run prettier
+        run: yarn ci:lint
+
+      - name: Install browsers for Playwright
+        run: yarn workspace @builder.io/e2e-solid run playwright install --with-deps
+
+      - name: Run E2E tests
+        run: yarn ci:e2e
