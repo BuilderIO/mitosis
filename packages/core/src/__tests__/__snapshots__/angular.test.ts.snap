@@ -3,11 +3,18 @@
 exports[`Angular Basic 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
     <div class=\\"test div\\">
-      <input [value]=\\"name\\" (input)=\\"name = $event.target.value\\" />
+      <input
+        [value]=\\"DEFAULT_VALUES.name || name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
 
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -21,9 +28,9 @@ exports[`Angular Basic 1`] = `
   ],
 })
 export default class MyBasicComponent {
-  name = \\"Steve\\";
+  DEFAULT_VALUES = DEFAULT_VALUES;
 
-  constructor() {}
+  name = \\"Steve\\";
 }
 "
 `;
@@ -52,8 +59,6 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default class MyBasicChildComponent {
   name = \\"Steve\\";
   dev = \\"PatrickJS\\";
-
-  constructor() {}
 }
 "
 `;
@@ -94,11 +99,48 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular Basic ForwardRef 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
 exports[`Angular Basic Ref 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
+export interface Props {
+  showInput: boolean;
+}
+
 @Component({
-  selector: \\"my-masic-ref-component\\",
+  selector: \\"my-basic-ref-component\\",
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
@@ -111,7 +153,7 @@ exports[`Angular Basic Ref 1`] = `
             (input)=\\"name = $event.target.value\\"
           />
 
-          <label for=\\"cars\\">Choose a car:</label>
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
 
           <select name=\\"cars\\" id=\\"cars\\">
             <option value=\\"supra\\">GR Supra</option>
@@ -133,10 +175,11 @@ exports[`Angular Basic Ref 1`] = `
     \`,
   ],
 })
-export default class MyMasicRefComponent {
-  @Input() showInput: any;
+export default class MyBasicRefComponent {
+  @Input() showInput: Props[\\"showInput\\"];
 
   @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
 
   name = \\"PatrickJS\\";
   onBlur = function onBlur() {
@@ -146,8 +189,62 @@ export default class MyMasicRefComponent {
   lowerCaseName = function lowerCaseName() {
     return this.name.toLowerCase();
   };
+}
+"
+`;
 
-  constructor() {}
+exports[`Angular Basic Ref Assignment 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  selector: \\"my-basic-ref-assignment-component\\",
+  template: \`
+    <div>
+      <button (click)=\\"handlerClick($event)\\">Click</button>
+    </div>
+  \`,
+})
+export default class MyBasicRefAssignmentComponent {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", this._holdValueRef);
+    this._holdValueRef = this._holdValueRef + \\"JS\\";
+  };
+
+  private _holdValueRef = \\"Patrick\\";
+}
+"
+`;
+
+exports[`Angular Basic Ref Previous 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  selector: \\"my-previous-component\\",
+  template: \`
+    <div>
+      <h1>Now: {{count}} , before: {{this._prevCount}}</h1>
+
+      <button (click)=\\"count += 1\\">Increment</button>
+    </div>
+  \`,
+})
+export default class MyPreviousComponent {
+  count = 0;
+
+  private _prevCount = this.count;
+
+  ngAfterContentChecked() {
+    prevCount = this.count;
+  }
 }
 "
 `;
@@ -179,8 +276,6 @@ export default class MyBasicForComponent {
   name = \\"PatrickJS\\";
   names = [\\"Steve\\", \\"PatrickJS\\"];
 
-  constructor() {}
-
   ngOnInit() {
     console.log(\\"onMount code\\");
   }
@@ -190,6 +285,10 @@ export default class MyBasicForComponent {
 
 exports[`Angular Slot Jsx 1`] = `
 "import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string;
+};
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -201,32 +300,36 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
     </div>
   \`,
 })
-export default class SlotCode {
-  constructor() {}
-}
+export default class SlotCode {}
 "
 `;
 
 exports[`Angular Text 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
 import { Builder } from \\"@builder.io/sdk\\";
 
 @Component({
   selector: \\"text\\",
   template: \`
-    <div  [contentEditable]='allowEditingText || undefined'  [data-name]='{
-      test: name || 'any name'
-    }'  [innerHTML]=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"  ></div>
-  \`,
+      <div  [contentEditable]='allowEditingText || undefined'  [data-name]='{
+        test: name || 'any name'
+      }'  [innerHTML]=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"  ></div>
+    \`,
 })
 export default class Text {
-  @Input() text: any;
-  @Input() content: any;
+  @Input() text: TextProps[\\"text\\"];
+  @Input() content: TextProps[\\"content\\"];
 
   name = \\"Decadef20\\";
-
-  constructor() {}
 }
 "
 `;
@@ -241,14 +344,12 @@ exports[`Angular basic outputs 1`] = `
   \`,
 })
 export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
 
-  @Input() message: any;
-
   name = \\"PatrickJS\\";
-
-  constructor() {}
 
   ngOnInit() {
     this.onMessage.emit(this.name);
@@ -268,14 +369,12 @@ exports[`Angular basic outputs meta 1`] = `
   \`,
 })
 export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
   @Output() onMessage = new EventEmitter();
   @Output() onEvent = new EventEmitter();
 
-  @Input() message: any;
-
   name = \\"PatrickJS\\";
-
-  constructor() {}
 
   ngOnInit() {
     this.onMessage.emit(this.name);
@@ -287,6 +386,11 @@ export default class MyBasicOutputsComponent {
 
 exports[`Angular className to class 1`] = `
 "import { Component } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
 
 @Component({
   selector: \\"class-name-code\\",
@@ -300,8 +404,6 @@ exports[`Angular className to class 1`] = `
 })
 export default class ClassNameCode {
   bindings = \\"a binding\\";
-
-  constructor() {}
 }
 "
 `;
@@ -316,8 +418,6 @@ exports[`Angular multiple onUpdate 1`] = `
   \`,
 })
 export default class MultipleOnUpdate {
-  constructor() {}
-
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
 
@@ -329,6 +429,11 @@ export default class MultipleOnUpdate {
 
 exports[`Angular ng-content and Slot 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
 
 @Component({
   selector: \\"content-slot-code\\",
@@ -346,14 +451,16 @@ exports[`Angular ng-content and Slot 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotCode {
-  constructor() {}
-}
+export default class ContentSlotCode {}
 "
 `;
 
 exports[`Angular ng-content and Slot jsx-props 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+};
 
 @Component({
   selector: \\"content-slot-jsx-code\\",
@@ -369,16 +476,20 @@ exports[`Angular ng-content and Slot jsx-props 1`] = `
     </div>
   \`,
 })
-export default class ContentSlotJsxCode {
-  @Input() children: any;
-
-  constructor() {}
-}
+export default class ContentSlotJsxCode {}
 "
 `;
 
 exports[`Angular onInit 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
 
 @Component({
   selector: \\"on-init\\",
@@ -387,7 +498,7 @@ exports[`Angular onInit 1`] = `
   \`,
 })
 export default class OnInit {
-  @Input() name: any;
+  @Input() name: Props[\\"name\\"];
 
   name = \\"\\";
 
@@ -430,8 +541,6 @@ exports[`Angular onMount 1`] = `
   \`,
 })
 export default class Comp {
-  constructor() {}
-
   ngOnInit() {
     console.log(\\"Runs on mount\\");
   }
@@ -453,8 +562,6 @@ exports[`Angular onUpdate 1`] = `
   \`,
 })
 export default class OnUpdate {
-  constructor() {}
-
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
   }

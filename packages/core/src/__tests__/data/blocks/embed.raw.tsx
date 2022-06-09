@@ -5,7 +5,7 @@ export interface EmbedProps {
 }
 
 export default function Embed(props: EmbedProps) {
-  const elem = useRef();
+  const elem = useRef<HTMLDivElement>(null);
 
   const state = useState({
     scriptsInserted: [] as string[],

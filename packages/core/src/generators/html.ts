@@ -20,6 +20,7 @@ import { isHtmlAttribute } from '../helpers/is-html-attribute';
 import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -903,14 +904,22 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
+
     const contextVars = Object.keys(json?.context?.get || {});
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
     const outputs = getPropFunctions(json);
-    const refs = Array.from(getRefs(json));
-    mapRefs(json, (refName) => `self.${refName}`);
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+    mapRefs(json, (refName) => `self._${refName}`);
     const context: string[] = contextVars.map((variableName) => {
       const token = json?.context?.get[variableName].name;
       if (options?.experimental?.htmlContext) {
@@ -995,6 +1004,8 @@ export const componentToCustomElement =
     }
 
     let str = `
+      ${json.types ? json.types.join('\n') : ''}
+      ${json.interfaces ? json.interfaces?.join('\n') : ''}
       ${renderPreComponent(json)}
       /**
        * Usage:
@@ -1007,13 +1018,15 @@ export const componentToCustomElement =
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
-        ${refs.map((ref) => {
-          return `
-        get ${ref}() {
+        ${Array.from(domRefs)
+          .map((ref) => {
+            return `
+        get _${ref}() {
           return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
         }
             `;
-        })}
+          })
+          .join('\n')}
 
         get _root() {
           return this.shadowRoot || this;
@@ -1091,6 +1104,14 @@ export const componentToCustomElement =
           }
 
           ${useOptions.js}
+
+          ${jsRefs
+            .map((ref) => {
+              // const typeParameter = json['refs'][ref]?.typeParameter || '';
+              const argument = json['refs'][ref]?.argument || 'null';
+              return `this._${ref} = ${argument}`;
+            })
+            .join('\n')}
 
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })

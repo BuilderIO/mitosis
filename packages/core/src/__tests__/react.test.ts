@@ -1,9 +1,14 @@
 import { componentToReact } from '../generators/react';
 import { parseJsx } from '../parsers/jsx';
 const basic = require('./data/basic.raw');
+const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = require('./data/basic-child-component.raw');
 const basicFor = require('./data/basic-for.raw');
 const basicRef = require('./data/basic-ref.raw');
+const basicForwardRef = require('./data/basic-forwardRef.raw');
+const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
+const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
+const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const inputBlock = require('./data/blocks/input.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -31,8 +36,19 @@ const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
 const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
 const slotJsx = require('./data/blocks/slot-jsx.raw');
 const slotHtml = require('./data/blocks/slot-html.raw');
+const propsType = require('./data/types/component-props-type.raw');
+const propsInterface = require('./data/types/component-props-interface.raw');
+const preserveTyping = require('./data/types/preserve-typing.raw');
 
 describe('React', () => {
+  test('Remove Internal mitosis package', () => {
+    const component = parseJsx(basicMitosis, {
+      compileAwayPackages: ['@dummy/custom-mitosis'],
+    });
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
   test('ContentSlotJSX', () => {
     const component = parseJsx(contentSlotJsx);
     const output = componentToReact()({ component });
@@ -58,8 +74,35 @@ describe('React', () => {
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
+
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef', () => {
+    const component = parseJsx(basicForwardRef);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef same as meta', () => {
+    const component = parseJsx(basicForwardRef);
+    const componentMeta = parseJsx(basicForwardRefMetadata);
+    const output = componentToReact()({ component });
+    const outputMeta = componentToReact()({ component: componentMeta });
+    expect(output).toMatch(outputMeta);
+  });
+
+  test('Basic Ref Previous', () => {
+    const component = parseJsx(basicRefPrevious);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Assignment', () => {
+    const component = parseJsx(basicRefAssignment);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
@@ -214,6 +257,24 @@ describe('React', () => {
   test('rootShow', () => {
     const component = parseJsx(rootShow);
     const output = componentToReact({ prettier: false })({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsType', () => {
+    const component = parseJsx(propsType);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsInterface', () => {
+    const component = parseJsx(propsInterface);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('preserveTyping', () => {
+    const component = parseJsx(preserveTyping);
+    const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
 });

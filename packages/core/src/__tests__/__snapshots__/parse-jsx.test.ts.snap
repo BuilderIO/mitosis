@@ -208,6 +208,7 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {
     "onMount": Object {
       "code": "
@@ -245,8 +246,35 @@ Object {
   },
   "imports": Array [],
   "inputs": Array [],
+  "interfaces": Array [
+    "// TODO: AMP Support?
+export interface ImageProps {
+  class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}",
+  ],
   "meta": Object {},
   "name": "Image",
+  "propsTypeRef": "ImageProps",
+  "refs": Object {
+    "pictureRef": Object {
+      "argument": "",
+      "typeParameter": "HTMLElement",
+    },
+  },
   "state": Object {
     "imageLoaded": false,
     "isBrowser": "@builder.io/mitosis/method:isBrowser() {
@@ -261,6 +289,76 @@ Object {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && state.isBrowser();
 }",
+  },
+  "subComponents": Array [],
+}
+`;
+
+exports[`Parse JSX custom mitosis package 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      Hello ",
+          },
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {
+            "_text": Object {
+              "code": "state.name",
+            },
+          },
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {},
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "! I can run in React, Qwik, Vue, Solid, or Liquid!
+    ",
+          },
+          "scope": Object {},
+        },
+      ],
+      "meta": Object {},
+      "name": "div",
+      "properties": Object {},
+      "scope": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {},
+    "set": Object {},
+  },
+  "exports": Object {},
+  "hooks": Object {},
+  "imports": Array [],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "MyBasicComponent",
+  "refs": Object {},
+  "state": Object {
+    "name": "PatrickJS",
   },
   "subComponents": Array [],
 }
@@ -507,9 +605,18 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [],
   "inputs": Array [],
+  "interfaces": Array [
+    "export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}",
+  ],
   "meta": Object {
     "useMetadata": Object {
       "foo": Object {
@@ -518,6 +625,8 @@ Object {
     },
   },
   "name": "Button",
+  "propsTypeRef": "ButtonProps",
+  "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
 }
@@ -566,6 +675,7 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {
     "onUpdate": Array [
       Object {
@@ -591,6 +701,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "MyBasicOnUpdateReturnComponent",
+  "refs": Object {},
   "state": Object {
     "name": "PatrickJS",
   },
@@ -690,7 +801,11 @@ Object {
                 },
                 Object {
                   "@type": "@builder.io/mitosis/node",
-                  "bindings": Object {},
+                  "bindings": Object {
+                    "ref": Object {
+                      "code": "inputNoArgRef",
+                    },
+                  },
                   "children": Array [
                     Object {
                       "@type": "@builder.io/mitosis/node",
@@ -699,7 +814,9 @@ Object {
                       "meta": Object {},
                       "name": "div",
                       "properties": Object {
-                        "_text": "Choose a car:",
+                        "_text": "
+            Choose a car:
+          ",
                       },
                       "scope": Object {},
                     },
@@ -892,11 +1009,28 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [],
   "inputs": Array [],
+  "interfaces": Array [
+    "export interface Props {
+  showInput: boolean;
+}",
+  ],
   "meta": Object {},
-  "name": "MyMasicRefComponent",
+  "name": "MyBasicRefComponent",
+  "propsTypeRef": "Props",
+  "refs": Object {
+    "inputNoArgRef": Object {
+      "argument": "null",
+      "typeParameter": "HTMLLabelElement",
+    },
+    "inputRef": Object {
+      "argument": "null",
+      "typeParameter": "HTMLInputElement",
+    },
+  },
   "state": Object {
     "lowerCaseName": "@builder.io/mitosis/function:function lowerCaseName() {
   return state.name.toLowerCase();

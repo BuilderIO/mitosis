@@ -116,11 +116,18 @@ export const blockToMitosis = (
   return str;
 };
 
-const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
+const getRefsString = (
+  json: MitosisComponent,
+  refs = Array.from(getRefs(json)),
+) => {
   let str = '';
 
-  for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
+  for (const ref of refs) {
+    const typeParameter = json['refs'][ref]?.typeParameter || '';
+    const argument = json['refs'][ref]?.argument || '';
+    str += `\nconst ${ref} = useRef${
+      typeParameter ? `<${typeParameter}>` : ''
+    }(${argument});`;
   }
 
   return str;
@@ -147,9 +154,17 @@ export const componentToMitosis =
 
     const json = fastClone(component);
 
-    const refs = getRefs(json);
+    const domRefs = getRefs(component);
+    // grab refs not used for bindings
+    const jsRefs = Object.keys(component.refs).filter((ref) =>
+      domRefs.has(ref),
+    );
 
-    mapRefs(json, (refName) => `${refName}.current`);
+    const refs = [...jsRefs, ...Array.from(domRefs)];
+
+    mapRefs(json, (refName) => {
+      return `${refName}${domRefs.has(refName) ? `.current` : ''}`;
+    });
 
     const addWrapper = json.children.length !== 1;
 
@@ -165,7 +180,7 @@ export const componentToMitosis =
     const hasState = Boolean(Object.keys(component.state).length);
 
     const needsMitosisCoreImport = Boolean(
-      hasState || refs.size || mitosisComponents.length,
+      hasState || refs.length || mitosisComponents.length,
     );
 
     const stringifiedUseMetadata = json5.stringify(component.meta.useMetadata);
@@ -176,7 +191,7 @@ export const componentToMitosis =
       !needsMitosisCoreImport
         ? ''
         : `import { ${!hasState ? '' : 'useState, '} ${
-            !refs.size ? '' : 'useRef, '
+            !refs.length ? '' : 'useRef, '
           } ${mitosisComponents.join(', ')} } from '@builder.io/mitosis';`
     }
     ${
@@ -184,6 +199,9 @@ export const componentToMitosis =
         ? ''
         : `import { ${otherComponents.join(',')} } from '@components';`
     }
+    ${json.types ? json.types.join('\n') : ''}
+    ${json.interfaces ? json.interfaces?.join('\n') : ''}
+
     ${renderPreComponent(json)}
 
     ${
@@ -200,7 +218,7 @@ export const componentToMitosis =
               json,
             )});`
       }
-      ${getRefsString(json)}
+      ${getRefsString(json, refs)}
 
       ${
         !json.hooks.onMount?.code

@@ -7,6 +7,10 @@ const onMount = require('./data/blocks/onMount.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const onInit = require('./data/blocks/onInit.raw');
 const basicFor = require('./data/basic-for.raw');
+const basicForwardRef = require('./data/basic-forwardRef.raw');
+const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
+const basicRefAssignment = require('./data/basic-ref-assignment.raw');
+const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basic = require('./data/basic.raw');
 const basicRef = require('./data/basic-ref.raw');
 const basicContext = require('./data/basic-context.raw');
@@ -30,6 +34,32 @@ describe('Angular', () => {
 
   test('Basic Ref', () => {
     const component = parseJsx(basicRef);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef', () => {
+    const component = parseJsx(basicForwardRef);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic ForwardRef same as meta', () => {
+    const component = parseJsx(basicForwardRef);
+    const componentMeta = parseJsx(basicForwardRefMetadata);
+    const output = componentToAngular()({ component });
+    const outputMeta = componentToAngular()({ component: componentMeta });
+    expect(output).toMatch(outputMeta);
+  });
+
+  test('Basic Ref Assignment', () => {
+    const component = parseJsx(basicRefAssignment);
+    const output = componentToAngular()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('Basic Ref Previous', () => {
+    const component = parseJsx(basicRefPrevious);
     const output = componentToAngular()({ component });
     expect(output).toMatchSnapshot();
   });

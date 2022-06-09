@@ -18,6 +18,7 @@ import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
+import { getPropsRef } from '../helpers/get-props-ref';
 import {
   getMemberObjectString,
   getStateObjectStringFromComponent,
@@ -50,6 +51,7 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  forwardRef?: string;
   experimental?: any;
 }
 
@@ -124,8 +126,25 @@ const NODE_MAPPERS: {
 
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDING_MAPPERS: {
-  [key: string]: string | ((key: string, value: string) => [string, string]);
+  [key: string]:
+    | string
+    | ((
+        key: string,
+        value: string,
+        options?: ToReactOptions,
+      ) => [string, string]);
 } = {
+  ref(ref, value, options) {
+    const regexp = /(.+)?props\.(.+)( |\)|;|\()?$/m;
+    if (regexp.test(value)) {
+      const match = regexp.exec(value);
+      const prop = match?.[2];
+      if (prop) {
+        return [ref, prop];
+      }
+    }
+    return [ref, value];
+  },
   innerHTML(_key, value) {
     return [
       'dangerouslySetInnerHTML',
@@ -182,7 +201,7 @@ export const blockToReact = (
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, value);
+        const [newKey, newValue] = mapper(key, value, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
         str += ` ${BINDING_MAPPERS[key]}="${value}" `;
@@ -218,7 +237,7 @@ export const blockToReact = (
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
-        const [newKey, newValue] = mapper(key, useBindingValue);
+        const [newKey, newValue] = mapper(key, useBindingValue, options);
         str += ` ${newKey}={${newValue}} `;
       } else {
         str += ` ${BINDING_MAPPERS[key]}={${useBindingValue}} `;
@@ -262,14 +281,30 @@ export const blockToReact = (
   return str + `</${json.name}>`;
 };
 
-const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
-  let str = '';
+const getRefsString = (
+  json: MitosisComponent,
+  refs: string[],
+  options: ToReactOptions,
+) => {
+  let hasStateArgument = false;
+  let code = '';
+  const domRefs = getRefs(json);
 
-  for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
+  for (const ref of refs) {
+    const typeParameter = json['refs'][ref]?.typeParameter || '';
+    // domRefs must have null argument
+    const argument =
+      json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
+    hasStateArgument = /state\./.test(argument);
+    code += `\nconst ${ref} = useRef${
+      typeParameter ? `<${typeParameter}>` : ''
+    }(${processBinding(
+      updateStateSettersInCode(argument, options),
+      options,
+    )});`;
   }
 
-  return str;
+  return [hasStateArgument, code];
 };
 
 /**
@@ -447,7 +482,8 @@ type ReactExports =
   | 'useRef'
   | 'useCallback'
   | 'useEffect'
-  | 'useContext';
+  | 'useContext'
+  | 'forwardRef';
 
 const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
@@ -518,10 +554,22 @@ const _componentToReact = (
     updateStateSetters(json, options);
   }
 
-  const refs = getRefs(json);
+  // const domRefs = getRefs(json);
+  const allRefs = Object.keys(json.refs);
+  mapRefs(json, (refName) => `${refName}.current`);
+
   let hasState = Boolean(Object.keys(json.state).length);
 
-  mapRefs(json, (refName) => `${refName}?.current`);
+  const [forwardRef, hasPropRef] = getPropsRef(json);
+  const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
+  if (isForwardRef) {
+    const meta = json.meta.useMetadata?.forwardRef as string;
+    options.forwardRef = meta || forwardRef;
+  }
+  const forwardRefType =
+    json.propsTypeRef && forwardRef && json.propsTypeRef !== 'any'
+      ? `${json.propsTypeRef}["${forwardRef}"]`
+      : undefined;
 
   const stylesType = options.stylesType || 'emotion';
   const stateType = options.stateType || 'mobx';
@@ -554,8 +602,11 @@ const _componentToReact = (
   if (hasContext(json)) {
     reactLibImports.add('useContext');
   }
-  if (refs.size) {
+  if (allRefs.length) {
     reactLibImports.add('useRef');
+  }
+  if (hasPropRef) {
+    reactLibImports.add('forwardRef');
   }
   if (
     json.hooks.onMount?.code ||
@@ -571,10 +622,16 @@ const _componentToReact = (
     (componentHasStyles && stylesType === 'styled-jsx') ||
     isRootShowNode(json);
 
+  const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
   const nativeStyles =
     stylesType === 'react-native' &&
     componentHasStyles &&
     collectReactNativeStyles(json);
+
+  let propsArgs = 'props';
+  if (json.propsTypeRef) {
+    propsArgs = `props: ${json.propsTypeRef}`;
+  }
 
   let str = dedent`
   ${
@@ -612,12 +669,17 @@ const _componentToReact = (
         ? `import { useLocalObservable } from 'mobx-react-lite';`
         : ''
     }
+    ${json.types ? json.types.join('\n') : ''}
+    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent(json)}
-
-    ${isSubComponent ? '' : 'export default '}function ${
-    json.name || 'MyComponent'
-  }(props) {
-      ${getRefsString(json)}
+    ${isSubComponent ? '' : 'export default '}${
+    isForwardRef
+      ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(`
+      : ''
+  }function ${json.name || 'MyComponent'}(${propsArgs}${
+    isForwardRef ? `, ${options.forwardRef}` : ''
+  }) {
+    ${hasStateArgument ? '' : refsString}
       ${
         hasState
           ? stateType === 'mobx'
@@ -639,6 +701,7 @@ const _componentToReact = (
               )});`
           : ''
       }
+      ${hasStateArgument ? refsString : ''}
       ${getContextString(json, options)}
       ${getInitCode(json, options)}
 
@@ -711,7 +774,7 @@ const _componentToReact = (
         }
         ${wrap ? '</>' : ''}
       );
-    }
+    }${isForwardRef ? ')' : ''}
 
     ${
       !nativeStyles

@@ -1,19 +1,22 @@
 **Table of contents**
 
-- [Refs](#refs)
+- [useRef](#useref)
+  - [forwardRef for React](#forwardref-for-react)
 - [onMount](#onmount)
 - [onUnMount](#onunmount)
-- [onUpdate](#onUpdate)
+- [onUpdate](#onupdate)
 - [useMetadata](./customizability.md#useMetadata)
 
-## Refs
+## useRef
 
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
-```jsx
+```typescript
 import { useState, useRef, Show } from '@builder.io/mitosis';
 
 export default function MyComponent() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const state = useState({
     name: 'Steve',
     onBlur() {
@@ -24,8 +27,6 @@ export default function MyComponent() {
       return state.name.toLowerCase();
     },
   });
-
-  const inputRef = useRef();
 
   return (
     <div>
@@ -43,6 +44,32 @@ export default function MyComponent() {
   );
 }
 ```
+
+<details>
+  <summary><strong>forwardRef</strong> for <strong>React</strong></summary>
+
+In React you may need to wrap your component with `forwardRef` to provide direct access to an element (`input` for example). You can do this by using using a `prop` value as the `ref`
+
+_Mitosis input_
+
+```typescript
+export default function MyInput(props) {
+  return <input ref={props.inputRef} />;
+}
+```
+
+_Mitosis output_
+
+```typescript
+import { forwardRef } from 'react';
+
+export default forwardRef(function MyInput(props, inputRef) {
+  return <input ref={inputRef} />;
+});
+```
+
+<hr />
+</details>
 
 ## onMount
 
@@ -79,7 +106,7 @@ The onUpdate hook is the best place to put custom code that will either:
 - if no `dependencies` array is provided: execute on every render
 - if a non-empty `dependencies` array is provided: execute whenever any value in `dependencies` changes
 
-````jsx
+```jsx
 export default function OnUpdateWithDeps() {
   const state = useState({
     a: 'a',
@@ -95,6 +122,5 @@ export default function OnUpdateWithDeps() {
   }, [state.a, state.b]);
 
   return <div />;
-}```
-
-````
+}
+```

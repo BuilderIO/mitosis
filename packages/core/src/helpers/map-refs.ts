@@ -33,7 +33,11 @@ export const mapRefs = (
   component: MitosisComponent,
   mapper: RefMapper,
 ): void => {
-  const refs = Array.from(getRefs(component));
+  const refSet = getRefs(component);
+
+  // grab refs not used for bindings
+  Object.keys(component.refs).forEach((ref) => refSet.add(ref));
+  const refs = Array.from(refSet);
 
   for (const key of Object.keys(component.state)) {
     const value = component.state[key];

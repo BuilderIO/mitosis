@@ -27,7 +27,7 @@ export interface ImageProps {
 }
 
 export default function Image(props: ImageProps) {
-  const pictureRef = useRef();
+  const pictureRef = useRef<HTMLElement>();
 
   const state = useState({
     scrollListener: null as null | (() => void),

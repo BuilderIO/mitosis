@@ -10,9 +10,14 @@ import { createMitosisComponent } from '../helpers/create-mitosis-component';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { getBindingsCode } from '../helpers/get-bindings';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
+import {
+  MitosisComponent,
+  MitosisImport,
+  MitosisExport,
+} from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { tryParseJson } from '../helpers/json';
 
@@ -158,6 +163,26 @@ const parseCodeJson = (node: babel.types.Node) => {
   return tryParseJson(code);
 };
 
+const getPropsTypeRef = (
+  node: babel.types.FunctionDeclaration,
+): string | undefined => {
+  const param = node.params[0];
+  // TODO: component function params name must be props
+  if (
+    babel.types.isIdentifier(param) &&
+    param.name === 'props' &&
+    babel.types.isTSTypeAnnotation(param.typeAnnotation)
+  ) {
+    const paramIdentifier = babel.types.variableDeclaration('let', [
+      babel.types.variableDeclarator(param),
+    ]);
+    return generate(paramIdentifier)
+      .code.replace(/^let\sprops:\s+/, '')
+      .replace(/;/g, '');
+  }
+  return undefined;
+};
+
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
@@ -166,6 +191,7 @@ const componentFunctionToJson = (
   let state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
   const setContext: MitosisComponent['context']['set'] = {};
+  const refs: MitosisComponent['refs'] = {};
   for (const item of node.body.body) {
     if (types.isExpressionStatement(item)) {
       const expression = item.expression;
@@ -345,6 +371,20 @@ const componentFunctionToJson = (
                 };
               }
             }
+          } else if (init.callee.name === 'useRef') {
+            if (types.isIdentifier(declaration.id)) {
+              const firstArg = init.arguments[0];
+              const varName = declaration.id.name;
+              refs[varName] = {
+                argument: generate(firstArg).code,
+              };
+              // Typescript Parameter
+              if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
+                refs[varName].typeParameter = generate(
+                  init.typeParameters.params[0],
+                ).code;
+              }
+            }
           }
         }
       }
@@ -362,16 +402,30 @@ const componentFunctionToJson = (
     }
   }
 
+  const { exports: localExports } = context.builder.component;
+  if (localExports) {
+    const bindingsCode = getBindingsCode(children);
+    Object.keys(localExports).forEach((name) => {
+      const found = bindingsCode.find((code: string) =>
+        code.match(new RegExp(`\\b${name}\\b`)),
+      );
+      localExports[name].usedInLocal = Boolean(found);
+    });
+    context.builder.component.exports = localExports;
+  }
+
   return createMitosisComponent({
     ...context.builder.component,
     name: node.id?.name,
     state,
     children,
+    refs: refs,
     hooks,
     context: {
       get: accessedContext,
       set: setContext,
     },
+    propsTypeRef: getPropsTypeRef(node),
   }) as any;
 };
 
@@ -656,6 +710,7 @@ const collectMetadata = (
 type ParseMitosisOptions = {
   format: 'react' | 'simple';
   jsonHookNames?: string[];
+  compileAwayPackages?: string[];
 };
 
 function mapReactIdentifiersInExpression(
@@ -810,6 +865,28 @@ function extractContextComponents(json: MitosisComponent) {
 const isImportOrDefaultExport = (node: babel.Node) =>
   types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
 
+const isTypeOrInterface = (node: babel.Node) =>
+  types.isTSTypeAliasDeclaration(node) ||
+  types.isTSInterfaceDeclaration(node) ||
+  (types.isExportNamedDeclaration(node) &&
+    types.isTSTypeAliasDeclaration(node.declaration)) ||
+  (types.isExportNamedDeclaration(node) &&
+    types.isTSInterfaceDeclaration(node.declaration));
+
+const collectTypes = (node: babel.Node, context: Context) => {
+  const typeStr = generate(node).code;
+  const { types = [] } = context.builder.component;
+  types.push(typeStr);
+  context.builder.component.types = types.filter(Boolean);
+};
+
+const collectInterfaces = (node: babel.Node, context: Context) => {
+  const interfaceStr = generate(node).code;
+  const { interfaces = [] } = context.builder.component;
+  interfaces.push(interfaceStr);
+  context.builder.component.interfaces = interfaces.filter(Boolean);
+};
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -850,9 +927,53 @@ export function parseJsx(
               component: createMitosisComponent(),
             };
 
-            const keepStatements = path.node.body.filter((statement) =>
-              isImportOrDefaultExport(statement),
+            const keepStatements = path.node.body.filter(
+              (statement) =>
+                isImportOrDefaultExport(statement) ||
+                isTypeOrInterface(statement),
             );
+
+            const exportsOrLocalVariables = path.node.body.filter(
+              (statement) =>
+                !isImportOrDefaultExport(statement) &&
+                !isTypeOrInterface(statement) &&
+                !types.isExpressionStatement(statement),
+            );
+
+            context.builder.component.exports = exportsOrLocalVariables.reduce(
+              (pre, node) => {
+                let name, isFunction;
+                if (
+                  babel.types.isExportNamedDeclaration(node) &&
+                  babel.types.isVariableDeclaration(node.declaration) &&
+                  babel.types.isIdentifier(node.declaration.declarations[0].id)
+                ) {
+                  name = node.declaration.declarations[0].id.name;
+                  isFunction = babel.types.isFunction(
+                    node.declaration.declarations[0].init,
+                  );
+                } else if (
+                  babel.types.isVariableDeclaration(node) &&
+                  babel.types.isIdentifier(node.declarations[0].id)
+                ) {
+                  name = node.declarations[0].id.name;
+                  isFunction = babel.types.isFunction(
+                    node.declarations[0].init,
+                  );
+                }
+                if (name) {
+                  pre[name] = {
+                    code: generate(node).code,
+                    isFunction,
+                  };
+                } else {
+                  console.warn('export statement without name', node);
+                }
+                return pre;
+              },
+              {} as MitosisExport,
+            );
+
             let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
             );
@@ -891,10 +1012,14 @@ export function parseJsx(
           },
           ImportDeclaration(path, context) {
             // @builder.io/mitosis or React imports compile away
+            const customPackages = options?.compileAwayPackages || [];
             if (
-              ['react', '@builder.io/mitosis', '@emotion/react'].includes(
-                path.node.source.value,
-              )
+              [
+                'react',
+                '@builder.io/mitosis',
+                '@emotion/react',
+                ...customPackages,
+              ].includes(path.node.source.value)
             ) {
               path.remove();
               return;
@@ -924,6 +1049,22 @@ export function parseJsx(
           JSXElement(path) {
             const { node } = path;
             path.replaceWith(jsonToAst(jsxElementToJson(node)));
+          },
+          ExportNamedDeclaration(path, context) {
+            const { node } = path;
+            const newTypeStr = generate(node).code;
+            if (babel.types.isTSInterfaceDeclaration(node.declaration)) {
+              collectInterfaces(path.node, context);
+            }
+            if (babel.types.isTSTypeAliasDeclaration(node.declaration)) {
+              collectTypes(path.node, context);
+            }
+          },
+          TSTypeAliasDeclaration(path, context) {
+            collectTypes(path.node, context);
+          },
+          TSInterfaceDeclaration(path, context) {
+            collectInterfaces(path.node, context);
           },
         },
       }),
