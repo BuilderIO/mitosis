@@ -4,7 +4,10 @@ import { devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export function configFor(command: string, port: number): PlaywrightTestConfig {
+export function configFor(
+  packageName: string,
+  port: number,
+): PlaywrightTestConfig {
   return {
     testDir: __dirname + '/tests',
     /* Maximum time one test can run for. */
@@ -100,7 +103,7 @@ export function configFor(command: string, port: number): PlaywrightTestConfig {
     // also to test against "run dev" for a faster development cycle.
 
     webServer: {
-      command,
+      command: `yarn workspace ${packageName} run serve --port ${port}`,
       port,
       reuseExistingServer: false,
     },
