@@ -93,7 +93,7 @@ const getImportedValues = ({ theImport }: { theImport: MitosisImport }) => {
   return importString;
 };
 
-const renderImport = ({
+export const renderImport = ({
   theImport,
   target,
 }: {
@@ -103,7 +103,7 @@ const renderImport = ({
   const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target);
 
-  return `import ${importedValues} from ${path}`;
+  return `import ${importedValues} from '${path}';`;
 };
 
 const renderImports = ({
@@ -112,23 +112,22 @@ const renderImports = ({
 }: {
   imports: MitosisImport[];
   target?: Target;
-}): string => {
-  let importString = '';
-
-  for (const theImport of imports) {
-    // Remove compile away components
-    if (theImport.path === '@builder.io/components') {
-      continue;
-    }
-    // TODO: Mitosis output needs this
-    if (theImport.path.startsWith('@builder.io/mitosis')) {
-      continue;
-    }
-    importString += renderImport({ theImport, target }) + '\n';
-  }
-
-  return importString;
-};
+}): string =>
+  imports
+    .filter((theImport) => {
+      if (
+        // Remove compile away components
+        theImport.path === '@builder.io/components' ||
+        // TODO: Mitosis output needs this
+        theImport.path.startsWith('@builder.io/mitosis')
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    })
+    .map((theImport) => renderImport({ theImport, target }))
+    .join('\n');
 
 export const renderPreComponent = (
   component: MitosisComponent,
