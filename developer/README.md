@@ -22,7 +22,7 @@ For all packages, the below steps to develop locally are the same:
 # run local development server
 yarn start
 
-# run tests
+# run unit tests
 yarn test
 ```
 
@@ -42,11 +42,16 @@ In `core`, we use jest snapshots for testing. If you are solving a problem that 
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
-## Running the full test suite
+## Running the CI locally, including E2E tests
 
-Before submitting a change, run roughly the same process as in CI, locally:
+Before submitting a change, run roughly the same process as in CI, including
+Playwright E2E tests.
 
 ```bash
 yarn
 yarn ci
 ```
+
+Playwright is in `devDependencies` only at the top level `package.json`, to
+ensure only a single copy is installed for the whole project. See the
+`README.md` for each E2E test harness for commands to run just one.
