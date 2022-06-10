@@ -1,9 +1,9 @@
 import { useState } from '@builder.io/mitosis';
 
 // @ts-ignore
-export default function MyBasicComponent({children: c, type}) {
+export default function MyBasicComponent({ children: c, type }) {
   const state = useState({
-    name: 'Steve',
+    name: 'Decadef20',
   });
 
   return (

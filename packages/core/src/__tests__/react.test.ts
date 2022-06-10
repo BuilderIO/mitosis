@@ -42,13 +42,6 @@ const preserveTyping = require('./data/types/preserve-typing.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
 
 describe('React', () => {
-  test('propsDestructure', () => {
-    const component = parseJsx(propsDestructure);
-    const output = componentToReact()({ component });
-    expect(output).toMatchSnapshot();
-  });
-
-  return
   test('Remove Internal mitosis package', () => {
     const component = parseJsx(basicMitosis, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
@@ -285,7 +278,7 @@ describe('React', () => {
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
-  
+
   test('propsDestructure', () => {
     const component = parseJsx(propsDestructure);
     const output = componentToReact()({ component });
