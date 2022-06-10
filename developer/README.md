@@ -4,7 +4,8 @@ Welcome ⚡️!! If you've found a bug, or have an idea to add a feature we'd lo
 
 ## Project Structure
 
-Mitosis is structured as a mono-repo. The packages live under `packages/`:
+Mitosis is structured as a mono-repo using Yarn (v3) Workspaces. The packages
+live under `packages/` and `examples/`:
 
 - `core` (`@builder.io/mitosis`): contains the Mitosis engine
 - `cli` (`@builder.io/mitosis-cli`): contains the Mitosis CLI, and _depends_ on `core`
@@ -40,3 +41,12 @@ In `core`, we use jest snapshots for testing. If you are solving a problem that 
 - keep iterating until your test passes!
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
+
+## Running the full test suite
+
+Before submitting a change, run roughly the same process as in CI, locally:
+
+```bash
+yarn
+yarn ci
+```

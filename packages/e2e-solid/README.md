@@ -1,0 +1,3 @@
+# E2E test with Solid
+
+To run this...
