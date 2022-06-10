@@ -1,4 +1,3 @@
-import '@builder.io/mitosis/dist/src/jsx-types';
 import { useState } from '@builder.io/mitosis';
 
 export interface State {
