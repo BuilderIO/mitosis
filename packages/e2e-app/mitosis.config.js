@@ -7,8 +7,7 @@ module.exports = {
     // 'builder',
     'vue',
     'html',
-    // TO-DO: fix error causing svelte output not to work
-    // 'svelte',
+    'svelte',
     'solid',
     'angular',
     'webcomponent',
