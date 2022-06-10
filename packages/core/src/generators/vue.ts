@@ -393,6 +393,31 @@ const mergeOptions = (
   plugins: [...pluginsA, ...pluginsB],
 });
 
+const generateComponentImport =
+  (options: ToVueOptions) =>
+  (componentName: string): string => {
+    if (options.vueVersion === 3) {
+      return `'${kebabCase(
+        componentName,
+      )}': defineAsyncComponent(() => import(${componentName}))`;
+    } else {
+      return `'${kebabCase(componentName)}': () => import(${componentName})`;
+    }
+  };
+
+const generateComponents = (
+  componentsUsed: string[],
+  options: ToVueOptions,
+): string => {
+  if (componentsUsed.length === 0) {
+    return '';
+  } else {
+    return `components: { ${componentsUsed
+      .map(generateComponentImport(options))
+      .join(',')} },`;
+  }
+};
+
 export const componentToVue =
   (userOptions: ToVueOptions = {}) =>
   // hack while we migrate all other transpilers to receive/handle path
@@ -526,6 +551,11 @@ export const componentToVue =
       ${template}
     </template>
     <script>
+    ${
+      options.vueVersion === 3
+        ? 'import { defineAsyncComponent } from "vue"'
+        : ''
+    }
       ${renderPreComponent(component, 'vue')}
 
       export default {
@@ -538,18 +568,7 @@ export const componentToVue =
                   : ''
               }${kebabCase(component.name)}',`
         }
-        ${
-          !componentsUsed.length
-            ? ''
-            : `components: { ${componentsUsed
-                .map(
-                  (componentName) =>
-                    `'${kebabCase(
-                      componentName,
-                    )}': async () => ${componentName}`,
-                )
-                .join(',')} },`
-        }
+        ${generateComponents(componentsUsed, options)}
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
