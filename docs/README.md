@@ -12,6 +12,7 @@ Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports gener
 - [Gotchas](./gotchas.md)
 - [Customizability](./customizability.md)
 - [Configuration](./configuration.md)
+- [CLI](./cli.md)
 
 ## How does it work
 
