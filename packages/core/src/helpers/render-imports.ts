@@ -34,6 +34,8 @@ const getFileExtensionForTarget = (target?: Target) => {
       return '.svelte';
     case 'solid':
       return '.jsx';
+    case 'vue':
+      return '.vue';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to one place.
     default:
@@ -54,14 +56,8 @@ const transformImportPath = (theImport: MitosisImport, target?: Target) => {
   return theImport.path;
 };
 
-const renderImport = ({
-  theImport,
-  target,
-}: {
-  theImport: MitosisImport;
-  target?: Target;
-}): string => {
-  let importString = 'import ';
+const getImportedValues = ({ theImport }: { theImport: MitosisImport }) => {
+  let importString = '';
 
   const starImport = getStarImport({ theImport });
   if (starImport) {
@@ -94,11 +90,20 @@ const renderImport = ({
     importString += ' } ';
   }
 
+  return importString;
+};
+
+const renderImport = ({
+  theImport,
+  target,
+}: {
+  theImport: MitosisImport;
+  target?: Target;
+}): string => {
+  const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target);
 
-  importString += ` from '${path}';`;
-
-  return importString;
+  return `import ${importedValues} from ${path}`;
 };
 
 const renderImports = ({
