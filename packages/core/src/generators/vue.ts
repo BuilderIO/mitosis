@@ -526,7 +526,7 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-      ${renderPreComponent(component)}
+      ${renderPreComponent(component, 'vue')}
 
       export default {
         ${

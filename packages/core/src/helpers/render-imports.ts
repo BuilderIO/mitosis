@@ -28,7 +28,7 @@ const getDefaultImport = ({
   return null;
 };
 
-const getFileExtensionForTarget = (target?: Target) => {
+const getFileExtensionForTarget = (target: Target) => {
   switch (target) {
     case 'svelte':
       return '.svelte';
@@ -43,7 +43,7 @@ const getFileExtensionForTarget = (target?: Target) => {
   }
 };
 
-const transformImportPath = (theImport: MitosisImport, target?: Target) => {
+const transformImportPath = (theImport: MitosisImport, target: Target) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '');
@@ -98,7 +98,7 @@ export const renderImport = ({
   target,
 }: {
   theImport: MitosisImport;
-  target?: Target;
+  target: Target;
 }): string => {
   const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target);
@@ -106,12 +106,12 @@ export const renderImport = ({
   return `import ${importedValues} from '${path}';`;
 };
 
-const renderImports = ({
+export const renderImports = ({
   imports,
   target,
 }: {
   imports: MitosisImport[];
-  target?: Target;
+  target: Target;
 }): string =>
   imports
     .filter((theImport) => {
@@ -131,7 +131,7 @@ const renderImports = ({
 
 export const renderPreComponent = (
   component: MitosisComponent,
-  target?: Target,
+  target: Target,
 ): string => `
     ${renderImports({ imports: component.imports, target })}
     ${renderExportAndLocal(component)}
