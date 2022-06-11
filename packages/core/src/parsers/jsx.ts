@@ -887,9 +887,19 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
-function undoPropsDestructure(
+const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
+  path.traverse({
+    VariableDeclaration(path) {
+      undoStateDestructure(path);
+    },
+    FunctionDeclaration(path) {
+      undoPropsDestructure(path);
+    },
+  });
+};
+const undoPropsDestructure = (
   path: babel.NodePath<babel.types.FunctionDeclaration>,
-) {
+) => {
   const { node } = path;
   if (node.params.length && types.isObjectPattern(node.params[0])) {
     const propsMap = node.params[0].properties.reduce((pre, cur) => {
@@ -920,7 +930,45 @@ function undoPropsDestructure(
       },
     });
   }
-}
+};
+
+const undoStateDestructure = (
+  path: babel.NodePath<babel.types.VariableDeclaration>,
+) => {
+  const { node } = path;
+  if (node.declarations?.length) {
+    const index = node.declarations.findIndex(
+      (v) =>
+        types.isObjectPattern(v.id) &&
+        types.isIdentifier(v.init) &&
+        v.init.name === 'state',
+    );
+    if (index > -1) {
+      const declarator = node.declarations[index];
+      if (babel.types.isObjectPattern(declarator.id)) {
+        const newDeclarators = declarator.id.properties.reduce((pre, cur) => {
+          if (
+            babel.types.isObjectProperty(cur) &&
+            babel.types.isIdentifier(cur.value) &&
+            babel.types.isIdentifier(cur.key)
+          ) {
+            pre.push(
+              babel.types.variableDeclarator(
+                cur.value,
+                babel.types.identifier(`state.${cur.key.name}`),
+              ),
+            );
+          }
+          return pre;
+        }, [] as babel.types.VariableDeclarator[]);
+
+        node.declarations.splice(index, 1, ...newDeclarators);
+
+        path.replaceWith(node);
+      }
+    }
+  }
+};
 
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
@@ -958,6 +1006,9 @@ export function parseJsx(
             if (context.builder) {
               return;
             }
+
+            beforeParse(path);
+
             context.builder = {
               component: createMitosisComponent(),
             };
@@ -1036,7 +1087,6 @@ export function parseJsx(
           },
           FunctionDeclaration(path, context) {
             const { node } = path;
-            undoPropsDestructure(path);
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {

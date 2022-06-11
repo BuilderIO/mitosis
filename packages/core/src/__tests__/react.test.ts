@@ -40,6 +40,7 @@ const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
+const stateDestructure = require('./data/basic-state-destructure.raw');
 
 describe('React', () => {
   test('Remove Internal mitosis package', () => {
@@ -281,6 +282,12 @@ describe('React', () => {
 
   test('propsDestructure', () => {
     const component = parseJsx(propsDestructure);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('stateDestructure', () => {
+    const component = parseJsx(stateDestructure);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

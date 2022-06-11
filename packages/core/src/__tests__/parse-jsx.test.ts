@@ -7,6 +7,8 @@ const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
 const basicRef = require('./data/basic-ref.raw');
 const basicPropsRaw = require('./data/basic-props.raw');
 const basicPropsDestructureRaw = require('./data/basic-props-destructure.raw');
+const basicStateRaw = require('./data/basic-state.raw');
+const basicStateDestructureRaw = require('./data/basic-state-destructure.raw');
 
 describe('Parse JSX', () => {
   test('metadata', () => {
@@ -35,7 +37,11 @@ describe('Parse JSX', () => {
     expect(json).toMatchSnapshot();
   });
 
-  test('custom mitosis package', () => {
+  test('support props destructure', () => {
     expect(parseJsx(basicPropsRaw)).toEqual(parseJsx(basicPropsDestructureRaw));
+  });
+
+  test('support state destructure', () => {
+    expect(parseJsx(basicStateRaw)).toEqual(parseJsx(basicStateDestructureRaw));
   });
 });
