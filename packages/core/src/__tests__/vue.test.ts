@@ -22,6 +22,7 @@ const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const onMount = require('./data/blocks/onMount.raw');
 const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
 const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
+const propsDestructure = require('./data/basic-props-destructure.raw');
 
 const path = 'test-path';
 
@@ -154,6 +155,12 @@ describe('Vue', () => {
 
   test('onMount & onUnMount', () => {
     const component = parseJsx(onMount);
+    const output = componentToVue()({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsDestructure', () => {
+    const component = parseJsx(propsDestructure);
     const output = componentToVue()({ component, path });
     expect(output).toMatchSnapshot();
   });

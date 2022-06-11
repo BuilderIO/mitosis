@@ -887,6 +887,41 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
+function undoPropsDestructure(
+  path: babel.NodePath<babel.types.FunctionDeclaration>,
+) {
+  const { node } = path;
+  if (node.params.length && types.isObjectPattern(node.params[0])) {
+    const propsMap = node.params[0].properties.reduce((pre, cur) => {
+      if (
+        types.isObjectProperty(cur) &&
+        types.isIdentifier(cur.key) &&
+        types.isIdentifier(cur.value)
+      ) {
+        pre[cur.value.name] = `props.${cur.key.name}`;
+        return pre;
+      }
+      return pre;
+    }, {} as Record<string, string>);
+
+    path.traverse({
+      JSXExpressionContainer(path) {
+        const { node } = path;
+        if (types.isIdentifier(node.expression)) {
+          const { name } = node.expression;
+          if (propsMap[name]) {
+            path.replaceWith(
+              babel.types.jsxExpressionContainer(
+                babel.types.identifier(propsMap[name]),
+              ),
+            );
+          }
+        }
+      },
+    });
+  }
+}
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -1001,6 +1036,7 @@ export function parseJsx(
           },
           FunctionDeclaration(path, context) {
             const { node } = path;
+            undoPropsDestructure(path);
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {

@@ -39,6 +39,7 @@ const slotHtml = require('./data/blocks/slot-html.raw');
 const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
+const propsDestructure = require('./data/basic-props-destructure.raw');
 
 describe('React', () => {
   test('Remove Internal mitosis package', () => {
@@ -274,6 +275,12 @@ describe('React', () => {
 
   test('preserveTyping', () => {
     const component = parseJsx(preserveTyping);
+    const output = componentToReact()({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('propsDestructure', () => {
+    const component = parseJsx(propsDestructure);
     const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });

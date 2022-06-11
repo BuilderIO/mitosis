@@ -11,6 +11,8 @@
   - [Can't assign "params" to "state"](#cant-assign-"params"-to-"state")
   - [Can't assign function output to "state"](#cant-assign-function-output-to-"state")
   - [Can't destructure assignment from state](#cant-destructure-assignment-from-state)
+  - [Can't set default props value with destructuring](#can't-set-default-props-value-with-destructuring)
+  - [Can't destructure props as ...rest](#can't-destructure-props-as-...rest)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -392,5 +394,72 @@ export default function MyComponent(props) {
   }, []);
 
   return <></>;
+}
+```
+
+### Can't set default props value with destructuring
+
+Setting default props value with destructuring isn't currently supported, and is
+ignored by the compiler.
+
+_Mitosis input_
+
+```typescript
+export default function MyComponent(props) {
+  return <div>{color}</div>;
+}
+```
+
+_Mitosis output_
+
+```typescript
+export default function MyComponent({ color = 'blue' }) {
+  return <div>{color}</div>;
+}
+```
+
+**Work around**
+
+define a local variable
+
+_Mitosis input_
+
+```typescript
+const DEFAULT_VALUES = {
+  color: 'blue',
+};
+export default function MyComponent(props) {
+  return <div>{props.color || DEFAULT_VALUES.color}</div>;
+}
+```
+
+_Mitosis output_
+
+```typescript
+const DEFAULT_VALUES = {
+  color: 'blue',
+};
+export default function MyComponent(props) {
+  return <div>{props.color || DEFAULT_VALUES.color}</div>;
+}
+```
+
+### Can't destructure props as ...rest
+
+`...rest` props parameter isn't currently supported
+
+_Mitosis input_
+
+```typescript
+export default function MyComponent({ children, ...rest }) {
+  return <div {...rest}>{children}</div>;
+}
+```
+
+_Mitosis output_
+
+```typescript
+export default function MyComponent(props) {
+  return <div {...rest}>{props.children}</div>;
 }
 ```
