@@ -3,10 +3,14 @@ export * from './flow';
 export type Context<T> = {};
 
 // These compile away
-export const useState = <T>(obj: T): T => {
-  throw Error('useState: Mitosis hook should have been compiled away');
+export const useState = <T>(obj: T) => {
+  throw new Error('useState: Mitosis hook should have been compiled away');
+  return obj as T;
 };
-export const useRef = <T>(obj?: null | void | T) => obj as unknown as T;
+export const useRef = <T>(obj?: null | void | T) => {
+  throw new Error('useRef: Mitosis hook should have been compiled away');
+  return obj as unknown as T;
+};
 export const useContext = <T = { [key: string]: any }>(key: Context<T>): T =>
   null as unknown as T;
 export const createContext = <T = { [key: string]: any }>(
@@ -16,8 +20,9 @@ export const setContext = <T = { [key: string]: any }>(
   key: Context<T>,
   value: Partial<T>,
 ): void => {};
-export const onMount = (fn: () => any): any => {
-  throw Error('onMount: Mitosis hook should have been compiled away');
+export const onMount = (fn: () => any) => {
+  throw new Error('onMount: Mitosis hook should have been compiled away');
+  return null as any;
 };
 export const onUpdate = (fn: () => any, deps?: any[]) => null as any;
 export const onCreate = (fn: () => any) => null as any;
@@ -25,8 +30,9 @@ export const onInit = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
 export const useDynamicTag = (fn: () => any) => null as any;
 export const onError = (fn: () => any) => null as any;
-export const useMetadata = (obj: object): any => {
-  throw Error('useMetadata: Mitosis hook should have been compiled away');
+export const useMetadata = (obj: object) => {
+  throw new Error('useMetadata: Mitosis hook should have been compiled away');
+  return null as any;
 };
 
 export * from './parsers/jsx';
