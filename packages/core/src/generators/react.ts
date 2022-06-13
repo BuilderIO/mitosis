@@ -671,7 +671,7 @@ const _componentToReact = (
     }
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
-    ${renderPreComponent(json)}
+    ${renderPreComponent(json, 'react')}
     ${isSubComponent ? '' : 'export default '}${
     isForwardRef
       ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(`
