@@ -11,21 +11,21 @@ import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 import { componentToReact, ToMitosisOptions } from '..';
 
-/**
- * Load a file using nodejs resolution as a string.
- */
-function fixture(path: string): string {
-  const localpath = require.resolve(path);
-  return fs.readFileSync(localpath, { encoding: 'utf-8' });
-}
+// /**
+//  * Load a file using nodejs resolution as a string.
+//  */
+// function require(path: string): string {
+//   const localpath = require.resolve(path);
+//   return fs.readFileSync(localpath, { encoding: 'utf-8' });
+// }
 
-const stamped = fixture('./data/blocks/stamped-io.raw');
-const customCode = fixture('./data/blocks/custom-code.raw');
-const embed = fixture('./data/blocks/embed.raw');
-const image = fixture('./data/blocks/image.raw');
-const columns = fixture('./data/blocks/columns.raw');
+const stamped = require('./data/blocks/stamped-io.raw');
+const customCode = require('./data/blocks/custom-code.raw');
+const embed = require('./data/blocks/embed.raw');
+const image = require('./data/blocks/image.raw');
+const columns = require('./data/blocks/columns.raw');
 const lazyLoadSection = JSON.parse(
-  fixture('./data/builder/lazy-load-section.json'),
+  require('./data/builder/lazy-load-section.json'),
 );
 
 const mitosisOptions: ToMitosisOptions = {
