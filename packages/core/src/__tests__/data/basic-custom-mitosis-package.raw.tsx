@@ -1,4 +1,4 @@
-import { useState } from '@dummy/custom-mitosis';
+import { useStore } from '@dummy/custom-mitosis';
 
 export default function MyBasicComponent() {
   const state = useStore({
