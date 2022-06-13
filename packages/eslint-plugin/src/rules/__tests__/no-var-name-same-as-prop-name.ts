@@ -22,7 +22,7 @@ ruleTester.run('no-var-name-same-as-prop-name', rule, {
       import { useState } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({
+        const state = useStore({
           getName() {
             const name = props.name_ || 'hello'
             return name + ' world'
@@ -44,7 +44,7 @@ ruleTester.run('no-var-name-same-as-prop-name', rule, {
       import { useState } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({
+        const state = useStore({
           getName() {
             const name = props.name || 'hello'
             return name + ' world'
@@ -68,7 +68,7 @@ ruleTester.run('no-var-name-same-as-prop-name', rule, {
       import { useState } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({
+        const state = useStore({
           getName() {
             const name = props.name
             return name + ' world'
@@ -90,7 +90,7 @@ ruleTester.run('no-var-name-same-as-prop-name', rule, {
       import { useState } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({
+        const state = useStore({
           getName() {
             const name = props.name || 'hello'
             return name + ' world'

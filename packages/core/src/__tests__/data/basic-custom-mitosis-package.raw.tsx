@@ -1,7 +1,7 @@
 import { useState } from '@dummy/custom-mitosis';
 
 export default function MyBasicComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
   });
 

@@ -2453,21 +2453,21 @@ class Image extends HTMLElement {
     this.state = {
       scrollListener: null,
       imageLoaded: false,
-      load: false,
       setLoaded() {
         self.state.imageLoaded = true;
         self.update();
       },
-      isBrowser() {
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!self.props.lazy && isBrowser();
+      },
+      isBrowser: function isBrowser() {
         return (
           typeof window !== \\"undefined\\" &&
           window.navigator.product != \\"ReactNative\\"
         );
       },
-      useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
-        return !!self.props.lazy && self.state.isBrowser();
-      },
+      load: false,
     };
     if (!this.props) {
       this.props = {};
@@ -2584,8 +2584,7 @@ class Image extends HTMLElement {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            this.state.load = true;
-            this.update();
+            setLoad(true);
             this.state.scrollListener = null;
             this.update();
             window.removeEventListener(\\"scroll\\", listener);

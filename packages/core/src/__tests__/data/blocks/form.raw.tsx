@@ -1,4 +1,4 @@
-import { useState, useRef, Show, For } from '@builder.io/mitosis';
+import { useStore, useRef, Show, For } from '@builder.io/mitosis';
 import { BuilderBlock as BuilderBlockComponent } from '@fake';
 import { BuilderElement, Builder, builder } from '@builder.io/sdk';
 import { BuilderBlocks } from '@fake';
@@ -29,7 +29,7 @@ export interface FormProps {
 export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
 
 export default function FormComponent(props: FormProps) {
-  const state = useState({
+  const state = useStore({
     state: 'unsubmitted' as FormState,
     // TODO: separate response and error?
     responseData: null as any,

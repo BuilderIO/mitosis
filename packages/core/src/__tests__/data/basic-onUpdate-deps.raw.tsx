@@ -1,11 +1,11 @@
-import { useState, onUpdate } from '@builder.io/mitosis';
+import { useStore, onUpdate } from '@builder.io/mitosis';
 
 export interface Props {
   name: string;
 }
 
 export default function MyBasicComponent(props: Props) {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
   });
 

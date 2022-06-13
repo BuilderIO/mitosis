@@ -1,4 +1,4 @@
-import { onInit, useState } from '@builder.io/mitosis';
+import { onInit, useStore } from '@builder.io/mitosis';
 
 type Props = {
   name: string;
@@ -9,7 +9,7 @@ export const defaultValues = {
 };
 
 export default function OnInit(props: Props) {
-  const state = useState({
+  const state = useStore({
     // name: props.name
     // name: defaultValues.name || props.name,
     name: '',

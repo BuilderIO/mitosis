@@ -1,5 +1,5 @@
 import { Builder } from '@builder.io/sdk';
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export interface TextProps {
   attributes?: any;
@@ -19,7 +19,7 @@ export default function Text(props: TextProps) {
       props.builderBlock?.bindings?.['options.text'] ||
       props.builderBlock?.bindings?.['text']
     );
-  const state = useState({ name: 'Decadef20' });
+  const state = useStore({ name: 'Decadef20' });
 
   // TODO: Add back dynamic `direction` CSS prop when we add support for some
   //       sort of dynamic CSS

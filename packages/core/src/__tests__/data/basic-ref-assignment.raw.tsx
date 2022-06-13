@@ -1,4 +1,4 @@
-import { useState, useRef } from '@builder.io/mitosis';
+import { useRef } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;

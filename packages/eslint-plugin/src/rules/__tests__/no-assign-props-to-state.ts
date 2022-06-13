@@ -19,9 +19,9 @@ ruleTester.run('no-assign-props-to-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
       export default function MyComponent(props) {
-        const state = useState({ text: null });
+        const state = useStore({ text: null });
 
         onMount(() => {
           state.text = props.text;
@@ -32,11 +32,11 @@ ruleTester.run('no-assign-props-to-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
       import { foo } from '../helpers';
 
       export default function MyComponent(props) {
-        const state = useState({ 
+        const state = useStore({ 
           text: null,
           fn1() {
             return foo(props.text);
@@ -56,10 +56,10 @@ ruleTester.run('no-assign-props-to-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
 
       export default function MyComponent(props) {
-        const state = useState({ text: props.text });
+        const state = useStore({ text: props.text });
       }
       `,
       filename: 'file.jsx',
@@ -69,9 +69,9 @@ ruleTester.run('no-assign-props-to-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useuseStoreState } from '@builder.io/mitosis';
       export default function MyComponent(props) {
-        const state = useState({ text: props.text });
+        const state = useStore({ text: props.text });
       }
       `,
       errors: ['"props" can\'t be assign to  to "state" directly'],

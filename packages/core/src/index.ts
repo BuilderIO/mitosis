@@ -3,7 +3,8 @@ export * from './flow';
 export type Context<T> = {};
 
 // These compile away
-export const useState = <T>(obj: T) => obj;
+export const useState: <T>(value: T) => [T, (value: T) => void] = null as any;
+export const useStore = <T>(obj: T) => obj;
 export const useRef = <T>(obj?: null | void | T) => obj as unknown as T;
 export const useContext = <T = { [key: string]: any }>(key: Context<T>): T =>
   null as unknown as T;

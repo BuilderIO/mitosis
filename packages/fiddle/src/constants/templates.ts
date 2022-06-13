@@ -26,7 +26,7 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const state = useState({
+      const state = useStore({
         name: "Steve"
       });
       
@@ -50,7 +50,7 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
 
     export default function MyComponent(props) {
-      const state = useState({
+      const state = useStore({
         name: "Steve"
       });
 
@@ -88,12 +88,12 @@ export const templates: { [key: string]: string } = {
   `,
 
   'methods and refs': dedent`
-    import { useState, useRef } from "@builder.io/mitosis";
+    import { useStore, useRef } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
       const inputRef = useRef();
 
-      const state = useState({
+      const state = useStore({
         name: "Steve",
         onBlur() {
           inputRef.focus()
@@ -128,7 +128,7 @@ export const templates: { [key: string]: string } = {
     import { useState } from "@builder.io/mitosis";
     
     export default function MyComponent(props) {
-      const state = useState({
+      const state = useStore({
         list: ["hello", "world"],
         newItemName: "New item",
         addItem() {

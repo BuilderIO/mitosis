@@ -339,12 +339,12 @@ const componentFunctionToJson = (
           }
         }
         // Legacy format, like:
-        // const state = useState({...})
+        // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === 'useState') {
+          if (init.callee.name === 'useState' || init.callee.name === 'useStore') {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              state = parseStateObject(firstArg);
+              Object.assign(state, parseStateObject(firstArg));
             }
           } else if (init.callee.name === 'useContext') {
             const firstArg = init.arguments[0];

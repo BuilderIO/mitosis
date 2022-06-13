@@ -10,7 +10,7 @@ Examples of **incorrect** code for this rule:
 
 ```js
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     async doSomethingAsync(event) {
       return;
     },
@@ -22,7 +22,7 @@ Examples of **correct** code for this rule:
 
 ```js
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     doSomethingAsync(event) {
       void (async function () {
         const response = await fetch();

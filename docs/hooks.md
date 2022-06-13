@@ -12,12 +12,12 @@
 Use the `useRef` hook to hold a reference to a rendered DOM element.
 
 ```typescript
-import { useState, useRef, Show } from '@builder.io/mitosis';
+import { useStore, useRef, Show } from '@builder.io/mitosis';
 
 export default function MyComponent() {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
     onBlur() {
       // Maintain focus
@@ -108,7 +108,7 @@ The onUpdate hook is the best place to put custom code that will either:
 
 ```jsx
 export default function OnUpdateWithDeps() {
-  const state = useState({
+  const state = useStore({
     a: 'a',
     b: 'b',
   });
