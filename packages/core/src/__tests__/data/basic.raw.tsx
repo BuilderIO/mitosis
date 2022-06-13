@@ -7,6 +7,9 @@ export const DEFAULT_VALUES = {
 export default function MyBasicComponent() {
   const state = useState({
     name: 'Steve',
+    underscore_fn_name() {
+      return 'bar';
+    },
   });
 
   return (
