@@ -69,7 +69,7 @@ ruleTester.run('no-assign-props-to-state', rule, {
     {
       ...opts,
       code: `
-      import { useuseStoreState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
       export default function MyComponent(props) {
         const state = useStore({ text: props.text });
       }
