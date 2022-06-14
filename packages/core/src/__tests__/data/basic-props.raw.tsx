@@ -1,8 +1,8 @@
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 // @ts-ignore
 export default function MyBasicComponent(props) {
-  const state = useState({
+  const state = useStore({
     name: 'Decadef20',
   });
 

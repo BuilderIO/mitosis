@@ -1,11 +1,11 @@
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export const DEFAULT_VALUES = {
   name: 'Steve',
 };
 
-export default function MyBasicComponent() {
-  const state = useState({
+export default function MyBasicComponent(props: { id: string }) {
+  const state = useStore({
     name: 'Steve',
     underscore_fn_name() {
       return 'bar';

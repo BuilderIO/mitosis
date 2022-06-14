@@ -24,7 +24,7 @@ module.exports = {
   notify: true,
   notifyMode: 'always',
   roots: ['<rootDir>'],
-  testMatch: ['**/__tests__/*.+(ts|tsx|js)', '**/*.test.+(ts|tsx|js)'],
+  testMatch: ['**/__tests__/*.test.+(ts|tsx)', '**/*.test.+(ts|tsx)'],
   transform: {
     '^.+\\.raw\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
     '^.+\\.lite\\.(ts|tsx|js|jsx)$': 'jest-raw-loader',
