@@ -35,6 +35,290 @@ export default {
 "
 `;
 
+exports[`Vue Basic 2`] = `
+"<template>
+  <div>
+    <input
+      v-if=\\"person === name\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value + ' and ' + person\\"
+    />
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-for-show-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
+};
+</script>
+"
+`;
+
+exports[`Vue Basic Context 1`] = `
+"<template>
+  <div>
+    {{ myService.method(\\"hello\\") + name }}
+    Hello! I can run in React, Vue, Solid, or Liquid!
+    <input @input=\\"onChange\\" />
+  </div>
+</template>
+<script>
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+export default {
+  name: \\"my-basic-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  provide() {
+    const _this = this;
+    return {
+      Injector: null,
+    };
+  },
+  inject: {
+    myService: \\"MyService\\",
+  },
+
+  mounted() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  },
+
+  methods: {
+    onChange: function onChange() {
+      const change = this.myService.method(\\"change\\");
+      console.log(change);
+    },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Basic OnMount Update 1`] = `
+"<template>
+  <div>Hello {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-on-mount-update-component\\",
+
+  props: [\\"hi\\", \\"bye\\"],
+
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
+
+  mounted() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Basic Outputs 1`] = `
+"<template>
+  <div></div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-outputs-component\\",
+
+  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  mounted() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Basic Outputs Meta 1`] = `
+"<template>
+  <div></div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-outputs-component\\",
+
+  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  mounted() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue BasicChildComponent 1`] = `
+"<template>
+  <div>
+    <my-basic-component :id=\\"dev\\"></my-basic-component>
+    <div>
+      <my-basic-on-mount-update-component
+        :hi=\\"name\\"
+        :bye=\\"dev\\"
+      ></my-basic-on-mount-update-component>
+    </div>
+  </div>
+</template>
+<script>
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+export default {
+  name: \\"my-basic-child-component\\",
+  components: {
+    \\"my-basic-component\\": async () => MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": async () =>
+      MyBasicOnMountUpdateComponent,
+  },
+
+  data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
+};
+</script>
+"
+`;
+
+exports[`Vue BasicFor 1`] = `
+"<template>
+  <div>
+    <input
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value + ' and ' + person\\"
+    />
+
+    Hello
+    {{ person }}
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-for-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
+
+  mounted() {
+    console.log(\\"onMount code\\");
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue BasicRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @blur=\\"onBlur()\\"
+      @input=\\"name = $event.target.value\\"
+    />
+
+    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+
+    Hello
+    {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
+    Component!
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-ref-component\\",
+
+  props: [\\"showInput\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  methods: {
+    onBlur: function onBlur() {
+      // Maintain focus
+      this.$refs.inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return this.name.toLowerCase();
+    },
+  },
+};
+</script>
+<style scoped>
+.input {
+  color: red;
+}
+</style>
+"
+`;
+
+exports[`Vue BasicRefAssignment 1`] = `
+"<template>
+  <div>
+    <button @click=\\"handlerClick($event)\\">Click</button>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-ref-assignment-component\\",
+
+  methods: {
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", this.$refs.holdValueRef);
+      this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
+    },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue BasicRefPrevious 1`] = `
+"<template>
+  <div>
+    <h1>Now: {{ count }}, before: {{ this.$refs.prevCount }}</h1>
+    <button @click=\\"count += 1\\">Increment</button>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-previous-component\\",
+
+  data: () => ({ count: 0 }),
+
+  watch: {
+    onUpdateHook0() {
+      this.$refs.prevCount = this.count;
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.count,
+      };
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue Button 1`] = `
 "<template>
   <a
@@ -120,6 +404,48 @@ export default {
   flex-grow: 1;
 }
 </style>
+"
+`;
+
+exports[`Vue ContentSlotHtml 1`] = `
+"<template>
+  <div>
+    <slot :name=\\"slotTesting\\"></slot>
+    <div>
+      <hr />
+    </div>
+    <div>
+      <slot></slot>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"content-slot-code\\",
+  components: { slot: async () => Slot },
+  props: [\\"slotTesting\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue ContentSlotJSX 1`] = `
+"<template>
+  <div>
+    {{ slotTesting }}
+    <div>
+      <hr />
+    </div>
+    <div><slot></slot></div>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"content-slot-jsx-code\\",
+
+  props: [\\"slotTesting\\"],
+};
+</script>
 "
 `;
 
@@ -289,7 +615,7 @@ export default {
 "
 `;
 
-exports[`Vue Form block 1`] = `
+exports[`Vue Form 1`] = `
 "<template>
   <form
     v-bind=\\"attributes\\"
@@ -710,6 +1036,40 @@ export default {
 "
 `;
 
+exports[`Vue Image State 1`] = `
+"<template>
+  <div>
+    <img
+      :class=\\"_classStringToObject('custom-class')\\"
+      :src=\\"item\\"
+      :key=\\"itemIndex\\"
+    />
+  </div>
+</template>
+<script>
+export default {
+  name: \\"img-state-component\\",
+
+  data: () => ({ canShow: true, images: [\\"http://example.com/qwik.png\\"] }),
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue Img 1`] = `
 "<template>
   <img
@@ -743,7 +1103,7 @@ export default {
 "
 `;
 
-exports[`Vue Input block 1`] = `
+exports[`Vue Input 1`] = `
 "<template>
   <input
     v-bind=\\"attributes\\"
@@ -811,6 +1171,20 @@ export default {
 "
 `;
 
+exports[`Vue Remove Internal mitosis package 1`] = `
+"<template>
+  <div>Hello {{ name }}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
+</script>
+"
+`;
+
 exports[`Vue Section 1`] = `
 "<template>
   <section
@@ -836,7 +1210,32 @@ export default {
 "
 `;
 
-exports[`Vue Select block 1`] = `
+exports[`Vue Section 2`] = `
+"<template>
+  <section
+    v-bind=\\"attributes\\"
+    v-for=\\"(item, index) in items\\"
+    :style=\\"{
+      maxWidth: item + max,
+    }\\"
+    :key=\\"index\\"
+  >
+    <slot></slot>
+  </section>
+</template>
+<script>
+export default {
+  name: \\"section-state-component\\",
+
+  props: [\\"attributes\\"],
+
+  data: () => ({ max: 42, items: [42] }),
+};
+</script>
+"
+`;
+
+exports[`Vue Select 1`] = `
 "<template>
   <select
     v-bind=\\"attributes\\"
@@ -864,6 +1263,45 @@ export default {
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
 
   data: () => ({ Builder }),
+};
+</script>
+"
+`;
+
+exports[`Vue SlotHtml 1`] = `
+"<template>
+  <div>
+    <content-slot-code>
+      <slot :testing=\\"<div>Hello</div>\\"></slot>
+    </content-slot-code>
+  </div>
+</template>
+<script>
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default {
+  name: \\"slot-code\\",
+  components: {
+    \\"content-slot-code\\": async () => ContentSlotCode,
+    slot: async () => Slot,
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue SlotJsx 1`] = `
+"<template>
+  <div>
+    <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
+  </div>
+</template>
+<script>
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default {
+  name: \\"slot-code\\",
+  components: { \\"content-slot-code\\": async () => ContentSlotCode },
 };
 </script>
 "
@@ -963,7 +1401,7 @@ export default {
 "
 `;
 
-exports[`Vue Submit button block 1`] = `
+exports[`Vue Submit 1`] = `
 "<template>
   <button v-bind=\\"attributes\\" type=\\"submit\\">
     {{ text }}
@@ -1066,6 +1504,94 @@ export default {
 "
 `;
 
+exports[`Vue basicForwardRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-forward-ref-component\\",
+
+  props: [\\"inputRef\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
+</script>
+<style scoped>
+.input {
+  color: red;
+}
+</style>
+"
+`;
+
+exports[`Vue basicForwardRefMetadata 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @input=\\"name = $event.target.value\\"
+    />
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-forward-ref-component\\",
+
+  props: [\\"inputRef\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
+</script>
+<style scoped>
+.input {
+  color: red;
+}
+</style>
+"
+`;
+
+exports[`Vue className 1`] = `
+"<template>
+  <div>
+    <div class=\\"no binding\\">Without Binding</div>
+
+    <div :class=\\"_classStringToObject(this.bindings)\\">With binding</div>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"class-name-code\\",
+
+  data: () => ({ bindings: \\"a binding\\" }),
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue multipleOnUpdate 1`] = `
 "<template>
   <div></div>
@@ -1096,9 +1622,17 @@ export default {
   watch: {
     onUpdateHook0() {
       console.log(\\"Runs when a or b changes\\", this.a, this.b);
+
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
     onUpdateHook1() {
       console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
   },
 
@@ -1121,7 +1655,43 @@ export default {
 "
 `;
 
-exports[`Vue onMount & onUnMount 1`] = `
+exports[`Vue onInit & onMount 1`] = `
+"<template>
+  <div></div>
+</template>
+<script>
+export default {
+  name: \\"on-init\\",
+
+  mounted() {
+    console.log(\\"onMount\\");
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue onInit 1`] = `
+"<template>
+  <div>Default name defined by parent {{ name }}</div>
+</template>
+<script>
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+export default {
+  name: \\"on-init\\",
+
+  props: [\\"name\\"],
+
+  data: () => ({ name: \\"\\" }),
+};
+</script>
+"
+`;
+
+exports[`Vue onMount 1`] = `
 "<template>
   <div></div>
 </template>
@@ -1186,6 +1756,20 @@ export default {
 "
 `;
 
+exports[`Vue preserveTyping 1`] = `
+"<template>
+  <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
+
 exports[`Vue propsDestructure 1`] = `
 "<template>
   <div>
@@ -1200,6 +1784,49 @@ export default {
   props: [\\"type\\"],
 
   data: () => ({ name: \\"Decadef20\\" }),
+};
+</script>
+"
+`;
+
+exports[`Vue propsInterface 1`] = `
+"<template>
+  <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue propsType 1`] = `
+"<template>
+  <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue rootShow 1`] = `
+"<template>
+  <div v-if=\\"foo === 'bar'\\">Bar</div>
+  <div v-else=\\"\\">Foo</div>
+</template>
+<script>
+export default {
+  name: \\"render-styles\\",
+
+  props: [\\"foo\\"],
 };
 </script>
 "

@@ -4,7 +4,7 @@ export const DEFAULT_VALUES = {
   name: 'Steve',
 };
 
-export default function MyBasicComponent() {
+export default function MyBasicComponent(props: { id: string }) {
   const state = useStore({
     name: 'Steve',
     underscore_fn_name() {
