@@ -46,7 +46,10 @@ const rule: Rule.RuleModule = {
         if (!types.isImportDeclaration(importSpecifiers)) return;
 
         const useState = importSpecifiers.specifiers.find((n) => {
-          if (types.isImportSpecifier(n) && n.imported.name === 'useState') {
+          if (
+            types.isImportSpecifier(n) &&
+            (n.imported.name === 'useState' || n.imported.name === 'useStore')
+          ) {
             return true;
           }
         });

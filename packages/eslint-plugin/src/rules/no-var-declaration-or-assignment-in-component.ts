@@ -43,7 +43,7 @@ const rule: Rule.RuleModule = {
                     type: 'CallExpression',
                     callee: {
                       type: 'Identifier',
-                      name: when((v) => v === 'useState' || v === 'useContext'),
+                      name: when((v) => v === 'useState' || v === 'useContext' || v === 'useStore'),
                     },
                   },
                 }),

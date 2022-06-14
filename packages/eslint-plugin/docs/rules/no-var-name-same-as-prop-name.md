@@ -9,7 +9,7 @@ This rule aims to warn you if you declare a variable with the same name as a pro
 Examples of **incorrect** code for this rule:
 
 ```js
-import { useState } from "@builder.io/mitosis";
+import { useStore } from "@builder.io/mitosis";
 
 export default function MyComponent(props) {
   const state = useStore({
@@ -27,7 +27,7 @@ export default function MyComponent(props) {
 }
 
 
-import { useState } from "@builder.io/mitosis";
+import { useStore } from "@builder.io/mitosis";
 
 export default function MyComponent(props) {
   const state = useStore({

@@ -12,7 +12,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description:
-        'disallow assigning useState() to a variable with name other than state.',
+        'disallow assigning useStore() to a variable with name other than state.',
       recommended: true,
     },
   },
@@ -39,7 +39,7 @@ const rule: Rule.RuleModule = {
           .with(
             {
               callee: {
-                name: 'useState',
+                name: 'useStore',
               },
               parent: {
                 type: 'VariableDeclarator',
@@ -52,7 +52,7 @@ const rule: Rule.RuleModule = {
               context.report({
                 node: node.parent.id as any,
                 message:
-                  'useState should be exclusively assigned to a variable called state',
+                  'useStore should be exclusively assigned to a variable called state',
               });
             },
           )
