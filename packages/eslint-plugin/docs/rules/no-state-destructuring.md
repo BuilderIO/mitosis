@@ -10,7 +10,7 @@ Examples of **incorrect** code for this rule:
 
 ```js
 export default function MyComponent() {
-  const state = useState({ foo: '1' });
+  const state = useStore({ foo: '1' });
 
   onMount(() => {
     const { foo } = state;
@@ -22,7 +22,7 @@ Examples of **correct** code for this rule:
 
 ```js
 export default function MyComponent() {
-  const state = useState({ foo: '1' });
+  const state = useStore({ foo: '1' });
 
   onMount(() => {
     const foo = state.foo;

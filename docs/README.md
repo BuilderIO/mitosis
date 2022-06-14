@@ -20,7 +20,7 @@ Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com
 
 ```tsx
 export function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
   });
 
