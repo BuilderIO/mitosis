@@ -341,7 +341,10 @@ const componentFunctionToJson = (
         // Legacy format, like:
         // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === 'useState' || init.callee.name === 'useStore') {
+          if (
+            init.callee.name === 'useState' ||
+            init.callee.name === 'useStore'
+          ) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
               Object.assign(state, parseStateObject(firstArg));
