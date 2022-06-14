@@ -2,6 +2,10 @@ import { Transpiler } from '..';
 import { componentToReact } from '../generators/react';
 import { parseJsx } from '../parsers/jsx';
 
+const basicForShow = require('./data/basic-for-show.raw');
+const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
+const sectionState = require('./data/blocks/section-state.raw');
+const imageState = require('./data/blocks/img-state.raw');
 const onInitonMount = require('./data/blocks/onInit-onMount.raw');
 const basicContext = require('./data/basic-context.raw');
 const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
@@ -142,12 +146,6 @@ export const getTestsForGenerator = (generator: Transpiler) => {
 
   test('Select block', () => {
     const component = parseJsx(selectBlock);
-    const output = generator({ component, path });
-    expect(output).toMatchSnapshot();
-  });
-
-  test('Form block', () => {
-    const component = parseJsx(formBlock);
     const output = generator({ component, path });
     expect(output).toMatchSnapshot();
   });
@@ -306,6 +304,27 @@ export const getTestsForGenerator = (generator: Transpiler) => {
     const output = generator({ component, path });
     expect(output).toMatchSnapshot();
   });
+
+  test('Image State', () => {
+    const component = parseJsx(imageState);
+    const output = generator({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+  test('Section State', () => {
+    const component = parseJsx(sectionState);
+    const output = generator({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+  test('Basic For and Show', () => {
+    const component = parseJsx(basicForShow);
+    const output = generator({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+  test('Basic OnMount Update', () => {
+    const component = parseJsx(basicOnMountUpdate);
+    const output = generator({ component, path });
+    expect(output).toMatchSnapshot();
+  });
 };
 
 export const getMultipleOnUpdateTests = (generator: Transpiler) => {
@@ -317,6 +336,14 @@ export const getMultipleOnUpdateTests = (generator: Transpiler) => {
 
   test('multipleOnUpdateWithDeps', () => {
     const component = parseJsx(multipleOnUpdateWithDeps);
+    const output = generator({ component, path });
+    expect(output).toMatchSnapshot();
+  });
+};
+
+export const getFormBlockTests = (generator: Transpiler) => {
+  test.skip('Form block', () => {
+    const component = parseJsx(formBlock);
     const output = generator({ component, path });
     expect(output).toMatchSnapshot();
   });
