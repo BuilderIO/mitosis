@@ -237,18 +237,6 @@ export const getTestsForGenerator = (generator: Transpiler) => {
     expect(output).toMatchSnapshot();
   });
 
-  test('multipleOnUpdate', () => {
-    const component = parseJsx(multipleOnUpdate);
-    const output = generator({ component });
-    expect(output).toMatchSnapshot();
-  });
-
-  test('multipleOnnUpdateWithDeps', () => {
-    const component = parseJsx(multipleOnUpdateWithDeps);
-    const output = generator({ component });
-    expect(output).toMatchSnapshot();
-  });
-
   test('onMount & onUnMount', () => {
     const component = parseJsx(onMount);
     const output = generator({ component });
@@ -281,6 +269,20 @@ export const getTestsForGenerator = (generator: Transpiler) => {
 
   test('propsDestructure', () => {
     const component = parseJsx(propsDestructure);
+    const output = generator({ component });
+    expect(output).toMatchSnapshot();
+  });
+};
+
+export const getMultipleOnUpdateTests = (generator: Transpiler) => {
+  test('multipleOnUpdate', () => {
+    const component = parseJsx(multipleOnUpdate);
+    const output = generator({ component });
+    expect(output).toMatchSnapshot();
+  });
+
+  test('multipleOnnUpdateWithDeps', () => {
+    const component = parseJsx(multipleOnUpdateWithDeps);
     const output = generator({ component });
     expect(output).toMatchSnapshot();
   });
