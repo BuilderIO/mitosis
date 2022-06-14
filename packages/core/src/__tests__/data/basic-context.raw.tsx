@@ -1,5 +1,5 @@
 import {
-  useState,
+  useStore,
   useContext,
   onInit,
   setContext,
@@ -11,7 +11,7 @@ export default function MyBasicComponent() {
   setContext(Injector, createInjector());
 
   const myService = useContext(MyService);
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
   });
 

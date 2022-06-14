@@ -580,10 +580,13 @@ export default function Image(props: ImageProps) {
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
 
-  const [load, setLoad] = useState(() => false);
-
   function setLoaded() {
     setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
   }
 
   function isBrowser() {
@@ -592,10 +595,7 @@ export default function Image(props: ImageProps) {
     );
   }
 
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
-  }
+  const [load, setLoad] = useState(() => false);
 
   useEffect(() => {
     if (useLazyLoading()) {

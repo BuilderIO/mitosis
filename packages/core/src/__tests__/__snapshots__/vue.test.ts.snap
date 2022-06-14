@@ -649,7 +649,7 @@ export default {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
+            setLoad(true);
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -675,15 +675,15 @@ export default {
     setLoaded() {
       this.imageLoaded = true;
     },
-    isBrowser() {
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && isBrowser();
+    },
+    isBrowser: function isBrowser() {
       return (
         typeof window !== \\"undefined\\" &&
         window.navigator.product != \\"ReactNative\\"
       );
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!this.lazy && this.isBrowser();
     },
     _classStringToObject(str) {
       const obj = {};

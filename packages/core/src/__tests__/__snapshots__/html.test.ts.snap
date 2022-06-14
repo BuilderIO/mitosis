@@ -502,21 +502,21 @@ exports[`Html Image 1`] = `
     const state = {
       scrollListener: null,
       imageLoaded: false,
-      load: false,
       setLoaded() {
         state.imageLoaded = true;
         update();
       },
-      isBrowser() {
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!props.lazy && isBrowser();
+      },
+      isBrowser: function isBrowser() {
         return (
           typeof window !== \\"undefined\\" &&
           window.navigator.product != \\"ReactNative\\"
         );
       },
-      useLazyLoading() {
-        // TODO: Add more checks here, like testing for real web browsers
-        return !!props.lazy && state.isBrowser();
-      },
+      load: false,
     };
     let props = {};
     let context = null;
@@ -591,8 +591,7 @@ exports[`Html Image 1`] = `
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
-            update();
+            setLoad(true);
             state.scrollListener = null;
             update();
             window.removeEventListener(\\"scroll\\", listener);

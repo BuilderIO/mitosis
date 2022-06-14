@@ -650,15 +650,15 @@ export default class Image {
   setLoaded() {
     this.imageLoaded = true;
   }
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
-  }
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
-  }
+  };
 
   componentDidLoad() {
     if (this.useLazyLoading()) {
@@ -669,7 +669,7 @@ export default class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
+            setLoad(true);
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }

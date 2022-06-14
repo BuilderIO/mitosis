@@ -1,4 +1,4 @@
-import { useState, useRef, onMount } from '@builder.io/mitosis';
+import { useStore, useRef, onMount } from '@builder.io/mitosis';
 
 export interface CustomCodeProps {
   code: string;
@@ -8,7 +8,7 @@ export interface CustomCodeProps {
 export default function CustomCode(props: CustomCodeProps) {
   const elem = useRef<HTMLDivElement>(null);
 
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [] as string[],
     scriptsRun: [] as string[],
 

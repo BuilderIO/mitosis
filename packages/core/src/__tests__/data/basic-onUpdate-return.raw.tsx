@@ -1,7 +1,7 @@
-import { useState, onUpdate } from '@builder.io/mitosis';
+import { useStore, onUpdate } from '@builder.io/mitosis';
 
 export default function MyBasicOnUpdateReturnComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
   });
 

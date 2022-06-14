@@ -1,4 +1,4 @@
-import { onUpdate, useState, useRef } from '@builder.io/mitosis';
+import { onUpdate, useStore, useRef } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;
@@ -17,7 +17,7 @@ export function usePrevious<T>(value: T) {
 }
 
 export default function MyPreviousComponent(props: Props) {
-  const state = useState({
+  const state = useStore({
     count: 0,
   });
 

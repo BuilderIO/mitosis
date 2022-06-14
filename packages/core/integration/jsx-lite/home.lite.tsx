@@ -1,7 +1,7 @@
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({ name: 'Steve' });
+  const state = useStore({ name: 'Steve' });
 
   return (
     <div

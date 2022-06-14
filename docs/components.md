@@ -18,10 +18,10 @@ Mitosis is inspired by many modern frameworks. You'll see components look like R
 An example Mitosis component showing several features:
 
 ```javascript
-import { For, Show, useState } from '@builder.io/mitosis';
+import { For, Show, useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     newItemName: 'New item',
     list: ['hello', 'world'],
     addItem() {
@@ -97,7 +97,7 @@ State is provided by the `useState` hook. Currently, the name of this value must
 
 ```jsx
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
   });
 
@@ -119,7 +119,7 @@ If the initial state value is a computed value (whether based on `props` or the 
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
     get transformedName() {
       return kebabCase('Steve');
@@ -149,7 +149,7 @@ The state object can also take methods.
 
 ```jsx
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
     updateName(newName) {
       state.name = newName;
@@ -188,7 +188,7 @@ Use `<For>` for repeating items, for instance mapping over an array. It takes a 
 
 ```jsx
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     myArray: [1, 2, 3],
   });
   return (

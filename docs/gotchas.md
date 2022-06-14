@@ -26,7 +26,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     foo: 'bar',
 
     doSomething() {
@@ -59,7 +59,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     foo: 'bar',
 
     doSomething() {
@@ -90,7 +90,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     async doSomethingAsync(event) {
       //  ^^^^^^^^^^^^^^^^^^^^^^^^^
       //  Fails to parse this line
@@ -111,7 +111,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     doSomethingAsync(event) {
       void (async function () {
         const response = await fetch(); /* ... */
@@ -143,7 +143,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     myCallback(event) {
       // do something
     },
@@ -183,7 +183,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     myCallback(event) {
       // do something
     },
@@ -223,7 +223,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent(props) {
-  const state = useState({ text: props.text });
+  const state = useStore({ text: props.text });
   //                             ^^^^^^^^^^
   //                             Could not JSON5 parse object
 }
@@ -237,7 +237,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent(props) {
-  const state = useState({ text: null });
+  const state = useStore({ text: null });
 
   onMount(() => {
     state.text = props.text;
@@ -273,7 +273,7 @@ _Mitosis input_
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     name: kebabCase('Steve'),
     //    ^^^^^^^^^
     //    Could not JSON5 parse object
@@ -297,7 +297,7 @@ _Mitosis input_
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     get name() {
       return kebabCase('Steve');
     },
@@ -341,7 +341,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({ foo: '1' });
+  const state = useStore({ foo: '1' });
 
   onMount(() => {
     const { foo } = state;
@@ -373,7 +373,7 @@ _Mitosis input_
 
 ```typescript
 export default function MyComponent() {
-  const state = useState({ foo: '1' });
+  const state = useStore({ foo: '1' });
 
   onMount(() => {
     const foo = state.foo;

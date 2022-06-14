@@ -19,9 +19,9 @@ ruleTester.run('no-async-methods-on-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
       export default function MyComponent() {
-        const state = useState({
+        const state = useStore({
           doSomethingAsync(event) {
             void (async function() {
               const response = await fetch(); /* ... */
@@ -35,9 +35,9 @@ ruleTester.run('no-async-methods-on-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
       export default function MyComponent() {
-        const state = useState({
+        const state = useStore({
           async doSomethingAsync(event) {
             const response = await fetch(); /* ... */
           },
@@ -52,10 +52,10 @@ ruleTester.run('no-async-methods-on-state', rule, {
     {
       ...opts,
       code: `
-      import { useState } from '@builder.io/mitosis';
+      import { useStore } from '@builder.io/mitosis';
 
       export default function MyComponent() {
-        const state = useState({
+        const state = useStore({
           async doSomethingAsync(event) {
       
             const response = await fetch(); /* ... */

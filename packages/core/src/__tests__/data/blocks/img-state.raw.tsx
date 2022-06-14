@@ -1,8 +1,8 @@
-import { useState, For, Show } from '@builder.io/mitosis';
+import { useStore, For, Show } from '@builder.io/mitosis';
 import { Builder } from '@builder.io/sdk';
 
 export default function ImgStateComponent() {
-  const state = useState({
+  const state = useStore({
     canShow: true,
     images: ['http://example.com/qwik.png'],
   });

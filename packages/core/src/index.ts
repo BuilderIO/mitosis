@@ -3,9 +3,10 @@ export * from './flow';
 export type Context<T> = {};
 
 // These compile away
-export const useState = <T>(obj: T) => {
+export const useStore = <T>(obj: T) => obj;
+export const useState = <T>(obj: T): [T, (value: T) => void] => {
   throw new Error('useState: Mitosis hook should have been compiled away');
-  return obj as T;
+  return null as any;
 };
 export const useRef = <T>(obj?: null | void | T) => {
   throw new Error('useRef: Mitosis hook should have been compiled away');
