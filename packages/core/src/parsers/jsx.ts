@@ -20,6 +20,7 @@ import {
 } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { tryParseJson } from '../helpers/json';
+import { HOOKS } from '../constants/hooks';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -342,14 +343,14 @@ const componentFunctionToJson = (
         // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
           if (
-            init.callee.name === 'useState' ||
-            init.callee.name === 'useStore'
+            init.callee.name === HOOKS.STATE ||
+            init.callee.name === HOOKS.STORE
           ) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
               Object.assign(state, parseStateObject(firstArg));
             }
-          } else if (init.callee.name === 'useContext') {
+          } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
             if (
               types.isVariableDeclarator(declaration) &&
@@ -374,7 +375,7 @@ const componentFunctionToJson = (
                 };
               }
             }
-          } else if (init.callee.name === 'useRef') {
+          } else if (init.callee.name === HOOKS.REF) {
             if (types.isIdentifier(declaration.id)) {
               const firstArg = init.arguments[0];
               const varName = declaration.id.name;
