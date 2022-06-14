@@ -1,5 +1,6 @@
 import * as types from '@babel/types';
 import { Rule } from 'eslint';
+import { HOOKS } from 'src/constants/hooks';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 // ------------------------------------------------------------------------------
@@ -48,7 +49,7 @@ const rule: Rule.RuleModule = {
         const useState = importSpecifiers.specifiers.find((n) => {
           if (
             types.isImportSpecifier(n) &&
-            (n.imported.name === 'useState' || n.imported.name === 'useStore')
+            (n.imported.name === HOOKS.STATE || n.imported.name === HOOKS.STORE)
           ) {
             return true;
           }

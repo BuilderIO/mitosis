@@ -1,4 +1,5 @@
 import { Rule } from 'eslint';
+import { HOOKS } from '../constants/hooks';
 import { match, not, when } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
@@ -45,9 +46,9 @@ const rule: Rule.RuleModule = {
                       type: 'Identifier',
                       name: when(
                         (v) =>
-                          v === 'useState' ||
-                          v === 'useContext' ||
-                          v === 'useStore',
+                          v === HOOKS.STATE ||
+                          v === HOOKS.CONTEXT ||
+                          v === HOOKS.STORE,
                       ),
                     },
                   },

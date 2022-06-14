@@ -1,4 +1,5 @@
 import { Rule } from 'eslint';
+import { HOOKS } from '../constants/hooks';
 import { match, not } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
@@ -39,7 +40,7 @@ const rule: Rule.RuleModule = {
           .with(
             {
               callee: {
-                name: 'useStore',
+                name: HOOKS.STORE,
               },
               parent: {
                 type: 'VariableDeclarator',
@@ -51,8 +52,7 @@ const rule: Rule.RuleModule = {
             (node) => {
               context.report({
                 node: node.parent.id as any,
-                message:
-                  'useStore should be exclusively assigned to a variable called state',
+                message: `${HOOKS.STORE} should be exclusively assigned to a variable called state`,
               });
             },
           )
