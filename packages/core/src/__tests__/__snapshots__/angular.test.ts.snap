@@ -38,30 +38,32 @@ export default class MyBasicComponent {
 "
 `;
 
-exports[`Angular Basic Child Component 1`] = `
+exports[`Angular Basic 2`] = `
 "import { Component } from \\"@angular/core\\";
 
-import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
-
 @Component({
-  selector: \\"my-basic-child-component\\",
+  selector: \\"my-basic-for-show-component\\",
   template: \`
     <div>
-      <my-basic-component [id]=\\"dev\\"></my-basic-component>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container *ngIf=\\"person === name\\">
+          <input
+            [value]=\\"name\\"
+            (input)=\\"
+         name = $event.target.value + ' and ' + person;
+       \\"
+          />
 
-      <div>
-        <my-basic-on-mount-update-component
-          [hi]=\\"name\\"
-          [bye]=\\"dev\\"
-        ></my-basic-on-mount-update-component>
-      </div>
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
     </div>
   \`,
 })
-export default class MyBasicChildComponent {
-  name = \\"Steve\\";
-  dev = \\"PatrickJS\\";
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
 }
 "
 `;
@@ -102,35 +104,34 @@ export default class MyBasicComponent {
 "
 `;
 
-exports[`Angular Basic ForwardRef 1`] = `
-"import { Component } from \\"@angular/core\\";
+exports[`Angular Basic OnMount Update 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
 
 export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
+  hi: string;
+  bye: string;
 }
 
 @Component({
-  selector: \\"my-basic-forward-ref-component\\",
+  selector: \\"my-basic-on-mount-update-component\\",
   template: \`
-    <div>
-      <input
-        class=\\"input\\"
-        [value]=\\"name\\"
-        (input)=\\"name = $event.target.value\\"
-      />
-    </div>
+    <div>Hello {{name}}</div>
   \`,
-  styles: [
-    \`
-      .input {
-        color: red;
-      }
-    \`,
-  ],
 })
-export default class MyBasicForwardRefComponent {
+export default class MyBasicOnMountUpdateComponent {
+  @Input() hi: Props[\\"hi\\"];
+  @Input() bye: Props[\\"bye\\"];
+
   name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  constructor() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  }
+
+  ngOnInit() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  }
 }
 "
 `;
@@ -185,7 +186,69 @@ export default class MyBasicOutputsComponent {
 "
 `;
 
-exports[`Angular Basic Ref 1`] = `
+exports[`Angular BasicChildComponent 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+@Component({
+  selector: \\"my-basic-child-component\\",
+  template: \`
+    <div>
+      <my-basic-component [id]=\\"dev\\"></my-basic-component>
+
+      <div>
+        <my-basic-on-mount-update-component
+          [hi]=\\"name\\"
+          [bye]=\\"dev\\"
+        ></my-basic-on-mount-update-component>
+      </div>
+    </div>
+  \`,
+})
+export default class MyBasicChildComponent {
+  name = \\"Steve\\";
+  dev = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular BasicFor 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-for-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <div>
+          <input
+            [value]=\\"name\\"
+            (input)=\\"
+         name = $event.target.value + ' and ' + person;
+       \\"
+          />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyBasicForComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+}
+"
+`;
+
+exports[`Angular BasicRef 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
 export interface Props {
@@ -246,7 +309,7 @@ export default class MyBasicRefComponent {
 "
 `;
 
-exports[`Angular Basic Ref Assignment 1`] = `
+exports[`Angular BasicRefAssignment 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 export interface Props {
@@ -273,7 +336,7 @@ export default class MyBasicRefAssignmentComponent {
 "
 `;
 
-exports[`Angular Basic Ref Previous 1`] = `
+exports[`Angular BasicRefPrevious 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 export interface Props {
@@ -297,40 +360,6 @@ export default class MyPreviousComponent {
 
   ngAfterContentChecked() {
     prevCount = this.count;
-  }
-}
-"
-`;
-
-exports[`Angular BasicFor 1`] = `
-"import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"my-basic-for-component\\",
-  template: \`
-    <div>
-      <ng-container *ngFor=\\"let person of names\\">
-        <div>
-          <input
-            [value]=\\"name\\"
-            (input)=\\"
-         name = $event.target.value + ' and ' + person;
-       \\"
-          />
-
-          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
-          Solid, or Liquid!
-        </div>
-      </ng-container>
-    </div>
-  \`,
-})
-export default class MyBasicForComponent {
-  name = \\"PatrickJS\\";
-  names = [\\"Steve\\", \\"PatrickJS\\"];
-
-  ngOnInit() {
-    console.log(\\"onMount code\\");
   }
 }
 "
@@ -662,7 +691,7 @@ export default class CustomCode {
 "
 `;
 
-exports[`Angular Form block 1`] = `
+exports[`Angular Form 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
@@ -1113,6 +1142,28 @@ export default class Image {
 "
 `;
 
+exports[`Angular Image State 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"img-state-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of images\\">
+        <div>
+          <img [class]=\\"'custom-class'\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class ImgStateComponent {
+  canShow = true;
+  images = [\\"http://example.com/qwik.png\\"];
+}
+"
+`;
+
 exports[`Angular Img 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1153,7 +1204,7 @@ export default class ImgComponent {
 "
 `;
 
-exports[`Angular Input block 1`] = `
+exports[`Angular Input 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 export interface FormInputProps {
@@ -1255,7 +1306,41 @@ export default class SectionComponent {
 "
 `;
 
-exports[`Angular Select block 1`] = `
+exports[`Angular Section 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+@Component({
+  selector: \\"section-state-component\\",
+  template: \`
+    <ng-container *ngIf=\\"max\\">
+      <ng-container *ngFor=\\"let item of items\\">
+        <section
+          [style]=\\"{
+         maxWidth: item + max
+       }\\"
+        >
+          <ng-content></ng-content>
+        </section>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class SectionStateComponent {
+  @Input() attributes: SectionProps[\\"attributes\\"];
+
+  max = 42;
+  items = [42];
+}
+"
+`;
+
+exports[`Angular Select 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 export interface FormSelectProps {
@@ -1344,114 +1429,114 @@ export default class SlotCode {}
 `;
 
 exports[`Angular Stamped.io 1`] = `
-"import styled from \\"styled-components\\";
-import { useState, useEffect } from \\"react\\";
+"import { Component, Input } from \\"@angular/core\\";
 
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
+
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
-export default function SmileReviews(props: SmileReviewsProps) {
-  const [reviews, setReviews] = useState(() => []);
+@Component({
+  selector: \\"smile-reviews\\",
+  template: \`
+    <div [data-user]=\\"name\\">
+      <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
 
-  const [name, setName] = useState(() => \\"test\\");
+      <ng-container *ngIf=\\"showReviewPrompt\\">
+        <input placeholder=\\"Email\\" />
 
-  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+        <input placeholder=\\"Title\\" class=\\"input\\" />
 
-  function kebabCaseValue() {
+        <textarea
+          placeholder=\\"How was your experience?\\"
+          class=\\"textarea\\"
+        ></textarea>
+
+        <button
+          class=\\"button\\"
+          (click)=\\"
+         showReviewPrompt = false;
+       \\"
+        >
+          Submit
+        </button>
+      </ng-container>
+
+      <ng-container *ngFor=\\"let review of reviews\\">
+        <div class=\\"review\\" [key]=\\"review.id\\">
+          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+
+          <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+            <div>N: {{index}}</div>
+
+            <div>{{review.author}}</div>
+
+            <div>{{review.reviewMessage}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        display: block;
+      }
+      .textarea {
+        display: block;
+      }
+      .button {
+        display: block;
+      }
+      .review {
+        margin: 10px;
+        padding: 10px;
+        background: white;
+        display: flex;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .img {
+        height: 30px;
+        width: 30px;
+        margin-right: 10px;
+      }
+    \`,
+  ],
+})
+export default class SmileReviews {
+  @Input() apiKey: SmileReviewsProps[\\"apiKey\\"];
+  @Input() productId: SmileReviewsProps[\\"productId\\"];
+
+  reviews = [];
+  name = \\"test\\";
+  showReviewPrompt = false;
+  kebabCaseValue() {
     return kebabCase(\\"testThat\\");
   }
-
-  function snakeCaseValue() {
+  snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
 
-  useEffect(() => {
+  ngOnInit() {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
     )
       .then((res) => res.json())
       .then((data) => {
-        setReviews(data.data);
+        this.reviews = data.data;
       });
-  }, []);
-
-  return (
-    <div data-user={name}>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
-
-      {showReviewPrompt ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\" />
-          <Textarea placeholder=\\"How was your experience?\\" />
-          <Button
-            onClick={(event) => {
-              setShowReviewPrompt(false);
-            }}
-          >
-            Submit
-          </Button>
-        </>
-      ) : null}
-
-      {reviews?.map((review, index) => (
-        <Review key={review.id}>
-          <Img src={review.avatar} />
-
-          <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-            <div>
-              N:
-              {index}
-            </div>
-
-            <div>{review.author}</div>
-
-            <div>{review.reviewMessage}</div>
-          </div>
-        </Review>
-      ))}
-    </div>
-  );
+  }
 }
-
-const Input = styled.input\`
-  display: block;
-\`;
-
-const Textarea = styled.textarea\`
-  display: block;
-\`;
-
-const Button = styled.button\`
-  display: block;
-\`;
-
-const Review = styled.div\`
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-\`;
-
-const Img = styled.img\`
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-\`;
 "
 `;
 
-exports[`Angular Submit button block 1`] = `
+exports[`Angular Submit 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
@@ -1592,7 +1677,73 @@ export default class Video {
 "
 `;
 
-exports[`Angular classNameJsx 1`] = `
+exports[`Angular basicForwardRef 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular basicForwardRefMetadata 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular className 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 type Props = {
@@ -1635,7 +1786,7 @@ export default class MultipleOnUpdate {
 "
 `;
 
-exports[`Angular multipleOnnUpdateWithDeps 1`] = `
+exports[`Angular multipleOnUpdateWithDeps 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
@@ -1653,7 +1804,36 @@ export default class MultipleOnUpdateWithDeps {
   ngAfterContentChecked() {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+
     console.log(\\"Runs when c or d changes\\", this.c, this.d);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+}
+"
+`;
+
+exports[`Angular onInit & onMount 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-init\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInit {
+  constructor() {
+    console.log(\\"onInit\\");
+  }
+
+  ngOnInit() {
+    console.log(\\"onMount\\");
   }
 }
 "
@@ -1689,28 +1869,7 @@ export default class OnInit {
 "
 `;
 
-exports[`Angular onInit and onMount 1`] = `
-"import { Component } from \\"@angular/core\\";
-
-@Component({
-  selector: \\"on-init\\",
-  template: \`
-    <div></div>
-  \`,
-})
-export default class OnInit {
-  constructor() {
-    console.log(\\"onInit\\");
-  }
-
-  ngOnInit() {
-    console.log(\\"onMount\\");
-  }
-}
-"
-`;
-
-exports[`Angular onMount & onUnMount 1`] = `
+exports[`Angular onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
@@ -1798,11 +1957,6 @@ export default class MyBasicComponent {
 exports[`Angular propsDestructure 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
-type Props = {
-  type: string;
-  children: any;
-};
-
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
@@ -1862,32 +2016,20 @@ export default class MyBasicComponent {
 `;
 
 exports[`Angular rootShow 1`] = `
-"export default function RenderStyles(props: {
-foo: string
-}) {
-  
-    
-    
-    
-    
+"import { Component, Input } from \\"@angular/core\\";
 
-    
-    
-
-    
-
-    
-
-    return (
-      <>
-      {props.foo === 'bar' ? (
-    <><div >Bar</div></>
-  ) : <div >Foo</div>}
-      
-      </>
-    );
-  }
-
-
+@Component({
+  selector: \\"render-styles\\",
+  template: \`
+    <ng-container *ngIf=\\"foo === 'bar'\\">
+      <div>Bar</div>
+    </ng-container>
+  \`,
+})
+export default class RenderStyles {
+  @Input() foo: {
+    foo: string;
+  }[\\"foo\\"];
+}
 "
 `;
