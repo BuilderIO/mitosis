@@ -1,8 +1,7 @@
 import MonacoEditor, { MonacoEditorProps } from 'react-monaco-editor';
 import { Linter as ESLinter } from 'eslint';
 import * as monaco from 'monaco-editor';
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import types from 'raw-loader!@builder.io/mitosis/dist/src/jsx-types';
+import { JsxTypes } from '@builder.io/mitosis';
 import React, { useState } from 'react';
 import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
@@ -29,7 +28,7 @@ monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
 });
 
 monaco.languages.typescript.typescriptDefaults.addExtraLib(
-  types,
+  JsxTypes,
   `file:///node_modules/@react/types/index.d.ts`,
 );
 
