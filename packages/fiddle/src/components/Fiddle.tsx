@@ -39,11 +39,12 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useRef, useState } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import { useRef, useState } from 'react';
+import Image from 'next/image';
+
 import { adapt } from 'webcomponents-in-react';
-import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
-import logo from '../assets/mitosis-logo-white.png';
+import githubLogo from '../../assets/GitHub-Mark-Light-64px.png';
+import logo from '../../assets/mitosis-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
 import { defaultCode, templates } from '../constants/templates';
@@ -55,11 +56,12 @@ import { localStorageSet } from '../functions/local-storage-set';
 import { setQueryParam } from '../functions/set-query-param';
 import { useEventListener } from '../hooks/use-event-listener';
 import { useReaction } from '../hooks/use-reaction';
-import { CodeEditor } from './CodeEditor';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
 import stringify from 'fast-json-stable-stringify';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
+import { CodeEditor } from './CodeEditor';
 
 type Position = { row: number; column: number };
 
@@ -225,8 +227,13 @@ const plugins = [
   }),
 ];
 
+type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
+type Editor = EditorRefArgs[0];
+
 // TODO: Build this Fiddle app with Mitosis :)
 export default function Fiddle() {
+  const monaco = useMonaco();
+
   const [staticState] = useState(() => ({
     ignoreNextBuilderUpdate: false,
   }));
@@ -243,8 +250,8 @@ export default function Fiddle() {
     isDraggingJSXCodeBar: false,
     jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
     builderPaneHeight: Number(localStorageGet('builderPaneHeight')) || 35,
-    setEditorRef(editor: monaco.editor.IStandaloneCodeEditor | void) {
-      monacoEditorRef.current = editor || null;
+    setEditorRef(editor: Editor, monaco: EditorRefArgs[1]) {
+      monacoEditorRef.current = editor;
       if (editor) {
         if (SYNC_SELECTIONS) {
           editor.onDidChangeCursorPosition((event) => {
@@ -453,7 +460,7 @@ export default function Fiddle() {
               if (i++ === index) {
                 const index = match.index;
                 const length = match[1].length;
-                if (monacoEditorRef) {
+                if (monaco) {
                   const start = indexToRowAndColumn(code, index - 1);
                   const end = indexToRowAndColumn(code, index + length + 1);
                   const startPosition = new monaco.Position(
@@ -478,9 +485,7 @@ export default function Fiddle() {
     }
   });
 
-  const monacoEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(
-    null,
-  );
+  const monacoEditorRef = useRef<Editor | null>(null);
 
   useReaction(
     () => state.jsxCodeTabWidth,
@@ -570,6 +575,11 @@ export default function Fiddle() {
             {
               backgroundColor: 'transparent !important',
             },
+
+          'a > span': {
+            color: 'white',
+            textDecoration: 'none',
+          },
         }}
       >
         <div
@@ -584,6 +594,8 @@ export default function Fiddle() {
               flexShrink: 0,
               alignItems: 'center',
               color: 'white',
+              paddingTop: '5px',
+              paddingBottom: '5px',
             }}
           >
             <a
@@ -592,18 +604,14 @@ export default function Fiddle() {
               href="https://github.com/builderio/mitosis"
               css={{
                 marginRight: 'auto',
+                paddingLeft: 20,
               }}
             >
-              <img
+              <Image
                 alt="Mitosis Logo"
-                src={logo}
-                css={{
-                  marginLeft: 20,
-                  objectFit: 'contain',
-                  width: 130,
-                  marginBottom: -5,
-                  height: 60,
-                }}
+                src={'/mitosis-logo-white.png'}
+                width={130}
+                height={40}
               />
             </a>
             <div
@@ -665,12 +673,18 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/mitosis"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
+              <span
+                css={{
+                  [smallBreakpoint]: { display: 'none' },
+                  marginRight: '5px',
+                }}
+              >
                 Source
               </span>
-              <img
+              <Image
                 width={30}
-                src={githubLogo}
+                height={30}
+                src={'/github-logo.png'}
                 css={{ marginLeft: 10 }}
                 alt="Github Mark"
               />
@@ -813,12 +827,14 @@ export default function Fiddle() {
                     minimap: { enabled: false },
                     scrollbar: { vertical: 'hidden' },
                   }}
-                  editorDidMount={(editor) => state.setEditorRef(editor)}
+                  onMount={(editor, monaco) =>
+                    state.setEditorRef(editor, monaco)
+                  }
                   theme={monacoTheme}
                   height="calc(100vh - 105px)"
                   language="typescript"
                   value={state.code}
-                  onChange={(val) => (state.code = val)}
+                  onChange={(val = '') => (state.code = val)}
                 />
               </div>
             </Show>
@@ -838,7 +854,7 @@ export default function Fiddle() {
                   selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
-                onChange={(value) => {
+                onChange={(value = '') => {
                   state.inputCode = value;
                 }}
                 theme={monacoTheme}
@@ -861,7 +877,7 @@ export default function Fiddle() {
                   selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
-                onChange={(value) => {
+                onChange={(value = '') => {
                   state.inputCode = value;
                 }}
                 theme={monacoTheme}
