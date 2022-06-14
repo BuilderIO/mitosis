@@ -315,7 +315,7 @@ export const getMultipleOnUpdateTests = (generator: Transpiler) => {
     expect(output).toMatchSnapshot();
   });
 
-  test('multipleOnnUpdateWithDeps', () => {
+  test('multipleOnUpdateWithDeps', () => {
     const component = parseJsx(multipleOnUpdateWithDeps);
     const output = generator({ component, path });
     expect(output).toMatchSnapshot();
