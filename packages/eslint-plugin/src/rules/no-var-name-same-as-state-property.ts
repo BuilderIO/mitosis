@@ -1,6 +1,6 @@
 import * as types from '@babel/types';
 import { Rule } from 'eslint';
-import { HOOKS } from 'src/constants/hooks';
+import { HOOKS } from '../constants/hooks';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 // ------------------------------------------------------------------------------
