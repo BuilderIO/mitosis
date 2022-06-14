@@ -10,7 +10,6 @@ export default function MyBasicChildComponent() {
 
   return (
     <div>
-      {/*// @ts-ignore */}
       <MyBasicComponent id={state.dev} />
       <div>
         <MyBasicOnMountUpdateComponent hi={state.name} bye={state.dev} />
