@@ -51,11 +51,6 @@ type Context = {
   };
 };
 
-type ArrayElementType<T> = T extends (infer E)[] ? E : T;
-type ArrayExpressionArg = ArrayElementType<
-  NonNullable<Parameters<typeof types.arrayExpression>[0]>
->;
-
 const arrayToAst = (array: JSONOrNode[]) =>
   types.arrayExpression(array.map(jsonToAst));
 
