@@ -1,4 +1,4 @@
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export interface State {
   list: string[];
@@ -6,7 +6,7 @@ export interface State {
 }
 
 export default function MyComponent(props: any) {
-  const state = useState<State>({
+  const state = useStore<State>({
     list: ['hello', 'world'],
     newItemName: 'New item',
   });

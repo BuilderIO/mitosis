@@ -132,10 +132,10 @@ useState({
 `;
 
 exports[`Builder Columns 2`] = `
-"import { useState, For } from \\"@builder.io/mitosis\\";
+"import { useStore, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     getColumns() {
       return props.columns || [];
     },
@@ -325,10 +325,10 @@ onMount(() => {
 `;
 
 exports[`Builder CustomCode 2`] = `
-"import { useState, useRef } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
@@ -526,10 +526,10 @@ onMount(() => {
 `;
 
 exports[`Builder Embed 2`] = `
-"import { useState, useRef } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
@@ -709,19 +709,19 @@ Object {
 Object.assign(state, {
   scrollListener: null,
   imageLoaded: false,
-  load: false,
   setLoaded() {
     state.imageLoaded = true;
   },
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  },
+  isBrowser: function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
   },
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
-  },
+  load: false,
 });
 
 if (state.useLazyLoading()) {
@@ -732,7 +732,7 @@ if (state.useLazyLoading()) {
       const buffer = window.innerHeight / 2;
 
       if (rect.top < window.innerHeight + buffer) {
-        state.load = true;
+        setLoad(true);
         state.scrollListener = null;
         window.removeEventListener(\\"scroll\\", listener);
       }
@@ -752,19 +752,19 @@ if (state.useLazyLoading()) {
 useState({
   scrollListener: null,
   imageLoaded: false,
-  load: false,
   setLoaded() {
     state.imageLoaded = true;
   },
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  },
+  isBrowser: function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
   },
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
-  },
+  load: false,
 });
 
 onMount(() => {
@@ -776,7 +776,7 @@ onMount(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          state.load = true;
+          setLoad(true);
           state.scrollListener = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -797,27 +797,27 @@ onMount(() => {
 `;
 
 exports[`Builder Image 2`] = `
-"import { useState, useRef, Show } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef, Show } from \\"@builder.io/mitosis\\";
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scrollListener: null,
     imageLoaded: false,
-    load: false,
     setLoaded() {
       state.imageLoaded = true;
     },
-    isBrowser() {
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && isBrowser();
+    },
+    isBrowser: function isBrowser() {
       return (
         typeof window !== \\"undefined\\" &&
         window.navigator.product != \\"ReactNative\\"
       );
     },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
-    },
+    load: false,
   });
 
   const pictureRef = useRef();
@@ -831,7 +831,7 @@ export default function MyComponent(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
+            setLoad(true);
             state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -1233,7 +1233,7 @@ Object {
     ],
     "jsCode": "Object.assign(state, {});
 ",
-    "tsCode": "useState({});
+    "tsCode": "useStore({});
 ",
   },
 }
@@ -1446,7 +1446,7 @@ Object {
     ],
     "jsCode": "Object.assign(state, {});
 ",
-    "tsCode": "useState({});
+    "tsCode": "useStore({});
 ",
   },
 }
@@ -1961,10 +1961,10 @@ onMount(() => {
 `;
 
 exports[`Builder Stamped 2`] = `
-"import { useState, Show, For } from \\"@builder.io/mitosis\\";
+"import { useStore, Show, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     reviews: [],
     name: \\"test\\",
     showReviewPrompt: false,

@@ -14,7 +14,7 @@ import { componentToSvelte as svelte } from './generators/svelte';
 import { componentToSwift as swift } from './generators/swift-ui';
 import { componentToTemplate as template } from './generators/template';
 import { componentToVue as vue } from './generators/vue';
-
+import { componentToStencil as stencil } from './generators/stencil';
 export const targets = {
   angular,
   builder,
@@ -30,4 +30,5 @@ export const targets = {
   template,
   webcomponent,
   vue,
+  stencil,
 };

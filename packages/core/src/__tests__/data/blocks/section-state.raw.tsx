@@ -1,5 +1,4 @@
-import { useState, Show, For } from '@builder.io/mitosis';
-import { number } from 'fp-ts';
+import { useStore, Show, For } from '@builder.io/mitosis';
 
 export interface SectionProps {
   maxWidth?: number;
@@ -8,7 +7,7 @@ export interface SectionProps {
 }
 
 export default function SectionStateComponent(props: SectionProps) {
-  const state = useState({
+  const state = useStore({
     max: 42,
     items: [42],
   });

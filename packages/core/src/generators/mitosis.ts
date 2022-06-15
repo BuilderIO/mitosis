@@ -190,7 +190,7 @@ export const componentToMitosis =
     ${
       !needsMitosisCoreImport
         ? ''
-        : `import { ${!hasState ? '' : 'useState, '} ${
+        : `import { ${!hasState ? '' : 'useStore, '} ${
             !refs.length ? '' : 'useRef, '
           } ${mitosisComponents.join(', ')} } from '@builder.io/mitosis';`
     }
@@ -202,7 +202,7 @@ export const componentToMitosis =
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
 
-    ${renderPreComponent(json)}
+    ${renderPreComponent(json, 'mitosis')}
 
     ${
       stringifiedUseMetadata !== '{}'
@@ -214,7 +214,7 @@ export const componentToMitosis =
       ${
         !hasState
           ? ''
-          : `const state = useState(${getStateObjectStringFromComponent(
+          : `const state = useStore(${getStateObjectStringFromComponent(
               json,
             )});`
       }

@@ -7,8 +7,12 @@ export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: { id: string }) {
   const [name, setName] = useState(() => \\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
 
   return (
     <>
@@ -30,7 +34,105 @@ export default function MyBasicComponent(props) {
 "
 `;
 
-exports[`React Basic Child Component 1`] = `
+exports[`React Basic Context 1`] = `
+"import { useState, useContext, useEffect } from \\"react\\";
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  useEffect(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  });
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <div>
+      {myService.method(\\"hello\\") + name}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      <input onChange={(event) => onChange} />
+    </div>
+  );
+}
+"
+`;
+
+exports[`React Basic OnMount Update 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
+export default function MyBasicOnMountUpdateComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    setName(\\"PatrickJS onInit\\" + props.hi);
+  });
+
+  useEffect(() => {
+    setName(\\"PatrickJS onMount\\" + props.bye);
+  }, []);
+
+  return (
+    <div>
+      Hello
+      {name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React Basic Outputs 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOutputsComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`React Basic Outputs Meta 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOutputsComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`React BasicChildComponent 1`] = `
 "import { useState } from \\"react\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -53,41 +155,40 @@ export default function MyBasicChildComponent(props) {
 "
 `;
 
-exports[`React Basic ForwardRef 1`] = `
-"import { useState, forwardRef } from \\"react\\";
+exports[`React BasicFor 1`] = `
+"import { useState, useEffect } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
+export default function MyBasicForComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
 
-export default forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
 
-    return (
-      <>
-        <div>
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
+
+  return (
+    <div>
+      {names?.map((person) => (
+        <>
           <input
-            className=\\"input\\"
-            ref={inputRef}
             value={name}
-            onChange={(event) => setName(event.target.value)}
+            onChange={(event) => {
+              setName(event.target.value + \\" and \\" + person);
+            }}
           />
-        </div>
-        <style jsx>{\`
-          .input {
-            color: red;
-          }
-        \`}</style>
-      </>
-    );
-  }
-);
+          Hello
+          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+          Liquid!
+        </>
+      ))}
+    </div>
+  );
+}
 "
 `;
 
-exports[`React Basic Ref 1`] = `
+exports[`React BasicRef 1`] = `
 "import { useState, useRef } from \\"react\\";
 
 export interface Props {
@@ -147,7 +248,7 @@ export default function MyBasicRefComponent(props: Props) {
 "
 `;
 
-exports[`React Basic Ref Assignment 1`] = `
+exports[`React BasicRefAssignment 1`] = `
 "import { useRef } from \\"react\\";
 
 export interface Props {
@@ -171,7 +272,7 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
 "
 `;
 
-exports[`React Basic Ref Previous 1`] = `
+exports[`React BasicRefPrevious 1`] = `
 "import { useState, useRef, useEffect } from \\"react\\";
 
 export interface Props {
@@ -196,39 +297,6 @@ export default function MyPreviousComponent(props: Props) {
       </h1>
 
       <button onClick={(event) => setCount(1)}>Increment</button>
-    </div>
-  );
-}
-"
-`;
-
-exports[`React BasicFor 1`] = `
-"import { useState, useEffect } from \\"react\\";
-
-export default function MyBasicForComponent(props) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
-
-  useEffect(() => {
-    console.log(\\"onMount code\\");
-  }, []);
-
-  return (
-    <div>
-      {names?.map((person) => (
-        <>
-          <input
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value + \\" and \\" + person);
-            }}
-          />
-          Hello
-          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
-          Liquid!
-        </>
-      ))}
     </div>
   );
 }
@@ -535,7 +603,7 @@ export default function CustomCode(props: CustomCodeProps) {
 "
 `;
 
-exports[`React Form block 1`] = `
+exports[`React Form 1`] = `
 "import { useState, useRef } from \\"react\\";
 
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
@@ -861,10 +929,13 @@ export default function Image(props: ImageProps) {
 
   const [imageLoaded, setImageLoaded] = useState(() => false);
 
-  const [load, setLoad] = useState(() => false);
-
   function setLoaded() {
     setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
   }
 
   function isBrowser() {
@@ -873,10 +944,7 @@ export default function Image(props: ImageProps) {
     );
   }
 
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
-  }
+  const [load, setLoad] = useState(() => false);
 
   useEffect(() => {
     if (useLazyLoading()) {
@@ -951,6 +1019,27 @@ export default function Image(props: ImageProps) {
 "
 `;
 
+exports[`React Image State 1`] = `
+"import { useState } from \\"react\\";
+
+export default function ImgStateComponent(props) {
+  const [canShow, setCanShow] = useState(() => true);
+
+  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+
+  return (
+    <div>
+      {images?.map((item, itemIndex) => (
+        <>
+          <img className={\\"custom-class\\"} src={item} key={itemIndex} />
+        </>
+      ))}
+    </div>
+  );
+}
+"
+`;
+
 exports[`React Img 1`] = `
 "export interface ImgProps {
   attributes?: any;
@@ -988,7 +1077,7 @@ export default function ImgComponent(props: ImgProps) {
 "
 `;
 
-exports[`React Input block 1`] = `
+exports[`React Input 1`] = `
 "export interface FormInputProps {
   type?: string;
   attributes?: any;
@@ -1081,7 +1170,7 @@ export default function SectionComponent(props: SectionProps) {
 "
 `;
 
-exports[`React Select block 1`] = `
+exports[`React Select 1`] = `
 "export interface FormSelectProps {
   options?: {
     name?: string;
@@ -1152,8 +1241,7 @@ export default function SlotCode(props: Props) {
 `;
 
 exports[`React Stamped.io 1`] = `
-"import styled from \\"styled-components\\";
-import { useState, useEffect } from \\"react\\";
+"import { useState, useEffect } from \\"react\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -1190,76 +1278,79 @@ export default function SmileReviews(props: SmileReviewsProps) {
   }, []);
 
   return (
-    <div data-user={name}>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
+    <>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
 
-      {showReviewPrompt ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\" />
-          <Textarea placeholder=\\"How was your experience?\\" />
-          <Button
-            onClick={(event) => {
-              setShowReviewPrompt(false);
-            }}
-          >
-            Submit
-          </Button>
-        </>
-      ) : null}
+        {showReviewPrompt ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea\\"
+            />
+            <button
+              className=\\"button\\"
+              onClick={(event) => {
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </>
+        ) : null}
 
-      {reviews?.map((review, index) => (
-        <Review key={review.id}>
-          <Img src={review.avatar} />
+        {reviews?.map((review, index) => (
+          <div className=\\"review\\" key={review.id}>
+            <img className=\\"img\\" src={review.avatar} />
 
-          <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-            <div>
-              N:
-              {index}
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
             </div>
-
-            <div>{review.author}</div>
-
-            <div>{review.reviewMessage}</div>
           </div>
-        </Review>
-      ))}
-    </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </>
   );
 }
-
-const Input = styled.input\`
-  display: block;
-\`;
-
-const Textarea = styled.textarea\`
-  display: block;
-\`;
-
-const Button = styled.button\`
-  display: block;
-\`;
-
-const Review = styled.div\`
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-\`;
-
-const Img = styled.img\`
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-\`;
 "
 `;
 
-exports[`React Submit button block 1`] = `
+exports[`React Submit 1`] = `
 "export interface ButtonProps {
   attributes?: any;
   text?: string;
@@ -1387,6 +1478,96 @@ export default function Video(props: VideoProps) {
 "
 `;
 
+exports[`React basicForwardRef 1`] = `
+"import { useState, forwardRef } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+export default forwardRef<Props[\\"inputRef\\"]>(
+  function MyBasicForwardRefComponent(props: Props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
+
+    return (
+      <>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </>
+    );
+  }
+);
+"
+`;
+
+exports[`React basicForwardRefMetadata 1`] = `
+"import { useState, forwardRef } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+export default forwardRef<Props[\\"inputRef\\"]>(
+  function MyBasicForwardRefComponent(props: Props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
+
+    return (
+      <>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </>
+    );
+  }
+);
+"
+`;
+
+exports[`React className 1`] = `
+"import { useState } from \\"react\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+export default function ClassNameCode(props: Props) {
+  const [bindings, setBindings] = useState(() => \\"a binding\\");
+
+  return (
+    <div>
+      <div className=\\"no binding\\">Without Binding</div>
+
+      <div className={bindings}>With binding</div>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React multipleOnUpdate 1`] = `
 "import { useEffect } from \\"react\\";
 
@@ -1403,7 +1584,7 @@ export default function MultipleOnUpdate(props) {
 "
 `;
 
-exports[`React multipleOnnUpdateWithDeps 1`] = `
+exports[`React multipleOnUpdateWithDeps 1`] = `
 "import { useState, useEffect } from \\"react\\";
 
 export default function MultipleOnUpdateWithDeps(props) {
@@ -1417,10 +1598,35 @@ export default function MultipleOnUpdateWithDeps(props) {
 
   useEffect(() => {
     console.log(\\"Runs when a or b changes\\", a, b);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
   }, [a, b]);
   useEffect(() => {
     console.log(\\"Runs when c or d changes\\", c, d);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
   }, [c, d]);
+
+  return <div />;
+}
+"
+`;
+
+exports[`React onInit & onMount 1`] = `
+"import { useEffect } from \\"react\\";
+
+export default function OnInit(props) {
+  useEffect(() => {
+    console.log(\\"onInit\\");
+  });
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
 
   return <div />;
 }
@@ -1456,7 +1662,7 @@ export default function OnInit(props: Props) {
 "
 `;
 
-exports[`React onMount & onUnMount 1`] = `
+exports[`React onMount 1`] = `
 "import { useEffect } from \\"react\\";
 
 export default function Comp(props) {
@@ -1529,6 +1735,23 @@ export default function MyBasicComponent(props: {
 "
 `;
 
+exports[`React propsDestructure 1`] = `
+"import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <div>
+      {props.children}
+      {props.type}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
 exports[`React propsInterface 1`] = `
 "interface Person {
   name: string;
@@ -1564,32 +1787,126 @@ export default function MyBasicComponent(props: Person) {
 `;
 
 exports[`React rootShow 1`] = `
-"export default function RenderStyles(props: {
-foo: string
-}) {
-  
-    
-    
-    
-    
+"export default function RenderStyles(props: { foo: string }) {
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <div>Bar</div>
+        </>
+      ) : (
+        <div>Foo</div>
+      )}
+    </>
+  );
+}
+"
+`;
 
-    
-    
+exports[`React stamped 1`] = `
+"import styled from \\"styled-components\\";
+import { useState, useEffect } from \\"react\\";
 
-    
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
-    
+export default function SmileReviews(props: SmileReviewsProps) {
+  const [reviews, setReviews] = useState(() => []);
 
-    return (
-      <>
-      {props.foo === 'bar' ? (
-    <><div >Bar</div></>
-  ) : <div >Foo</div>}
-      
-      </>
-    );
+  const [name, setName] = useState(() => \\"test\\");
+
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
   }
 
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
 
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.data);
+      });
+  }, []);
+
+  return (
+    <div data-user={name}>
+      <button onClick={(event) => setShowReviewPrompt(true)}>
+        Write a review
+      </button>
+
+      {showReviewPrompt ? (
+        <>
+          <input placeholder=\\"Email\\" />
+          <Input placeholder=\\"Title\\" />
+          <Textarea placeholder=\\"How was your experience?\\" />
+          <Button
+            onClick={(event) => {
+              setShowReviewPrompt(false);
+            }}
+          >
+            Submit
+          </Button>
+        </>
+      ) : null}
+
+      {reviews?.map((review, index) => (
+        <Review key={review.id}>
+          <Img src={review.avatar} />
+
+          <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+            <div>
+              N:
+              {index}
+            </div>
+
+            <div>{review.author}</div>
+
+            <div>{review.reviewMessage}</div>
+          </div>
+        </Review>
+      ))}
+    </div>
+  );
+}
+
+const Input = styled.input\`
+  display: block;
+\`;
+
+const Textarea = styled.textarea\`
+  display: block;
+\`;
+
+const Button = styled.button\`
+  display: block;
+\`;
+
+const Review = styled.div\`
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  display: flex;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+\`;
+
+const Img = styled.img\`
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+\`;
 "
 `;

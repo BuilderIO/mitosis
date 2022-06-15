@@ -1,7 +1,7 @@
-import { onUpdate, useState } from '@builder.io/mitosis';
+import { onUpdate, useStore } from '@builder.io/mitosis';
 
 export default function OnUpdateWithDeps() {
-  const state = useState({
+  const state = useStore({
     a: 'a',
     b: 'b',
   });

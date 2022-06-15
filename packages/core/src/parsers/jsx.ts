@@ -20,6 +20,7 @@ import {
 } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { tryParseJson } from '../helpers/json';
+import { HOOKS } from '../constants/hooks';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -339,14 +340,17 @@ const componentFunctionToJson = (
           }
         }
         // Legacy format, like:
-        // const state = useState({...})
+        // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === 'useState') {
+          if (
+            init.callee.name === HOOKS.STATE ||
+            init.callee.name === HOOKS.STORE
+          ) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              state = parseStateObject(firstArg);
+              Object.assign(state, parseStateObject(firstArg));
             }
-          } else if (init.callee.name === 'useContext') {
+          } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
             if (
               types.isVariableDeclarator(declaration) &&
@@ -371,7 +375,7 @@ const componentFunctionToJson = (
                 };
               }
             }
-          } else if (init.callee.name === 'useRef') {
+          } else if (init.callee.name === HOOKS.REF) {
             if (types.isIdentifier(declaration.id)) {
               const firstArg = init.arguments[0];
               const varName = declaration.id.name;
@@ -887,6 +891,41 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
+function undoPropsDestructure(
+  path: babel.NodePath<babel.types.FunctionDeclaration>,
+) {
+  const { node } = path;
+  if (node.params.length && types.isObjectPattern(node.params[0])) {
+    const propsMap = node.params[0].properties.reduce((pre, cur) => {
+      if (
+        types.isObjectProperty(cur) &&
+        types.isIdentifier(cur.key) &&
+        types.isIdentifier(cur.value)
+      ) {
+        pre[cur.value.name] = `props.${cur.key.name}`;
+        return pre;
+      }
+      return pre;
+    }, {} as Record<string, string>);
+
+    path.traverse({
+      JSXExpressionContainer(path) {
+        const { node } = path;
+        if (types.isIdentifier(node.expression)) {
+          const { name } = node.expression;
+          if (propsMap[name]) {
+            path.replaceWith(
+              babel.types.jsxExpressionContainer(
+                babel.types.identifier(propsMap[name]),
+              ),
+            );
+          }
+        }
+      },
+    });
+  }
+}
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -1001,6 +1040,7 @@ export function parseJsx(
           },
           FunctionDeclaration(path, context) {
             const { node } = path;
+            undoPropsDestructure(path);
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {

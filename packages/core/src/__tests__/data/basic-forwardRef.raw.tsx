@@ -1,4 +1,4 @@
-import { useState, useRef, useMetadata } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;
@@ -6,7 +6,7 @@ export interface Props {
 }
 
 export default function MyBasicForwardRefComponent(props: Props) {
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
   });
 

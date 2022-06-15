@@ -108,11 +108,11 @@ describe('Builder', () => {
 
   test('Regenerate Image', () => {
     const code = dedent`
-      import { useState } from "@builder.io/mitosis";
+      import { useStore } from "@builder.io/mitosis";
       import { Image } from "@components";
 
       export default function MyComponent(props) {
-        const state = useState({ people: ["Steve", "Sewell"] });
+        const state = useStore({ people: ["Steve", "Sewell"] });
 
         return (
           <div
@@ -149,10 +149,10 @@ describe('Builder', () => {
 
   test('Regenerate Text', () => {
     const code = dedent`
-      import { useState } from "@builder.io/mitosis";
+      import { useStore } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({ people: ["Steve", "Sewell"] });
+        const state = useStore({ people: ["Steve", "Sewell"] });
 
         return (
           <div
@@ -183,10 +183,10 @@ describe('Builder', () => {
 
   test('Regenerate loop', () => {
     const code = dedent`
-      import { useState, For } from "@builder.io/mitosis";
+      import { useStore, For } from "@builder.io/mitosis";
 
       export default function MyComponent(props) {
-        const state = useState({ people: ["Steve", "Sewell"] });
+        const state = useStore({ people: ["Steve", "Sewell"] });
 
         return (
           <For each={state.people}>
