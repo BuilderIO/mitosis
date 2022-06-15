@@ -343,6 +343,19 @@ export interface Props {
   showInput: boolean;
 }
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
 @Component({
   selector: \\"my-previous-component\\",
   template: \`
@@ -1924,6 +1937,32 @@ export default class OnUpdateWithDeps {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
   }
 }
+"
+`;
+
+exports[`Angular preserveExportOrLocalStatement 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicComponent {}
 "
 `;
 

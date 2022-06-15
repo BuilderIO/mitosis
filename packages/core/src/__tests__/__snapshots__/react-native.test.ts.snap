@@ -297,6 +297,19 @@ export interface Props {
   showInput: boolean;
 }
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
 export default function MyPreviousComponent(props: Props) {
   const [count, setCount] = useState(() => 0);
 
@@ -1735,6 +1748,29 @@ export default function OnUpdateWithDeps(props) {
     console.log(\\"Runs when a or b changes\\", a, b);
   }, [a, b]);
 
+  return <View />;
+}
+"
+`;
+
+exports[`React Native preserveExportOrLocalStatement 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+export default function MyBasicComponent(props: { id: string }) {
   return <View />;
 }
 "

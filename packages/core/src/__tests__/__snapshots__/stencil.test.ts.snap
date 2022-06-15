@@ -300,7 +300,20 @@ export default class MyBasicRefAssignmentComponent {
 `;
 
 exports[`Stencil BasicRefPrevious 1`] = `
-"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-previous-component\\",
@@ -1734,6 +1747,26 @@ export default class OnUpdateWithDeps {
     console.log(\\"Runs when a or b changes\\", this.a, this.b);
   }
 
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil preserveExportOrLocalStatement 1`] = `
+"const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
   render() {
     return <div></div>;
   }
