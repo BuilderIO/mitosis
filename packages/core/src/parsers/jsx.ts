@@ -51,16 +51,20 @@ type Context = {
   };
 };
 
-const arrayToAst = (array: JSONOrNode[]) => {
-  return types.arrayExpression(array.map((item) => jsonToAst(item)) as any);
-};
+type ArrayElementType<T> = T extends (infer E)[] ? E : T;
+type ArrayExpressionArg = ArrayElementType<
+  NonNullable<Parameters<typeof types.arrayExpression>[0]>
+>;
 
-const jsonToAst = (json: JSONOrNode): babel.Node => {
-  if (types.isNode(json as any)) {
-    if (types.isJSXText(json as any)) {
-      return types.stringLiteral((json as any).value);
+const arrayToAst = (array: JSONOrNode[]) =>
+  types.arrayExpression(array.map(jsonToAst));
+
+const jsonToAst = (json: JSONOrNode): babel.types.Expression => {
+  if (types.isNode(json)) {
+    if (types.isJSXText(json)) {
+      return types.stringLiteral(json.value);
     }
-    return json as babel.Node;
+    return json as babel.types.Expression;
   }
   switch (typeof json) {
     case 'undefined':
@@ -78,15 +82,14 @@ const jsonToAst = (json: JSONOrNode): babel.Node => {
       if (Array.isArray(json)) {
         return arrayToAst(json);
       }
-      return jsonObjectToAst(json as JSONObject);
+      return jsonObjectToAst(json);
   }
 };
 
-const jsonObjectToAst = (
-  json: JSONOrNodeObject,
-): babel.types.ObjectExpression => {
+const jsonObjectToAst = (json: JSONOrNodeObject): babel.types.Expression => {
   if (!json) {
-    return json;
+    // TO-DO: This looks concerning...
+    return json as any;
   }
   const properties: babel.types.ObjectProperty[] = [];
   for (const key in json) {
@@ -891,12 +894,21 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
+const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
+  path.traverse({
+    FunctionDeclaration(path) {
+      undoPropsDestructure(path);
+    },
+  });
+};
+
 function undoPropsDestructure(
   path: babel.NodePath<babel.types.FunctionDeclaration>,
 ) {
   const { node } = path;
   if (node.params.length && types.isObjectPattern(node.params[0])) {
-    const propsMap = node.params[0].properties.reduce((pre, cur) => {
+    const param = node.params[0];
+    const propsMap = param.properties.reduce((pre, cur) => {
       if (
         types.isObjectProperty(cur) &&
         types.isIdentifier(cur.key) &&
@@ -907,6 +919,16 @@ function undoPropsDestructure(
       }
       return pre;
     }, {} as Record<string, string>);
+
+    if (param.typeAnnotation) {
+      node.params = [
+        {
+          ...babel.types.identifier('props'),
+          typeAnnotation: param.typeAnnotation,
+        } as babel.types.Identifier,
+      ];
+      path.replaceWith(node);
+    }
 
     path.traverse({
       JSXExpressionContainer(path) {
@@ -962,6 +984,9 @@ export function parseJsx(
             if (context.builder) {
               return;
             }
+
+            beforeParse(path);
+
             context.builder = {
               component: createMitosisComponent(),
             };
@@ -1040,7 +1065,6 @@ export function parseJsx(
           },
           FunctionDeclaration(path, context) {
             const { node } = path;
-            undoPropsDestructure(path);
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
