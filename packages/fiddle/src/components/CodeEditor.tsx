@@ -1,5 +1,5 @@
 import { Linter as ESLinter } from 'eslint';
-import { JsxTypes } from '@builder.io/mitosis';
+// import JsxTypes from '@builder.io/mitosis/jsx-runtime';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
@@ -83,10 +83,10 @@ export function CodeEditor(props: MonacoEditorProps) {
       noSyntaxValidation: false,
     });
 
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      JsxTypes,
-      `file:///node_modules/@react/types/index.d.ts`,
-    );
+    // monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    // JsxTypes,
+    // `file:///node_modules/@builder.io/types/index.d.ts`,
+    // );
 
     monaco.languages.registerDocumentFormattingEditProvider('typescript', {
       async provideDocumentFormattingEdits(model) {
