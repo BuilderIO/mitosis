@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 export function useReaction<T = any>(
   expression: () => T,
   effect: (value: T) => void,
-  options: IReactionOptions = { fireImmediately: true },
+  options: IReactionOptions<T, boolean> = { fireImmediately: true },
 ): void {
-  // eslint-disable-next-line
   useEffect(() => reaction(expression, effect, options), []);
 }
