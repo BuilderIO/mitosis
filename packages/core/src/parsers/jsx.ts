@@ -922,7 +922,7 @@ function undoPropsDestructure(
         {
           ...babel.types.identifier('props'),
           typeAnnotation: param.typeAnnotation,
-        } as babel.types.Identifier,
+        },
       ];
       path.replaceWith(node);
     }
