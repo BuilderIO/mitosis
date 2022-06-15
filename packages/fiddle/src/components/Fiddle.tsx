@@ -43,8 +43,6 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { adapt } from 'webcomponents-in-react';
-import githubLogo from '../../assets/GitHub-Mark-Light-64px.png';
-import logo from '../../assets/mitosis-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
 import { defaultCode, templates } from '../constants/templates';
