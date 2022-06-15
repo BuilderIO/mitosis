@@ -891,12 +891,21 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
+const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
+  path.traverse({
+    FunctionDeclaration(path) {
+      undoPropsDestructure(path);
+    },
+  });
+};
+
 function undoPropsDestructure(
   path: babel.NodePath<babel.types.FunctionDeclaration>,
 ) {
   const { node } = path;
   if (node.params.length && types.isObjectPattern(node.params[0])) {
-    const propsMap = node.params[0].properties.reduce((pre, cur) => {
+    const param = node.params[0];
+    const propsMap = param.properties.reduce((pre, cur) => {
       if (
         types.isObjectProperty(cur) &&
         types.isIdentifier(cur.key) &&
@@ -907,6 +916,16 @@ function undoPropsDestructure(
       }
       return pre;
     }, {} as Record<string, string>);
+
+    if (param.typeAnnotation) {
+      node.params = [
+        {
+          ...babel.types.identifier('props'),
+          typeAnnotation: param.typeAnnotation,
+        },
+      ];
+      path.replaceWith(node);
+    }
 
     path.traverse({
       JSXExpressionContainer(path) {
@@ -962,6 +981,9 @@ export function parseJsx(
             if (context.builder) {
               return;
             }
+
+            beforeParse(path);
+
             context.builder = {
               component: createMitosisComponent(),
             };
@@ -1059,7 +1081,6 @@ export function parseJsx(
           },
           FunctionDeclaration(path, context) {
             const { node } = path;
-            undoPropsDestructure(path);
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
