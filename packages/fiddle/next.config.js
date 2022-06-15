@@ -14,6 +14,8 @@ const nextConfig = {
     return config;
   },
   experimental: {
+    esmExternals: true,
+
     externalDir: true,
   },
 };
