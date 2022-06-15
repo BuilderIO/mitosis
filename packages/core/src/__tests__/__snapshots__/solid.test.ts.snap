@@ -331,6 +331,19 @@ export default MyBasicRefAssignmentComponent;
 exports[`Solid BasicRefPrevious 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
 function MyPreviousComponent(props) {
   const state = createMutable({ count: 0 });
 
@@ -1570,6 +1583,21 @@ function OnUpdateWithDeps(props) {
 }
 
 export default OnUpdateWithDeps;
+"
+`;
+
+exports[`Solid preserveExportOrLocalStatement 1`] = `
+"const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+function MyBasicComponent(props) {
+  return <div></div>;
+}
+
+export default MyBasicComponent;
 "
 `;
 

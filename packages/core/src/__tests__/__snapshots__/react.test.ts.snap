@@ -279,6 +279,19 @@ export interface Props {
   showInput: boolean;
 }
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
 export default function MyPreviousComponent(props: Props) {
   const [count, setCount] = useState(() => 0);
 
@@ -1711,6 +1724,26 @@ export default function OnUpdateWithDeps(props) {
 "
 `;
 
+exports[`React preserveExportOrLocalStatement 1`] = `
+"type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+export default function MyBasicComponent(props: { id: string }) {
+  return <div />;
+}
+"
+`;
+
 exports[`React preserveTyping 1`] = `
 "export type A = \\"test\\";
 type B = \\"test2\\";
@@ -1738,7 +1771,12 @@ export default function MyBasicComponent(props: {
 exports[`React propsDestructure 1`] = `
 "import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+type Props = {
+  children: any;
+  type: string;
+};
+
+export default function MyBasicComponent(props: Props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (

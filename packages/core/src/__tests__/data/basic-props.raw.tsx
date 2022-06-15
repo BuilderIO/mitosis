@@ -1,7 +1,11 @@
 import { useStore } from '@builder.io/mitosis';
 
-// @ts-ignore
-export default function MyBasicComponent(props) {
+type Props = {
+  children: any;
+  type: string;
+};
+
+export default function MyBasicComponent(props: Props) {
   const state = useStore({
     name: 'Decadef20',
   });

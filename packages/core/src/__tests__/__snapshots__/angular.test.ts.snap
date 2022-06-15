@@ -343,6 +343,19 @@ export interface Props {
   showInput: boolean;
 }
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
 @Component({
   selector: \\"my-previous-component\\",
   template: \`
@@ -1927,6 +1940,32 @@ export default class OnUpdateWithDeps {
 "
 `;
 
+exports[`Angular preserveExportOrLocalStatement 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular preserveTyping 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1957,6 +1996,11 @@ export default class MyBasicComponent {
 exports[`Angular propsDestructure 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+type Props = {
+  children: any;
+  type: string;
+};
+
 @Component({
   selector: \\"my-basic-component\\",
   template: \`
@@ -1968,7 +2012,7 @@ exports[`Angular propsDestructure 1`] = `
   \`,
 })
 export default class MyBasicComponent {
-  @Input() type: any;
+  @Input() type: Props[\\"type\\"];
 
   name = \\"Decadef20\\";
 }
