@@ -6,9 +6,10 @@ const withTM = require('next-transpile-modules')(['@builder.io/mitosis']);
 const nextConfig = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     config.resolve.fallback = {
-      ...config.resolve.fallback, // if you miss it, all the other options in fallback, specified
-      // by next.js will be dropped. Doesn't make much sense, but how it is
-      fs: false, // the solution
+      ...config.resolve.fallback,
+      // @babel/core imported by Mitosis imports `fs`. We don't need it in the browser, so we tell webpack to ignore it.
+      // https://webpack.js.org/configuration/resolve/#resolvealias
+      fs: false,
     };
 
     return config;
