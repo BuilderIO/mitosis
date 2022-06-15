@@ -51,16 +51,15 @@ type Context = {
   };
 };
 
-const arrayToAst = (array: JSONOrNode[]) => {
-  return types.arrayExpression(array.map((item) => jsonToAst(item)) as any);
-};
+const arrayToAst = (array: JSONOrNode[]) =>
+  types.arrayExpression(array.map(jsonToAst));
 
-const jsonToAst = (json: JSONOrNode): babel.Node => {
-  if (types.isNode(json as any)) {
-    if (types.isJSXText(json as any)) {
-      return types.stringLiteral((json as any).value);
+const jsonToAst = (json: JSONOrNode): babel.types.Expression => {
+  if (types.isNode(json)) {
+    if (types.isJSXText(json)) {
+      return types.stringLiteral(json.value);
     }
-    return json as babel.Node;
+    return json as babel.types.Expression;
   }
   switch (typeof json) {
     case 'undefined':
@@ -78,15 +77,14 @@ const jsonToAst = (json: JSONOrNode): babel.Node => {
       if (Array.isArray(json)) {
         return arrayToAst(json);
       }
-      return jsonObjectToAst(json as JSONObject);
+      return jsonObjectToAst(json);
   }
 };
 
-const jsonObjectToAst = (
-  json: JSONOrNodeObject,
-): babel.types.ObjectExpression => {
+const jsonObjectToAst = (json: JSONOrNodeObject): babel.types.Expression => {
   if (!json) {
-    return json;
+    // TO-DO: This looks concerning...
+    return json as any;
   }
   const properties: babel.types.ObjectProperty[] = [];
   for (const key in json) {
