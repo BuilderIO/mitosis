@@ -50,6 +50,7 @@ const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
+const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
 
 const path = 'test-path';
 
@@ -96,6 +97,7 @@ const BASIC_TESTS = {
   className: classNameJsx,
   'Image State': imageState,
   'Basic OnMount Update': basicOnMountUpdate,
+  preserveExportOrLocalStatement,
 };
 
 const MULTI_ON_UPDATE_TESTS: Tests = {
