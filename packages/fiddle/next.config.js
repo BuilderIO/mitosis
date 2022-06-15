@@ -1,4 +1,4 @@
-const withTM = require('next-transpile-modules')(['@builder.io/mitosis']);
+// const withTM = require('next-transpile-modules')(['@builder.io/mitosis']);
 
 /**
  * @type {import('next').NextConfig}
@@ -18,4 +18,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(nextConfig);
+module.exports = nextConfig;
