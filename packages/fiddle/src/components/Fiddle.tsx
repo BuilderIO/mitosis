@@ -39,7 +39,7 @@ import {
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { adapt } from 'webcomponents-in-react';
