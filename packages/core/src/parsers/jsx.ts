@@ -20,6 +20,7 @@ import {
 } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { tryParseJson } from '../helpers/json';
+import { HOOKS } from '../constants/hooks';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -50,16 +51,15 @@ type Context = {
   };
 };
 
-const arrayToAst = (array: JSONOrNode[]) => {
-  return types.arrayExpression(array.map((item) => jsonToAst(item)) as any);
-};
+const arrayToAst = (array: JSONOrNode[]) =>
+  types.arrayExpression(array.map(jsonToAst));
 
-const jsonToAst = (json: JSONOrNode): babel.Node => {
-  if (types.isNode(json as any)) {
-    if (types.isJSXText(json as any)) {
-      return types.stringLiteral((json as any).value);
+const jsonToAst = (json: JSONOrNode): babel.types.Expression => {
+  if (types.isNode(json)) {
+    if (types.isJSXText(json)) {
+      return types.stringLiteral(json.value);
     }
-    return json as babel.Node;
+    return json as babel.types.Expression;
   }
   switch (typeof json) {
     case 'undefined':
@@ -77,15 +77,14 @@ const jsonToAst = (json: JSONOrNode): babel.Node => {
       if (Array.isArray(json)) {
         return arrayToAst(json);
       }
-      return jsonObjectToAst(json as JSONObject);
+      return jsonObjectToAst(json);
   }
 };
 
-const jsonObjectToAst = (
-  json: JSONOrNodeObject,
-): babel.types.ObjectExpression => {
+const jsonObjectToAst = (json: JSONOrNodeObject): babel.types.Expression => {
   if (!json) {
-    return json;
+    // TO-DO: This looks concerning...
+    return json as any;
   }
   const properties: babel.types.ObjectProperty[] = [];
   for (const key in json) {
@@ -339,14 +338,17 @@ const componentFunctionToJson = (
           }
         }
         // Legacy format, like:
-        // const state = useState({...})
+        // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === 'useState') {
+          if (
+            init.callee.name === HOOKS.STATE ||
+            init.callee.name === HOOKS.STORE
+          ) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              state = parseStateObject(firstArg);
+              Object.assign(state, parseStateObject(firstArg));
             }
-          } else if (init.callee.name === 'useContext') {
+          } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
             if (
               types.isVariableDeclarator(declaration) &&
@@ -371,7 +373,7 @@ const componentFunctionToJson = (
                 };
               }
             }
-          } else if (init.callee.name === 'useRef') {
+          } else if (init.callee.name === HOOKS.REF) {
             if (types.isIdentifier(declaration.id)) {
               const firstArg = init.arguments[0];
               const varName = declaration.id.name;
@@ -887,6 +889,60 @@ const collectInterfaces = (node: babel.Node, context: Context) => {
   context.builder.component.interfaces = interfaces.filter(Boolean);
 };
 
+const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
+  path.traverse({
+    FunctionDeclaration(path) {
+      undoPropsDestructure(path);
+    },
+  });
+};
+
+function undoPropsDestructure(
+  path: babel.NodePath<babel.types.FunctionDeclaration>,
+) {
+  const { node } = path;
+  if (node.params.length && types.isObjectPattern(node.params[0])) {
+    const param = node.params[0];
+    const propsMap = param.properties.reduce((pre, cur) => {
+      if (
+        types.isObjectProperty(cur) &&
+        types.isIdentifier(cur.key) &&
+        types.isIdentifier(cur.value)
+      ) {
+        pre[cur.value.name] = `props.${cur.key.name}`;
+        return pre;
+      }
+      return pre;
+    }, {} as Record<string, string>);
+
+    if (param.typeAnnotation) {
+      node.params = [
+        {
+          ...babel.types.identifier('props'),
+          typeAnnotation: param.typeAnnotation,
+        },
+      ];
+      path.replaceWith(node);
+    }
+
+    path.traverse({
+      JSXExpressionContainer(path) {
+        const { node } = path;
+        if (types.isIdentifier(node.expression)) {
+          const { name } = node.expression;
+          if (propsMap[name]) {
+            path.replaceWith(
+              babel.types.jsxExpressionContainer(
+                babel.types.identifier(propsMap[name]),
+              ),
+            );
+          }
+        }
+      },
+    });
+  }
+}
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -923,6 +979,9 @@ export function parseJsx(
             if (context.builder) {
               return;
             }
+
+            beforeParse(path);
+
             context.builder = {
               component: createMitosisComponent(),
             };
@@ -943,31 +1002,50 @@ export function parseJsx(
             context.builder.component.exports = exportsOrLocalVariables.reduce(
               (pre, node) => {
                 let name, isFunction;
-                if (
-                  babel.types.isExportNamedDeclaration(node) &&
-                  babel.types.isVariableDeclaration(node.declaration) &&
-                  babel.types.isIdentifier(node.declaration.declarations[0].id)
-                ) {
-                  name = node.declaration.declarations[0].id.name;
-                  isFunction = babel.types.isFunction(
-                    node.declaration.declarations[0].init,
-                  );
-                } else if (
-                  babel.types.isVariableDeclaration(node) &&
-                  babel.types.isIdentifier(node.declarations[0].id)
-                ) {
-                  name = node.declarations[0].id.name;
-                  isFunction = babel.types.isFunction(
-                    node.declarations[0].init,
-                  );
+                if (babel.types.isExportNamedDeclaration(node)) {
+                  if (
+                    babel.types.isVariableDeclaration(node.declaration) &&
+                    babel.types.isIdentifier(
+                      node.declaration.declarations[0].id,
+                    )
+                  ) {
+                    name = node.declaration.declarations[0].id.name;
+                    isFunction = babel.types.isFunction(
+                      node.declaration.declarations[0].init,
+                    );
+                  }
+
+                  if (babel.types.isFunctionDeclaration(node.declaration)) {
+                    name = node.declaration.id?.name;
+                    isFunction = true;
+                  }
+                } else {
+                  if (
+                    babel.types.isVariableDeclaration(node) &&
+                    babel.types.isIdentifier(node.declarations[0].id)
+                  ) {
+                    name = node.declarations[0].id.name;
+                    isFunction = babel.types.isFunction(
+                      node.declarations[0].init,
+                    );
+                  }
+
+                  if (babel.types.isFunctionDeclaration(node)) {
+                    name = node.id?.name;
+                    isFunction = true;
+                  }
                 }
+
                 if (name) {
                   pre[name] = {
                     code: generate(node).code,
                     isFunction,
                   };
                 } else {
-                  console.warn('export statement without name', node);
+                  console.warn(
+                    'Could not parse export or variable: ignoring node',
+                    node,
+                  );
                 }
                 return pre;
               },

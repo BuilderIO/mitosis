@@ -50,7 +50,7 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       export default function MyComponent(props) {
         const context = useContext(x)
 
-        const state = useState({ name: null })
+        const state = useStore({ name: null })
 
         return (
             <div />

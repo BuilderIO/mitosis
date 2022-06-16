@@ -9,10 +9,10 @@ This rule aims to warn you if you declare a variable with the same name as a pro
 Examples of **incorrect** code for this rule:
 
 ```js
-import { useState } from "@builder.io/mitosis";
+import { useStore } from "@builder.io/mitosis";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     getName() {
       const name = props.name
       return name + ' world'
@@ -27,10 +27,10 @@ export default function MyComponent(props) {
 }
 
 
-import { useState } from "@builder.io/mitosis";
+import { useStore } from "@builder.io/mitosis";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     getName() {
       const name = props.name || 'hello'
       return name + ' world'
@@ -48,10 +48,10 @@ export default function MyComponent(props) {
 Examples of **correct** code for this rule:
 
 ```js
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     getName() {
       const name = props.name_;
       return name + ' world';

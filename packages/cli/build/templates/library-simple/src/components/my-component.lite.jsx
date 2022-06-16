@@ -4,7 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 require('@jsx-lite/core/dist/src/jsx-types');
 var core_1 = require('@jsx-lite/core');
 function MyComponent(props) {
-  var state = core_1.useState({
+  var state = core_1.useStore({
     name: 'Steve',
   });
   return (

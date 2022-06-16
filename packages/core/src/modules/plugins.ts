@@ -1,7 +1,7 @@
 import { MitosisComponent } from '../types/mitosis-component';
 import { Plugin } from '../types/plugins';
 
-export { Plugin };
+export type { Plugin };
 
 export const runPreJsonPlugins = (
   json: MitosisComponent,

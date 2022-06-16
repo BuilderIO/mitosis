@@ -1,4 +1,4 @@
-import { useState, onMount, For, Show } from '@builder.io/mitosis';
+import { useStore, onMount, For, Show } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';
 import { reduce } from 'lodash';
@@ -9,7 +9,7 @@ type SmileReviewsProps = {
 };
 
 export default function SmileReviews(props: SmileReviewsProps) {
-  const state = useState({
+  const state = useStore({
     reviews: [] as any[],
     name: 'test',
     showReviewPrompt: false,

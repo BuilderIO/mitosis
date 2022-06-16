@@ -1,4 +1,4 @@
-import { useState, useRef, onMount } from '@builder.io/mitosis';
+import { useStore, useRef, onMount } from '@builder.io/mitosis';
 
 export interface EmbedProps {
   content: string;
@@ -7,7 +7,7 @@ export interface EmbedProps {
 export default function Embed(props: EmbedProps) {
   const elem = useRef<HTMLDivElement>(null);
 
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [] as string[],
     scriptsRun: [] as string[],
 

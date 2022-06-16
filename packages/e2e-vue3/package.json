@@ -3,14 +3,16 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "yarn run copy && vue-tsc --noEmit && vite build",
+    "copy": "copyfiles -u 7 -V \"./node_modules/@builder.io/e2e-app/output/vue/nuxt2/src/components/**\" src/lib",
     "dev": "vite",
-    "e2e": "playwright test",
+    "e2e": "../../node_modules/.bin/playwright test",
     "serve": "vite preview"
   },
   "dependencies": {
     "@builder.io/e2e-app": "workspace:*",
     "@builder.io/e2e-app-spec": "workspace:*",
+    "copyfiles": "^2.4.1",
     "vue": "^3.2.25"
   },
   "devDependencies": {

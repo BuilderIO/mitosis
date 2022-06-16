@@ -1,4 +1,4 @@
-import { useState, Show, useContext, For } from '@builder.io/mitosis';
+import { useStore, Show, useContext, For } from '@builder.io/mitosis';
 import { getBlockComponentOptions } from '../functions/get-block-component-options';
 import { getBlockProperties } from '../functions/get-block-properties';
 import { getBlockStyles } from '../functions/get-block-styles';
@@ -18,7 +18,7 @@ export type RenderBlockProps = {
 export default function RenderBlock(props: RenderBlockProps) {
   const builderContext = useContext(BuilderContext);
 
-  const state = useState({
+  const state = useStore({
     get component() {
       const componentName = state.useBlock.component?.name;
       if (!componentName) {

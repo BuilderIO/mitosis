@@ -79,17 +79,3 @@ find . -name '*lite.tsx' | entr make /_
   file extension of the input file, which doesn't make any sense in the case of
   an html output.
 - `--out=<file>` does not support concatenating multiple files together.
-
-## Manual installation
-
-```bash
-git clone git@github.com:BuilderIO/mitosis.git
-cd mitosis/packages/cli
-npm install
-npm run build
-npm link
-```
-
-# License
-
-MIT - see LICENSE

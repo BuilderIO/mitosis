@@ -9,20 +9,20 @@ This rule aims to warn you if you declare a variable with the same name as a sta
 Examples of **incorrect** code for this rule:
 
 ```js
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({ text: props.text });
+  const state = useStore({ text: props.text });
 }
 ```
 
 Examples of **correct** code for this rule:
 
 ```js
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({ text: null });
+  const state = useStore({ text: null });
 
   onMount(() => {
     state.text = props.text;
@@ -30,7 +30,7 @@ export default function MyComponent(props) {
 }
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     text: null,
     fn1() {
       return foo(props.text);

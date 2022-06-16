@@ -14,6 +14,98 @@ exports[`Liquid Basic 1`] = `
 "
 `;
 
+exports[`Liquid Basic Context 1`] = `
+"<div>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+
+  <input />
+</div>
+"
+`;
+
+exports[`Liquid Basic OnMount Update 1`] = `
+"<div>Hello {{name}}</div>
+"
+`;
+
+exports[`Liquid Basic Outputs 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid Basic Outputs Meta 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid BasicChildComponent 1`] = `
+"<div>
+  <MyBasicComponent id=\\"{{dev}}\\"></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi=\\"{{name}}\\"
+      bye=\\"{{dev}}\\"
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>
+"
+`;
+
+exports[`Liquid BasicFor 1`] = `
+"<div>
+  {% for person in names %}
+  <div>
+    <input value=\\"{{name}}\\" />
+
+    Hello {{person}} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+    Liquid!
+  </div>
+  {% endfor %}
+</div>
+"
+`;
+
+exports[`Liquid BasicRef 1`] = `
+"<div>
+  {% if showInput %}
+  <div>
+    <input class=\\"input\\" value=\\"{{name}}\\" />
+
+    <label for=\\"cars\\">Choose a car:</label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </div>
+  {% endif %} Hello ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+"
+`;
+
+exports[`Liquid BasicRefAssignment 1`] = `
+"<div>
+  <button>Click</button>
+</div>
+"
+`;
+
+exports[`Liquid BasicRefPrevious 1`] = `
+"<div>
+  <h1>Now: {{count}} , before: {{prevCount}}</h1>
+
+  <button>Increment</button>
+</div>
+"
+`;
+
 exports[`Liquid Button 1`] = `
 "<div>
   {% if link %}
@@ -21,15 +113,6 @@ exports[`Liquid Button 1`] = `
   <a href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
-</div>
-"
-`;
-
-exports[`Liquid ClassName 1`] = `
-"<div>
-  <div class=\\"no binding\\">Without Binding</div>
-
-  <div class=\\"{{bindings}}\\">With binding</div>
 </div>
 "
 `;
@@ -64,6 +147,34 @@ exports[`Liquid Columns 1`] = `
 "
 `;
 
+exports[`Liquid ContentSlotHtml 1`] = `
+"<div>
+  <slot name=\\"{{slotTesting}}\\"></slot>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
+</div>
+"
+`;
+
+exports[`Liquid ContentSlotJSX 1`] = `
+"<div>
+  {{slotTesting}}
+
+  <div>
+    <hr />
+  </div>
+
+  <div>{{children}}</div>
+</div>
+"
+`;
+
 exports[`Liquid CustomCode 1`] = `
 "<div innerHTML=\\"{{code}}\\"></div>
 "
@@ -74,7 +185,7 @@ exports[`Liquid Embed 1`] = `
 "
 `;
 
-exports[`Liquid Form block 1`] = `
+exports[`Liquid Form 1`] = `
 "<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
 <style>
   .pre {
@@ -105,12 +216,23 @@ exports[`Liquid Image 1`] = `
 "
 `;
 
+exports[`Liquid Image State 1`] = `
+"<div>
+  {% for item in images %}
+  <div>
+    <img src=\\"{{item}}\\" key=\\"{{itemIndex}}\\" />
+  </div>
+  {% endfor %}
+</div>
+"
+`;
+
 exports[`Liquid Img 1`] = `
 "<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
 "
 `;
 
-exports[`Liquid Input block 1`] = `
+exports[`Liquid Input 1`] = `
 "<input
   placeholder=\\"{{placeholder}}\\"
   type=\\"{{type}}\\"
@@ -127,17 +249,38 @@ exports[`Liquid RawText 1`] = `
 "
 `;
 
+exports[`Liquid Remove Internal mitosis package 1`] = `
+"<div>Hello {{name}} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+"
+`;
+
 exports[`Liquid Section 1`] = `
 "<section>{{children}}</section>
 "
 `;
 
-exports[`Liquid Select block 1`] = `
+exports[`Liquid Select 1`] = `
 "<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
   {% for option in options %}
   <option value=\\"{{option.value}}\\" data-index=\\"{{index}}\\"></option>
   {% endfor %}
 </select>
+"
+`;
+
+exports[`Liquid SlotHtml 1`] = `
+"<div>
+  <ContentSlotCode>
+    <slot></slot>
+  </ContentSlotCode>
+</div>
+"
+`;
+
+exports[`Liquid SlotJsx 1`] = `
+"<div>
+  <ContentSlotCode></ContentSlotCode>
+</div>
 "
 `;
 
@@ -196,7 +339,7 @@ exports[`Liquid Stamped.io 1`] = `
 "
 `;
 
-exports[`Liquid Submit button block 1`] = `
+exports[`Liquid Submit 1`] = `
 "<button type=\\"submit\\">{{text}}</button>
 "
 `;
@@ -227,3 +370,100 @@ exports[`Liquid Video 1`] = `
 ></video>
 "
 `;
+
+exports[`Liquid basicForwardRef 1`] = `
+"<div>
+  <input class=\\"input\\" value=\\"{{name}}\\" />
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+"
+`;
+
+exports[`Liquid basicForwardRefMetadata 1`] = `
+"<div>
+  <input class=\\"input\\" value=\\"{{name}}\\" />
+</div>
+<style>
+  .input {
+    color: red;
+  }
+</style>
+"
+`;
+
+exports[`Liquid className 1`] = `
+"<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class=\\"{{bindings}}\\">With binding</div>
+</div>
+"
+`;
+
+exports[`Liquid multipleOnUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid multipleOnUpdateWithDeps 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid onInit & onMount 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid onInit 1`] = `
+"<div>Default name defined by parent {{name}}</div>
+"
+`;
+
+exports[`Liquid onMount 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid onUpdate 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid onUpdateWithDeps 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid preserveExportOrLocalStatement 1`] = `
+"<div></div>
+"
+`;
+
+exports[`Liquid preserveTyping 1`] = `
+"<div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+"
+`;
+
+exports[`Liquid propsDestructure 1`] = `
+"<div>
+  {{children}} {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+"
+`;
+
+exports[`Liquid propsInterface 1`] = `
+"<div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+"
+`;
+
+exports[`Liquid propsType 1`] = `
+"<div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+"
+`;
+
+exports[`Liquid rootShow 1`] = `""`;
