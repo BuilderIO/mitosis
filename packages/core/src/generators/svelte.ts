@@ -382,7 +382,7 @@ export const componentToSvelte =
           : `import { afterUpdate } from 'svelte'`
       }
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
-      ${renderPreComponent(json, 'svelte')}
+      ${renderPreComponent({ component: json, target: 'svelte' })}
       ${
         hasContext(component)
           ? 'import { getContext, setContext } from "svelte";'

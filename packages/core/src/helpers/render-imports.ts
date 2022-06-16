@@ -158,10 +158,13 @@ export const renderImports = ({
     .map((theImport) => renderImport({ theImport, target }))
     .join('\n');
 
-export const renderPreComponent = (
-  component: MitosisComponent,
-  target: Target,
-): string => `
+export const renderPreComponent = ({
+  component,
+  target,
+}: {
+  component: MitosisComponent;
+  target: Target;
+}): string => `
     ${renderImports({ imports: component.imports, target })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent || ''}

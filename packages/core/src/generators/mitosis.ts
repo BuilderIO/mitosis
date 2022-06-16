@@ -202,7 +202,7 @@ export const componentToMitosis =
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
 
-    ${renderPreComponent(json, 'mitosis')}
+    ${renderPreComponent({ component: json, target: 'mitosis' })}
 
     ${
       stringifiedUseMetadata !== '{}'

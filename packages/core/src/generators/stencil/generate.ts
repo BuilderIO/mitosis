@@ -171,7 +171,7 @@ export const componentToStencil =
     }
 
     let str = dedent`
-    ${renderPreComponent(json, 'stencil')}
+    ${renderPreComponent({ component: json, target: 'stencil' })}
 
     import { Component, Prop, h, State, Fragment } from '@stencil/core';
 

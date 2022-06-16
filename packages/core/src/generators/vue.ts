@@ -43,6 +43,7 @@ export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion?: 2 | 3;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
+  asyncComponentImports?: boolean;
 }
 
 function getContextNames(json: MitosisComponent) {
@@ -556,7 +557,7 @@ export const componentToVue =
         ? 'import { defineAsyncComponent } from "vue"'
         : ''
     }
-      ${renderPreComponent(component, 'vue')}
+      ${renderPreComponent({ component, target: 'vue' })}
 
       export default {
         ${
