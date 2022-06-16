@@ -396,12 +396,12 @@ const mergeOptions = (
 const generateComponentImport =
   (options: ToVueOptions) =>
   (componentName: string): string => {
+    const key = kebabCase(componentName);
     if (options.vueVersion === 3) {
-      return `'${kebabCase(
-        componentName,
-      )}': defineAsyncComponent(() => import(${componentName}))`;
+      return `'${key}': defineAsyncComponent(${componentName})`;
+      // return `'${key}': () => ${componentName}`;
     } else {
-      return `'${kebabCase(componentName)}': () => import(${componentName})`;
+      return `'${key}': () => import(${componentName})`;
     }
   };
 
