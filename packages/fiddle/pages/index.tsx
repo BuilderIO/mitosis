@@ -2,6 +2,7 @@ import { configure } from 'mobx';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import Script from 'next/script';
+import { theme } from '../src/constants/theme';
 
 const App = dynamic(() => import('../src/components/App'), { ssr: false });
 
@@ -14,7 +15,10 @@ export default () => {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="icon"
+          href={theme.darkMode ? '/favicon-dark.ico' : '/favicon.ico'}
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta
