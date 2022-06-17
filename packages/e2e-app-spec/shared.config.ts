@@ -1,6 +1,8 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
+import { targetContext } from '@builder.io/e2e-app-spec/tests/context';
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -8,6 +10,8 @@ export function configFor(
   packageName: string,
   port: number,
 ): PlaywrightTestConfig {
+  targetContext.name = packageName;
+
   return {
     testDir: __dirname + '/tests',
     /* Maximum time one test can run for. */
@@ -103,7 +107,7 @@ export function configFor(
     // also to test against "run dev" for a faster development cycle.
 
     webServer: {
-      command: `yarn workspace ${packageName} run serve --port ${port}`,
+      command: `yarn workspace @builder.io/${packageName} run serve --port ${port}`,
       port,
       reuseExistingServer: false,
     },
