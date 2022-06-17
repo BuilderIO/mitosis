@@ -3,20 +3,22 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "yarn run copy && vue-tsc --noEmit && vite build",
-    "copy": "copyfiles -u 7 -V \"./node_modules/@builder.io/e2e-app/output/vue/nuxt2/src/components/**\" src/lib",
-    "dev": "vite",
+    "build": "yarn run mitosis && vue-tsc --noEmit && vite build",
+    "dev": "yarn run mitosis && vite",
     "e2e": "../../node_modules/.bin/playwright test",
+    "mitosis": "syncdir ../e2e-app/src src --deleteOrphaned --quiet && mitosis build",
     "serve": "vite preview"
   },
   "dependencies": {
     "@builder.io/e2e-app": "workspace:*",
     "@builder.io/e2e-app-spec": "workspace:*",
-    "copyfiles": "^2.4.1",
+    "@builder.io/mitosis": "workspace:*",
+    "@builder.io/mitosis-cli": "workspace:*",
     "vue": "^3.2.25"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.3",
+    "sync-directory": "^5.1.5",
     "typescript": "^4",
     "vite": "^2.9.10",
     "vue-tsc": "^0.37.3"
