@@ -28,12 +28,7 @@ export default function Text(props: TextProps) {
     <div
       contentEditable={allowEditingText || undefined}
       data-name={{ test: state.name || 'any name' }}
-      innerHTML={
-        props.text ||
-        props.content ||
-        state.name ||
-        '<p class="text-lg">my name</p>'
-      }
+      innerHTML={props.text || props.content || state.name || '<p class="text-lg">my name</p>'}
     />
   );
 }

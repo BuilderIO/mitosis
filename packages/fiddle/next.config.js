@@ -12,10 +12,7 @@ const nextConfig = {
       fs: false,
     };
 
-    config.resolve.plugins = [
-      ...config.resolve.plugins,
-      new TsconfigPathsPlugin(),
-    ];
+    config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
 
     return config;
   },

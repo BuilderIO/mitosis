@@ -35,11 +35,7 @@ export const DIRECTIVES: Record<
   __passThroughProps__: minify`${__passThroughProps__}`,
 };
 
-declare const h: (
-  name: string,
-  props: Record<string, any>,
-  children?: any[],
-) => any;
+declare const h: (name: string, props: Record<string, any>, children?: any[]) => any;
 
 interface ImageProps {
   altText?: string;
@@ -72,10 +68,7 @@ export function Image(props: ImageProps) {
       style:
         `object-fit:${props.backgroundSize || 'cover'};object-position:${
           props.backgroundPosition || 'center'
-        };` +
-        (props.aspectRatio
-          ? 'position:absolute;height:100%;width:100%;top:0;left:0'
-          : ''),
+        };` + (props.aspectRatio ? 'position:absolute;height:100%;width:100%;top:0;left:0' : ''),
       sizes: props.sizes,
       alt: props.altText,
       role: !props.altText ? 'presentation' : undefined,
@@ -101,10 +94,7 @@ export function Image(props: ImageProps) {
     } else {
       jsx = [h('img', imgProps, jsx)];
     }
-    if (
-      props.aspectRatio &&
-      !(props.fitContent && props.children && props.children.length)
-    ) {
+    if (props.aspectRatio && !(props.fitContent && props.children && props.children.length)) {
       const sizingDiv = h('div', {
         class: 'builder-image-sizer',
         style: `width:100%;padding-top:${
@@ -125,10 +115,7 @@ export function Image(props: ImageProps) {
     const re = new RegExp('([?&])' + key + '=.*?(&|$)', 'i');
     const separator = uri.indexOf('?') !== -1 ? '&' : '?';
     if (uri.match(re)) {
-      return uri.replace(
-        re,
-        '$1' + key + '=' + encodeURIComponent(value) + '$2',
-      );
+      return uri.replace(re, '$1' + key + '=' + encodeURIComponent(value) + '$2');
     }
 
     return uri + separator + key + '=' + encodeURIComponent(value);
@@ -164,8 +151,5 @@ export function CoreButton(props: {
     target: props.openInNewTab ? '_blank' : '_self',
     class: props.class,
   };
-  return h(
-    hasLink ? 'a' : props.tagName$ || 'span',
-    __passThroughProps__(hProps, props),
-  );
+  return h(hasLink ? 'a' : props.tagName$ || 'span', __passThroughProps__(hProps, props));
 }

@@ -55,9 +55,7 @@ ruleTester.run('no-state-destructuring', rule, {
         });
       }
       `,
-      errors: [
-        "destructuring state isn't allowed: use standard assignment instead",
-      ],
+      errors: ["destructuring state isn't allowed: use standard assignment instead"],
     },
   ],
 });

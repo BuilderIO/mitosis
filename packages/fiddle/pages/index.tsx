@@ -15,10 +15,7 @@ export default () => {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <link
-          rel="icon"
-          href={theme.darkMode ? '/favicon-dark.ico' : '/favicon.ico'}
-        />
+        <link rel="icon" href={theme.darkMode ? '/favicon-dark.ico' : '/favicon.ico'} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
         <meta
@@ -41,10 +38,7 @@ export default () => {
         />
         <meta property="og:url" content="https://mitosis.builder.io" />
         <link rel="canonical" href="https://mitosis.builder.io" />
-        <title>
-          Mitosis Fiddle - compile to common frameworks, import from popular
-          tools
-        </title>
+        <title>Mitosis Fiddle - compile to common frameworks, import from popular tools</title>
 
         <Script>
           {`
@@ -62,10 +56,7 @@ export default () => {
       <Script async src="https://cdn.builder.io/js/editor@1.0.42-0"></Script>
 
       {/* <!-- Global site tag (gtag.js) - Google Analytics --> */}
-      <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-LFJQTJMFD3"
-      ></Script>
+      <Script async src="https://www.googletagmanager.com/gtag/js?id=G-LFJQTJMFD3"></Script>
       <Script>
         {`
           window.dataLayer = window.dataLayer || [];

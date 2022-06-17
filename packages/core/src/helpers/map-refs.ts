@@ -13,11 +13,7 @@ const tsPreset = require('@babel/preset-typescript');
 
 export type RefMapper = (refName: string) => string;
 
-const replaceRefsInString = (
-  code: string,
-  refs: string[],
-  mapper: RefMapper,
-) => {
+const replaceRefsInString = (code: string, refs: string[], mapper: RefMapper) => {
   return babelTransformExpression(code, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       const name = path.node.name;
@@ -29,10 +25,7 @@ const replaceRefsInString = (
   });
 };
 
-export const mapRefs = (
-  component: MitosisComponent,
-  mapper: RefMapper,
-): void => {
+export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void => {
   const refSet = getRefs(component);
 
   // grab refs not used for bindings
@@ -56,11 +49,7 @@ export const mapRefs = (
       } else if (value.startsWith(functionLiteralPrefix)) {
         component.state[key] =
           functionLiteralPrefix +
-          replaceRefsInString(
-            value.replace(functionLiteralPrefix, ''),
-            refs,
-            mapper,
-          );
+          replaceRefsInString(value.replace(functionLiteralPrefix, ''), refs, mapper);
       }
     }
   }
@@ -79,9 +68,7 @@ export const mapRefs = (
     }
   });
 
-  for (const key of Object.keys(
-    component.hooks,
-  ) as (keyof typeof component.hooks)[]) {
+  for (const key of Object.keys(component.hooks) as (keyof typeof component.hooks)[]) {
     const hooks = component.hooks[key];
     if (Array.isArray(hooks)) {
       hooks.forEach((hook) => {

@@ -19,17 +19,12 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToTemplateOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `<div>${json.children
-      .map((item) => blockToTemplate(item, options))
-      .join('\n')}</div>`;
+    return `<div>${json.children.map((item) => blockToTemplate(item, options)).join('\n')}</div>`;
   },
 };
 
 // TODO: spread support
-const blockToTemplate = (
-  json: MitosisNode,
-  options: ToTemplateOptions = {},
-) => {
+const blockToTemplate = (json: MitosisNode, options: ToTemplateOptions = {}) => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -46,18 +41,14 @@ const blockToTemplate = (
   if (json.name === 'For') {
     str += `\${${json.bindings.each?.code}?.map(${json.properties._forName} => \``;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToTemplate(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToTemplate(item, options)).join('\n');
     }
 
     str += '`).join("")}';
   } else if (json.name === 'Show') {
     str += `\${!(${json.bindings.when?.code}) ? '' : \``;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToTemplate(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToTemplate(item, options)).join('\n');
     }
 
     str += '`}';
@@ -97,9 +88,7 @@ const blockToTemplate = (
     }
     str += '>';
     if (json.children) {
-      str += json.children
-        .map((item) => blockToTemplate(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToTemplate(item, options)).join('\n');
     }
 
     str += `</${json.name}>`;

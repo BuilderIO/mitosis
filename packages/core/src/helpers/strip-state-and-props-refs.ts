@@ -28,10 +28,7 @@ export const stripStateAndPropsRefs = (
     contextVars.forEach((_var) => {
       newCode = newCode.replace(
         // determine expression edge cases
-        new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)',
-          'g',
-        ),
+        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
         '$1' + context + _var + '$2',
       );
     });
@@ -48,9 +45,7 @@ export const stripStateAndPropsRefs = (
     if (typeof replacer === 'string') {
       newCode = newCode.replace(/props\./g, replacer);
     } else {
-      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) =>
-        replacer(name),
-      );
+      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
     }
     // TODO: webcomponent edge-case
     if (/el\.this\.props/.test(newCode)) {
@@ -61,9 +56,7 @@ export const stripStateAndPropsRefs = (
     if (typeof replacer === 'string') {
       newCode = newCode.replace(/state\./g, replacer);
     } else {
-      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) =>
-        replacer(name),
-      );
+      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
     }
   }
   return newCode;

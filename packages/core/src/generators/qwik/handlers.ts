@@ -14,10 +14,7 @@ export function extractJSBlock(binding: any): string | null {
     ) {
       return binding.substring(1, binding.length - 2);
     } else if (binding.startsWith(IIF_START) && binding.endsWith(IIF_END)) {
-      return binding.substring(
-        IIF_START.length,
-        binding.length - IIF_END.length - 1,
-      );
+      return binding.substring(IIF_START.length, binding.length - IIF_END.length - 1);
     }
   }
   return null;

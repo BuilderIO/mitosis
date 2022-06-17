@@ -10,8 +10,7 @@ export function transpileOptionalChaining(template: string): string {
       // start of it
       .replace(
         /v-for="(.+?) in ([^"]+?)"/g,
-        (_match, group1, group2) =>
-          `v-for="${group1} in ${transpileBindingExpression(group2)}"`,
+        (_match, group1, group2) => `v-for="${group1} in ${transpileBindingExpression(group2)}"`,
       )
       // Transpile out the ?. operator which Vue 2 templates don't support
       .replace(

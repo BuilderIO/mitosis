@@ -27,8 +27,7 @@ export const transpile = async ({
 }) => {
   try {
     const transpilerOptions = options.options[target]?.transpiler;
-    const format =
-      transpilerOptions?.format || getDefaultFormatForTarget(target);
+    const format = transpilerOptions?.format || getDefaultFormatForTarget(target);
 
     let useContent = content ?? (await readFile(path, 'utf8'));
     useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);

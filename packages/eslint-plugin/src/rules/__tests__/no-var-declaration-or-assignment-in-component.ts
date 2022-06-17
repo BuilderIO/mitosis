@@ -86,9 +86,7 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
         );
       }
     `,
-      errors: [
-        'Variable declaration inside component is ignored during compilation',
-      ],
+      errors: ['Variable declaration inside component is ignored during compilation'],
     },
     // Doesn't accept variable assignment inside component
     {
@@ -103,9 +101,7 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
         );
       }
     `,
-      errors: [
-        'Variable assignment inside component is ignored during compilation',
-      ],
+      errors: ['Variable assignment inside component is ignored during compilation'],
     },
     // Doesn't accept variable declaration and assignment inside component
     {

@@ -14,8 +14,7 @@ export function useEventListener<EventType extends Event = Event>(
   }, [handler]);
 
   useEffect(() => {
-    const eventListener = (event: Event) =>
-      savedHandler.current(event as EventType);
+    const eventListener = (event: Event) => savedHandler.current(event as EventType);
 
     element.addEventListener(eventName, eventListener, { once, passive });
 

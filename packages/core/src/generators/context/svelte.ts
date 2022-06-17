@@ -3,8 +3,7 @@ import { getMemberObjectString } from '../../helpers/get-state-object-string';
 import { MitosisContext } from '../../types/mitosis-context';
 import { BaseTranspilerOptions } from '../../types/config';
 
-interface ContextToSvelteOptions
-  extends Pick<BaseTranspilerOptions, 'prettier'> {}
+interface ContextToSvelteOptions extends Pick<BaseTranspilerOptions, 'prettier'> {}
 
 export const contextToSvelte =
   (options: ContextToSvelteOptions = {}) =>

@@ -12,8 +12,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'disallow assigning useStore() to a variable with name other than state.',
+      description: 'disallow assigning useStore() to a variable with name other than state.',
       recommended: true,
     },
   },

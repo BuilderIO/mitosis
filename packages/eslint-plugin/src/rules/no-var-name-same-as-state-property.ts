@@ -11,8 +11,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'disallow defining variables with the same name as a state property',
+      description: 'disallow defining variables with the same name as a state property',
       recommended: true,
     },
   },
@@ -40,9 +39,7 @@ const rule: Rule.RuleModule = {
 
         if (!types.isProgram(program)) return;
 
-        const importSpecifiers = program.body.find((n) =>
-          types.isImportDeclaration(n),
-        );
+        const importSpecifiers = program.body.find((n) => types.isImportDeclaration(n));
 
         if (!types.isImportDeclaration(importSpecifiers)) return;
 
@@ -64,9 +61,7 @@ const rule: Rule.RuleModule = {
           !types.isObjectExpression(node.arguments[0])
         )
           return;
-        const component = program.body.find((n) =>
-          types.isExportDefaultDeclaration(n),
-        );
+        const component = program.body.find((n) => types.isExportDefaultDeclaration(n));
 
         if (!types.isExportDefaultDeclaration(component)) return;
 
@@ -79,10 +74,7 @@ const rule: Rule.RuleModule = {
         const { body: componentBody } = component.declaration.body;
 
         for (const prop of node.arguments[0].properties) {
-          if (
-            !types.isProperty(prop) ||
-            !types.isIdentifier((prop as types.Property).key)
-          )
+          if (!types.isProperty(prop) || !types.isIdentifier((prop as types.Property).key))
             continue;
 
           const { name } = (prop as types.Property).key as types.Identifier;
@@ -91,17 +83,12 @@ const rule: Rule.RuleModule = {
             if (!types.isVariableDeclaration(n)) continue;
 
             for (const d of n.declarations) {
-              if (
-                !types.isVariableDeclarator(d) ||
-                !types.isIdentifier(d.id) ||
-                d.id.name !== name
-              )
+              if (!types.isVariableDeclarator(d) || !types.isIdentifier(d.id) || d.id.name !== name)
                 continue;
 
               context.report({
                 node: d,
-                message:
-                  'variables with the same name as a state property will shadow it',
+                message: 'variables with the same name as a state property will shadow it',
               });
             }
           }

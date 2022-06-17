@@ -12,11 +12,9 @@ export const useRef = <T>(obj?: null | void | T) => {
   throw new Error('useRef: Mitosis hook should have been compiled away');
   return obj as unknown as T;
 };
-export const useContext = <T = { [key: string]: any }>(key: Context<T>): T =>
-  null as unknown as T;
-export const createContext = <T = { [key: string]: any }>(
-  value: T,
-): Context<T> => null as unknown as Context<T>;
+export const useContext = <T = { [key: string]: any }>(key: Context<T>): T => null as unknown as T;
+export const createContext = <T = { [key: string]: any }>(value: T): Context<T> =>
+  null as unknown as Context<T>;
 export const setContext = <T = { [key: string]: any }>(
   key: Context<T>,
   value: Partial<T>,

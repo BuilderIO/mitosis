@@ -104,10 +104,7 @@ export default function MyComponent() {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => (state.name = event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => (state.name = event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -132,10 +129,7 @@ export default function MyComponent(props) {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => (state.name = event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => (state.name = event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -159,10 +153,7 @@ export default function MyComponent() {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => state.updateName(event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => state.updateName(event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -191,11 +182,7 @@ export default function MyComponent(props) {
   const state = useStore({
     myArray: [1, 2, 3],
   });
-  return (
-    <For each={state.myArray}>
-      {(theArrayItem, index) => <div>{theArrayItem}</div>}
-    </For>
-  );
+  return <For each={state.myArray}>{(theArrayItem, index) => <div>{theArrayItem}</div>}</For>;
 }
 ```
 

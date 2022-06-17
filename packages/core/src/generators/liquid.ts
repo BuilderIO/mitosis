@@ -42,17 +42,12 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToLiquidOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `<div>${json.children
-      .map((item) => blockToLiquid(item, options))
-      .join('\n')}</div>`;
+    return `<div>${json.children.map((item) => blockToLiquid(item, options)).join('\n')}</div>`;
   },
 };
 
 // TODO: spread support
-const blockToLiquid = (
-  json: MitosisNode,
-  options: ToLiquidOptions = {},
-): string => {
+const blockToLiquid = (json: MitosisNode, options: ToLiquidOptions = {}): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -85,9 +80,7 @@ const blockToLiquid = (
       json.bindings.each?.code,
     )} %}`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += '{% endfor %}';
@@ -97,9 +90,7 @@ const blockToLiquid = (
     }
     str += `{% if ${stripStateAndPropsRefs(json.bindings.when?.code)} %}`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += '{% endif %}';
@@ -141,9 +132,7 @@ const blockToLiquid = (
     }
     str += '>';
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += `</${json.name}>`;

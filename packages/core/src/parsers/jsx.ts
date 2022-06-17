@@ -13,11 +13,7 @@ import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getBindingsCode } from '../helpers/get-bindings';
 import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
 import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import {
-  MitosisComponent,
-  MitosisImport,
-  MitosisExport,
-} from '../types/mitosis-component';
+import { MitosisComponent, MitosisImport, MitosisExport } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { tryParseJson } from '../helpers/json';
 import { HOOKS } from '../constants/hooks';
@@ -51,8 +47,7 @@ type Context = {
   };
 };
 
-const arrayToAst = (array: JSONOrNode[]) =>
-  types.arrayExpression(array.map(jsonToAst));
+const arrayToAst = (array: JSONOrNode[]) => types.arrayExpression(array.map(jsonToAst));
 
 const jsonToAst = (json: JSONOrNode): babel.types.Expression => {
   if (types.isNode(json)) {
@@ -123,10 +118,7 @@ export const parseStateObject = (object: babel.types.ObjectExpression) => {
   const properties = object.properties;
   const useProperties = properties.map((item) => {
     if (types.isObjectProperty(item)) {
-      if (
-        types.isFunctionExpression(item.value) ||
-        types.isArrowFunctionExpression(item.value)
-      ) {
+      if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
         return createFunctionStringLiteralObjectProperty(item.key, item.value);
       }
     }
@@ -134,9 +126,7 @@ export const parseStateObject = (object: babel.types.ObjectExpression) => {
       return types.objectProperty(
         item.key,
         types.stringLiteral(
-          `${methodLiteralPrefix}${
-            generate({ ...item, returnType: null }).code
-          }`,
+          `${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`,
         ),
       );
     }
@@ -162,9 +152,7 @@ const parseCodeJson = (node: babel.types.Node) => {
   return tryParseJson(code);
 };
 
-const getPropsTypeRef = (
-  node: babel.types.FunctionDeclaration,
-): string | undefined => {
+const getPropsTypeRef = (node: babel.types.FunctionDeclaration): string | undefined => {
   const param = node.params[0];
   // TODO: component function params name must be props
   if (
@@ -203,10 +191,7 @@ const componentFunctionToJson = (
             const keyNode = expression.arguments[0];
             if (types.isIdentifier(keyNode)) {
               const key = keyNode.name;
-              const keyPath = traceReferenceToModulePath(
-                context.builder.component.imports,
-                key,
-              )!;
+              const keyPath = traceReferenceToModulePath(context.builder.component.imports, key)!;
               const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
@@ -229,10 +214,7 @@ const componentFunctionToJson = (
             expression.callee.name === 'useEffect'
           ) {
             const firstArg = expression.arguments[0];
-            if (
-              types.isFunctionExpression(firstArg) ||
-              types.isArrowFunctionExpression(firstArg)
-            ) {
+            if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = generate(firstArg.body)
                 .code.trim()
                 // Remove arbitrary block wrapping if any
@@ -246,10 +228,7 @@ const componentFunctionToJson = (
           } else if (expression.callee.name === 'onUpdate') {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
-            if (
-              types.isFunctionExpression(firstArg) ||
-              types.isArrowFunctionExpression(firstArg)
-            ) {
+            if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = generate(firstArg.body)
                 .code.trim()
                 // Remove arbitrary block wrapping if any
@@ -259,8 +238,7 @@ const componentFunctionToJson = (
                 .replace(/}$/, '');
               if (
                 !secondArg ||
-                (types.isArrayExpression(secondArg) &&
-                  secondArg.elements.length > 0)
+                (types.isArrayExpression(secondArg) && secondArg.elements.length > 0)
               ) {
                 const depsCode = secondArg ? generate(secondArg).code : '';
 
@@ -275,10 +253,7 @@ const componentFunctionToJson = (
             }
           } else if (expression.callee.name === 'onUnMount') {
             const firstArg = expression.arguments[0];
-            if (
-              types.isFunctionExpression(firstArg) ||
-              types.isArrowFunctionExpression(firstArg)
-            ) {
+            if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = generate(firstArg.body)
                 .code.trim()
                 // Remove arbitrary block wrapping if any
@@ -290,10 +265,7 @@ const componentFunctionToJson = (
             }
           } else if (expression.callee.name === 'onInit') {
             const firstArg = expression.arguments[0];
-            if (
-              types.isFunctionExpression(firstArg) ||
-              types.isArrowFunctionExpression(firstArg)
-            ) {
+            if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
               const code = generate(firstArg.body)
                 .code.trim()
                 // Remove arbitrary block wrapping if any
@@ -322,8 +294,7 @@ const componentFunctionToJson = (
         // const [foo, setFoo] = useState(...)
         if (types.isArrayPattern(declaration.id)) {
           const varName =
-            types.isIdentifier(declaration.id.elements[0]) &&
-            declaration.id.elements[0].name;
+            types.isIdentifier(declaration.id.elements[0]) && declaration.id.elements[0].name;
           if (varName) {
             const value = init.arguments[0];
             // Function as init, like:
@@ -340,29 +311,20 @@ const componentFunctionToJson = (
         // Legacy format, like:
         // const state = useStore({...})
         else if (types.isIdentifier(init.callee)) {
-          if (
-            init.callee.name === HOOKS.STATE ||
-            init.callee.name === HOOKS.STORE
-          ) {
+          if (init.callee.name === HOOKS.STATE || init.callee.name === HOOKS.STORE) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
               Object.assign(state, parseStateObject(firstArg));
             }
           } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
-            if (
-              types.isVariableDeclarator(declaration) &&
-              types.isIdentifier(declaration.id)
-            ) {
+            if (types.isVariableDeclarator(declaration) && types.isIdentifier(declaration.id)) {
               if (types.isIdentifier(firstArg)) {
                 const varName = declaration.id.name;
                 const name = firstArg.name;
                 accessedContext[varName] = {
                   name,
-                  path: traceReferenceToModulePath(
-                    context.builder.component.imports,
-                    name,
-                  )!,
+                  path: traceReferenceToModulePath(context.builder.component.imports, name)!,
                 };
               } else {
                 const varName = declaration.id.name;
@@ -382,9 +344,7 @@ const componentFunctionToJson = (
               };
               // Typescript Parameter
               if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
-                refs[varName].typeParameter = generate(
-                  init.typeParameters.params[0],
-                ).code;
+                refs[varName].typeParameter = generate(init.typeParameters.params[0]).code;
               }
             }
           }
@@ -393,9 +353,7 @@ const componentFunctionToJson = (
     }
   }
 
-  const theReturn = node.body.body.find((item) =>
-    types.isReturnStatement(item),
-  );
+  const theReturn = node.body.body.find((item) => types.isReturnStatement(item));
   const children: MitosisNode[] = [];
   if (theReturn) {
     const value = (theReturn as babel.types.ReturnStatement).argument;
@@ -408,9 +366,7 @@ const componentFunctionToJson = (
   if (localExports) {
     const bindingsCode = getBindingsCode(children);
     Object.keys(localExports).forEach((name) => {
-      const found = bindingsCode.find((code: string) =>
-        code.match(new RegExp(`\\b${name}\\b`)),
-      );
+      const found = bindingsCode.find((code: string) => code.match(new RegExp(`\\b${name}\\b`)));
       localExports[name].usedInLocal = Boolean(found);
     });
     context.builder.component.exports = localExports;
@@ -524,24 +480,20 @@ const jsxElementToJson = (
   if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
-      children: node.children
-        .map((item) => jsxElementToJson(item as any))
-        .filter(Boolean) as any,
+      children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
     });
   }
 
   const nodeName = generate(node.openingElement.name).code;
 
   if (nodeName === 'Show') {
-    const whenAttr: babel.types.JSXAttribute | undefined =
-      node.openingElement.attributes.find(
-        (item) => types.isJSXAttribute(item) && item.name.name === 'when',
-      ) as any;
+    const whenAttr: babel.types.JSXAttribute | undefined = node.openingElement.attributes.find(
+      (item) => types.isJSXAttribute(item) && item.name.name === 'when',
+    ) as any;
 
-    const elseAttr: babel.types.JSXAttribute | undefined =
-      node.openingElement.attributes.find(
-        (item) => types.isJSXAttribute(item) && item.name.name === 'else',
-      ) as any;
+    const elseAttr: babel.types.JSXAttribute | undefined = node.openingElement.attributes.find(
+      (item) => types.isJSXAttribute(item) && item.name.name === 'else',
+    ) as any;
 
     const whenValue =
       whenAttr && types.isJSXExpressionContainer(whenAttr.value)
@@ -561,17 +513,13 @@ const jsxElementToJson = (
       bindings: {
         ...(whenValue ? { when: { code: whenValue } } : {}),
       },
-      children: node.children
-        .map((item) => jsxElementToJson(item as any))
-        .filter(Boolean) as any,
+      children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
     });
   }
 
   // <For ...> control flow component
   if (nodeName === 'For') {
-    const child = node.children.find((item) =>
-      types.isJSXExpressionContainer(item),
-    );
+    const child = node.children.find((item) => types.isJSXExpressionContainer(item));
     if (types.isJSXExpressionContainer(child)) {
       const childExpression = child.expression;
 
@@ -586,10 +534,8 @@ const jsxElementToJson = (
             each: {
               code: generate(
                 (
-                  (
-                    node.openingElement
-                      .attributes[0] as babel.types.JSXAttribute
-                  ).value as babel.types.JSXExpressionContainer
+                  (node.openingElement.attributes[0] as babel.types.JSXAttribute)
+                    .value as babel.types.JSXExpressionContainer
                 ).expression,
               ).code,
             },
@@ -632,9 +578,7 @@ const jsxElementToJson = (
             if (key.startsWith('on')) {
               memo[key] = {
                 code: generate(expression.body).code,
-                arguments: expression.params.map(
-                  (node) => (node as babel.types.Identifier)?.name,
-                ),
+                arguments: expression.params.map((node) => (node as babel.types.Identifier)?.name),
               };
             } else {
               memo[key] = { code: generate(expression.body).code };
@@ -655,9 +599,7 @@ const jsxElementToJson = (
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
-    children: node.children
-      .map((item) => jsxElementToJson(item as any))
-      .filter(Boolean) as any,
+    children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
   });
 };
 
@@ -688,9 +630,7 @@ const collectMetadata = (
   component: MitosisComponent,
   options: ParseMitosisOptions,
 ) => {
-  const hookNames = new Set(
-    (options.jsonHookNames || []).concat(METADATA_HOOK_NAME),
-  );
+  const hookNames = new Set((options.jsonHookNames || []).concat(METADATA_HOOK_NAME));
   return nodes.filter((node) => {
     const hook = getHook(node);
     if (!hook) {
@@ -715,13 +655,8 @@ type ParseMitosisOptions = {
   compileAwayPackages?: string[];
 };
 
-function mapReactIdentifiersInExpression(
-  expression: string,
-  stateProperties: string[],
-) {
-  const setExpressions = stateProperties.map(
-    (propertyName) => `set${capitalize(propertyName)}`,
-  );
+function mapReactIdentifiersInExpression(expression: string, stateProperties: string[]) {
+  const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
   return babelTransformExpression(
     // foo -> state.foo
@@ -731,9 +666,7 @@ function mapReactIdentifiersInExpression(
         if (types.isIdentifier(path.node.callee)) {
           if (setExpressions.includes(path.node.callee.name)) {
             // setFoo -> foo
-            const statePropertyName = uncapitalize(
-              path.node.callee.name.slice(3),
-            );
+            const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
 
             // setFoo(...) -> state.foo = ...
             path.replaceWith(
@@ -764,10 +697,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
     if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
       json.state[key] =
         functionLiteralPrefix +
-        mapReactIdentifiersInExpression(
-          value.replace(functionLiteralPrefix, ''),
-          stateProperties,
-        );
+        mapReactIdentifiersInExpression(value.replace(functionLiteralPrefix, ''), stateProperties);
     }
   }
 
@@ -778,10 +708,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
 
         if (value) {
           item.bindings[key] = {
-            code: mapReactIdentifiersInExpression(
-              value.code as string,
-              stateProperties,
-            ),
+            code: mapReactIdentifiersInExpression(value.code as string, stateProperties),
           };
           if (value.arguments?.length) {
             item.bindings[key]!.arguments = value.arguments;
@@ -805,9 +732,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
       if (item.properties.className) {
         if (item.properties.class) {
           item.properties.class = `${item.properties.class} ${item.properties.className}`;
-          console.warn(
-            `[${json.name}]: Found both 'class' and 'className' properties: merging.`,
-          );
+          console.warn(`[${json.name}]: Found both 'class' and 'className' properties: merging.`);
         } else {
           item.properties.class = item.properties.className;
         }
@@ -815,9 +740,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
       }
 
       if (item.properties.class && item.bindings.class) {
-        console.warn(
-          `[${json.name}]: Ended up with both a property and binding for 'class'.`,
-        );
+        console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
       }
     }
   });
@@ -826,8 +749,7 @@ function mapReactIdentifiers(json: MitosisComponent) {
 const expressionToNode = (str: string) => {
   const code = `export default ${str}`;
   return (
-    (babel.parse(code) as babel.types.File).program
-      .body[0] as babel.types.ExportDefaultDeclaration
+    (babel.parse(code) as babel.types.File).program.body[0] as babel.types.ExportDefaultDeclaration
   ).declaration;
 };
 
@@ -845,9 +767,7 @@ function extractContextComponents(json: MitosisComponent) {
         json.context.set[refPath] = {
           name,
           value: value
-            ? parseStateObject(
-                expressionToNode(value) as babel.types.ObjectExpression,
-              )
+            ? parseStateObject(expressionToNode(value) as babel.types.ObjectExpression)
             : undefined,
         };
 
@@ -870,10 +790,8 @@ const isImportOrDefaultExport = (node: babel.Node) =>
 const isTypeOrInterface = (node: babel.Node) =>
   types.isTSTypeAliasDeclaration(node) ||
   types.isTSInterfaceDeclaration(node) ||
-  (types.isExportNamedDeclaration(node) &&
-    types.isTSTypeAliasDeclaration(node.declaration)) ||
-  (types.isExportNamedDeclaration(node) &&
-    types.isTSInterfaceDeclaration(node.declaration));
+  (types.isExportNamedDeclaration(node) && types.isTSTypeAliasDeclaration(node.declaration)) ||
+  (types.isExportNamedDeclaration(node) && types.isTSInterfaceDeclaration(node.declaration));
 
 const collectTypes = (node: babel.Node, context: Context) => {
   const typeStr = generate(node).code;
@@ -897,9 +815,7 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   });
 };
 
-function undoPropsDestructure(
-  path: babel.NodePath<babel.types.FunctionDeclaration>,
-) {
+function undoPropsDestructure(path: babel.NodePath<babel.types.FunctionDeclaration>) {
   const { node } = path;
   if (node.params.length && types.isObjectPattern(node.params[0])) {
     const param = node.params[0];
@@ -932,9 +848,7 @@ function undoPropsDestructure(
           const { name } = node.expression;
           if (propsMap[name]) {
             path.replaceWith(
-              babel.types.jsxExpressionContainer(
-                babel.types.identifier(propsMap[name]),
-              ),
+              babel.types.jsxExpressionContainer(babel.types.identifier(propsMap[name])),
             );
           }
         }
@@ -987,9 +901,7 @@ export function parseJsx(
             };
 
             const keepStatements = path.node.body.filter(
-              (statement) =>
-                isImportOrDefaultExport(statement) ||
-                isTypeOrInterface(statement),
+              (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
             );
 
             const exportsOrLocalVariables = path.node.body.filter(
@@ -999,58 +911,46 @@ export function parseJsx(
                 !types.isExpressionStatement(statement),
             );
 
-            context.builder.component.exports = exportsOrLocalVariables.reduce(
-              (pre, node) => {
-                let name, isFunction;
-                if (babel.types.isExportNamedDeclaration(node)) {
-                  if (
-                    babel.types.isVariableDeclaration(node.declaration) &&
-                    babel.types.isIdentifier(
-                      node.declaration.declarations[0].id,
-                    )
-                  ) {
-                    name = node.declaration.declarations[0].id.name;
-                    isFunction = babel.types.isFunction(
-                      node.declaration.declarations[0].init,
-                    );
-                  }
-
-                  if (babel.types.isFunctionDeclaration(node.declaration)) {
-                    name = node.declaration.id?.name;
-                    isFunction = true;
-                  }
-                } else {
-                  if (
-                    babel.types.isVariableDeclaration(node) &&
-                    babel.types.isIdentifier(node.declarations[0].id)
-                  ) {
-                    name = node.declarations[0].id.name;
-                    isFunction = babel.types.isFunction(
-                      node.declarations[0].init,
-                    );
-                  }
-
-                  if (babel.types.isFunctionDeclaration(node)) {
-                    name = node.id?.name;
-                    isFunction = true;
-                  }
+            context.builder.component.exports = exportsOrLocalVariables.reduce((pre, node) => {
+              let name, isFunction;
+              if (babel.types.isExportNamedDeclaration(node)) {
+                if (
+                  babel.types.isVariableDeclaration(node.declaration) &&
+                  babel.types.isIdentifier(node.declaration.declarations[0].id)
+                ) {
+                  name = node.declaration.declarations[0].id.name;
+                  isFunction = babel.types.isFunction(node.declaration.declarations[0].init);
                 }
 
-                if (name) {
-                  pre[name] = {
-                    code: generate(node).code,
-                    isFunction,
-                  };
-                } else {
-                  console.warn(
-                    'Could not parse export or variable: ignoring node',
-                    node,
-                  );
+                if (babel.types.isFunctionDeclaration(node.declaration)) {
+                  name = node.declaration.id?.name;
+                  isFunction = true;
                 }
-                return pre;
-              },
-              {} as MitosisExport,
-            );
+              } else {
+                if (
+                  babel.types.isVariableDeclaration(node) &&
+                  babel.types.isIdentifier(node.declarations[0].id)
+                ) {
+                  name = node.declarations[0].id.name;
+                  isFunction = babel.types.isFunction(node.declarations[0].init);
+                }
+
+                if (babel.types.isFunctionDeclaration(node)) {
+                  name = node.id?.name;
+                  isFunction = true;
+                }
+              }
+
+              if (name) {
+                pre[name] = {
+                  code: generate(node).code,
+                  isFunction,
+                };
+              } else {
+                console.warn('Could not parse export or variable: ignoring node', node);
+              }
+              return pre;
+            }, {} as MitosisExport);
 
             let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
@@ -1059,16 +959,11 @@ export function parseJsx(
             subComponentFunctions = path.node.body
               .filter(
                 (node) =>
-                  !types.isExportDefaultDeclaration(node) &&
-                  types.isFunctionDeclaration(node),
+                  !types.isExportDefaultDeclaration(node) && types.isFunctionDeclaration(node),
               )
               .map((node) => `export default ${generate(node).code!}`);
 
-            cutStatements = collectMetadata(
-              cutStatements,
-              context.builder.component,
-              useOptions,
-            );
+            cutStatements = collectMetadata(cutStatements, context.builder.component, useOptions);
 
             // TODO: support multiple? e.g. for others to add imports?
             context.builder.component.hooks.preComponent = {
@@ -1082,9 +977,7 @@ export function parseJsx(
             if (types.isIdentifier(node.id)) {
               const name = node.id.name;
               if (name[0].toUpperCase() === name[0]) {
-                path.replaceWith(
-                  jsonToAst(componentFunctionToJson(node, context)),
-                );
+                path.replaceWith(jsonToAst(componentFunctionToJson(node, context)));
               }
             }
           },
@@ -1092,12 +985,9 @@ export function parseJsx(
             // @builder.io/mitosis or React imports compile away
             const customPackages = options?.compileAwayPackages || [];
             if (
-              [
-                'react',
-                '@builder.io/mitosis',
-                '@emotion/react',
-                ...customPackages,
-              ].includes(path.node.source.value)
+              ['react', '@builder.io/mitosis', '@emotion/react', ...customPackages].includes(
+                path.node.source.value,
+              )
             ) {
               path.remove();
               return;
@@ -1108,9 +998,8 @@ export function parseJsx(
             };
             for (const specifier of path.node.specifiers) {
               if (types.isImportSpecifier(specifier)) {
-                importObject.imports[
-                  (specifier.imported as babel.types.Identifier).name
-                ] = specifier.local.name;
+                importObject.imports[(specifier.imported as babel.types.Identifier).name] =
+                  specifier.local.name;
               } else if (types.isImportDefaultSpecifier(specifier)) {
                 importObject.imports[specifier.local.name] = 'default';
               } else if (types.isImportNamespaceSpecifier(specifier)) {
@@ -1165,9 +1054,7 @@ export function parseJsx(
   mapReactIdentifiers(parsed);
   extractContextComponents(parsed);
 
-  parsed.subComponents = subComponentFunctions.map((item) =>
-    parseJsx(item, useOptions),
-  );
+  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, useOptions));
 
   return parsed;
 }
