@@ -178,9 +178,9 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default {
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": async () => MyBasicComponent,
-    \\"my-basic-on-mount-update-component\\": async () =>
-      MyBasicOnMountUpdateComponent,
+    \\"my-basic-component\\": () => import(MyBasicComponent),
+    \\"my-basic-on-mount-update-component\\": () =>
+      import(MyBasicOnMountUpdateComponent),
   },
 
   data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
@@ -435,7 +435,7 @@ exports[`Vue ContentSlotHtml 1`] = `
 <script>
 export default {
   name: \\"content-slot-code\\",
-  components: { slot: async () => Slot },
+  components: { slot: () => import(Slot) },
   props: [\\"slotTesting\\"],
 };
 </script>
@@ -683,8 +683,8 @@ import { get } from \\"@fake\\";
 export default {
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": async () => BuilderBlockComponent,
-    \\"builder-blocks\\": async () => BuilderBlocks,
+    \\"builder-block-component\\": () => import(BuilderBlockComponent),
+    \\"builder-blocks\\": () => import(BuilderBlocks),
   },
   props: [
     \\"previewState\\",
@@ -1295,8 +1295,8 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 export default {
   name: \\"slot-code\\",
   components: {
-    \\"content-slot-code\\": async () => ContentSlotCode,
-    slot: async () => Slot,
+    \\"content-slot-code\\": () => import(ContentSlotCode),
+    slot: () => import(Slot),
   },
 };
 </script>
@@ -1314,7 +1314,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": async () => ContentSlotCode },
+  components: { \\"content-slot-code\\": () => import(ContentSlotCode) },
 };
 </script>
 "

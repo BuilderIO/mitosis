@@ -40,7 +40,7 @@ function encodeQuotes(string: string) {
 
 export type VueVersion = 2 | 3;
 
-export interface InternalVueOptions extends BaseTranspilerOptions {
+export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion: VueVersion;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
@@ -59,7 +59,7 @@ const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 // to properly replace context refs
 function processBinding(
   code: string,
-  _options: InternalVueOptions,
+  _options: ToVueOptions,
   json: MitosisComponent,
 ): string {
   return replaceIdentifiers(
@@ -76,7 +76,7 @@ function processBinding(
 
 const NODE_MAPPERS: {
   [key: string]:
-    | ((json: MitosisNode, options: InternalVueOptions) => string)
+    | ((json: MitosisNode, options: ToVueOptions) => string)
     | undefined;
 } = {
   Fragment(json, options) {
@@ -152,7 +152,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(
   json: MitosisComponent,
-  _options: InternalVueOptions,
+  _options: ToVueOptions,
 ) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
@@ -164,7 +164,7 @@ function processDynamicComponents(
   });
 }
 
-function processForKeys(json: MitosisComponent, _options: InternalVueOptions) {
+function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name === 'For') {
@@ -238,7 +238,7 @@ const stringifyBinding =
 
 export const blockToVue = (
   node: MitosisNode,
-  options: InternalVueOptions,
+  options: ToVueOptions,
 ): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -311,7 +311,7 @@ export const blockToVue = (
 
 function getContextInjectString(
   component: MitosisComponent,
-  options: InternalVueOptions,
+  options: ToVueOptions,
 ) {
   let str = '{';
 
@@ -327,7 +327,7 @@ function getContextInjectString(
 
 function getContextProvideString(
   component: MitosisComponent,
-  options: InternalVueOptions,
+  options: ToVueOptions,
 ) {
   let str = '{';
 
@@ -382,35 +382,34 @@ const onUpdatePlugin: Plugin = (options) => ({
   },
 });
 
-const BASE_OPTIONS: InternalVueOptions = {
+const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
   vueVersion: 2,
 };
 
 const mergeOptions = (
-  { plugins: pluginsA = [], ...a }: InternalVueOptions,
-  { plugins: pluginsB = [], ...b }: InternalVueOptions,
-): InternalVueOptions => ({
+  { plugins: pluginsA = [], ...a }: ToVueOptions,
+  { plugins: pluginsB = [], ...b }: ToVueOptions,
+): ToVueOptions => ({
   ...a,
   ...b,
   plugins: [...pluginsA, ...pluginsB],
 });
 
 const generateComponentImport =
-  (options: InternalVueOptions) =>
+  (options: ToVueOptions) =>
   (componentName: string): string => {
     const key = kebabCase(componentName);
-    if (options.vueVersion === 3) {
+    if (options.vueVersion === 3 && options.asyncComponentImports) {
       return `'${key}': defineAsyncComponent(${componentName})`;
-      // return `'${key}': () => ${componentName}`;
     } else {
-      return `'${key}': () => import(${componentName})`;
+      return `'${key}': ${componentName}`;
     }
   };
 
 const generateComponents = (
   componentsUsed: string[],
-  options: InternalVueOptions,
+  options: ToVueOptions,
 ): string => {
   if (componentsUsed.length === 0) {
     return '';
@@ -422,7 +421,7 @@ const generateComponents = (
 };
 
 export const componentToVue =
-  (userOptions: InternalVueOptions): Transpiler =>
+  (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
@@ -557,7 +556,11 @@ export const componentToVue =
         ? 'import { defineAsyncComponent } from "vue"'
         : ''
     }
-      ${renderPreComponent({ component, target: 'vue' })}
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
 
       export default {
         ${
