@@ -352,7 +352,7 @@ async function buildAndOutputComponentFiles({
       outputFile(`${outputDir}/${outputFilePath}`, transpiled),
       // output generated component file, before it is minified and transpiled into JS.
       // we skip these targets because the files would be invalid.
-      ...(target === 'swift' || target === 'svelte'
+      ...(target === 'swift' || target === 'svelte' || target === 'vue'
         ? []
         : [outputFile(`${outputDir}/${path}`, original)]),
     ]);
