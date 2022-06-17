@@ -557,7 +557,11 @@ export const componentToVue =
         ? 'import { defineAsyncComponent } from "vue"'
         : ''
     }
-      ${renderPreComponent({ component, target: 'vue' })}
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
 
       export default {
         ${
