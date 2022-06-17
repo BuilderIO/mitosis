@@ -83,17 +83,31 @@ const getMitosisComponentJSONs = async (options: MitosisConfig) => {
   );
 };
 
+const buildAndOutputNonComponentFiles = async ({
+  options,
+  target,
+}: {
+  target: Target;
+  options: MitosisConfig;
+}) => {
+  const jsFiles = await buildNonComponentFiles({ target, options });
+  await outputNonComponentFiles(target, jsFiles, options);
+};
+
 export async function build(config?: MitosisConfig) {
+  // merge default options
   const options = getOptions(config);
+
+  // clean output directory
   await clean(options);
 
+  // get all mitosis component JSONs
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
   await Promise.all(
     options.targets.map(async (target) => {
-      const jsFiles = await buildNonComponentFiles({ target, options });
       await Promise.all([
-        outputNonComponentFiles(target, jsFiles, options),
+        buildAndOutputNonComponentFiles({ target, options }),
         buildAndOutputComponentFiles(target, mitosisComponents, options),
       ]);
       await outputOverrides(target, options);
@@ -103,33 +117,41 @@ export async function build(config?: MitosisConfig) {
   console.info('Done!');
 }
 
+/**
+ * TO-DO: can this be removed?
+ */
 async function outputOverrides(target: Target, options: MitosisConfig) {
   const kebabTarget = kebabCase(target);
-  const outputDirPath = `${options.overridesDir}/${kebabTarget}`;
-  const files = await glob([
-    `${outputDirPath}/**/*`,
-    `!${outputDirPath}/node_modules/**/*`,
+  const targetOverrides = `${options.overridesDir}/${kebabTarget}`;
+
+  // get all outputted files
+  const overrideFileNames = await glob([
+    `${targetOverrides}/**/*`,
+    `!${targetOverrides}/node_modules/**/*`,
   ]);
   await Promise.all(
-    files.map(async (file) => {
-      let contents = await readFile(file, 'utf8');
+    overrideFileNames.map(async (overrideFileName) => {
+      let contents = await readFile(overrideFileName, 'utf8');
 
-      const esbuildTranspile = file.match(/\.tsx?$/);
+      // transpile `.tsx` files to `.js`
+      const esbuildTranspile = overrideFileName.match(/\.tsx?$/);
       if (esbuildTranspile) {
-        contents = await transpile({ path: file, target, options });
+        contents = await transpile({ path: overrideFileName, target, options });
       }
 
       const targetPaths = getTargetPaths(target);
 
       await Promise.all(
-        targetPaths.map((targetPath) =>
-          outputFile(
-            file
-              .replace(`${outputDirPath}`, `${options.dest}/${targetPath}`)
-              .replace(/\.tsx?$/, '.js'),
-            contents,
-          ),
-        ),
+        targetPaths.map((targetPath) => {
+          const newFile = overrideFileName
+            // replace any reference to the overrides directory with the target directory
+            // e.g. `overrides/react/components/Button.tsx` -> `output/react/components/Button.tsx`
+            .replace(`${targetOverrides}`, `${options.dest}/${targetPath}`)
+            // replace `.tsx` references with `.js`
+            .replace(/\.tsx?$/, '.js');
+
+          return outputFile(newFile, contents);
+        }),
       );
     }),
   );
