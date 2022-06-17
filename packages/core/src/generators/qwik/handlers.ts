@@ -1,12 +1,6 @@
 import { MitosisNode } from '../../types/mitosis-node';
 import { renderUseLexicalScope } from './component';
-import {
-  arrowFnBlock,
-  EmitFn,
-  File,
-  invoke,
-  SrcBuilder,
-} from './src-generator';
+import { arrowFnBlock, EmitFn, File, SrcBuilder } from './src-generator';
 
 const IIF_START = '(() => {';
 const IIF_END = '})()';

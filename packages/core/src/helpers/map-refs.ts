@@ -1,7 +1,7 @@
 import traverse from 'traverse';
 import * as babel from '@babel/core';
 
-import { extendedHook, MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';

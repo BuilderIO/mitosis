@@ -6,12 +6,7 @@ import {
   componentToVue,
   componentToHtml,
   componentToCustomElement,
-  contextToReact,
-  contextToSolid,
-  contextToVue,
-  contextToSvelte,
   MitosisComponent,
-  parseContext,
   parseJsx,
   MitosisConfig,
   Target,
@@ -20,32 +15,30 @@ import {
   componentToAngular,
 } from '@builder.io/mitosis';
 import debug from 'debug';
-import dedent from 'dedent';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
-import * as json5 from 'json5';
-import { camelCase, kebabCase, last, upperFirst } from 'lodash';
+import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
+import { buildContextFile } from './helpers/context';
 
 const cwd = process.cwd();
 
-const DEFAULT_CONFIG: Partial<MitosisConfig> = {
+const DEFAULT_CONFIG: MitosisConfig = {
   targets: [],
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
-};
-
-const DEFAULT_OPTIONS: MitosisConfig['options'] = {
-  vue: {
-    cssNamespace: () => getSimpleId(),
-    namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
-    vueVersion: { 2: true, 3: true },
+  options: {
+    vue: {
+      cssNamespace: () => getSimpleId(),
+      namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
+      vueVersion: { 2: true, 3: true },
+    },
   },
 };
 
@@ -53,20 +46,26 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   ...DEFAULT_CONFIG,
   ...config,
   options: {
-    ...DEFAULT_OPTIONS,
+    ...DEFAULT_CONFIG.options,
     ...config?.options,
     vue: {
-      ...DEFAULT_OPTIONS.vue,
+      ...DEFAULT_CONFIG.options?.vue,
       ...config?.options?.vue,
     },
   },
 });
 
-export async function build(config?: MitosisConfig) {
-  const options = getOptions(config);
-  await clean(options);
+async function clean(options: MitosisConfig) {
+  const files = await glob(`${options.dest}/**/*/${options.files}`);
+  await Promise.all(
+    files.map(async (file) => {
+      await remove(file);
+    }),
+  );
+}
 
-  const tsLiteFiles = await Promise.all(
+const getMitosisComponentJSONs = async (options: MitosisConfig) => {
+  return Promise.all(
     micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
       async (path) => {
         try {
@@ -82,28 +81,26 @@ export async function build(config?: MitosisConfig) {
       },
     ),
   );
+};
+
+export async function build(config?: MitosisConfig) {
+  const options = getOptions(config);
+  await clean(options);
+
+  const mitosisComponents = await getMitosisComponentJSONs(options);
 
   await Promise.all(
     options.targets.map(async (target) => {
       const jsFiles = await buildNonComponentFiles({ target, options });
       await Promise.all([
         outputNonComponentFiles(target, jsFiles, options),
-        buildAndOutputComponentFiles(target, tsLiteFiles, options),
+        buildAndOutputComponentFiles(target, mitosisComponents, options),
       ]);
       await outputOverrides(target, options);
     }),
   );
 
   console.info('Done!');
-}
-
-async function clean(options: MitosisConfig) {
-  const files = await glob(`${options.dest}/**/*/${options.files}`);
-  await Promise.all(
-    files.map(async (file) => {
-      await remove(file);
-    }),
-  );
 }
 
 async function outputOverrides(target: Target, options: MitosisConfig) {
@@ -305,40 +302,6 @@ async function outputNonComponentFiles(
   await Promise.all(output);
 }
 
-const buildContextFile = async ({
-  path,
-  options,
-  target,
-}: {
-  path: string;
-  options: MitosisConfig;
-  target: Target;
-}) => {
-  // 'foo/bar/my-thing.context.ts' -> 'MyThing'
-  const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
-  const context = parseContext(await readFile(path, 'utf8'), { name });
-  if (!context) {
-    console.warn('Could not parse context from file', path);
-  } else {
-    switch (target) {
-      case 'svelte':
-        return contextToSvelte(options.options.svelte)({ context });
-      case 'vue':
-        return contextToVue(context);
-      case 'solid':
-        return contextToSolid()({ context });
-      case 'react':
-      case 'reactNative':
-        return contextToReact()({ context });
-      default:
-        console.warn(
-          'Context files are not supported for this target. Outputting no-op',
-        );
-        return contextToVue(context);
-    }
-  }
-};
-
 /**
  * Transpiles all non-component files, including Context files.
  */
@@ -349,9 +312,7 @@ async function buildNonComponentFiles({
   target: Target;
   options: MitosisConfig;
 }) {
-  const tsFiles = await glob(`src/**/*.ts`, {
-    cwd: cwd,
-  });
+  const tsFiles = await glob(`src/**/*.ts`, { cwd });
 
   return await Promise.all(
     tsFiles.map(async (path) => {

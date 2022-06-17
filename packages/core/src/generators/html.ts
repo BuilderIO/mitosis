@@ -17,8 +17,6 @@ import { hasBindingsText } from '../helpers/has-bindings-text';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isHtmlAttribute } from '../helpers/is-html-attribute';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';

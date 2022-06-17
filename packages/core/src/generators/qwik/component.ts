@@ -6,7 +6,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
-  arrowFnBlock,
   arrowFnValue,
   EmitFn,
   File,

@@ -1,7 +1,6 @@
 import { useStore, onMount, For, Show } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';
-import { reduce } from 'lodash';
 
 type SmileReviewsProps = {
   productId: string;

@@ -1,7 +1,5 @@
 import * as babel from '@babel/core';
 import { MitosisComponent } from '@builder.io/mitosis';
-import dedent from 'dedent';
-import * as json5 from 'json5';
 
 const tsPreset = require('@babel/preset-typescript');
 

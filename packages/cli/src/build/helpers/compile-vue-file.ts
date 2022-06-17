@@ -2,7 +2,6 @@ import { MitosisComponent } from '@builder.io/mitosis';
 import * as vueCompilerSfc from '@vue/compiler-sfc';
 import dedent from 'dedent';
 import { getSimpleId } from './get-simple-id';
-import * as json5 from 'json5';
 import * as esbuild from 'esbuild';
 import { vue2Transform } from './compile-vue-v2-file';
 

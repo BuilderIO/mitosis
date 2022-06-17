@@ -1,5 +1,4 @@
-import { useStore, For, Show } from '@builder.io/mitosis';
-import { Builder } from '@builder.io/sdk';
+import { useStore, For } from '@builder.io/mitosis';
 
 export default function ImgStateComponent() {
   const state = useStore({
