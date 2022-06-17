@@ -38,7 +38,7 @@ function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
-export type VueVersion = 2 | 3;
+export type VueVersion = '2' | '3';
 
 export interface ToVueOptions extends BaseTranspilerOptions {
   vueVersion: VueVersion;
@@ -82,7 +82,7 @@ const NODE_MAPPERS: {
       json.bindings.each?.code,
     )}`;
 
-    if (options.vueVersion >= 3) {
+    if (options.vueVersion === '3') {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
       return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
         forValue,
@@ -101,7 +101,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion >= 3) {
+    if (options.vueVersion === '3') {
       return `
       <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
@@ -355,7 +355,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
-  vueVersion: 2,
+  vueVersion: '2',
 };
 
 const mergeOptions = (
@@ -371,7 +371,7 @@ const generateComponentImport =
   (options: ToVueOptions) =>
   (componentName: string): string => {
     const key = kebabCase(componentName);
-    if (options.vueVersion === 3 && options.asyncComponentImports) {
+    if (options.vueVersion === '3' && options.asyncComponentImports) {
       return `'${key}': defineAsyncComponent(${componentName})`;
     } else {
       return `'${key}': ${componentName}`;
@@ -503,7 +503,7 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-    ${options.vueVersion === 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
+    ${options.vueVersion === '3' ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
