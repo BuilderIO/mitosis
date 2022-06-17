@@ -29,9 +29,8 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
@@ -39,8 +38,10 @@ function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
-export interface ToVueOptions extends BaseTranspilerOptions {
-  vueVersion?: 2 | 3;
+export type VueVersion = 2 | 3;
+
+export interface InternalVueOptions extends BaseTranspilerOptions {
+  vueVersion: VueVersion;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
@@ -58,7 +59,7 @@ const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 // to properly replace context refs
 function processBinding(
   code: string,
-  _options: ToVueOptions,
+  _options: InternalVueOptions,
   json: MitosisComponent,
 ): string {
   return replaceIdentifiers(
@@ -75,7 +76,7 @@ function processBinding(
 
 const NODE_MAPPERS: {
   [key: string]:
-    | ((json: MitosisNode, options: ToVueOptions) => string)
+    | ((json: MitosisNode, options: InternalVueOptions) => string)
     | undefined;
 } = {
   Fragment(json, options) {
@@ -87,7 +88,7 @@ const NODE_MAPPERS: {
       json.properties._forName
     }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
 
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
       return `<template :key="${encodeQuotes(
         keyValue?.code || 'index',
@@ -106,7 +107,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       return `
       <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
@@ -151,7 +152,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(
   json: MitosisComponent,
-  _options: ToVueOptions,
+  _options: InternalVueOptions,
 ) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
@@ -163,7 +164,7 @@ function processDynamicComponents(
   });
 }
 
-function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
+function processForKeys(json: MitosisComponent, _options: InternalVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name === 'For') {
@@ -237,7 +238,7 @@ const stringifyBinding =
 
 export const blockToVue = (
   node: MitosisNode,
-  options: ToVueOptions,
+  options: InternalVueOptions,
 ): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
@@ -310,7 +311,7 @@ export const blockToVue = (
 
 function getContextInjectString(
   component: MitosisComponent,
-  options: ToVueOptions,
+  options: InternalVueOptions,
 ) {
   let str = '{';
 
@@ -326,7 +327,7 @@ function getContextInjectString(
 
 function getContextProvideString(
   component: MitosisComponent,
-  options: ToVueOptions,
+  options: InternalVueOptions,
 ) {
   let str = '{';
 
@@ -381,21 +382,22 @@ const onUpdatePlugin: Plugin = (options) => ({
   },
 });
 
-const BASE_OPTIONS: ToVueOptions = {
+const BASE_OPTIONS: InternalVueOptions = {
   plugins: [onUpdatePlugin],
+  vueVersion: 2,
 };
 
 const mergeOptions = (
-  { plugins: pluginsA = [], ...a }: ToVueOptions,
-  { plugins: pluginsB = [], ...b }: ToVueOptions,
-): ToVueOptions => ({
+  { plugins: pluginsA = [], ...a }: InternalVueOptions,
+  { plugins: pluginsB = [], ...b }: InternalVueOptions,
+): InternalVueOptions => ({
   ...a,
   ...b,
   plugins: [...pluginsA, ...pluginsB],
 });
 
 const generateComponentImport =
-  (options: ToVueOptions) =>
+  (options: InternalVueOptions) =>
   (componentName: string): string => {
     const key = kebabCase(componentName);
     if (options.vueVersion === 3) {
@@ -408,7 +410,7 @@ const generateComponentImport =
 
 const generateComponents = (
   componentsUsed: string[],
-  options: ToVueOptions,
+  options: InternalVueOptions,
 ): string => {
   if (componentsUsed.length === 0) {
     return '';
@@ -420,10 +422,8 @@ const generateComponents = (
 };
 
 export const componentToVue =
-  (userOptions: ToVueOptions = {}) =>
-  // hack while we migrate all other transpilers to receive/handle path
-  // TO-DO: use `Transpiler` once possible
-  ({ component, path }: TranspilerArgs & { path: string }) => {
+  (userOptions: InternalVueOptions): Transpiler =>
+  ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -564,7 +564,7 @@ export const componentToVue =
           !component.name
             ? ''
             : `name: '${
-                options.namePrefix?.(path)
+                path && options.namePrefix?.(path)
                   ? options.namePrefix?.(path) + '-'
                   : ''
               }${kebabCase(component.name)}',`

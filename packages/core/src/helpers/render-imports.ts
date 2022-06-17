@@ -109,23 +109,24 @@ const getImportValue = ({
 export const renderImport = ({
   theImport,
   target,
+  asyncComponentImports,
 }: {
   theImport: MitosisImport;
   target: Target;
+  asyncComponentImports: boolean;
 }): string => {
   const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target);
   const importValue = getImportValue(importedValues);
 
   const isComponentImport = checkIsComponentImport(theImport);
-  // TO-DO: make async Vue imports optional via CLI config
-  const isVueImport = target === 'vue';
-  const shouldBeAsyncImport = isComponentImport && isVueImport;
+  const shouldBeAsyncImport = asyncComponentImports && isComponentImport;
 
   if (shouldBeAsyncImport) {
-    if (importedValues.namedImports) {
+    const isVueImport = target === 'vue';
+    if (isVueImport && importedValues.namedImports) {
       console.warn(
-        'Vue: Component imports with named imports is not supported, due to async components. Dropping named imports',
+        'Vue: Async Component imports cannot include named imports. Dropping async import. This might break your code.',
       );
     } else {
       return `const ${importValue} = () => import('${path}')`;
@@ -138,9 +139,11 @@ export const renderImport = ({
 export const renderImports = ({
   imports,
   target,
+  asyncComponentImports,
 }: {
   imports: MitosisImport[];
   target: Target;
+  asyncComponentImports: boolean;
 }): string =>
   imports
     .filter((theImport) => {
@@ -155,17 +158,25 @@ export const renderImports = ({
         return true;
       }
     })
-    .map((theImport) => renderImport({ theImport, target }))
+    .map((theImport) =>
+      renderImport({ theImport, target, asyncComponentImports }),
+    )
     .join('\n');
 
 export const renderPreComponent = ({
   component,
   target,
+  asyncComponentImports = false,
 }: {
   component: MitosisComponent;
   target: Target;
+  asyncComponentImports?: boolean;
 }): string => `
-    ${renderImports({ imports: component.imports, target })}
+    ${renderImports({
+      imports: component.imports,
+      target,
+      asyncComponentImports,
+    })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent || ''}
   `;

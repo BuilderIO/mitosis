@@ -8,7 +8,11 @@ describe('renderImport', () => {
         path: '../render-blocks.lite',
       },
     ];
-    const output = renderImport({ theImport: data[0], target: 'vue' });
+    const output = renderImport({
+      theImport: data[0],
+      target: 'vue',
+      asyncComponentImports: false,
+    });
     expect(output).toBe(
       "import  RenderBlocks,  {  }  from '../render-blocks.vue';",
     );
