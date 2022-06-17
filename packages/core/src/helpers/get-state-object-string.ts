@@ -27,10 +27,7 @@ const convertStateMemberToString =
           return undefined;
         }
         const functionValue = value.replace(functionLiteralPrefix, '');
-        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
-          functionValue,
-          'function',
-        )}`;
+        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(functionValue, 'function')}`;
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(GETTER));
@@ -50,10 +47,7 @@ const convertStateMemberToString =
     if (options.data === false) {
       return undefined;
     }
-    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-      json5.stringify(value),
-      'data',
-    )}`;
+    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(json5.stringify(value), 'data')}`;
   };
 
 export const getMemberObjectString = (
@@ -75,8 +69,7 @@ export const getMemberObjectString = (
   // If the delimiter is a comma and the format is `object`, then we need to make sure we have an extra comma at the end,
   // or the object will become invalid JS.
   // We also have to make sure that `stringifiedProperties` isn't empty, or we will get `{,}` which is invalid
-  const extraDelimiter =
-    stringifiedProperties.length > 0 ? lineItemDelimiter : '';
+  const extraDelimiter = stringifiedProperties.length > 0 ? lineItemDelimiter : '';
 
   return `${prefix}${stringifiedProperties}${extraDelimiter}${suffix}`;
 };

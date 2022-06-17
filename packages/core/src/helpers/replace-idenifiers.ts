@@ -16,17 +16,10 @@ export const replaceIdentifiers = (
           path.parent.property === path.node
         ) &&
         // This is no the function name - like `foo` in `function foo() {}`
-        !(
-          types.isFunctionDeclaration(path.parent) &&
-          path.parent.id === path.node
-        ) &&
-        (Array.isArray(from)
-          ? from.includes(path.node.name)
-          : path.node.name === from)
+        !(types.isFunctionDeclaration(path.parent) && path.parent.id === path.node) &&
+        (Array.isArray(from) ? from.includes(path.node.name) : path.node.name === from)
       ) {
-        path.replaceWith(
-          types.identifier(typeof to === 'string' ? to : to(path.node.name)),
-        );
+        path.replaceWith(types.identifier(typeof to === 'string' ? to : to(path.node.name)));
       }
     },
   });

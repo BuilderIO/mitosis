@@ -35,18 +35,13 @@ export default function SmileReviews(props: SmileReviewsProps) {
 
   return (
     <div data-user={state.name}>
-      <button onClick={() => (state.showReviewPrompt = true)}>
-        Write a review
-      </button>
+      <button onClick={() => (state.showReviewPrompt = true)}>Write a review</button>
       <Show when={state.showReviewPrompt}>
         <input placeholder="Email" />
 
         <input css={{ display: 'block' }} placeholder="Title" />
 
-        <textarea
-          css={{ display: 'block' }}
-          placeholder="How was your experience?"
-        />
+        <textarea css={{ display: 'block' }} placeholder="How was your experience?" />
         <button
           css={{ display: 'block' }}
           onClick={() => {
@@ -70,10 +65,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <img
-              css={{ height: '30px', width: '30px', marginRight: '10px' }}
-              src={review.avatar}
-            />
+            <img css={{ height: '30px', width: '30px', marginRight: '10px' }} src={review.avatar} />
             <div class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'}>
               <div>N: {index}</div>
               <div>{review.author}</div>

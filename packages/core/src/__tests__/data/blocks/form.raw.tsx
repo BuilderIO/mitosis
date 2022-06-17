@@ -38,8 +38,7 @@ export default function FormComponent(props: FormProps) {
       return (Builder.isEditing && props.previewState) || state.state;
     },
     onSubmit(event: Event & { currentTarget: HTMLFormElement }) {
-      const sendWithJs =
-        props.sendWithJs || props.sendSubmissionsTo === 'email';
+      const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
 
       if (props.sendSubmissionsTo === 'zapier') {
         event.preventDefault();
@@ -61,9 +60,7 @@ export default function FormComponent(props: FormProps) {
         const formPairs: {
           key: string;
           value: File | boolean | number | string | FileList;
-        }[] = Array.from(
-          event.currentTarget.querySelectorAll('input,select,textarea'),
-        )
+        }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea'))
           .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
             let value: any;
@@ -262,9 +259,7 @@ export default function FormComponent(props: FormProps) {
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
-          {(block, index) => (
-            <BuilderBlockComponent key={block.id} block={block} index={index} />
-          )}
+          {(block, index) => <BuilderBlockComponent key={block.id} block={block} index={index} />}
         </For>
       </Show>
 
@@ -273,10 +268,7 @@ export default function FormComponent(props: FormProps) {
       </Show>
 
       <Show when={state.submissionState === 'sending'}>
-        <BuilderBlocks
-          dataPath="sendingMessage"
-          blocks={props.sendingMessage!}
-        />
+        <BuilderBlocks dataPath="sendingMessage" blocks={props.sendingMessage!} />
       </Show>
 
       <Show when={state.submissionState === 'error' && state.responseData}>
@@ -289,10 +281,7 @@ export default function FormComponent(props: FormProps) {
       </Show>
 
       <Show when={state.submissionState === 'success'}>
-        <BuilderBlocks
-          dataPath="successMessage"
-          blocks={props.successMessage!}
-        />
+        <BuilderBlocks dataPath="successMessage" blocks={props.successMessage!} />
       </Show>
     </form>
   );

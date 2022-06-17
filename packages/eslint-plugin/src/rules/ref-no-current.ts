@@ -34,19 +34,14 @@ const rule: Rule.RuleModule = {
 
     const listener: Rule.RuleListener = {
       MemberExpression(node) {
-        if (
-          types.isIdentifier(node.property) &&
-          node.property.name === 'current'
-        ) {
+        if (types.isIdentifier(node.property) && node.property.name === 'current') {
           if (types.isIdentifier(node.object)) {
             const { name } = node.object;
             const program = context.getAncestors()[0];
 
             if (!types.isProgram(program)) return;
 
-            const importSpecifiers = program.body.find((n) =>
-              types.isImportDeclaration(n),
-            );
+            const importSpecifiers = program.body.find((n) => types.isImportDeclaration(n));
 
             if (!types.isImportDeclaration(importSpecifiers)) return;
 
@@ -60,9 +55,7 @@ const rule: Rule.RuleModule = {
 
             const useRefHookLocalName = useRef?.local.name;
 
-            const component = program.body.find((n) =>
-              types.isExportDefaultDeclaration(n),
-            );
+            const component = program.body.find((n) => types.isExportDefaultDeclaration(n));
 
             if (!types.isExportDefaultDeclaration(component)) return;
 

@@ -82,22 +82,13 @@ export default function RenderBlock(props: RenderBlockProps) {
       <state.tagName {...state.properties} style={state.css}>
         <BlockStyles block={state.useBlock} />
         {state.componentRef && (
-          <state.componentRef
-            {...state.componentOptions}
-            children={state.useBlock.children}
-          />
+          <state.componentRef {...state.componentOptions} children={state.useBlock.children} />
         )}
         <Show
-          when={
-            !state.componentRef &&
-            state.useBlock.children &&
-            state.useBlock.children.length
-          }
+          when={!state.componentRef && state.useBlock.children && state.useBlock.children.length}
         >
           <For each={state.useBlock.children}>
-            {(child: any, index: number) => (
-              <RenderBlock index={index} block={child} />
-            )}
+            {(child: any, index: number) => <RenderBlock index={index} block={child} />}
           </For>
         </Show>
       </state.tagName>

@@ -36,9 +36,7 @@ export const buildContextFile = async ({
       case 'reactNative':
         return contextToReact()({ context });
       default:
-        console.warn(
-          'Context files are not supported for this target. Outputting no-op',
-        );
+        console.warn('Context files are not supported for this target. Outputting no-op');
         return contextToVue(context);
     }
   }

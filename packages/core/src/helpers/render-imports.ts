@@ -4,11 +4,7 @@ import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 const DEFAULT_IMPORT = 'default';
 const STAR_IMPORT = '*';
 
-const getStarImport = ({
-  theImport,
-}: {
-  theImport: MitosisImport;
-}): string | null => {
+const getStarImport = ({ theImport }: { theImport: MitosisImport }): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === STAR_IMPORT) {
@@ -17,11 +13,7 @@ const getStarImport = ({
   }
   return null;
 };
-const getDefaultImport = ({
-  theImport,
-}: {
-  theImport: MitosisImport;
-}): string | null => {
+const getDefaultImport = ({ theImport }: { theImport: MitosisImport }): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
     if (value === DEFAULT_IMPORT) {
@@ -82,11 +74,7 @@ interface ImportValues {
   namedImports: string | null;
 }
 
-const getImportedValues = ({
-  theImport,
-}: {
-  theImport: MitosisImport;
-}): ImportValues => {
+const getImportedValues = ({ theImport }: { theImport: MitosisImport }): ImportValues => {
   const starImport = getStarImport({ theImport });
   const defaultImport = getDefaultImport({ theImport });
   const namedImports = getNamedImports({ theImport });
@@ -94,11 +82,7 @@ const getImportedValues = ({
   return { starImport, defaultImport, namedImports };
 };
 
-const getImportValue = ({
-  defaultImport,
-  namedImports,
-  starImport,
-}: ImportValues) => {
+const getImportValue = ({ defaultImport, namedImports, starImport }: ImportValues) => {
   if (starImport) {
     return ` * as ${starImport} `;
   } else {
@@ -158,9 +142,7 @@ export const renderImports = ({
         return true;
       }
     })
-    .map((theImport) =>
-      renderImport({ theImport, target, asyncComponentImports }),
-    )
+    .map((theImport) => renderImport({ theImport, target, asyncComponentImports }))
     .join('\n');
 
 export const renderPreComponent = ({

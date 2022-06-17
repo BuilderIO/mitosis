@@ -40,10 +40,7 @@ const mapComponentName = (name: string) => {
 };
 
 const componentMappers: {
-  [key: string]: (
-    node: MitosisNode,
-    options: ToBuilderOptions,
-  ) => BuilderElement;
+  [key: string]: (node: MitosisNode, options: ToBuilderOptions) => BuilderElement;
 } = {
   // TODO: add back if this direction (blocks as children not prop) is desired
   ...(!symbolBlocksAsChildren
@@ -52,8 +49,7 @@ const componentMappers: {
         Symbol(node, options) {
           const child = node.children[0];
           const symbolOptions =
-            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) ||
-            {};
+            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) || {};
 
           if (child) {
             set(
@@ -196,23 +192,16 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey =
-      key.match(eventBindingKeyRegex)?.[1];
+    const firstCharMatchForEventBindingKey = key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
-      actions[
-        key.replace(
-          eventBindingKeyRegex,
-          firstCharMatchForEventBindingKey.toLowerCase(),
-        )
-      ] = removeSurroundingBlock(bindings[key]?.code as string);
+      actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
+        removeSurroundingBlock(bindings[key]?.code as string);
       delete bindings[key];
     }
   }
 
   const builderBindings: Record<string, any> = {};
-  const componentOptions: Record<string, any> = omitMetaProperties(
-    json.properties,
-  );
+  const componentOptions: Record<string, any> = omitMetaProperties(json.properties);
 
   if (thisIsComponent) {
     for (const key in bindings) {
@@ -287,9 +276,7 @@ export const blockToBuilder = (
         bindings: builderBindings,
         actions,
       },
-      properties: thisIsComponent
-        ? undefined
-        : omitMetaProperties(json.properties),
+      properties: thisIsComponent ? undefined : omitMetaProperties(json.properties),
       bindings: thisIsComponent ? builderBindings : omit(bindings, 'css'),
       actions,
       children: json.children
@@ -311,24 +298,14 @@ export const componentToBuilder =
         jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
-        ${
-          !hasState
-            ? ''
-            : `Object.assign(state, ${getStateObjectStringFromComponent(
-                component,
-              )});`
-        }
+        ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
         
         ${!component.hooks.onMount?.code ? '' : component.hooks.onMount.code}
       `),
         tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
-        ${
-          !hasState
-            ? ''
-            : `useState(${getStateObjectStringFromComponent(component)});`
-        }
+        ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(component)});`}
 
         ${
           !component.hooks.onMount?.code

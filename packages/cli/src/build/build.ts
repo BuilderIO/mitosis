@@ -66,20 +66,18 @@ async function clean(options: MitosisConfig) {
 
 const getMitosisComponentJSONs = async (options: MitosisConfig) => {
   return Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
-      async (path) => {
-        try {
-          const parsed = parseJsx(await readFile(path, 'utf8'));
-          return {
-            path,
-            mitosisJson: parsed,
-          };
-        } catch (err) {
-          console.error('Could not parse file:', path);
-          throw err;
-        }
-      },
-    ),
+    micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(async (path) => {
+      try {
+        const parsed = parseJsx(await readFile(path, 'utf8'));
+        return {
+          path,
+          mitosisJson: parsed,
+        };
+      } catch (err) {
+        console.error('Could not parse file:', path);
+        throw err;
+      }
+    }),
   );
 };
 
@@ -191,13 +189,8 @@ const getTranspilerForTarget = ({
   }
 };
 
-const replaceFileExtensionForTarget = ({
-  target,
-  path,
-}: {
-  target: Target;
-  path: string;
-}) => path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
+const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
+  path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
 
 /**
  * Transpiles and outputs Mitosis component files.
@@ -230,9 +223,7 @@ async function buildAndOutputComponentFiles(
     }
     try {
       transpiled = overrideFile ?? transpiler({ path, component: mitosisJson });
-      debugTarget(
-        `Success: transpiled ${path}. Output length: ${transpiled.length}`,
-      );
+      debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
       debugTarget(error);
@@ -262,10 +253,7 @@ async function buildAndOutputComponentFiles(
         break;
       case 'vue':
         // TODO: transform to CJS (?)
-        transpiled = transpileOptionalChaining(transpiled).replace(
-          /\.lite(['"];)/g,
-          '$1',
-        );
+        transpiled = transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1');
     }
 
     const outputDir = `${options.dest}/${kebabTarget}`;
@@ -295,8 +283,7 @@ async function buildAndOutputComponentFiles(
 
 function getTargetPaths(target: Target) {
   const kebabTarget = kebabCase(target);
-  const targetPaths =
-    target === 'vue' ? ['vue/nuxt2', 'vue/vue2', 'vue/vue3'] : [kebabTarget];
+  const targetPaths = target === 'vue' ? ['vue/nuxt2', 'vue/vue2', 'vue/vue3'] : [kebabTarget];
 
   return targetPaths;
 }

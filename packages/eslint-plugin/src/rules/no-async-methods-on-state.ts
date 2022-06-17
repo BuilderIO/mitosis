@@ -39,9 +39,7 @@ const rule: Rule.RuleModule = {
 
         if (!types.isProgram(program)) return;
 
-        const importSpecifiers = program.body.find((n) =>
-          types.isImportDeclaration(n),
-        );
+        const importSpecifiers = program.body.find((n) => types.isImportDeclaration(n));
 
         if (!types.isImportDeclaration(importSpecifiers)) return;
 
@@ -69,8 +67,7 @@ const rule: Rule.RuleModule = {
           )
             continue;
 
-          const { async } = (prop as types.Property)
-            .value as types.ArrowFunctionExpression;
+          const { async } = (prop as types.Property).value as types.ArrowFunctionExpression;
 
           if (async) {
             context.report({

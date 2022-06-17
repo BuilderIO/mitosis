@@ -71,9 +71,7 @@ describe('qwik', () => {
 
   describe('hello_world', () => {
     test('stylesheet', async () => {
-      const component = builderContentToMitosisComponent(
-        require('./qwik.test.hello_world.json'),
-      );
+      const component = builderContentToMitosisComponent(require('./qwik.test.hello_world.json'));
       const fileSet = createFileSet({ output: 'mjs' });
 
       addComponent(fileSet, component);
@@ -94,9 +92,7 @@ describe('qwik', () => {
   });
 
   test('button', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.button.json'),
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.button.json'));
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -105,13 +101,10 @@ describe('qwik', () => {
   });
 
   test('svg', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.svg.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.svg.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -120,13 +113,10 @@ describe('qwik', () => {
   });
 
   test('Image', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.image.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -135,13 +125,10 @@ describe('qwik', () => {
   });
 
   test('Image.slow', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.image.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -150,13 +137,10 @@ describe('qwik', () => {
   });
 
   test('Accordion', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.accordion.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.accordion.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -166,13 +150,10 @@ describe('qwik', () => {
   });
 
   test('For', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.for-loop.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.for-loop.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -193,10 +174,8 @@ describe('qwik', () => {
       expect(state).toMatchSnapshot();
       const fileSet = createFileSet({ output: 'mjs', jsx: true });
       hierarchy.depthFirstSymbols.forEach((builderComponent) => {
-        const mitosisComponent =
-          convertBuilderElementToMitosisComponent(builderComponent);
-        mitosisComponent &&
-          addComponent(fileSet, mitosisComponent, { isRoot: false });
+        const mitosisComponent = convertBuilderElementToMitosisComponent(builderComponent);
+        mitosisComponent && addComponent(fileSet, mitosisComponent, { isRoot: false });
       });
 
       const component = builderContentToMitosisComponent(content, {

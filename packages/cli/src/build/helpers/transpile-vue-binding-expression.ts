@@ -9,9 +9,7 @@ export function transpileBindingExpression(code: string) {
   const { types } = babel;
   return babelTransformExpression(code, {
     // Replace foo?.bar -> foo && foo.barF
-    OptionalMemberExpression(
-      path: babel.NodePath<babel.types.OptionalMemberExpression>,
-    ) {
+    OptionalMemberExpression(path: babel.NodePath<babel.types.OptionalMemberExpression>) {
       path.replaceWith(
         types.parenthesizedExpression(
           types.logicalExpression(

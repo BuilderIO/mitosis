@@ -64,20 +64,14 @@ function injectRender(script, render, lang, options) {
 
       const result = script
         .split(matches[1])
-        .join(
-          renderScript
-            .replace('module.exports={', 'export default {')
-            .replace(/\}$/, ''),
-        );
+        .join(renderScript.replace('module.exports={', 'export default {').replace(/\}$/, ''));
 
       return result;
     }
   } else if (options.inject) {
     return options.inject(script, render, lang, options);
   }
-  throw new Error(
-    '[rollup-plugin-vue] could not find place to inject template in script.',
-  );
+  throw new Error('[rollup-plugin-vue] could not find place to inject template in script.');
 }
 
 /**
@@ -92,17 +86,13 @@ function injectTemplate(script, template, lang, options) {
   if (['js', 'babel'].indexOf(lang.toLowerCase()) > -1) {
     const matches = /(export default[^{]*\{)/g.exec(script);
     if (matches) {
-      return script
-        .split(matches[1])
-        .join(`${matches[1]} template: ${JSON.stringify(template)},`);
+      return script.split(matches[1]).join(`${matches[1]} template: ${JSON.stringify(template)},`);
     }
   } else if (options.inject) {
     return options.inject(script, template, lang, options);
   }
 
-  throw new Error(
-    '[rollup-plugin-vue] could not find place to inject template in script.',
-  );
+  throw new Error('[rollup-plugin-vue] could not find place to inject template in script.');
 }
 
 /**
@@ -123,10 +113,7 @@ function processTemplate(source, id, content, options) {
     const relativePath = relative(process.cwd(), id);
     warnings
       .filter((warning) => {
-        return (
-          options.compileTemplate &&
-          ignore.findIndex((i) => warning.indexOf(i) > -1) < 0
-        );
+        return options.compileTemplate && ignore.findIndex((i) => warning.indexOf(i) > -1) < 0;
       })
       .forEach((msg) => {
         console.warn(`\n Warning in ${relativePath}:\n ${msg}`);
@@ -146,9 +133,7 @@ async function processScript(source, id, content, options, nodes) {
 
   const lang = source.attrs.lang || 'js';
 
-  const script = deIndent(
-    padContent(content.slice(0, content.indexOf(source.code))) + source.code,
-  );
+  const script = deIndent(padContent(content.slice(0, content.indexOf(source.code))) + source.code);
   const map = new MagicString(script).generateMap({ hires: true });
 
   if (template && options.compileTemplate) {
@@ -222,12 +207,7 @@ export async function vue2Transform(code, id, options) {
 
   if (options.styleToImports === true) {
     const style = css
-      .map(
-        (s, i) =>
-          'import ' +
-          JSON.stringify(`${id}.${i}.vue.component.${s.lang}`) +
-          ';',
-      )
+      .map((s, i) => 'import ' + JSON.stringify(`${id}.${i}.vue.component.${s.lang}`) + ';')
       .join(' ');
 
     return { css, code: style + js.code, map: js.map };

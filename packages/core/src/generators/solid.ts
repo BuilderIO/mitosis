@@ -32,10 +32,7 @@ import { kebabCase } from 'lodash';
 export interface ToSolidOptions extends BaseTranspilerOptions {}
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
-function processDynamicComponents(
-  json: MitosisComponent,
-  options: ToSolidOptions,
-) {
+function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
   let found = false;
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
@@ -49,10 +46,7 @@ function processDynamicComponents(
   return found;
 }
 
-function getContextString(
-  component: MitosisComponent,
-  options: ToSolidOptions,
-) {
+function getContextString(component: MitosisComponent, options: ToSolidOptions) {
   let str = '';
   for (const key in component.context.get) {
     str += `
@@ -86,10 +80,7 @@ const collectClassString = (json: MitosisNode): string | null => {
     dynamicClasses.push(json.bindings.className.code as any);
     delete json.bindings.className;
   }
-  if (
-    typeof json.bindings.css?.code === 'string' &&
-    json.bindings.css.code.trim().length > 4
-  ) {
+  if (typeof json.bindings.css?.code === 'string' && json.bindings.css.code.trim().length > 4) {
     dynamicClasses.push(`css(${json.bindings.css.code})`);
   }
   delete json.bindings.css;
@@ -115,10 +106,7 @@ const collectClassString = (json: MitosisNode): string | null => {
   return null;
 };
 
-const blockToSolid = (
-  json: MitosisNode,
-  options: ToSolidOptions = {},
-): string => {
+const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -173,8 +161,7 @@ const blockToSolid = (
     if (!code) continue;
 
     if (key.startsWith('on')) {
-      const useKey =
-        key === 'onChange' && json.name === 'input' ? 'onInput' : key;
+      const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
     } else {
       let useValue = code;
@@ -189,10 +176,7 @@ const blockToSolid = (
             // TODO: limit to top level objects only
             for (const property of path.node.properties) {
               if (types.isObjectProperty(property)) {
-                if (
-                  types.isIdentifier(property.key) ||
-                  types.isStringLiteral(property.key)
-                ) {
+                if (types.isIdentifier(property.key) || types.isStringLiteral(property.key)) {
                   const key = types.isIdentifier(property.key)
                     ? property.key.name
                     : property.key.value;
@@ -236,10 +220,7 @@ const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
   return str;
 };
 
-function addProviderComponents(
-  json: MitosisComponent,
-  options: ToSolidOptions,
-) {
+function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
   for (const key in json.context.set) {
     const { name, value } = json.context.set[key];
     json.children = [
@@ -300,11 +281,7 @@ export const componentToSolid =
     }
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
-    ${
-      !componentHasStyles
-        ? ''
-        : `import { css } from "solid-styled-components";`
-    }
+    ${!componentHasStyles ? '' : `import { css } from "solid-styled-components";`}
     ${renderPreComponent({ component: json, target: 'solid' })}
 
     function ${json.name}(props) {
@@ -313,11 +290,7 @@ export const componentToSolid =
       ${refs}
       ${getContextString(json, options)}
 
-      ${
-        !json.hooks.onMount?.code
-          ? ''
-          : `onMount(() => { ${json.hooks.onMount.code} })`
-      }
+      ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
 
       return (${addWrapper ? '<>' : ''}
         ${json.children

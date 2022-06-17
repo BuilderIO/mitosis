@@ -12,8 +12,7 @@ import hash from 'object-hash';
 
 const nodeHasStyles = (node: MitosisNode) => {
   return Boolean(
-    typeof node.bindings.css?.code === 'string' &&
-      node.bindings.css.code.trim().length > 6,
+    typeof node.bindings.css?.code === 'string' && node.bindings.css.code.trim().length > 6,
   );
 };
 
@@ -148,9 +147,7 @@ const collectStyles = (
 
         const stylesHash = hash(value);
         if (componentHashes[componentName] === stylesHash) {
-          const className = `${componentName}${
-            options.prefix ? `-${options.prefix}` : ''
-          }`;
+          const className = `${componentName}${options.prefix ? `-${options.prefix}` : ''}`;
           item.properties.class = `${item.properties.class || ''} ${className}`
             .trim()
             .replace(/\s{2,}/g, ' ');
@@ -163,9 +160,9 @@ const collectStyles = (
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${
-          options.prefix ? `-${options.prefix}` : ''
-        }${index === 1 ? '' : `-${index}`}`;
+        const className = `${componentName}${options.prefix ? `-${options.prefix}` : ''}${
+          index === 1 ? '' : `-${index}`
+        }`;
 
         item.properties.class = `${item.properties.class || ''} ${className}`
           .trim()
@@ -180,10 +177,7 @@ const collectStyles = (
   return styleMap;
 };
 
-export const collectCss = (
-  json: MitosisComponent,
-  options: CollectStyleOptions = {},
-): string => {
+export const collectCss = (json: MitosisComponent, options: CollectStyleOptions = {}): string => {
   const styles = collectStyles(json, options);
   // TODO create and use a root selector
   return classStyleMapToCss(styles);

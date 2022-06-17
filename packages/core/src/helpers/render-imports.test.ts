@@ -13,8 +13,6 @@ describe('renderImport', () => {
       target: 'vue',
       asyncComponentImports: false,
     });
-    expect(output).toBe(
-      "import  RenderBlocks,  {  }  from '../render-blocks.vue';",
-    );
+    expect(output).toMatchSnapshot();
   });
 });

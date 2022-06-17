@@ -38,10 +38,7 @@ async function toCjs(path: string, contents: string) {
 }
 
 export async function compileVueV2(options: CompileVueFileOptions) {
-  const rootPath = `${options.distDir}/vue/${options.path.replace(
-    /\.lite\.tsx$/,
-    '',
-  )}`;
+  const rootPath = `${options.distDir}/vue/${options.path.replace(/\.lite\.tsx$/, '')}`;
 
   const id = options.id || getSimpleId();
 
@@ -100,24 +97,16 @@ export async function compileVueV2(options: CompileVueFileOptions) {
   return [];
 }
 
-export async function compileVueFile(
-  options: CompileVueFileOptions,
-): Promise<FileSpec[]> {
+export async function compileVueFile(options: CompileVueFileOptions): Promise<FileSpec[]> {
   if (options.vueVersion === 2) {
     return compileVueV2(options);
   }
-  const rootPath = `${options.distDir}/vue/${options.path.replace(
-    /\.lite\.tsx$/,
-    '',
-  )}`;
+  const rootPath = `${options.distDir}/vue/${options.path.replace(/\.lite\.tsx$/, '')}`;
   const parsed = vueCompilerSfc.parse(options.contents);
   const id = getSimpleId();
 
   if (parsed.errors.length) {
-    console.warn(
-      `Vue template compiler errors in file ${options.path}`,
-      parsed.errors,
-    );
+    console.warn(`Vue template compiler errors in file ${options.path}`, parsed.errors);
     console.warn(options.contents);
   }
 
@@ -128,10 +117,7 @@ export async function compileVueFile(
     scoped: true,
   });
   if (compiledTemplate.errors.length) {
-    console.warn(
-      `Vue template compiler errors in file ${options.path}`,
-      compiledTemplate.errors,
-    );
+    console.warn(`Vue template compiler errors in file ${options.path}`, compiledTemplate.errors);
     console.warn(options.contents);
   }
   const compiledScript = vueCompilerSfc.compileScript(parsed.descriptor, {
@@ -145,10 +131,7 @@ export async function compileVueFile(
     source: parsed.descriptor.styles[0]?.content || '',
   });
   if (compiledStyles.errors.length > 1) {
-    console.warn(
-      `Vue style compiler errors in file ${options.path}`,
-      compiledTemplate.errors,
-    );
+    console.warn(`Vue style compiler errors in file ${options.path}`, compiledTemplate.errors);
     console.warn(options.contents);
   }
 

@@ -1,12 +1,6 @@
 import ts from 'typescript';
 import { parseTemplate } from '@angular/compiler';
-import {
-  Node,
-  Element,
-  Template,
-  Text,
-  BoundText,
-} from '@angular/compiler/src/render3/r3_ast';
+import { Node, Element, Template, Text, BoundText } from '@angular/compiler/src/render3/r3_ast';
 import { ASTWithSource } from '@angular/compiler/src/expression_parser/ast';
 import { createMitosisComponent } from '../helpers/create-mitosis-component';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
@@ -23,26 +17,19 @@ const getTsAST = (code: string) => {
 
 interface AngularToMitosisOptions {}
 
-const transformBinding = (
-  binding: string,
-  _options: AngularToMitosisOptions,
-) => {
+const transformBinding = (binding: string, _options: AngularToMitosisOptions) => {
   return babelTransformCode(binding, {
     Identifier(path) {
       const name = path.node.name;
 
       if (
-        (types.isObjectProperty(path.parent) &&
-          path.parent.key === path.node) ||
-        (types.isMemberExpression(path.parent) &&
-          path.parent.property === path.node)
+        (types.isObjectProperty(path.parent) && path.parent.key === path.node) ||
+        (types.isMemberExpression(path.parent) && path.parent.property === path.node)
       ) {
         return;
       }
 
-      if (
-        !(name.startsWith('state.') || name === 'event' || name === '$event')
-      ) {
+      if (!(name.startsWith('state.') || name === 'event' || name === '$event')) {
         path.replaceWith(types.identifier(`state.${name}`));
       }
     },
@@ -57,11 +44,9 @@ const isTemplate = (node: Node): node is Template =>
   // TODO: theres got to be a better way than this
   Array.isArray((node as any).templateAttrs);
 
-const isText = (node: Node): node is Text =>
-  typeof (node as any).value === 'string';
+const isText = (node: Node): node is Text => typeof (node as any).value === 'string';
 
-const isBoundText = (node: Node): node is BoundText =>
-  typeof (node as any).value === 'object';
+const isBoundText = (node: Node): node is BoundText => typeof (node as any).value === 'object';
 
 const angularTemplateNodeToMitosisNode = (
   node: Node,
@@ -74,18 +59,10 @@ const angularTemplateNodeToMitosisNode = (
         name: 'Show',
         bindings: {
           when: {
-            code: transformBinding(
-              (ngIf.value as ASTWithSource).source!,
-              options,
-            ),
+            code: transformBinding((ngIf.value as ASTWithSource).source!, options),
           },
         },
-        children: [
-          angularTemplateNodeToMitosisNode(
-            omit(node, 'templateAttrs'),
-            options,
-          ),
-        ],
+        children: [angularTemplateNodeToMitosisNode(omit(node, 'templateAttrs'), options)],
       });
     }
     const ngFor = node.templateAttrs.find((item) => item.name === 'ngFor');
@@ -101,12 +78,7 @@ const angularTemplateNodeToMitosisNode = (
         properties: {
           _forName: itemName,
         },
-        children: [
-          angularTemplateNodeToMitosisNode(
-            omit(node, 'templateAttrs'),
-            options,
-          ),
-        ],
+        children: [angularTemplateNodeToMitosisNode(omit(node, 'templateAttrs'), options)],
       });
     }
   }
@@ -138,9 +110,7 @@ const angularTemplateNodeToMitosisNode = (
       name: node.name,
       properties,
       bindings,
-      children: node.children.map((node) =>
-        angularTemplateNodeToMitosisNode(node, options),
-      ),
+      children: node.children.map((node) => angularTemplateNodeToMitosisNode(node, options)),
     });
   }
 
@@ -164,14 +134,9 @@ const angularTemplateNodeToMitosisNode = (
   throw new Error(`Element node type {${node}} is not supported`);
 };
 
-const angularTemplateToMitosisNodes = (
-  template: string,
-  options: AngularToMitosisOptions,
-) => {
+const angularTemplateToMitosisNodes = (template: string, options: AngularToMitosisOptions) => {
   const ast = parseTemplate(template, '.');
-  const blocks = ast.nodes.map((node) =>
-    angularTemplateNodeToMitosisNode(node, options),
-  );
+  const blocks = ast.nodes.map((node) => angularTemplateNodeToMitosisNode(node, options));
 
   return blocks;
 };
@@ -194,19 +159,10 @@ const parseTypescript = (code: string, options: AngularToMitosisOptions) => {
               if (ts.isObjectLiteralExpression(firstArg)) {
                 firstArg.properties.find((item) => {
                   if (ts.isPropertyAssignment(item)) {
-                    if (
-                      ts.isIdentifier(item.name) &&
-                      item.name.text === 'template'
-                    ) {
+                    if (ts.isIdentifier(item.name) && item.name.text === 'template') {
                       if (ts.isTemplateLiteral(item.initializer)) {
-                        const template = item.initializer
-                          .getText()
-                          .trim()
-                          .slice(1, -1);
-                        component.children = angularTemplateToMitosisNodes(
-                          template,
-                          options,
-                        );
+                        const template = item.initializer.getText().trim().slice(1, -1);
+                        component.children = angularTemplateToMitosisNodes(template, options);
                       }
                     }
                   }
