@@ -1,7 +1,7 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
-import { targetContext } from '@builder.io/e2e-app-spec/tests/context';
+import { targetContext } from './tests/context';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
