@@ -8,7 +8,6 @@ module.exports = {
     'vue',
     'html',
     'svelte',
-    'solid',
     'angular',
     'webcomponent',
   ],
