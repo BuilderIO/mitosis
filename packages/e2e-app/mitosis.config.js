@@ -6,7 +6,6 @@ module.exports = {
     // 'builder',
     'vue',
     'html',
-    'svelte',
     'angular',
     'webcomponent',
   ],
