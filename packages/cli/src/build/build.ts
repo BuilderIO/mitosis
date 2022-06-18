@@ -292,8 +292,9 @@ async function outputTsFiles(
   for (const targetPath of targetPaths) {
     output.push(
       ...files.map(({ path, output }) => {
+        const ext = getFileExtensionForTarget(target);
         return outputFile(
-          `${options.dest}/${targetPath}/${path.replace(/\.tsx?$/, '.js')}`,
+          `${options.dest}/${targetPath}/${path.replace(/\.tsx?$/, ext)}`,
           output,
         );
       }),
