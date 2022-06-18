@@ -1,7 +1,6 @@
 module.exports = {
   files: 'src/**',
   targets: [
-    'react',
     // still unsupported
     // 'qwik',
     // 'builder',
