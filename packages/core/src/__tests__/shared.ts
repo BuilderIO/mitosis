@@ -203,6 +203,14 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
   ],
+  qwik: [
+    BASIC_TESTS,
+    ROOT_SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    FOR_SHOW_TESTS,
+  ],
 };
 
 export const runTestsForTarget = (target: Target, generator: Transpiler) => {

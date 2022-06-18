@@ -1,7 +1,7 @@
 import { outputFileAsync } from 'fs-extra-promise';
 import { File } from '../generators/qwik';
+import { componentToQwik } from '../generators/qwik/component-generator';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
-import { isStatement } from '../generators/qwik/src-generator';
 import { builderContentToMitosisComponent } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import {
@@ -12,6 +12,7 @@ import {
   convertBuilderContentToSymbolHierarchy,
   convertBuilderElementToMitosisComponent,
 } from '../symbols/symbol-processor';
+import { runTestsForTarget } from './shared';
 
 const todo = require('../../../../examples/todo/src/components/todo.lite');
 const todos = require('../../../../examples/todo/src/components/todos.lite');
@@ -30,6 +31,8 @@ const debugOutput = async (fileSet: FileSet) => {
 };
 
 describe('qwik', () => {
+  runTestsForTarget('qwik', componentToQwik());
+
   describe('todo', () => {
     test('Todo.tsx', async () => {
       const json = parseJsx(todo);
@@ -269,6 +272,7 @@ describe('qwik', () => {
             isTypeScript: false,
             isJSX: true,
             isModule: true,
+            isBuilder: true,
           },
           '',
           '',
@@ -284,23 +288,6 @@ describe('qwik', () => {
       file.src.jsxBegin('Image', {}, { image: '' });
       file.src.jsxEnd('Image');
       expect(file.toString()).toEqual('<Image></Image>;\n');
-    });
-  });
-
-  describe('helper functions', () => {
-    describe('isStatement', () => {
-      test('is an expression', () => {
-        expect(isStatement('a.b')).toBe(false);
-        expect(isStatement('1?2:"bar"')).toBe(false);
-        expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
-        expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
-        expect(isStatement('(...)()')).toBe(false);
-      });
-
-      test('is a statement', () => {
-        expect(isStatement('var x; return x;')).toBe(true);
-        expect(isStatement('var x')).toBe(true);
-      });
     });
   });
 });

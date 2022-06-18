@@ -1,30 +1,31 @@
 import {
+  componentToAngular,
+  componentToCustomElement,
+  componentToHtml,
+  componentToQwik,
   componentToReact,
   componentToReactNative,
   componentToSolid,
-  componentToSwift,
-  componentToHtml,
-  componentToCustomElement,
-  MitosisComponent,
-  parseJsx,
-  MitosisConfig,
-  Target,
-  Transpiler,
   componentToSvelte,
-  componentToAngular,
+  componentToSwift,
   componentToVue2,
   componentToVue3,
+  MitosisComponent,
+  MitosisConfig,
+  parseJsx,
+  Target,
+  Transpiler,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
+import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
-import { buildContextFile } from './helpers/context';
 
 const cwd = process.cwd();
 
@@ -186,6 +187,8 @@ const getGeneratorForTarget = ({
       return componentToCustomElement(options.options.webcomponent);
     case 'svelte':
       return componentToSvelte(options.options.svelte);
+    case 'qwik':
+      return componentToQwik(options.options.qwik);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
@@ -267,7 +270,7 @@ async function buildAndOutputComponentFiles({
       outputFile(`${outputDir}/${outputFilePath}`, transpiled),
       // output generated component file, before it is minified and transpiled into JS.
       // we skip these targets because the files would be invalid.
-      ...(target === 'swift' || target === 'svelte' || target === 'vue'
+      ...(target === 'swift' || target === 'svelte' || target === 'vue' || target === 'qwik'
         ? []
         : [outputFile(`${outputDir}/${path}`, original)]),
     ]);

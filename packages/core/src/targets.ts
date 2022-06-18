@@ -15,6 +15,8 @@ import { componentToSwift as swift } from './generators/swift-ui';
 import { componentToTemplate as template } from './generators/template';
 import { componentToVue2, componentToVue3 } from './generators/vue';
 import { componentToStencil as stencil } from './generators/stencil';
+import { componentToQwik as qwik } from './generators/qwik';
+
 export const targets = {
   angular,
   builder,
@@ -33,4 +35,5 @@ export const targets = {
   vue2: componentToVue2,
   vue3: componentToVue3,
   stencil,
+  qwik,
 };

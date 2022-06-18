@@ -4,6 +4,7 @@ export interface SrcBuilderOptions {
   isTypeScript: boolean;
   isModule: boolean;
   isJSX: boolean;
+  isBuilder: boolean;
 }
 
 export type EmitFn = (this: SrcBuilder) => void;
@@ -35,8 +36,8 @@ export class File {
     this.qrlPrefix = qrlPrefix;
   }
 
-  import(module: string, symbol: string): Symbol {
-    return this.imports.get(module, symbol);
+  import(module: string, symbol: string, as?: string): Symbol {
+    return this.imports.get(module, symbol, as);
   }
 
   toQrlChunk() {
@@ -49,33 +50,54 @@ export class File {
     this.src.const(name, value, true, locallyVisible);
   }
 
+  exportDefault(symbolName: any) {
+    if (this.options.isModule) {
+      this.src.emit('export default ', symbolName, ';');
+    } else {
+      this.src.emit('module.exports=', symbolName, ';');
+    }
+  }
+
   toString() {
     const srcImports = new SrcBuilder(this, this.options);
     const imports = this.imports.imports;
     const modules = Array.from(imports.keys()).sort();
     modules.forEach((module) => {
+      if (module == '<SELF>') return;
       const symbolMap = imports.get(module)!;
-      const symbols = Array.from(symbolMap.keys()).sort();
+      const symbols = Array.from(symbolMap.values());
+      symbols.sort(symbolSort);
       if (removeExt(module) !== removeExt(this.qrlPrefix + this.filename)) {
         srcImports.import(module, symbols);
       }
     });
     let source = srcImports.toString() + this.src.toString();
     if (this.options.isPretty) {
-      source = format(source, {
-        parser: 'typescript',
-        plugins: [
-          // To support running in browsers
-          require('prettier/parser-typescript'),
-          require('prettier/parser-postcss'),
-          require('prettier/parser-html'),
-          require('prettier/parser-babel'),
-        ],
-        htmlWhitespaceSensitivity: 'ignore',
-      });
+      try {
+        source = format(source, {
+          parser: 'typescript',
+          plugins: [
+            // To support running in browsers
+            require('prettier/parser-typescript'),
+            require('prettier/parser-postcss'),
+            require('prettier/parser-html'),
+            require('prettier/parser-babel'),
+          ],
+          htmlWhitespaceSensitivity: 'ignore',
+        });
+      } catch (e) {
+        debugger;
+        source += `\n===============================\n`;
+        source += String(e);
+        console.error(source);
+      }
     }
     return source;
   }
+}
+
+function symbolSort(a: Symbol, b: Symbol) {
+  return a.importName < b.importName ? -1 : a.importName === b.importName ? 0 : 1;
 }
 
 function removeExt(filename: string): string {
@@ -92,21 +114,47 @@ export class SrcBuilder {
   isJSX: boolean;
 
   buf: string[] = [];
+  jsxDepth: number = 0;
+  /**
+   * Used to signal that we are generating code for Builder.
+   *
+   * In builder the `<For/>` iteration places the value on the state.
+   */
+  isBuilder: any = false;
 
   constructor(file: File, options: SrcBuilderOptions) {
     this.file = file;
     this.isTypeScript = options.isTypeScript;
     this.isModule = options.isModule;
     this.isJSX = options.isJSX;
+    this.isBuilder = options.isBuilder;
   }
 
-  import(module: string, symbols: string[]) {
+  import(module: string, symbols: Symbol[]) {
     if (this.isModule) {
-      this.emit('import{', symbols, '}from', quote(module), ';');
+      this.emit('import');
+      if (symbols.length === 1 && symbols[0].importName === 'default') {
+        this.emit(' ', symbols[0].localName, ' ');
+      } else {
+        this.emit('{');
+        symbols.forEach((symbol) => {
+          if (symbol.importName === symbol.localName) {
+            this.emit(symbol.importName);
+          } else {
+            this.emit(symbol.importName, ' as ', symbol.localName);
+          }
+          this.emit(',');
+        });
+        this.emit('}');
+      }
+      this.emit('from', quote(module), ';');
     } else {
       symbols.forEach((symbol) => {
-        this.const(symbol, function (this: SrcBuilder) {
-          this.emit(invoke('require', [quote(module)]), '.', symbol);
+        this.const(symbol.localName, function (this: SrcBuilder) {
+          this.emit(invoke('require', [quote(module)]));
+          if (symbol.importName !== 'default') {
+            this.emit('.', symbol.importName);
+          }
         });
       });
     }
@@ -212,7 +260,24 @@ export class SrcBuilder {
     }
   }
 
+  jsxExpression(expression: EmitFn) {
+    const previousJsxDepth = this.jsxDepth;
+    try {
+      if (previousJsxDepth) {
+        this.jsxDepth = 0;
+        this.isJSX && this.emit('{');
+      }
+      expression.apply(this);
+    } finally {
+      if (previousJsxDepth) {
+        this.isJSX && this.emit('}');
+      }
+      this.jsxDepth = previousJsxDepth;
+    }
+  }
+
   jsxBegin(symbol: Symbol | string, props: Record<string, any>, bindings: Record<string, any>) {
+    this.jsxDepth++;
     const self = this;
     if (symbol == 'div' && ('href' in props || 'href' in bindings)) {
       // HACK: if we contain href then we are `a` not `div`
@@ -233,10 +298,20 @@ export class SrcBuilder {
       }
     }
     for (const rawKey in bindings) {
-      if (Object.prototype.hasOwnProperty.call(bindings, rawKey) && !ignoreKey(rawKey)) {
+      if (rawKey === '_spread') {
+        if (this.isJSX) {
+          this.emit('{...', bindings[rawKey].code, '}');
+        } else {
+          this.emit('...', bindings[rawKey].code);
+        }
+      } else if (Object.prototype.hasOwnProperty.call(bindings, rawKey) && !ignoreKey(rawKey)) {
         let binding = bindings[rawKey];
         binding =
           binding && typeof binding == 'object' && 'code' in binding ? binding.code : binding;
+        if (rawKey === 'class' && props.class) {
+          // special case for classes as they can have both static and dynamic binding
+          binding = quote(props.class + ' ') + '+' + binding;
+        }
         const key = lastProperty(rawKey);
         if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
@@ -267,7 +342,7 @@ export class SrcBuilder {
       if (value) {
         if (self.isJSX) {
           self.emit(' ', key, '=');
-          if (typeof value == 'string' && value.startsWith('"')) {
+          if (typeof value == 'string' && value.startsWith('"') && value.endsWith('"')) {
             self.emit(value);
           } else {
             self.emit('{', value, '}');
@@ -285,16 +360,19 @@ export class SrcBuilder {
     } else {
       this.emit('),');
     }
+    this.jsxDepth--;
   }
 
   jsxBeginFragment(symbol: Symbol) {
+    this.jsxDepth++;
     if (this.isJSX) {
       this.emit('<>');
     } else {
-      this.emit('h(', symbol.name, ',null,');
+      this.emit('h(', symbol.localName, ',null,');
     }
   }
   jsxEndFragment() {
+    this.jsxDepth--;
     if (this.isJSX) {
       this.emit('</>');
     } else {
@@ -316,16 +394,18 @@ export class SrcBuilder {
 }
 
 export class Symbol {
-  name: string;
-  constructor(name: string) {
-    this.name = name;
+  importName: string;
+  localName: string;
+  constructor(importName: string, localName: string) {
+    this.importName = importName;
+    this.localName = localName;
   }
 }
 
 export class Imports {
   imports: Map<string, Map<string, Symbol>> = new Map();
 
-  get(moduleName: string, symbolName: string) {
+  get(moduleName: string, symbolName: string, as?: string) {
     let importSymbols = this.imports.get(moduleName);
     if (!importSymbols) {
       importSymbols = new Map();
@@ -333,10 +413,21 @@ export class Imports {
     }
     let symbol = importSymbols.get(symbolName);
     if (!symbol) {
-      symbol = new Symbol(symbolName);
+      symbol = new Symbol(symbolName, as || symbolName);
       importSymbols.set(symbolName, symbol);
     }
     return symbol;
+  }
+
+  hasImport(localName: string): boolean {
+    for (const symbolMap of Array.from(this.imports.values())) {
+      for (const symbol of Array.from(symbolMap.values())) {
+        if (symbol.localName === localName) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }
 
@@ -374,15 +465,25 @@ export function quote(text: string) {
 
 export function invoke(symbol: Symbol | string, args: any[], typeParameters?: string[]) {
   return function (this: SrcBuilder) {
-    this.emit(typeof symbol == 'string' ? symbol : symbol.name);
+    this.emit(typeof symbol == 'string' ? symbol : symbol.localName);
     this.typeParameters(typeParameters);
     this.emit('(', args, ')');
   };
 }
 
-export function arrowFnBlock(args: string[], statements: any[]) {
+export function arrowFnBlock(args: string[], statements: any[], argTypes?: string[]) {
   return function (this: SrcBuilder) {
-    this.emit('(', args, ')=>{').emitList(statements, ';').emit('}');
+    this.emit('(');
+    for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      const type = argTypes && argTypes[i];
+      this.emit(arg);
+      if (type && this.file.options.isTypeScript) {
+        this.emit(':', type);
+      }
+      this.emit(',');
+    }
+    this.emit(')=>{').emitList(statements, ';').emit('}');
   };
 }
 
@@ -447,7 +548,7 @@ export function isStatement(code: string) {
 const STRING_LITERAL = /(["'`])((\\{2})*|((\n|.)*?[^\\](\\{2})*))\1/g;
 
 // https://regexr.com/6cpk4
-const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,]+/;
+const EXPRESSION_SEPARATORS = /[()\[\]{}.\?:\-+/*,|&]+/;
 
 // https://regexr.com/6cpka
 const EXPRESSION_IDENTIFIER = /^\s*[a-zA-Z0-9_$]+\s*$/;
