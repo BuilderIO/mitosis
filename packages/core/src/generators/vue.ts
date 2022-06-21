@@ -33,7 +33,7 @@ import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { OmitObj } from 'src/helpers/typescript';
+import { OmitObj } from '../helpers/typescript';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
