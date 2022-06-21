@@ -178,9 +178,8 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default {
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": () => import(MyBasicComponent),
-    \\"my-basic-on-mount-update-component\\": () =>
-      import(MyBasicOnMountUpdateComponent),
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
   },
 
   data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
@@ -435,7 +434,7 @@ exports[`Vue ContentSlotHtml 1`] = `
 <script>
 export default {
   name: \\"content-slot-code\\",
-  components: { slot: () => import(Slot) },
+  components: { slot: Slot },
   props: [\\"slotTesting\\"],
 };
 </script>
@@ -683,8 +682,8 @@ import { get } from \\"@fake\\";
 export default {
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": () => import(BuilderBlockComponent),
-    \\"builder-blocks\\": () => import(BuilderBlocks),
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -1294,10 +1293,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: {
-    \\"content-slot-code\\": () => import(ContentSlotCode),
-    slot: () => import(Slot),
-  },
+  components: { \\"content-slot-code\\": ContentSlotCode, slot: Slot },
 };
 </script>
 "
@@ -1314,7 +1310,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": () => import(ContentSlotCode) },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 };
 </script>
 "
