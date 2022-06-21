@@ -147,7 +147,6 @@ const AlphaPreviewMessage = () => (
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
-  previewUrl: 'https://jsx-lite.builder.io/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
