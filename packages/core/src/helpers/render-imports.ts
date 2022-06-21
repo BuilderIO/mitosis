@@ -1,6 +1,9 @@
 import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 
+const DEFAULT_IMPORT = 'default';
+const STAR_IMPORT = '*';
+
 const getStarImport = ({
   theImport,
 }: {
@@ -8,7 +11,7 @@ const getStarImport = ({
 }): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
-    if (value === '*') {
+    if (value === STAR_IMPORT) {
       return key;
     }
   }
@@ -21,7 +24,7 @@ const getDefaultImport = ({
 }): string | null => {
   for (const key in theImport.imports) {
     const value = theImport.imports[key];
-    if (value === 'default') {
+    if (value === DEFAULT_IMPORT) {
       return key;
     }
   }
@@ -43,75 +46,104 @@ const getFileExtensionForTarget = (target: Target) => {
   }
 };
 
+const checkIsComponentImport = (theImport: MitosisImport) =>
+  theImport.path.endsWith('.lite') && !theImport.path.endsWith('.context.lite');
+
 const transformImportPath = (theImport: MitosisImport, target: Target) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '');
   }
 
-  if (theImport.path.endsWith('.lite')) {
+  if (checkIsComponentImport(theImport)) {
     return theImport.path.replace('.lite', getFileExtensionForTarget(target));
   }
 
   return theImport.path;
 };
 
-const getImportedValues = ({ theImport }: { theImport: MitosisImport }) => {
-  let importString = '';
+const getNamedImports = ({ theImport }: { theImport: MitosisImport }) => {
+  const namedImports = Object.entries(theImport.imports)
+    .filter(([, value]) => ![DEFAULT_IMPORT, STAR_IMPORT].includes(value!))
+    .map(([key, value]) => {
+      return key !== value ? `${value} as ${key}` : value;
+    });
 
-  const starImport = getStarImport({ theImport });
-  if (starImport) {
-    importString += ` * as ${starImport} `;
+  if (namedImports.length > 0) {
+    return `{ ${namedImports.join(', ')} }`;
   } else {
-    const defaultImport = getDefaultImport({ theImport });
-
-    if (defaultImport) {
-      importString += ` ${defaultImport}, `;
-    }
-    importString += ' { ';
-
-    let firstAdded = false;
-    for (const key in theImport.imports) {
-      const value = theImport.imports[key];
-      if (['default', '*'].includes(value!)) {
-        continue;
-      }
-      if (firstAdded) {
-        importString += ' , ';
-      } else {
-        firstAdded = true;
-      }
-      importString += ` ${value} `;
-
-      if (key !== value) {
-        importString += ` as ${key} `;
-      }
-    }
-    importString += ' } ';
+    return null;
   }
+};
 
-  return importString;
+interface ImportValues {
+  starImport: string | null;
+  defaultImport: string | null;
+  namedImports: string | null;
+}
+
+const getImportedValues = ({
+  theImport,
+}: {
+  theImport: MitosisImport;
+}): ImportValues => {
+  const starImport = getStarImport({ theImport });
+  const defaultImport = getDefaultImport({ theImport });
+  const namedImports = getNamedImports({ theImport });
+
+  return { starImport, defaultImport, namedImports };
+};
+
+const getImportValue = ({
+  defaultImport,
+  namedImports,
+  starImport,
+}: ImportValues) => {
+  if (starImport) {
+    return ` * as ${starImport} `;
+  } else {
+    return [defaultImport, namedImports].filter(Boolean).join(', ');
+  }
 };
 
 export const renderImport = ({
   theImport,
   target,
+  asyncComponentImports,
 }: {
   theImport: MitosisImport;
   target: Target;
+  asyncComponentImports: boolean;
 }): string => {
   const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target);
+  const importValue = getImportValue(importedValues);
 
-  return `import ${importedValues} from '${path}';`;
+  const isComponentImport = checkIsComponentImport(theImport);
+  const shouldBeAsyncImport = asyncComponentImports && isComponentImport;
+
+  if (shouldBeAsyncImport) {
+    const isVueImport = target === 'vue';
+    if (isVueImport && importedValues.namedImports) {
+      console.warn(
+        'Vue: Async Component imports cannot include named imports. Dropping async import. This might break your code.',
+      );
+    } else {
+      return `const ${importValue} = () => import('${path}')`;
+    }
+  }
+
+  return `import ${importValue} from '${path}';`;
 };
 
 export const renderImports = ({
   imports,
   target,
+  asyncComponentImports,
 }: {
   imports: MitosisImport[];
   target: Target;
+  asyncComponentImports: boolean;
 }): string =>
   imports
     .filter((theImport) => {
@@ -126,14 +158,25 @@ export const renderImports = ({
         return true;
       }
     })
-    .map((theImport) => renderImport({ theImport, target }))
+    .map((theImport) =>
+      renderImport({ theImport, target, asyncComponentImports }),
+    )
     .join('\n');
 
-export const renderPreComponent = (
-  component: MitosisComponent,
-  target: Target,
-): string => `
-    ${renderImports({ imports: component.imports, target })}
+export const renderPreComponent = ({
+  component,
+  target,
+  asyncComponentImports = false,
+}: {
+  component: MitosisComponent;
+  target: Target;
+  asyncComponentImports?: boolean;
+}): string => `
+    ${renderImports({
+      imports: component.imports,
+      target,
+      asyncComponentImports,
+    })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent || ''}
   `;

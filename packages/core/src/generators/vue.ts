@@ -29,9 +29,8 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 
@@ -39,10 +38,13 @@ function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
+export type VueVersion = 2 | 3;
+
 export interface ToVueOptions extends BaseTranspilerOptions {
-  vueVersion?: 2 | 3;
+  vueVersion: VueVersion;
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
+  asyncComponentImports?: boolean;
 }
 
 function getContextNames(json: MitosisComponent) {
@@ -86,7 +88,7 @@ const NODE_MAPPERS: {
       json.properties._forName
     }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
 
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
       return `<template :key="${encodeQuotes(
         keyValue?.code || 'index',
@@ -105,7 +107,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       return `
       <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
@@ -382,6 +384,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
+  vueVersion: 2,
 };
 
 const mergeOptions = (
@@ -393,11 +396,33 @@ const mergeOptions = (
   plugins: [...pluginsA, ...pluginsB],
 });
 
+const generateComponentImport =
+  (options: ToVueOptions) =>
+  (componentName: string): string => {
+    const key = kebabCase(componentName);
+    if (options.vueVersion === 3 && options.asyncComponentImports) {
+      return `'${key}': defineAsyncComponent(${componentName})`;
+    } else {
+      return `'${key}': ${componentName}`;
+    }
+  };
+
+const generateComponents = (
+  componentsUsed: string[],
+  options: ToVueOptions,
+): string => {
+  if (componentsUsed.length === 0) {
+    return '';
+  } else {
+    return `components: { ${componentsUsed
+      .map(generateComponentImport(options))
+      .join(',')} },`;
+  }
+};
+
 export const componentToVue =
-  (userOptions: ToVueOptions = {}) =>
-  // hack while we migrate all other transpilers to receive/handle path
-  // TO-DO: use `Transpiler` once possible
-  ({ component, path }: TranspilerArgs & { path: string }) => {
+  (userOptions: ToVueOptions): Transpiler =>
+  ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -526,30 +551,28 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-      ${renderPreComponent(component, 'vue')}
+    ${
+      options.vueVersion === 3
+        ? 'import { defineAsyncComponent } from "vue"'
+        : ''
+    }
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
 
       export default {
         ${
           !component.name
             ? ''
             : `name: '${
-                options.namePrefix?.(path)
+                path && options.namePrefix?.(path)
                   ? options.namePrefix?.(path) + '-'
                   : ''
               }${kebabCase(component.name)}',`
         }
-        ${
-          !componentsUsed.length
-            ? ''
-            : `components: { ${componentsUsed
-                .map(
-                  (componentName) =>
-                    `'${kebabCase(
-                      componentName,
-                    )}': async () => ${componentName}`,
-                )
-                .join(',')} },`
-        }
+        ${generateComponents(componentsUsed, options)}
         ${
           elementProps.size
             ? `props: ${JSON.stringify(

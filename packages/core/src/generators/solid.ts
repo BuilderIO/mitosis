@@ -305,7 +305,7 @@ export const componentToSolid =
         ? ''
         : `import { css } from "solid-styled-components";`
     }
-    ${renderPreComponent(json, 'solid')}
+    ${renderPreComponent({ component: json, target: 'solid' })}
 
     function ${json.name}(props) {
       ${!hasState ? '' : `const state = createMutable(${stateString});`}

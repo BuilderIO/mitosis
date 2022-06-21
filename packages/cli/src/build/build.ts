@@ -45,23 +45,25 @@ const DEFAULT_OPTIONS: MitosisConfig['options'] = {
   vue: {
     cssNamespace: () => getSimpleId(),
     namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
+    vueVersion: { 2: true, 3: true },
   },
 };
 
-export async function build(config?: MitosisConfig) {
-  const options: MitosisConfig = {
-    ...DEFAULT_CONFIG,
-    ...config,
-    options: {
-      ...DEFAULT_OPTIONS,
-      ...config?.options,
-      vue: {
-        ...DEFAULT_OPTIONS.vue,
-        ...config?.options?.vue,
-      },
+const getOptions = (config?: MitosisConfig): MitosisConfig => ({
+  ...DEFAULT_CONFIG,
+  ...config,
+  options: {
+    ...DEFAULT_OPTIONS,
+    ...config?.options,
+    vue: {
+      ...DEFAULT_OPTIONS.vue,
+      ...config?.options?.vue,
     },
-  };
+  },
+});
 
+export async function build(config?: MitosisConfig) {
+  const options = getOptions(config);
   await clean(options);
 
   const tsLiteFiles = await Promise.all(
@@ -83,10 +85,10 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     options.targets.map(async (target) => {
-      const jsFiles = await buildTsFiles({ target, options });
+      const jsFiles = await buildNonComponentFiles({ target, options });
       await Promise.all([
-        outputTsFiles(target, jsFiles, options),
-        outputTsxLiteFiles(target, tsLiteFiles, options),
+        outputNonComponentFiles(target, jsFiles, options),
+        buildAndOutputComponentFiles(target, tsLiteFiles, options),
       ]);
       await outputOverrides(target, options);
     }),
@@ -151,7 +153,8 @@ const getTranspilerForTarget = ({
     case 'reactNative':
       return componentToReactNative({ stateType: 'useState' });
     case 'vue':
-      return componentToVue(options.options.vue);
+      const { vueVersion, ...vueOptions } = options.options.vue;
+      return componentToVue({ ...vueOptions, vueVersion: 2 });
     case 'angular':
       return componentToAngular(options.options.angular);
     case 'react':
@@ -165,7 +168,7 @@ const getTranspilerForTarget = ({
     case 'svelte':
       return componentToSvelte(options.options.svelte);
     default:
-      throw new Error('CLI does not support target: ' + target);
+      throw new Error('CLI does not yet support target: ' + target);
   }
 };
 
@@ -180,7 +183,7 @@ const replaceFileExtensionForTarget = ({
 /**
  * Transpiles and outputs Mitosis component files.
  */
-async function outputTsxLiteFiles(
+async function buildAndOutputComponentFiles(
   target: Target,
   files: { path: string; mitosisJson: MitosisComponent }[],
   options: MitosisConfig,
@@ -282,7 +285,7 @@ function getTargetPaths(target: Target) {
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
-async function outputTsFiles(
+async function outputNonComponentFiles(
   target: Target,
   files: { path: string; output: string }[],
   options: MitosisConfig,
@@ -339,7 +342,7 @@ const buildContextFile = async ({
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildTsFiles({
+async function buildNonComponentFiles({
   target,
   options,
 }: {

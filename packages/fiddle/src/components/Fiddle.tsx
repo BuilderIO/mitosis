@@ -387,7 +387,10 @@ export default function Fiddle() {
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
             ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : componentToVue({ plugins })({ component: json, path: '' });
+            : componentToVue({ plugins, vueVersion: 2 })({
+                component: json,
+                path: '',
+              });
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
