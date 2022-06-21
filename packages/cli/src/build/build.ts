@@ -70,14 +70,6 @@ const getMitosisComponentJSONs = async (options: MitosisConfig) => {
   );
 };
 
-/**
- * I need to iterate over the Mitosis Config and come out with a list of:
- *  - Target
- *  - Generator
- *  - targetPath
- *
- * Then, This information can be provided to a function that will build and output the files for each combo.
- */
 interface TargetContext {
   target: Target;
   generator: Transpiler;
@@ -89,13 +81,13 @@ interface TargetContextWithConfig extends TargetContext {
 }
 
 const getTargetContexts = (options: MitosisConfig) =>
-  options.targets.map((target): TargetContext => {
-    return {
+  options.targets.map(
+    (target): TargetContext => ({
       target,
       generator: getGeneratorForTarget({ target, options }),
       outputPath: getTargetPath({ target }),
-    };
-  });
+    }),
+  );
 
 const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
   const jsFiles = await buildNonComponentFiles(targetContext);
