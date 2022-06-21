@@ -1,4 +1,3 @@
-import * as CSS from 'csstype';
 import json5 from 'json5';
 import { size } from 'lodash';
 import { MitosisNode } from '../types/mitosis-node';

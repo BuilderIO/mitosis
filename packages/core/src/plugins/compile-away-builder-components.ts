@@ -11,9 +11,7 @@ import { BuilderElement } from '@builder.io/sdk';
 import { builderElementToMitosisNode } from '../parsers/builder';
 
 function getComponentInputNames(componentName: string): string[] {
-  const componentInfo = Builder.components.find(
-    (item) => item.name === componentName,
-  );
+  const componentInfo = Builder.components.find((item) => item.name === componentName);
   return componentInfo?.inputs?.map((item) => item.name) || [];
 }
 
@@ -111,12 +109,11 @@ export const components: CompileAwayComponentsMap = {
           preserveTextBlocks: true,
         }),
       );
-      const detailChildren: MitosisNode[] = accordionItem.detail.map(
-        (element) =>
-          builderElementToMitosisNode(element, {
-            includeBuilderExtras: true,
-            preserveTextBlocks: true,
-          }),
+      const detailChildren: MitosisNode[] = accordionItem.detail.map((element) =>
+        builderElementToMitosisNode(element, {
+          includeBuilderExtras: true,
+          preserveTextBlocks: true,
+        }),
       );
       return createMitosisNode({
         name: 'div',
@@ -200,9 +197,7 @@ export const components: CompileAwayComponentsMap = {
               flexGrow: '1',
               boxSizing: 'border-box',
               maxWidth: `${
-                (node.bindings.maxWidth?.code &&
-                  Number(node.bindings.maxWidth.code)) ||
-                1200
+                (node.bindings.maxWidth?.code && Number(node.bindings.maxWidth.code)) || 1200
               }px`,
               display: 'flex',
               flexDirection: 'column',
@@ -219,22 +214,17 @@ export const components: CompileAwayComponentsMap = {
   },
   Columns(node: MitosisNode, context, components) {
     const columns = node.children.filter(filterEmptyTextNodes).map((item) => ({
-      width:
-        parseFloat(item.properties.width || item.bindings.width?.code || '0') ||
-        0,
+      width: parseFloat(item.properties.width || item.bindings.width?.code || '0') || 0,
       children: item.children,
     }));
-    const gutterSize =
-      (node.properties.getterSize && parseFloat(node.properties.getterSize)) ||
-      20;
+    const gutterSize = (node.properties.getterSize && parseFloat(node.properties.getterSize)) || 20;
 
     function getWidth(index: number) {
       return (columns[index] && columns[index].width) || 100 / columns.length;
     }
 
     function getColumnWidth(index: number) {
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
+      const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
       return `calc(${getWidth(index)}% - ${subtractWidth}px)`;
     }
     const { properties } = node;
@@ -253,15 +243,14 @@ export const components: CompileAwayComponentsMap = {
               ...(properties.stackColumnsAt === 'never'
                 ? {}
                 : {
-                    [`@media (max-width: ${
-                      properties.stackColumnsAt !== 'tablet' ? 639 : 999
-                    }px)`]: {
-                      flexDirection:
-                        properties.reverseColumnsWhenStacked === 'true'
-                          ? 'column-reverse'
-                          : 'column',
-                      alignItems: 'stretch',
-                    },
+                    [`@media (max-width: ${properties.stackColumnsAt !== 'tablet' ? 639 : 999}px)`]:
+                      {
+                        flexDirection:
+                          properties.reverseColumnsWhenStacked === 'true'
+                            ? 'column-reverse'
+                            : 'column',
+                        alignItems: 'stretch',
+                      },
                   }),
             }),
           },
@@ -611,10 +600,7 @@ function generateBuilderIoSrcSet(image: string): string {
   const isBuilderIo = !!(image || '').match(/builder\.io/);
   return isBuilderIo
     ? [100, 200, 400, 800, 1200, 1600, 2000]
-        .map(
-          (size) =>
-            `${updateQueryParam(image, 'width', String(size))} ${size}w`,
-        )
+        .map((size) => `${updateQueryParam(image, 'width', String(size))} ${size}w`)
         .concat([image])
         .join(', ')
     : '';

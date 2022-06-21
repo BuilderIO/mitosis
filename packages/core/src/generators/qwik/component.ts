@@ -6,7 +6,6 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
-  arrowFnBlock,
   arrowFnValue,
   EmitFn,
   File,
@@ -41,8 +40,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     jsx: true,
     ...options,
   };
-  const extension =
-    (opts.output == 'mjs' ? 'js' : opts.output) + (opts.jsx ? 'x' : '');
+  const extension = (opts.output == 'mjs' ? 'js' : opts.output) + (opts.jsx ? 'x' : '');
   const srcOptions: SrcBuilderOptions = {
     isPretty: !opts.minify,
     isModule: opts.output != 'cjs',
@@ -50,12 +48,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     isJSX: opts.jsx,
   };
   const fileSet = {
-    high: new File(
-      'high.' + extension,
-      srcOptions,
-      opts.qwikLib,
-      opts.qrlPrefix,
-    ),
+    high: new File('high.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
     med: new File('med.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
     low: new File('low.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
   };
@@ -85,11 +78,7 @@ export function addComponent(
     CoreButton: undefined!,
   });
   const componentName = component.name;
-  const handlers = renderHandlers(
-    fileSet.high,
-    componentName,
-    component.children,
-  );
+  const handlers = renderHandlers(fileSet.high, componentName, component.children);
   // If the component has no handlers, than it is probably static
   // and so it is unlikely to be re-rendered on the client, therefore
   // put it in a low priority bucket.
@@ -99,9 +88,7 @@ export function addComponent(
   );
   const onRenderFile = isStatic ? fileSet.low : fileSet.med;
   const componentFile = fileSet.med;
-  const styles = _opts.shareStyles
-    ? getCommonStyles(fileSet).styles
-    : new Map<string, CssStyles>();
+  const styles = _opts.shareStyles ? getCommonStyles(fileSet).styles : new Map<string, CssStyles>();
   collectStyles(component.children, styles);
   let useStyles: EmitFn = () => null;
   if (_opts.shareStyles) {
@@ -123,14 +110,7 @@ export function addComponent(
     function (this: SrcBuilder) {
       return this.emit(
         'return ',
-        renderJSXNodes(
-          onRenderFile,
-          directives,
-          handlers,
-          component.children,
-          styles,
-          {},
-        ),
+        renderJSXNodes(onRenderFile, directives, handlers, component.children, styles, {}),
         ';',
       );
     },
@@ -153,19 +133,11 @@ export function addComponent(
   });
 }
 
-function generateStyles(
-  fromFile: File,
-  dstFile: File,
-  symbol: string,
-  scoped: boolean,
-): EmitFn {
+function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: boolean): EmitFn {
   return function (this: SrcBuilder) {
     this.emit(
       invoke(
-        fromFile.import(
-          fromFile.qwikModule,
-          scoped ? 'withScopedStylesQrl' : 'useStylesQrl',
-        ),
+        fromFile.import(fromFile.qwikModule, scoped ? 'withScopedStylesQrl' : 'useStylesQrl'),
         [generateQrl(fromFile, dstFile, symbol)],
       ),
       ';',
@@ -175,11 +147,7 @@ function generateStyles(
 
 export function renderUseLexicalScope(file: File) {
   return function (this: SrcBuilder) {
-    return this.emit(
-      'const state=',
-      file.import(file.qwikModule, 'useLexicalScope').name,
-      '()[0]',
-    );
+    return this.emit('const state=', file.import(file.qwikModule, 'useLexicalScope').name, '()[0]');
   };
 }
 
@@ -213,27 +181,24 @@ function addComponentOnMount(
         );
     });
   }
-  componentFile.exportConst(
-    componentName + '_onMount',
-    function (this: SrcBuilder) {
-      this.emit(
-        arrowFnValue(['state'], () =>
-          this.emit(
-            '{',
-            'if(!state.__INIT__){',
-            'state.__INIT__=true;',
-            ...inputInitializer,
-            'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
-            iif(component.hooks.onMount?.code),
-            '}',
-            useStyles,
-            onRenderEmit,
-            ';}',
-          ),
+  componentFile.exportConst(componentName + '_onMount', function (this: SrcBuilder) {
+    this.emit(
+      arrowFnValue(['state'], () =>
+        this.emit(
+          '{',
+          'if(!state.__INIT__){',
+          'state.__INIT__=true;',
+          ...inputInitializer,
+          'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
+          iif(component.hooks.onMount?.code),
+          '}',
+          useStyles,
+          onRenderEmit,
+          ';}',
         ),
-      );
-    },
-  );
+      ),
+    );
+  });
 }
 
 function generateQrl(

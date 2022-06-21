@@ -49,10 +49,7 @@ const rule: Rule.RuleModule = {
           node: value.expression as any,
           message: 'Callback value must be an arrow function expression',
           fix(fixer) {
-            return fixer.replaceTextRange(
-              node.value.expression.range as AST.Range,
-              '(event)=>{}',
-            );
+            return fixer.replaceTextRange(node.value.expression.range as AST.Range, '(event)=>{}');
           },
         });
       },

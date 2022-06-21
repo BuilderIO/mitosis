@@ -26,10 +26,7 @@ export function MyComponent() {
 
   return (
     <div>
-      <input
-        value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
-      />
+      <input value={state.name} onChange={(event) => (state.name = event.target.value)} />
     </div>
   );
 }

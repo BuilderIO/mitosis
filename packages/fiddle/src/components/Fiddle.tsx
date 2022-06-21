@@ -218,8 +218,7 @@ const plugins = [
       ...styles,
       boxSizing: undefined,
       flexShrink: undefined,
-      alignItems:
-        styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
     }),
   }),
 ];
@@ -264,17 +263,14 @@ export default function Fiddle() {
             });
 
             const elementIndex =
-              Array.from(state.code.substring(0, index).matchAll(openTagRe))
-                .length - 1;
+              Array.from(state.code.substring(0, index).matchAll(openTagRe)).length - 1;
 
             if (elementIndex === -1) {
               return;
             }
 
             (
-              document.querySelector(
-                'builder-editor iframe',
-              ) as HTMLIFrameElement
+              document.querySelector('builder-editor iframe') as HTMLIFrameElement
             )?.contentWindow?.postMessage(
               {
                 type: 'builder.changeSelection',
@@ -290,14 +286,11 @@ export default function Fiddle() {
     },
     options: {
       reactStyleType:
-        localStorageGet('options.reactStyleType') ||
-        ('styled-jsx' as 'emotion' | 'styled-jsx'),
+        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
       reactStateType:
-        localStorageGet('options.reactStateType') ||
-        ('useState' as 'useState' | 'mobx' | 'solid'),
+        localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
-        localStorageGet('options.svelteStateType') ||
-        ('variables' as 'variables' | 'proxies'),
+        localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -313,9 +306,7 @@ export default function Fiddle() {
         format: 'html',
       }).state;
 
-      const builderJson = await liquidToBuilder(
-        state.inputCode.replace(reactiveScriptRe, ''),
-      );
+      const builderJson = await liquidToBuilder(state.inputCode.replace(reactiveScriptRe, ''));
 
       const jsx = builderContentToMitosisComponent({
         data: { blocks: builderJson },
@@ -438,9 +429,7 @@ export default function Fiddle() {
   useEventListener<MessageEvent>(window, 'message', (e) => {
     if (e.data?.type === 'builder.saveCommand') {
       if (e.data.data || state.pendingBuilderChange) {
-        state.applyPendingBuilderChange(
-          e.data.data || state.pendingBuilderChange,
-        );
+        state.applyPendingBuilderChange(e.data.data || state.pendingBuilderChange);
       }
     } else if (e.data?.type === 'builder.selectionChange') {
       if (SYNC_SELECTIONS) {
@@ -463,14 +452,8 @@ export default function Fiddle() {
                 if (monaco) {
                   const start = indexToRowAndColumn(code, index - 1);
                   const end = indexToRowAndColumn(code, index + length + 1);
-                  const startPosition = new monaco.Position(
-                    start.row + 1,
-                    start.column + 1,
-                  );
-                  const endPosition = new monaco.Position(
-                    end.row + 1,
-                    end.column + 1,
-                  );
+                  const startPosition = new monaco.Position(start.row + 1, start.column + 1);
+                  const endPosition = new monaco.Position(end.row + 1, end.column + 1);
 
                   monacoEditorRef.current?.setSelection(
                     monaco.Selection.fromPositions(startPosition, endPosition),
@@ -607,12 +590,7 @@ export default function Fiddle() {
                 paddingLeft: 20,
               }}
             >
-              <Image
-                alt="Mitosis Logo"
-                src={'/mitosis-logo-white.png'}
-                width={130}
-                height={40}
-              />
+              <Image alt="Mitosis Logo" src={'/mitosis-logo-white.png'} width={130} height={40} />
             </a>
             <div
               css={{
@@ -633,9 +611,7 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/figma-html"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                Figma
-              </span>
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>Figma</span>
               <img
                 width={20}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
@@ -653,9 +629,7 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/vscode"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                VS Code
-              </span>
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>VS Code</span>
               <img
                 width={30}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
@@ -741,9 +715,7 @@ export default function Fiddle() {
                   padding: '0 15px',
                   marginTop: 'auto',
                   marginBottom: 'auto',
-                  color: theme.darkMode
-                    ? 'rgba(255, 255, 255, 0.7)'
-                    : 'rgba(0, 0, 0, 0.7)',
+                  color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                 }}
               >
                 Inputs:
@@ -790,9 +762,7 @@ export default function Fiddle() {
                   }}
                   renderValue={(value) => (
                     <span css={{ textTransform: 'capitalize' }}>
-                      {value === '_none'
-                        ? 'Choose template'
-                        : (value as string)}
+                      {value === '_none' ? 'Choose template' : (value as string)}
                     </span>
                   )}
                   defaultValue="_none"
@@ -827,9 +797,7 @@ export default function Fiddle() {
                     minimap: { enabled: false },
                     scrollbar: { vertical: 'hidden' },
                   }}
-                  onMount={(editor, monaco) =>
-                    state.setEditorRef(editor, monaco)
-                  }
+                  onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
                   theme={monacoTheme}
                   height="calc(100vh - 105px)"
                   language="typescript"
@@ -978,18 +946,9 @@ export default function Fiddle() {
                   value="react"
                 />
 
-                <Tab
-                  label={<TabLabelWithIcon label="Angular" />}
-                  value="angular"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Svelte" />}
-                  value="svelte"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="React Native" />}
-                  value="reactNative"
-                />
+                <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
+                <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
                 <Tab
                   label={
@@ -1000,14 +959,8 @@ export default function Fiddle() {
                   }
                   value="solid"
                 />
-                <Tab
-                  label={<TabLabelWithIcon label="Stencil" />}
-                  value="stencil"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Webcomponents" />}
-                  value="webcomponents"
-                />
+                <Tab label={<TabLabelWithIcon label="Stencil" />} value="stencil" />
+                <Tab label={<TabLabelWithIcon label="Webcomponents" />} value="webcomponents" />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
                   label={
@@ -1018,14 +971,8 @@ export default function Fiddle() {
                   }
                   value="liquid"
                 />
-                <Tab
-                  label={<TabLabelWithIcon label="Template" />}
-                  value="template"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Mitosis" />}
-                  value="mitosis"
-                />
+                <Tab label={<TabLabelWithIcon label="Template" />} value="template" />
+                <Tab label={<TabLabelWithIcon label="Mitosis" />} value="mitosis" />
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -1065,10 +1012,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   Style library:
                 </Typography>
                 <RadioGroup
@@ -1109,11 +1053,7 @@ export default function Fiddle() {
               </div>
               <Divider css={{ opacity: 0.6 }} />
             </Show>
-            <Show
-              when={
-                state.outputTab === 'react' || state.outputTab === 'reactNative'
-              }
-            >
+            <Show when={state.outputTab === 'react' || state.outputTab === 'reactNative'}>
               <div
                 css={{
                   display: 'flex',
@@ -1121,10 +1061,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   State library:
                 </Typography>
                 <RadioGroup
@@ -1179,10 +1116,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   State handling:
                 </Typography>
                 <RadioGroup
@@ -1242,8 +1176,7 @@ export default function Fiddle() {
                   language={
                     state.outputTab === 'swift'
                       ? 'swift'
-                      : state.outputTab === 'json' ||
-                        state.outputTab === 'builder'
+                      : state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'reactNative' ||
@@ -1293,9 +1226,7 @@ export default function Fiddle() {
                 flexGrow: 1,
                 textAlign: 'left',
                 padding: '10px 15px',
-                color: theme.darkMode
-                  ? 'rgba(255, 255, 255, 0.7)'
-                  : 'rgba(0, 0, 0, 0.7)',
+                color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
               }}
             >
               Builder.io
@@ -1328,9 +1259,7 @@ export default function Fiddle() {
             {`
             builder-editor { 
               flex-grow: 1; 
-              pointer-events: ${
-                state.isDraggingBuilderCodeBar ? 'none' : 'auto'
-              }; 
+              pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
             }`}
           </style>
           <BuilderEditor

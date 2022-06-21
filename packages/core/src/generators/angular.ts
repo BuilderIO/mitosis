@@ -49,9 +49,7 @@ const mappers: {
     return `<ng-content ${Object.keys(json.bindings)
       .map((binding) => {
         if (binding === 'name') {
-          const selector = kebabCase(
-            json.bindings.name?.code?.replace('props.slot', ''),
-          );
+          const selector = kebabCase(json.bindings.name?.code?.replace('props.slot', ''));
           return `select="[${selector}]"`;
         }
 
@@ -86,9 +84,7 @@ export const blockToAngular = (
     return json.properties._text;
   }
   if (/props\.slot/.test(json.bindings._text?.code as string)) {
-    const selector = kebabCase(
-      json.bindings._text?.code?.replace('props.slot', ''),
-    );
+    const selector = kebabCase(json.bindings._text?.code?.replace('props.slot', ''));
     return `<ng-content select="[${selector}]"></ng-content>`;
   }
 
@@ -105,24 +101,21 @@ export const blockToAngular = (
   const needsToRenderSlots = [];
 
   if (json.name === 'For') {
-    str += `<ng-container *ngFor="let ${
-      json.properties._forName
-    } of ${stripStateAndPropsRefs(json.bindings.each?.code, {
+    str += `<ng-container *ngFor="let ${json.properties._forName} of ${stripStateAndPropsRefs(
+      json.bindings.each?.code,
+      {
+        contextVars,
+        outputVars,
+      },
+    )}">`;
+    str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
+    str += `</ng-container>`;
+  } else if (json.name === 'Show') {
+    str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
       contextVars,
       outputVars,
     })}">`;
-    str += json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
-      .join('\n');
-    str += `</ng-container>`;
-  } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${stripStateAndPropsRefs(
-      json.bindings.when?.code,
-      { contextVars, outputVars },
-    )}">`;
-    str += json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
-      .join('\n');
+    str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
     const elSelector = childComponents.find((impName) => impName === json.name)
@@ -161,24 +154,17 @@ export const blockToAngular = (
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
-        if (
-          event === 'change' &&
-          json.name === 'input' /* todo: other tags */
-        ) {
+        if (event === 'change' && json.name === 'input' /* todo: other tags */) {
           event = 'input';
         }
         // TODO: proper babel transform to replace. Util for this
         const eventName = cusArgs[0];
         const regexp = new RegExp(
-          '(^|\\n|\\r| |;|\\(|\\[|!)' +
-            eventName +
-            '(\\?\\.|\\.|\\(| |;|\\)|$)',
+          '(^|\\n|\\r| |;|\\(|\\[|!)' + eventName + '(\\?\\.|\\.|\\(| |;|\\)|$)',
           'g',
         );
         const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(
-          useValue.replace(regexp, replacer),
-        );
+        const finalValue = removeSurroundingBlock(useValue.replace(regexp, replacer));
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'class') {
         str += ` [class]="${useValue}" `;
@@ -186,16 +172,10 @@ export const blockToAngular = (
         str += ` #${useValue} `;
       } else if (key.startsWith('slot')) {
         const lowercaseKey =
-          key.replace('slot', '')[0].toLowerCase() +
-          key.replace('slot', '').substring(1);
-        needsToRenderSlots.push(
-          `${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`,
-        );
+          key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
+        needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(
-          /"/g,
-          "\\'",
-        )}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(/"/g, "\\'")}"  `;
       } else {
         str += ` [${key}]='${useValue}' `;
       }
@@ -210,9 +190,7 @@ export const blockToAngular = (
     }
 
     if (json.children) {
-      str += json.children
-        .map((item) => blockToAngular(item, options, blockOptions))
-        .join('\n');
+      str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     }
 
     str += `</${elSelector}>`;
@@ -231,8 +209,7 @@ export const componentToAngular =
 
     const [forwardProp, hasPropRef] = getPropsRef(json, true);
     const childComponents: string[] = [];
-    const propsTypeRef =
-      json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
+    const propsTypeRef = json.propsTypeRef !== 'any' ? json.propsTypeRef : undefined;
 
     json.imports.forEach(({ imports }) => {
       Object.keys(imports).forEach((key) => {
@@ -247,8 +224,7 @@ export const componentToAngular =
       .filter((key) => localExports[key].usedInLocal)
       .map((key) => `${key} = ${key};`);
 
-    const metaOutputVars: string[] =
-      (json.meta?.useMetadata?.outputs as string[]) || [];
+    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
     const contextVars = Object.keys(json?.context?.get || {});
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
@@ -260,9 +236,7 @@ export const componentToAngular =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(
-      injectables.length || component.hooks?.onInit,
-    );
+    const hasConstructor = Boolean(injectables.length || component.hooks?.onInit);
 
     const props = getProps(component);
     // prevent jsx props from showing up as @Input
@@ -271,10 +245,7 @@ export const componentToAngular =
     }
     props.delete('children');
 
-    const outputVars = uniq([
-      ...metaOutputVars,
-      ...getPropFunctions(component),
-    ]);
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(component)]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
@@ -293,9 +264,7 @@ export const componentToAngular =
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
-      return `this.${isDomRef ? '' : '_'}${refName}${
-        isDomRef ? '.nativeElement' : ''
-      }`;
+      return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
     });
 
     if (options.plugins) {

@@ -11,7 +11,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { extendedHook, MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
@@ -57,11 +57,7 @@ const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-function processBinding(
-  code: string,
-  _options: ToVueOptions,
-  json: MitosisComponent,
-): string {
+function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
   return replaceIdentifiers(
     stripStateAndPropsRefs(code, {
       includeState: true,
@@ -75,24 +71,22 @@ function processBinding(
 }
 
 const NODE_MAPPERS: {
-  [key: string]:
-    | ((json: MitosisNode, options: ToVueOptions) => string)
-    | undefined;
+  [key: string]: ((json: MitosisNode, options: ToVueOptions) => string) | undefined;
 } = {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
     const keyValue = json.bindings.key || { code: 'index' };
-    const forValue = `(${
-      json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
+    const forValue = `(${json.properties._forName}, index) in ${stripStateAndPropsRefs(
+      json.bindings.each?.code,
+    )}`;
 
     if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${encodeQuotes(
-        keyValue?.code || 'index',
-      )}" v-for="${encodeQuotes(forValue)}">
+      return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
+        forValue,
+      )}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
     }
@@ -150,10 +144,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 };
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
-function processDynamicComponents(
-  json: MitosisComponent,
-  _options: ToVueOptions,
-) {
+function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
@@ -180,19 +171,13 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [
-    string,
-    { code: string; arguments?: string[] } | undefined,
-  ]) => {
+  ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
     if (key === '_spread') {
       return '';
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(
-        value?.code,
-        {
-          replaceWith: 'this.',
-        },
-      )})" `;
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
+        replaceWith: 'this.',
+      })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
@@ -227,19 +212,14 @@ const stringifyBinding =
       } else if (key === 'ref') {
         return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(
-          useValue.replace(/"/g, "\\'"),
-        )}" `;
+        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}" `;
       } else {
         return ` :${key}="${encodeQuotes(useValue)}" `;
       }
     }
   };
 
-export const blockToVue = (
-  node: MitosisNode,
-  options: ToVueOptions,
-): string => {
+export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
     return nodeMapper(node, options);
@@ -269,9 +249,7 @@ export const blockToVue = (
   str += `<${node.name} `;
 
   if (node.bindings._spread?.code) {
-    str += `v-bind="${encodeQuotes(
-      stripStateAndPropsRefs(node.bindings._spread.code as string),
-    )}"`;
+    str += `v-bind="${encodeQuotes(stripStateAndPropsRefs(node.bindings._spread.code as string))}"`;
   }
 
   for (const key in node.properties) {
@@ -309,10 +287,7 @@ export const blockToVue = (
   return str + `</${node.name}>`;
 };
 
-function getContextInjectString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.get) {
@@ -325,10 +300,7 @@ function getContextInjectString(
   return str;
 }
 
-function getContextProvideString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextProvideString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.set) {
@@ -337,8 +309,7 @@ function getContextProvideString(
       ${name}: ${
       value
         ? getMemberObjectString(value, {
-            valueMapper: (code) =>
-              stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
+            valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
         : null
     },
@@ -407,16 +378,11 @@ const generateComponentImport =
     }
   };
 
-const generateComponents = (
-  componentsUsed: string[],
-  options: ToVueOptions,
-): string => {
+const generateComponents = (componentsUsed: string[], options: ToVueOptions): string => {
   if (componentsUsed.length === 0) {
     return '';
   } else {
-    return `components: { ${componentsUsed
-      .map(generateComponentImport(options))
-      .join(',')} },`;
+    return `components: { ${componentsUsed.map(generateComponentImport(options)).join(',')} },`;
   }
 };
 
@@ -468,8 +434,7 @@ export const componentToVue =
       data: false,
       getters: true,
       functions: false,
-      valueMapper: (code) =>
-        processBinding(code.replace(GETTER, ''), options, component),
+      valueMapper: (code) => processBinding(code.replace(GETTER, ''), options, component),
     });
 
     let functionsString = getStateObjectStringFromComponent(component, {
@@ -483,16 +448,9 @@ export const componentToVue =
 
     // Component references to include in `component: { YourComponent, ... }
     const componentsUsed = Array.from(getComponentsUsed(component))
-      .filter(
-        (name) =>
-          name.length &&
-          !name.includes('.') &&
-          name[0].toUpperCase() === name[0],
-      )
+      .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
       // Strip out components that compile away
-      .filter(
-        (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
-      );
+      .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
     dataString = dataString.replace(
@@ -513,9 +471,7 @@ export const componentToVue =
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children
-      .map((item) => blockToVue(item, options))
-      .join('\n');
+    const template = component.children.map((item) => blockToVue(item, options)).join('\n');
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
@@ -535,14 +491,10 @@ export const componentToVue =
     }
 
     if (localVarAsFunc.length) {
-      functionsString = functionsString.replace(
-        /}\s*$/,
-        `${localVarAsFunc.join(',')}}`,
-      );
+      functionsString = functionsString.replace(/}\s*$/, `${localVarAsFunc.join(',')}}`);
     }
 
-    const onUpdateWithDeps =
-      component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    const onUpdateWithDeps = component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
@@ -551,11 +503,7 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-    ${
-      options.vueVersion === 3
-        ? 'import { defineAsyncComponent } from "vue"'
-        : ''
-    }
+    ${options.vueVersion === 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
@@ -567,18 +515,14 @@ export const componentToVue =
           !component.name
             ? ''
             : `name: '${
-                path && options.namePrefix?.(path)
-                  ? options.namePrefix?.(path) + '-'
-                  : ''
+                path && options.namePrefix?.(path) ? options.namePrefix?.(path) + '-' : ''
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter(
-                  (prop) => prop !== 'children' && prop !== 'class',
-                ),
+                Array.from(elementProps).filter((prop) => prop !== 'children' && prop !== 'class'),
               )},`
             : ''
         }
@@ -607,11 +551,7 @@ export const componentToVue =
         ${
           component.hooks.onMount?.code
             ? `mounted() {
-                ${processBinding(
-                  component.hooks.onMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onMount.code, options, component)}
               },`
             : ''
         }
@@ -642,11 +582,7 @@ export const componentToVue =
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(
-                  component.hooks.onUnMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onUnMount.code, options, component)}
               },`
             : ''
         }

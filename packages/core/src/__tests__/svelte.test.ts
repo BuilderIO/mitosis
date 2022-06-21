@@ -60,9 +60,7 @@ describe('Svelte', () => {
     test('Parse context', () => {
       const component = parseContext(simpleExample, { name: 'SimpleExample' });
       if (!component) {
-        throw new Error(
-          'No parseable context found for simple.context.lite.ts',
-        );
+        throw new Error('No parseable context found for simple.context.lite.ts');
       }
       expect(component).toMatchSnapshot();
       const context = contextToSvelte()({ context: component });

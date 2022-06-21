@@ -73,9 +73,7 @@ ruleTester.run('no-var-name-same-as-state-property', rule, {
         );
       }
       `,
-      errors: [
-        'variables with the same name as a state property will shadow it',
-      ],
+      errors: ['variables with the same name as a state property will shadow it'],
     },
   ],
 });

@@ -15,11 +15,7 @@ export default function FormInputComponent(props: FormInputProps) {
   return (
     <input
       {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : 'default-key'
-      }
+      key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}
       placeholder={props.placeholder}
       type={props.type}
       name={props.name}

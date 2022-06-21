@@ -4,10 +4,7 @@ import { devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export function configFor(
-  packageName: string,
-  port: number,
-): PlaywrightTestConfig {
+export function configFor(packageName: string, port: number): PlaywrightTestConfig {
   return {
     testDir: __dirname + '/tests',
     /* Maximum time one test can run for. */

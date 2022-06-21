@@ -44,10 +44,7 @@ export function renderStyles(styles: Map<string, CssStyles>) {
     styles.forEach((styles) => {
       this.emit('.', styles.CLASS_NAME, /*'.🏷️�', WS,*/ '{');
       for (const key in styles) {
-        if (
-          key !== 'CLASS_NAME' &&
-          Object.prototype.hasOwnProperty.call(styles, key)
-        ) {
+        if (key !== 'CLASS_NAME' && Object.prototype.hasOwnProperty.call(styles, key)) {
           const value = styles[key];
           if (value && typeof value == 'object') {
             mediaStyles.push(styles.CLASS_NAME, key, value);
@@ -61,10 +58,7 @@ export function renderStyles(styles: Map<string, CssStyles>) {
     while (mediaStyles.length) {
       const className: string = mediaStyles.shift() as string;
       const mediaKey: string = mediaStyles.shift() as string;
-      const mediaObj: Record<string, string> = mediaStyles.shift() as Record<
-        string,
-        string
-      >;
+      const mediaObj: Record<string, string> = mediaStyles.shift() as Record<string, string>;
       this.emit(mediaKey, '{.', className, /*'.🏷️�',*/ '{');
       for (const key in mediaObj) {
         if (Object.prototype.hasOwnProperty.call(mediaObj, key)) {

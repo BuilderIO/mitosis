@@ -21,8 +21,7 @@ export default function MyBasicForComponent() {
                 state.name = event.target.value + ' and ' + person;
               }}
             />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
           </>
         )}
       </For>

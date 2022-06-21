@@ -1,4 +1,3 @@
-import { componentToSvelte } from '../generators/svelte';
 import { parseJsx } from '../parsers/jsx';
 
 const classRaw = require('./data/styles/class.raw');

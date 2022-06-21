@@ -28,8 +28,6 @@ export const rules = {
   'jsx-callback-arrow-function': jsxCallbackArrowFunction,
   'no-var-name-same-as-state-property': noVarNameSameAsStateProperty,
   'only-default-function-and-imports': onlyDefaultFunctionAndImports,
-  'no-conditional-logic-in-component-render':
-    noConditionalLogicInComponentRender,
-  'no-var-declaration-or-assignment-in-component':
-    noVarDeclarationOrAssignmentInComponent,
+  'no-conditional-logic-in-component-render': noConditionalLogicInComponentRender,
+  'no-var-declaration-or-assignment-in-component': noVarDeclarationOrAssignmentInComponent,
 };
