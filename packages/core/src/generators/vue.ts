@@ -386,7 +386,7 @@ const generateComponents = (componentsUsed: string[], options: ToVueOptions): st
   }
 };
 
-export const componentToVue =
+const componentToVue =
   (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
@@ -643,6 +643,12 @@ export const componentToVue =
       match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     );
   };
+
+export const componentToVue2 = (vueOptions?: ToVueOptions) =>
+  componentToVue({ ...vueOptions, vueVersion: '2' });
+
+export const componentToVue3 = (vueOptions?: ToVueOptions) =>
+  componentToVue({ ...vueOptions, vueVersion: '3' });
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

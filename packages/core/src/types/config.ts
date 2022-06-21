@@ -1,5 +1,4 @@
-import { Overwrite } from '../helpers/typescript';
-import { MitosisComponent, VueVersion } from '..';
+import { MitosisComponent } from '..';
 import { Plugin } from './plugins';
 
 export type Format = 'esm' | 'cjs';
@@ -14,13 +13,6 @@ export type GeneratorOptions = {
     transpiler?: TranspilerOptions;
   };
 };
-
-type ExternalVueOptions = Overwrite<
-  GeneratorOptions['vue'],
-  { vueVersion: { [T in VueVersion]?: boolean } }
->;
-
-type Options = Overwrite<GeneratorOptions, { vue: ExternalVueOptions }>;
 
 export interface TranspilerArgs {
   path?: string;
@@ -41,5 +33,5 @@ export type MitosisConfig = {
   dest?: string;
   files?: string | string[];
   overridesDir?: string;
-  options: Partial<Options>;
+  options: Partial<GeneratorOptions>;
 };

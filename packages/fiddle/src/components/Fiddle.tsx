@@ -14,13 +14,13 @@ import {
   componentToSvelte,
   componentToSwift,
   componentToTemplate,
-  componentToVue,
   liquidToBuilder,
   angularToMitosisComponent,
   mapStyles,
   parseJsx,
   parseReactiveScript,
   reactiveScriptRe,
+  componentToVue2,
 } from '@builder.io/mitosis';
 import {
   Button,
@@ -378,10 +378,7 @@ export default function Fiddle() {
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
             ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : componentToVue({ plugins, vueVersion: '2' })({
-                component: json,
-                path: '',
-              });
+            : componentToVue2({ plugins })({ component: json, path: '' });
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);

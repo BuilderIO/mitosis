@@ -3,7 +3,6 @@ import {
   componentToReactNative,
   componentToSolid,
   componentToSwift,
-  componentToVue,
   componentToHtml,
   componentToCustomElement,
   MitosisComponent,
@@ -13,7 +12,8 @@ import {
   Transpiler,
   componentToSvelte,
   componentToAngular,
-  VueVersion,
+  componentToVue2,
+  componentToVue3,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
@@ -38,7 +38,7 @@ const DEFAULT_CONFIG: MitosisConfig = {
     vue: {
       cssNamespace: () => getSimpleId(),
       namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
-      vueVersion: { 2: true, 3: true },
+      vueVersion: '2',
     },
   },
 };
@@ -204,26 +204,21 @@ const getContextsForTarget = ({
         },
       ];
     case 'vue':
-      const { vueVersion, ...vueOptions } = options.options.vue;
+    case 'vue2':
       return [
-        ...(vueVersion['2']
-          ? [
-              {
-                target,
-                outputPath: getTargetPath({ target, vueVersion: '2' }),
-                generator: componentToVue({ ...vueOptions, vueVersion: '2' }),
-              },
-            ]
-          : []),
-        ...(vueVersion['3']
-          ? [
-              {
-                target,
-                outputPath: getTargetPath({ target, vueVersion: '3' }),
-                generator: componentToVue({ ...vueOptions, vueVersion: '3' }),
-              },
-            ]
-          : []),
+        {
+          target,
+          outputPath: getTargetPath({ target }),
+          generator: componentToVue2(options.options.vue2),
+        },
+      ];
+    case 'vue3':
+      return [
+        {
+          target,
+          outputPath: getTargetPath({ target }),
+          generator: componentToVue3(options.options.vue3),
+        },
       ];
     case 'angular':
       return [
@@ -341,6 +336,8 @@ async function buildAndOutputComponentFiles({
         });
         break;
       case 'vue':
+      case 'vue2':
+      case 'vue3':
         // TODO: transform to CJS (?)
         transpiled = transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1');
     }
@@ -360,20 +357,13 @@ async function buildAndOutputComponentFiles({
   await Promise.all(output);
 }
 
-const getTargetPath = ({
-  target,
-  vueVersion,
-}: {
-  target: Target;
-  vueVersion?: VueVersion;
-}): string => {
+const getTargetPath = ({ target }: { target: Target }): string => {
   switch (target) {
+    case 'vue2':
+      return 'vue/vue2';
     case 'vue':
-      if (vueVersion === '3') {
-        return 'vue/vue3';
-      } else {
-        return 'vue/vue2';
-      }
+    case 'vue3':
+      return 'vue/vue3';
     default:
       return kebabCase(target);
   }
