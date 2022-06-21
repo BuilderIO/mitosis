@@ -89,10 +89,13 @@ interface TargetContextWithConfig extends TargetContext {
 }
 
 const getTargetContexts = (options: MitosisConfig) =>
-  options.targets.reduce<TargetContext[]>(
-    (acc, target) => [...acc, ...getContextsForTarget({ target, options })],
-    [],
-  );
+  options.targets.map((target): TargetContext => {
+    return {
+      target,
+      generator: getGeneratorForTarget({ target, options }),
+      outputPath: getTargetPath({ target }),
+    };
+  });
 
 const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
   const jsFiles = await buildNonComponentFiles(targetContext);
@@ -159,103 +162,38 @@ async function outputOverrides({ target, options, outputPath }: TargetContextWit
   );
 }
 
-const getContextsForTarget = ({
+const getGeneratorForTarget = ({
   target,
   options,
 }: {
   target: Target;
   options: MitosisConfig;
-}): TargetContext[] => {
+}): TargetContext['generator'] => {
   switch (target) {
     case 'customElement':
-      return [
-        {
-          generator: componentToCustomElement(options.options.customElement),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToCustomElement(options.options.customElement);
     case 'html':
-      return [
-        {
-          generator: componentToHtml(options.options.html),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToHtml(options.options.html);
     case 'reactNative':
-      return [
-        {
-          generator: componentToReactNative({ stateType: 'useState' }),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
-    case 'vue':
+      return componentToReactNative({ stateType: 'useState' });
     case 'vue2':
-      return [
-        {
-          target,
-          outputPath: getTargetPath({ target }),
-          generator: componentToVue2(options.options.vue2),
-        },
-      ];
+      return componentToVue2(options.options.vue2);
+    case 'vue':
+      console.log('Targetting Vue: defaulting to vue v3');
     case 'vue3':
-      return [
-        {
-          target,
-          outputPath: getTargetPath({ target }),
-          generator: componentToVue3(options.options.vue3),
-        },
-      ];
+      return componentToVue3(options.options.vue3);
     case 'angular':
-      return [
-        {
-          generator: componentToAngular(options.options.angular),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToAngular(options.options.angular);
     case 'react':
-      return [
-        {
-          generator: componentToReact(options.options.react),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToReact(options.options.react);
     case 'swift':
-      return [
-        {
-          generator: componentToSwift(options.options.swift),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToSwift(options.options.swift);
     case 'solid':
-      return [
-        {
-          generator: componentToSolid(options.options.solid),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToSolid(options.options.solid);
     case 'webcomponent':
-      return [
-        {
-          generator: componentToCustomElement(options.options.webcomponent),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToCustomElement(options.options.webcomponent);
     case 'svelte':
-      return [
-        {
-          generator: componentToSvelte(options.options.svelte),
-          outputPath: getTargetPath({ target }),
-          target,
-        },
-      ];
+      return componentToSvelte(options.options.svelte);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
