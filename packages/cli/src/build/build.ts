@@ -21,7 +21,6 @@ import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
 import { getFileExtensionForTarget } from './helpers/extensions';
-import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
 import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
@@ -29,18 +28,11 @@ import { buildContextFile } from './helpers/context';
 
 const cwd = process.cwd();
 
-const DEFAULT_CONFIG: MitosisConfig = {
+const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   targets: [],
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
-  options: {
-    vue: {
-      cssNamespace: () => getSimpleId(),
-      namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
-      vueVersion: '2',
-    },
-  },
 };
 
 const getOptions = (config?: MitosisConfig): MitosisConfig => ({
@@ -49,10 +41,6 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   options: {
     ...DEFAULT_CONFIG.options,
     ...config?.options,
-    vue: {
-      ...DEFAULT_CONFIG.options?.vue,
-      ...config?.options?.vue,
-    },
   },
 });
 
