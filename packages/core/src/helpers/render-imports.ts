@@ -30,6 +30,8 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'solid':
       return '.jsx';
     case 'vue':
+    case 'vue2':
+    case 'vue3':
       return '.vue';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to one place.

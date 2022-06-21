@@ -29,6 +29,8 @@ export const buildContextFile = async ({
       case 'svelte':
         return contextToSvelte(options.options.svelte)({ context });
       case 'vue':
+      case 'vue2':
+      case 'vue3':
         return contextToVue(context);
       case 'solid':
         return contextToSolid()({ context });

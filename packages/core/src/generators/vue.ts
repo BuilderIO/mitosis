@@ -33,6 +33,7 @@ import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { OmitObj } from '../helpers/typescript';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -40,8 +41,11 @@ function encodeQuotes(string: string) {
 
 export type VueVersion = 2 | 3;
 
-export interface ToVueOptions extends BaseTranspilerOptions {
+interface VueVersionOpt {
   vueVersion: VueVersion;
+}
+
+export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
@@ -371,7 +375,7 @@ const generateComponentImport =
   (options: ToVueOptions) =>
   (componentName: string): string => {
     const key = kebabCase(componentName);
-    if (options.vueVersion === 3 && options.asyncComponentImports) {
+    if (options.vueVersion >= 3 && options.asyncComponentImports) {
       return `'${key}': defineAsyncComponent(${componentName})`;
     } else {
       return `'${key}': ${componentName}`;
@@ -386,7 +390,7 @@ const generateComponents = (componentsUsed: string[], options: ToVueOptions): st
   }
 };
 
-export const componentToVue =
+const componentToVue =
   (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
@@ -503,7 +507,7 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-    ${options.vueVersion === 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
+    ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
@@ -643,6 +647,14 @@ export const componentToVue =
       match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     );
   };
+
+type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
+
+export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 2 });
+
+export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 3 });
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

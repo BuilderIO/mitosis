@@ -14,6 +14,9 @@ const getDefaultFormatForTarget = (target: Target): Format => {
   }
 };
 
+/**
+ * Runs `esbuild` on a file, and performs some additional transformations.
+ */
 export const transpile = async ({
   path,
   content,
