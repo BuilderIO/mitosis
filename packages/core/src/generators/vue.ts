@@ -33,6 +33,7 @@ import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { OmitObj } from 'src/helpers/typescript';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -40,8 +41,11 @@ function encodeQuotes(string: string) {
 
 export type VueVersion = '2' | '3';
 
-export interface ToVueOptions extends BaseTranspilerOptions {
+interface VueVersionOpt {
   vueVersion: VueVersion;
+}
+
+export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
@@ -644,10 +648,12 @@ const componentToVue =
     );
   };
 
-export const componentToVue2 = (vueOptions?: ToVueOptions) =>
+type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
+
+export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: '2' });
 
-export const componentToVue3 = (vueOptions?: ToVueOptions) =>
+export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: '3' });
 
 // Remove unused artifacts like empty script or style tags
