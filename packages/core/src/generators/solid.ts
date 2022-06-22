@@ -21,7 +21,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import traverse from 'traverse';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { hasContext } from './helpers/context';

@@ -1,4 +1,5 @@
-import { Target, Transpiler } from '..';
+import { Transpiler } from '../types/transpiler';
+import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
 const basicForShow = require('./data/basic-for-show.raw');

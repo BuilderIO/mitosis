@@ -14,7 +14,7 @@ import { attempt, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
-import { TranspilerArgs } from '../types/config';
+import { TranspilerArgs } from '../types/transpiler';
 
 export interface ToBuilderOptions {
   includeIds?: boolean;

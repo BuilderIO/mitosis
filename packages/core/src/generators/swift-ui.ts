@@ -11,7 +11,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
-import { Transpiler } from '..';
+import { Transpiler } from '../types/transpiler';
 
 export type ToSwiftOptions = {
   prettier?: boolean;
