@@ -31,9 +31,21 @@ export type MitosisConfig = {
    */
   overridesDir?: string;
   /**
-   * Options for each transpilers, e.g.
-   * ```json
+   * Dictionary of per-target configuration.
    *
+   * Example:
+   *
+   * ```js
+   * options: {
+   *   vue: {
+   *     prettier: false,
+   *     namePrefix: (path) => path + '-my-vue-code',
+   *   },
+   *   react: {
+   *     stateType: 'builder';
+   *     stylesType: 'styled-jsx'
+   *   }
+   * }
    * ```
    */
   options: Partial<GeneratorOptions>;
