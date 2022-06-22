@@ -79,9 +79,7 @@ const command: GluegunCommand = {
     const generator = targets[to];
 
     if (out && paths.length > 1) {
-      console.error(
-        `--out doesn't support multiple input files, did you mean --outDir?`,
-      );
+      console.error(`--out doesn't support multiple input files, did you mean --outDir?`);
       process.exit(1);
     }
 
@@ -109,9 +107,7 @@ const command: GluegunCommand = {
 
       // Validate that "--out" file doesn't already exist
       if (force === false && out && filesystem.exists(out) === 'file') {
-        print.error(
-          `${out} already exists. Use --force if you want to overwrite existing files.`,
-        );
+        print.error(`${out} already exists. Use --force if you want to overwrite existing files.`);
         process.exit(1);
       }
 

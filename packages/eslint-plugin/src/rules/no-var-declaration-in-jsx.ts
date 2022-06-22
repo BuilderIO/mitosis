@@ -34,14 +34,10 @@ const rule: Rule.RuleModule = {
     const listener: Rule.RuleListener = {
       VariableDeclarator(node) {
         const ans = context.getAncestors();
-        if (
-          ans.find(types.isJSXElement as any) &&
-          !ans.find(types.isJSXAttribute as any)
-        ) {
+        if (ans.find(types.isJSXElement as any) && !ans.find(types.isJSXAttribute as any)) {
           context.report({
             node: node as any,
-            message:
-              'Variable declaration inside jsx is ignored during compilation',
+            message: 'Variable declaration inside jsx is ignored during compilation',
           });
         }
       },

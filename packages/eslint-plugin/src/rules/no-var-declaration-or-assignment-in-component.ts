@@ -45,10 +45,7 @@ const rule: Rule.RuleModule = {
                     callee: {
                       type: 'Identifier',
                       name: when(
-                        (v) =>
-                          v === HOOKS.STATE ||
-                          v === HOOKS.CONTEXT ||
-                          v === HOOKS.STORE,
+                        (v) => v === HOOKS.STATE || v === HOOKS.CONTEXT || v === HOOKS.STORE,
                       ),
                     },
                   },
@@ -67,8 +64,7 @@ const rule: Rule.RuleModule = {
             (node) => {
               context.report({
                 node: node as any,
-                message:
-                  'Variable declaration inside component is ignored during compilation',
+                message: 'Variable declaration inside component is ignored during compilation',
               });
             },
           )
@@ -94,8 +90,7 @@ const rule: Rule.RuleModule = {
             (node) => {
               context.report({
                 node: node as any,
-                message:
-                  'Variable assignment inside component is ignored during compilation',
+                message: 'Variable assignment inside component is ignored during compilation',
               });
             },
           )

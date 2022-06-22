@@ -25,16 +25,13 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToSwiftOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `${json.children
-      .map((item) => blockToSwift(item, options))
-      .join('\n')}`;
+    return `${json.children.map((item) => blockToSwift(item, options)).join('\n')}`;
   },
   link: () => '',
   Image: (json, options) => {
     return (
       `Image(${
-        processBinding(json.bindings.image?.code as string, options) ||
-        `"${json.properties.image}"`
+        processBinding(json.bindings.image?.code as string, options) || `"${json.properties.image}"`
       })` +
       getStyleString(json, options) +
       getActionsString(json, options)
@@ -89,10 +86,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     return `Text("${json.properties._text.trim().replace(/\s+/g, ' ')}")`;
   }
   if (json.bindings._text) {
-    return `Text(${processBinding(
-      json.bindings._text.code as string,
-      options,
-    )}.toString())`;
+    return `Text(${processBinding(json.bindings._text.code as string, options)}.toString())`;
   }
 
   let str = '';
@@ -174,9 +168,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
 
     str += ` {`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToSwift(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToSwift(item, options)).join('\n');
     }
 
     str += `}`;
@@ -193,10 +185,7 @@ function getActionsString(json: MitosisNode, options: ToSwiftOptions): string {
   let str = '';
   if (json.bindings.onClick) {
     str += `\n.onTapGesture {
-      ${processBinding(
-        wrapAction(json.bindings.onClick.code as string),
-        options,
-      )}
+      ${processBinding(wrapAction(json.bindings.onClick.code as string), options)}
     }`;
   }
   return str;
@@ -225,9 +214,7 @@ function getStyleString(node: MitosisNode, options: ToSwiftOptions): string {
 }
 
 function getJsSource(json: MitosisComponent, options: ToSwiftOptions) {
-  const str = `const state = new Proxy(${getStateObjectStringFromComponent(
-    json,
-  )}, {
+  const str = `const state = new Proxy(${getStateObjectStringFromComponent(json)}, {
     set: (target, key, value) => {
       const returnVal = Reflect.set(target, key, value);
       update();
@@ -277,17 +264,14 @@ function mapDataForSwiftCompatability(json: MitosisComponent) {
   traverse(json).forEach(function (node) {
     if (isMitosisNode(node)) {
       if (node.name === 'input') {
-        if (
-          !Object.keys(node.bindings).filter((item) => item !== 'css').length
-        ) {
+        if (!Object.keys(node.bindings).filter((item) => item !== 'css').length) {
           return;
         }
         if (!node.properties.$name) {
           node.properties.$name = `input${++inputIndex}`;
         }
-        (json.meta.inputNames as Record<string, string>)[
-          node.properties.$name
-        ] = node.bindings.value?.code || '';
+        (json.meta.inputNames as Record<string, string>)[node.properties.$name] =
+          node.bindings.value?.code || '';
       }
     }
   });
@@ -313,9 +297,7 @@ export const componentToSwift =
 
     const hasDyanmicData = componentHasDynamicData(json);
 
-    let children = json.children
-      .map((item) => blockToSwift(item, options))
-      .join('\n');
+    let children = json.children.map((item) => blockToSwift(item, options)).join('\n');
 
     const hasInputNames = Object.keys(json.meta.inputNames || {}).length > 0;
 

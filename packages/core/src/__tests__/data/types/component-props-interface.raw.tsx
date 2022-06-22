@@ -4,7 +4,5 @@ interface Person {
 }
 
 export default function MyBasicComponent(props: Person | never) {
-  return (
-    <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>
-  );
+  return <div>Hello! I can run in React, Vue, Solid, or Liquid! {props.name}</div>;
 }

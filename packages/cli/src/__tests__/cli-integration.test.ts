@@ -39,9 +39,7 @@ test('strips out builder components by default', async () => {
 test('--builder-components keeps builder components', async () => {
   const filepath = path.resolve(__dirname, 'data/triptych.builder.json');
 
-  const output = await cli(
-    `compile --builder-components --from=builder --to=react ${filepath}`,
-  );
+  const output = await cli(`compile --builder-components --from=builder --to=react ${filepath}`);
 
   expect(output).toContain('export default function MyComponent(props) {');
   expect(output).toContain('<Columns');

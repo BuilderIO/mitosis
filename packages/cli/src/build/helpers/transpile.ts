@@ -14,6 +14,9 @@ const getDefaultFormatForTarget = (target: Target): Format => {
   }
 };
 
+/**
+ * Runs `esbuild` on a file, and performs some additional transformations.
+ */
 export const transpile = async ({
   path,
   content,
@@ -27,8 +30,7 @@ export const transpile = async ({
 }) => {
   try {
     const transpilerOptions = options.options[target]?.transpiler;
-    const format =
-      transpilerOptions?.format || getDefaultFormatForTarget(target);
+    const format = transpilerOptions?.format || getDefaultFormatForTarget(target);
 
     let useContent = content ?? (await readFile(path, 'utf8'));
     useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);

@@ -27,12 +27,7 @@ export class File {
     return this.toString();
   }
 
-  constructor(
-    filename: string,
-    options: SrcBuilderOptions,
-    qwikModule: string,
-    qrlPrefix: string,
-  ) {
+  constructor(filename: string, options: SrcBuilderOptions, qwikModule: string, qrlPrefix: string) {
     this.filename = filename;
     this.options = options;
     this.src = new SrcBuilder(this, this.options);
@@ -186,12 +181,7 @@ export class SrcBuilder {
     return this;
   }
 
-  const(
-    name: string,
-    value?: any,
-    export_: boolean = false,
-    locallyVisible: boolean = false,
-  ) {
+  const(name: string, value?: any, export_: boolean = false, locallyVisible: boolean = false) {
     if (export_) {
       this.emit(
         this.isModule
@@ -222,11 +212,7 @@ export class SrcBuilder {
     }
   }
 
-  jsxBegin(
-    symbol: Symbol | string,
-    props: Record<string, any>,
-    bindings: Record<string, any>,
-  ) {
+  jsxBegin(symbol: Symbol | string, props: Record<string, any>, bindings: Record<string, any>) {
     const self = this;
     if (symbol == 'div' && ('href' in props || 'href' in bindings)) {
       // HACK: if we contain href then we are `a` not `div`
@@ -247,15 +233,10 @@ export class SrcBuilder {
       }
     }
     for (const rawKey in bindings) {
-      if (
-        Object.prototype.hasOwnProperty.call(bindings, rawKey) &&
-        !ignoreKey(rawKey)
-      ) {
+      if (Object.prototype.hasOwnProperty.call(bindings, rawKey) && !ignoreKey(rawKey)) {
         let binding = bindings[rawKey];
         binding =
-          binding && typeof binding == 'object' && 'code' in binding
-            ? binding.code
-            : binding;
+          binding && typeof binding == 'object' && 'code' in binding ? binding.code : binding;
         const key = lastProperty(rawKey);
         if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
@@ -267,8 +248,7 @@ export class SrcBuilder {
           binding = iif(binding);
         }
         if (key === 'hide' || key === 'show') {
-          let [truthy, falsy] =
-            key == 'hide' ? ['"none"', '"inherit"'] : ['"inherit"', '"none"'];
+          let [truthy, falsy] = key == 'hide' ? ['"none"', '"inherit"'] : ['"inherit"', '"none"'];
           emitJsxProp('style', function (this: SrcBuilder) {
             this.emit('{display:', binding, '?', truthy, ':', falsy, '}');
           });
@@ -392,11 +372,7 @@ export function quote(text: string) {
   return parts.join('\\u2028');
 }
 
-export function invoke(
-  symbol: Symbol | string,
-  args: any[],
-  typeParameters?: string[],
-) {
+export function invoke(symbol: Symbol | string, args: any[], typeParameters?: string[]) {
   return function (this: SrcBuilder) {
     this.emit(typeof symbol == 'string' ? symbol : symbol.name);
     this.typeParameters(typeParameters);
@@ -423,9 +399,7 @@ export function iif(code: any) {
   if (!code) return;
   code = code.trim();
   if (code.endsWith(_virtual_index) && !code.endsWith(return_virtual_index)) {
-    code =
-      code.substr(0, code.length - _virtual_index.length) +
-      return_virtual_index;
+    code = code.substr(0, code.length - _virtual_index.length) + return_virtual_index;
   }
   return function (this: SrcBuilder) {
     code && this.emit('(()=>{', code, '})()');

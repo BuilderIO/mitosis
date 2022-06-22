@@ -68,15 +68,7 @@ export const htmlElementAttributes: { [key: string]: string[] } = {
     'target',
     'type',
   ],
-  audio: [
-    'autoplay',
-    'controls',
-    'crossorigin',
-    'loop',
-    'muted',
-    'preload',
-    'src',
-  ],
+  audio: ['autoplay', 'controls', 'crossorigin', 'loop', 'muted', 'preload', 'src'],
   base: ['href', 'target'],
   basefont: ['color', 'face', 'size'],
   blockquote: ['cite'],
@@ -283,15 +275,7 @@ export const htmlElementAttributes: { [key: string]: string[] } = {
     'src',
     'type',
   ],
-  select: [
-    'autocomplete',
-    'disabled',
-    'form',
-    'multiple',
-    'name',
-    'required',
-    'size',
-  ],
+  select: ['autocomplete', 'disabled', 'form', 'multiple', 'name', 'required', 'size'],
   slot: ['name'],
   source: ['height', 'media', 'sizes', 'src', 'srcset', 'type', 'width'],
   style: ['media', 'type'],
@@ -379,9 +363,8 @@ export const isHtmlAttribute = (attr: string, tagName: string) => {
   if (/role|aria-/.test(attr)) {
     return true;
   }
-  const getAttr = [
-    ...htmlElementAttributes['*'],
-    ...(htmlElementAttributes[tagName] || []),
-  ].find((attribute) => attr === attribute);
+  const getAttr = [...htmlElementAttributes['*'], ...(htmlElementAttributes[tagName] || [])].find(
+    (attribute) => attr === attribute,
+  );
   return Boolean(getAttr);
 };

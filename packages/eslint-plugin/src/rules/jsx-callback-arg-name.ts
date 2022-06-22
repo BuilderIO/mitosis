@@ -12,8 +12,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'disallow naming the event arg for callbacks anything other than "event".',
+      description: 'disallow naming the event arg for callbacks anything other than "event".',
       recommended: true,
     },
     fixable: 'code',

@@ -54,9 +54,7 @@ const mappers: {
 {#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
       includeState: options.stateType === 'variables',
     })} as ${json.properties._forName}, index }
-${json.children
-  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-  .join('\n')}
+${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
   },
@@ -65,9 +63,7 @@ ${json.children
 {#if ${stripStateAndPropsRefs(json.bindings.when?.code, {
       includeState: options.stateType === 'variables',
     })} }
-${json.children
-  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-  .join('\n')}
+${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
     json.meta.else
@@ -98,9 +94,7 @@ const setContextCode = (json: MitosisComponent) => {
     .map((key) => {
       const { value, name } = contextSetters[key];
       return `setContext(${name}.key, ${
-        value
-          ? stripStateAndPropsRefs(getMemberObjectString(value))
-          : 'undefined'
+        value ? stripStateAndPropsRefs(getMemberObjectString(value)) : 'undefined'
       });`;
     })
     .join('\n');
@@ -152,11 +146,7 @@ const getTagName = ({
 
 type BlockToSvelte = (props: BlockToSvelteProps) => string;
 
-export const blockToSvelte: BlockToSvelte = ({
-  json,
-  options,
-  parentComponent,
-}) => {
+export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
   if (mappers[json.name]) {
     return mappers[json.name]({ json, options, parentComponent });
   }
@@ -207,9 +197,7 @@ export const blockToSvelte: BlockToSvelte = ({
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
-      str += ` on:${event}="{${cusArgs.join(',')} => ${removeSurroundingBlock(
-        useValue,
-      )}}" `;
+      str += ` on:${event}="{${cusArgs.join(',')} => ${removeSurroundingBlock(useValue)}}" `;
     } else if (key === 'ref') {
       str += ` bind:this={${useValue}} `;
     } else {
@@ -263,8 +251,7 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
       if (value && onChange) {
         const { arguments: cusArgs = ['event'] } = onChange;
         if (
-          normalizeStr(onChange.code) ===
-          `${normalizeStr(value.code)}=${cusArgs[0]}.target.value`
+          normalizeStr(onChange.code) === `${normalizeStr(value.code)}=${cusArgs[0]}.target.value`
         ) {
           delete item.bindings.value;
           delete item.bindings.onChange;
@@ -330,9 +317,7 @@ export const componentToSvelte =
         valueMapper: (code) =>
           pipe(
             stripStateAndPropsRefs(
-              code
-                .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-                .replace(/\)/, ') => '),
+              code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
               {
                 includeState: useOptions.stateType === 'variables',
               },
@@ -376,24 +361,12 @@ export const componentToSvelte =
     let str = dedent`
     <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
-      ${
-        !json.hooks.onUpdate?.length
-          ? ''
-          : `import { afterUpdate } from 'svelte'`
-      }
+      ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
-      ${renderPreComponent(json, 'svelte')}
-      ${
-        hasContext(component)
-          ? 'import { getContext, setContext } from "svelte";'
-          : ''
-      }
+      ${renderPreComponent({ component: json, target: 'svelte' })}
+      ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
-      ${
-        !hasData || useOptions.stateType === 'variables'
-          ? ''
-          : `import onChange from 'on-change'`
-      }
+      ${!hasData || useOptions.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
       ${refs
         .concat(props)
         .map((name) => {
@@ -427,19 +400,14 @@ export const componentToSvelte =
         !json.hooks.onUpdate?.length
           ? ''
           : json.hooks.onUpdate
-              .map(
-                (hook) =>
-                  `afterUpdate(() => { ${transformHookCode(hook.code)} })`,
-              )
+              .map((hook) => `afterUpdate(() => { ${transformHookCode(hook.code)} })`)
               .join(';')
       }
 
       ${
         !json.hooks.onUnMount?.code
           ? ''
-          : `onDestroy(() => { ${transformHookCode(
-              json.hooks.onUnMount.code,
-            )} });`
+          : `onDestroy(() => { ${transformHookCode(json.hooks.onUnMount.code)} });`
       }
     </script>
 

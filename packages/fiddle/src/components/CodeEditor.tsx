@@ -5,10 +5,7 @@ import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
 // import { rules } from 'eslint-plugin-mitosis';
 
-import MonacoEditor, {
-  EditorProps as MonacoEditorProps,
-  useMonaco,
-} from '@monaco-editor/react';
+import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 

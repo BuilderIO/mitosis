@@ -1,10 +1,4 @@
-import {
-  Show,
-  onMount,
-  useStore,
-  For,
-  afterUnmount,
-} from '@builder.io/mitosis';
+import { Show, onMount, useStore, For, afterUnmount } from '@builder.io/mitosis';
 import { Builder, BuilderContent, GetContentOptions } from '@builder.io/sdk';
 import { applyPatchWithMinimalMutationChain } from '@builder.io/utils';
 import { useBuilderData } from '@builder.io/mitosis';

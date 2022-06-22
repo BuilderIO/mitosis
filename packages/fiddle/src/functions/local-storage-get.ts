@@ -2,10 +2,7 @@ export type LocalStorageGetOptions = {
   suppressWarning?: boolean;
 };
 
-export const localStorageGet = (
-  key: string,
-  options: LocalStorageGetOptions = {},
-): any => {
+export const localStorageGet = (key: string, options: LocalStorageGetOptions = {}): any => {
   try {
     const val = localStorage.getItem(key);
     if (typeof val === 'string') {

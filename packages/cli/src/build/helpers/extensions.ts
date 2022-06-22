@@ -13,6 +13,8 @@ export const getFileExtensionForTarget = (target: Target) => {
     case 'swift':
       return '.swift';
     case 'vue':
+    case 'vue2':
+    case 'vue3':
       return '.vue';
     case 'webcomponent':
       return '.ts';

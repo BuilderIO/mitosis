@@ -11,7 +11,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { extendedHook, MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
@@ -29,20 +29,26 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/config';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { OmitObj } from '../helpers/typescript';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
-export interface ToVueOptions extends BaseTranspilerOptions {
-  vueVersion?: 2 | 3;
+export type VueVersion = 2 | 3;
+
+interface VueVersionOpt {
+  vueVersion: VueVersion;
+}
+
+export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
+  asyncComponentImports?: boolean;
 }
 
 function getContextNames(json: MitosisComponent) {
@@ -55,11 +61,7 @@ const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-function processBinding(
-  code: string,
-  _options: ToVueOptions,
-  json: MitosisComponent,
-): string {
+function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
   return replaceIdentifiers(
     stripStateAndPropsRefs(code, {
       includeState: true,
@@ -73,24 +75,22 @@ function processBinding(
 }
 
 const NODE_MAPPERS: {
-  [key: string]:
-    | ((json: MitosisNode, options: ToVueOptions) => string)
-    | undefined;
+  [key: string]: ((json: MitosisNode, options: ToVueOptions) => string) | undefined;
 } = {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
     const keyValue = json.bindings.key || { code: 'index' };
-    const forValue = `(${
-      json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
+    const forValue = `(${json.properties._forName}, index) in ${stripStateAndPropsRefs(
+      json.bindings.each?.code,
+    )}`;
 
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${encodeQuotes(
-        keyValue?.code || 'index',
-      )}" v-for="${encodeQuotes(forValue)}">
+      return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
+        forValue,
+      )}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
     }
@@ -105,7 +105,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       return `
       <template v-if="${encodeQuotes(ifValue)}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
@@ -148,10 +148,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 };
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
-function processDynamicComponents(
-  json: MitosisComponent,
-  _options: ToVueOptions,
-) {
+function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
@@ -178,19 +175,13 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [
-    string,
-    { code: string; arguments?: string[] } | undefined,
-  ]) => {
+  ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
     if (key === '_spread') {
       return '';
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(
-        value?.code,
-        {
-          replaceWith: 'this.',
-        },
-      )})" `;
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
+        replaceWith: 'this.',
+      })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
@@ -225,19 +216,14 @@ const stringifyBinding =
       } else if (key === 'ref') {
         return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(
-          useValue.replace(/"/g, "\\'"),
-        )}" `;
+        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}" `;
       } else {
         return ` :${key}="${encodeQuotes(useValue)}" `;
       }
     }
   };
 
-export const blockToVue = (
-  node: MitosisNode,
-  options: ToVueOptions,
-): string => {
+export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
     return nodeMapper(node, options);
@@ -267,9 +253,7 @@ export const blockToVue = (
   str += `<${node.name} `;
 
   if (node.bindings._spread?.code) {
-    str += `v-bind="${encodeQuotes(
-      stripStateAndPropsRefs(node.bindings._spread.code as string),
-    )}"`;
+    str += `v-bind="${encodeQuotes(stripStateAndPropsRefs(node.bindings._spread.code as string))}"`;
   }
 
   for (const key in node.properties) {
@@ -307,10 +291,7 @@ export const blockToVue = (
   return str + `</${node.name}>`;
 };
 
-function getContextInjectString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.get) {
@@ -323,10 +304,7 @@ function getContextInjectString(
   return str;
 }
 
-function getContextProvideString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextProvideString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.set) {
@@ -335,8 +313,7 @@ function getContextProvideString(
       ${name}: ${
       value
         ? getMemberObjectString(value, {
-            valueMapper: (code) =>
-              stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
+            valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
         : null
     },
@@ -382,6 +359,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
+  vueVersion: 2,
 };
 
 const mergeOptions = (
@@ -393,11 +371,28 @@ const mergeOptions = (
   plugins: [...pluginsA, ...pluginsB],
 });
 
-export const componentToVue =
-  (userOptions: ToVueOptions = {}) =>
-  // hack while we migrate all other transpilers to receive/handle path
-  // TO-DO: use `Transpiler` once possible
-  ({ component, path }: TranspilerArgs & { path: string }) => {
+const generateComponentImport =
+  (options: ToVueOptions) =>
+  (componentName: string): string => {
+    const key = kebabCase(componentName);
+    if (options.vueVersion >= 3 && options.asyncComponentImports) {
+      return `'${key}': defineAsyncComponent(${componentName})`;
+    } else {
+      return `'${key}': ${componentName}`;
+    }
+  };
+
+const generateComponents = (componentsUsed: string[], options: ToVueOptions): string => {
+  if (componentsUsed.length === 0) {
+    return '';
+  } else {
+    return `components: { ${componentsUsed.map(generateComponentImport(options)).join(',')} },`;
+  }
+};
+
+const componentToVue =
+  (userOptions: ToVueOptions): Transpiler =>
+  ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -443,8 +438,7 @@ export const componentToVue =
       data: false,
       getters: true,
       functions: false,
-      valueMapper: (code) =>
-        processBinding(code.replace(GETTER, ''), options, component),
+      valueMapper: (code) => processBinding(code.replace(GETTER, ''), options, component),
     });
 
     let functionsString = getStateObjectStringFromComponent(component, {
@@ -458,16 +452,9 @@ export const componentToVue =
 
     // Component references to include in `component: { YourComponent, ... }
     const componentsUsed = Array.from(getComponentsUsed(component))
-      .filter(
-        (name) =>
-          name.length &&
-          !name.includes('.') &&
-          name[0].toUpperCase() === name[0],
-      )
+      .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
       // Strip out components that compile away
-      .filter(
-        (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
-      );
+      .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
     dataString = dataString.replace(
@@ -488,9 +475,7 @@ export const componentToVue =
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children
-      .map((item) => blockToVue(item, options))
-      .join('\n');
+    const template = component.children.map((item) => blockToVue(item, options)).join('\n');
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
@@ -510,14 +495,10 @@ export const componentToVue =
     }
 
     if (localVarAsFunc.length) {
-      functionsString = functionsString.replace(
-        /}\s*$/,
-        `${localVarAsFunc.join(',')}}`,
-      );
+      functionsString = functionsString.replace(/}\s*$/, `${localVarAsFunc.join(',')}}`);
     }
 
-    const onUpdateWithDeps =
-      component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    const onUpdateWithDeps = component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
@@ -526,36 +507,26 @@ export const componentToVue =
       ${template}
     </template>
     <script>
-      ${renderPreComponent(component, 'vue')}
+    ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
 
       export default {
         ${
           !component.name
             ? ''
             : `name: '${
-                options.namePrefix?.(path)
-                  ? options.namePrefix?.(path) + '-'
-                  : ''
+                path && options.namePrefix?.(path) ? options.namePrefix?.(path) + '-' : ''
               }${kebabCase(component.name)}',`
         }
-        ${
-          !componentsUsed.length
-            ? ''
-            : `components: { ${componentsUsed
-                .map(
-                  (componentName) =>
-                    `'${kebabCase(
-                      componentName,
-                    )}': async () => ${componentName}`,
-                )
-                .join(',')} },`
-        }
+        ${generateComponents(componentsUsed, options)}
         ${
           elementProps.size
             ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter(
-                  (prop) => prop !== 'children' && prop !== 'class',
-                ),
+                Array.from(elementProps).filter((prop) => prop !== 'children' && prop !== 'class'),
               )},`
             : ''
         }
@@ -584,11 +555,7 @@ export const componentToVue =
         ${
           component.hooks.onMount?.code
             ? `mounted() {
-                ${processBinding(
-                  component.hooks.onMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onMount.code, options, component)}
               },`
             : ''
         }
@@ -619,11 +586,7 @@ export const componentToVue =
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(
-                  component.hooks.onUnMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onUnMount.code, options, component)}
               },`
             : ''
         }
@@ -684,6 +647,14 @@ export const componentToVue =
       match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     );
   };
+
+type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
+
+export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 2 });
+
+export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 3 });
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

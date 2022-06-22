@@ -16,8 +16,7 @@ export function renderJSXNodes(
   return function (this: SrcBuilder) {
     if (children.length == 0) return;
     if (root) this.emit('(');
-    const needsFragment =
-      root && (children.length > 1 || isInlinedDirective(children[0]));
+    const needsFragment = root && (children.length > 1 || isInlinedDirective(children[0]));
     file.import(file.qwikModule, 'h');
     if (needsFragment) {
       this.jsxBeginFragment(file.import(file.qwikModule, 'Fragment'));
@@ -44,15 +43,9 @@ export function renderJSXNodes(
         if (typeof directive == 'function') {
           this.emit(
             directive(child, () =>
-              renderJSXNodes(
-                file,
-                directives,
-                handlers,
-                child.children,
-                styles,
-                {},
-                false,
-              ).call(this),
+              renderJSXNodes(file, directives, handlers, child.children, styles, {}, false).call(
+                this,
+              ),
             ),
           );
           !this.isJSX && this.emit(',');
@@ -92,12 +85,7 @@ export function renderJSXNodes(
             }
           }
           const symbolBindings: Record<string, string> = {};
-          const bindings = rewriteHandlers(
-            file,
-            handlers,
-            child.bindings,
-            symbolBindings,
-          );
+          const bindings = rewriteHandlers(file, handlers, child.bindings, symbolBindings);
           this.jsxBegin(childName, props, {
             ...bindings,
             ...parentSymbolBindings,
@@ -127,13 +115,8 @@ function isSymbol(name: string): boolean {
   return name.charAt(0) == name.charAt(0).toUpperCase();
 }
 
-function addClass(
-  className: string,
-  existingClass: string | undefined,
-): string {
-  return [className, ...(existingClass ? existingClass.split(' ') : [])].join(
-    ' ',
-  );
+function addClass(className: string, existingClass: string | undefined): string {
+  return [className, ...(existingClass ? existingClass.split(' ') : [])].join(' ');
 }
 
 function isEmptyTextNode(child: MitosisNode) {
@@ -141,10 +124,7 @@ function isEmptyTextNode(child: MitosisNode) {
 }
 
 function isTextNode(child: MitosisNode) {
-  return (
-    child.properties._text !== undefined ||
-    child.bindings._text?.code !== undefined
-  );
+  return child.properties._text !== undefined || child.bindings._text?.code !== undefined;
 }
 
 /**
@@ -167,8 +147,7 @@ function rewriteHandlers(
   },
   symbolBindings: Record<string, string>,
 ): { [key: string]: { code: string; arguments?: string[] } } {
-  const outBindings: { [key: string]: { code: string; arguments?: string[] } } =
-    {};
+  const outBindings: { [key: string]: { code: string; arguments?: string[] } } = {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
       let { code: binding } = bindings[key]!;

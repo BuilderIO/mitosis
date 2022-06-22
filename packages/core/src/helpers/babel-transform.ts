@@ -14,11 +14,7 @@ export const babelTransform = <VisitorContextType = any>(
     configFile: false,
     babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
-    plugins: [
-      [decorators, { legacy: true }],
-      jsxPlugin,
-      ...(visitor ? [() => ({ visitor })] : []),
-    ],
+    plugins: [[decorators, { legacy: true }], jsxPlugin, ...(visitor ? [() => ({ visitor })] : [])],
   });
 };
 export const babelTransformCode = <VisitorContextType = any>(
@@ -44,8 +40,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
   // For Builder content
   if (
     type === 'unknown' &&
-    (code.includes('return _virtual_index') ||
-      code.trim().startsWith('return ')) &&
+    (code.includes('return _virtual_index') || code.trim().startsWith('return ')) &&
     !code.trim().startsWith('function')
   ) {
     type = 'functionBody';
@@ -79,8 +74,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
       // Detect method fragments. These get passed sometimes and otherwise
       // generate compile errors. They are of the form `foo() { ... }`
       const isMethod = Boolean(
-        !code.startsWith('function') &&
-          code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
+        !code.startsWith('function') && code.match(/^[a-z0-9_]+\s*\([^\)]*\)\s*[\{:]/i),
       );
 
       if (isMethod) {

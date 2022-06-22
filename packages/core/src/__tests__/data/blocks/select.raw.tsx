@@ -14,11 +14,7 @@ export default function SelectComponent(props: FormSelectProps) {
     <select
       {...props.attributes}
       value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : 'default-key'
-      }
+      key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}
       defaultValue={props.defaultValue}
       name={props.name}
     >

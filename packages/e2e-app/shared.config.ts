@@ -6,10 +6,7 @@ import { targetContext } from './tests/context';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export function configFor(
-  packageName: string,
-  port: number,
-): PlaywrightTestConfig {
+export function configFor(packageName: string, port: number): PlaywrightTestConfig {
   targetContext.name = packageName;
 
   return {

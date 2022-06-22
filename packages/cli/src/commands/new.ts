@@ -14,9 +14,7 @@ const command: GluegunCommand = {
         const result = await sys.exec(cmd, opts);
         result.stdout && print.info(result.stdout);
       } catch (e) {
-        print.error(
-          `Command failed with exit code ${e.exitCode}: ${e.command}`,
-        );
+        print.error(`Command failed with exit code ${e.exitCode}: ${e.command}`);
         e.stdout && print.error(e.stdout);
         e.stderr && print.error(e.stderr);
         process.exit(1);
@@ -34,13 +32,10 @@ const command: GluegunCommand = {
 
     spinner.start('Installing packages');
 
-    await pkg.add(
-      ['@builder.io/mitosis', '@builder.io/mitosis-cli', 'typescript'],
-      {
-        dev: true,
-        force: 'npm',
-      },
-    );
+    await pkg.add(['@builder.io/mitosis', '@builder.io/mitosis-cli', 'typescript'], {
+      dev: true,
+      force: 'npm',
+    });
 
     spinner.succeed('Installed packages');
 

@@ -28,11 +28,7 @@ export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
   let counter = 0;
   const ids = new Set<string>();
   forEach(content, function (this, el: any) {
-    if (
-      this.key === 'jsCode' &&
-      isString(el) &&
-      el.endsWith('return _virtual_index')
-    ) {
+    if (this.key === 'jsCode' && isString(el) && el.endsWith('return _virtual_index')) {
       // Sometimes rollup adds a final `return _virtual_index` but that causes VM evaluation to fail.
       // Instead of a return on the last line, it needs a plain expression on the last line. Luckily
       // because the rollup compile behavior is consistent this works pretty reliably

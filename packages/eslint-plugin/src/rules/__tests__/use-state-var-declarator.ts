@@ -74,9 +74,7 @@ ruleTester.run('use-state-var-declarator', rule, {
         );
       }
     `,
-      errors: [
-        'useStore should be exclusively assigned to a variable called state',
-      ],
+      errors: ['useStore should be exclusively assigned to a variable called state'],
     },
   ],
 });

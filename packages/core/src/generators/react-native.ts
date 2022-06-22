@@ -17,9 +17,7 @@ const stylePropertiesThatMustBeNumber = new Set(['lineHeight']);
 
 const MEDIA_QUERY_KEY_REGEX = /^@media.*/;
 
-export const collectReactNativeStyles = (
-  json: MitosisComponent,
-): ClassStyleMap => {
+export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap => {
   const styleMap: ClassStyleMap = {};
 
   const componentIndexes: { [className: string]: number | undefined } = {};
@@ -39,22 +37,13 @@ export const collectReactNativeStyles = (
       const propertyValue = value[key];
 
       if (key.match(MEDIA_QUERY_KEY_REGEX)) {
-        console.warn(
-          'Unsupported: skipping media queries for react-native: ',
-          key,
-          propertyValue,
-        );
+        console.warn('Unsupported: skipping media queries for react-native: ', key, propertyValue);
         delete value[key];
         continue;
       }
 
-      if (
-        stylePropertiesThatMustBeNumber.has(key) &&
-        typeof propertyValue !== 'number'
-      ) {
-        console.warn(
-          `Style key ${key} must be a number, but had value \`${propertyValue}\``,
-        );
+      if (stylePropertiesThatMustBeNumber.has(key) && typeof propertyValue !== 'number') {
+        console.warn(`Style key ${key} must be a number, but had value \`${propertyValue}\``);
         delete value[key];
         continue;
       }
@@ -68,8 +57,7 @@ export const collectReactNativeStyles = (
       }
     }
     const componentName = camelCase(item.name || 'view');
-    const index = (componentIndexes[componentName] =
-      (componentIndexes[componentName] || 0) + 1);
+    const index = (componentIndexes[componentName] = (componentIndexes[componentName] || 0) + 1);
     const className = `${componentName}${index}`;
     item.bindings.style = { code: `styles.${className}` };
 
@@ -91,10 +79,7 @@ function processReactNative() {
               node.name = 'View';
             }
 
-            if (
-              node.properties._text?.trim().length ||
-              node.bindings._text?.code?.trim()?.length
-            ) {
+            if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
               node.name = 'Text';
             }
 

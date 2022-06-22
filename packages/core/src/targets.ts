@@ -13,7 +13,7 @@ import { componentToSolid as solid } from './generators/solid';
 import { componentToSvelte as svelte } from './generators/svelte';
 import { componentToSwift as swift } from './generators/swift-ui';
 import { componentToTemplate as template } from './generators/template';
-import { componentToVue as vue } from './generators/vue';
+import { componentToVue2, componentToVue3 } from './generators/vue';
 import { componentToStencil as stencil } from './generators/stencil';
 export const targets = {
   angular,
@@ -29,6 +29,8 @@ export const targets = {
   swift,
   template,
   webcomponent,
-  vue,
+  vue: componentToVue3,
+  vue2: componentToVue2,
+  vue3: componentToVue3,
   stencil,
 };

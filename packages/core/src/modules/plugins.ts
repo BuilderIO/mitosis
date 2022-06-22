@@ -3,11 +3,7 @@ import { Plugin } from '../types/plugins';
 
 export type { Plugin };
 
-export const runPreJsonPlugins = (
-  json: MitosisComponent,
-  plugins: Plugin[],
-  options?: any,
-) => {
+export const runPreJsonPlugins = (json: MitosisComponent, plugins: Plugin[], options?: any) => {
   let useJson = json;
   for (const plugin of plugins) {
     const preFunction = plugin(options).json?.pre;
@@ -18,11 +14,7 @@ export const runPreJsonPlugins = (
   return useJson;
 };
 
-export const runPostJsonPlugins = (
-  json: MitosisComponent,
-  plugins: Plugin[],
-  options?: any,
-) => {
+export const runPostJsonPlugins = (json: MitosisComponent, plugins: Plugin[], options?: any) => {
   let useJson = json;
   for (const plugin of plugins) {
     const postFunction = plugin(options).json?.post;
@@ -33,11 +25,7 @@ export const runPostJsonPlugins = (
   return useJson;
 };
 
-export const runPreCodePlugins = (
-  code: string,
-  plugins: Plugin[],
-  options?: any,
-) => {
+export const runPreCodePlugins = (code: string, plugins: Plugin[], options?: any) => {
   let string = code;
   for (const plugin of plugins) {
     const preFunction = plugin(options).code?.pre;
@@ -48,11 +36,7 @@ export const runPreCodePlugins = (
   return string;
 };
 
-export const runPostCodePlugins = (
-  code: string,
-  plugins: Plugin[],
-  options?: any,
-) => {
+export const runPostCodePlugins = (code: string, plugins: Plugin[], options?: any) => {
   let string = code;
   for (const plugin of plugins) {
     const postFunction = plugin(options).code?.post;
