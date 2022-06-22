@@ -3,14 +3,16 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "tsc && vite build",
-    "dev": "vite",
+    "build": "yarn run mitosis && tsc && vite build",
+    "dev": "yarn run mitosis && vite",
     "e2e": "../../node_modules/.bin/playwright test",
+    "mitosis": "syncdir ../e2e-app/src src --deleteOrphaned --quiet && mitosis build",
     "serve": "vite preview"
   },
   "dependencies": {
     "@builder.io/e2e-app": "workspace:*",
-    "@builder.io/e2e-app-spec": "workspace:*",
+    "@builder.io/mitosis": "workspace:*",
+    "@builder.io/mitosis-cli": "workspace:*",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
@@ -18,6 +20,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@vitejs/plugin-react": "^1.3.0",
+    "sync-directory": "^5.1.5",
     "typescript": "^4",
     "vite": "^2.9.9"
   }

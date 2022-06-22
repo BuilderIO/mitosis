@@ -3,19 +3,23 @@ import { useStore } from '@builder.io/mitosis';
 export interface State {
   list: string[];
   newItemName: string;
+  setItemName: any;
+  addItem: any;
 }
 
 export default function MyComponent(props: any) {
   const state = useStore<State>({
     list: ['hello', 'world'],
     newItemName: 'New item',
-  });
 
-  // Inner function is more readble, but errors in Svelte generation
-  // https://github.com/BuilderIO/mitosis/issues/472
-  // function addItem() {
-  //   state.list = [...state.list, state.newItemName];
-  // }
+    setItemName(event: Event) {
+      state.newItemName = (event.target as any).value;
+    },
+
+    addItem() {
+      state.list = [...state.list, state.newItemName];
+    },
+  });
 
   return (
     <div
@@ -28,7 +32,7 @@ export default function MyComponent(props: any) {
       <input
         class="shadow-md rounded w-full px-4 py-2"
         value={state.newItemName}
-        onChange={(event) => (state.newItemName = event.target.value)}
+        onChange={(event) => state.setItemName(event)}
       />
 
       <button
@@ -36,7 +40,7 @@ export default function MyComponent(props: any) {
         css={{
           margin: '10px 0',
         }}
-        onClick={(event) => (state.list = [...state.list, state.newItemName])}
+        onClick={() => state.addItem()}
       >
         Add list item
       </button>

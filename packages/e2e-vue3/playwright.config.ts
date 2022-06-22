@@ -1,3 +1,3 @@
-import { configFor } from '@builder.io/e2e-app-spec/shared.config';
+import { configFor } from '@builder.io/e2e-app/shared.config';
 
-export default configFor('@builder.io/e2e-vue3', 7503);
+export default configFor('e2e-vue3', 7503);

@@ -1,3 +1,3 @@
-import { configFor } from '@builder.io/e2e-app-spec/shared.config';
+import { configFor } from '@builder.io/e2e-app/shared.config';
 
-export default configFor('@builder.io/e2e-react', 7502);
+export default configFor('e2e-react', 7502);
