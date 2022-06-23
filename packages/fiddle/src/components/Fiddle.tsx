@@ -1,26 +1,27 @@
 import {
+  angularToMitosisComponent,
   builderContentToMitosisComponent,
   compileAwayBuilderComponents,
   componentToAngular,
   componentToBuilder,
   componentToCustomElement,
   componentToHtml,
-  componentToMitosis,
   componentToLiquid,
+  componentToMitosis,
+  componentToQwik,
   componentToReact,
-  componentToStencil,
   componentToReactNative,
   componentToSolid,
+  componentToStencil,
   componentToSvelte,
   componentToSwift,
   componentToTemplate,
+  componentToVue2,
   liquidToBuilder,
-  angularToMitosisComponent,
   mapStyles,
   parseJsx,
   parseReactiveScript,
   reactiveScriptRe,
-  componentToVue2,
 } from '@builder.io/mitosis';
 import {
   Button,
@@ -38,10 +39,11 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
+import stringify from 'fast-json-stable-stringify';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useRef, useState } from 'react';
 import Image from 'next/image';
-
+import React, { useRef, useState } from 'react';
 import { adapt } from 'webcomponents-in-react';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
@@ -54,12 +56,9 @@ import { localStorageSet } from '../functions/local-storage-set';
 import { setQueryParam } from '../functions/set-query-param';
 import { useEventListener } from '../hooks/use-event-listener';
 import { useReaction } from '../hooks/use-reaction';
+import { CodeEditor } from './CodeEditor';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
-import stringify from 'fast-json-stable-stringify';
-
-import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
-import { CodeEditor } from './CodeEditor';
 
 type Position = { row: number; column: number };
 
@@ -364,15 +363,9 @@ export default function Fiddle() {
                 stateType: state.options.svelteStateType,
                 plugins,
               })({ component: json })
-            : // TODO: add qwik support back again
-            // : state.outputTab === 'qwik'
-            // ? (
-            //     await componentToQwik(json, {
-            //       plugins,
-            //     })
-            //   ).files.find((file) => file.path.endsWith('template.tsx'))!
-            //     ?.contents
-            state.outputTab === 'mitosis'
+            : state.outputTab === 'qwik'
+            ? componentToQwik({ plugins })({ component: json })
+            : state.outputTab === 'mitosis'
             ? componentToMitosis()({ component: json })
             : state.outputTab === 'json'
             ? JSON.stringify(json, null, 2)
@@ -423,6 +416,7 @@ export default function Fiddle() {
     state.isDraggingJSXCodeBar = false;
     state.isDraggingBuilderCodeBar = false;
   });
+
   useEventListener<MessageEvent>(window, 'message', (e) => {
     if (e.data?.type === 'builder.saveCommand') {
       if (e.data.data || state.pendingBuilderChange) {
@@ -942,7 +936,7 @@ export default function Fiddle() {
                   }
                   value="react"
                 />
-
+                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
                 <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
                 <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
