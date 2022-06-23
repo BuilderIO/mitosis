@@ -4,10 +4,27 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "mitosis build"
+    "mitosis-angular": "mitosis build angular",
+    "mitosis-builder": "echo NOT SUPPORTED YET mitosis build builder",
+    "mitosis-customElement": "mitosis build customElement",
+    "mitosis-html": "mitosis build html",
+    "mitosis-liquid": "echo NOT SUPPORTED YET mitosis build liquid",
+    "mitosis-qwik": "echo NOT SUPPORTED YET mitosis build qwik",
+    "mitosis-react": "mitosis build react",
+    "mitosis-reactNative": "mitosis build reactNative",
+    "mitosis-solid": "mitosis build solid",
+    "mitosis-svelte": "mitosis build svelte",
+    "mitosis-swift": "mitosis build swift",
+    "mitosis-template": "echo NOT SUPPORTED YET mitosis build template",
+    "mitosis-vue2": "mitosis build vue2",
+    "mitosis-vue3": "mitosis build vue3",
+    "build": "concurrently \"npm:mitosis-*\" --max-processes 3 --group || echo continuing"
   },
   "dependencies": {
     "@builder.io/mitosis": "workspace:*",
     "@builder.io/mitosis-cli": "workspace:*"
+  },
+  "devDependencies": {
+    "concurrently": "^7.2.2"
   }
 }
