@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { Transpiler } from '..';
+import { Transpiler } from '../types/transpiler';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';

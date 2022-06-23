@@ -30,7 +30,7 @@ import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';

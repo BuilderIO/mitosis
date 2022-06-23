@@ -24,7 +24,7 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';

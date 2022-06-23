@@ -12,7 +12,7 @@ import {
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 
 export interface ToLiquidOptions extends BaseTranspilerOptions {
   reactive?: boolean;

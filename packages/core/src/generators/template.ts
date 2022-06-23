@@ -11,7 +11,7 @@ import {
 } from '../modules/plugins';
 import dedent from 'dedent';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 
 export interface ToTemplateOptions extends BaseTranspilerOptions {}
 

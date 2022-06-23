@@ -3,7 +3,7 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import traverse from 'traverse';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';

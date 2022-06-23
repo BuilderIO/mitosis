@@ -22,7 +22,7 @@ import { getPropFunctions } from '../helpers/get-prop-functions';
 import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}

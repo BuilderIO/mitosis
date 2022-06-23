@@ -6,7 +6,7 @@ import { ClassStyleMap } from '../helpers/collect-styles';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';
