@@ -1,8 +1,10 @@
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
 } from '../../plugins/compile-away-builder-components';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
 import { renderHandlers } from './handlers';
 import { renderJSXNodes } from './jsx';
 import {
@@ -70,14 +72,15 @@ function getCommonStyles(fileSet: FileSet): {
 export function addComponent(
   fileSet: FileSet,
   component: MitosisComponent,
-  opts: { isRoot?: boolean; shareStyles?: boolean } = {},
+  opts: { isRoot?: boolean; shareStyles?: boolean; hostProps?: Record<string, string> } = {},
 ) {
-  const _opts = { isRoot: false, shareStyles: false, ...opts };
+  const _opts = { isRoot: false, shareStyles: false, hostProps: null, ...opts };
   compileAwayBuilderComponentsFromTree(component, {
     ...compileAwayComponents,
     Image: undefined!,
     CoreButton: undefined!,
   });
+  addBuilderBlockClass(component.children);
   const componentName = component.name;
   const handlers = renderHandlers(fileSet.high, componentName, component.children);
   // If the component has no handlers, than it is probably static
@@ -106,12 +109,22 @@ export function addComponent(
     }
   }
   const directives: Map<string, string> = new Map();
+  let rootChildren = component.children;
+  if (_opts.hostProps) {
+    rootChildren = [
+      createMitosisNode({
+        name: 'Host',
+        properties: _opts.hostProps,
+        children: component.children,
+      }),
+    ];
+  }
   addComponentOnMount(
     onRenderFile,
     function (this: SrcBuilder) {
       return this.emit(
         'return ',
-        renderJSXNodes(onRenderFile, directives, handlers, component.children, styles, {}),
+        renderJSXNodes(onRenderFile, directives, handlers, rootChildren, styles, {}),
         ';',
       );
     },
@@ -144,6 +157,15 @@ function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: b
       ';',
     );
   };
+}
+
+function addBuilderBlockClass(children: MitosisNode[]) {
+  children.forEach((child) => {
+    const props = child.properties;
+    if (props['builder-id']) {
+      props.class = (props.class ? props.class + ' ' : '') + 'builder-block';
+    }
+  });
 }
 
 export function renderUseLexicalScope(file: File) {
@@ -195,7 +217,7 @@ function addComponentOnMount(
           'state.__INIT__=true;',
           ...inputInitializer,
           'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
-          iif(component.hooks.onMount?.code),
+          ...(component.hooks.onMount?.code ? [iif(component.hooks.onMount?.code)] : []),
           '}',
           useStyles,
           onRenderEmit,
