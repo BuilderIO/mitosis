@@ -6,7 +6,7 @@ const srcRepoRef = 'https://github.com/BuilderIO/mitosis/commit/';
 const root = __dirname + '/..';
 const packages_core = root + '/packages/core';
 const mitosis_build_artifacts = packages_core + '/mitosis-build';
-const buildFiles = ['CHANGELOG.md', 'package.json', 'README.md', 'dist'];
+const buildFiles = ['CHANGELOG.md', 'package.json', 'dist'];
 
 (async () => {
   await $('rm', '-rf', mitosis_build_artifacts);
@@ -43,9 +43,7 @@ const buildFiles = ['CHANGELOG.md', 'package.json', 'README.md', 'dist'];
   const dstSHA = await $('git', 'rev-parse', 'HEAD');
   console.log('##############################################################');
   console.log('##############################################################');
-  console.log(
-    `### https://github.com/BuilderIO/mitosis-build/commit/${dstSHA}`,
-  );
+  console.log(`### https://github.com/BuilderIO/mitosis-build/commit/${dstSHA}`);
   console.log('##############################################################');
   console.log('##############################################################');
   await $('git', 'push', repo, `HEAD:${branch}`);
