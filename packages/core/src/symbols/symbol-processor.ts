@@ -210,7 +210,7 @@ export function hashCode(obj: any, hash = 0): number {
           hash = hashCode(obj[i], hash);
         }
       } else {
-        for (const key in obj) {
+        for (const key of Object.keys(obj).sort()) {
           if (obj.hasOwnProperty(key)) {
             hash = hashCode(obj[key], hash);
           }
