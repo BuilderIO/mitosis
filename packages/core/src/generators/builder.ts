@@ -15,6 +15,7 @@ import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
 import { TranspilerArgs } from '../types/transpiler';
+import { hashCodeAsString } from '../symbols/symbol-processor';
 
 export interface ToBuilderOptions {
   includeIds?: boolean;
@@ -128,7 +129,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id: 'builder-' + Math.random().toString(36).split('.')[1],
+    id: 'builder-' + hashCodeAsString(options),
   }),
   ...options,
 });

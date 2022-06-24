@@ -168,7 +168,7 @@ describe('qwik', () => {
   describe('component', () => {
     test('bindings', async () => {
       // https://builder.io/content/0937630137c94676ba24f95d9d12e426/edit
-      // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachbust=true
+      // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachebust=true
       const content = require('./qwik.test.component-binding.json');
       const state: Record<string, any> = {};
       const hierarchy = convertBuilderContentToSymbolHierarchy(content, {
