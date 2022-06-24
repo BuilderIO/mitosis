@@ -1,10 +1,13 @@
+# This workflow runs when new change is pushed to the main repo.
+# It should only save artifacts and nothing else so that it is fast.
+
 name: Save artifact on branch push
 
 on:
   push:
 
 jobs:
-  build:
+  save-build-artifacts:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,21 +24,6 @@ jobs:
 
       - name: Build
         run: yarn ci:build
-
-      - name: Run tests
-        run: yarn ci:test
-
-      - name: Run prettier
-        run: yarn ci:lint
-
-      - name: Install browsers for Playwright
-        run: yarn ci:e2e-prep
-
-      - name: Build E2E tests
-        run: yarn ci:e2e-build
-
-      - name: Run E2E tests
-        run: yarn ci:e2e
 
       - name: save artifact
         env:
