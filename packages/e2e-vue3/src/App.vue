@@ -1,8 +1,9 @@
-<script>
-import MyComponent from './lib/vue/vue2/src/components/my-component.vue';
+<script setup>
+import { MyComponent } from '@builder.io/e2e-app-vue3-output';
+</script>
 
+<script>
 export default {
-  name: 'app',
   components: {
     MyComponent,
   },
