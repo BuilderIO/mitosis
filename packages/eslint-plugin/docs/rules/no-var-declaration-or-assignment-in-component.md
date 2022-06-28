@@ -54,4 +54,12 @@ export default function MyComponent(props) {
       <div />
   );
 }
+
+export default function MyComponent(props) {
+  const ref = useRef()
+
+  return (
+      <div />
+  );
+}
 ```

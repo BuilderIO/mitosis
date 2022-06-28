@@ -45,7 +45,11 @@ const rule: Rule.RuleModule = {
                     callee: {
                       type: 'Identifier',
                       name: when(
-                        (v) => v === HOOKS.STATE || v === HOOKS.CONTEXT || v === HOOKS.STORE,
+                        (v) =>
+                          v === HOOKS.STATE ||
+                          v === HOOKS.CONTEXT ||
+                          v === HOOKS.STORE ||
+                          v === HOOKS.REF,
                       ),
                     },
                   },
