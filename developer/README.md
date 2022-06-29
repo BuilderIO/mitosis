@@ -39,6 +39,7 @@ In `core`, we use jest snapshots for testing. If you are solving a problem that 
 - run `jest` in watch mode: `yarn test --watch`
 - run the development server: `yarn start`
 - keep iterating until your test passes!
+- after making your changes, run `yarn run fmt:prettier` in the root directory.
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
