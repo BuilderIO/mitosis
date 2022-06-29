@@ -1,9 +1,12 @@
 module.exports = {
   files: 'src/**',
-  targets: [
-    // 'qwik',  // CLI does not support target: qwik
-    // 'builder', // CLI does not support target: builder
-    'html', // HTML output in a JS file
-    'webcomponent', // TS output in a JS file
-  ],
+  // A real Mitosis application usually has a set of targets to include here;
+  // for this E2E test, we vary it by invocation to separately test each target,
+  // so that one failing does not stop the whole test suite.
+  targets: [process.argv[3]],
+  // Each run needs a separate output dest, as Mitosis clears it first.
+  dest: ['output/' + process.argv[3]],
+  options: {
+    react: { transpiler: { format: 'esm' } },
+  },
 };
