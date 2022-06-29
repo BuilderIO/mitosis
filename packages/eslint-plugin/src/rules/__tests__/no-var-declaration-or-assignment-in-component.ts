@@ -58,6 +58,20 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       }
     `,
     },
+    {
+      ...opts,
+      code: `
+      import x from "y";
+
+      export default function MyComponent(props) {
+        const ref = useRef(x)
+
+        return (
+            <div />
+        );
+      }
+    `,
+    },
     // Doesn't apply to none mitosis files
     {
       ...opts,
