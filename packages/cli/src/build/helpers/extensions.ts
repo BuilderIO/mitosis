@@ -18,6 +18,8 @@ export const getFileExtensionForTarget = (target: Target) => {
       return '.vue';
     case 'webcomponent':
       return '.ts';
+    case 'qwik':
+      return '.jsx';
     default:
       return '.js';
   }

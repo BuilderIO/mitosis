@@ -7,6 +7,7 @@ const getDefaultFormatForTarget = (target: Target): Format => {
   switch (target) {
     case 'reactNative':
     case 'solid':
+    case 'qwik':
     case 'svelte':
       return 'esm';
     default:

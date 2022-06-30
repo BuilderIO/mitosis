@@ -9,26 +9,43 @@ export const DIRECTIVES: Record<
   Show: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
       const expr = node.bindings.when?.code;
-      this.isJSX && this.emit('{');
-      this.emit(expr, '?');
-      blockFn();
-      this.emit(':null');
-      this.isJSX && this.emit('}');
+      this.jsxExpression(() => {
+        this.emit(expr, '?');
+        blockFn();
+        this.emit(':null');
+      });
     },
   For: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
       const expr = node.bindings.each?.code!;
-      this.isJSX && this.emit('{');
-      this.emit('(', expr, '||[]).map(', '(function(__value__){');
-      this.emit(
-        'var state=Object.assign({},this,{',
-        iteratorProperty(expr),
-        ':__value__==null?{}:__value__});',
-      );
-      this.emit('return(');
-      blockFn();
-      this.emit(');}).bind(state))');
-      this.isJSX && this.emit('}');
+      this.jsxExpression(() => {
+        const forName: string = node.properties._forName || '_';
+        const indexName: string | undefined = node.properties._indexName;
+        this.emit(
+          '(',
+          expr,
+          '||[]).map(',
+          '((',
+          forName,
+          indexName ? ',' : '',
+          indexName ? indexName : '',
+          ') => {',
+        );
+        if (this.isBuilder) {
+          this.emit(
+            'var state=Object.assign({},this,{',
+            iteratorProperty(expr),
+            ':',
+            forName,
+            '==null?{}:',
+            forName,
+            '});',
+          );
+        }
+        this.emit('return(');
+        blockFn();
+        this.emit(');}))');
+      });
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
