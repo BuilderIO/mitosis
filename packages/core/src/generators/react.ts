@@ -41,8 +41,8 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { hasContext } from './helpers/context';
 import { collectReactNativeStyles } from './react-native';
-import { collectStyledComponents } from 'src/helpers/styles/collect-styled-components';
-import { hasStyles } from 'src/helpers/styles/helpers';
+import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
+import { hasStyles } from '../helpers/styles/helpers';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';

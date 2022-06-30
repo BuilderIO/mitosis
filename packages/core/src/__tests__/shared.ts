@@ -53,6 +53,10 @@ const preserveTyping = require('./data/types/preserve-typing.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
 const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
 
+const classRaw = require('./data/styles/class.raw');
+const className = require('./data/styles/className.raw');
+const classAndClassName = require('./data/styles/class-and-className.raw');
+
 const path = 'test-path';
 
 type Tests = { [index: string]: any };
@@ -99,6 +103,9 @@ const BASIC_TESTS = {
   'Image State': imageState,
   'Basic OnMount Update': basicOnMountUpdate,
   preserveExportOrLocalStatement,
+  'class + css': classRaw,
+  'className + css': className,
+  'class + ClassName + css': classAndClassName,
 };
 
 const MULTI_ON_UPDATE_TESTS: Tests = {

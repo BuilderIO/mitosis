@@ -11,10 +11,22 @@ import {
   parseCssObject,
   styleMapToCss,
 } from './helpers';
+import { MitosisNode } from 'src/types/mitosis-node';
 
 type CollectStyleOptions = {
   prefix?: string;
 };
+
+const trimClassStr = (classStr: string) => classStr.trim().replace(/\s{2,}/g, ' ');
+
+const updateClassForNode = (item: MitosisNode, className: string) => {
+  if (item.bindings.class) {
+    item.bindings.class.code = trimClassStr(`${item.bindings.class.code} + "${className}"`);
+  } else {
+    item.properties.class = trimClassStr(`${item.properties.class || ''} ${className}`);
+  }
+};
+
 const collectStyles = (
   json: MitosisComponent,
   options: CollectStyleOptions = {},
@@ -35,12 +47,12 @@ const collectStyles = (
           ? item.name
           : dashCase(item.name || 'div');
 
+        const classNameWPrefix = `${componentName}${options.prefix ? `-${options.prefix}` : ''}`;
+
         const stylesHash = hash(value);
         if (componentHashes[componentName] === stylesHash) {
-          const className = `${componentName}${options.prefix ? `-${options.prefix}` : ''}`;
-          item.properties.class = `${item.properties.class || ''} ${className}`
-            .trim()
-            .replace(/\s{2,}/g, ' ');
+          const className = classNameWPrefix;
+          updateClassForNode(item, className);
           return;
         }
 
@@ -50,13 +62,9 @@ const collectStyles = (
 
         const index = (componentIndexes[componentName] =
           (componentIndexes[componentName] || 0) + 1);
-        const className = `${componentName}${options.prefix ? `-${options.prefix}` : ''}${
-          index === 1 ? '' : `-${index}`
-        }`;
+        const className = `${classNameWPrefix}${index === 1 ? '' : `-${index}`}`;
 
-        item.properties.class = `${item.properties.class || ''} ${className}`
-          .trim()
-          .replace(/\s{2,}/g, ' ');
+        updateClassForNode(item, className);
 
         styleMap[className] = value;
       }
