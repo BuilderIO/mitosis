@@ -2,7 +2,7 @@ import json5 from 'json5';
 import { camelCase, size } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import traverse from 'traverse';
-import { ClassStyleMap } from '../helpers/styles/collect';
+import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';

@@ -8,7 +8,7 @@ import { getRefs } from '../helpers/get-refs';
 import { mapRefs } from '../helpers/map-refs';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { collectCss } from '../helpers/styles/collect';
+import { collectCss } from '../helpers/styles/collect-css';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';

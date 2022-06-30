@@ -20,7 +20,7 @@ import { getProps } from '../../helpers/get-props';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { dashCase } from '../../helpers/dash-case';
-import { collectCss } from '../../helpers/styles/collect';
+import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 

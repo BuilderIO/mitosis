@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect';
+import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import {
   getMemberObjectString,
