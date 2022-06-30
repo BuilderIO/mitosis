@@ -1,5 +1,5 @@
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';

@@ -9,7 +9,7 @@ import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { capitalize } from '../helpers/capitalize';
-import { collectCss, collectStyledComponents, hasStyles } from '../helpers/collect-styles';
+import { collectCss, collectStyledComponents, hasStyles } from '../helpers/styles/collect';
 import { createMitosisNode } from '../helpers/create-mitosis-node';
 import { fastClone } from '../helpers/fast-clone';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';

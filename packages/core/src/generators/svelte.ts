@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';

@@ -1,13 +1,13 @@
 import * as CSS from 'csstype';
 import json5 from 'json5';
 import { camelCase, pickBy } from 'lodash';
-import { MitosisNode } from '../types/mitosis-node';
+import { MitosisNode } from '../../types/mitosis-nodeode';
 import traverse from 'traverse';
-import { MitosisComponent } from '../types/mitosis-component';
-import { capitalize } from './capitalize';
-import { dashCase } from './dash-case';
-import { isMitosisNode } from './is-mitosis-node';
-import { isUpperCase } from './is-upper-case';
+import { MitosisComponent } from '../../types/mitosis-componentent';
+import { capitalize } from '../capitalizee';
+import { dashCase } from '../dash-casee';
+import { isMitosisNode } from '../is-mitosis-nodee';
+import { isUpperCase } from '../is-upper-casee';
 import hash from 'object-hash';
 
 const nodeHasStyles = (node: MitosisNode) => {
