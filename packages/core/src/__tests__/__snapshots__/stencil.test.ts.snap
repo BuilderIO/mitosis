@@ -1057,7 +1057,11 @@ export default class Image {
           {!this.useLazyLoading() || this.load ? (
             <>
               <img
-                class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+                class={
+                  \\"builder-image\\" +
+                  (props.class ? \\" \\" + props.class : \\"\\") +
+                  \\"img\\"
+                }
                 alt={this.altText}
                 aria-role={this.altText ? \\"presentation\\" : undefined}
                 src={this.image}
@@ -1622,6 +1626,63 @@ export default class MyBasicForwardRefComponent {
         />
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil class + ClassName + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil class + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil className + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
   }
 }
 "

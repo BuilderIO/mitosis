@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { hasStyles } from '../helpers/collect-styles';
+import { hasStyles } from '../helpers/styles/helpers';
 import { getRefs } from '../helpers/get-refs';
 import {
   getMemberObjectString,

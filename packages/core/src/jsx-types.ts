@@ -62,6 +62,7 @@ declare global {
     interface CustomAttributes<T> {
       ref?: T | ((el: T) => void);
       classList?: { [k: string]: boolean | undefined };
+      className?: string;
       on?: { [key: string]: EventHandler<T, CustomEvent> };
       onCapture?: { [key: string]: EventHandler<T, CustomEvent> };
 
