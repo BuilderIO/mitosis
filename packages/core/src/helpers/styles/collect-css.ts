@@ -11,7 +11,7 @@ import {
   parseCssObject,
   styleMapToCss,
 } from './helpers';
-import { MitosisNode } from 'src/types/mitosis-node';
+import { MitosisNode } from '../../types/mitosis-node';
 
 type CollectStyleOptions = {
   prefix?: string;
