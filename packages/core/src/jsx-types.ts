@@ -2,7 +2,7 @@ type CSS = Partial<CSSStyleDeclaration> & {
   [key: string]: Partial<CSSStyleDeclaration> | string;
 };
 
-declare global {
+
   /**
    * Based on JSX types for Solid, Inferno, Surplus, and React
    *
@@ -12,7 +12,7 @@ declare global {
    * https://github.com/adamhaile/surplus/blob/master/index.d.ts
    */
 
-  namespace JSX {
+export declare namespace JSX  {
     type Element =
       | Node
       | ArrayElement
@@ -1838,7 +1838,7 @@ declare global {
       use: UseSVGAttributes<SVGUseElement>;
       view: ViewSVGAttributes<SVGViewElement>;
     }
-  }
 }
+
 
 export {};
