@@ -1,7 +1,7 @@
 /** @jsxImportSource @builder.io/mitosis */
 
 import { Slot } from '@builder.io/mitosis';
-import type { JSX } from "../../../jsx-types"
+import type { JSX } from '../../../jsx-types';
 
 type Props = {
   [key: string]: string | JSX.Element;

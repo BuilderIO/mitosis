@@ -1,4 +1,4 @@
-import { JSX } from './jsx-types'
+import { JSX } from './jsx-types';
 /**
  * Flow control based on Solid
  *

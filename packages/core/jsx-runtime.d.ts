@@ -1,1 +1,1 @@
-export * from "./src/jsx-types"
+export * from './src/jsx-types';
