@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { useState } from '@builder.io/mitosis';
 
 export default function MyBasicComponent() {

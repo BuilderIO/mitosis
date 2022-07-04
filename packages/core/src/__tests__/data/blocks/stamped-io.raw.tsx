@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { useStore, onMount, For, Show } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';

@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 export type A = 'test';
 export interface C {
   n: 'test';

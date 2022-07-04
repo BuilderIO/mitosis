@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { onUpdate } from '@builder.io/mitosis';
 
 export default function OnUpdate() {

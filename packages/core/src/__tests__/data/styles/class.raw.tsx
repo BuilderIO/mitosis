@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 export default function MyBasicComponent() {
   return (
     <div

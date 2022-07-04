@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { useStore, Show, For } from '@builder.io/mitosis';
 
 export interface SectionProps {

@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 export interface RawTextProps {
   attributes?: any;
   text?: string;

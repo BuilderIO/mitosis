@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 export interface TextareaProps {
   attributes?: any;
   name?: string;

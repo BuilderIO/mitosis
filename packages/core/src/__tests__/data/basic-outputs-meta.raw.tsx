@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 import { useStore, useMetadata, onMount } from '@builder.io/mitosis';
 
 useMetadata({

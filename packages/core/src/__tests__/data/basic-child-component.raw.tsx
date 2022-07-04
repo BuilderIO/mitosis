@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 import { useStore } from '@builder.io/mitosis';
 import MyBasicComponent from './basic.raw';
 import MyBasicOnMountUpdateComponent from './basic-onMount-update.raw';

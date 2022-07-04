@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { useStore, useRef, Show, For } from '@builder.io/mitosis';
 import { BuilderBlock as BuilderBlockComponent } from '@fake';
 import { BuilderElement, Builder, builder } from '@builder.io/sdk';

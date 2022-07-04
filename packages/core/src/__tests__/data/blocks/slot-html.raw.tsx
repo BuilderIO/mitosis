@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { Slot } from '@builder.io/mitosis';
 import ContentSlotCode from './content-slot-jsx.raw';
 

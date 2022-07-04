@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 import { useStore, For, onMount } from '@builder.io/mitosis';
 
 export default function MyBasicForComponent() {

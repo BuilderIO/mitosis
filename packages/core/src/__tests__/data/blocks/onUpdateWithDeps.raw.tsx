@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { onUpdate, useStore } from '@builder.io/mitosis';
 
 export default function OnUpdateWithDeps() {

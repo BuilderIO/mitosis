@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { Show } from '@builder.io/mitosis';
 
 export default function MyComponent(props: any) {

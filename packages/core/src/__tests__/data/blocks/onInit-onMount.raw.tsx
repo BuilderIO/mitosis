@@ -1,3 +1,5 @@
+/** @jsxImportSource @builder.io/mitosis */
+
 import { onInit, onMount } from '@builder.io/mitosis';
 
 export default function OnInit() {

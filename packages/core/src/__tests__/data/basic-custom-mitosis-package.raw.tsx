@@ -1,3 +1,4 @@
+/** @jsxImportSource @builder.io/mitosis */
 import { useStore } from '@dummy/custom-mitosis';
 
 export default function MyBasicComponent() {
