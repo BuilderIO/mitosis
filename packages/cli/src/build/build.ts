@@ -204,8 +204,8 @@ const shouldOutputOriginalGeneratedFile = ({
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  const language = options.options[target]?.transpiler?.language;
-  if (language?.includes('ts')) {
+  const languages = options.options[target]?.transpiler?.languages;
+  if (languages?.includes('ts')) {
     return true;
   } else {
     return false;
