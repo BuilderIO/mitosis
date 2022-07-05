@@ -194,6 +194,24 @@ const getGeneratorForTarget = ({
   }
 };
 
+/**
+ * Output generated component file, before it is minified and transpiled into JS.
+ */
+const shouldOutputOriginalGeneratedFile = ({
+  target,
+  options,
+}: {
+  target: Target;
+  options: MitosisConfig;
+}): boolean => {
+  const languages = options.options[target]?.transpiler?.languages;
+  if (languages?.includes('ts')) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
 const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
   path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
 
@@ -268,11 +286,9 @@ async function buildAndOutputComponentFiles({
     await Promise.all([
       // this is the default output
       outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-      // output generated component file, before it is minified and transpiled into JS.
-      // we skip these targets because the files would be invalid.
-      ...(target === 'swift' || target === 'svelte' || target === 'vue' || target === 'qwik'
-        ? []
-        : [outputFile(`${outputDir}/${path}`, original)]),
+      ...(shouldOutputOriginalGeneratedFile({ target, options })
+        ? [outputFile(`${outputDir}/${path}`, original)]
+        : []),
     ]);
   });
   await Promise.all(output);
