@@ -46,6 +46,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     isModule: opts.output != 'cjs',
     isTypeScript: opts.output == 'ts',
     isJSX: opts.jsx,
+    isBuilder: true,
   };
   const fileSet = {
     high: new File('high.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
@@ -147,7 +148,11 @@ function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: b
 
 export function renderUseLexicalScope(file: File) {
   return function (this: SrcBuilder) {
-    return this.emit('const state=', file.import(file.qwikModule, 'useLexicalScope').name, '()[0]');
+    return this.emit(
+      'const state=',
+      file.import(file.qwikModule, 'useLexicalScope').localName,
+      '()[0]',
+    );
   };
 }
 
