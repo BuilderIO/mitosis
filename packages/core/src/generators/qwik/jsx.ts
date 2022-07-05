@@ -1,4 +1,3 @@
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
