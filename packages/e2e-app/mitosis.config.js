@@ -11,5 +11,6 @@ module.exports = {
   dest: ['output/' + process.argv[3]],
   options: {
     react: { transpiler: { format: 'esm', languages: ['ts'] } },
+    solid: { transpiler: { languages: ['ts'] } },
   },
 };
