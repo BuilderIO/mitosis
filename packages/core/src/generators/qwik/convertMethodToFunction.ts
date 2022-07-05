@@ -1,5 +1,3 @@
-import { number } from 'fp-ts';
-
 export function convertMethodToFunction(
   code: string,
   methods: Record<string, 'method' | 'getter'>,

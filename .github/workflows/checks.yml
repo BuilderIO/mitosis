@@ -25,14 +25,50 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
 
+      - name: Lint
+        run: yarn ci:lint
+
       - name: Build
         run: yarn ci:build
 
       - name: Run tests
         run: yarn ci:test
 
-      - name: Run prettier
-        run: yarn ci:lint
+  fiddle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+  
+      - name: Build Fiddle
+        run: yarn ci:fiddle-build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn ci:build
 
       - name: Install browsers for Playwright
         run: yarn ci:e2e-prep
