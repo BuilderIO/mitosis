@@ -121,14 +121,10 @@ export async function build(config?: MitosisConfig) {
   console.info('Done!');
 }
 
-/**
- * TO-DO: can this be removed?
- */
 async function outputOverrides({ target, options, outputPath }: TargetContextWithConfig) {
-  const kebabTarget = kebabCase(target);
-  const targetOverrides = `${options.overridesDir}/${kebabTarget}`;
+  const targetOverrides = `${options.overridesDir}/${outputPath}`;
 
-  // get all outputted files
+  // get all overrides files
   const overrideFileNames = await glob([
     `${targetOverrides}/**/*`,
     `!${targetOverrides}/node_modules/**/*`,
@@ -231,9 +227,8 @@ async function buildAndOutputComponentFiles({
   const output = files.map(async ({ path, mitosisJson }) => {
     const outputFilePath = replaceFileExtensionForTarget({ target, path });
 
-    // try to find override file
-    const kebabTarget = kebabCase(target);
-    const overrideFilePath = `${options.overridesDir}/${kebabTarget}/${outputFilePath}`;
+    // try to find override component file
+    const overrideFilePath = `${options.overridesDir}/${outputPath}/${outputFilePath}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;
