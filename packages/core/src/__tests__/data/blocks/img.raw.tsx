@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import '@builder.io/mitosis';
 import { Builder } from '@builder.io/sdk';
 

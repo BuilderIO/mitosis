@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 import { useStore } from '@builder.io/mitosis';
 
 type Props = {

@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 import { useStore, onUpdate } from '@builder.io/mitosis';
 
 export default function MyBasicOnUpdateReturnComponent() {

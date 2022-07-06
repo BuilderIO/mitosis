@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { useStore, For } from '@builder.io/mitosis';
 
 export default function ImgStateComponent() {

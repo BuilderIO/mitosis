@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import ContentSlotCode from './content-slot-jsx.raw';
 
 type Props = { [key: string]: string };

@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 import { useStore, useContext, onInit, setContext, onMount } from '@builder.io/mitosis';
 import { Injector, createInjector, MyService } from '@dummy/injection-js';
 

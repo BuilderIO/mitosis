@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { useMetadata, useStore, onMount, For, Show } from '@builder.io/mitosis';
 
 useMetadata({ isAttachedToShadowDom: true });

@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { useStore, useRef, onMount } from '@builder.io/mitosis';
 
 export interface EmbedProps {

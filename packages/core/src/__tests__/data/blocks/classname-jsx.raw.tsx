@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { useStore } from '@builder.io/mitosis';
 import type { JSX } from '../../../jsx-types';
 

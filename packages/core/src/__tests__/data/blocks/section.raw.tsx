@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import '@builder.io/mitosis';
 
 export interface SectionProps {

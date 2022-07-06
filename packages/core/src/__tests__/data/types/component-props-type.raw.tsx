@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 type Person = {
   name: string;
   age?: number;

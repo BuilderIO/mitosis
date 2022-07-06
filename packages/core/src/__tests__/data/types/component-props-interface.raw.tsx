@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 interface Person {
   name: string;
   age?: number;

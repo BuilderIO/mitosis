@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 const b = 3;
 const foo = () => {};
 

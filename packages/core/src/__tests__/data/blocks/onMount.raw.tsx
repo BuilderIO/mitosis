@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { onMount, onUnMount } from '@builder.io/mitosis';
 
 export default function Comp() {

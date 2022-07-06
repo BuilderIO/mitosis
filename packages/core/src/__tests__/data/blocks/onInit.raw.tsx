@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { onInit, useStore } from '@builder.io/mitosis';
 
 type Props = {

@@ -1,4 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
 import { useStore, onInit, onMount } from '@builder.io/mitosis';
 
 export interface Props {

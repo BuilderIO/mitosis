@@ -1,5 +1,3 @@
-/** @jsxImportSource @builder.io/mitosis */
-
 import { Show } from '@builder.io/mitosis';
 
 export interface ButtonProps {
