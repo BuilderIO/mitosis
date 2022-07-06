@@ -1,3 +1,5 @@
+import type { JSX } from '../../../jsx-types';
+
 type Props = {
   [key: string]: string | JSX.Element;
 };
