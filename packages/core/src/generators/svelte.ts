@@ -272,8 +272,9 @@ export const componentToSvelte =
   (options: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
     const useOptions: ToSvelteOptions = {
-      ...options,
       stateType: 'variables',
+      prettier: true,
+      ...options,
     };
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
