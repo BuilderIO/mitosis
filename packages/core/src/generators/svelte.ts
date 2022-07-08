@@ -423,7 +423,21 @@ export const componentToSvelte =
         !json.hooks.onUpdate?.length
           ? ''
           : json.hooks.onUpdate
-              .map((hook) => `afterUpdate(() => { ${transformHookCode(hook.code)} })`)
+              .map(({ code, deps }, index) => {
+                const hookCode = transformHookCode(code);
+
+                if (deps) {
+                  const fnName = `onUpdateFn_${index}`;
+                  return `
+                    function ${fnName}() {
+                      ${hookCode}
+                    }
+                    $: ${fnName}(...${deps})
+                    `;
+                } else {
+                  return `afterUpdate(() => { ${hookCode} })`;
+                }
+              })
               .join(';')
       }
 
