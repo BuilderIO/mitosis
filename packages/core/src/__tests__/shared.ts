@@ -164,6 +164,14 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
   ],
+  svelte: [
+    BASIC_TESTS,
+    ROOT_SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    FOR_SHOW_TESTS,
+  ],
   html: [
     BASIC_TESTS,
     ROOT_SHOW_TESTS,

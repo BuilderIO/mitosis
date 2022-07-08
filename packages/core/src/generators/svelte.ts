@@ -16,6 +16,7 @@ import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -30,6 +31,10 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { uniq } from 'lodash';
+import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { GETTER } from '../helpers/patterns';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -268,12 +273,31 @@ const stripThisRefs = (str: string) => {
   return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
 };
 
+const FUNCTION_HACK_PLUGIN: Plugin = () => ({
+  json: {
+    pre: (json) => {
+      for (const key in json.state) {
+        const value = json.state[key];
+        if (typeof value === 'string' && value.startsWith(methodLiteralPrefix)) {
+          const strippedValue = value.replace(methodLiteralPrefix, '');
+          if (!Boolean(strippedValue.match(GETTER))) {
+            const newValue = `${functionLiteralPrefix} function ${strippedValue}`;
+            json.state[key] = newValue;
+          }
+        }
+      }
+    },
+  },
+});
+
 export const componentToSvelte =
-  (options: ToSvelteOptions = {}): Transpiler =>
+  ({ plugins = [], ...options }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
     const useOptions: ToSvelteOptions = {
-      ...options,
       stateType: 'variables',
+      prettier: true,
+      plugins: [FUNCTION_HACK_PLUGIN, ...plugins],
+      ...options,
     };
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
@@ -334,7 +358,7 @@ export const componentToSvelte =
         getters: false,
         functions: true,
         format: 'variables',
-        keyPrefix: 'function ',
+        keyPrefix: 'const ',
         valueMapper: (code) =>
           pipe(
             stripStateAndPropsRefs(code, {
@@ -367,8 +391,7 @@ export const componentToSvelte =
       ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
       ${!hasData || useOptions.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
-      ${refs
-        .concat(props)
+      ${uniq(refs.map((ref) => stripStateAndPropsRefs(ref)).concat(props))
         .map((name) => {
           if (name === 'children') {
             return '';
@@ -447,7 +470,8 @@ export const componentToSvelte =
           ],
         });
       } catch (err) {
-        console.warn('Could not prettify', { string: str }, err);
+        console.warn('Could not prettify');
+        console.warn({ string: str }, err);
       }
     }
     if (useOptions.plugins) {

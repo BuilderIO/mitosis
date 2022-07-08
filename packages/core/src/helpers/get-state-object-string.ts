@@ -5,25 +5,34 @@ import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { MitosisComponent } from '../types/mitosis-component';
 import { GETTER } from './patterns';
 
-export type GetStateObjectStringOptions = {
+interface GetStateObjectStringOptions {
   data?: boolean;
   functions?: boolean;
   getters?: boolean;
   valueMapper?: (code: string, type: 'data' | 'function' | 'getter') => string;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
+}
+
+interface RequiredOptions extends Required<GetStateObjectStringOptions> {}
+
+const DEFAULT_OPTIONS: RequiredOptions = {
+  format: 'object',
+  keyPrefix: '',
+  valueMapper: (val) => val,
+  data: true,
+  functions: true,
+  getters: true,
 };
 
 const convertStateMemberToString =
-  (options: GetStateObjectStringOptions) =>
+  ({ data, format, functions, getters, keyPrefix, valueMapper }: RequiredOptions) =>
   ([key, value]: [string, JSON]) => {
-    const valueMapper = options.valueMapper || ((val: string) => val);
-    const keyValueDelimiter = options.format === 'object' ? ':' : '=';
-    const keyPrefix = options.keyPrefix || '';
+    const keyValueDelimiter = format === 'object' ? ':' : '=';
 
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
-        if (options.functions === false) {
+        if (functions === false) {
           return undefined;
         }
         const functionValue = value.replace(functionLiteralPrefix, '');
@@ -31,10 +40,10 @@ const convertStateMemberToString =
       } else if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(GETTER));
-        if (isGet && options.getters === false) {
+        if (isGet && getters === false) {
           return undefined;
         }
-        if (!isGet && options.functions === false) {
+        if (!isGet && functions === false) {
           return undefined;
         }
         return `${keyPrefix} ${valueMapper(
@@ -44,7 +53,7 @@ const convertStateMemberToString =
       }
     }
 
-    if (options.data === false) {
+    if (data === false) {
       return undefined;
     }
     return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(json5.stringify(value), 'data')}`;
@@ -52,18 +61,19 @@ const convertStateMemberToString =
 
 export const getMemberObjectString = (
   object: JSONObject,
-  options: GetStateObjectStringOptions = {},
+  userOptions: GetStateObjectStringOptions = {},
 ) => {
-  const format = options.format || 'object';
-  const lineItemDelimiter = format === 'object' ? ',' : '\n';
+  const options = { ...DEFAULT_OPTIONS, ...userOptions };
+
+  const lineItemDelimiter = options.format === 'object' ? ',' : '\n';
 
   const stringifiedProperties = Object.entries(object)
-    .map(convertStateMemberToString({ ...options, format }))
+    .map(convertStateMemberToString(options))
     .filter((x) => x !== undefined)
     .join(lineItemDelimiter);
 
-  const prefix = format === 'object' ? '{' : '';
-  const suffix = format === 'object' ? '}' : '';
+  const prefix = options.format === 'object' ? '{' : '';
+  const suffix = options.format === 'object' ? '}' : '';
 
   // NOTE: we add a `lineItemDelimiter` at the very end because other functions will sometimes append more properties.
   // If the delimiter is a comma and the format is `object`, then we need to make sure we have an extra comma at the end,
@@ -76,9 +86,5 @@ export const getMemberObjectString = (
 
 export const getStateObjectStringFromComponent = (
   component: MitosisComponent,
-  options: GetStateObjectStringOptions = {},
-) => {
-  const stateObjectStr = getMemberObjectString(component.state, options);
-
-  return stateObjectStr;
-};
+  options?: GetStateObjectStringOptions,
+) => getMemberObjectString(component.state, options);
