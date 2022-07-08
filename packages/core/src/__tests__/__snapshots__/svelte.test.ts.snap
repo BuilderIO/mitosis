@@ -332,9 +332,10 @@ exports[`Svelte BasicRefPrevious 1`] = `
 
   let count = 0;
 
-  afterUpdate(() => {
+  function onUpdateFn_0() {
     prevCount = count;
-  });
+  }
+  $: onUpdateFn_0(...[state.count]);
 
 </script>
 
@@ -1545,20 +1546,22 @@ exports[`Svelte multipleOnUpdateWithDeps 1`] = `
   let c = \\"c\\";
   let d = \\"d\\";
 
-  afterUpdate(() => {
+  function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a === \\"a\\") {
       a = \\"b\\";
     }
-  });
-  afterUpdate(() => {
+  }
+  $: onUpdateFn_0(...[state.a, state.b]);
+  function onUpdateFn_1() {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a === \\"a\\") {
       a = \\"b\\";
     }
-  });
+  }
+  $: onUpdateFn_1(...[state.c, state.d]);
 
 </script>
 
@@ -1637,9 +1640,10 @@ exports[`Svelte onUpdateWithDeps 1`] = `
   let a = \\"a\\";
   let b = \\"b\\";
 
-  afterUpdate(() => {
+  function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a, b);
-  });
+  }
+  $: onUpdateFn_0(...[state.a, state.b]);
 
 </script>
 
