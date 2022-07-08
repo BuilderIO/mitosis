@@ -6,9 +6,9 @@ exports[`Svelte Basic 1`] = `
     name: \\"Steve\\",
   };
 
-  function underscore_fn_name() {
+  const underscore_fn_name = function underscore_fn_name() {
     return \\"bar\\";
-  }
+  };
 
   let name = \\"Steve\\";
 
@@ -84,6 +84,36 @@ name = event.target.value + ' and ' + person;
 
 
   </div>"
+`;
+
+exports[`Svelte Basic Context 1`] = `
+"<script>
+  import { onMount } from \\"svelte\\";
+
+  import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+  import { getContext, setContext } from \\"svelte\\";
+
+  const onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  let myService = getContext(MyService.key);
+  setContext(Injector.key, undefined);
+  let name = \\"PatrickJS\\";
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+</script>
+
+<div>{myService.method('hello') + name}
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  <input on:change={(event) => onChange} /></div>
+"
 `;
 
 exports[`Svelte Basic OnMount Update 1`] = `
@@ -218,6 +248,71 @@ name = event.target.value + ' and ' + person;
   </div>"
 `;
 
+exports[`Svelte BasicRef 1`] = `
+"<script>
+  export let inputRef;
+  export let inputNoArgRef;
+  export let showInput;
+
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  };
+
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  let name = \\"PatrickJS\\";
+
+</script>
+
+<style>
+  .input {
+    color: red;
+  }
+
+</style>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => onBlur()}
+      bind:value={name} />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+
+  Hello
+
+  {lowerCaseName()}
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+"
+`;
+
+exports[`Svelte BasicRefAssignment 1`] = `
+"<script>
+  const handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  };
+
+</script>
+
+<div><button on:click={(evt) => handlerClick(evt)}>Click</button></div>
+"
+`;
+
 exports[`Svelte BasicRefPrevious 1`] = `
 "<script>
   import { afterUpdate } from \\"svelte\\";
@@ -278,25 +373,25 @@ exports[`Svelte Columns 1`] = `
   export let columns;
   export let space;
 
-  function getColumns() {
+  const getColumns = function getColumns() {
     return columns || [];
-  }
+  };
 
-  function getGutterSize() {
+  const getGutterSize = function getGutterSize() {
     return typeof space === \\"number\\" ? space || 0 : 20;
-  }
+  };
 
-  function getWidth(index) {
+  const getWidth = function getWidth(index) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
-  }
+  };
 
-  function getColumnCssWidth(index) {
+  const getColumnCssWidth = function getColumnCssWidth(index) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
     return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
-  }
+  };
 
 </script>
 
@@ -379,7 +474,7 @@ exports[`Svelte CustomCode 1`] = `
   export let replaceNodes;
   export let code;
 
-  function findAndRunScripts() {
+  const findAndRunScripts = function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
@@ -419,7 +514,7 @@ exports[`Svelte CustomCode 1`] = `
         }
       }
     }
-  }
+  };
 
   let scriptsInserted = [];
   let scriptsRun = [];
@@ -446,7 +541,7 @@ exports[`Svelte Embed 1`] = `
   export let replaceNodes;
   export let code;
 
-  function findAndRunScripts() {
+  const findAndRunScripts = function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
@@ -486,7 +581,7 @@ exports[`Svelte Embed 1`] = `
         }
       }
     }
-  }
+  };
 
   let scriptsInserted = [];
   let scriptsRun = [];
@@ -533,7 +628,7 @@ exports[`Svelte Form 1`] = `
   export let sendingMessage;
   export let successMessage;
 
-  function onSubmit(event) {
+  const onSubmit = function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
 
     if (sendSubmissionsTo === \\"zapier\\") {
@@ -745,7 +840,7 @@ exports[`Svelte Form 1`] = `
         }
       );
     }
-  }
+  };
   $: submissionState = () => {
     return (Builder.isEditing && previewState) || state;
   };
@@ -805,6 +900,112 @@ exports[`Svelte Form 1`] = `
   {/if}
 </form>
 "
+`;
+
+exports[`Svelte Image 1`] = `
+"<script>
+    import { onMount } from 'svelte'
+    
+    import { onDestroy } from 'svelte'
+    
+  
+  
+  
+
+    
+
+    
+    export let pictureRef;
+export let lazy;
+export let altText;
+export let class;
+export let image;
+export let srcset;
+export let sizes;
+
+    
+    const setLoaded = function setLoaded() {
+imageLoaded = true;
+};
+
+const useLazyLoading = function useLazyLoading() {
+// TODO: Add more checks here, like testing for real web browsers
+return !!lazy && isBrowser();
+};
+
+const isBrowser = function isBrowser() {
+return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+};
+    
+
+    
+    
+    let scrollListener = null;
+let imageLoaded = false;
+let load = false;
+
+    onMount(() => { if (useLazyLoading()) {
+// throttled scroll capture listener
+const listener = () => {
+  if (pictureRef) {
+    const rect = pictureRef.getBoundingClientRect();
+    const buffer = window.innerHeight / 2;
+
+    if (rect.top < window.innerHeight + buffer) {
+      setLoad(true);
+      scrollListener = null;
+      window.removeEventListener('scroll', listener);
+    }
+  }
+};
+
+scrollListener = listener;
+window.addEventListener('scroll', listener, {
+  capture: true,
+  passive: true
+});
+listener();
+} });
+
+    
+
+    onDestroy(() => { if (scrollListener) {
+window.removeEventListener('scroll', scrollListener);
+} });
+  </script>
+
+  
+    
+<picture  bind:this={pictureRef} >
+      
+
+{#if !useLazyLoading() || load }
+
+        
+<img  alt={altText}  aria-role={altText ? 'presentation' : undefined}  class={'builder-image' + (class ? ' ' + class : '') + 'img'}  src={image}  on:load=\\"{event => setLoaded()}\\"  srcset={srcset}  sizes={sizes}  />
+
+      
+
+
+{/if}
+
+      
+<source  srcset={srcset}  />
+
+    </picture>
+
+    
+<slot></slot>
+
+  
+
+  <style>
+    .img { 
+opacity: 1;
+transition: opacity 0.2s ease-in-out;
+object-fit: cover;
+object-position: center; }
+  </style>"
 `;
 
 exports[`Svelte Image State 1`] = `
@@ -1047,13 +1248,13 @@ import { snakeCase } from 'lodash';
     export let apiKey;
 export let productId;
     
-    function kebabCaseValue() {
+    const kebabCaseValue = function kebabCaseValue() {
 return kebabCase('testThat');
-}
+};
 
-function snakeCaseValue() {
+const snakeCaseValue = function snakeCaseValue() {
 return snakeCase('testThis');
-}
+};
     
 
     
@@ -1221,31 +1422,9 @@ exports[`Svelte Video 1`] = `
 
 exports[`Svelte basicForwardRef 1`] = `
 "<script>
-  
-  
-  
-  
+  export let inputRef;
 
-
-
-
-  
-
-  
-  export let props.inputRef;
-export let inputRef;
-  
-  
-  
-
-  
-  
-  let name = 'PatrickJS';
-
-  
-
-  
-
+  let name = \\"PatrickJS\\";
 
 </script>
 
@@ -1262,31 +1441,9 @@ export let inputRef;
 
 exports[`Svelte basicForwardRefMetadata 1`] = `
 "<script>
-  
-  
-  
-  
+  export let inputRef;
 
-
-
-
-  
-
-  
-  export let props.inputRef;
-export let inputRef;
-  
-  
-  
-
-  
-  
-  let name = 'PatrickJS';
-
-  
-
-  
-
+  let name = \\"PatrickJS\\";
 
 </script>
 
