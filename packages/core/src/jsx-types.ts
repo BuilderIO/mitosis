@@ -1,7 +1,3 @@
-type CSS = Partial<CSSStyleDeclaration> & {
-  [key: string]: Partial<CSSStyleDeclaration> | string;
-};
-
 /**
  * Based on JSX types for Solid, Inferno, Surplus, and React
  *
@@ -12,6 +8,10 @@ type CSS = Partial<CSSStyleDeclaration> & {
  */
 
 export declare namespace JSX {
+  type CSS = Partial<CSSStyleDeclaration> & {
+    [key: string]: Partial<CSSStyleDeclaration> | string;
+  };
+
   type Element =
     | Node
     | ArrayElement
@@ -54,6 +54,7 @@ export declare namespace JSX {
   // at the same time hiding them from the element's `props`.
   // https://github.com/Microsoft/TypeScript/issues/5478
   interface IntrinsicAttributes {
+    key?: string | number;
     ref?: HTMLElement | ((e: HTMLElement) => void);
   }
 
@@ -71,7 +72,7 @@ export declare namespace JSX {
 
   // https://github.com/ryansolid/babel-plugin-jsx-dom-expressions#oneventname
   interface DOMAttributes<T> extends CustomAttributes<T> {
-    children?: Element;
+    children?: Element | Element[] | string | undefined | false;
     innerHTML?: string;
     innerText?: string;
     textContent?: string;
@@ -441,6 +442,8 @@ export declare namespace JSX {
   }
 
   interface ImgHTMLAttributes<T> extends HTMLAttributes<T> {
+    loading?: string;
+    role?: string;
     alt?: string;
     crossorigin?: HTMLCrossorigin;
     decoding?: 'sync' | 'async' | 'auto';
