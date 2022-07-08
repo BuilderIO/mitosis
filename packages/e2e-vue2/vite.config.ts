@@ -6,7 +6,7 @@ import { resolve } from 'path';
 const config = defineConfig({
   resolve: {
     alias: {
-      '@': `${resolve(__dirname, 'vue_src')}`,
+      '@': `${resolve(__dirname, 'src')}`,
     },
   },
 
