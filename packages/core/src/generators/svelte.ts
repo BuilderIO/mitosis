@@ -191,6 +191,16 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     })}}`;
   }
 
+  if (json.bindings.style?.code || json.properties.style) {
+    const useValue = stripStateAndPropsRefs(json.bindings.style?.code || json.properties.style, {
+      includeState: options.stateType === 'variables',
+    });
+
+    str += `use:mitosis_styling={${useValue}}`;
+    delete json.bindings.style;
+    delete json.properties.style;
+  }
+
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
@@ -298,6 +308,19 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
     },
   },
 });
+
+const hasStyleObject = (children: MitosisNode[]): boolean => {
+  for (let i = 0; i < children.length; i++) {
+    const child = children[i];
+    if (child.bindings.style || child.properties.style) {
+      return true;
+    } else if (child.children.length) {
+      return hasStyleObject(child.children);
+    }
+  }
+
+  return false;
+};
 
 export const componentToSvelte =
   ({ plugins = [], ...options }: ToSvelteOptions = {}): Transpiler =>
@@ -408,7 +431,15 @@ export const componentToSvelte =
           return `export let ${name};`;
         })
         .join('\n')}
-      
+      ${
+        hasStyleObject(json.children)
+          ? `
+        function mitosis_styling (node, vars) {
+          Object.entries(vars).forEach(([ p, v ]) => { node.style[p] = v })
+        }
+      `
+          : ''
+      }
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
