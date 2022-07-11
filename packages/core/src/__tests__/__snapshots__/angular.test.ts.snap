@@ -1202,8 +1202,8 @@ import { Builder } from \\"@builder.io/sdk\\";
 @Component({
   selector: \\"img-component\\",
   template: \`
-    <img [style]='{ objectFit: backgroundSize || 'cover', objectPosition:
-    backgroundPosition || 'center' }' [key]='Builder.isEditing && imgSrc ||
+    <img [ngStyle]=\\"{ objectFit: backgroundSize || 'cover', objectPosition:
+    backgroundPosition || 'center' }\\" [key]='Builder.isEditing && imgSrc ||
     'default-key'' [alt]='altText' [src]='imgSrc' />
   \`,
 })
@@ -1303,14 +1303,14 @@ export interface SectionProps {
 @Component({
   selector: \\"section-component\\",
   template: \`
-      <section  [style]='maxWidth && typeof maxWidth === 'number' ? {
+    <section
+      [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
         maxWidth: maxWidth
-      } : undefined' >
-            
+      } : undefined\\"
+    >
       <ng-content></ng-content>
-
-          </section>
-    \`,
+    </section>
+  \`,
 })
 export default class SectionComponent {
   @Input() attributes: SectionProps[\\"attributes\\"];
@@ -1334,7 +1334,7 @@ export interface SectionProps {
     <ng-container *ngIf=\\"max\\">
       <ng-container *ngFor=\\"let item of items\\">
         <section
-          [style]=\\"{
+          [ngStyle]=\\"{
          maxWidth: item + max
        }\\"
         >
@@ -1664,7 +1664,7 @@ export interface VideoProps {
 @Component({
   selector: \\"video\\",
   template: \`
-      <video  preload=\\"none\\"  [style]='{
+      <video  preload=\\"none\\"  [ngStyle]=\\"{
         width: '100%',
         height: '100%',
         ...attributes?.style,
@@ -1673,7 +1673,7 @@ export interface VideoProps {
         // Hack to get object fit to work as expected and
         // not have the video overflow
         borderRadius: 1
-      }'  [key]='video || 'no-src''  [poster]='posterImage'  [autoplay]='autoPlay'  [muted]='muted'  [controls]='controls'  [loop]='loop' ></video>
+      }\\"   [key]='video || 'no-src''  [poster]='posterImage'  [autoplay]='autoPlay'  [muted]='muted'  [controls]='controls'  [loop]='loop' ></video>
     \`,
 })
 export default class Video {
@@ -1842,6 +1842,31 @@ type Props = {
 })
 export default class ClassNameCode {
   bindings = \\"a binding\\";
+}
+"
+`;
+
+exports[`Angular classState 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"classState + 'div'\\" [ngStyle]=\\"customStyles\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  classState = \\"testClassName\\";
+  customStyles = { color: \\"red\\" };
 }
 "
 `;

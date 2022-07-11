@@ -17,16 +17,6 @@ const basicForwardRef = require('./data/basic-forwardRef.raw');
 const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
-const propsDestructure = require('./data/basic-props-destructure.raw');
-const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
-
-const propsType = require('./data/types/component-props-type.raw');
-const propsInterface = require('./data/types/component-props-interface.raw');
-const preserveTyping = require('./data/types/preserve-typing.raw');
-
-const classRaw = require('./data/styles/class.raw');
-const className = require('./data/styles/className.raw');
-const classAndClassName = require('./data/styles/class-and-className.raw');
 
 const button = require('./data/blocks/button.raw');
 const classNameJsx = require('./data/blocks/classname-jsx.raw');
@@ -60,6 +50,16 @@ const submitButtonBlock = require('./data/blocks/submit-button.raw');
 const text = require('./data/blocks/text.raw');
 const textarea = require('./data/blocks/textarea.raw');
 const video = require('./data/blocks/video.raw');
+const propsType = require('./data/types/component-props-type.raw');
+const propsInterface = require('./data/types/component-props-interface.raw');
+const preserveTyping = require('./data/types/preserve-typing.raw');
+const propsDestructure = require('./data/basic-props-destructure.raw');
+const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
+
+const classRaw = require('./data/styles/class.raw');
+const className = require('./data/styles/className.raw');
+const classAndClassName = require('./data/styles/class-and-className.raw');
+const classState = require('./data/styles/classState.raw');
 
 const path = 'test-path';
 
@@ -115,6 +115,7 @@ const SLOTS_TESTS = {
   ContentSlotHtml: contentSlotHtml,
   SlotJsx: slotJsx,
   SlotHtml: slotHtml,
+  classState,
 };
 
 const MULTI_ON_UPDATE_TESTS: Tests = {
@@ -178,12 +179,15 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FOR_SHOW_TESTS,
   ],
   svelte: [
-    BASIC_TESTS,
-    ROOT_SHOW_TESTS,
-    FORWARD_REF_TESTS,
-    MULTI_ON_UPDATE_TESTS,
-    FORM_BLOCK_TESTS,
-    FOR_SHOW_TESTS,
+    {
+      classState,
+    },
+    // BASIC_TESTS,
+    // ROOT_SHOW_TESTS,
+    // FORWARD_REF_TESTS,
+    // MULTI_ON_UPDATE_TESTS,
+    // FORM_BLOCK_TESTS,
+    // FOR_SHOW_TESTS,
   ],
   html: [
     BASIC_TESTS,
