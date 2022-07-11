@@ -11,23 +11,22 @@ exports[`Svelte Basic 1`] = `
   };
 
   let name = \\"Steve\\";
-
 </script>
+
+<div class=\\"test div\\">
+  <input
+    value={DEFAULT_VALUES.name || name}
+    on:change={(myEvent) => (name = myEvent.target.value)}
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
 
 <style>
   .div {
     padding: 10px;
   }
-
 </style>
-
-<div class=\\"test div\\">
-  <input
-    value={DEFAULT_VALUES.name || name}
-    on:change={(myEvent) => (name = myEvent.target.value)} />
-
-  Hello! I can run in React, Vue, Solid, or Liquid!
-</div>
 "
 `;
 
@@ -64,7 +63,7 @@ let names = ['Steve', 'PatrickJS'];
   <div >
     
 
-{#each names as person, index }
+{#each names as person, undefined }
 
 {#if person === name }
 
@@ -107,12 +106,15 @@ exports[`Svelte Basic Context 1`] = `
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
-
 </script>
 
-<div>{myService.method('hello') + name}
+<div>
+  {myService.method(\\"hello\\") + name}
+
   Hello! I can run in React, Vue, Solid, or Liquid!
-  <input on:change={(event) => onChange} /></div>
+
+  <input on:change={(event) => onChange} />
+</div>
 "
 `;
 
@@ -129,10 +131,12 @@ exports[`Svelte Basic OnMount Update 1`] = `
   onMount(() => {
     name = \\"PatrickJS onMount\\" + bye;
   });
-
 </script>
 
-<div>Hello {name}</div>
+<div>
+  Hello
+  {name}
+</div>
 "
 `;
 
@@ -150,7 +154,6 @@ exports[`Svelte Basic Outputs 1`] = `
     onMessage(name);
     onEvent(message);
   });
-
 </script>
 
 <div />
@@ -171,7 +174,6 @@ exports[`Svelte Basic Outputs Meta 1`] = `
     onMessage(name);
     onEvent(message);
   });
-
 </script>
 
 <div />
@@ -185,7 +187,6 @@ exports[`Svelte BasicChildComponent 1`] = `
 
   let name = \\"Steve\\";
   let dev = \\"PatrickJS\\";
-
 </script>
 
 <div>
@@ -231,7 +232,7 @@ let names = ['Steve', 'PatrickJS'];
   <div >
     
 
-{#each names as person, index }
+{#each names as person, undefined }
 
           
 <input  value={name}  on:change=\\"{event => 
@@ -264,15 +265,7 @@ exports[`Svelte BasicRef 1`] = `
   };
 
   let name = \\"PatrickJS\\";
-
 </script>
-
-<style>
-  .input {
-    color: red;
-  }
-
-</style>
 
 <div>
   {#if showInput}
@@ -280,7 +273,8 @@ exports[`Svelte BasicRef 1`] = `
       class=\\"input\\"
       bind:this={inputRef}
       on:blur={(event) => onBlur()}
-      bind:value={name} />
+      bind:value={name}
+    />
 
     <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
 
@@ -296,6 +290,12 @@ exports[`Svelte BasicRef 1`] = `
   {lowerCaseName()}
   ! I can run in React, Qwik, Vue, Solid, or Web Component!
 </div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>
 "
 `;
 
@@ -306,10 +306,11 @@ exports[`Svelte BasicRefAssignment 1`] = `
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
   };
-
 </script>
 
-<div><button on:click={(evt) => handlerClick(evt)}>Click</button></div>
+<div>
+  <button on:click={(evt) => handlerClick(evt)}>Click</button>
+</div>
 "
 `;
 
@@ -336,11 +337,15 @@ exports[`Svelte BasicRefPrevious 1`] = `
     prevCount = count;
   }
   $: onUpdateFn_0(...[state.count]);
-
 </script>
 
 <div>
-  <h1>Now: {count} , before: {prevCount}</h1>
+  <h1>
+    Now:
+    {count}
+    , before:
+    {prevCount}
+  </h1>
 
   <button on:click={(event) => (count += 1)}>Increment</button>
 </div>
@@ -353,19 +358,23 @@ exports[`Svelte Button 1`] = `
   export let attributes;
   export let openLinkInNewTab;
   export let text;
-
 </script>
 
 {#if link}
   <a
     {...attributes}
     href={link}
-    target={openLinkInNewTab ? '_blank' : undefined}>
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+  >
     {text}
   </a>
 {/if}
 
-{#if !link}<button {...attributes} type=\\"button\\"> {text} </button>{/if}
+{#if !link}
+  <button {...attributes} type=\\"button\\">
+    {text}
+  </button>
+{/if}
 "
 `;
 
@@ -393,8 +402,17 @@ exports[`Svelte Columns 1`] = `
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
     return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   };
-
 </script>
+
+<div class=\\"builder-columns div\\">
+  {#each columns as column, index}
+    <div class=\\"builder-column div-2\\">
+      {column.content}
+
+      {index}
+    </div>
+  {/each}
+</div>
 
 <style>
   .div {
@@ -416,21 +434,13 @@ exports[`Svelte Columns 1`] = `
   .div-2 {
     flex-grow: 1;
   }
-
 </style>
-
-<div class=\\"builder-columns div\\">
-  {#each columns as column, index}
-    <div class=\\"builder-column div-2\\">{column.content} {index}</div>
-  {/each}
-</div>
 "
 `;
 
 exports[`Svelte ContentSlotHtml 1`] = `
 "<script>
   export let slotTesting;
-
 </script>
 
 <div>
@@ -450,7 +460,6 @@ exports[`Svelte ContentSlotHtml 1`] = `
 exports[`Svelte ContentSlotJSX 1`] = `
 "<script>
   export let slotTesting;
-
 </script>
 
 <div>
@@ -460,9 +469,7 @@ exports[`Svelte ContentSlotJSX 1`] = `
     <hr />
   </div>
 
-  <div>
-    <slot />
-  </div>
+  <div><slot /></div>
 </div>
 "
 `;
@@ -523,12 +530,12 @@ exports[`Svelte CustomCode 1`] = `
   onMount(() => {
     findAndRunScripts();
   });
-
 </script>
 
 <div
   bind:this={elem}
-  class={'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')}>
+  class={\\"builder-custom-code\\" + (replaceNodes ? \\" replace-nodes\\" : \\"\\")}
+>
   {@html code}
 </div>
 "
@@ -590,12 +597,12 @@ exports[`Svelte Embed 1`] = `
   onMount(() => {
     findAndRunScripts();
   });
-
 </script>
 
 <div
   bind:this={elem}
-  class={'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')}>
+  class={\\"builder-custom-code\\" + (replaceNodes ? \\" replace-nodes\\" : \\"\\")}
+>
   {@html code}
 </div>
 "
@@ -849,17 +856,7 @@ exports[`Svelte Form 1`] = `
   let state = \\"unsubmitted\\";
   let responseData = null;
   let formErrorMessage = \\"\\";
-
 </script>
-
-<style>
-  .pre {
-    padding: 10px;
-    color: red;
-    text-align: center;
-  }
-
-</style>
 
 <form
   {...attributes}
@@ -868,34 +865,42 @@ exports[`Svelte Form 1`] = `
   action={!sendWithJs && action}
   {method}
   {name}
-  on:submit={(event) => onSubmit(event)}>
+  on:submit={(event) => onSubmit(event)}
+>
   {#if builderBlock && builderBlock.children}
     {#each builderBlock?.children as block, index (block.id)}
       <svelte:component this={BuilderBlockComponent} {block} {index} />
     {/each}
   {/if}
 
-  {#if submissionState() === 'error'}
+  {#if submissionState() === \\"error\\"}
     <BuilderBlocks dataPath=\\"errorMessage\\" blocks={errorMessage} />
   {/if}
 
-  {#if submissionState() === 'sending'}
+  {#if submissionState() === \\"sending\\"}
     <BuilderBlocks dataPath=\\"sendingMessage\\" blocks={sendingMessage} />
   {/if}
 
-  {#if submissionState() === 'error' && responseData}
-    <pre
-      class=\\"builder-form-error-text pre\\">
+  {#if submissionState() === \\"error\\" && responseData}
+    <pre class=\\"builder-form-error-text pre\\">
         
 {JSON.stringify(responseData, null, 2)}
 
       </pre>
   {/if}
 
-  {#if submissionState() === 'success'}
+  {#if submissionState() === \\"success\\"}
     <BuilderBlocks dataPath=\\"successMessage\\" blocks={successMessage} />
   {/if}
 </form>
+
+<style>
+  .pre {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+</style>
 "
 `;
 
@@ -1009,12 +1014,11 @@ exports[`Svelte Image State 1`] = `
 "<script>
   let canShow = true;
   let images = [\\"http://example.com/qwik.png\\"];
-
 </script>
 
 <div>
-  {#each images as item, index}
-    <img class={'custom-class'} src={item} key={itemIndex} />
+  {#each images as item, itemIndex}
+    <img class={\\"custom-class\\"} src={item} key={itemIndex} />
   {/each}
 </div>
 "
@@ -1029,15 +1033,18 @@ exports[`Svelte Img 1`] = `
   export let attributes;
   export let imgSrc;
   export let altText;
-
 </script>
 
 <img
   {...attributes}
-  style={{ objectFit: backgroundSize || 'cover', objectPosition: backgroundPosition || 'center' }}
-  key={(Builder.isEditing && imgSrc) || 'default-key'}
+  style={{
+    objectFit: backgroundSize || \\"cover\\",
+    objectPosition: backgroundPosition || \\"center\\",
+  }}
+  key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
   alt={altText}
-  src={imgSrc} />
+  src={imgSrc}
+/>
 "
 `;
 
@@ -1052,18 +1059,18 @@ exports[`Svelte Input 1`] = `
   export let name;
   export let value;
   export let required;
-
 </script>
 
 <input
   {...attributes}
-  key={Builder.isEditing && defaultValue ? defaultValue : 'default-key'}
+  key={Builder.isEditing && defaultValue ? defaultValue : \\"default-key\\"}
   {placeholder}
   {type}
   {name}
   {value}
   {defaultValue}
-  {required} />
+  {required}
+/>
 "
 `;
 
@@ -1071,21 +1078,24 @@ exports[`Svelte RawText 1`] = `
 "<script>
   export let attributes;
   export let text;
-
 </script>
 
-<span
-  class={attributes?.class || attributes?.className}>{@html text || ''}</span>
+<span class={attributes?.class || attributes?.className}
+  >{@html text || \\"\\"}</span
+>
 "
 `;
 
 exports[`Svelte Remove Internal mitosis package 1`] = `
 "<script>
   let name = \\"PatrickJS\\";
-
 </script>
 
-<div>Hello {name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+<div>
+  Hello
+  {name}
+  ! I can run in React, Qwik, Vue, Solid, or Liquid!
+</div>
 "
 `;
 
@@ -1093,12 +1103,16 @@ exports[`Svelte Section 1`] = `
 "<script>
   export let attributes;
   export let maxWidth;
-
 </script>
 
 <section
   {...attributes}
-  style={maxWidth && typeof maxWidth === 'number' ? { maxWidth: maxWidth } : undefined}>
+  style={maxWidth && typeof maxWidth === \\"number\\"
+    ? {
+        maxWidth: maxWidth,
+      }
+    : undefined}
+>
   <slot />
 </section>
 "
@@ -1110,14 +1124,16 @@ exports[`Svelte Section 2`] = `
 
   let max = 42;
   let items = [42];
-
 </script>
 
 {#if max}
-  {#each items as item, index}
+  {#each items as item, undefined}
     <section
       {...attributes}
-      style={{ maxWidth: item + max }}>
+      style={{
+        maxWidth: item + max,
+      }}
+    >
       <slot />
     </section>
   {/each}
@@ -1134,15 +1150,15 @@ exports[`Svelte Select 1`] = `
   export let defaultValue;
   export let name;
   export let options;
-
 </script>
 
 <select
   {...attributes}
   {value}
-  key={Builder.isEditing && defaultValue ? defaultValue : 'default-key'}
+  key={Builder.isEditing && defaultValue ? defaultValue : \\"default-key\\"}
   {defaultValue}
-  {name}>
+  {name}
+>
   {#each options as option, index}
     <option value={option.value} data-index={index}>
       {option.name || option.value}
@@ -1348,10 +1364,11 @@ exports[`Svelte Submit 1`] = `
 "<script>
   export let attributes;
   export let text;
-
 </script>
 
-<button {...attributes} type=\\"submit\\"> {text} </button>
+<button {...attributes} type=\\"submit\\">
+  {text}
+</button>
 "
 `;
 
@@ -1363,12 +1380,14 @@ exports[`Svelte Text 1`] = `
   export let content;
 
   let name = \\"Decadef20\\";
-
 </script>
 
 <div
   contentEditable={allowEditingText || undefined}
-  data-name={{ test: name || 'any name' }}>
+  data-name={{
+    test: name || \\"any name\\",
+  }}
+>
   {@html text || content || name || '<p class=\\"text-lg\\">my name</p>'}
 </div>
 "
@@ -1381,7 +1400,6 @@ exports[`Svelte Textarea 1`] = `
   export let name;
   export let value;
   export let defaultValue;
-
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />
@@ -1399,21 +1417,28 @@ exports[`Svelte Video 1`] = `
   export let muted;
   export let controls;
   export let loop;
-
 </script>
 
 <video
   {...attributes}
   preload=\\"none\\"
-  style={{ width: '100%', height: '100%', ...attributes?.style, objectFit: fit, objectPosition: position, // Hack to get object fit to work as expected and
+  style={{
+    width: \\"100%\\",
+    height: \\"100%\\",
+    ...attributes?.style,
+    objectFit: fit,
+    objectPosition: position,
+    // Hack to get object fit to work as expected and
     // not have the video overflow
-    borderRadius: 1 }}
-  key={video || 'no-src'}
+    borderRadius: 1,
+  }}
+  key={video || \\"no-src\\"}
   poster={posterImage}
   autoplay={autoPlay}
   {muted}
   {controls}
-  {loop} />
+  {loop}
+/>
 "
 `;
 
@@ -1422,17 +1447,17 @@ exports[`Svelte basicForwardRef 1`] = `
   export let inputRef;
 
   let name = \\"PatrickJS\\";
-
 </script>
+
+<div>
+  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+</div>
 
 <style>
   .input {
     color: red;
   }
-
 </style>
-
-<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 "
 `;
 
@@ -1441,17 +1466,17 @@ exports[`Svelte basicForwardRefMetadata 1`] = `
   export let inputRef;
 
   let name = \\"PatrickJS\\";
-
 </script>
+
+<div>
+  <input class=\\"input\\" bind:this={inputRef} bind:value={name} />
+</div>
 
 <style>
   .input {
     color: red;
   }
-
 </style>
-
-<div><input class=\\"input\\" bind:this={inputRef} bind:value={name} /></div>
 "
 `;
 
@@ -1459,16 +1484,15 @@ exports[`Svelte class + ClassName + css 1`] = `
 "<script>
 </script>
 
+<div class=\\"test2 test div\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+
 <style>
   .div {
     padding: 10px;
   }
-
 </style>
-
-<div class=\\"test2 test div\\">
-  Hello! I can run in React, Vue, Solid, or Liquid!
-</div>
 "
 `;
 
@@ -1476,14 +1500,13 @@ exports[`Svelte class + css 1`] = `
 "<script>
 </script>
 
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
 <style>
   .div {
     padding: 10px;
   }
-
 </style>
-
-<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 "
 `;
 
@@ -1491,21 +1514,19 @@ exports[`Svelte className + css 1`] = `
 "<script>
 </script>
 
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
 <style>
   .div {
     padding: 10px;
   }
-
 </style>
-
-<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 "
 `;
 
 exports[`Svelte className 1`] = `
 "<script>
   let bindings = \\"a binding\\";
-
 </script>
 
 <div>
@@ -1526,7 +1547,6 @@ exports[`Svelte multipleOnUpdate 1`] = `
   afterUpdate(() => {
     console.log(\\"Runs on every update/rerender as well\\");
   });
-
 </script>
 
 <div />
@@ -1558,7 +1578,6 @@ exports[`Svelte multipleOnUpdateWithDeps 1`] = `
     }
   }
   $: onUpdateFn_1(...[state.c, state.d]);
-
 </script>
 
 <div />
@@ -1572,7 +1591,6 @@ exports[`Svelte onInit & onMount 1`] = `
   onMount(() => {
     console.log(\\"onMount\\");
   });
-
 </script>
 
 <div />
@@ -1588,10 +1606,12 @@ exports[`Svelte onInit 1`] = `
   export let name;
 
   let name = \\"\\";
-
 </script>
 
-<div>Default name defined by parent {name}</div>
+<div>
+  Default name defined by parent
+  {name}
+</div>
 "
 `;
 
@@ -1608,7 +1628,6 @@ exports[`Svelte onMount 1`] = `
   onDestroy(() => {
     console.log(\\"Runs on unMount\\");
   });
-
 </script>
 
 <div />
@@ -1622,7 +1641,6 @@ exports[`Svelte onUpdate 1`] = `
   afterUpdate(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
-
 </script>
 
 <div />
@@ -1640,7 +1658,6 @@ exports[`Svelte onUpdateWithDeps 1`] = `
     console.log(\\"Runs when a or b changes\\", a, b);
   }
   $: onUpdateFn_0(...[state.a, state.b]);
-
 </script>
 
 <div />
@@ -1654,7 +1671,6 @@ exports[`Svelte preserveExportOrLocalStatement 1`] = `
   export const a = 3;
   export const bar = () => {};
   export function run<T>(value: T) {}
-
 </script>
 
 <div />
@@ -1664,10 +1680,12 @@ exports[`Svelte preserveExportOrLocalStatement 1`] = `
 exports[`Svelte preserveTyping 1`] = `
 "<script>
   export let name;
-
 </script>
 
-<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
+<div>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  {name}
+</div>
 "
 `;
 
@@ -1676,7 +1694,6 @@ exports[`Svelte propsDestructure 1`] = `
   export let type;
 
   let name = \\"Decadef20\\";
-
 </script>
 
 <div>
@@ -1692,30 +1709,33 @@ exports[`Svelte propsDestructure 1`] = `
 exports[`Svelte propsInterface 1`] = `
 "<script>
   export let name;
-
 </script>
 
-<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
+<div>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  {name}
+</div>
 "
 `;
 
 exports[`Svelte propsType 1`] = `
 "<script>
   export let name;
-
 </script>
 
-<div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
+<div>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+  {name}
+</div>
 "
 `;
 
 exports[`Svelte rootShow 1`] = `
 "<script>
   export let foo;
-
 </script>
 
-{#if foo === 'bar'}
+{#if foo === \\"bar\\"}
   <div>Bar</div>
 {:else}
   <div>Foo</div>
@@ -1726,14 +1746,13 @@ exports[`Svelte rootShow 1`] = `
 exports[`Svelte self-referencing component 1`] = `
 "<script>
   export let name;
-
 </script>
 
 <div>
   {name}
 
-  {#if name === 'Batman'}
-    <svelte:self name={'Bruce Wayne'} />
+  {#if name === \\"Batman\\"}
+    <svelte:self name={\\"Bruce Wayne\\"} />
   {/if}
 </div>
 "
@@ -1742,7 +1761,6 @@ exports[`Svelte self-referencing component 1`] = `
 exports[`Svelte self-referencing component with children 1`] = `
 "<script>
   export let name;
-
 </script>
 
 <div>
@@ -1750,8 +1768,8 @@ exports[`Svelte self-referencing component with children 1`] = `
 
   <slot />
 
-  {#if name === 'Batman'}
-    <svelte:self name={'Bruce'}>
+  {#if name === \\"Batman\\"}
+    <svelte:self name={\\"Bruce\\"}>
       <div>Wayne</div>
     </svelte:self>
   {/if}
