@@ -62,6 +62,7 @@ const mappers: {
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDINGS_MAPPER: { [key: string]: string | undefined } = {
   innerHTML: 'innerHTML',
+  style: 'ngStyle',
 };
 
 export const blockToAngular = (

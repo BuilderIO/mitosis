@@ -56,6 +56,7 @@ const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
 const classAndClassName = require('./data/styles/class-and-className.raw');
+const classState = require('./data/styles/classState.raw');
 
 const path = 'test-path';
 
@@ -106,6 +107,7 @@ const BASIC_TESTS = {
   'class + css': classRaw,
   'className + css': className,
   'class + ClassName + css': classAndClassName,
+  classState,
 };
 
 const MULTI_ON_UPDATE_TESTS: Tests = {
@@ -165,12 +167,15 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FOR_SHOW_TESTS,
   ],
   svelte: [
-    BASIC_TESTS,
-    ROOT_SHOW_TESTS,
-    FORWARD_REF_TESTS,
-    MULTI_ON_UPDATE_TESTS,
-    FORM_BLOCK_TESTS,
-    FOR_SHOW_TESTS,
+    {
+      classState,
+    },
+    // BASIC_TESTS,
+    // ROOT_SHOW_TESTS,
+    // FORWARD_REF_TESTS,
+    // MULTI_ON_UPDATE_TESTS,
+    // FORM_BLOCK_TESTS,
+    // FOR_SHOW_TESTS,
   ],
   html: [
     BASIC_TESTS,
