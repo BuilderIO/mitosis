@@ -1939,3 +1939,49 @@ export default function RenderStyles(props: { foo: string }) {
 }
 "
 `;
+
+exports[`React Native self-referencing component 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <View>
+      <Text>{props.name}</Text>
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name={\\"Bruce Wayne\\"} />
+        </>
+      ) : null}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native self-referencing component with children 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <View>
+      <Text>{props.name}</Text>
+
+      <Text>{props.children}</Text>
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name={\\"Bruce\\"}>
+            <View>
+              <Text>Wayne</Text>
+            </View>
+          </MyComponent>
+        </>
+      ) : null}
+    </View>
+  );
+}
+"
+`;

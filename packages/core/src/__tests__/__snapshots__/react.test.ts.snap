@@ -1896,6 +1896,44 @@ exports[`React rootShow 1`] = `
 "
 `;
 
+exports[`React self-referencing component 1`] = `
+"export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.name}
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name={\\"Bruce Wayne\\"} />
+        </>
+      ) : null}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React self-referencing component with children 1`] = `
+"export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.name}
+
+      {props.children}
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name={\\"Bruce\\"}>
+            <div>Wayne</div>
+          </MyComponent>
+        </>
+      ) : null}
+    </div>
+  );
+}
+"
+`;
+
 exports[`React stamped 1`] = `
 "import styled from \\"styled-components\\";
 import { useState, useEffect } from \\"react\\";

@@ -870,12 +870,8 @@ exports[`Svelte Form 1`] = `
   {name}
   on:submit={(event) => onSubmit(event)}>
   {#if builderBlock && builderBlock.children}
-    {#each builderBlock?.children as block, index}
-      <svelte:component
-        this={BuilderBlockComponent}
-        key={block.id}
-        {block}
-        {index} />
+    {#each builderBlock?.children as block, index (block.id)}
+      <svelte:component this={BuilderBlockComponent} {block} {index} />
     {/each}
   {/if}
 
@@ -1306,8 +1302,8 @@ showReviewPrompt = false;
 
     
 
-{#each reviews as review, index }
-<div  class=\\"review\\"  key={review.id} >
+{#each reviews as review, index (review.id)}
+<div  class=\\"review\\" >
           
 <img  class=\\"img\\"  src={review.avatar}  />
 
@@ -1724,5 +1720,41 @@ exports[`Svelte rootShow 1`] = `
 {:else}
   <div>Foo</div>
 {/if}
+"
+`;
+
+exports[`Svelte self-referencing component 1`] = `
+"<script>
+  export let name;
+
+</script>
+
+<div>
+  {name}
+
+  {#if name === 'Batman'}
+    <svelte:self name={'Bruce Wayne'} />
+  {/if}
+</div>
+"
+`;
+
+exports[`Svelte self-referencing component with children 1`] = `
+"<script>
+  export let name;
+
+</script>
+
+<div>
+  {name}
+
+  <slot />
+
+  {#if name === 'Batman'}
+    <svelte:self name={'Bruce'}>
+      <div>Wayne</div>
+    </svelte:self>
+  {/if}
+</div>
 "
 `;

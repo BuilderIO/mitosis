@@ -1922,3 +1922,60 @@ export default class MyBasicComponent {
 }
 "
 `;
+
+exports[`Stencil self-referencing component 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name={\\"Bruce Wayne\\"}></MyComponent>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil self-referencing component with children 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+  @Prop() children: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.children}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name={\\"Bruce\\"}>
+              <div>Wayne</div>
+            </MyComponent>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;

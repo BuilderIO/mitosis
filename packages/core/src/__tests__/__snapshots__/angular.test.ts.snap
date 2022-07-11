@@ -2143,3 +2143,62 @@ export default class RenderStyles {
 }
 "
 `;
+
+exports[`Angular self-referencing component 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div >
+          
+    {{name}}
+
+          
+    <ng-container *ngIf=\\"name === 'Batman'\\">
+            
+    <MyComponent  [name]=''Bruce Wayne'' ></MyComponent>
+
+          </ng-container>
+
+        </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() name: any;
+}
+"
+`;
+
+exports[`Angular self-referencing component with children 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div >
+          
+    {{name}}
+
+          
+    <ng-content></ng-content>
+
+          
+    <ng-container *ngIf=\\"name === 'Batman'\\">
+            
+    <MyComponent  [name]=''Bruce'' >
+              
+    <div >Wayne</div>
+
+            </MyComponent>
+
+          </ng-container>
+
+        </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() name: any;
+}
+"
+`;

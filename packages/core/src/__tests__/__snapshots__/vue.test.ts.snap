@@ -1910,3 +1910,42 @@ export default {
 </script>
 "
 `;
+
+exports[`Vue self-referencing component 1`] = `
+"<template>
+  <div>
+    {{ name }}
+
+    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce Wayne'\\"></my-component>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue self-referencing component with children 1`] = `
+"<template>
+  <div>
+    {{ name }}
+    <slot></slot>
+
+    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce'\\">
+      <div>Wayne</div>
+    </my-component>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
