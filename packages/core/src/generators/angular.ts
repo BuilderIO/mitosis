@@ -24,6 +24,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
+import { isSlotProperty } from '../helpers/slots';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {}
 
@@ -170,7 +171,7 @@ export const blockToAngular = (
         str += ` [class]="${useValue}" `;
       } else if (key === 'ref') {
         str += ` #${useValue} `;
-      } else if (key.startsWith('slot')) {
+      } else if (isSlotProperty(key)) {
         const lowercaseKey =
           key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
@@ -328,7 +329,7 @@ export const componentToAngular =
       ${localExportVars.join('\n')}
 
       ${Array.from(props)
-        .filter((item) => !item.startsWith('slot') && item !== 'children')
+        .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
           return `@Input() ${item}: ${propType}`;

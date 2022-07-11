@@ -43,6 +43,7 @@ import { hasContext } from './helpers/context';
 import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
 import { hasStyles } from '../helpers/styles/helpers';
+import { isSlotProperty } from '../helpers/slots';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
@@ -286,7 +287,7 @@ const processBinding = (str: string, options: ToReactOptions) => {
     return str;
   }
 
-  if (str.startsWith('slot')) {
+  if (isSlotProperty(str)) {
     return stripStateAndPropsRefs(str, {
       includeState: true,
       includeProps: false,
