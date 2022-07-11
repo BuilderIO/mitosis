@@ -1049,7 +1049,7 @@ exports[`Angular Image 1`] = `
 
 // TODO: AMP Support?
 export interface ImageProps {
-  class?: string;
+  _class?: string;
   image: string;
   sizes?: string;
   lazy?: boolean;
@@ -1073,7 +1073,7 @@ export interface ImageProps {
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img [alt]='altText' [aria-role]='altText ? 'presentation' :
-          undefined' [class]=\\"'builder-image' + (class ? ' ' + class : '') +
+          undefined' [class]=\\"'builder-image' + (_class ? ' ' + _class : '') +
           'img'\\" [src]='image' (load)=\\"setLoaded()\\" [srcset]='srcset'
           [sizes]='sizes' />
         </ng-container>
@@ -1098,7 +1098,7 @@ export interface ImageProps {
 export default class Image {
   @Input() lazy: ImageProps[\\"lazy\\"];
   @Input() altText: ImageProps[\\"altText\\"];
-  @Input() class: ImageProps[\\"class\\"];
+  @Input() _class: ImageProps[\\"_class\\"];
   @Input() image: ImageProps[\\"image\\"];
   @Input() srcset: ImageProps[\\"srcset\\"];
   @Input() sizes: ImageProps[\\"sizes\\"];

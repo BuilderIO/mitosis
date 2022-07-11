@@ -16,7 +16,9 @@ exports[`Svelte Basic 1`] = `
 <div class=\\"test div\\">
   <input
     value={DEFAULT_VALUES.name || name}
-    on:change={(myEvent) => (name = myEvent.target.value)}
+    on:change={(myEvent) => {
+      name = myEvent.target.value;
+    }}
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
@@ -32,57 +34,27 @@ exports[`Svelte Basic 1`] = `
 
 exports[`Svelte Basic 2`] = `
 "<script>
-    
-    
-    
-    
-  
-  
-  
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
+</script>
 
-    
+<div>
+  {#each names as person, undefined}
+    {#if person === name}
+      <input
+        value={name}
+        on:change={(event) => {
+          name = event.target.value + \\" and \\" + person;
+        }}
+      />
 
-    
-    
-    
-    
-    
-
-    
-    
-    let name = 'PatrickJS';
-let names = ['Steve', 'PatrickJS'];
-
-    
-
-    
-
-    
-  </script>
-
-  <div >
-    
-
-{#each names as person, undefined }
-
-{#if person === name }
-
-          
-<input  value={name}  on:change=\\"{event => 
-name = event.target.value + ' and ' + person;
-}\\"  />
-
-          Hello 
-{person}
-! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-        
-
-
-{/if}
-{/each}
-
-
-  </div>"
+      Hello
+      {person}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    {/if}
+  {/each}
+</div>
+"
 `;
 
 exports[`Svelte Basic Context 1`] = `
@@ -113,7 +85,11 @@ exports[`Svelte Basic Context 1`] = `
 
   Hello! I can run in React, Vue, Solid, or Liquid!
 
-  <input on:change={(event) => onChange} />
+  <input
+    on:change={(event) => {
+      onChange;
+    }}
+  />
 </div>
 "
 `;
@@ -201,52 +177,31 @@ exports[`Svelte BasicChildComponent 1`] = `
 
 exports[`Svelte BasicFor 1`] = `
 "<script>
-    import { onMount } from 'svelte'
-    
-    
-    
-  
-  
-  
+  import { onMount } from \\"svelte\\";
 
-    
+  let name = \\"PatrickJS\\";
+  let names = [\\"Steve\\", \\"PatrickJS\\"];
 
-    
-    
-    
-    
-    
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+</script>
 
-    
-    
-    let name = 'PatrickJS';
-let names = ['Steve', 'PatrickJS'];
+<div>
+  {#each names as person, undefined}
+    <input
+      value={name}
+      on:change={(event) => {
+        name = event.target.value + \\" and \\" + person;
+      }}
+    />
 
-    onMount(() => { console.log('onMount code'); });
-
-    
-
-    
-  </script>
-
-  <div >
-    
-
-{#each names as person, undefined }
-
-          
-<input  value={name}  on:change=\\"{event => 
-name = event.target.value + ' and ' + person;
-}\\"  />
-
-          Hello 
-{person}
-! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-        
-{/each}
-
-
-  </div>"
+    Hello
+    {person}
+    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+  {/each}
+</div>
+"
 `;
 
 exports[`Svelte BasicRef 1`] = `
@@ -272,7 +227,9 @@ exports[`Svelte BasicRef 1`] = `
     <input
       class=\\"input\\"
       bind:this={inputRef}
-      on:blur={(event) => onBlur()}
+      on:blur={(event) => {
+        onBlur();
+      }}
       bind:value={name}
     />
 
@@ -309,7 +266,11 @@ exports[`Svelte BasicRefAssignment 1`] = `
 </script>
 
 <div>
-  <button on:click={(evt) => handlerClick(evt)}>Click</button>
+  <button
+    on:click={(evt) => {
+      handlerClick(evt);
+    }}>Click</button
+  >
 </div>
 "
 `;
@@ -347,7 +308,11 @@ exports[`Svelte BasicRefPrevious 1`] = `
     {prevCount}
   </h1>
 
-  <button on:click={(event) => (count += 1)}>Increment</button>
+  <button
+    on:click={(event) => {
+      count += 1;
+    }}>Increment</button
+  >
 </div>
 "
 `;
@@ -435,42 +400,6 @@ exports[`Svelte Columns 1`] = `
     flex-grow: 1;
   }
 </style>
-"
-`;
-
-exports[`Svelte ContentSlotHtml 1`] = `
-"<script>
-  export let slotTesting;
-</script>
-
-<div>
-  <svelte:component this={Slot} name={slotTesting} />
-
-  <div>
-    <hr />
-  </div>
-
-  <div>
-    <svelte:component this={Slot} />
-  </div>
-</div>
-"
-`;
-
-exports[`Svelte ContentSlotJSX 1`] = `
-"<script>
-  export let slotTesting;
-</script>
-
-<div>
-  {slotTesting}
-
-  <div>
-    <hr />
-  </div>
-
-  <div><slot /></div>
-</div>
 "
 `;
 
@@ -865,7 +794,9 @@ exports[`Svelte Form 1`] = `
   action={!sendWithJs && action}
   {method}
   {name}
-  on:submit={(event) => onSubmit(event)}
+  on:submit={(event) => {
+    onSubmit(event);
+  }}
 >
   {#if builderBlock && builderBlock.children}
     {#each builderBlock?.children as block, index (block.id)}
@@ -906,108 +837,98 @@ exports[`Svelte Form 1`] = `
 
 exports[`Svelte Image 1`] = `
 "<script>
-    import { onMount } from 'svelte'
-    
-    import { onDestroy } from 'svelte'
-    
-  
-  
-  
+  import { onMount } from \\"svelte\\";
 
-    
+  import { onDestroy } from \\"svelte\\";
 
-    
-    export let pictureRef;
-export let lazy;
-export let altText;
-export let class;
-export let image;
-export let srcset;
-export let sizes;
+  export let pictureRef;
+  export let lazy;
+  export let altText;
+  export let _class;
+  export let image;
+  export let srcset;
+  export let sizes;
 
-    
-    const setLoaded = function setLoaded() {
-imageLoaded = true;
-};
+  const setLoaded = function setLoaded() {
+    imageLoaded = true;
+  };
 
-const useLazyLoading = function useLazyLoading() {
-// TODO: Add more checks here, like testing for real web browsers
-return !!lazy && isBrowser();
-};
+  const useLazyLoading = function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!lazy && isBrowser();
+  };
 
-const isBrowser = function isBrowser() {
-return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
-};
-    
+  const isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
 
-    
-    
-    let scrollListener = null;
-let imageLoaded = false;
-let load = false;
+  let scrollListener = null;
+  let imageLoaded = false;
+  let load = false;
 
-    onMount(() => { if (useLazyLoading()) {
-// throttled scroll capture listener
-const listener = () => {
-  if (pictureRef) {
-    const rect = pictureRef.getBoundingClientRect();
-    const buffer = window.innerHeight / 2;
+  onMount(() => {
+    if (useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
 
-    if (rect.top < window.innerHeight + buffer) {
-      setLoad(true);
-      scrollListener = null;
-      window.removeEventListener('scroll', listener);
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
     }
+  });
+
+  onDestroy(() => {
+    if (scrollListener) {
+      window.removeEventListener(\\"scroll\\", scrollListener);
+    }
+  });
+</script>
+
+<picture bind:this={pictureRef}>
+  {#if !useLazyLoading() || load}
+    <img
+      alt={altText}
+      aria-role={altText ? \\"presentation\\" : undefined}
+      class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\"img\\"}
+      src={image}
+      on:load={(event) => {
+        setLoaded();
+      }}
+      {srcset}
+      {sizes}
+    />
+  {/if}
+
+  <source {srcset} />
+</picture>
+
+<slot />
+
+<style>
+  .img {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
   }
-};
-
-scrollListener = listener;
-window.addEventListener('scroll', listener, {
-  capture: true,
-  passive: true
-});
-listener();
-} });
-
-    
-
-    onDestroy(() => { if (scrollListener) {
-window.removeEventListener('scroll', scrollListener);
-} });
-  </script>
-
-  
-    
-<picture  bind:this={pictureRef} >
-      
-
-{#if !useLazyLoading() || load }
-
-        
-<img  alt={altText}  aria-role={altText ? 'presentation' : undefined}  class={'builder-image' + (class ? ' ' + class : '') + 'img'}  src={image}  on:load=\\"{event => setLoaded()}\\"  srcset={srcset}  sizes={sizes}  />
-
-      
-
-
-{/if}
-
-      
-<source  srcset={srcset}  />
-
-    </picture>
-
-    
-<slot></slot>
-
-  
-
-  <style>
-    .img { 
-opacity: 1;
-transition: opacity 0.2s ease-in-out;
-object-fit: cover;
-object-position: center; }
-  </style>"
+</style>
+"
 `;
 
 exports[`Svelte Image State 1`] = `
@@ -1168,196 +1089,108 @@ exports[`Svelte Select 1`] = `
 "
 `;
 
-exports[`Svelte SlotHtml 1`] = `
-"<script>
-  
-  
-  
-  
-import ContentSlotCode from './content-slot-jsx.raw';
-
-
-
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-  
-
-  
-
-  
-
-  
-</script>
-
-<div >
-  
-<ContentSlotCode >
-    
-<svelte:component  testing={<div>Hello</div>}  this={Slot} ></svelte:component>
-
-  </ContentSlotCode>
-
-</div>"
-`;
-
-exports[`Svelte SlotJsx 1`] = `
-"<script>
-  
-  
-  
-  
-import ContentSlotCode from './content-slot-jsx.raw';
-
-
-
-  
-
-  
-  
-  
-  
-  
-
-  
-  
-  
-
-  
-
-  
-
-  
-</script>
-
-<div >
-  
-<ContentSlotCode  slotTesting={<div>Hello</div>} ></ContentSlotCode>
-
-</div>"
-`;
-
 exports[`Svelte Stamped.io 1`] = `
 "<script>
-    import { onMount } from 'svelte'
-    
-    
-    
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
-  
-  
+  import { onMount } from \\"svelte\\";
 
-    
+  import { kebabCase } from \\"lodash\\";
+  import { snakeCase } from \\"lodash\\";
 
-    
-    export let apiKey;
-export let productId;
-    
-    const kebabCaseValue = function kebabCaseValue() {
-return kebabCase('testThat');
-};
+  export let apiKey;
+  export let productId;
 
-const snakeCaseValue = function snakeCaseValue() {
-return snakeCase('testThis');
-};
-    
+  const kebabCaseValue = function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  };
 
-    
-    
-    let reviews = [];
-let name = 'test';
-let showReviewPrompt = false;
+  const snakeCaseValue = function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  };
 
-    onMount(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews = data.data;
-}); });
+  let reviews = [];
+  let name = \\"test\\";
+  let showReviewPrompt = false;
 
-    
+  onMount(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        reviews = data.data;
+      });
+  });
+</script>
 
-    
-  </script>
+<div data-user={name}>
+  <button
+    on:click={(event) => {
+      showReviewPrompt = true;
+    }}>Write a review</button
+  >
 
-  <div  data-user={name} >
-    
-<button  on:click=\\"{event => showReviewPrompt = true}\\" >Write a review</button>
+  {#if showReviewPrompt}
+    <input placeholder=\\"Email\\" />
 
-    
+    <input placeholder=\\"Title\\" class=\\"input\\" />
 
-{#if showReviewPrompt }
+    <textarea placeholder=\\"How was your experience?\\" class=\\"textarea\\" />
 
-      
-<input  placeholder=\\"Email\\"  />
+    <button
+      class=\\"button\\"
+      on:click={(event) => {
+        showReviewPrompt = false;
+      }}
+    >
+      Submit
+    </button>
+  {/if}
 
+  {#each reviews as review, index (review.id)}
+    <div class=\\"review\\">
+      <img class=\\"img\\" src={review.avatar} />
 
-      
-<input  placeholder=\\"Title\\"  class=\\"input\\"  />
-
-
-      
-<textarea  placeholder=\\"How was your experience?\\"  class=\\"textarea\\" ></textarea>
-
-      
-<button  class=\\"button\\"  on:click=\\"{event => 
-showReviewPrompt = false;
-}\\" >
-        Submit
-      </button>
-
-    
-
-
-{/if}
-
-    
-
-{#each reviews as review, index (review.id)}
-<div  class=\\"review\\" >
-          
-<img  class=\\"img\\"  src={review.avatar}  />
-
-          
-<div  class={showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-            
-<div >N: 
-{index}</div>
-
-            
-<div >{review.author}</div>
-
-            
-<div >{review.reviewMessage}</div>
-
-          </div>
-
+      <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+        <div>
+          N:
+          {index}
         </div>
-{/each}
 
+        <div>{review.author}</div>
 
-  </div>
+        <div>{review.reviewMessage}</div>
+      </div>
+    </div>
+  {/each}
+</div>
 
-  <style>
-    .input { 
-display: block; }.textarea { 
-display: block; }.button { 
-display: block; }.review { 
-margin: 10px;
-padding: 10px;
-background: white;
-display: flex;
-border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img { 
-height: 30px;
-width: 30px;
-margin-right: 10px; }
-  </style>"
+<style>
+  .input {
+    display: block;
+  }
+  .textarea {
+    display: block;
+  }
+  .button {
+    display: block;
+  }
+  .review {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+</style>
+"
 `;
 
 exports[`Svelte Submit 1`] = `
