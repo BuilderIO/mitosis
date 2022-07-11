@@ -1013,7 +1013,7 @@ function Image(props) {
           <img
             class={
               \\"builder-image\\" +
-              (props.class ? \\" \\" + props.class : \\"\\") +
+              (props._class ? \\" \\" + props._class : \\"\\") +
               \\" \\" +
               css({
                 opacity: \\"1\\",
@@ -1740,5 +1740,44 @@ function RenderStyles(props) {
 }
 
 export default RenderStyles;
+"
+`;
+
+exports[`Solid self-referencing component 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function MyComponent(props) {
+  return (
+    <div>
+      {props.name}
+      <Show when={props.name === \\"Batman\\"}>
+        <MyComponent name={\\"Bruce Wayne\\"}></MyComponent>
+      </Show>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid self-referencing component with children 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function MyComponent(props) {
+  return (
+    <div>
+      {props.name}
+      {props.children}
+      <Show when={props.name === \\"Batman\\"}>
+        <MyComponent name={\\"Bruce\\"}>
+          <div>Wayne</div>
+        </MyComponent>
+      </Show>
+    </div>
+  );
+}
+
+export default MyComponent;
 "
 `;

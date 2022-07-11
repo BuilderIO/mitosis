@@ -3,7 +3,7 @@ import { useRef, onMount, onUnMount, Show, useStore, useState } from '@builder.i
 // TODO: AMP Support?
 
 export interface ImageProps {
-  class?: string;
+  _class?: string;
   image: string;
   sizes?: string;
   lazy?: boolean;
@@ -83,7 +83,7 @@ export default function Image(props: ImageProps) {
               objectFit: 'cover',
               objectPosition: 'center',
             }}
-            class={'builder-image' + (props.class ? ' ' + props.class : '')}
+            class={'builder-image' + (props._class ? ' ' + props._class : '')}
             src={props.image}
             onLoad={() => state.setLoaded()}
             // TODO: memoize on image on client

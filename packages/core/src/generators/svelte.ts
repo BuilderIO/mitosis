@@ -55,10 +55,19 @@ const mappers: {
     }
   },
   For: ({ json, options, parentComponent }) => {
+    const firstChild = json.children[0];
+    const keyValue = firstChild.properties.key || firstChild.bindings.key?.code;
+
+    if (keyValue) {
+      // we remove extraneous prop which Svelte does not use
+      delete firstChild.properties.key;
+      delete firstChild.bindings.key;
+    }
+
     return `
 {#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
       includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName}, index }
+    })} as ${json.scope.For[0]}, ${json.scope.For[1]} ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
@@ -202,7 +211,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
-      str += ` on:${event}="{${cusArgs.join(',')} => ${removeSurroundingBlock(useValue)}}" `;
+      str += ` on:${event}="{${cusArgs.join(',')} => {${removeSurroundingBlock(useValue)}}}" `;
     } else if (key === 'ref') {
       str += ` bind:this={${useValue}} `;
     } else {

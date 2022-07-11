@@ -955,7 +955,7 @@ exports[`Vue Image 1`] = `
       :aria-role=\\"altText ? 'presentation' : undefined\\"
       :class=\\"
         _classStringToObject(
-          'builder-image' + (this.class ? ' ' + this.class : '') + 'img'
+          'builder-image' + (this._class ? ' ' + this._class : '') + 'img'
         )
       \\"
       :src=\\"image\\"
@@ -973,7 +973,7 @@ exports[`Vue Image 1`] = `
 export default {
   name: \\"image\\",
 
-  props: [\\"lazy\\", \\"altText\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
+  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
 
   data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
 
@@ -1906,6 +1906,45 @@ export default {
   name: \\"render-styles\\",
 
   props: [\\"foo\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue self-referencing component 1`] = `
+"<template>
+  <div>
+    {{ name }}
+
+    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce Wayne'\\"></my-component>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue self-referencing component with children 1`] = `
+"<template>
+  <div>
+    {{ name }}
+    <slot></slot>
+
+    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce'\\">
+      <div>Wayne</div>
+    </my-component>
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"name\\"],
 };
 </script>
 "

@@ -997,7 +997,7 @@ exports[`Stencil Image 1`] = `
 export default class Image {
   @Prop() lazy: any;
   @Prop() altText: any;
-  @Prop() class: any;
+  @Prop() _class: any;
   @Prop() image: any;
   @Prop() srcset: any;
   @Prop() sizes: any;
@@ -1059,7 +1059,7 @@ export default class Image {
               <img
                 class={
                   \\"builder-image\\" +
-                  (props.class ? \\" \\" + props.class : \\"\\") +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
                   \\"img\\"
                 }
                 alt={this.altText}
@@ -1916,6 +1916,63 @@ export default class MyBasicComponent {
       <div>
         Hello! I can run in React, Vue, Solid, or Liquid!
         {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil self-referencing component 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name={\\"Bruce Wayne\\"}></MyComponent>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil self-referencing component with children 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+  @Prop() children: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.children}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name={\\"Bruce\\"}>
+              <div>Wayne</div>
+            </MyComponent>
+          </>
+        ) : null}
       </div>
     );
   }

@@ -4,6 +4,7 @@ export type MitosisNode = {
   '@type': '@builder.io/mitosis/node';
   name: string;
   meta: JSONObject;
+  scope: { [key: string]: Array<string> };
   /**
    * Key-value store of string values for DOM attributes.
    * ```js
@@ -13,7 +14,6 @@ export type MitosisNode = {
    * }
    * ```
    */
-  scope: { [key: string]: Array<string> };
   properties: { [key: string]: string | undefined };
   /**
    * Key-value store of expression values for DOM attributes. These are always represented as strings.
