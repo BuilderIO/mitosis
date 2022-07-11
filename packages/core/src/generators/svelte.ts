@@ -55,10 +55,19 @@ const mappers: {
     }
   },
   For: ({ json, options, parentComponent }) => {
+    const firstChild = json.children[0];
+    const keyValue = firstChild.properties.key || firstChild.bindings.key?.code;
+
+    if (keyValue) {
+      // we remove extraneous prop which Svelte does not use
+      delete firstChild.properties.key;
+      delete firstChild.bindings.key;
+    }
+
     return `
 {#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
       includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName}, index }
+    })} as ${json.properties._forName}, index ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
