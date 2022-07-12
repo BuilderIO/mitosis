@@ -74,8 +74,10 @@ function processBinding(code: string, _options: ToVueOptions, json: MitosisCompo
   );
 }
 
+type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
+
 const NODE_MAPPERS: {
-  [key: string]: ((json: MitosisNode, options: ToVueOptions) => string) | undefined;
+  [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
@@ -103,7 +105,7 @@ const NODE_MAPPERS: {
     firstChild.properties['v-for'] = forValue;
     return blockToVue(firstChild, options);
   },
-  Show(json, options) {
+  Show(json, options, scope) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
 
     switch (options.vueVersion) {
@@ -119,27 +121,83 @@ const NODE_MAPPERS: {
         }
         `;
       case 2:
-        let ifString = '';
         // Vue 2 can only handle one root element, so we just take the first one.
         // TO-DO: warn user of multi-children Show.
         const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-        if (firstChild) {
-          firstChild.properties['v-if'] = ifValue;
-          ifString = blockToVue(firstChild, options);
-        }
-
-        let elseString = '';
         const elseBlock = json.meta.else;
-        if (isMitosisNode(elseBlock)) {
-          elseBlock.properties['v-else'] = '';
-          elseString = blockToVue(elseBlock, options);
-          console.log(elseBlock, json.meta.else);
-        }
 
-        return `
-          ${ifString}
-          ${elseString}
-        `;
+        const hasShowChild = firstChild?.name === 'Show';
+        const childElseBlock = firstChild.meta.else;
+
+        /**
+         * This is special edge logic to handle 2 nested Show elements in Vue 2.
+         * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
+         *
+         * <show when={foo} else={else-1}>
+         *  <show when={bar} else={else-2}>
+         *   <if-code>
+         *  </show>
+         * </show>
+         *
+         *
+         * foo: true && bar: true => if-code
+         * foo: true && bar: false => else-2
+         * foo: false && bar: true?? => else-1
+         *
+         *
+         * map to:
+         *
+         * <else-1 if={!foo} />
+         * <else-2 else-if={!bar} />
+         * <if-code v-else />
+         *
+         */
+        if (
+          firstChild &&
+          isMitosisNode(elseBlock) &&
+          hasShowChild &&
+          isMitosisNode(childElseBlock)
+        ) {
+          const showScope: Scope = {
+            ...scope,
+            isParentShow: true,
+          };
+
+          elseBlock.properties['v-if'] = `!(${ifValue})`;
+          const ifString = blockToVue(elseBlock, options, showScope);
+
+          const childIfValue = stripStateAndPropsRefs(firstChild.bindings.when?.code);
+          childElseBlock.properties['v-else-if'] = `!(${childIfValue})`;
+          const elseIfString = blockToVue(childElseBlock, options, showScope);
+
+          const firstChildOfirstChild = firstChild.children.filter(filterEmptyTextNodes)[0];
+          firstChildOfirstChild.properties['v-else'] = '';
+          const elseString = blockToVue(firstChildOfirstChild, options, showScope);
+
+          return `
+            ${ifString}
+            ${elseIfString}
+            ${elseString}
+          `;
+        } else {
+          let ifString = '';
+          if (firstChild) {
+            firstChild.properties['v-if'] = ifValue;
+            ifString = blockToVue(firstChild, options);
+          }
+
+          let elseString = '';
+          if (isMitosisNode(elseBlock)) {
+            elseBlock.properties['v-else'] = '';
+            elseString = blockToVue(elseBlock, options);
+            console.log(elseBlock, json.meta.else);
+          }
+
+          return `
+                    ${ifString}
+                    ${elseString}
+                  `;
+        }
     }
   },
 };
@@ -225,10 +283,14 @@ const stringifyBinding =
     }
   };
 
-export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => {
+interface Scope {
+  isParentShow?: boolean;
+}
+
+export const blockToVue: BlockRenderer = (node, options, scope) => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
-    return nodeMapper(node, options);
+    return nodeMapper(node, options, scope);
   }
 
   if (isChildren(node)) {
