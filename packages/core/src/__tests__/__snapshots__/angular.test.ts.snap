@@ -1922,6 +1922,31 @@ export default class MultipleOnUpdateWithDeps {
 "
 `;
 
+exports[`Angular nestedShow 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngIf=\\"!conditionB\\">
+        <div>if condition A and condition B</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() conditionB: Props[\\"conditionB\\"];
+}
+"
+`;
+
 exports[`Angular onInit & onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -2211,6 +2236,31 @@ exports[`Angular self-referencing component with children 1`] = `
 })
 export default class MyComponent {
   @Input() name: any;
+}
+"
+`;
+
+exports[`Angular showWithFor 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+@Component({
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngFor=\\"let item of items\\">
+        <div [key]=\\"idx\\">{{item}}</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() items: Props[\\"items\\"];
 }
 "
 `;

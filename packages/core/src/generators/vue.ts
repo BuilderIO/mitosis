@@ -34,6 +34,7 @@ import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
+import { pipe } from 'fp-ts/lib/function';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -51,6 +52,13 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   asyncComponentImports?: boolean;
 }
 
+const SPECIAL_PROPERTIES = {
+  V_IF: 'v-if',
+  V_FOR: 'v-for',
+  V_ELSE: 'v-else',
+  V_ELSE_IF: 'v-else-if',
+} as const;
+
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
@@ -58,6 +66,28 @@ function getContextNames(json: MitosisComponent) {
 const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
 const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
+
+const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
+
+const addPropertiesToJson =
+  (properties: MitosisNode['properties']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    properties: {
+      ...json.properties,
+      ...properties,
+    },
+  });
+
+const addBindingsToJson =
+  (bindings: MitosisNode['bindings']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    bindings: {
+      ...json.bindings,
+      ...bindings,
+    },
+  });
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
@@ -74,8 +104,10 @@ function processBinding(code: string, _options: ToVueOptions, json: MitosisCompo
   );
 }
 
+type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
+
 const NODE_MAPPERS: {
-  [key: string]: ((json: MitosisNode, options: ToVueOptions) => string) | undefined;
+  [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
@@ -95,50 +127,137 @@ const NODE_MAPPERS: {
       </template>`;
     }
     // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (!firstChild) {
-      return '';
-    }
-    firstChild.bindings.key = keyValue;
-    firstChild.properties['v-for'] = forValue;
-    return blockToVue(firstChild, options);
-  },
-  Show(json, options) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion >= 3) {
-      return `
-      <template v-if="${encodeQuotes(ifValue)}">
-        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-      </template>
-      ${
-        !json.meta.else
-          ? ''
-          : `
-        <template v-else>
-          ${blockToVue(json.meta.else as any, options)}
-        </template>
-      `
-      }
-      `;
-    }
-    let ifString = '';
-    // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (firstChild) {
-      firstChild.properties['v-if'] = ifValue;
-      ifString = blockToVue(firstChild, options);
-    }
-    let elseString = '';
-    const elseBlock = json.meta.else;
-    if (isMitosisNode(elseBlock)) {
-      elseBlock.properties['v-else'] = '';
-      elseString = blockToVue(elseBlock, options);
-    }
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
 
-    return `
-    ${ifString}
-    ${elseString}
-    `;
+    // Edge-case for when the parent is a `Show`, we need to pass down the `v-if` prop.
+    const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
+
+    return firstChild
+      ? pipe(
+          firstChild,
+          addBindingsToJson({ key: keyValue }),
+          addPropertiesToJson({
+            [SPECIAL_PROPERTIES.V_FOR]: forValue,
+            ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
+          }),
+          (block) => blockToVue(block, options),
+        )
+      : '';
+  },
+  Show(json, options, scope) {
+    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
+
+    switch (options.vueVersion) {
+      case 3:
+        return `
+        <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
+          ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+        </template>
+        ${
+          isMitosisNode(json.meta.else)
+            ? `
+            <template ${SPECIAL_PROPERTIES.V_ELSE}> 
+              ${blockToVue(json.meta.else, options)}
+            </template>`
+            : ''
+        }
+        `;
+      case 2:
+        // Vue 2 can only handle one root element, so we just take the first one.
+        // TO-DO: warn user of multi-children Show.
+        const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
+        const elseBlock = json.meta.else;
+
+        const hasShowChild = firstChild?.name === 'Show';
+        const childElseBlock = firstChild?.meta.else;
+
+        /**
+         * This is special edge logic to handle 2 nested Show elements in Vue 2.
+         * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
+         *
+         * <show when={foo} else={else-1}>
+         *  <show when={bar} else={else-2}>
+         *   <if-code>
+         *  </show>
+         * </show>
+         *
+         *
+         * foo: true && bar: true => if-code
+         * foo: true && bar: false => else-2
+         * foo: false && bar: true?? => else-1
+         *
+         *
+         * map to:
+         *
+         * <else-1 if={!foo} />
+         * <else-2 else-if={!bar} />
+         * <if-code v-else />
+         *
+         */
+        if (
+          firstChild &&
+          isMitosisNode(elseBlock) &&
+          hasShowChild &&
+          isMitosisNode(childElseBlock)
+        ) {
+          const ifString = pipe(
+            elseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
+            (block) => blockToVue(block, options),
+          );
+
+          const childIfValue = pipe(
+            firstChild.bindings.when?.code,
+            stripStateAndPropsRefs,
+            invertBooleanExpression,
+          );
+          const elseIfString = pipe(
+            childElseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
+            (block) => blockToVue(block, options),
+          );
+
+          const firstChildOfFirstChild = firstChild.children.filter(filterEmptyTextNodes)[0] as
+            | MitosisNode
+            | undefined;
+          const elseString = firstChildOfFirstChild
+            ? pipe(
+                firstChildOfFirstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
+
+          return `
+            
+            ${ifString}
+            
+            ${elseIfString}
+            
+            ${elseString}
+            
+          `;
+        } else {
+          const ifString = firstChild
+            ? pipe(
+                firstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
+
+          const elseString = isMitosisNode(elseBlock)
+            ? pipe(elseBlock, addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }), (block) =>
+                blockToVue(block, options),
+              )
+            : '';
+
+          return `
+                    ${ifString}
+                    ${elseString}
+                  `;
+        }
+    }
   },
 };
 
@@ -223,10 +342,14 @@ const stringifyBinding =
     }
   };
 
-export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => {
+interface Scope {
+  isRootNode?: boolean;
+}
+
+export const blockToVue: BlockRenderer = (node, options, scope) => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
-    return nodeMapper(node, options);
+    return nodeMapper(node, options, scope);
   }
 
   if (isChildren(node)) {
@@ -261,9 +384,9 @@ export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => 
 
     if (key === 'className') {
       continue;
-    }
-
-    if (typeof value === 'string') {
+    } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+      str += ` ${key} `;
+    } else if (typeof value === 'string') {
       str += ` ${key}="${encodeQuotes(value)}" `;
     }
   }
@@ -475,7 +598,9 @@ const componentToVue =
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children.map((item) => blockToVue(item, options)).join('\n');
+    const template = component.children
+      .map((item) => blockToVue(item, options, { isRootNode: true }))
+      .join('\n');
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 

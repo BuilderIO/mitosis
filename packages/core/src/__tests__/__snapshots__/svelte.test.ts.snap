@@ -1441,6 +1441,24 @@ exports[`Svelte multipleOnUpdateWithDeps 1`] = `
 "
 `;
 
+exports[`Svelte nestedShow 1`] = `
+"<script>
+  export let conditionA;
+  export let conditionB;
+</script>
+
+{#if conditionA}
+  {#if !conditionB}
+    <div>if condition A and condition B</div>
+  {:else}
+    <div>else-condition-B</div>
+  {/if}
+{:else}
+  <div>else-condition-A</div>
+{/if}
+"
+`;
+
 exports[`Svelte onInit & onMount 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
@@ -1631,5 +1649,21 @@ exports[`Svelte self-referencing component with children 1`] = `
     </svelte:self>
   {/if}
 </div>
+"
+`;
+
+exports[`Svelte showWithFor 1`] = `
+"<script>
+  export let conditionA;
+  export let items;
+</script>
+
+{#if conditionA}
+  {#each items as item, idx (idx)}
+    <div>{item}</div>
+  {/each}
+{:else}
+  <div>else-condition-A</div>
+{/if}
 "
 `;

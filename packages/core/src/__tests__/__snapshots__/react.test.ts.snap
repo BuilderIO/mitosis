@@ -1710,6 +1710,34 @@ export default function MultipleOnUpdateWithDeps(props) {
 "
 `;
 
+exports[`React nestedShow 1`] = `
+"interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+export default function NestedShow(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {!props.conditionB ? (
+            <>
+              <div>if condition A and condition B</div>
+            </>
+          ) : (
+            <div>else-condition-B</div>
+          )}
+        </>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </>
+  );
+}
+"
+`;
+
 exports[`React onInit & onMount 1`] = `
 "import { useEffect } from \\"react\\";
 
@@ -1955,6 +1983,30 @@ exports[`React self-referencing component with children 1`] = `
         </>
       ) : null}
     </div>
+  );
+}
+"
+`;
+
+exports[`React showWithFor 1`] = `
+"interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+export default function NestedShow(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {props.items?.map((item, idx) => (
+            <div key={idx}>{item}</div>
+          ))}
+        </>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </>
   );
 }
 "

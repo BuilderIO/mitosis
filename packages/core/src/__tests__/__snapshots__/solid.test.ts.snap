@@ -1608,6 +1608,23 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
+exports[`Solid nestedShow 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+        <div>if condition A and condition B</div>
+      </Show>
+    </Show>
+  );
+}
+
+export default NestedShow;
+"
+`;
+
 exports[`Solid onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -1809,5 +1826,25 @@ function MyComponent(props) {
 }
 
 export default MyComponent;
+"
+`;
+
+exports[`Solid showWithFor 1`] = `
+"import { Show, For } from \\"solid-js\\";
+
+function NestedShow(props) {
+  return (
+    <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+      <For each={props.items}>
+        {(item, _index) => {
+          const index = _index();
+          return <div key={idx}>{item}</div>;
+        }}
+      </For>
+    </Show>
+  );
+}
+
+export default NestedShow;
 "
 `;

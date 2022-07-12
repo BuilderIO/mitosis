@@ -640,6 +640,7 @@ exports[`Vue Form 1`] = `
   >
     <builder-block-component
       v-for=\\"(block, index) in builderBlock?.children\\"
+      v-if=\\"builderBlock && builderBlock.children\\"
       :block=\\"block\\"
       :index=\\"index\\"
       :key=\\"block.id\\"
@@ -1208,6 +1209,7 @@ exports[`Vue Section 2`] = `
   <section
     v-bind=\\"attributes\\"
     v-for=\\"(item, index) in items\\"
+    v-if=\\"max\\"
     :style=\\"{
       maxWidth: item + max,
     }\\"
@@ -1736,6 +1738,24 @@ export default {
 "
 `;
 
+exports[`Vue nestedShow 1`] = `
+"<template>
+  <div v-if=\\"!Boolean(conditionA)\\">else-condition-A</div>
+
+  <div v-else-if=\\"!Boolean(!conditionB)\\">else-condition-B</div>
+
+  <div v-else>if condition A and condition B</div>
+</template>
+<script>
+export default {
+  name: \\"nested-show\\",
+
+  props: [\\"conditionA\\", \\"conditionB\\"],
+};
+</script>
+"
+`;
+
 exports[`Vue onInit & onMount 1`] = `
 "<template>
   <div></div>
@@ -1919,7 +1939,7 @@ export default {
 exports[`Vue rootShow 1`] = `
 "<template>
   <div v-if=\\"foo === 'bar'\\">Bar</div>
-  <div v-else=\\"\\">Foo</div>
+  <div v-else>Foo</div>
 </template>
 <script>
 export default {
@@ -1965,6 +1985,23 @@ export default {
   name: \\"my-component\\",
 
   props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue showWithFor 1`] = `
+"<template>
+  <div v-for=\\"(item, index) in items\\" v-if=\\"conditionA\\" :key=\\"idx\\">
+    {{ item }}
+  </div>
+  <div v-else>else-condition-A</div>
+</template>
+<script>
+export default {
+  name: \\"nested-show\\",
+
+  props: [\\"conditionA\\", \\"items\\"],
 };
 </script>
 "
