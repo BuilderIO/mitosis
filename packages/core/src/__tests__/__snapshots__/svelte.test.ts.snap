@@ -954,11 +954,17 @@ exports[`Svelte Img 1`] = `
   export let attributes;
   export let imgSrc;
   export let altText;
+
+  function mitosis_styling(node, vars) {
+    Object.entries(vars).forEach(([p, v]) => {
+      node.style[p] = v;
+    });
+  }
 </script>
 
 <img
   {...attributes}
-  style={{
+  use:mitosis_styling={{
     objectFit: backgroundSize || \\"cover\\",
     objectPosition: backgroundPosition || \\"center\\",
   }}
@@ -1024,11 +1030,17 @@ exports[`Svelte Section 1`] = `
 "<script>
   export let attributes;
   export let maxWidth;
+
+  function mitosis_styling(node, vars) {
+    Object.entries(vars).forEach(([p, v]) => {
+      node.style[p] = v;
+    });
+  }
 </script>
 
 <section
   {...attributes}
-  style={maxWidth && typeof maxWidth === \\"number\\"
+  use:mitosis_styling={maxWidth && typeof maxWidth === \\"number\\"
     ? {
         maxWidth: maxWidth,
       }
@@ -1043,6 +1055,12 @@ exports[`Svelte Section 2`] = `
 "<script>
   export let attributes;
 
+  function mitosis_styling(node, vars) {
+    Object.entries(vars).forEach(([p, v]) => {
+      node.style[p] = v;
+    });
+  }
+
   let max = 42;
   let items = [42];
 </script>
@@ -1051,7 +1069,7 @@ exports[`Svelte Section 2`] = `
   {#each items as item, undefined}
     <section
       {...attributes}
-      style={{
+      use:mitosis_styling={{
         maxWidth: item + max,
       }}
     >
@@ -1250,12 +1268,17 @@ exports[`Svelte Video 1`] = `
   export let muted;
   export let controls;
   export let loop;
+
+  function mitosis_styling(node, vars) {
+    Object.entries(vars).forEach(([p, v]) => {
+      node.style[p] = v;
+    });
+  }
 </script>
 
 <video
   {...attributes}
-  preload=\\"none\\"
-  style={{
+  use:mitosis_styling={{
     width: \\"100%\\",
     height: \\"100%\\",
     ...attributes?.style,
@@ -1265,6 +1288,7 @@ exports[`Svelte Video 1`] = `
     // not have the video overflow
     borderRadius: 1,
   }}
+  preload=\\"none\\"
   key={video || \\"no-src\\"}
   poster={posterImage}
   autoplay={autoPlay}
