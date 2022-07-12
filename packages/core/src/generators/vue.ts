@@ -34,6 +34,7 @@ import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
+import { pipe } from 'fp-ts/lib/function';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -65,6 +66,28 @@ function getContextNames(json: MitosisComponent) {
 const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
 const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
+
+const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
+
+const addPropertiesToJson =
+  (properties: MitosisNode['properties']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    properties: {
+      ...json.properties,
+      ...properties,
+    },
+  });
+
+const addBindingsToJson =
+  (bindings: MitosisNode['bindings']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    bindings: {
+      ...json.bindings,
+      ...bindings,
+    },
+  });
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
@@ -104,20 +127,22 @@ const NODE_MAPPERS: {
       </template>`;
     }
     // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (!firstChild) {
-      return '';
-    }
-    firstChild.bindings.key = keyValue;
-    firstChild.properties[SPECIAL_PROPERTIES.V_FOR] = forValue;
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
 
     // Edge-case for when the parent is a `Show`, we need to pass down the `v-if` prop.
     const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
-    if (jsonIf) {
-      firstChild.properties[SPECIAL_PROPERTIES.V_IF] = jsonIf;
-    }
 
-    return blockToVue(firstChild, options);
+    return firstChild
+      ? pipe(
+          firstChild,
+          addBindingsToJson({ key: keyValue }),
+          addPropertiesToJson({
+            [SPECIAL_PROPERTIES.V_FOR]: forValue,
+            ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
+          }),
+          (block) => blockToVue(block, options),
+        )
+      : '';
   },
   Show(json, options, scope) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
@@ -140,11 +165,11 @@ const NODE_MAPPERS: {
       case 2:
         // Vue 2 can only handle one root element, so we just take the first one.
         // TO-DO: warn user of multi-children Show.
-        const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+        const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
         const elseBlock = json.meta.else;
 
         const hasShowChild = firstChild?.name === 'Show';
-        const childElseBlock = firstChild.meta.else;
+        const childElseBlock = firstChild?.meta.else;
 
         /**
          * This is special edge logic to handle 2 nested Show elements in Vue 2.
@@ -175,19 +200,33 @@ const NODE_MAPPERS: {
           hasShowChild &&
           isMitosisNode(childElseBlock)
         ) {
-          const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
+          const ifString = pipe(
+            elseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
+            (block) => blockToVue(block, options),
+          );
 
-          elseBlock.properties[SPECIAL_PROPERTIES.V_IF] = invertBooleanExpression(ifValue);
-          const ifString = blockToVue(elseBlock, options);
+          const childIfValue = pipe(
+            firstChild.bindings.when?.code,
+            stripStateAndPropsRefs,
+            invertBooleanExpression,
+          );
+          const elseIfString = pipe(
+            childElseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
+            (block) => blockToVue(block, options),
+          );
 
-          const childIfValue = stripStateAndPropsRefs(firstChild.bindings.when?.code);
-          childElseBlock.properties[SPECIAL_PROPERTIES.V_ELSE_IF] =
-            invertBooleanExpression(childIfValue);
-          const elseIfString = blockToVue(childElseBlock, options);
-
-          const firstChildOfirstChild = firstChild.children.filter(filterEmptyTextNodes)[0];
-          firstChildOfirstChild.properties[SPECIAL_PROPERTIES.V_ELSE] = '';
-          const elseString = blockToVue(firstChildOfirstChild, options);
+          const firstChildOfFirstChild = firstChild.children.filter(filterEmptyTextNodes)[0] as
+            | MitosisNode
+            | undefined;
+          const elseString = firstChildOfFirstChild
+            ? pipe(
+                firstChildOfFirstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
 
           return `
             
@@ -199,18 +238,19 @@ const NODE_MAPPERS: {
             
           `;
         } else {
-          let ifString = '';
-          if (firstChild) {
-            firstChild.properties[SPECIAL_PROPERTIES.V_IF] = ifValue;
-            ifString = blockToVue(firstChild, options);
-          }
+          const ifString = firstChild
+            ? pipe(
+                firstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
 
-          let elseString = '';
-          if (isMitosisNode(elseBlock)) {
-            elseBlock.properties[SPECIAL_PROPERTIES.V_ELSE] = '';
-            elseString = blockToVue(elseBlock, options);
-            console.log(elseBlock, json.meta.else);
-          }
+          const elseString = isMitosisNode(elseBlock)
+            ? pipe(elseBlock, addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }), (block) =>
+                blockToVue(block, options),
+              )
+            : '';
 
           return `
                     ${ifString}
