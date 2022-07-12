@@ -2022,3 +2022,34 @@ export default function MyComponent(props: any) {
 }
 "
 `;
+
+exports[`React Native showWithFor 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+export default function NestedShow(props: Props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {props.items?.map((item, idx) => (
+            <View key={idx}>
+              <Text>{item}</Text>
+            </View>
+          ))}
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;

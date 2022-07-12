@@ -1718,8 +1718,10 @@ export default {
 
 exports[`Vue nestedShow 1`] = `
 "<template>
-  <div v-if=\\"!conditionA\\">else-condition-A</div>
-  <div v-else-if=\\"!!conditionB\\">else-condition-B</div>
+  <div v-if=\\"!Boolean(conditionA)\\">else-condition-A</div>
+
+  <div v-else-if=\\"!Boolean(!conditionB)\\">else-condition-B</div>
+
   <div v-else>if condition A and condition B</div>
 </template>
 <script>
@@ -1961,6 +1963,21 @@ export default {
   name: \\"my-component\\",
 
   props: [\\"name\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue showWithFor 1`] = `
+"<template>
+  <div v-for=\\"(item, index) in items\\" :key=\\"idx\\">{{ item }}</div>
+  <div v-else>else-condition-A</div>
+</template>
+<script>
+export default {
+  name: \\"nested-show\\",
+
+  props: [\\"conditionA\\", \\"items\\"],
 };
 </script>
 "

@@ -2227,3 +2227,28 @@ export default class MyComponent {
 }
 "
 `;
+
+exports[`Angular showWithFor 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+@Component({
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngFor=\\"let item of items\\">
+        <div [key]=\\"idx\\">{{item}}</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() items: Props[\\"items\\"];
+}
+"
+`;
