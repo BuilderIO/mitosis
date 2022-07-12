@@ -47,7 +47,6 @@ const onMount = require('./data/blocks/onMount.raw');
 const onUpdate = require('./data/blocks/onUpdate.raw');
 const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
 const rawText = require('./data/blocks/raw-text.raw');
-const rootShow = require('./data/blocks/rootShow.raw');
 const section = require('./data/blocks/section.raw');
 const sectionState = require('./data/blocks/section-state.raw');
 const selectBlock = require('./data/blocks/select.raw');
@@ -136,15 +135,16 @@ const FORWARD_REF_TESTS: Tests = {
   basicForwardRefMetadata,
 };
 
-const ROOT_SHOW_TESTS: Tests = {
-  rootShow: rootShow,
+const SHOW_TESTS: Tests = {
+  rootShow: require('./data/blocks/rootShow.raw'),
+  nestedShow: require('./data/show/nested-show.raw'),
 };
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -153,7 +153,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   angular: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -162,7 +162,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   webcomponent: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FOR_SHOW_TESTS,
@@ -171,7 +171,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   vue: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -179,7 +179,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   ],
   svelte: [
     BASIC_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -188,7 +188,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   html: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FOR_SHOW_TESTS,
@@ -206,7 +206,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   solid: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     // FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -215,7 +215,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   reactNative: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -224,7 +224,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   liquid: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
@@ -232,7 +232,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   qwik: [
     BASIC_TESTS,
     SLOTS_TESTS,
-    ROOT_SHOW_TESTS,
+    SHOW_TESTS,
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,

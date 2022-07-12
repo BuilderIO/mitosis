@@ -1897,6 +1897,31 @@ export default class MultipleOnUpdateWithDeps {
 "
 `;
 
+exports[`Angular nestedShow 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngIf=\\"!conditionB\\">
+        <div>if condition A and condition B</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() conditionB: Props[\\"conditionB\\"];
+}
+"
+`;
+
 exports[`Angular onInit & onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
