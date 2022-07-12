@@ -111,8 +111,8 @@ const NODE_MAPPERS: {
     firstChild.bindings.key = keyValue;
     firstChild.properties[SPECIAL_PROPERTIES.V_FOR] = forValue;
 
+    // Edge-case for when the parent is a `Show`, we need to pass down the `v-if` prop.
     const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
-
     if (jsonIf) {
       firstChild.properties[SPECIAL_PROPERTIES.V_IF] = jsonIf;
     }
@@ -125,12 +125,15 @@ const NODE_MAPPERS: {
     switch (options.vueVersion) {
       case 3:
         return `
-        <template v-if="${encodeQuotes(ifValue)}">
+        <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
           ${json.children.map((item) => blockToVue(item, options)).join('\n')}
         </template>
         ${
           isMitosisNode(json.meta.else)
-            ? `<template v-else> ${blockToVue(json.meta.else, options)} </template>`
+            ? `
+            <template ${SPECIAL_PROPERTIES.V_ELSE}> 
+              ${blockToVue(json.meta.else, options)}
+            </template>`
             : ''
         }
         `;
@@ -341,8 +344,8 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
     if (key === 'className') {
       continue;
-    } else if (key === 'v-else') {
-      str += ' v-else ';
+    } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+      str += ` ${key} `;
     } else if (typeof value === 'string') {
       str += ` ${key}="${encodeQuotes(value)}" `;
     }
