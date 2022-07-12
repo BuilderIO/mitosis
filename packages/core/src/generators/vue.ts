@@ -105,40 +105,42 @@ const NODE_MAPPERS: {
   },
   Show(json, options) {
     const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion >= 3) {
-      return `
-      <template v-if="${encodeQuotes(ifValue)}">
-        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-      </template>
-      ${
-        !json.meta.else
-          ? ''
-          : `
-        <template v-else>
-          ${blockToVue(json.meta.else as any, options)}
-        </template>
-      `
-      }
-      `;
-    }
-    let ifString = '';
-    // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (firstChild) {
-      firstChild.properties['v-if'] = ifValue;
-      ifString = blockToVue(firstChild, options);
-    }
-    let elseString = '';
-    const elseBlock = json.meta.else;
-    if (isMitosisNode(elseBlock)) {
-      elseBlock.properties['v-else'] = '';
-      elseString = blockToVue(elseBlock, options);
-    }
 
-    return `
-    ${ifString}
-    ${elseString}
-    `;
+    switch (options.vueVersion) {
+      case 3:
+        return `
+        <template v-if="${encodeQuotes(ifValue)}">
+          ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+        </template>
+        ${
+          isMitosisNode(json.meta.else)
+            ? `<template v-else> ${blockToVue(json.meta.else, options)} </template>`
+            : ''
+        }
+        `;
+      case 2:
+        let ifString = '';
+        // Vue 2 can only handle one root element, so we just take the first one.
+        // TO-DO: warn user of multi-children Show.
+        const firstChild = json.children.filter(filterEmptyTextNodes)[0];
+        if (firstChild) {
+          firstChild.properties['v-if'] = ifValue;
+          ifString = blockToVue(firstChild, options);
+        }
+
+        let elseString = '';
+        const elseBlock = json.meta.else;
+        if (isMitosisNode(elseBlock)) {
+          elseBlock.properties['v-else'] = '';
+          elseString = blockToVue(elseBlock, options);
+          console.log(elseBlock, json.meta.else);
+        }
+
+        return `
+          ${ifString}
+          ${elseString}
+        `;
+    }
   },
 };
 
@@ -261,9 +263,9 @@ export const blockToVue = (node: MitosisNode, options: ToVueOptions): string => 
 
     if (key === 'className') {
       continue;
-    }
-
-    if (typeof value === 'string') {
+    } else if (key === 'v-else') {
+      str += ' v-else ';
+    } else if (typeof value === 'string') {
       str += ` ${key}="${encodeQuotes(value)}" `;
     }
   }
