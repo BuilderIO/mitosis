@@ -1653,6 +1653,44 @@ export default {
 "
 `;
 
+exports[`Vue classState 1`] = `
+"<template>
+  <div
+    :class=\\"_classStringToObject(this.classState + 'div')\\"
+    :style=\\"styleState\\"
+  >
+    Hello! I can run in React, Vue, Solid, or Liquid!
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  data: () => ({ classState: \\"testClassName\\", styleState: { color: \\"red\\" } }),
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+<style scoped>
+.div {
+  padding: 10px;
+}
+</style>
+"
+`;
+
 exports[`Vue multipleOnUpdate 1`] = `
 "<template>
   <div></div>

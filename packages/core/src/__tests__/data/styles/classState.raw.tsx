@@ -1,12 +1,8 @@
-import { useState, useStore } from '@builder.io/mitosis';
+import { useState } from '@builder.io/mitosis';
 
 export default function MyBasicComponent() {
   const [classState, setClassState] = useState('testClassName');
-  const state = useStore({
-    customStyles: {
-      color: 'red',
-    },
-  });
+  const [styleState, setStyleState] = useState({ color: 'red' });
 
   return (
     <div
@@ -14,7 +10,7 @@ export default function MyBasicComponent() {
       css={{
         padding: '10px',
       }}
-      style={state.customStyles}
+      style={styleState}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>

@@ -3053,6 +3053,59 @@ exports[`Html className 1`] = `
 "
 `;
 
+exports[`Html classState 1`] = `
+"<div data-el=\\"div-1\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
+<style>
+  .div {
+    padding: 10px;
+  }
+</style>
+<script>
+  (() => {
+    const state = {
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        el.className = state.classState + \\"div\\";
+
+        Object.assign(el.style, state.styleState);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html multipleOnUpdate 1`] = `
 "<div></div>
 "

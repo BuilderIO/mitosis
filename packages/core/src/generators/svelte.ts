@@ -35,7 +35,6 @@ import { uniq } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
-import json5 from 'json5';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -191,12 +190,13 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
       includeState: options.stateType === 'variables',
     })}}`;
   }
-  console.log('json.bindings.styles', json.bindings.styles);
 
-  if (json.bindings.style || json.properties.style) {
-    str += `use:mitosis_styling={ ${json5.stringify(
-      json.bindings.style || json.properties.style,
-    )}}`;
+  if (json.bindings.style?.code || json.properties.style) {
+    const useValue = stripStateAndPropsRefs(json.bindings.style?.code || json.properties.style, {
+      includeState: options.stateType === 'variables',
+    });
+
+    str += `use:mitosis_styling={${useValue}}`;
     delete json.bindings.style;
     delete json.properties.style;
   }
@@ -431,7 +431,6 @@ export const componentToSvelte =
           return `export let ${name};`;
         })
         .join('\n')}
-
       ${
         hasStyleObject(json.children)
           ? `
@@ -441,8 +440,6 @@ export const componentToSvelte =
       `
           : ''
       }
-
-      
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
