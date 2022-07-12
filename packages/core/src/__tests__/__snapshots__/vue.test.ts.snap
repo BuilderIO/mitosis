@@ -640,6 +640,7 @@ exports[`Vue Form 1`] = `
   >
     <builder-block-component
       v-for=\\"(block, index) in builderBlock?.children\\"
+      v-if=\\"builderBlock && builderBlock.children\\"
       :block=\\"block\\"
       :index=\\"index\\"
       :key=\\"block.id\\"
@@ -1226,6 +1227,7 @@ exports[`Vue Section 2`] = `
   <section
     v-bind=\\"attributes\\"
     v-for=\\"(item, index) in items\\"
+    v-if=\\"max\\"
     :style=\\"{
       maxWidth: item + max,
     }\\"
@@ -1970,7 +1972,9 @@ export default {
 
 exports[`Vue showWithFor 1`] = `
 "<template>
-  <div v-for=\\"(item, index) in items\\" :key=\\"idx\\">{{ item }}</div>
+  <div v-for=\\"(item, index) in items\\" v-if=\\"conditionA\\" :key=\\"idx\\">
+    {{ item }}
+  </div>
   <div v-else>else-condition-A</div>
 </template>
 <script>
