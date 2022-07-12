@@ -1556,6 +1556,36 @@ export default ClassNameCode;
 "
 `;
 
+exports[`Solid classState 1`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const state = createMutable({
+    classState: \\"testClassName\\",
+    styleState: { color: \\"red\\" },
+  });
+
+  return (
+    <div
+      class={
+        state.classState +
+        \\" \\" +
+        css({
+          padding: \\"10px\\",
+        })
+      }
+      style={state.styleState}
+    >
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid multipleOnUpdate 1`] = `
 "function MultipleOnUpdate(props) {
   return <div></div>;

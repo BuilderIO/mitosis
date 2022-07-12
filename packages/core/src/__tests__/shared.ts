@@ -27,6 +27,7 @@ const preserveTyping = require('./data/types/preserve-typing.raw');
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
 const classAndClassName = require('./data/styles/class-and-className.raw');
+const classState = require('./data/styles/classState.raw');
 
 const button = require('./data/blocks/button.raw');
 const classNameJsx = require('./data/blocks/classname-jsx.raw');
@@ -114,6 +115,7 @@ const SLOTS_TESTS = {
   ContentSlotHtml: contentSlotHtml,
   SlotJsx: slotJsx,
   SlotHtml: slotHtml,
+  classState,
 };
 
 const MULTI_ON_UPDATE_TESTS: Tests = {

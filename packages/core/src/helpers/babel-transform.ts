@@ -85,7 +85,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
       // that is an object
       useCode = `let _ = ${useCode}`;
       result = (babelTransform(useCode, visitor)?.code || '')
-        // Babel addes trailing semicolons, but for expressions we need those gone
+        // Babel adds trailing semicolons, but for expressions we need those gone
         .replace(/;$/, '')
         // Remove our fake variable assignment
         .replace(/let _ =\s/, '');
@@ -105,7 +105,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
   if (type === 'functionBody') {
     return result!.replace(/^function\s*\(\)\s*\{/, '').replace(/\};?$/, '');
   } else {
-    // Babel addes trailing semicolons, but for expressions we need those gone
+    // Babel adds trailing semicolons, but for expressions we need those gone
     // TODO: maybe detect if the original code ended with one, and keep it if so, for the case
     // of appending several fragements
     return result!.replace(/;$/, '');
