@@ -1635,7 +1635,7 @@ exports[`Html Image 1`] = `
 exports[`Html Image State 1`] = `
 "<div>
   <template data-el=\\"for\\">
-    <img data-el=\\"img-1\\" />
+    <img class=\\"custom-class\\" data-el=\\"img-1\\" />
   </template>
 </div>
 <script>
@@ -1669,8 +1669,6 @@ exports[`Html Image State 1`] = `
       document.querySelectorAll(\\"[data-el='img-1']\\").forEach((el) => {
         const item = getScope(el, \\"item\\");
         const itemIndex = getScope(el, \\"itemIndex\\");
-
-        el.className = \\"custom-class\\";
 
         el.setAttribute(\\"src\\", item);
 
@@ -3572,7 +3570,7 @@ exports[`Html self-referencing component 1`] = `
   <template data-el=\\"div-1\\"><!-- props.name --></template>
 
   <template data-el=\\"show\\">
-    <MyComponent data-el=\\"my-component\\"></MyComponent>
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
   </template>
 </div>
 <script>
@@ -3607,10 +3605,6 @@ exports[`Html self-referencing component 1`] = `
         if (whenCondition) {
           showContent(el);
         }
-      });
-
-      document.querySelectorAll(\\"[data-el='my-component']\\").forEach((el) => {
-        el.setAttribute(\\"name\\", \\"Bruce Wayne\\");
       });
 
       destroyAnyNodes();
@@ -3665,7 +3659,7 @@ exports[`Html self-referencing component with children 1`] = `
   <slot></slot>
 
   <template data-el=\\"show\\">
-    <MyComponent data-el=\\"my-component\\">
+    <MyComponent name=\\"Bruce\\">
       <div>Wayne</div>
     </MyComponent>
   </template>
@@ -3702,10 +3696,6 @@ exports[`Html self-referencing component with children 1`] = `
         if (whenCondition) {
           showContent(el);
         }
-      });
-
-      document.querySelectorAll(\\"[data-el='my-component']\\").forEach((el) => {
-        el.setAttribute(\\"name\\", \\"Bruce\\");
       });
 
       destroyAnyNodes();

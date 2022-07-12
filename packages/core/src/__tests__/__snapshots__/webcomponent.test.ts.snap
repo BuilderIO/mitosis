@@ -3168,7 +3168,7 @@ class ImgStateComponent extends HTMLElement {
     this._root.innerHTML = \`
       <div>
         <template data-el=\\"for-img-state-component\\">
-          <img data-el=\\"img-img-state-component-1\\" />
+          <img class=\\"custom-class\\" data-el=\\"img-img-state-component-1\\" />
         </template>
       </div>\`;
     this.pendingUpdate = true;
@@ -3212,8 +3212,6 @@ class ImgStateComponent extends HTMLElement {
       .forEach((el) => {
         const item = this.getScope(el, \\"item\\");
         const itemIndex = this.getScope(el, \\"itemIndex\\");
-
-        el.className = \\"custom-class\\";
 
         el.setAttribute(\\"src\\", item);
 
@@ -8393,7 +8391,7 @@ class MyComponent extends HTMLElement {
         <template data-el=\\"div-my-component-1\\"><!-- props.name --></template>
       
         <template data-el=\\"show-my-component\\">
-          <MyComponent data-el=\\"my-component-my-component\\"></MyComponent>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
         </template>
       </div>\`;
     this.pendingUpdate = true;
@@ -8458,12 +8456,6 @@ class MyComponent extends HTMLElement {
         if (whenCondition) {
           this.showContent(el);
         }
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='my-component-my-component']\\")
-      .forEach((el) => {
-        el.setAttribute(\\"name\\", \\"Bruce Wayne\\");
       });
   }
 
@@ -8545,7 +8537,7 @@ class MyComponent extends HTMLElement {
         <slot></slot>
       
         <template data-el=\\"show-my-component\\">
-          <MyComponent data-el=\\"my-component-my-component\\">
+          <MyComponent name=\\"Bruce\\">
             <div>Wayne</div>
           </MyComponent>
         </template>
@@ -8612,12 +8604,6 @@ class MyComponent extends HTMLElement {
         if (whenCondition) {
           this.showContent(el);
         }
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='my-component-my-component']\\")
-      .forEach((el) => {
-        el.setAttribute(\\"name\\", \\"Bruce\\");
       });
   }
 

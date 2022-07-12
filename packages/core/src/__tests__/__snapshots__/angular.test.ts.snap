@@ -1164,7 +1164,7 @@ exports[`Angular Image State 1`] = `
     <div>
       <ng-container *ngFor=\\"let item of images\\">
         <div>
-          <img [class]=\\"'custom-class'\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
         </div>
       </ng-container>
     </div>
@@ -2175,18 +2175,13 @@ exports[`Angular self-referencing component 1`] = `
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div >
-          
-    {{name}}
+    <div>
+      {{name}}
 
-          
-    <ng-container *ngIf=\\"name === 'Batman'\\">
-            
-    <MyComponent  [name]=''Bruce Wayne'' ></MyComponent>
-
-          </ng-container>
-
-        </div>
+      <ng-container *ngIf=\\"name === 'Batman'\\">
+        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+      </ng-container>
+    </div>
   \`,
 })
 export default class MyComponent {
@@ -2201,25 +2196,17 @@ exports[`Angular self-referencing component with children 1`] = `
 @Component({
   selector: \\"my-component\\",
   template: \`
-    <div >
-          
-    {{name}}
+    <div>
+      {{name}}
 
-          
-    <ng-content></ng-content>
+      <ng-content></ng-content>
 
-          
-    <ng-container *ngIf=\\"name === 'Batman'\\">
-            
-    <MyComponent  [name]=''Bruce'' >
-              
-    <div >Wayne</div>
-
-            </MyComponent>
-
-          </ng-container>
-
-        </div>
+      <ng-container *ngIf=\\"name === 'Batman'\\">
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
+      </ng-container>
+    </div>
   \`,
 })
 export default class MyComponent {
