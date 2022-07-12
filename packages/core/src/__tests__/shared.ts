@@ -138,6 +138,7 @@ const FORWARD_REF_TESTS: Tests = {
 const SHOW_TESTS: Tests = {
   rootShow: require('./data/blocks/rootShow.raw'),
   nestedShow: require('./data/show/nested-show.raw'),
+  showWithFor: require('./data/show/show-with-for.raw'),
 };
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
