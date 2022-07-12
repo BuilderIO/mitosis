@@ -51,6 +51,13 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   asyncComponentImports?: boolean;
 }
 
+const SPECIAL_PROPERTIES = {
+  V_IF: 'v-if',
+  V_FOR: 'v-for',
+  V_ELSE: 'v-else',
+  V_ELSE_IF: 'v-else-if',
+} as const;
+
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
@@ -102,7 +109,14 @@ const NODE_MAPPERS: {
       return '';
     }
     firstChild.bindings.key = keyValue;
-    firstChild.properties['v-for'] = forValue;
+    firstChild.properties[SPECIAL_PROPERTIES.V_FOR] = forValue;
+
+    const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
+
+    if (jsonIf) {
+      firstChild.properties[SPECIAL_PROPERTIES.V_IF] = jsonIf;
+    }
+
     return blockToVue(firstChild, options);
   },
   Show(json, options, scope) {
@@ -158,37 +172,39 @@ const NODE_MAPPERS: {
           hasShowChild &&
           isMitosisNode(childElseBlock)
         ) {
-          const showScope: Scope = {
-            ...scope,
-            isParentShow: true,
-          };
+          const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
 
-          elseBlock.properties['v-if'] = `!(${ifValue})`;
-          const ifString = blockToVue(elseBlock, options, showScope);
+          elseBlock.properties[SPECIAL_PROPERTIES.V_IF] = invertBooleanExpression(ifValue);
+          const ifString = blockToVue(elseBlock, options);
 
           const childIfValue = stripStateAndPropsRefs(firstChild.bindings.when?.code);
-          childElseBlock.properties['v-else-if'] = `!(${childIfValue})`;
-          const elseIfString = blockToVue(childElseBlock, options, showScope);
+          childElseBlock.properties[SPECIAL_PROPERTIES.V_ELSE_IF] =
+            invertBooleanExpression(childIfValue);
+          const elseIfString = blockToVue(childElseBlock, options);
 
           const firstChildOfirstChild = firstChild.children.filter(filterEmptyTextNodes)[0];
-          firstChildOfirstChild.properties['v-else'] = '';
-          const elseString = blockToVue(firstChildOfirstChild, options, showScope);
+          firstChildOfirstChild.properties[SPECIAL_PROPERTIES.V_ELSE] = '';
+          const elseString = blockToVue(firstChildOfirstChild, options);
 
           return `
+            
             ${ifString}
+            
             ${elseIfString}
+            
             ${elseString}
+            
           `;
         } else {
           let ifString = '';
           if (firstChild) {
-            firstChild.properties['v-if'] = ifValue;
+            firstChild.properties[SPECIAL_PROPERTIES.V_IF] = ifValue;
             ifString = blockToVue(firstChild, options);
           }
 
           let elseString = '';
           if (isMitosisNode(elseBlock)) {
-            elseBlock.properties['v-else'] = '';
+            elseBlock.properties[SPECIAL_PROPERTIES.V_ELSE] = '';
             elseString = blockToVue(elseBlock, options);
             console.log(elseBlock, json.meta.else);
           }
@@ -284,7 +300,7 @@ const stringifyBinding =
   };
 
 interface Scope {
-  isParentShow?: boolean;
+  isRootNode?: boolean;
 }
 
 export const blockToVue: BlockRenderer = (node, options, scope) => {
@@ -539,7 +555,9 @@ const componentToVue =
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children.map((item) => blockToVue(item, options)).join('\n');
+    const template = component.children
+      .map((item) => blockToVue(item, options, { isRootNode: true }))
+      .join('\n');
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
