@@ -564,6 +564,10 @@ const jsxElementToJson = (
           memo[key] = value;
           return memo;
         }
+        if (types.isJSXExpressionContainer(value) && types.isStringLiteral(value.expression)) {
+          memo[key] = value.expression.value;
+          return memo;
+        }
       }
       return memo;
     }, {} as { [key: string]: JSONOrNode }) as any,
@@ -572,7 +576,7 @@ const jsxElementToJson = (
         const key = item.name.name as string;
         const value = item.value;
 
-        if (types.isJSXExpressionContainer(value)) {
+        if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
             if (key.startsWith('on')) {

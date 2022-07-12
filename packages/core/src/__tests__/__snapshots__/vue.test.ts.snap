@@ -1050,11 +1050,7 @@ export default {
 exports[`Vue Image State 1`] = `
 "<template>
   <div>
-    <img
-      :class=\\"_classStringToObject('custom-class')\\"
-      :src=\\"item\\"
-      :key=\\"itemIndex\\"
-    />
+    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
   </div>
 </template>
 <script>
@@ -1062,20 +1058,6 @@ export default {
   name: \\"img-state-component\\",
 
   data: () => ({ canShow: true, images: [\\"http://example.com/qwik.png\\"] }),
-
-  methods: {
-    _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== \\"string\\") {
-        return obj;
-      }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-    },
-  },
 };
 </script>
 "
@@ -1916,7 +1898,7 @@ exports[`Vue self-referencing component 1`] = `
   <div>
     {{ name }}
 
-    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce Wayne'\\"></my-component>
+    <my-component name=\\"Bruce Wayne\\" v-if=\\"name === 'Batman'\\"></my-component>
   </div>
 </template>
 <script>
@@ -1935,7 +1917,7 @@ exports[`Vue self-referencing component with children 1`] = `
     {{ name }}
     <slot></slot>
 
-    <my-component v-if=\\"name === 'Batman'\\" :name=\\"'Bruce'\\">
+    <my-component name=\\"Bruce\\" v-if=\\"name === 'Batman'\\">
       <div>Wayne</div>
     </my-component>
   </div>
