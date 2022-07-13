@@ -4,22 +4,19 @@
   "version": "0.0.1",
   "scripts": {
     "build": "yarn run typecheck && yarn run build.client && yarn run build.ssr",
-    "build.client": "echo SKIP BUILD TO AVOID QWIK ISSUE vite build",
-    "build.ssr": "echo SKIP BUILD TO AVOID QWIK ISSUE vite build --ssr src/entry.express.tsx",
+    "build.client": "vite build",
+    "build.ssr": "vite build --ssr src/entry.express.tsx",
     "dev": "vite",
     "e2e": "../../node_modules/.bin/playwright test",
     "lint": "eslint \"src/**/*.ts*\"",
-    "serve": "vite",
+    "serve": "node server/entry.express.js",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@builder.io/e2e-app": "workspace:*",
-    "@builder.io/e2e-app-qwik-output": "workspace:*",
-    "solid-js": "^1.4.5",
-    "solid-styled-components": "^0.28.4"
+    "@builder.io/e2e-app-qwik-output": "workspace:*"
   },
   "devDependencies": {
-    "@builder.io/qwik": "0.0.34",
+    "@builder.io/qwik": "0.0.36",
     "@types/eslint": "8.4.2",
     "@types/express": "4.17.13",
     "@types/node": "^16",
@@ -27,7 +24,7 @@
     "@typescript-eslint/parser": "5.27.0",
     "autoprefixer": "10.4.7",
     "eslint": "8.16.0",
-    "eslint-plugin-qwik": "0.0.34",
+    "eslint-plugin-qwik": "0.0.36",
     "express": "4.17.3",
     "node-fetch": "2.6.7",
     "postcss": "8.4.14",
