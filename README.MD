@@ -112,7 +112,7 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 
 ## Community
 
-- [Mitosis Discord](https://discord.gg/CQZt8hzZJR)
+- [Mitosis Discord](https://discord.gg/SNusEyNGsx)
 - [@Builderio](https://twitter.com/builderio)
 
 ## ESLint rules
