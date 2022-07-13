@@ -7,7 +7,7 @@ import {
   ClassStyleMap,
   getNestedSelectors,
   getStylesOnly,
-  nodeHasStyles,
+  nodeHasCss,
   parseCssObject,
   styleMapToCss,
 } from './helpers';
@@ -40,7 +40,7 @@ const collectStyles = (
 
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
-      if (nodeHasStyles(item)) {
+      if (nodeHasCss(item)) {
         const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
         const componentName = item.properties.$name

@@ -42,7 +42,7 @@ import { MitosisNode } from '../types/mitosis-node';
 import { hasContext } from './helpers/context';
 import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
-import { hasStyles } from '../helpers/styles/helpers';
+import { hasCss } from '../helpers/styles/helpers';
 import { isSlotProperty } from '../helpers/slots';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
@@ -488,7 +488,7 @@ const _componentToReact = (
   handleMissingState(json);
   processTagReferences(json);
   addProviderComponents(json, options);
-  const componentHasStyles = hasStyles(json);
+  const componentHasStyles = hasCss(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
