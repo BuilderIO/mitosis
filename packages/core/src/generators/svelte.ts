@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import { collectCss } from '../helpers/styles/collect-css';
-import { hasAnyStyles } from '../helpers/styles/helpers';
+import { hasStyle } from '../helpers/styles/helpers';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
@@ -420,7 +420,7 @@ export const componentToSvelte =
         })
         .join('\n')}
       ${
-        hasAnyStyles(json)
+        hasStyle(json)
           ? `
         function mitosis_styling (node, vars) {
           Object.entries(vars).forEach(([ p, v ]) => { node.style[p] = v })
