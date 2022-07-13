@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { hasStyles } from '../helpers/styles/helpers';
+import { hasBindingStyles } from '../helpers/styles/helpers';
 import { getRefs } from '../helpers/get-refs';
 import {
   getMemberObjectString,
@@ -245,7 +245,7 @@ export const componentToSolid =
       json = runPreJsonPlugins(json, options.plugins);
     }
     addProviderComponents(json, options);
-    const componentHasStyles = hasStyles(json);
+    const componentHasStyles = hasBindingStyles(json);
     const addWrapper = json.children.filter(filterEmptyTextNodes).length !== 1;
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);

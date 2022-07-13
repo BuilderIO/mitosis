@@ -2,6 +2,7 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
 import { collectCss } from '../helpers/styles/collect-css';
+import { hasAnyStyles } from '../helpers/styles/helpers';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
@@ -309,19 +310,6 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   },
 });
 
-const hasStyleObject = (children: MitosisNode[]): boolean => {
-  for (let i = 0; i < children.length; i++) {
-    const child = children[i];
-    if (child.bindings.style || child.properties.style) {
-      return true;
-    } else if (child.children.length) {
-      return hasStyleObject(child.children);
-    }
-  }
-
-  return false;
-};
-
 export const componentToSvelte =
   ({ plugins = [], ...options }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
@@ -432,7 +420,7 @@ export const componentToSvelte =
         })
         .join('\n')}
       ${
-        hasStyleObject(json.children)
+        hasAnyStyles(json)
           ? `
         function mitosis_styling (node, vars) {
           Object.entries(vars).forEach(([ p, v ]) => { node.style[p] = v })

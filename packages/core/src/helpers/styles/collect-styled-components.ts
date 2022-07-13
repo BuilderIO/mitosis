@@ -8,7 +8,7 @@ import hash from 'object-hash';
 import {
   getNestedSelectors,
   getStylesOnly,
-  nodeHasStyles,
+  nodeHasBindingStyles,
   parseCssObject,
   styleMapToCss,
 } from './helpers';
@@ -21,7 +21,7 @@ export const collectStyledComponents = (json: MitosisComponent): string => {
 
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
-      if (nodeHasStyles(item)) {
+      if (nodeHasBindingStyles(item)) {
         const value = parseCssObject(item.bindings.css?.code as string);
         delete item.bindings.css;
 

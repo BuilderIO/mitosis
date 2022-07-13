@@ -7,18 +7,39 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { dashCase } from '../dash-case';
 
-export const nodeHasStyles = (node: MitosisNode) => {
+export const nodeHasBindingStyles = (node: MitosisNode) => {
   return Boolean(
     typeof node.bindings.css?.code === 'string' && node.bindings.css.code.trim().length > 6,
   );
 };
 
-export const hasStyles = (component: MitosisComponent) => {
+export const nodeHasAnyStyles = (node: MitosisNode) => {
+  return (
+    Boolean(typeof node.bindings.style?.code === 'string') ||
+    Boolean(typeof node.properties.style === 'string')
+  );
+};
+
+export const hasBindingStyles = (component: MitosisComponent) => {
   let hasStyles = false;
 
   traverse(component).forEach(function (item) {
     if (isMitosisNode(item)) {
-      if (nodeHasStyles(item)) {
+      if (nodeHasBindingStyles(item)) {
+        hasStyles = true;
+        this.stop();
+      }
+    }
+  });
+  return hasStyles;
+};
+
+export const hasAnyStyles = (component: MitosisComponent) => {
+  let hasStyles = false;
+
+  traverse(component).forEach(function (item) {
+    if (isMitosisNode(item)) {
+      if (nodeHasAnyStyles(item)) {
         hasStyles = true;
         this.stop();
       }
