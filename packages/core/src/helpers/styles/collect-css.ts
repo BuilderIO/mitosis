@@ -22,8 +22,8 @@ const trimClassStr = (classStr: string) => classStr.trim().replace(/\s{2,}/g, ' 
 const updateClassForNode = (item: MitosisNode, className: string) => {
   if (item.bindings.class) {
     // combine className with existing binding. We use single quotes because in Vue, bindings are wrapped in double quotes
-    // e.g. <div :class="_classStringToObject(this.className + 'div-21azgz5avex')" />
-    item.bindings.class.code = trimClassStr(`${item.bindings.class.code} + '${className}'`);
+    // e.g. <div :class="_classStringToObject(this.className + ' div-21azgz5avex')" />
+    item.bindings.class.code = trimClassStr(`${item.bindings.class.code} + ' ${className}'`);
   } else {
     item.properties.class = trimClassStr(`${item.properties.class || ''} ${className}`);
   }
