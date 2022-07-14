@@ -66,18 +66,16 @@ const mappers: {
     }
 
     return `
-{#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
-      includeState: options.stateType === 'variables',
-    })} as ${json.scope.For[0]}, ${json.scope.For[1]} ${keyValue ? `(${keyValue})` : ''}}
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}, ${
+      json.scope.For[1]
+    } ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
   },
   Show: ({ json, options, parentComponent }) => {
     return `
-{#if ${stripStateAndPropsRefs(json.bindings.when?.code, {
-      includeState: options.stateType === 'variables',
-    })} }
+{#if ${stripStateAndProps(json.bindings.when?.code, options)} }
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
@@ -161,6 +159,11 @@ const getTagName = ({
 
 type BlockToSvelte = (props: BlockToSvelteProps) => string;
 
+const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
+  stripStateAndPropsRefs(code, {
+    includeState: options.stateType === 'variables',
+  });
+
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
   if (mappers[json.name]) {
     return mappers[json.name]({ json, options, parentComponent });
@@ -177,9 +180,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   }
 
   if (json.bindings._text?.code) {
-    return `{${stripStateAndPropsRefs(json.bindings._text.code, {
-      includeState: options.stateType === 'variables',
-    })}}`;
+    return `{${stripStateAndProps(json.bindings._text.code, options)}}`;
   }
 
   let str = '';
@@ -187,15 +188,14 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   str += `<${tagName} `;
 
   if (json.bindings._spread?.code) {
-    str += `{...${stripStateAndPropsRefs(json.bindings._spread.code, {
-      includeState: options.stateType === 'variables',
-    })}}`;
+    str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
   }
 
   if (json.bindings.style?.code || json.properties.style) {
-    const useValue = stripStateAndPropsRefs(json.bindings.style?.code || json.properties.style, {
-      includeState: options.stateType === 'variables',
-    });
+    const useValue = stripStateAndProps(
+      json.bindings.style?.code || json.properties.style,
+      options,
+    );
 
     str += `use:mitosis_styling={${useValue}}`;
     delete json.bindings.style;
@@ -215,9 +215,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     }
     const { code: value, arguments: cusArgs = ['event'] } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
-    const useValue = stripStateAndPropsRefs(value, {
-      includeState: options.stateType === 'variables',
-    });
+    const useValue = stripStateAndProps(value, options);
 
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
@@ -311,27 +309,27 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
 });
 
 export const componentToSvelte =
-  ({ plugins = [], ...options }: ToSvelteOptions = {}): Transpiler =>
+  ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
-    const useOptions: ToSvelteOptions = {
+    const options: ToSvelteOptions = {
       stateType: 'variables',
       prettier: true,
       plugins: [FUNCTION_HACK_PLUGIN, ...plugins],
-      ...options,
+      ...userProvidedOptions,
     };
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
-    if (useOptions.plugins) {
-      json = runPreJsonPlugins(json, useOptions.plugins);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
     }
 
     const refs = Array.from(getRefs(json));
-    useBindValue(json, useOptions);
+    useBindValue(json, options);
 
     gettersToFunctions(json);
 
-    if (useOptions.plugins) {
-      json = runPostJsonPlugins(json, useOptions.plugins);
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
     }
     const css = collectCss(json);
     stripMetaProperties(json);
@@ -341,12 +339,9 @@ export const componentToSvelte =
         data: true,
         functions: false,
         getters: false,
-        format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
-        keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
-        valueMapper: (code) =>
-          stripStateAndPropsRefs(code, {
-            includeState: useOptions.stateType === 'variables',
-          }),
+        format: options.stateType === 'proxies' ? 'object' : 'variables',
+        keyPrefix: options.stateType === 'variables' ? 'let ' : '',
+        valueMapper: (code) => stripStateAndProps(code, options),
       }),
       babelTransformCode,
     );
@@ -360,11 +355,9 @@ export const componentToSvelte =
         keyPrefix: '$: ',
         valueMapper: (code) =>
           pipe(
-            stripStateAndPropsRefs(
+            stripStateAndProps(
               code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
-              {
-                includeState: useOptions.stateType === 'variables',
-              },
+              options,
             ),
             stripThisRefs,
           ),
@@ -379,13 +372,7 @@ export const componentToSvelte =
         functions: true,
         format: 'variables',
         keyPrefix: 'const ',
-        valueMapper: (code) =>
-          pipe(
-            stripStateAndPropsRefs(code, {
-              includeState: useOptions.stateType === 'variables',
-            }),
-            stripThisRefs,
-          ),
+        valueMapper: (code) => pipe(stripStateAndProps(code, options), stripThisRefs),
       }),
       babelTransformCode,
     );
@@ -395,12 +382,7 @@ export const componentToSvelte =
     const props = Array.from(getProps(json));
 
     const transformHookCode = (hookCode: string) =>
-      pipe(
-        stripStateAndPropsRefs(hookCode, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-        babelTransformCode,
-      );
+      pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
     let str = dedent`
     <script>
@@ -410,7 +392,7 @@ export const componentToSvelte =
       ${renderPreComponent({ component: json, target: 'svelte' })}
       ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
-      ${!hasData || useOptions.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
+      ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
       ${uniq(refs.map((ref) => stripStateAndPropsRefs(ref)).concat(props))
         .map((name) => {
           if (name === 'children') {
@@ -434,7 +416,7 @@ export const componentToSvelte =
       ${getContextCode(json)}
       ${setContextCode(json)}
       ${
-        useOptions.stateType === 'proxies'
+        options.stateType === 'proxies'
           ? dataString.length < 4
             ? ''
             : `let state = onChange(${dataString}, () => state = state)`
@@ -460,7 +442,7 @@ export const componentToSvelte =
                     function ${fnName}() {
                       ${hookCode}
                     }
-                    $: ${fnName}(...${deps})
+                    $: ${fnName}(...${stripStateAndProps(deps, options)})
                     `;
                 } else {
                   return `afterUpdate(() => { ${hookCode} })`;
@@ -480,7 +462,7 @@ export const componentToSvelte =
       .map((item) =>
         blockToSvelte({
           json: item,
-          options: useOptions,
+          options: options,
           parentComponent: json,
         }),
       )
@@ -495,10 +477,10 @@ export const componentToSvelte =
     }
   `;
 
-    if (useOptions.plugins) {
-      str = runPreCodePlugins(str, useOptions.plugins);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-    if (useOptions.prettier !== false) {
+    if (options.prettier !== false) {
       try {
         str = format(str, {
           parser: 'svelte',
@@ -516,8 +498,8 @@ export const componentToSvelte =
         console.warn({ string: str }, err);
       }
     }
-    if (useOptions.plugins) {
-      str = runPostCodePlugins(str, useOptions.plugins);
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
     }
     return str;
   };
