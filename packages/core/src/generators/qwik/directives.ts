@@ -47,6 +47,13 @@ export const DIRECTIVES: Record<
         this.emit(');}))');
       });
     },
+  Host: (node: MitosisNode, blockFn) =>
+    function (this: SrcBuilder) {
+      const host = this.file.import(this.file.qwikModule, 'Host').localName;
+      this.jsxBegin(host, node.properties, {});
+      blockFn();
+      this.jsxEnd(host);
+    },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
   __passThroughProps__: minify`${__passThroughProps__}`,
