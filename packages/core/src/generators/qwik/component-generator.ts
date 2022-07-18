@@ -6,13 +6,12 @@ import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
-import { MitosisNode } from '../../types/mitosis-node';
 
 Error.stackTraceLimit = 9999;
 
 // TODO(misko): styles are not processed.
 
-const DEBUG = false;
+const DEBUG = true;
 
 export interface ToQwikOptions extends BaseTranspilerOptions {}
 
@@ -36,30 +35,38 @@ export const componentToQwik =
     try {
       emitImports(file, component);
       emitTypes(file, component);
+      const metadata = component.meta.useMetadata || ({} as any);
+      const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component);
       let hasState = Boolean(Object.keys(component.state).length);
       let css: string | null = null;
+      let topLevelElement = isLightComponent ? null : getTopLevelElement(component);
+      const componentBody = arrowFnBlock(
+        ['props'],
+        [
+          function (this: SrcBuilder) {
+            css = emitUseStyles(file, component);
+            emitUseContext(file, component);
+            emitUseRef(file, component);
+            hasState && emitUseStore(file, state);
+            emitUseContextProvider(file, component);
+            emitUseMount(file, component);
+            emitUseWatch(file, component);
+            emitUseCleanup(file, component);
+            emitTagNameHack(file, component);
+            emitJSX(file, component, topLevelElement);
+          },
+        ],
+        [component.propsTypeRef || 'any'],
+      );
       file.src.const(
         component.name,
-        invoke(file.import(file.qwikModule, 'component$'), [
-          arrowFnBlock(
-            ['props'],
-            [
-              function (this: SrcBuilder) {
-                css = emitUseStyles(file, component);
-                emitUseContext(file, component);
-                emitUseRef(file, component);
-                hasState && emitUseStore(file, state);
-                emitUseContextProvider(file, component);
-                emitUseMount(file, component);
-                emitUseWatch(file, component);
-                emitUseCleanup(file, component);
-                emitJSX(file, component);
-              },
-            ],
-            [component.propsTypeRef || 'any'],
-          ),
-        ]),
+        isLightComponent
+          ? componentBody
+          : invoke(file.import(file.qwikModule, 'component$'), [
+              componentBody,
+              ...(topLevelElement ? [`{tagName:"${topLevelElement}"}`] : []),
+            ]),
         true,
         true,
       );
@@ -72,6 +79,22 @@ export const componentToQwik =
       return (e as Error).stack || String(e);
     }
   };
+
+function emitTagNameHack(file: File, component: MitosisComponent) {
+  const elementTag = component.meta.useMetadata?.elementTag as string | undefined;
+  if (elementTag) {
+    file.src.emit(
+      elementTag,
+      '=',
+      convertMethodToFunction(
+        elementTag,
+        stateToMethodOrGetter(component.state),
+        getLexicalScopeVars(component),
+      ),
+      ';',
+    );
+  }
+}
 
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onMount) {
@@ -91,7 +114,8 @@ function emitUseWatch(file: File, component: MitosisComponent) {
     component.hooks.onUpdate.forEach((onUpdate) => {
       file.src.emit(file.import(file.qwikModule, 'useWatch$').localName, '((track)=>{');
       emitTrackExpressions(file.src, onUpdate.deps);
-      file.src.emit(convertTypeScriptToJS(onUpdate.code), '});');
+      file.src.emit(convertTypeScriptToJS(onUpdate.code));
+      file.src.emit('});');
     });
   }
 }
@@ -101,9 +125,11 @@ function emitTrackExpressions(src: SrcBuilder, deps?: string) {
     const dependencies = deps.substring(1, deps.length - 1).split(',');
     dependencies.forEach((dep) => {
       const lastDotIdx = dep.lastIndexOf('.');
-      const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
-      const objProp = dep.substring(lastDotIdx + 1);
-      src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      if (lastDotIdx > 0) {
+        const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
+        const objProp = dep.substring(lastDotIdx + 1);
+        objExp && src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      }
     });
   }
 }
@@ -114,14 +140,23 @@ function emitUseCleanup(file: File, component: MitosisComponent) {
   }
 }
 
-function emitJSX(file: File, component: MitosisComponent) {
+function emitJSX(file: File, component: MitosisComponent, topLevelElement: string | null) {
   const directives = new Map();
   const handlers = new Map<string, string>();
   const styles = new Map();
   const parentSymbolBindings = {};
+  const children = component.children;
+  if (topLevelElement && children.length == 1) {
+    const child = children[0];
+    children[0] = {
+      ...child,
+      name: 'Host',
+    };
+    file.import(file.qwikModule, 'Host');
+  }
   file.src.emit(
     'return ',
-    renderJSXNodes(file, directives, handlers, component.children, styles, parentSymbolBindings),
+    renderJSXNodes(file, directives, handlers, children, styles, parentSymbolBindings),
   );
 }
 
@@ -141,13 +176,7 @@ function emitUseContextProvider(file: File, component: MitosisComponent) {
         const propValue = context.value![prop];
         file.src.emit(prop, ':');
         if (isGetter(propValue)) {
-          const methodMap = stateToMethodOrGetter(component.state);
-          const code = convertMethodToFunction(
-            extractGetterBody(propValue),
-            methodMap,
-            getLexicalScopeVars(component),
-          );
-          file.src.emit('(()=>{', code, '})(),');
+          file.src.emit('(()=>{', extractGetterBody(propValue), '})(),');
         } else if (typeof propValue == 'function') {
           throw new Error('Qwik: Functions are not supported in context');
         } else {
@@ -193,18 +222,21 @@ function emitStyles(file: File, css: string | null) {
   }
 }
 
+/**
+ * @param file
+ * @param stateInit
+ */
 function emitUseStore(file: File, stateInit: StateInit) {
   const state = stateInit[0];
-  file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
-  if (stateInit.length == 1) {
+  const hasState = state && Object.keys(state).length > 0;
+  if (hasState) {
+    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
     file.src.emit(JSON.stringify(state));
+    file.src.emit(');');
   } else {
-    file.src.emit('()=>{const state=', JSON.stringify(state), ';');
-    file.src.emitList(stateInit.slice(1), ';');
-    file.src.emit(';return state;');
-    file.src.emit('}');
+    // TODO hack for now so that `state` variable is defined, even though it is never read.
+    file.src.emit('const state={};');
   }
-  file.src.emit(');');
 }
 
 function emitTypes(file: File, component: MitosisComponent) {
@@ -218,9 +250,30 @@ function emitStateMethodsAndRewriteBindings(file: File, component: MitosisCompon
   const lexicalArgs = getLexicalScopeVars(component);
   const state: StateInit = emitStateMethods(file, component.state, lexicalArgs);
   const methodMap = stateToMethodOrGetter(component.state);
-
-  component.children?.forEach((node) => rewriteBindings(node, methodMap, lexicalArgs));
+  rewriteCodeExpr(component, methodMap, lexicalArgs);
   return state;
+}
+
+function rewriteCodeExpr(
+  obj: any,
+  methodMap: Record<string, 'method' | 'getter'>,
+  lexicalArgs: string[],
+) {
+  if (obj && typeof obj == 'object') {
+    if (Array.isArray(obj)) {
+      obj.forEach((item) => rewriteCodeExpr(item, methodMap, lexicalArgs));
+    } else {
+      Object.keys(obj).forEach((key) => {
+        const value = obj[key];
+        if (typeof value == 'string') {
+          if (value.startsWith(CODE_PREFIX) || key == 'code') {
+            obj[key] = convertMethodToFunction(value, methodMap, lexicalArgs);
+          }
+        }
+        rewriteCodeExpr(value, methodMap, lexicalArgs);
+      });
+    }
+  }
 }
 
 function getLexicalScopeVars(component: MitosisComponent) {
@@ -283,8 +336,6 @@ function emitStateMethods(
 }
 
 function convertTypeScriptToJS(code: string): string {
-  // HACK, proper implementation should use Babel
-  // return code.replace(/(\w+):\s+[\w\[\]"']+/gm, (_, ident) => ident);
   return babelTransformExpression(code, {});
 }
 
@@ -317,22 +368,24 @@ function stateToMethodOrGetter(state: Record<string, any>): Record<string, 'meth
   return methodMap;
 }
 
-function rewriteBindings(
-  node: MitosisNode,
-  methodMap: Record<string, 'method' | 'getter'>,
-  lexicalArgs: string[],
-) {
-  Object.keys(node.bindings).forEach((key) => {
-    const binding = node.bindings[key];
-    if (binding?.code) {
-      binding.code = convertMethodToFunction(binding.code, methodMap, lexicalArgs);
+/**
+ * Return a top-level element for the component.
+ *
+ * WHAT: If the component has a single root element, than this returns the element name.
+ *
+ * WHY: This is useful to pull the root element into the component's host and those saving unnecessary wrapping.
+ *
+ * @param component
+ */
+function getTopLevelElement(component: MitosisComponent): string | null {
+  if (component.children?.length === 1) {
+    const child = component.children[0];
+    if (child['@type'] === '@builder.io/mitosis/node' && startsLowerCase(child.name)) {
+      return child.name;
     }
-    if (key.startsWith('on') && binding?.code) {
-      const args = binding?.arguments || [];
-      binding.code = `(${args.join(',')}) => ${binding.code}`;
-      delete node.bindings[key];
-      node.bindings[key + '$'] = binding;
-    }
-  });
-  node.children?.forEach((child) => rewriteBindings(child, methodMap, lexicalArgs));
+  }
+  return null;
+}
+function startsLowerCase(name: string) {
+  return name.length > 0 && name[0].toLowerCase() === name[0];
 }
