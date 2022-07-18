@@ -269,6 +269,7 @@ export const componentToSolid =
       hasForComponent ? 'For' : undefined,
       json.hooks.onMount?.code ? 'onMount' : undefined,
       hasRefs ? 'useRef' : undefined,
+      ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
     ].filter(Boolean);
 
     let str = dedent`
@@ -291,6 +292,24 @@ export const componentToSolid =
       ${getContextString(json, options)}
 
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
+      ${
+        json.hooks.onUpdate
+          ? json.hooks.onUpdate
+              .map((hook, index) => {
+                if (hook.deps) {
+                  const hookName = `onUpdateFn_${index}`;
+                  return `
+                    function ${hookName}() { ${hook.code} };
+                    createEffect(on(() => ${hook.deps}, ${hookName}));
+                  `;
+                } else {
+                  // TO-DO: support `onUpdate` without `deps`
+                  return '';
+                }
+              })
+              .join('\n')
+          : ''
+      }
 
       return (${addWrapper ? '<>' : ''}
         ${json.children
