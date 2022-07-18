@@ -329,7 +329,9 @@ export default MyBasicRefAssignmentComponent;
 `;
 
 exports[`Solid BasicRefPrevious 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
@@ -346,6 +348,11 @@ export function usePrevious<T>(value: T) {
 
 function MyPreviousComponent(props) {
   const state = createMutable({ count: 0 });
+
+  function onUpdateFn_0() {
+    prevCount = state.count;
+  }
+  createEffect(on(() => [state.count], onUpdateFn_0));
 
   return (
     <div>
@@ -1587,7 +1594,9 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid multipleOnUpdate 1`] = `
-"function MultipleOnUpdate(props) {
+"import { on, createEffect } from \\"solid-js\\";
+
+function MultipleOnUpdate(props) {
   return <div></div>;
 }
 
@@ -1596,10 +1605,30 @@ export default MultipleOnUpdate;
 `;
 
 exports[`Solid multipleOnUpdateWithDeps 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 
 function MultipleOnUpdateWithDeps(props) {
   const state = createMutable({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
+
+  function onUpdateFn_0() {
+    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+
+    if (state.a === \\"a\\") {
+      state.a = \\"b\\";
+    }
+  }
+  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+
+  function onUpdateFn_1() {
+    console.log(\\"Runs when c or d changes\\", state.c, state.d);
+
+    if (state.a === \\"a\\") {
+      state.a = \\"b\\";
+    }
+  }
+  createEffect(on(() => [state.c, state.d], onUpdateFn_1));
 
   return <div></div>;
 }
@@ -1678,7 +1707,9 @@ export default Comp;
 `;
 
 exports[`Solid onUpdate 1`] = `
-"function OnUpdate(props) {
+"import { on, createEffect } from \\"solid-js\\";
+
+function OnUpdate(props) {
   return <div></div>;
 }
 
@@ -1687,10 +1718,17 @@ export default OnUpdate;
 `;
 
 exports[`Solid onUpdateWithDeps 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
 
 function OnUpdateWithDeps(props) {
   const state = createMutable({ a: \\"a\\", b: \\"b\\" });
+
+  function onUpdateFn_0() {
+    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+  }
+  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
 
   return <div></div>;
 }
