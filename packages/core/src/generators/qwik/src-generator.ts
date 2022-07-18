@@ -86,10 +86,13 @@ export class File {
           htmlWhitespaceSensitivity: 'ignore',
         });
       } catch (e) {
-        debugger;
-        source += `\n===============================\n`;
-        source += String(e);
-        console.error(source);
+        throw new Error(
+          e +
+            '\n' +
+            '========================================================================\n' +
+            source +
+            '\n\n========================================================================',
+        );
       }
     }
     return source;
@@ -204,6 +207,7 @@ export class SrcBuilder {
       value.startsWith(':') ||
       value.startsWith(']') ||
       value.startsWith('}') ||
+      value.startsWith(',') ||
       value.startsWith('?')
     ) {
       // clear last ',' or ';';
@@ -437,7 +441,6 @@ function ignoreKey(key: string): boolean {
     key.startsWith('_') ||
     key == 'code' ||
     key == '' ||
-    key == 'builder-id' ||
     key.indexOf('.') !== -1
   );
 }

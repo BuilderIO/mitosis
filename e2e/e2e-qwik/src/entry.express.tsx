@@ -46,9 +46,8 @@ app.get('/*', async (req, res, next) => {
 // Qwik's express server modified to accept --port parameter.
 let port = 8080;
 const argv = process.argv;
-console.log('argv', argv);
 const portIndex = argv.indexOf('--port');
-if (portIndex < argv.length - 1) {
+if (portIndex > 0 && portIndex < argv.length - 1) {
   port = +argv[portIndex + 1];
 }
 
