@@ -210,15 +210,10 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string =
   return str;
 };
 
-const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
-  let str = '';
-
-  for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
-  }
-
-  return str;
-};
+const getRefsString = (json: MitosisComponent) =>
+  Array.from(getRefs(json))
+    .map((ref) => `let ${ref};`)
+    .join('\n');
 
 function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) {
   for (const key in json.context.set) {
@@ -257,18 +252,15 @@ export const componentToSolid =
     const hasState = Object.keys(component.state).length > 0;
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
-    const refs = getRefsString(json);
 
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
-    const hasRefs = refs.length > 0;
 
     const solidJSImports = [
       componentHasContext ? 'useContext' : undefined,
       hasShowComponent ? 'Show' : undefined,
       hasForComponent ? 'For' : undefined,
       json.hooks.onMount?.code ? 'onMount' : undefined,
-      hasRefs ? 'useRef' : undefined,
       ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
     ].filter(Boolean);
 
@@ -288,7 +280,7 @@ export const componentToSolid =
     function ${json.name}(props) {
       ${!hasState ? '' : `const state = createMutable(${stateString});`}
       
-      ${refs}
+      ${getRefsString(json)}
       ${getContextString(json, options)}
 
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
