@@ -36,30 +36,38 @@ export const componentToQwik =
     try {
       emitImports(file, component);
       emitTypes(file, component);
+      const metadata = component.meta.useMetadata || ({} as any);
+      const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component);
       let hasState = Boolean(Object.keys(component.state).length);
       let css: string | null = null;
+      let topLevelElement = isLightComponent ? null : getTopLevelElement(component);
+      const componentBody = arrowFnBlock(
+        ['props'],
+        [
+          function (this: SrcBuilder) {
+            css = emitUseStyles(file, component);
+            emitUseContext(file, component);
+            emitUseRef(file, component);
+            hasState && emitUseStore(file, state);
+            emitUseContextProvider(file, component);
+            emitUseMount(file, component);
+            emitUseWatch(file, component);
+            emitUseCleanup(file, component);
+            emitTagNameHack(file, component);
+            emitJSX(file, component, topLevelElement);
+          },
+        ],
+        [component.propsTypeRef || 'any'],
+      );
       file.src.const(
         component.name,
-        invoke(file.import(file.qwikModule, 'component$'), [
-          arrowFnBlock(
-            ['props'],
-            [
-              function (this: SrcBuilder) {
-                css = emitUseStyles(file, component);
-                emitUseContext(file, component);
-                emitUseRef(file, component);
-                hasState && emitUseStore(file, state);
-                emitUseContextProvider(file, component);
-                emitUseMount(file, component);
-                emitUseWatch(file, component);
-                emitUseCleanup(file, component);
-                emitJSX(file, component);
-              },
-            ],
-            [component.propsTypeRef || 'any'],
-          ),
-        ]),
+        isLightComponent
+          ? componentBody
+          : invoke(file.import(file.qwikModule, 'component$'), [
+              componentBody,
+              ...(topLevelElement ? [`{tagName:"${topLevelElement}"}`] : []),
+            ]),
         true,
         true,
       );
@@ -72,6 +80,22 @@ export const componentToQwik =
       return (e as Error).stack || String(e);
     }
   };
+
+function emitTagNameHack(file: File, component: MitosisComponent) {
+  const elementTag = component.meta.useMetadata?.elementTag as string | undefined;
+  if (elementTag) {
+    file.src.emit(
+      elementTag,
+      '=',
+      convertMethodToFunction(
+        elementTag,
+        stateToMethodOrGetter(component.state),
+        getLexicalScopeVars(component),
+      ),
+      ';',
+    );
+  }
+}
 
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onMount) {
@@ -101,9 +125,11 @@ function emitTrackExpressions(src: SrcBuilder, deps?: string) {
     const dependencies = deps.substring(1, deps.length - 1).split(',');
     dependencies.forEach((dep) => {
       const lastDotIdx = dep.lastIndexOf('.');
-      const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
-      const objProp = dep.substring(lastDotIdx + 1);
-      src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      if (lastDotIdx > 0) {
+        const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
+        const objProp = dep.substring(lastDotIdx + 1);
+        src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      }
     });
   }
 }
@@ -114,14 +140,23 @@ function emitUseCleanup(file: File, component: MitosisComponent) {
   }
 }
 
-function emitJSX(file: File, component: MitosisComponent) {
+function emitJSX(file: File, component: MitosisComponent, topLevelElement: string | null) {
   const directives = new Map();
   const handlers = new Map<string, string>();
   const styles = new Map();
   const parentSymbolBindings = {};
+  const children = component.children;
+  if (topLevelElement && children.length == 1) {
+    const child = children[0];
+    children[0] = {
+      ...child,
+      name: 'Host',
+    };
+    file.import(file.qwikModule, 'Host');
+  }
   file.src.emit(
     'return ',
-    renderJSXNodes(file, directives, handlers, component.children, styles, parentSymbolBindings),
+    renderJSXNodes(file, directives, handlers, children, styles, parentSymbolBindings),
   );
 }
 
@@ -193,18 +228,21 @@ function emitStyles(file: File, css: string | null) {
   }
 }
 
+/**
+ * @param file
+ * @param stateInit
+ */
 function emitUseStore(file: File, stateInit: StateInit) {
   const state = stateInit[0];
-  file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
-  if (stateInit.length == 1) {
+  const hasState = state && Object.keys(state).length > 0;
+  if (hasState) {
+    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
     file.src.emit(JSON.stringify(state));
+    file.src.emit(');');
   } else {
-    file.src.emit('()=>{const state=', JSON.stringify(state), ';');
-    file.src.emitList(stateInit.slice(1), ';');
-    file.src.emit(';return state;');
-    file.src.emit('}');
+    // TODO hack for now so that `state` variable is defined, even though it is never read.
+    file.src.emit('const state={};');
   }
-  file.src.emit(');');
 }
 
 function emitTypes(file: File, component: MitosisComponent) {
@@ -335,4 +373,23 @@ function rewriteBindings(
     }
   });
   node.children?.forEach((child) => rewriteBindings(child, methodMap, lexicalArgs));
+}
+
+/**
+ * Return a top-level element for the component.
+ *
+ * WHAT: If the component has a single root element, than this returns the element name.
+ *
+ * WHY: This is useful to pull the root element into the component's host and those saving unnecessary wrapping.
+ *
+ * @param component
+ */
+function getTopLevelElement(component: MitosisComponent): string | null {
+  if (component.children?.length === 1) {
+    const child = component.children[0];
+    if (child['@type'] === '@builder.io/mitosis/node') {
+      return child.name;
+    }
+  }
+  return null;
 }

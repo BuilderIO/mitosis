@@ -28,7 +28,8 @@ export function renderJSXNodes(
   return function (this: SrcBuilder) {
     if (children.length == 0) return;
     if (root) this.emit('(');
-    const needsFragment = root && (children.length > 1 || isInlinedDirective(children[0]));
+    const needsFragment =
+      root && (children.length > 1 || (children.length && isInlinedDirective(children[0])));
     file.import(file.qwikModule, 'h');
     const fragmentSymbol = file.import(file.qwikModule, 'Fragment');
     if (needsFragment) {
@@ -37,19 +38,13 @@ export function renderJSXNodes(
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
-        if (child.bindings._text?.code !== undefined) {
-          if (child.bindings._text.code == 'props.children') {
-            this.file.import(this.file.qwikModule, 'Slot');
-            this.jsxBegin('Slot', {}, {});
-            this.jsxEnd('Slot');
-          } else {
-            this.jsxTextBinding(child.bindings._text.code);
-          }
-        } else {
-          this.isJSX
-            ? this.emit(child.properties._text)
-            : this.jsxTextBinding(quote(child.properties._text!));
-        }
+        this.isJSX
+          ? this.emit(child.properties._text)
+          : this.jsxTextBinding(quote(child.properties._text!));
+      } else if (isSlotProjection(child)) {
+        this.file.import(this.file.qwikModule, 'Slot');
+        this.jsxBegin('Slot', {}, {});
+        this.jsxEnd('Slot');
       } else {
         let childName = child.name;
         const directive = DIRECTIVES[childName];
@@ -57,10 +52,12 @@ export function renderJSXNodes(
           this.emit(
             directive(child, () => {
               let children = child.children.filter((c) => !isEmptyTextNode(c));
-              const needsFragment = children.length > 1 || isTextNode(children[0]);
-              needsFragment && this.jsxBeginFragment(fragmentSymbol);
+              const childNeedsFragment =
+                children.length > 1 || (children.length && isTextNode(children[0]));
+              childNeedsFragment && this.jsxBeginFragment(fragmentSymbol);
+              if (childNeedsFragment && children.length == 1) debugger;
               renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(this);
-              needsFragment && this.jsxEndFragment();
+              childNeedsFragment && this.jsxEndFragment();
             }),
           );
           !this.isJSX && this.emit(',');
@@ -139,7 +136,18 @@ function isEmptyTextNode(child: MitosisNode) {
 }
 
 function isTextNode(child: MitosisNode) {
-  return child.properties._text !== undefined || child.bindings._text?.code !== undefined;
+  if (child.properties._text !== undefined) {
+    return true;
+  }
+  const code = child.bindings._text?.code;
+  if (code !== undefined && code !== 'props.children') {
+    return true;
+  }
+  return false;
+}
+
+function isSlotProjection(child: MitosisNode) {
+  return child.bindings._text?.code === 'props.children';
 }
 
 /**
