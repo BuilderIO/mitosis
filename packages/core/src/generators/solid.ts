@@ -252,7 +252,6 @@ export const componentToSolid =
     const hasState = Object.keys(component.state).length > 0;
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
-    const refs = getRefsString(json);
 
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
@@ -281,7 +280,7 @@ export const componentToSolid =
     function ${json.name}(props) {
       ${!hasState ? '' : `const state = createMutable(${stateString});`}
       
-      ${refs}
+      ${getRefsString(json)}
       ${getContextString(json, options)}
 
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} })`}
