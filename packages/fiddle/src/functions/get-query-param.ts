@@ -2,7 +2,8 @@ import { decompressFromBase64 } from 'lz-string';
 
 export const getQueryParam = (name: string): string | null => {
   const urlParams = new URLSearchParams(window.location.search);
-  const compressedValue = urlParams.get(name);
+  const rawValue = urlParams.get(name);
+  const decompressedValue = decompressFromBase64(rawValue);
 
-  return decompressFromBase64(compressedValue);
+  return decompressedValue ?? rawValue;
 };
