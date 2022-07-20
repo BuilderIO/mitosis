@@ -41,7 +41,7 @@ export const transpile = async ({
        * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
        * a mitosis `.lite.tsx` file.
        */
-      ...(path.endsWith('.tsx') ? { loader: 'tsx' } : {}),
+      loader: path.endsWith('.tsx') ? 'tsx' : 'ts',
       target: 'es6',
     });
 
