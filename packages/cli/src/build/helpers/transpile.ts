@@ -37,7 +37,11 @@ export const transpile = async ({
     useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);
     const output = await esbuild.transform(useContent, {
       format: format,
-      loader: 'tsx',
+      /**
+       * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
+       * a mitosis `.lite.tsx` file.
+       */
+      loader: path.endsWith('.tsx') ? 'tsx' : 'ts',
       target: 'es6',
     });
 

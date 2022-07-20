@@ -55,12 +55,12 @@ export interface ToReactOptions extends BaseTranspilerOptions {
 }
 
 /**
- * If the root Mitosis component only has 1 child, and it is a `Show` node, then we need to wrap it in a fragment.
+ * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
  * Otherwise, we end up with invalid React render code.
  *
  */
-const isRootShowNode = (json: MitosisComponent) =>
-  json.children.length === 1 && ['Show'].includes(json.children[0].name);
+const isRootSpecialNode = (json: MitosisComponent) =>
+  json.children.length === 1 && ['Show', 'For'].includes(json.children[0].name);
 
 const wrapInFragment = (json: MitosisComponent | MitosisNode) => json.children.length !== 1;
 
@@ -557,7 +557,7 @@ const _componentToReact = (
   const wrap =
     wrapInFragment(json) ||
     (componentHasStyles && stylesType === 'styled-jsx') ||
-    isRootShowNode(json);
+    isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
   const nativeStyles =
