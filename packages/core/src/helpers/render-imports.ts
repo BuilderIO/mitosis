@@ -119,7 +119,7 @@ export const renderImport = ({
     }
   }
 
-  return `import ${importValue} from '${path}';`;
+  return importValue ? `import ${importValue} from '${path}';` : `import '${path}';`;
 };
 
 export const renderImports = ({
