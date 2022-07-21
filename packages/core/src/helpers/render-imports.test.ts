@@ -15,4 +15,19 @@ describe('renderImport', () => {
     });
     expect(output).toMatchSnapshot();
   });
+
+  test('Adds correctly a side-effect import', () => {
+    const data = [
+      {
+        imports: {},
+        path: '../render-blocks.scss',
+      },
+    ];
+    const output = renderImport({
+      theImport: data[0],
+      target: 'react',
+      asyncComponentImports: false,
+    });
+    expect(output).toEqual("import '../render-blocks.scss';");
+  });
 });
