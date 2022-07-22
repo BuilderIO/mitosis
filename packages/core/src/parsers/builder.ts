@@ -308,20 +308,21 @@ const componentMappers: {
     delete node.bindings.columns;
     delete node.properties.columns;
 
-    node.children = block.component?.options.columns?.map((col: any, index: number) =>
-      createMitosisNode({
-        name: 'Column',
-        bindings: {
-          width: { code: col.width },
-        },
-        ...(col.link && {
-          properties: {
-            link: col.link,
+    node.children =
+      block.component?.options.columns?.map((col: any, index: number) =>
+        createMitosisNode({
+          name: 'Column',
+          bindings: {
+            width: { code: col.width },
           },
+          ...(col.link && {
+            properties: {
+              link: col.link,
+            },
+          }),
+          children: col.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
         }),
-        children: col.blocks.map((col: any) => builderElementToMitosisNode(col, options)),
-      }),
-    );
+      ) || [];
 
     return node;
   },
