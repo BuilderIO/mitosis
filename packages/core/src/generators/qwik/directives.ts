@@ -153,7 +153,7 @@ export function __passThroughProps__(
   for (const key in srcProps) {
     if (
       Object.prototype.hasOwnProperty.call(srcProps, key) &&
-      ((key.startsWith('on') && key.endsWith('Qrl')) || key == 'style')
+      ((key.startsWith('on') && key.endsWith('$')) || key == 'style')
     ) {
       (dstProps as any)[key] = (srcProps as any)[key];
     }

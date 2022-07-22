@@ -35,7 +35,7 @@ export function renderHandlers(
       if (Object.prototype.hasOwnProperty.call(bindings, key)) {
         const { code: binding } = bindings[key]!;
         if (binding != null) {
-          if (key.startsWith('on')) {
+          if (isEventName(key)) {
             let block = extractJSBlock(binding) || binding;
             const symbol = `${componentName}_${key}_${id++}`;
             map.set(binding, symbol);
@@ -62,4 +62,7 @@ function renderHandler(file: File, symbol: string, code: string) {
 
 function stripBlock(block: string) {
   return block.substring(1, block.length - 1).trim();
+}
+function isEventName(name: string) {
+  return name.startsWith('on') && name.charAt(2).toUpperCase() == name.charAt(2);
 }

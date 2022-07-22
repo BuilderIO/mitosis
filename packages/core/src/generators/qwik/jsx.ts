@@ -165,22 +165,24 @@ function rewriteHandlers(
   const outBindings: { [key: string]: { code: string; arguments?: string[] } } = {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-      let { code: binding } = bindings[key]!;
+      let bindingExpr: string | undefined = bindings?.[key]?.code;
       let handlerBlock: string | undefined;
-      if (binding != null) {
+      if (bindingExpr != null) {
         if (key == 'css') {
           continue;
-        } else if ((handlerBlock = handlers.get(binding))) {
-          key = `${key}Qrl`;
-          binding = invoke(file.import(file.qwikModule, 'qrl'), [
+        } else if ((handlerBlock = handlers.get(bindingExpr))) {
+          key = `${key}$`;
+          bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),
             '[state]',
           ]) as any;
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
-          symbolBindings[lastProperty(key)] = binding;
+          symbolBindings[lastProperty(key)] = bindingExpr;
+        } else if (key.startsWith('component.options.')) {
+          key = lastProperty(key);
         }
-        outBindings[key] = { code: binding as string };
+        outBindings[key] = { code: bindingExpr as string };
       }
     }
   }
