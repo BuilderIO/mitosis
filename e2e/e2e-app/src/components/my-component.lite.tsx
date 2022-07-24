@@ -1,5 +1,7 @@
 import { useStore } from '@builder.io/mitosis';
 
+import ItemList from './item-list.lite';
+
 export interface State {
   list: string[];
   newItemName: string;
@@ -45,18 +47,7 @@ export default function MyComponent(props: any) {
         Add list item
       </button>
 
-      <ul class="shadow-md rounded">
-        {state.list.map((item) => (
-          <li
-            class="border-gray-200 border-b"
-            css={{
-              padding: '10px',
-            }}
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
+      <ItemList list={state.list}></ItemList>
     </div>
   );
 }
