@@ -32,6 +32,7 @@ interface AngularBlockOptions {
   contextVars?: string[];
   outputVars?: string[];
   childComponents?: string[];
+  domRefs?: string[];
 }
 
 const mappers: {
@@ -74,6 +75,8 @@ export const blockToAngular = (
   const contextVars = blockOptions?.contextVars || [];
   const outputVars = blockOptions?.outputVars || [];
   const childComponents = blockOptions?.childComponents || [];
+  const domRefs = blockOptions?.domRefs || [];
+
   if (mappers[json.name]) {
     return mappers[json.name](json, options, blockOptions);
   }
@@ -95,6 +98,7 @@ export const blockToAngular = (
       // the context is the class
       contextVars: [],
       outputVars,
+      domRefs,
     })}}}`;
   }
 
@@ -108,6 +112,7 @@ export const blockToAngular = (
       {
         contextVars,
         outputVars,
+        domRefs,
       },
     )}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
@@ -116,6 +121,7 @@ export const blockToAngular = (
     str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
       contextVars,
       outputVars,
+      domRefs,
     })}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
@@ -152,6 +158,7 @@ export const blockToAngular = (
       const useValue = stripStateAndPropsRefs(code as string, {
         contextVars,
         outputVars,
+        domRefs,
       });
 
       if (key.startsWith('on')) {
@@ -277,14 +284,15 @@ export const componentToAngular =
       css = tryFormat(css, 'css');
     }
 
+    const blockOptions = {
+      contextVars,
+      outputVars,
+      domRefs: [], // the template doesn't need the this keyword.
+      childComponents,
+    };
+
     let template = json.children
-      .map((item) =>
-        blockToAngular(item, options, {
-          contextVars,
-          outputVars,
-          childComponents,
-        }),
-      )
+      .map((item) => blockToAngular(item, options, blockOptions))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
@@ -299,6 +307,7 @@ export const componentToAngular =
           replaceWith: 'this.',
           contextVars,
           outputVars,
+          domRefs: Array.from(domRefs),
         }),
     });
 
@@ -355,6 +364,7 @@ export const componentToAngular =
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
+                  domRefs: Array.from(domRefs),
                 })}`
               : ''
           };`;
@@ -392,6 +402,7 @@ export const componentToAngular =
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
+                  domRefs: Array.from(domRefs),
                 })}
                 `
               }
@@ -407,6 +418,7 @@ export const componentToAngular =
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
+                  domRefs: Array.from(domRefs),
                 });
                 return code + '\n';
               }, '')}
@@ -421,6 +433,7 @@ export const componentToAngular =
                 replaceWith: 'this.',
                 contextVars,
                 outputVars,
+                domRefs: Array.from(domRefs),
               })}
             }`
       }
