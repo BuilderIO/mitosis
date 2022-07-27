@@ -29,7 +29,15 @@ import { babelTransformExpression } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 
-export interface ToSolidOptions extends BaseTranspilerOptions {}
+type SolidState = 'mutable' | 'signals';
+
+export interface ToSolidOptions extends BaseTranspilerOptions {
+  state: SolidState;
+}
+
+const DEFAULT_OPTIONS: ToSolidOptions = {
+  state: 'mutable',
+};
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -106,7 +114,7 @@ const collectClassString = (json: MitosisNode): string | null => {
   return null;
 };
 
-const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string => {
+const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -233,8 +241,13 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 }
 
 export const componentToSolid =
-  (options: ToSolidOptions = {}): Transpiler =>
+  (passedOptions: Partial<ToSolidOptions> = DEFAULT_OPTIONS): Transpiler =>
   ({ component }) => {
+    const options = {
+      ...DEFAULT_OPTIONS,
+      ...passedOptions,
+    };
+
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
