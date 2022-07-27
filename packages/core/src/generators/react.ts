@@ -43,7 +43,7 @@ import { hasContext } from './helpers/context';
 import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
 import { hasCss } from '../helpers/styles/helpers';
-import { isSlotProperty } from '../helpers/slots';
+import { JSON } from '../types/json';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
@@ -287,59 +287,49 @@ const processBinding = (str: string, options: ToReactOptions) => {
     return str;
   }
 
-  if (isSlotProperty(str)) {
-    return stripStateAndPropsRefs(str, {
-      includeState: true,
-      includeProps: false,
-    });
-  }
-
   return stripStateAndPropsRefs(str, {
     includeState: true,
     includeProps: false,
   });
 };
 
-const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
-  let str = '';
-
-  const { state } = json;
-
-  const valueMapper = (val: string) => {
-    const x = processBinding(updateStateSettersInCode(val, options), options);
-    return stripThisRefs(x, options);
-  };
-
-  const lineItemDelimiter = '\n\n\n';
-
-  for (const key in state) {
-    const value = state[key];
-
-    const defaultCase = `const [${key}, set${capitalize(key)}] = useState(() => (${valueMapper(
-      json5.stringify(value),
-    )}))`;
-
+const valueMapper = (options: ToReactOptions) => (val: string) => {
+  const x = processBinding(updateStateSettersInCode(val, options), options);
+  return stripThisRefs(x, options);
+};
+const processStateValue = (options: ToReactOptions) => {
+  const mapValue = valueMapper(options);
+  return ([key, value]: [key: string, value: JSON]) => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
+        // functions
         const useValue = value.replace(functionLiteralPrefix, '');
-        const mappedVal = valueMapper(useValue);
+        const mappedVal = mapValue(useValue);
 
-        str += mappedVal;
+        return mappedVal;
       } else if (value.startsWith(methodLiteralPrefix)) {
+        // methods
         const methodValue = value.replace(methodLiteralPrefix, '');
         const useValue = methodValue.replace(/^(get )?/, 'function ');
-        str += valueMapper(useValue);
-      } else {
-        str += defaultCase;
+        return mapValue(useValue);
       }
-    } else {
-      str += defaultCase;
     }
 
-    str += lineItemDelimiter;
-  }
+    // Other (data)
+    const transformedValue = json5.stringify(mapValue(json5.stringify(value)));
+    const defaultCase = `const [${key}, set${capitalize(
+      key,
+    )}] = useState(() => (${transformedValue}))`;
 
-  return str;
+    return defaultCase;
+  };
+};
+
+const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
+  const lineItemDelimiter = '\n\n\n';
+
+  const stringifiedState = Object.entries(json.state).map(processStateValue(options));
+  return stringifiedState.join(lineItemDelimiter);
 };
 
 const updateStateSetters = (json: MitosisComponent, options: ToReactOptions) => {
