@@ -11,7 +11,6 @@ import {
   arrowFnValue,
   EmitFn,
   File,
-  iif,
   invoke,
   quote,
   SrcBuilder,
@@ -77,6 +76,7 @@ export function addComponent(
   const _opts = { isRoot: false, shareStyles: false, hostProps: null, ...opts };
   compileAwayBuilderComponentsFromTree(component, {
     ...compileAwayComponents,
+    // A set of components that should not be compiled away because they are implemented as runtime components.
     Image: undefined!,
     CoreButton: undefined!,
   });
@@ -210,15 +210,17 @@ function addComponentOnMount(
   }
   componentFile.exportConst(componentName + '_onMount', function (this: SrcBuilder) {
     this.emit(
-      arrowFnValue(['state'], () =>
+      arrowFnValue(['props'], () =>
         this.emit(
           '{',
-          'if(!state.__INIT__){',
-          'state.__INIT__=true;',
+          'const state=',
+          componentFile.import(componentFile.qwikModule, 'useStore').localName,
+          '(()=>{',
+          'const state = Object.assign({},props,typeof __STATE__==="object"?__STATE__[props.serverStateId]:undefined);',
           ...inputInitializer,
-          'typeof __STATE__==="object"&&Object.assign(state,__STATE__[state.serverStateId]);',
-          ...(component.hooks.onMount?.code ? [iif(component.hooks.onMount?.code)] : []),
-          '}',
+          inlineCode(component.hooks.onMount?.code),
+          'return state;',
+          '});',
           useStyles,
           onRenderEmit,
           ';}',
@@ -226,6 +228,19 @@ function addComponentOnMount(
       ),
     );
   });
+}
+
+function inlineCode(code: string | undefined) {
+  return function (this: SrcBuilder) {
+    if (code) {
+      // HACK: remove the return value as it is not the state we are creating.
+      code = code
+        .trim()
+        .replace(/return main\(\);?$/, '')
+        .trim();
+      this.emit(code, ';');
+    }
+  };
 }
 
 function generateQrl(
