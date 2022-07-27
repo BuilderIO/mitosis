@@ -5,6 +5,7 @@ export type StripStateAndPropsRefsOptions = {
   contextVars?: string[];
   outputVars?: string[];
   context?: string;
+  domRefs?: string[];
 };
 
 /**
@@ -24,10 +25,12 @@ export const stripStateAndPropsRefs = (
   const contextVars = options?.contextVars || [];
   const outputVars = options?.outputVars || [];
   const context = options?.context || 'this.';
+  const domRefs = options?.domRefs || [];
+
   if (contextVars.length) {
     contextVars.forEach((_var) => {
       newCode = newCode.replace(
-        // determine expression edge cases
+        // determine expression edge cases - https://regex101.com/r/iNcTSM/1
         new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
         '$1' + context + _var + '$2',
       );
@@ -58,6 +61,15 @@ export const stripStateAndPropsRefs = (
     } else {
       newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
     }
+  }
+  if (domRefs.length) {
+    domRefs.forEach((_var) => {
+      newCode = newCode.replace(
+        // determine expression edge cases - https://regex101.com/r/iNcTSM/1
+        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+        '$1' + 'this.' + _var + '$2',
+      );
+    });
   }
   return newCode;
 };
