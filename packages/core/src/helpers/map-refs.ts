@@ -75,11 +75,19 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
         if (hook.code) {
           hook.code = replaceRefsInString(hook.code, refs, mapper);
         }
+
+        if (hook.deps) {
+          hook.deps = replaceRefsInString(hook.deps, refs, mapper);
+        }
       });
     } else {
       const hookCode = hooks?.code;
       if (hookCode) {
         hooks.code = replaceRefsInString(hookCode, refs, mapper);
+      }
+
+      if (hooks?.deps) {
+        hooks.deps = replaceRefsInString(hooks?.deps, refs, mapper);
       }
     }
   }
