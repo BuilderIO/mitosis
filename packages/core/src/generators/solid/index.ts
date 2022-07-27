@@ -1,39 +1,33 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { hasCss } from '../helpers/styles/helpers';
-import { getRefs } from '../helpers/get-refs';
-import {
-  getMemberObjectString,
-  getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { hasCss } from '../../helpers/styles/helpers';
+import { getRefs } from '../../helpers/get-refs';
+import { getMemberObjectString } from '../../helpers/get-state-object-string';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { selfClosingTags } from '../../parsers/jsx';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { fastClone } from '../helpers/fast-clone';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { getComponentsUsed } from '../helpers/get-components-used';
+} from '../../modules/plugins';
+import { fastClone } from '../../helpers/fast-clone';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { getComponentsUsed } from '../../helpers/get-components-used';
 import traverse from 'traverse';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { hasContext } from './helpers/context';
-import { babelTransformExpression } from '../helpers/babel-transform';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { Transpiler } from '../../types/transpiler';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { hasContext } from '../helpers/context';
+import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
-
-type SolidState = 'mutable' | 'signals';
-
-export interface ToSolidOptions extends BaseTranspilerOptions {
-  state: SolidState;
-}
+import { ToSolidOptions } from './types';
+import { getState } from './state';
+import { checkIsDefined } from 'src/helpers/nullable';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'mutable',
@@ -261,8 +255,8 @@ export const componentToSolid =
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
 
-    const stateString = getStateObjectStringFromComponent(json);
-    const hasState = Object.keys(component.state).length > 0;
+    const state = getState(json, options);
+
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 
@@ -275,23 +269,20 @@ export const componentToSolid =
       hasForComponent ? 'For' : undefined,
       json.hooks.onMount?.code ? 'onMount' : undefined,
       ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
-    ].filter(Boolean);
+      ...(state?.import.solidjs ?? []),
+    ].filter(checkIsDefined);
+
+    const storeImports = state?.import.store ?? [];
 
     let str = dedent`
-    ${
-      solidJSImports.length > 0
-        ? `import { 
-          ${solidJSImports.map((item) => item).join(', ')}
-         } from 'solid-js';`
-        : ''
-    }
+    ${solidJSImports.length > 0 ? `import { ${solidJSImports.join(', ')} } from 'solid-js';` : ''}
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
-    ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
+    ${storeImports.length > 0 ? `import { ${storeImports.join(', ')} } from 'solid-js/store';` : ''}
     ${!componentHasStyles ? '' : `import { css } from "solid-styled-components";`}
     ${renderPreComponent({ component: json, target: 'solid' })}
 
     function ${json.name}(props) {
-      ${!hasState ? '' : `const state = createMutable(${stateString});`}
+      ${state?.str ?? ''}
       
       ${getRefsString(json)}
       ${getContextString(json, options)}
