@@ -1624,6 +1624,39 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 "
 `;
 
+exports[`React basicOnUpdateReturn 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOnUpdateReturnComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setName(data.name);
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }, [name]);
+
+  return (
+    <div>
+      Hello!
+      {name}
+    </div>
+  );
+}
+"
+`;
+
 exports[`React class + ClassName + css 1`] = `
 "export default function MyBasicComponent(props) {
   return (
