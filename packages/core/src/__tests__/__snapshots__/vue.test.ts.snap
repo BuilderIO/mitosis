@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Vue AdvancedRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @blur=\\"onBlur()\\"
+      @input=\\"name = $event.target.value\\"
+    />
+
+    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+
+    Hello
+    {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
+    Component!
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-ref-component\\",
+
+  props: [\\"showInput\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Received an update\\");
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.$refs.inputRef,
+        1: this.$refs.inputNoArgRef,
+      };
+    },
+  },
+
+  methods: {
+    onBlur: function onBlur() {
+      // Maintain focus
+      this.$refs.inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return this.name.toLowerCase();
+    },
+  },
+};
+</script>
+<style scoped>
+.input {
+  color: red;
+}
+</style>
+"
+`;
+
 exports[`Vue Basic 1`] = `
 "<template>
   <div class=\\"test div\\">
@@ -1549,6 +1614,47 @@ export default {
   color: red;
 }
 </style>
+"
+`;
+
+exports[`Vue basicOnUpdateReturn 1`] = `
+"<template>
+  <div>Hello! {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-on-update-return-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  watch: {
+    onUpdateHook0() {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.name,
+      };
+    },
+  },
+};
+</script>
 "
 `;
 

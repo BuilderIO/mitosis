@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React Native AdvancedRef 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <View>
+      {props.showInput ? (
+        <>
+          <View
+            ref={inputRef}
+            value={name}
+            onBlur={(event) => onBlur()}
+            onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
+          />
+
+          <View for=\\"cars\\" ref={inputNoArgRef}>
+            <Text>Choose a car:</Text>
+          </View>
+
+          <View name=\\"cars\\" id=\\"cars\\">
+            <View value=\\"supra\\">
+              <Text>GR Supra</Text>
+            </View>
+
+            <View value=\\"86\\">
+              <Text>GR 86</Text>
+            </View>
+          </View>
+        </>
+      ) : null}
+      <Text>Hello</Text>
+      <Text>{lowerCaseName()}</Text>
+      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
 exports[`React Native Basic 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -1565,6 +1630,41 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 );
 
 const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
+exports[`React Native basicOnUpdateReturn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOnUpdateReturnComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setName(data.name);
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }, [name]);
+
+  return (
+    <View>
+      <Text>Hello! </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
 "
 `;
 
