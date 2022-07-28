@@ -1,5 +1,69 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`React AdvancedRef 1`] = `
+"import { useState, useRef, useEffect } from \\"react\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <>
+      <div>
+        {props.showInput ? (
+          <>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Basic 1`] = `
 "import { useState } from \\"react\\";
 
@@ -1557,6 +1621,39 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     );
   }
 );
+"
+`;
+
+exports[`React basicOnUpdateReturn 1`] = `
+"import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOnUpdateReturnComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setName(data.name);
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }, [name]);
+
+  return (
+    <div>
+      Hello!
+      {name}
+    </div>
+  );
+}
 "
 `;
 

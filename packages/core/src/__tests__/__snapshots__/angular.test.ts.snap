@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Angular AdvancedRef 1`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  selector: \\"my-basic-ref-component\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"showInput\\">
+        <div>
+          <input
+            class=\\"input\\"
+            #inputRef
+            [value]=\\"name\\"
+            (blur)=\\"onBlur()\\"
+            (input)=\\"name = $event.target.value\\"
+          />
+
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </div>
+      </ng-container>
+
+      Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicRefComponent {
+  @Input() showInput: Props[\\"showInput\\"];
+
+  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+
+  name = \\"PatrickJS\\";
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.nativeElement.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  ngAfterContentChecked() {
+    console.log(\\"Received an update\\");
+  }
+}
+"
+`;
+
 exports[`Angular Basic 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -1752,6 +1817,38 @@ export interface Props {
 })
 export default class MyBasicForwardRefComponent {
   name = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular basicOnUpdateReturn 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-on-update-return-component\\",
+  template: \`
+    <div>Hello! {{name}}</div>
+  \`,
+})
+export default class MyBasicOnUpdateReturnComponent {
+  name = \\"PatrickJS\\";
+
+  ngAfterContentChecked() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
 }
 "
 `;

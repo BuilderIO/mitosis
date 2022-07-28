@@ -143,6 +143,14 @@ const SHOW_TESTS: Tests = {
   showWithFor: require('./data/show/show-with-for.raw'),
 };
 
+const ADVANCED_REF: Tests = {
+  AdvancedRef: require('./data/advanced-ref.raw'),
+};
+
+const ON_UPDATE_RETURN: Tests = {
+  basicOnUpdateReturn: require('./data/basic-onUpdate-return.raw'),
+};
+
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
     BASIC_TESTS,
@@ -151,6 +159,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
     // FOR_SHOW_TESTS,
   ],
   angular: [
@@ -161,6 +171,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
   ],
   webcomponent: [
     BASIC_TESTS,
@@ -169,6 +181,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
     // FORM_BLOCK_TESTS
   ],
   vue: [
@@ -179,6 +193,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
   ],
   svelte: [
     BASIC_TESTS,
@@ -187,6 +203,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
   ],
   html: [
     BASIC_TESTS,
@@ -195,6 +213,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
     // FORM_BLOCK_TESTS
   ],
   stencil: [
@@ -204,6 +224,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     // MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
     // FOR_SHOW_TESTS
   ],
   solid: [
@@ -214,6 +236,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
   ],
   reactNative: [
     BASIC_TESTS,
@@ -222,6 +246,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
     // FOR_SHOW_TESTS,
   ],
   liquid: [
@@ -231,6 +257,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
   ],
   qwik: [
     BASIC_TESTS,
