@@ -57,7 +57,8 @@ export function renderJSXNodes(
           this.emit(
             directive(child, () => {
               let children = child.children.filter((c) => !isEmptyTextNode(c));
-              const needsFragment = children.length > 1 || isTextNode(children[0]);
+              const needsFragment =
+                children.length > 1 || (children.length === 1 && isTextNode(children[0]));
               needsFragment && this.jsxBeginFragment(fragmentSymbol);
               renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(this);
               needsFragment && this.jsxEndFragment();
