@@ -2,6 +2,8 @@ import { Transpiler } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
+const advancedRef = require('./data/advanced-ref.raw');
+
 const basicForShow = require('./data/basic-for-show.raw');
 const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const basicContext = require('./data/basic-context.raw');
@@ -143,6 +145,10 @@ const SHOW_TESTS: Tests = {
   showWithFor: require('./data/show/show-with-for.raw'),
 };
 
+const ADVANCED_REF: Tests = {
+  AdvancedRef: advancedRef,
+};
+
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
     BASIC_TESTS,
@@ -151,6 +157,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORWARD_REF_TESTS,
     MULTI_ON_UPDATE_TESTS,
     FORM_BLOCK_TESTS,
+    ADVANCED_REF,
     // FOR_SHOW_TESTS,
   ],
   angular: [
