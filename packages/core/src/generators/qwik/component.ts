@@ -95,14 +95,14 @@ export function addComponent(
   const styles = _opts.shareStyles ? getCommonStyles(fileSet).styles : new Map<string, CssStyles>();
   collectStyles(component.children, styles);
   let useStyles: EmitFn = () => null;
-  if (_opts.shareStyles) {
-    if (_opts.isRoot) {
-      const symbolName = componentName + '_styles';
-      getCommonStyles(fileSet).symbolName = symbolName;
-      useStyles = generateStyles(onRenderFile, fileSet.low, symbolName, false);
-    }
-  } else {
-    if (styles.size) {
+  if (styles.size) {
+    if (_opts.shareStyles) {
+      if (_opts.isRoot) {
+        const symbolName = componentName + '_styles';
+        getCommonStyles(fileSet).symbolName = symbolName;
+        useStyles = generateStyles(onRenderFile, fileSet.low, symbolName, false);
+      }
+    } else {
       const symbolName = componentName + '_styles';
       onRenderFile.exportConst(symbolName, renderStyles(styles));
       useStyles = generateStyles(onRenderFile, onRenderFile, symbolName, true);
