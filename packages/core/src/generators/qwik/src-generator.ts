@@ -348,6 +348,7 @@ export class SrcBuilder {
 
     function emitJsxProp(key: string, value: any) {
       if (value) {
+        if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
         if (self.isJSX) {
           self.emit(' ', key, '=');
           if (typeof value == 'string' && value.startsWith('"') && value.endsWith('"')) {

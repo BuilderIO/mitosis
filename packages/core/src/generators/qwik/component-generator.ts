@@ -1,7 +1,7 @@
 import { collectCss } from '../../helpers/styles/collect-css';
 import { JSONObject } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { convertMethodToFunction } from './convertMethodToFunction';
+import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import { babelTransformExpression } from '../../helpers/babel-transform';

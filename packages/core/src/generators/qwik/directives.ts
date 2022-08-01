@@ -176,7 +176,7 @@ export function CoreButton(props: {
 }) {
   const hasLink = !!props.link;
   const hProps = {
-    innerHTML: props.text || '',
+    dangerouslySetInnerHTML: props.text || '',
     href: props.link,
     target: props.openInNewTab ? '_blank' : '_self',
     class: props.class,

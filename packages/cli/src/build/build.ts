@@ -168,7 +168,7 @@ const getGeneratorForTarget = ({
     case 'vue2':
       return componentToVue2(options.options.vue2);
     case 'vue':
-      console.log('Targetting Vue: defaulting to vue v3');
+      console.log('Targeting Vue: defaulting to vue v3');
     case 'vue3':
       return componentToVue3(options.options.vue3);
     case 'angular':
