@@ -5,11 +5,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import MyComponent from './lib/angular/src/components/my-component';
+import { components } from './mitosis-component-list';
 
 @NgModule({
-  declarations: [MyComponent],
+  declarations: [...components],
   imports: [CommonModule],
-  exports: [MyComponent],
+  exports: [...components],
 })
 export class MitosisModule {}

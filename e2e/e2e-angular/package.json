@@ -4,7 +4,7 @@
   "scripts": {
     "clean": "rimraf src dist",
     "build": "yarn run mitosis && ng build",
-    "mitosis": "syncdir ../e2e-app/src src --deleteOrphaned --quiet && mitosis build",
+    "mitosis": "syncdir ../e2e-app/src src --deleteOrphaned --quiet && mitosis build && node generate_component_list",
     "ng": "ng",
     "start": "yarn run mitosis && ng serve",
     "serve": "http-server dist/e2e-angular",
@@ -30,6 +30,7 @@
     "@angular-devkit/build-angular": "^14.0.2",
     "@angular/cli": "~14.0.2",
     "@angular/compiler-cli": "^14.0.0",
+    "fast-glob": "^3.2.11",
     "rimraf": "^3.0.2",
     "sync-directory": "^5.1.5",
     "typescript": "~4.7.2"
