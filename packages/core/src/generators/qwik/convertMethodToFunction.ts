@@ -1,13 +1,12 @@
 export function convertMethodToFunction(
   code: string,
-  methods: Record<string, 'method' | 'getter'>,
+  properties: Record<string, 'method' | 'getter'>,
   lexicalArgs: string[],
 ): string {
   const out: string[] = [];
   let idx = 0;
   let lastIdx = idx;
   let end = code.length;
-  let templateDepth = 0;
   let mode: Mode = Mode.code;
   let braceDepth = 0;
   let stringEndBraceDepth = -1;
@@ -24,7 +23,6 @@ export function convertMethodToFunction(
           mode = Mode.stringSingle;
         } else if (ch === QUOTE_BACK_TICK) {
           mode = Mode.stringTemplate;
-          templateDepth++;
         } else if (ch === OPEN_BRACE) {
           braceDepth++;
         } else if (lastCh == FORWARD_SLASH && ch == FORWARD_SLASH) {
@@ -35,7 +33,6 @@ export function convertMethodToFunction(
           braceDepth--;
           if (braceDepth === stringEndBraceDepth) {
             stringEndBraceDepth = stringEndBraceDepthQueue.pop()!;
-            templateDepth--;
             mode = Mode.stringTemplate;
           }
         } else if (isWord(ch, code, idx, 'this') || isWord(ch, code, idx, 'state')) {
@@ -46,11 +43,16 @@ export function convertMethodToFunction(
             idx++;
             const propEndIdx = findIdentEnd();
             const identifier = code.substring(idx, propEndIdx);
-            if (identifier in methods) {
+            const propType = properties[identifier];
+            if (propType) {
               const isGetter = code.charCodeAt(propEndIdx) !== OPEN_PAREN;
               lastIdx = idx = propEndIdx + (isGetter ? 0 : 1);
               if (isGetter) {
-                out.push(identifier, `(${lexicalArgs.join(',')})`);
+                if (propType === 'method') {
+                  out.push(identifier, `.bind(null,${lexicalArgs.join(',')})`);
+                } else {
+                  out.push(identifier, `(${lexicalArgs.join(',')})`);
+                }
               } else {
                 out.push(identifier, `(${lexicalArgs.join(',')},`);
               }
@@ -75,9 +77,7 @@ export function convertMethodToFunction(
       case Mode.stringTemplate:
         if (lastCh !== BACKSLASH && ch == QUOTE_BACK_TICK) {
           mode = Mode.code;
-          templateDepth--;
         } else if (lastCh === DOLLAR && ch == OPEN_BRACE) {
-          templateDepth++;
           mode = Mode.code;
           stringEndBraceDepthQueue.push(stringEndBraceDepth);
           stringEndBraceDepth = braceDepth;

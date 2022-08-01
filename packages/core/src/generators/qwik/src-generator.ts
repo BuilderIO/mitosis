@@ -319,7 +319,7 @@ export class SrcBuilder {
         let key = lastProperty(rawKey);
         if (isEvent(key)) {
           key = key + '$';
-          binding = `(event)=>{${binding}}`;
+          binding = `(event)=>${binding}`;
         }
         if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);

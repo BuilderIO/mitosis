@@ -15,7 +15,26 @@ const DEBUG = true;
 
 export interface ToQwikOptions extends BaseTranspilerOptions {}
 
-type StateInit = [Record<string, any>, ...string[]];
+/**
+ * Stores getters and initialization map.
+ */
+type StateInit = [
+  StateValues,
+  /**
+   * Set of state initializers.
+   */
+  ...string[],
+];
+
+/**
+ * Map of getters that need to be rewritten to function invocations.
+ */
+type StateValues = Record<
+  /// property name
+  string,
+  /// State value
+  any
+>;
 
 export const componentToQwik =
   (userOptions: ToQwikOptions = {}): Transpiler =>
@@ -301,8 +320,8 @@ function emitStateMethods(
   componentState: JSONObject,
   lexicalArgs: string[],
 ): StateInit {
-  const state: Record<string, any> = {};
-  const stateInit: StateInit = [state];
+  const stateValues: StateValues = {};
+  const stateInit: StateInit = [stateValues];
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
     let code = componentState[key]!;
@@ -329,7 +348,7 @@ function emitStateMethods(
       }
       file.exportConst(functionName, 'function ' + code, true);
     } else {
-      state[key] = code;
+      stateValues[key] = code;
     }
   });
   return stateInit;
