@@ -406,9 +406,9 @@ function stateToMethodOrGetter(state: Record<string, any>): Record<string, 'meth
 /**
  * Return a top-level element for the component.
  *
- * WHAT: If the component has a single root element, than this returns the element name.
+ * WHAT: If the component has a single root element, then this returns the element name.
  *
- * WHY: This is useful to pull the root element into the component's host and those saving unnecessary wrapping.
+ * WHY: This is useful to pull the root element into the component's host and thus saving unnecessary wrapping.
  *
  * @param component
  */
