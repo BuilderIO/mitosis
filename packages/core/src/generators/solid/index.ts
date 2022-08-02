@@ -26,7 +26,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
-import { getState } from './state';
+import { getState, updateStateCode } from './state';
 import { checkIsDefined } from '../../helpers/nullable';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
@@ -108,7 +108,29 @@ const collectClassString = (json: MitosisNode): string | null => {
   return null;
 };
 
+const preProcessBlockCode = (json: MitosisNode, options: ToSolidOptions) => {
+  const processCode = updateStateCode(options);
+
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    if (value) {
+      json.properties[key] = processCode(value);
+    }
+  }
+  for (const key in json.bindings) {
+    const value = json.bindings[key];
+    if (value?.code) {
+      json.bindings[key] = {
+        arguments: value.arguments,
+        code: processCode(value.code),
+      };
+    }
+  }
+};
+
 const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
+  preProcessBlockCode(json, options);
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -234,6 +256,20 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
   }
 }
 
+const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions) => {
+  const processCode = updateStateCode(options);
+
+  if (json.hooks.onMount?.code) {
+    json.hooks.onMount.code = processCode(json.hooks.onMount.code);
+  }
+
+  if (json.hooks.onUpdate) {
+    for (const hook of json.hooks.onUpdate) {
+      hook.code = processCode(hook.code);
+    }
+  }
+};
+
 export const componentToSolid =
   (passedOptions: Partial<ToSolidOptions> = DEFAULT_OPTIONS): Transpiler =>
   ({ component }) => {
@@ -252,6 +288,7 @@ export const componentToSolid =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
+    preProcessComponentCode(json, options);
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
 

@@ -19,34 +19,47 @@ type State = {
   };
 };
 
-const updateStateSettersInCode = (_options: ToSolidOptions) => (value: string) =>
-  babelTransformExpression(value, {
-    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
-      const { node } = path;
-      if (types.isMemberExpression(node.left)) {
-        if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
-          if (node.left.object.name === 'state') {
-            // TODO: ultimately support other property access like strings
-            const propertyName = (node.left.property as types.Identifier).name;
-            path.replaceWith(
-              types.callExpression(types.identifier(`set${capitalize(propertyName)}`), [
-                node.right,
-              ]),
-            );
+const updateStateSettersInCode = (options: ToSolidOptions) => (value: string) => {
+  switch (options.state) {
+    case 'mutable':
+      return value;
+    case 'signals':
+      return babelTransformExpression(value, {
+        AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
+          const { node } = path;
+          if (types.isMemberExpression(node.left)) {
+            if (types.isIdentifier(node.left.object)) {
+              // TODO: utillity to properly trace this reference to the beginning
+              if (node.left.object.name === 'state') {
+                // TODO: ultimately support other property access like strings
+                const propertyName = (node.left.property as types.Identifier).name;
+                path.replaceWith(
+                  types.callExpression(types.identifier(`set${capitalize(propertyName)}`), [
+                    node.right,
+                  ]),
+                );
+              }
+            }
           }
-        }
-      }
-    },
-  });
+        },
+      });
+  }
+};
 
-const valueMapper = (options: ToSolidOptions) =>
-  flow(updateStateSettersInCode(options), (str) =>
-    stripStateAndPropsRefs(str, { includeState: true, includeProps: false }),
-  );
+const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) => {
+  switch (options.state) {
+    case 'mutable':
+      return value;
+    case 'signals':
+      return stripStateAndPropsRefs(value, { includeState: true, includeProps: false });
+  }
+};
+
+export const updateStateCode = (options: ToSolidOptions) =>
+  flow(updateStateSettersInCode(options), updateStateGettersInCode(options));
 
 const processStateValue = (options: ToSolidOptions) => {
-  const mapValue = valueMapper(options);
+  const mapValue = updateStateCode(options);
   return ([key, value]: [key: string, value: JSON]) => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {

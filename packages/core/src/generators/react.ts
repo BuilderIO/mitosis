@@ -298,6 +298,9 @@ const valueMapper = (options: ToReactOptions) => (val: string) => {
   const x = processBinding(updateStateSettersInCode(val, options), options);
   return stripThisRefs(x, options);
 };
+
+const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
+
 const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
   return ([key, value]: [key: string, value: JSON]) => {
@@ -318,7 +321,7 @@ const processStateValue = (options: ToReactOptions) => {
 
     // Other (data)
     const transformedValue = pipe(value, json5.stringify, mapValue);
-    const defaultCase = `const [${key}, set${capitalize(
+    const defaultCase = `const [${key}, ${getSetStateFnName(
       key,
     )}] = useState(() => (${transformedValue}))`;
 
@@ -388,7 +391,7 @@ const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
             // TODO: ultimately support other property access like strings
             const propertyName = (node.left.property as types.Identifier).name;
             path.replaceWith(
-              types.callExpression(types.identifier(`set${capitalize(propertyName)}`), [
+              types.callExpression(types.identifier(`${getSetStateFnName(propertyName)}`), [
                 node.right,
               ]),
             );
