@@ -266,6 +266,9 @@ const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions
   if (json.hooks.onUpdate) {
     for (const hook of json.hooks.onUpdate) {
       hook.code = processCode(hook.code);
+      if (hook.deps) {
+        hook.deps = processCode(hook.deps);
+      }
     }
   }
 };
