@@ -7,8 +7,9 @@ import { getStateObjectStringFromComponent } from '../../helpers/get-state-objec
 import { MitosisComponent } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
 import { JSON } from '../../types/json';
-import { functionLiteralPrefix } from 'src/constants/function-literal-prefix';
-import { methodLiteralPrefix } from 'src/constants/method-literal-prefix';
+import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
+import { flow, pipe } from 'fp-ts/lib/function';
 
 type State = {
   str: string;
@@ -18,7 +19,7 @@ type State = {
   };
 };
 
-const updateStateSettersInCode = (value: string, options: ToSolidOptions) =>
+const updateStateSettersInCode = (_options: ToSolidOptions) => (value: string) =>
   babelTransformExpression(value, {
     AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
       const { node } = path;
@@ -39,22 +40,11 @@ const updateStateSettersInCode = (value: string, options: ToSolidOptions) =>
     },
   });
 
-/**
- * Removes all `this.` references.
- */
-const stripThisRefs = (str: string, options: ToSolidOptions) =>
-  str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
+const valueMapper = (options: ToSolidOptions) =>
+  flow(updateStateSettersInCode(options), (str) =>
+    stripStateAndPropsRefs(str, { includeState: true, includeProps: false }),
+  );
 
-const processBinding = (str: string, options: ToSolidOptions) =>
-  stripStateAndPropsRefs(str, {
-    includeState: true,
-    includeProps: false,
-  });
-
-const valueMapper = (options: ToSolidOptions) => (val: string) => {
-  const x = processBinding(updateStateSettersInCode(val, options), options);
-  return stripThisRefs(x, options);
-};
 const processStateValue = (options: ToSolidOptions) => {
   const mapValue = valueMapper(options);
   return ([key, value]: [key: string, value: JSON]) => {
@@ -74,21 +64,17 @@ const processStateValue = (options: ToSolidOptions) => {
     }
 
     // Other (data)
-    const transformedValue = json5.stringify(mapValue(json5.stringify(value)));
+    const transformedValue = pipe(value, json5.stringify, mapValue);
+
     const defaultCase = `const [${key}, set${capitalize(key)}] = useSignal(${transformedValue})`;
 
     return defaultCase;
   };
 };
 
-const getUseStateCode = (json: MitosisComponent, options: ToSolidOptions) => {
-  const lineItemDelimiter = '\n\n\n';
-
-  const stringifiedState = Object.entries(json.state).map(processStateValue(options));
-  return stringifiedState.join(lineItemDelimiter);
-};
-
-const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) => getUseStateCode();
+const LINE_ITEM_DELIMITER = '\n\n\n';
+const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
+  Object.entries(json.state).map(processStateValue(options)).join(LINE_ITEM_DELIMITER);
 
 export const getState = (json: MitosisComponent, options: ToSolidOptions): State | undefined => {
   const hasState = Object.keys(json.state).length > 0;
@@ -99,16 +85,17 @@ export const getState = (json: MitosisComponent, options: ToSolidOptions): State
 
   switch (options.state) {
     case 'mutable':
-      const stateString = getStateObjectStringFromComponent(json);
+      const stateString = pipe(
+        getStateObjectStringFromComponent(json),
+        (str) => `const state = createMutable(${str});`,
+      );
       return {
-        str: `const state = createMutable(${stateString});`,
+        str: stateString,
         import: { store: ['createMutable'] },
       };
     case 'signals':
-      const stateString2 = getStateObjectStringFromComponent(json);
-
       return {
-        str: `const state = createMutable(${stateString2});`,
+        str: getSignalsCode(json, options),
         import: { solidjs: ['createSignal'] },
       };
   }

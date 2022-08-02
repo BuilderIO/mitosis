@@ -27,10 +27,10 @@ import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
 import { getState } from './state';
-import { checkIsDefined } from 'src/helpers/nullable';
+import { checkIsDefined } from '../../helpers/nullable';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
-  state: 'mutable',
+  state: 'signals',
 };
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
