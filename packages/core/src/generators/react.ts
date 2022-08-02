@@ -44,6 +44,7 @@ import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
 import { hasCss } from '../helpers/styles/helpers';
 import { JSON } from '../types/json';
+import { pipe } from 'fp-ts/lib/function';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
@@ -316,7 +317,7 @@ const processStateValue = (options: ToReactOptions) => {
     }
 
     // Other (data)
-    const transformedValue = json5.stringify(mapValue(json5.stringify(value)));
+    const transformedValue = pipe(value, json5.stringify, mapValue);
     const defaultCase = `const [${key}, set${capitalize(
       key,
     )}] = useState(() => (${transformedValue}))`;
