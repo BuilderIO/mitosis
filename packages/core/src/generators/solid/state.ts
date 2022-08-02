@@ -19,6 +19,8 @@ type State = {
   };
 };
 
+const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
+
 const updateStateSettersInCode = (options: ToSolidOptions) => (value: string) => {
   switch (options.state) {
     case 'mutable':
@@ -34,7 +36,7 @@ const updateStateSettersInCode = (options: ToSolidOptions) => (value: string) =>
                 // TODO: ultimately support other property access like strings
                 const propertyName = (node.left.property as types.Identifier).name;
                 path.replaceWith(
-                  types.callExpression(types.identifier(`set${capitalize(propertyName)}`), [
+                  types.callExpression(types.identifier(getStateSetterName(propertyName)), [
                     node.right,
                   ]),
                 );
@@ -56,7 +58,7 @@ const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) =>
 };
 
 export const updateStateCode = (options: ToSolidOptions) =>
-  flow(updateStateSettersInCode(options), updateStateGettersInCode(options));
+  flow(updateStateSettersInCode(options), updateStateGettersInCode(options), (x) => x.trim());
 
 const processStateValue = (options: ToSolidOptions) => {
   const mapValue = updateStateCode(options);
@@ -71,15 +73,45 @@ const processStateValue = (options: ToSolidOptions) => {
       } else if (value.startsWith(methodLiteralPrefix)) {
         // methods
         const methodValue = value.replace(methodLiteralPrefix, '');
-        const useValue = methodValue.replace(/^(get )?/, 'function ');
-        return mapValue(useValue);
+        const isGetter = methodValue.startsWith('get ');
+
+        const strippedMethodvalue = pipe(methodValue.replace('get ', ''), mapValue);
+
+        /**
+         * FROM:
+         * get foo() {
+         *   const bar = 'asdf'
+         *   return bar
+         * }
+         *
+         *
+         * TO:
+         * function _getter_foo() {
+         *   const bar = 'asdf'
+         *   return bar
+         * }
+         *
+         * const foo = _getter_foo()
+         */
+        if (isGetter) {
+          const FUNCTION_NAME_PREFIX = '_getter_';
+          return `
+            function ${FUNCTION_NAME_PREFIX}${strippedMethodvalue}
+
+            const ${key} = ${FUNCTION_NAME_PREFIX}${key}();
+          `;
+        } else {
+          return `function ${strippedMethodvalue}`;
+        }
       }
     }
 
     // Other (data)
     const transformedValue = pipe(value, json5.stringify, mapValue);
 
-    const defaultCase = `const [${key}, set${capitalize(key)}] = useSignal(${transformedValue})`;
+    const defaultCase = `const [${key}, ${getStateSetterName(
+      key,
+    )}] = createSignal(${transformedValue})`;
 
     return defaultCase;
   };
@@ -87,7 +119,23 @@ const processStateValue = (options: ToSolidOptions) => {
 
 const LINE_ITEM_DELIMITER = '\n\n\n';
 const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
-  Object.entries(json.state).map(processStateValue(options)).join(LINE_ITEM_DELIMITER);
+  Object.entries(json.state)
+    .map(processStateValue(options))
+    /**
+     * We need to sort state so that signals are at the top.
+     */
+    .sort((a, b) => {
+      const aHasSignal = a.includes('createSignal(');
+      const bHasSignal = b.includes('createSignal(');
+      if (aHasSignal && !bHasSignal) {
+        return -1;
+      } else if (!aHasSignal && bHasSignal) {
+        return 1;
+      } else {
+        return 0;
+      }
+    })
+    .join(LINE_ITEM_DELIMITER);
 
 export const getState = (json: MitosisComponent, options: ToSolidOptions): State | undefined => {
   const hasState = Object.keys(json.state).length > 0;
