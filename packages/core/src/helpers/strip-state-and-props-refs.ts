@@ -8,6 +8,16 @@ export type StripStateAndPropsRefsOptions = {
   domRefs?: string[];
 };
 
+const DEFAULT_OPTIONS: Required<StripStateAndPropsRefsOptions> = {
+  replaceWith: '',
+  contextVars: [],
+  outputVars: [],
+  context: 'this.',
+  domRefs: [],
+  includeProps: true,
+  includeState: true,
+};
+
 /**
  * Remove state. and props. from expressions, e.g.
  * state.foo -> foo
@@ -18,48 +28,46 @@ export type StripStateAndPropsRefsOptions = {
  */
 export const stripStateAndPropsRefs = (
   code?: string,
-  options: StripStateAndPropsRefsOptions = {},
+  _options: StripStateAndPropsRefsOptions = {},
 ): string => {
   let newCode = code || '';
-  const replacer = options.replaceWith || '';
-  const contextVars = options?.contextVars || [];
-  const outputVars = options?.outputVars || [];
-  const context = options?.context || 'this.';
-  const domRefs = options?.domRefs || [];
 
-  if (contextVars.length) {
-    contextVars.forEach((_var) => {
-      newCode = newCode.replace(
-        // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
-        '$1' + context + _var + '$2',
-      );
-    });
-  }
-  if (outputVars.length) {
-    outputVars.forEach((_var) => {
-      // determine expression edge cases onMessage( to this.onMessage.emit(
-      const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
-      const replacer = '$1' + context + _var + '.emit(';
-      newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
-    });
-  }
-  if (options.includeProps !== false) {
-    if (typeof replacer === 'string') {
-      newCode = newCode.replace(/props\./g, replacer);
+  const { replaceWith, contextVars, outputVars, context, domRefs, includeProps, includeState } = {
+    ...DEFAULT_OPTIONS,
+    ..._options,
+  };
+
+  contextVars.forEach((_var) => {
+    newCode = newCode.replace(
+      // determine expression edge cases - https://regex101.com/r/iNcTSM/1
+      new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+      '$1' + context + _var + '$2',
+    );
+  });
+
+  outputVars.forEach((_var) => {
+    // determine expression edge cases onMessage( to this.onMessage.emit(
+    const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
+    const replacer = '$1' + context + _var + '.emit(';
+    newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
+  });
+
+  if (includeProps !== false) {
+    if (typeof replaceWith === 'string') {
+      newCode = newCode.replace(/props\./g, replaceWith);
     } else {
-      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
+      newCode = newCode.replace(/props\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
     }
     // TODO: webcomponent edge-case
     if (/el\.this\.props/.test(newCode)) {
       newCode = newCode.replace(/el\.this\.props/g, 'el.props');
     }
   }
-  if (options.includeState !== false) {
-    if (typeof replacer === 'string') {
-      newCode = newCode.replace(/state\./g, replacer);
+  if (includeState !== false) {
+    if (typeof replaceWith === 'string') {
+      newCode = newCode.replace(/state\./g, replaceWith);
     } else {
-      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
+      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
     }
   }
   if (domRefs.length) {
