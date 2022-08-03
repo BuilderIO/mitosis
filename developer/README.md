@@ -28,7 +28,7 @@ yarn test
 
 ## Submitting Issues And Writing Tests
 
-We need your help! If you found a bug, it's best to [create an issue](https://github.com/BuilderIO/mitosis/issues/new/choose) and follow the template we've created for you. Afterwards, create a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests) that replicates the issue using a test.
+We need your help! If you found a bug, it's best to [create an issue](https://github.com/BuilderIO/mitosis/issues/new/choose) and follow the template we've created for you. Afterwards, create a [Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) that replicates the issue using a test.
 
 ## Developing for Core & Testing
 
