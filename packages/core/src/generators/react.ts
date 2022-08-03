@@ -571,7 +571,7 @@ const _componentToReact = (
   let str = dedent`
   ${
     options.type !== 'native'
-      ? 'import * as React from \'react\';'
+      ? "import * as React from 'react';"
       : `
   import * as React from 'react';
   import { View, StyleSheet, Image, Text } from 'react-native';
