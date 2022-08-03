@@ -7,6 +7,7 @@ import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 import { MitosisNode } from '../../types/mitosis-node';
+import { checkHasState } from '../../helpers/state';
 
 Error.stackTraceLimit = 9999;
 
@@ -37,7 +38,7 @@ export const componentToQwik =
       emitImports(file, component);
       emitTypes(file, component);
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component);
-      let hasState = Boolean(Object.keys(component.state).length);
+      let hasState = checkHasState(component);
       let css: string | null = null;
       file.src.const(
         component.name,

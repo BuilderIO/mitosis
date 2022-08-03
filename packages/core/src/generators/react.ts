@@ -44,6 +44,7 @@ import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
 import { hasCss } from '../helpers/styles/helpers';
 import { isSlotProperty } from '../helpers/slots';
+import { checkHasState } from '../helpers/state';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
@@ -498,7 +499,7 @@ const _componentToReact = (
   const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
 
-  let hasState = Boolean(Object.keys(json.state).length);
+  let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
   const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
@@ -638,18 +639,16 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUpdate?.length
-          ? json.hooks.onUpdate
-              .map(
-                (hook) => `useEffect(() => {
+        json.hooks.onUpdate
+          ?.map(
+            (hook) => `useEffect(() => {
             ${processBinding(updateStateSettersInCode(hook.code, options), options)}
           }, 
           ${
             hook.deps ? processBinding(updateStateSettersInCode(hook.deps, options), options) : ''
           })`,
-              )
-              .join(';')
-          : ''
+          )
+          .join(';') ?? ''
       }
 
       ${
