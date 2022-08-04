@@ -271,6 +271,9 @@ export const componentToAngular =
 
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+
+    const stateVars = Object.keys(json?.state || {});
+
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
       return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
@@ -308,6 +311,7 @@ export const componentToAngular =
           contextVars,
           outputVars,
           domRefs: Array.from(domRefs),
+          stateVars,
         }),
     });
 
@@ -365,6 +369,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 })}`
               : ''
           };`;
@@ -403,6 +408,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 })}
                 `
               }
@@ -419,6 +425,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 });
                 return code + '\n';
               }, '')}
@@ -434,6 +441,7 @@ export const componentToAngular =
                 contextVars,
                 outputVars,
                 domRefs: Array.from(domRefs),
+                stateVars,
               })}
             }`
       }

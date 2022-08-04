@@ -4,6 +4,7 @@ export type StripStateAndPropsRefsOptions = {
   includeState?: boolean;
   contextVars?: string[];
   outputVars?: string[];
+  stateVars?: string[];
   context?: string;
   domRefs?: string[];
 };
@@ -26,6 +27,7 @@ export const stripStateAndPropsRefs = (
   const outputVars = options?.outputVars || [];
   const context = options?.context || 'this.';
   const domRefs = options?.domRefs || [];
+  const stateVars = options?.stateVars || [];
 
   if (contextVars.length) {
     contextVars.forEach((_var) => {
@@ -69,6 +71,24 @@ export const stripStateAndPropsRefs = (
         new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
         '$1' + 'this.' + _var + '$2',
       );
+    });
+  }
+  if (stateVars.length) {
+    stateVars.forEach((_var) => {
+      newCode = newCode
+        .replace(
+          // roughly gets rid of state vars, like stuff = function this.stuff() {} turning it into stuff = function () {}
+          new RegExp(
+            '(^(?:function))(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)',
+            'g',
+          ),
+          '$1',
+        )
+        .replace(
+          // determine expression edge cases - https://regex101.com/r/iNcTSM/1
+          new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+          '$1' + 'this.' + _var + '$2',
+        );
     });
   }
   return newCode;
