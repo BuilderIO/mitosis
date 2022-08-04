@@ -66,7 +66,7 @@ export const stripStateAndPropsRefs = (
     domRefs.forEach((_var) => {
       newCode = newCode.replace(
         // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
         '$1' + 'this.' + _var + '$2',
       );
     });
