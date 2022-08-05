@@ -68,25 +68,26 @@ export const stripStateAndPropsRefs = (
     domRefs.forEach((_var) => {
       newCode = newCode.replace(
         // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(\\?\\.|,|\\.|\\(| |;|\\)|\\]|$)', 'g'),
         '$1' + 'this.' + _var + '$2',
       );
     });
   }
   if (stateVars.length) {
     stateVars.forEach((_var) => {
+      console.log('LOL', 'VAR ', _var, newCode);
       newCode = newCode
         .replace(
           // roughly gets rid of state vars, like stuff = function this.stuff() {} turning it into stuff = function () {}
-          new RegExp(
-            '(^(?:function))(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)',
-            'g',
-          ),
+          new RegExp('(^(?:function))(^| |)' + _var, 'g'),
           '$1',
         )
         .replace(
           // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-          new RegExp('(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(|\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+          new RegExp(
+            '(^|\\n|\\r| |;|\\(|\\[|!|,)' + _var + '(\\?\\.|,|\\.|\\(| |;|\\)|\\]|$)',
+            'g',
+          ),
           '$1' + 'this.' + _var + '$2',
         );
     });
