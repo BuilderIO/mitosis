@@ -1,9 +1,15 @@
+// Mitosis E2E orchestration script
+
 import { readFile, writeFile } from 'fs/promises';
 import { resolve } from 'path';
 import { spawn } from 'child_process';
 import syncDirectory from 'sync-directory';
 
+// Update this array when adding new cases.
+
 const cases = ['01-one-component', '02-two-components'];
+
+// Update this array when Mitosis adds new targets
 
 const packages = [
   '@builder.io/e2e-app-qwik-output',
@@ -16,6 +22,10 @@ const packages = [
   '@builder.io/e2e-vue2',
   '@builder.io/e2e-vue3',
 ];
+
+// To keep the E2E code minimal, the case and target names are currently treated
+// as string (untyped) data. Since only a (hopefully near 0) list of
+// allow-to-fail cases is stored, it seems a reasonable tradeoff.
 
 interface Entry {
   caseName: string;
@@ -48,6 +58,25 @@ async function readSummary(caseName: string): Promise<Entry[]> {
     target: y.title,
     ok: allOk(y.specs),
   }));
+}
+
+async function detectFailures(allResults: any[]) {
+  // Look for any failures, except those explicity allowed. A failure would be
+  // allowed so that the case and progress can be merged, even where Mitosis
+  // doesn't have complete support across all targets yet.
+
+  const allowFailuresJson = await readFile('./allow-failures.json', 'utf-8');
+  const allowFailures: Entry[] = JSON.parse(allowFailuresJson);
+
+  const didntPass = allResults.filter((e) => !e.ok);
+  const regressions = didntPass.filter(
+    (dp) => !allowFailures.find((af) => dp.caseName == af.caseName && dp.target == af.target),
+  );
+
+  if (regressions.length > 0) {
+    console.error('E2E regressions, these formerly passed!', regressions);
+    throw new Error('E2E regressions: ' + regressions.length);
+  }
 }
 
 async function main() {
@@ -101,18 +130,7 @@ async function main() {
 
   // TODO format the JSON output as a test status matrix.
 
-  // Look for any must-pass that didn't pass.
-  const mustPassJson = await readFile('./overall-result-must-pass.json', 'utf-8');
-  const mustPass: Entry[] = JSON.parse(mustPassJson).filter((mp) => mp.ok);
-  const didntPass = allResults.filter((e) => !e.ok);
-  const regressions = mustPass.filter((mp) =>
-    didntPass.find((dp) => mp.caseName == dp.caseName && mp.target == dp.target),
-  );
-
-  if (regressions.length > 0) {
-    console.error('E2E regressions, these formerly passed!', regressions);
-    throw new Error('E2E regressions: ' + regressions.length);
-  }
+  await detectFailures(allResults);
 }
 
 main()
