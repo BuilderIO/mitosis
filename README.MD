@@ -25,17 +25,21 @@
 
 ## Table of contents
 
+- [Table of contents](#table-of-contents)
 - [Getting Started](#getting-started)
+- [Overview](#overview)
 - [Docs](#docs)
 - [Why use Mitosis?](#why-use-mitosis)
   - [Design Systems Maintainers](#design-systems-maintainers)
   - [Teams using multiple web frameworks](#teams-using-multiple-web-frameworks)
   - [Teams building web SDKs](#teams-building-web-sdks)
+- [What about XKCD](#what-about-xkcd)
 - [Status](#status)
+- [E2E test status](#e2e-test-status)
 - [Contribute](#contribute)
 - [Coming soon](#coming-soon)
 - [Community](#community)
-- [ESLint Rules](#eslint-rules)
+- [ESLint rules](#eslint-rules)
 - [Related Projects](#related-projects)
 
 ## Getting Started
@@ -99,6 +103,18 @@ Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the
 | Webcomponents | Beta         |
 | React Native  | Beta         |
 | SwiftUI       | Experimental |
+
+## E2E test status
+
+| Target  | 01 one component   | 02 two components  |
+| ------- | ------------------ | ------------------ |
+| angular | :white_check_mark: | :white_check_mark: |
+| qwik    | :white_check_mark: | :x:                |
+| react   | :white_check_mark: | :white_check_mark: |
+| solid   | :white_check_mark: | :white_check_mark: |
+| svelte  | :white_check_mark: | :white_check_mark: |
+| vue2    | :white_check_mark: | :white_check_mark: |
+| vue3    | :white_check_mark: | :white_check_mark: |
 
 ## Contribute
 
