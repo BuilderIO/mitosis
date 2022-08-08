@@ -1177,7 +1177,7 @@ export default class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -2003,13 +2003,13 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngAfterContentChecked() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
@@ -2147,7 +2147,7 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngAfterContentChecked() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
   }
 }
 "
