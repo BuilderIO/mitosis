@@ -7,9 +7,6 @@
 <p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
 
 <p align="center">
-  <a href="https://mitosis.builder.io/">
-    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
-  </a>
   <p align="center">
     Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
   </p>
@@ -43,6 +40,24 @@
 The best way to learn Mitosis is to clone our [example project](./examples/basic/) and start tinkering. Otherwise, here are some helpful external resources on trying out Mitosis:
 
 - https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
+
+## Setup
+
+### Install
+
+```bash
+# to use the CLI
+npm install @builder.io/mitosis-cli
+
+# to use the core library directly
+npm install @builder.io/mitosis
+```
+
+See [this example](./examples/basic/) for how to use the CLI tool.
+
+### JSX Runtime Types
+
+Check [our configuration docs](/docs/configuration.md#typescript-configuration) for more information.
 
 ## Overview
 
