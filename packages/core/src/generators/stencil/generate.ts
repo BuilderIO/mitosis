@@ -99,16 +99,6 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
   return str;
 };
 
-const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
-  let str = '';
-
-  for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
-  }
-
-  return str;
-};
-
 function processBinding(code: string) {
   return stripStateAndPropsRefs(code, { replaceWith: 'this.' });
 }
