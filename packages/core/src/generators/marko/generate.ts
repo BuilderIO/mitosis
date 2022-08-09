@@ -135,18 +135,12 @@ export const componentToMarko =
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'object',
       data: true,
-      functions: false,
-      getters: false,
-      valueMapper: (code) => processBinding(code, 'class'),
-    });
-
-    const methodsString = getStateObjectStringFromComponent(json, {
-      format: 'class',
-      data: false,
       functions: true,
       getters: true,
       valueMapper: (code) => processBinding(code, 'class'),
     });
+
+    const methodsString = '';
 
     const hasState = dataString.length > 5;
 
@@ -217,7 +211,7 @@ export const componentToMarko =
     }
 
     // Convert on-click=(...) -> on-click(...)
-    jsString = jsString.replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(');
+    htmlString = htmlString.replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(');
 
     let finalStr = `
 ${jsString}

@@ -60,16 +60,17 @@ exports[` 3`] = `
 
 exports[`Marko AdvancedRef 1`] = `
 "class {
-  onBlur = function onBlur() {
-    // Maintain focus
-    inputRef.focus();
-  };
-  lowerCaseName = function lowerCaseName() {
-    return this.state.name.toLowerCase();
-  };
-
   onCreate() {
-    this.state = { name: \\"PatrickJS\\" };
+    this.state = {
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.state.name.toLowerCase();
+      },
+    };
   }
 
   onRender() {
@@ -87,8 +88,8 @@ style {
     <input
       ref=((el) => this.inputRef = el)
       value=(state.name)
-      on-blur=(event => state.onBlur())
-      on-input=(event => state.name = event.target.value)
+      on-blur(event => state.onBlur())
+      on-input(event => state.name = event.target.value)
     />
 
     <label for=\\"cars\\" ref=((el) => this.inputNoArgRef = el)>
@@ -113,12 +114,13 @@ exports[`Marko Basic 1`] = `
 };
 
 class {
-  underscore_fn_name() {
-    return \\"bar\\";
-  }
-
   onCreate() {
-    this.state = { name: \\"Steve\\" };
+    this.state = {
+      name: \\"Steve\\",
+      underscore_fn_name() {
+        return \\"bar\\";
+      },
+    };
   }
 }
 
@@ -130,7 +132,7 @@ style {
 <div>
   <input
     value=(DEFAULT_VALUES.name || state.name)
-    on-input=(myEvent => state.name = myEvent.target.value)
+    on-input(myEvent => state.name = myEvent.target.value)
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
@@ -149,7 +151,7 @@ exports[`Marko Basic 2`] = `
     <if(person === state.name)>
       <input
         value=(state.name)
-        on-input=(event => {
+        on-input(event => {
   state.name = event.target.value + ' and ' + person;
 })
       />
@@ -165,13 +167,14 @@ exports[`Marko Basic Context 1`] = `
 "import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 class {
-  onChange = function onChange() {
-    const change = myService.method(\\"change\\");
-    console.log(change);
-  };
-
   onCreate() {
-    this.state = { name: \\"PatrickJS\\" };
+    this.state = {
+      name: \\"PatrickJS\\",
+      onChange: function onChange() {
+        const change = myService.method(\\"change\\");
+        console.log(change);
+      },
+    };
   }
 
   onMount() {
@@ -184,7 +187,7 @@ class {
   \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input=(event => state.onChange) />
+  <input on-input(event => state.onChange) />
 </div>"
 `;
 
@@ -269,7 +272,7 @@ exports[`Marko BasicFor 1`] = `
   <for|person| of=(state.names)>
     <input
       value=(state.name)
-      on-input=(event => {
+      on-input(event => {
   state.name = event.target.value + ' and ' + person;
 })
     />
@@ -282,16 +285,17 @@ exports[`Marko BasicFor 1`] = `
 
 exports[`Marko BasicRef 1`] = `
 "class {
-  onBlur = function onBlur() {
-    // Maintain focus
-    inputRef.focus();
-  };
-  lowerCaseName = function lowerCaseName() {
-    return this.state.name.toLowerCase();
-  };
-
   onCreate() {
-    this.state = { name: \\"PatrickJS\\" };
+    this.state = {
+      name: \\"PatrickJS\\",
+      onBlur: function onBlur() {
+        // Maintain focus
+        inputRef.focus();
+      },
+      lowerCaseName: function lowerCaseName() {
+        return this.state.name.toLowerCase();
+      },
+    };
   }
 }
 
@@ -305,8 +309,8 @@ style {
     <input
       ref=((el) => this.inputRef = el)
       value=(state.name)
-      on-blur=(event => state.onBlur())
-      on-input=(event => state.name = event.target.value)
+      on-blur(event => state.onBlur())
+      on-input(event => state.name = event.target.value)
     />
 
     <label for=\\"cars\\" ref=((el) => this.inputNoArgRef = el)>
@@ -327,15 +331,19 @@ style {
 
 exports[`Marko BasicRefAssignment 1`] = `
 "class {
-  handlerClick = function handlerClick(event) {
-    event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
-  };
+  onCreate() {
+    this.state = {
+      handlerClick: function handlerClick(event) {
+        event.preventDefault();
+        console.log(\\"current value\\", holdValueRef);
+        holdValueRef = holdValueRef + \\"JS\\";
+      },
+    };
+  }
 }
 
 <div>
-  <button on-click=(evt => state.handlerClick(evt))>Click</button>
+  <button on-click(evt => state.handlerClick(evt))>Click</button>
 </div>"
 `;
 
@@ -366,7 +374,7 @@ class {
 <div>
   <h1>Now: \${state.count} , before: \${prevCount}</h1>
 
-  <button on-click=(event => state.count += 1)>Increment</button>
+  <button on-click(event => state.count += 1)>Increment</button>
 </div>"
 `;
 
@@ -390,21 +398,28 @@ exports[`Marko Button 1`] = `
 
 exports[`Marko Columns 1`] = `
 "class {
-  getColumns() {
-    return this.input.columns || [];
-  }
-  getGutterSize() {
-    return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
-  }
-  getWidth(index: number) {
-    const columns = this.getColumns();
-    return (columns[index] && columns[index].width) || 100 / columns.length;
-  }
-  getColumnCssWidth(index: number) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
-    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  onCreate() {
+    this.state = {
+      getColumns() {
+        return this.input.columns || [];
+      },
+      getGutterSize() {
+        return typeof this.input.space === \\"number\\"
+          ? this.input.space || 0
+          : 20;
+      },
+      getWidth(index: number) {
+        const columns = this.getColumns();
+        return (columns[index] && columns[index].width) || 100 / columns.length;
+      },
+      getColumnCssWidth(index: number) {
+        const columns = this.getColumns();
+        const gutterSize = this.getGutterSize();
+        const subtractWidth =
+          (gutterSize * (columns.length - 1)) / columns.length;
+        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      },
+    };
   }
 }
 
@@ -468,50 +483,52 @@ exports[`Marko ContentSlotJSX 1`] = `
 
 exports[`Marko CustomCode 1`] = `
 "class {
-  findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+  onCreate() {
+    this.state = {
+      scriptsInserted: [],
+      scriptsRun: [],
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = elem.getElementsByTagName(\\"script\\");
 
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
 
-        if (script.src) {
-          if (this.state.scriptsInserted.includes(script.src)) {
-            continue;
-          }
+            if (script.src) {
+              if (this.state.scriptsInserted.includes(script.src)) {
+                continue;
+              }
 
-          this.state.scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (this.state.scriptsRun.includes(script.innerText)) {
-            continue;
-          }
+              this.state.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.state.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
 
-          try {
-            this.state.scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              try {
+                this.state.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
           }
         }
-      }
-    }
-  }
-
-  onCreate() {
-    this.state = { scriptsInserted: [], scriptsRun: [] };
+      },
+    };
   }
 
   onMount() {
@@ -524,50 +541,52 @@ exports[`Marko CustomCode 1`] = `
 
 exports[`Marko Embed 1`] = `
 "class {
-  findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+  onCreate() {
+    this.state = {
+      scriptsInserted: [],
+      scriptsRun: [],
+      findAndRunScripts() {
+        // TODO: Move this function to standalone one in '@builder.io/utils'
+        if (elem && typeof window !== \\"undefined\\") {
+          /** @type {HTMLScriptElement[]} */
+          const scripts = elem.getElementsByTagName(\\"script\\");
 
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
+          for (let i = 0; i < scripts.length; i++) {
+            const script = scripts[i];
 
-        if (script.src) {
-          if (this.state.scriptsInserted.includes(script.src)) {
-            continue;
-          }
+            if (script.src) {
+              if (this.state.scriptsInserted.includes(script.src)) {
+                continue;
+              }
 
-          this.state.scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (this.state.scriptsRun.includes(script.innerText)) {
-            continue;
-          }
+              this.state.scriptsInserted.push(script.src);
+              const newScript = document.createElement(\\"script\\");
+              newScript.async = true;
+              newScript.src = script.src;
+              document.head.appendChild(newScript);
+            } else if (
+              !script.type ||
+              [
+                \\"text/javascript\\",
+                \\"application/javascript\\",
+                \\"application/ecmascript\\",
+              ].includes(script.type)
+            ) {
+              if (this.state.scriptsRun.includes(script.innerText)) {
+                continue;
+              }
 
-          try {
-            this.state.scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              try {
+                this.state.scriptsRun.push(script.innerText);
+                new Function(script.innerText)();
+              } catch (error) {
+                console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+              }
+            }
           }
         }
-      }
-    }
-  }
-
-  onCreate() {
-    this.state = { scriptsInserted: [], scriptsRun: [] };
+      },
+    };
   }
 
   onMount() {
@@ -586,236 +605,246 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 class {
-  get submissionState() {
-    return (Builder.isEditing && this.input.previewState) || this.state.state;
-  }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
-    const sendWithJs =
-      this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
-
-    if (this.input.sendSubmissionsTo === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(this.input.action || this.input.sendSubmissionsTo === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = this.input.customHeaders || {};
-      let body: any;
-      const formData = new FormData(el); // TODO: maybe support null
-
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!(el as HTMLInputElement).name)
-        .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = (el as HTMLInputElement).value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = this.input.contentType;
-
-      if (this.input.sendSubmissionsTo === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-        detail: {
-          body,
-        },
-      });
-
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
-
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-
-      this.state.state = \\"sending\\";
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        this.input.sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
-      fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
-        /* TODO: throw error if no action URL */
-        {
-          body,
-          headers,
-          method: this.input.method || \\"post\\",
-        }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-
-          if (!res.ok && this.input.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */
-            let message = get(body, this.input.errorMessagePath);
-
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
-                message = JSON.stringify(message);
-              }
-
-              this.state.formErrorMessage = message;
-            }
-          }
-
-          this.state.responseData = body;
-          this.state.state = res.ok ? \\"success\\" : \\"error\\";
-
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: {
-                res,
-                body,
-              },
-            });
-
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
-
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */
-
-              if (this.input.resetFormOnSubmit !== false) {
-                formRef.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */
-
-            if (this.input.successUrl) {
-              if (formRef) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: {
-                    url: this.input.successUrl,
-                  },
-                });
-                formRef.dispatchEvent(event);
-
-                if (!event.defaultPrevented) {
-                  location.href = this.input.successUrl;
-                }
-              } else {
-                location.href = this.input.successUrl;
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: {
-              error: err,
-            },
-          });
-
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
-
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-
-          this.state.responseData = err;
-          this.state.state = \\"error\\";
-        }
-      );
-    }
-  }
-
   onCreate() {
     this.state = {
       state: \\"unsubmitted\\",
       responseData: null,
       formErrorMessage: \\"\\",
+      get submissionState() {
+        return (
+          (Builder.isEditing && this.input.previewState) || this.state.state
+        );
+      },
+      onSubmit(
+        event: Event & {
+          currentTarget: HTMLFormElement;
+        }
+      ) {
+        const sendWithJs =
+          this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
+
+        if (this.input.sendSubmissionsTo === \\"zapier\\") {
+          event.preventDefault();
+        } else if (sendWithJs) {
+          if (
+            !(this.input.action || this.input.sendSubmissionsTo === \\"email\\")
+          ) {
+            event.preventDefault();
+            return;
+          }
+
+          event.preventDefault();
+          const el = event.currentTarget;
+          const headers = this.input.customHeaders || {};
+          let body: any;
+          const formData = new FormData(el); // TODO: maybe support null
+
+          const formPairs: {
+            key: string;
+            value: File | boolean | number | string | FileList;
+          }[] = Array.from(
+            event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+          )
+            .filter((el) => !!(el as HTMLInputElement).name)
+            .map((el) => {
+              let value: any;
+              const key = (el as HTMLImageElement).name;
+
+              if (el instanceof HTMLInputElement) {
+                if (el.type === \\"radio\\") {
+                  if (el.checked) {
+                    value = el.name;
+                    return {
+                      key,
+                      value,
+                    };
+                  }
+                } else if (el.type === \\"checkbox\\") {
+                  value = el.checked;
+                } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                  const num = el.valueAsNumber;
+
+                  if (!isNaN(num)) {
+                    value = num;
+                  }
+                } else if (el.type === \\"file\\") {
+                  // TODO: one vs multiple files
+                  value = el.files;
+                } else {
+                  value = el.value;
+                }
+              } else {
+                value = (el as HTMLInputElement).value;
+              }
+
+              return {
+                key,
+                value,
+              };
+            });
+          let contentType = this.input.contentType;
+
+          if (this.input.sendSubmissionsTo === \\"email\\") {
+            contentType = \\"multipart/form-data\\";
+          }
+
+          Array.from(formPairs).forEach(({ value }) => {
+            if (
+              value instanceof File ||
+              (Array.isArray(value) && value[0] instanceof File) ||
+              value instanceof FileList
+            ) {
+              contentType = \\"multipart/form-data\\";
+            }
+          }); // TODO: send as urlEncoded or multipart by default
+          // because of ease of use and reliability in browser API
+          // for encoding the form?
+
+          if (contentType !== \\"application/json\\") {
+            body = formData;
+          } else {
+            // Json
+            const json = {};
+            Array.from(formPairs).forEach(({ value, key }) => {
+              set(json, key, value);
+            });
+            body = JSON.stringify(json);
+          }
+
+          if (contentType && contentType !== \\"multipart/form-data\\") {
+            if (
+              /* Zapier doesn't allow content-type header to be sent from browsers */
+              !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
+            ) {
+              headers[\\"content-type\\"] = contentType;
+            }
+          }
+
+          const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+            detail: {
+              body,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(presubmitEvent);
+
+            if (presubmitEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.state.state = \\"sending\\";
+          const formUrl = \`\${
+            builder.env === \\"dev\\"
+              ? \\"http://localhost:5000\\"
+              : \\"https://builder.io\\"
+          }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+            this.input.sendSubmissionsToEmail || \\"\\"
+          )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
+          fetch(
+            this.input.sendSubmissionsTo === \\"email\\"
+              ? formUrl
+              : this.input.action!,
+            /* TODO: throw error if no action URL */
+            {
+              body,
+              headers,
+              method: this.input.method || \\"post\\",
+            }
+          ).then(
+            async (res) => {
+              let body;
+              const contentType = res.headers.get(\\"content-type\\");
+
+              if (
+                contentType &&
+                contentType.indexOf(\\"application/json\\") !== -1
+              ) {
+                body = await res.json();
+              } else {
+                body = await res.text();
+              }
+
+              if (!res.ok && this.input.errorMessagePath) {
+                /* TODO: allow supplying an error formatter function */
+                let message = get(body, this.input.errorMessagePath);
+
+                if (message) {
+                  if (typeof message !== \\"string\\") {
+                    /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                    message = JSON.stringify(message);
+                  }
+
+                  this.state.formErrorMessage = message;
+                }
+              }
+
+              this.state.responseData = body;
+              this.state.state = res.ok ? \\"success\\" : \\"error\\";
+
+              if (res.ok) {
+                const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                  detail: {
+                    res,
+                    body,
+                  },
+                });
+
+                if (formRef) {
+                  formRef.dispatchEvent(submitSuccessEvent);
+
+                  if (submitSuccessEvent.defaultPrevented) {
+                    return;
+                  }
+                  /* TODO: option to turn this on/off? */
+
+                  if (this.input.resetFormOnSubmit !== false) {
+                    formRef.reset();
+                  }
+                }
+                /* TODO: client side route event first that can be preventDefaulted */
+
+                if (this.input.successUrl) {
+                  if (formRef) {
+                    const event = new CustomEvent(\\"route\\", {
+                      detail: {
+                        url: this.input.successUrl,
+                      },
+                    });
+                    formRef.dispatchEvent(event);
+
+                    if (!event.defaultPrevented) {
+                      location.href = this.input.successUrl;
+                    }
+                  } else {
+                    location.href = this.input.successUrl;
+                  }
+                }
+              }
+            },
+            (err) => {
+              const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+                detail: {
+                  error: err,
+                },
+              });
+
+              if (formRef) {
+                formRef.dispatchEvent(submitErrorEvent);
+
+                if (submitErrorEvent.defaultPrevented) {
+                  return;
+                }
+              }
+
+              this.state.responseData = err;
+              this.state.state = \\"error\\";
+            }
+          );
+        }
+      },
     };
   }
 }
@@ -834,7 +863,7 @@ style {
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
-  on-submit=(event => state.state.onSubmit(event))
+  on-submit(event => state.state.onSubmit(event))
 >
   <if(input.builderBlock && input.builderBlock.children\\">
     <for|block| of=(input.builderBlock?.children)>
@@ -878,21 +907,25 @@ style {
 
 exports[`Marko Image 1`] = `
 "class {
-  setLoaded() {
-    this.state.imageLoaded = true;
-  }
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!this.input.lazy && isBrowser();
-  }
-  isBrowser = function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  };
-
   onCreate() {
-    this.state = { scrollListener: null, imageLoaded: false, load: false };
+    this.state = {
+      scrollListener: null,
+      imageLoaded: false,
+      setLoaded() {
+        this.state.imageLoaded = true;
+      },
+      useLazyLoading() {
+        // TODO: Add more checks here, like testing for real web browsers
+        return !!this.input.lazy && isBrowser();
+      },
+      isBrowser: function isBrowser() {
+        return (
+          typeof window !== \\"undefined\\" &&
+          window.navigator.product != \\"ReactNative\\"
+        );
+      },
+      load: false,
+    };
   }
 
   onMount() {
@@ -938,7 +971,7 @@ style {
   <if(!state.useLazyLoading() || state.load)>
     <img class={'builder-image' + (props._class ? ' ' + props._class : '') + '
     img'} alt=(input.altText) aria-role=(input.altText ? 'presentation' :
-    undefined) src=(input.image) on-load=(event => state.setLoaded())
+    undefined) src=(input.image) on-load(event => state.setLoaded())
     srcset=(input.srcset) sizes=(input.sizes) /></if
   >
 
@@ -1099,15 +1132,18 @@ exports[`Marko Stamped.io 1`] = `
 import { snakeCase } from \\"lodash\\";
 
 class {
-  kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-  snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
-
   onCreate() {
-    this.state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
+    this.state = {
+      reviews: [],
+      name: \\"test\\",
+      showReviewPrompt: false,
+      kebabCaseValue() {
+        return kebabCase(\\"testThat\\");
+      },
+      snakeCaseValue() {
+        return snakeCase(\\"testThis\\");
+      },
+    };
   }
 
   onMount() {
@@ -1149,14 +1185,14 @@ style {
 }
 <div  data-user=(state.name) >
       
-<button  on-click=(event => state.showReviewPrompt = true) >Write a review</button>
+<button  on-click(event => state.showReviewPrompt = true) >Write a review</button>
 
       
 <if(state.showReviewPrompt)>
       <input  placeholder=\\"Email\\"  />
 <input  placeholder=\\"Title\\"  />
 <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-<button  on-click=(event => {
+<button  on-click(event => {
   state.showReviewPrompt = false;
 }) >
           Submit
@@ -1266,7 +1302,7 @@ style {
   <input
     ref=((el) => this.props.inputRef = el)
     value=(state.name)
-    on-input=(event => state.name = event.target.value)
+    on-input(event => state.name = event.target.value)
   />
 </div>"
 `;
@@ -1287,7 +1323,7 @@ style {
   <input
     ref=((el) => this.props.inputRef = el)
     value=(state.name)
-    on-input=(event => state.name = event.target.value)
+    on-input(event => state.name = event.target.value)
   />
 </div>"
 `;
