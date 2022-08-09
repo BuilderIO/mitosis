@@ -7,6 +7,7 @@ import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 import { MitosisNode } from '../../types/mitosis-node';
+import { fastClone } from '../../helpers/fast-clone';
 
 Error.stackTraceLimit = 9999;
 
@@ -20,7 +21,9 @@ type StateInit = [Record<string, any>, ...string[]];
 
 export const componentToQwik =
   (userOptions: ToQwikOptions = {}): Transpiler =>
-  ({ component, path }): string => {
+  ({ component: _component, path }): string => {
+    // Make a copy we can safely mutate, similar to babel's toolchain
+    const component = fastClone(_component);
     const file = new File(
       component.name + '.js',
       {
