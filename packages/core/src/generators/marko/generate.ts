@@ -216,6 +216,9 @@ export const componentToMarko =
       }
     }
 
+    // Convert on-click=(...) -> on-click(...)
+    jsString = jsString.replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(');
+
     let finalStr = `
 ${jsString}
 ${cssString}
