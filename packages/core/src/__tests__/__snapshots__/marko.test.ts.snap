@@ -86,9 +86,9 @@ style {
   <if(input.showInput\\">
     <input
       ref=((el) => this.inputRef = el)
-      value=(this.state.name)
-      on-blur=(event => this.state.onBlur())
-      on-input=(event => this.state.name = event.target.value)
+      value=(state.name)
+      on-blur=(event => state.onBlur())
+      on-input=(event => state.name = event.target.value)
     />
 
     <label for=\\"cars\\" ref=((el) => this.inputNoArgRef = el)>
@@ -102,8 +102,8 @@ style {
     </select>
   </if>
 
-  Hello \${this.state.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-  Web Component!
+  Hello \${state.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
+  Component!
 </div>"
 `;
 
@@ -129,8 +129,8 @@ style {
 }
 <div>
   <input
-    value=(DEFAULT_VALUES.name || this.state.name)
-    on-input=(myEvent => this.state.name = myEvent.target.value)
+    value=(DEFAULT_VALUES.name || state.name)
+    on-input=(myEvent => state.name = myEvent.target.value)
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
@@ -145,12 +145,12 @@ exports[`Marko Basic 2`] = `
 }
 
 <div>
-  <for|person| of=(this.state.names)>
-    <if(person === this.state.name)>
+  <for|person| of=(state.names)>
+    <if(person === state.name)>
       <input
-        value=(this.state.name)
+        value=(state.name)
         on-input=(event => {
-  this.state.name = event.target.value + ' and ' + person;
+  state.name = event.target.value + ' and ' + person;
 })
       />
 
@@ -181,10 +181,10 @@ class {
 }
 
 <div>
-  \${myService.method('hello') + this.state.name} Hello! I can run in React, Vue,
+  \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
   Solid, or Liquid!
 
-  <input on-input=(event => this.state.onChange) />
+  <input on-input=(event => state.onChange) />
 </div>"
 `;
 
@@ -195,11 +195,11 @@ exports[`Marko Basic OnMount Update 1`] = `
   }
 
   onMount() {
-    this.state.name = \\"PatrickJS onMount\\" + input.bye;
+    state.name = \\"PatrickJS onMount\\" + input.bye;
   }
 }
 
-<div>Hello \${this.state.name}</div>"
+<div>Hello \${state.name}</div>"
 `;
 
 exports[`Marko Basic Outputs 1`] = `
@@ -209,7 +209,7 @@ exports[`Marko Basic Outputs 1`] = `
   }
 
   onMount() {
-    input.onMessage(this.state.name);
+    input.onMessage(state.name);
     input.onEvent(input.message);
   }
 }
@@ -224,7 +224,7 @@ exports[`Marko Basic Outputs Meta 1`] = `
   }
 
   onMount() {
-    input.onMessage(this.state.name);
+    input.onMessage(state.name);
     input.onEvent(input.message);
   }
 }
@@ -243,12 +243,12 @@ class {
 }
 
 <div>
-  <MyBasicComponent id=(this.state.dev)></MyBasicComponent>
+  <MyBasicComponent id=(state.dev)></MyBasicComponent>
 
   <div>
     <MyBasicOnMountUpdateComponent
-      hi=(this.state.name)
-      bye=(this.state.dev)
+      hi=(state.name)
+      bye=(state.dev)
     ></MyBasicOnMountUpdateComponent>
   </div>
 </div>"
@@ -266,11 +266,11 @@ exports[`Marko BasicFor 1`] = `
 }
 
 <div>
-  <for|person| of=(this.state.names)>
+  <for|person| of=(state.names)>
     <input
-      value=(this.state.name)
+      value=(state.name)
       on-input=(event => {
-  this.state.name = event.target.value + ' and ' + person;
+  state.name = event.target.value + ' and ' + person;
 })
     />
 
@@ -304,9 +304,9 @@ style {
   <if(input.showInput\\">
     <input
       ref=((el) => this.inputRef = el)
-      value=(this.state.name)
-      on-blur=(event => this.state.onBlur())
-      on-input=(event => this.state.name = event.target.value)
+      value=(state.name)
+      on-blur=(event => state.onBlur())
+      on-input=(event => state.name = event.target.value)
     />
 
     <label for=\\"cars\\" ref=((el) => this.inputNoArgRef = el)>
@@ -320,8 +320,8 @@ style {
     </select>
   </if>
 
-  Hello \${this.state.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
-  Web Component!
+  Hello \${state.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or Web
+  Component!
 </div>"
 `;
 
@@ -335,7 +335,7 @@ exports[`Marko BasicRefAssignment 1`] = `
 }
 
 <div>
-  <button on-click=(evt => this.state.handlerClick(evt))>Click</button>
+  <button on-click=(evt => state.handlerClick(evt))>Click</button>
 </div>"
 `;
 
@@ -359,14 +359,14 @@ class {
   }
 
   onRender() {
-    prevCount = this.state.count;
+    prevCount = state.count;
   }
 }
 
 <div>
-  <h1>Now: \${this.state.count} , before: \${prevCount}</h1>
+  <h1>Now: \${state.count} , before: \${prevCount}</h1>
 
-  <button on-click=(event => this.state.count += 1)>Increment</button>
+  <button on-click=(event => state.count += 1)>Increment</button>
 </div>"
 `;
 
@@ -391,10 +391,10 @@ exports[`Marko Button 1`] = `
 exports[`Marko Columns 1`] = `
 "class {
   getColumns() {
-    return input.columns || [];
+    return this.input.columns || [];
   }
   getGutterSize() {
-    return typeof input.space === \\"number\\" ? input.space || 0 : 20;
+    return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
   getWidth(index: number) {
     const columns = this.getColumns();
@@ -515,7 +515,7 @@ exports[`Marko CustomCode 1`] = `
   }
 
   onMount() {
-    this.state.findAndRunScripts();
+    state.findAndRunScripts();
   }
 }
 
@@ -571,7 +571,7 @@ exports[`Marko Embed 1`] = `
   }
 
   onMount() {
-    this.state.findAndRunScripts();
+    state.findAndRunScripts();
   }
 }
 
@@ -587,26 +587,27 @@ import { get } from \\"@fake\\";
 
 class {
   get submissionState() {
-    return (Builder.isEditing && input.previewState) || this.state.state;
+    return (Builder.isEditing && this.input.previewState) || this.state.state;
   }
   onSubmit(
     event: Event & {
       currentTarget: HTMLFormElement;
     }
   ) {
-    const sendWithJs = input.sendWithJs || input.sendSubmissionsTo === \\"email\\";
+    const sendWithJs =
+      this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
-    if (input.sendSubmissionsTo === \\"zapier\\") {
+    if (this.input.sendSubmissionsTo === \\"zapier\\") {
       event.preventDefault();
     } else if (sendWithJs) {
-      if (!(input.action || input.sendSubmissionsTo === \\"email\\")) {
+      if (!(this.input.action || this.input.sendSubmissionsTo === \\"email\\")) {
         event.preventDefault();
         return;
       }
 
       event.preventDefault();
       const el = event.currentTarget;
-      const headers = input.customHeaders || {};
+      const headers = this.input.customHeaders || {};
       let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
@@ -653,9 +654,9 @@ class {
             value,
           };
         });
-      let contentType = input.contentType;
+      let contentType = this.input.contentType;
 
-      if (input.sendSubmissionsTo === \\"email\\") {
+      if (this.input.sendSubmissionsTo === \\"email\\") {
         contentType = \\"multipart/form-data\\";
       }
 
@@ -685,7 +686,7 @@ class {
       if (contentType && contentType !== \\"multipart/form-data\\") {
         if (
           /* Zapier doesn't allow content-type header to be sent from browsers */
-          !(sendWithJs && input.action?.includes(\\"zapier.com\\"))
+          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
         ) {
           headers[\\"content-type\\"] = contentType;
         }
@@ -709,15 +710,15 @@ class {
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        input.sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(input.name || \\"\\")}\`;
+        this.input.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        input.sendSubmissionsTo === \\"email\\" ? formUrl : input.action!,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
         /* TODO: throw error if no action URL */
         {
           body,
           headers,
-          method: input.method || \\"post\\",
+          method: this.input.method || \\"post\\",
         }
       ).then(
         async (res) => {
@@ -730,9 +731,9 @@ class {
             body = await res.text();
           }
 
-          if (!res.ok && input.errorMessagePath) {
+          if (!res.ok && this.input.errorMessagePath) {
             /* TODO: allow supplying an error formatter function */
-            let message = get(body, input.errorMessagePath);
+            let message = get(body, this.input.errorMessagePath);
 
             if (message) {
               if (typeof message !== \\"string\\") {
@@ -764,26 +765,26 @@ class {
               }
               /* TODO: option to turn this on/off? */
 
-              if (input.resetFormOnSubmit !== false) {
+              if (this.input.resetFormOnSubmit !== false) {
                 formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
-            if (input.successUrl) {
+            if (this.input.successUrl) {
               if (formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
-                    url: input.successUrl,
+                    url: this.input.successUrl,
                   },
                 });
                 formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
-                  location.href = input.successUrl;
+                  location.href = this.input.successUrl;
                 }
               } else {
-                location.href = input.successUrl;
+                location.href = this.input.successUrl;
               }
             }
           }
@@ -833,7 +834,7 @@ style {
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
-  on-submit=(event => this.state.this.state.onSubmit(event))
+  on-submit=(event => state.state.onSubmit(event))
 >
   <if(input.builderBlock && input.builderBlock.children\\">
     <for|block| of=(input.builderBlock?.children)>
@@ -844,32 +845,30 @@ style {
       ></BuilderBlockComponent> </for
   ></if>
 
-  <if _=\\"this.state.this.state.submissionState === 'error'\\">
+  <if _=\\"state.state.submissionState === 'error'\\">
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
     ></BuilderBlocks
   ></if>
 
-  <if _=\\"this.state.this.state.submissionState === 'sending'\\">
+  <if _=\\"state.state.submissionState === 'sending'\\">
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
     ></BuilderBlocks
   ></if>
 
-  <if
-    _=\\"this.state.this.state.submissionState === 'error' && this.state.this.state.responseData\\"
-  >
+  <if _=\\"state.state.submissionState === 'error' && state.state.responseData\\">
     <pre>
           
-\${JSON.stringify(this.state.this.state.responseData, null, 2)}
+\${JSON.stringify(state.state.responseData, null, 2)}
 
         </pre
     >
   </if>
 
-  <if _=\\"this.state.this.state.submissionState === 'success'\\">
+  <if _=\\"state.state.submissionState === 'success'\\">
     <BuilderBlocks
       dataPath=\\"successMessage\\"
       blocks=\\"(input.successMessage))></BuilderBlocks
@@ -884,7 +883,7 @@ exports[`Marko Image 1`] = `
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!input.lazy && isBrowser();
+    return !!this.input.lazy && isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -897,7 +896,7 @@ exports[`Marko Image 1`] = `
   }
 
   onMount() {
-    if (this.state.useLazyLoading()) {
+    if (state.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef) {
@@ -906,13 +905,13 @@ exports[`Marko Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            this.state.scrollListener = null;
+            state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      this.state.scrollListener = listener;
+      state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -921,8 +920,8 @@ exports[`Marko Image 1`] = `
     }
   }
   onDestroy() {
-    if (this.state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
+    if (state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", state.scrollListener);
     }
   }
 }
@@ -936,10 +935,10 @@ style {
   }
 }
 <picture ref=((el) => this.pictureRef = el)>
-  <if(!this.state.useLazyLoading() || this.state.load)>
+  <if(!state.useLazyLoading() || state.load)>
     <img class={'builder-image' + (props._class ? ' ' + props._class : '') + '
     img'} alt=(input.altText) aria-role=(input.altText ? 'presentation' :
-    undefined) src=(input.image) on-load=(event => this.state.setLoaded())
+    undefined) src=(input.image) on-load=(event => state.setLoaded())
     srcset=(input.srcset) sizes=(input.sizes) /></if
   >
 
@@ -957,7 +956,7 @@ exports[`Marko Image State 1`] = `
 }
 
 <div>
-  <for|item| of=(this.state.images)>
+  <for|item| of=(state.images)>
     <img src=(item) key=(itemIndex) />
   </for>
 </div>"
@@ -1016,7 +1015,7 @@ exports[`Marko Remove Internal mitosis package 1`] = `
 }
 
 <div>
-  Hello \${this.state.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!
+  Hello \${state.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!
 </div>"
 `;
 
@@ -1040,12 +1039,12 @@ exports[`Marko Section 2`] = `
   }
 }
 
-<if(this.state.max\\">
-  <for|item| of=(this.state.items)>
+<if(state.max\\">
+  <for|item| of=(state.items)>
     <section
       ...(props.attributes)
       style=\\"({
-  maxWidth: item + this.state.max
+  maxWidth: item + state.max
 }))>
       \${input.children}
     </section>
@@ -1119,7 +1118,7 @@ class {
     )
       .then((res) => res.json())
       .then((data) => {
-        this.state.reviews = data.data;
+        state.reviews = data.data;
       });
   }
 }
@@ -1148,24 +1147,24 @@ style {
     margin-right: 10px;
   }
 }
-<div  data-user=(this.state.name) >
+<div  data-user=(state.name) >
       
-<button  on-click=(event => this.state.showReviewPrompt = true) >Write a review</button>
+<button  on-click=(event => state.showReviewPrompt = true) >Write a review</button>
 
       
-<if(this.state.showReviewPrompt)>
+<if(state.showReviewPrompt)>
       <input  placeholder=\\"Email\\"  />
 <input  placeholder=\\"Title\\"  />
 <textarea  placeholder=\\"How was your experience?\\" ></textarea>
 <button  on-click=(event => {
-  this.state.showReviewPrompt = false;
+  state.showReviewPrompt = false;
 }) >
           Submit
         </button></if>
     
 
       
-<for|review| of=(this.state.reviews)>
+<for|review| of=(state.reviews)>
       <div  key=(review.id) >
             
 <img  src=(review.avatar)  />
@@ -1208,9 +1207,9 @@ class {
 <div
   contenteditable=(allowEditingText || undefined)
   data-name=({
-  test: this.state.name || 'any name'
+  test: state.name || 'any name'
 })
-  innerHTML=(input.text || input.content || this.state.name || '<p class=\\"text-lg\\">my name</p>')
+  innerHTML=(input.text || input.content || state.name || '<p class=\\"text-lg\\">my name</p>')
 ></div>"
 `;
 
@@ -1266,8 +1265,8 @@ style {
 <div>
   <input
     ref=((el) => this.props.inputRef = el)
-    value=(this.state.name)
-    on-input=(event => this.state.name = event.target.value)
+    value=(state.name)
+    on-input=(event => state.name = event.target.value)
   />
 </div>"
 `;
@@ -1287,8 +1286,8 @@ style {
 <div>
   <input
     ref=((el) => this.props.inputRef = el)
-    value=(this.state.name)
-    on-input=(event => this.state.name = event.target.value)
+    value=(state.name)
+    on-input=(event => state.name = event.target.value)
   />
 </div>"
 `;
@@ -1307,7 +1306,7 @@ exports[`Marko basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        this.state.name = data.name;
+        state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -1317,7 +1316,7 @@ exports[`Marko basicOnUpdateReturn 1`] = `
   }
 }
 
-<div>Hello! \${this.state.name}</div>"
+<div>Hello! \${state.name}</div>"
 `;
 
 exports[`Marko class + ClassName + css 1`] = `
@@ -1379,7 +1378,7 @@ style {
     padding: 10px;
   }
 }
-<div  class={state.classState + ' div'}  style=(this.state.styleState) >
+<div  class={state.classState + ' div'}  style=(state.styleState) >
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>"
 `;
@@ -1413,16 +1412,16 @@ exports[`Marko multipleOnUpdateWithDeps 1`] = `
        
        
        onRender() { 
- console.log('Runs when a or b changes', this.state.a, this.state.b);
+ console.log('Runs when a or b changes', state.a, state.b);
 
- if (this.state.a === 'a') {
-   this.state.a = 'b';
+ if (state.a === 'a') {
+   state.a = 'b';
  }
 },onRender() { 
- console.log('Runs when c or d changes', this.state.c, this.state.d);
+ console.log('Runs when c or d changes', state.c, state.d);
 
- if (this.state.a === 'a') {
-   this.state.a = 'b';
+ if (state.a === 'a') {
+   state.a = 'b';
  }
 }
    }
@@ -1461,7 +1460,7 @@ class {
   }
 }
 
-<div>Default name defined by parent \${this.state.name}</div>"
+<div>Default name defined by parent \${state.name}</div>"
 `;
 
 exports[`Marko onMount 1`] = `
@@ -1494,7 +1493,7 @@ exports[`Marko onUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
+    console.log(\\"Runs when a or b changes\\", state.a, state.b);
   }
 }
 
