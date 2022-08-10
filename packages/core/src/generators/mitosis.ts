@@ -184,7 +184,7 @@ export const componentToMitosis =
     ${renderPreComponent({ component: json, target: 'mitosis' })}
 
     ${
-      stringifiedUseMetadata !== '{}' && stringifiedUseMetadata !== 'undefined'
+      stringifiedUseMetadata && stringifiedUseMetadata !== '{}'
         ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
         : ''
     }
