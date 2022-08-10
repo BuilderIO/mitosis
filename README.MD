@@ -104,6 +104,7 @@ npm exec mitosis build
 🎉 You should now have an `output` directory with your compiled components in all 4 frameworks!
 
 ## Examples
+
 Here are some helpful resources on trying out Mitosis:
 
 - [CKGrafico/papanasi](https://github.com/CKGrafico/papanasi): A framework-agnostic UI library built in Mitosis
@@ -160,6 +161,8 @@ Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the
 | vue2    | :white_check_mark: | :white_check_mark: |
 | vue3    | :white_check_mark: | :white_check_mark: |
 
+_NOTE: this matrix is programmatically generated and should not be manually edited._
+
 ## Contribute
 
 Interested in contribute? Head over to the [developer](developer/) docs and see how you can get setup & started!
@@ -170,6 +173,7 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 
 - [Mitosis Discord](https://discord.gg/SNusEyNGsx)
 - [@Builderio](https://twitter.com/builderio)
+
 ## Related Projects
 
 - [Figma plugin](https://github.com/BuilderIO/figma-html): Convert Figma designs into high quality HTML, React, Vue, Svelte, Angular, Solid, etc code via Mitosis.

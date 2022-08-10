@@ -51,6 +51,8 @@ export async function emitTable(allResults: Entry[]) {
   const newReadme = `${before}
 
 ${formattedTable}
+_NOTE: this matrix is programmatically generated and should not be manually edited._
+
 ${after}`;
 
   await writeFile(readmeFile, newReadme, 'utf-8');

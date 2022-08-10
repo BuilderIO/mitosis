@@ -122,8 +122,11 @@ async function main() {
   }
 
   // console.log('E2E results', allResults);
+
+  console.log('Writing E2E status');
   await writeFile('./e2e-test-status.json', JSON.stringify(allResults, undefined, 2), 'utf8');
 
+  console.log('Updating README with E2E status');
   await emitTable(allResults);
 
   await detectFailures(allResults);
