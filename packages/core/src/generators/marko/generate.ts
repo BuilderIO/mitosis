@@ -21,18 +21,68 @@ import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 import { dashCase } from '../../helpers/dash-case';
 import { hasProps } from '../../helpers/has-props';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
+import { GETTER } from '../../helpers/patterns';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
+
+interface InternalToMarkoOptions extends ToMarkoOptions {
+  component: MitosisComponent;
+}
 
 // Having issues with this, so off for now
 const USE_MARKO_PRETTIER = false;
 
-const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string => {
+type StateType = 'method' | 'function' | 'getter' | 'property';
+function getStateTypeOfValue(value: any): StateType {
+  if (typeof value === 'string') {
+    if (value.startsWith(functionLiteralPrefix)) {
+      return 'function';
+    } else if (value.startsWith(methodLiteralPrefix)) {
+      const isGet = Boolean(value.replace(methodLiteralPrefix, '').match(GETTER));
+      if (isGet) {
+        return 'getter';
+      }
+      return 'method';
+    }
+  }
+  return 'property';
+}
+
+/**
+ * Return the names of methods and functions on state
+ */
+function getStateMethodNames(json: MitosisComponent) {
+  return Object.keys(json.state).filter((key) => {
+    const value = json.state[key];
+    const type = getStateTypeOfValue(value);
+    return type === 'function' || type === 'method';
+  });
+}
+/**
+ * Return the names of getter and functions on state
+ */
+function getStateGetterNames(json: MitosisComponent) {
+  return Object.keys(json.state).filter((key) => getStateTypeOfValue(json.state[key]) === 'getter');
+}
+
+/**
+ * Return the names of properties (basic literal values) on state
+ */
+function getStatePropertyNames(json: MitosisComponent) {
+  return Object.keys(json.state).filter(
+    (key) => getStateTypeOfValue(json.state[key]) === 'property',
+  );
+}
+
+const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
   if (json.bindings._text?.code) {
-    return `\${${processBinding(json.bindings?._text.code as string)}}`;
+    return `\${${processBinding(options.component, json.bindings?._text.code as string)}}`;
   }
 
   if (json.name === 'Fragment') {
@@ -41,6 +91,7 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
 
   if (json.name === 'For') {
     return `<for|${json.properties._forName}| of=(${processBinding(
+      options.component,
       json.bindings.each?.code as string,
     )})>
       ${json.children
@@ -49,7 +100,7 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
         .join('\n')}
     </for>`;
   } else if (json.name === 'Show') {
-    return `<if(${processBinding(json.bindings.when?.code as string)})>
+    return `<if(${processBinding(options.component, json.bindings.when?.code as string)})>
       ${json.children
         .filter(filterEmptyTextNodes)
         .map((item) => blockToMarko(item, options))
@@ -84,9 +135,12 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
       // TODO: implement refs like this: https://github.com/BuilderIO/mitosis/pull/621#discussion_r942001014
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${dashCase(useKey)}=(${cusArgs.join(',')} => ${processBinding(code as string)}) `;
+      str += ` ${dashCase(useKey)}=(${cusArgs.join(',')} => ${processBinding(
+        options.component,
+        code as string,
+      )}) `;
     } else {
-      str += ` ${key}=(${processBinding(code as string)}) `;
+      str += ` ${key}=(${processBinding(options.component, code as string)}) `;
     }
   }
   if (selfClosingTags.has(json.name)) {
@@ -102,7 +156,11 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
   return str;
 };
 
-function processBinding(code: string, type: 'attribute' | 'class' | 'state' = 'attribute') {
+function processBinding(
+  json: MitosisComponent,
+  code: string,
+  type: 'attribute' | 'class' | 'state' = 'attribute',
+) {
   return stripStateAndPropsRefs(
     stripStateAndPropsRefs(code, {
       replaceWith: type === 'state' ? 'input.' : type === 'class' ? 'this.input.' : 'input.',
@@ -110,7 +168,13 @@ function processBinding(code: string, type: 'attribute' | 'class' | 'state' = 'a
       includeState: false,
     }),
     {
-      replaceWith: type === 'state' ? 'this.' : type === 'class' ? 'this.state.' : 'state.',
+      replaceWith: (key) => {
+        const isProperty = getStatePropertyNames(json).includes(key);
+        if (isProperty) {
+          return (type === 'state' || type === 'class' ? 'this.state.' : 'state.') + key;
+        }
+        return (type === 'class' || type === 'state' ? 'this.' : 'component.') + key;
+      },
       includeProps: false,
       includeState: true,
     },
@@ -118,9 +182,13 @@ function processBinding(code: string, type: 'attribute' | 'class' | 'state' = 'a
 }
 
 export const componentToMarko =
-  (options: ToMarkoOptions = {}): Transpiler =>
+  (userOptions: ToMarkoOptions = {}): Transpiler =>
   ({ component }) => {
     let json = fastClone(component);
+    const options: InternalToMarkoOptions = {
+      ...userOptions,
+      component,
+    };
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -136,16 +204,22 @@ export const componentToMarko =
     const dataString = getStateObjectStringFromComponent(json, {
       format: 'object',
       data: true,
-      functions: true,
-      getters: true,
-      valueMapper: (code) => processBinding(code, 'state'),
+      functions: false,
+      getters: false,
+      valueMapper: (code) => processBinding(json, code, 'state'),
     });
 
     const thisHasProps = hasProps(json);
 
-    const methodsString = '';
+    const methodsString = getStateObjectStringFromComponent(json, {
+      format: 'class',
+      data: false,
+      functions: true,
+      getters: true,
+      valueMapper: (code) => processBinding(json, code, 'class'),
+    });
 
-    const hasState = dataString.length > 5;
+    const hasState = dataString.trim().length > 5;
 
     if (options.prettier !== false) {
       try {
@@ -175,18 +249,18 @@ export const componentToMarko =
         ${
           !json.hooks.onMount?.code
             ? ''
-            : `onMount() { ${processBinding(json.hooks.onMount.code, 'class')} }`
+            : `onMount() { ${processBinding(json, json.hooks.onMount.code, 'class')} }`
         }
         ${
           !json.hooks.onUnMount?.code
             ? ''
-            : `onDestroy() { ${processBinding(json.hooks.onUnMount.code, 'class')} }`
+            : `onDestroy() { ${processBinding(json, json.hooks.onUnMount.code, 'class')} }`
         }
         ${
           !json.hooks.onUpdate?.length
             ? ''
             : json.hooks.onUpdate.map(
-                (hook) => `onRender() { ${processBinding(hook.code, 'class')} }`,
+                (hook) => `onRender() { ${processBinding(json, hook.code, 'class')} }`,
               )
         }
     }
