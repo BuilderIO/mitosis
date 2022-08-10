@@ -20,6 +20,8 @@ export const getFileExtensionForTarget = (target: Target) => {
       return '.ts';
     case 'qwik':
       return '.jsx';
+    case 'marko':
+      return '.marko';
     default:
       return '.js';
   }

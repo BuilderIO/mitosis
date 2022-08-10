@@ -9,6 +9,7 @@ import {
   componentToLiquid,
   componentToReact,
   componentToStencil,
+  componentToMarko,
   componentToReactNative,
   componentToSolid,
   componentToSvelte,
@@ -342,6 +343,10 @@ export default function Fiddle() {
               })({ component: json })
             : state.outputTab === 'stencil'
             ? componentToStencil({
+                plugins,
+              })({ component: json })
+            : state.outputTab === 'marko'
+            ? componentToMarko({
                 plugins,
               })({ component: json })
             : state.outputTab === 'swift'
@@ -957,6 +962,7 @@ export default function Fiddle() {
                   value="solid"
                 />
                 <Tab label={<TabLabelWithIcon label="Stencil" />} value="stencil" />
+                <Tab label={<TabLabelWithIcon label="Marko" />} value="marko" />
                 <Tab label={<TabLabelWithIcon label="Webcomponents" />} value="webcomponents" />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab

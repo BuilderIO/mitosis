@@ -2,6 +2,7 @@ import {
   componentToAngular,
   componentToCustomElement,
   componentToHtml,
+  componentToMarko,
   componentToQwik,
   componentToReact,
   componentToReactNative,
@@ -191,6 +192,8 @@ const getGeneratorForTarget = ({
       return componentToSvelte(options.options.svelte);
     case 'qwik':
       return componentToQwik(options.options.qwik);
+    case 'marko':
+      return componentToMarko(options.options.marko);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }

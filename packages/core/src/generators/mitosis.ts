@@ -183,7 +183,11 @@ export const componentToMitosis =
 
     ${renderPreComponent({ component: json, target: 'mitosis' })}
 
-    ${stringifiedUseMetadata !== '{}' ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})` : ''}
+    ${
+      stringifiedUseMetadata && stringifiedUseMetadata !== '{}'
+        ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
+        : ''
+    }
 
     export default function ${component.name}(props) {
       ${!hasState ? '' : `const state = useStore(${getStateObjectStringFromComponent(json)});`}
