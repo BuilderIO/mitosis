@@ -81,7 +81,7 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
     }
 
     if (key === 'ref') {
-      str += ` ref=((el) => this.${code} = el) `;
+      // TODO: implement refs like this: https://github.com/BuilderIO/mitosis/pull/621#discussion_r942001014
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${dashCase(useKey)}=(${cusArgs.join(',')} => ${processBinding(code as string)}) `;
@@ -167,8 +167,7 @@ export const componentToMarko =
         ${
           !hasState
             ? ''
-            : `onCreate() {
-          ${thisHasProps ? 'const input = this.input;' : ''}
+            : `onCreate(${thisHasProps ? 'input' : ''}) {
           this.state = ${dataString}
         }`
         }
