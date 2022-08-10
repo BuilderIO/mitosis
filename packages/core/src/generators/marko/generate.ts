@@ -25,6 +25,7 @@ import { MitosisComponent } from '../../types/mitosis-component';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { GETTER } from '../../helpers/patterns';
+import { getRefs } from '../../helpers/get-refs';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -132,7 +133,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
     }
 
     if (key === 'ref') {
-      // TODO: implement refs like this: https://github.com/BuilderIO/mitosis/pull/621#discussion_r942001014
+      str += ` key="${code}" `;
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${dashCase(useKey)}=(${cusArgs.join(',')} => ${processBinding(
@@ -187,14 +188,15 @@ export const componentToMarko =
     let json = fastClone(component);
     const options: InternalToMarkoOptions = {
       ...userOptions,
-      component,
+      component: json,
     };
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
     let css = collectCss(json);
 
-    mapRefs(component, (refName) => `this.${refName}`);
+    const domRefs = getRefs(json);
+    mapRefs(json, (refName) => `this.${refName}`);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -245,6 +247,14 @@ export const componentToMarko =
           this.state = ${dataString}
         }`
         }
+
+        ${Array.from(domRefs)
+          .map(
+            (refName) => `get ${refName}() { 
+            return this.getEl('${refName}')
+          }`,
+          )
+          .join('\n')}
       
         ${
           !json.hooks.onMount?.code

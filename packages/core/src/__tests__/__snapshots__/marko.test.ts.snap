@@ -62,7 +62,7 @@ exports[`Marko AdvancedRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -70,6 +70,13 @@ exports[`Marko AdvancedRef 1`] = `
 
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
   }
 
   onRender() {
@@ -85,12 +92,13 @@ style {
 <div>
   <if(input.showInput\\">
     <input
+      key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
 
-    <label for=\\"cars\\"> Choose a car: </label>
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
 
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
@@ -281,7 +289,7 @@ exports[`Marko BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
-    inputRef.focus();
+    this.inputRef.focus();
   };
   lowerCaseName = function lowerCaseName() {
     return this.state.name.toLowerCase();
@@ -289,6 +297,13 @@ exports[`Marko BasicRef 1`] = `
 
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
   }
 }
 
@@ -300,12 +315,13 @@ style {
 <div>
   <if(input.showInput\\">
     <input
+      key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
       on-input(event => state.name = event.target.value)
     />
 
-    <label for=\\"cars\\"> Choose a car: </label>
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
 
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
@@ -323,8 +339,8 @@ exports[`Marko BasicRefAssignment 1`] = `
 "class {
   handlerClick = function handlerClick(event) {
     event.preventDefault();
-    console.log(\\"current value\\", holdValueRef);
-    holdValueRef = holdValueRef + \\"JS\\";
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
   };
 }
 
@@ -353,12 +369,12 @@ class {
   }
 
   onRender() {
-    prevCount = this.state.count;
+    this.prevCount = this.state.count;
   }
 }
 
 <div>
-  <h-1> Now: \${state.count} , before: \${prevCount} </h-1>
+  <h-1> Now: \${state.count} , before: \${this.prevCount} </h-1>
 
   <button on-click(event => state.count += 1)>Increment</button>
 </div>"
@@ -390,11 +406,11 @@ exports[`Marko Columns 1`] = `
   getGutterSize() {
     return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -464,9 +480,9 @@ exports[`Marko CustomCode 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -508,21 +524,25 @@ exports[`Marko CustomCode 1`] = `
     this.state = { scriptsInserted: [], scriptsRun: [] };
   }
 
+  get elem() {
+    return this.getEl(\\"elem\\");
+  }
+
   onMount() {
     this.findAndRunScripts();
   }
 }
 
-<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  innerHTML=(input.code) ></div>"
+<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  key=\\"elem\\"  innerHTML=(input.code) ></div>"
 `;
 
 exports[`Marko Embed 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem && typeof window !== \\"undefined\\") {
+    if (this.elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
-      const scripts = elem.getElementsByTagName(\\"script\\");
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
 
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
@@ -564,12 +584,16 @@ exports[`Marko Embed 1`] = `
     this.state = { scriptsInserted: [], scriptsRun: [] };
   }
 
+  get elem() {
+    return this.getEl(\\"elem\\");
+  }
+
   onMount() {
     this.findAndRunScripts();
   }
 }
 
-<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  innerHTML=(input.code) ></div>"
+<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  key=\\"elem\\"  innerHTML=(input.code) ></div>"
 `;
 
 exports[`Marko Form 1`] = `
@@ -583,11 +607,7 @@ class {
   get submissionState() {
     return (Builder.isEditing && this.input.previewState) || this.state.state;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs =
       this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
 
@@ -602,19 +622,16 @@ class {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.input.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -640,7 +657,7 @@ class {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -692,8 +709,8 @@ class {
         },
       });
 
-      if (formRef) {
-        formRef.dispatchEvent(presubmitEvent);
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
 
         if (presubmitEvent.defaultPrevented) {
           return;
@@ -707,7 +724,7 @@ class {
         this.input.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
       fetch(
-        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action!,
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -751,8 +768,8 @@ class {
               },
             });
 
-            if (formRef) {
-              formRef.dispatchEvent(submitSuccessEvent);
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
 
               if (submitSuccessEvent.defaultPrevented) {
                 return;
@@ -760,19 +777,19 @@ class {
               /* TODO: option to turn this on/off? */
 
               if (this.input.resetFormOnSubmit !== false) {
-                formRef.reset();
+                this.formRef.reset();
               }
             }
             /* TODO: client side route event first that can be preventDefaulted */
 
             if (this.input.successUrl) {
-              if (formRef) {
+              if (this.formRef) {
                 const event = new CustomEvent(\\"route\\", {
                   detail: {
                     url: this.input.successUrl,
                   },
                 });
-                formRef.dispatchEvent(event);
+                this.formRef.dispatchEvent(event);
 
                 if (!event.defaultPrevented) {
                   location.href = this.input.successUrl;
@@ -790,8 +807,8 @@ class {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitErrorEvent);
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
 
             if (submitErrorEvent.defaultPrevented) {
               return;
@@ -812,6 +829,10 @@ class {
       formErrorMessage: \\"\\",
     };
   }
+
+  get formRef() {
+    return this.getEl(\\"formRef\\");
+  }
 }
 
 style { 
@@ -824,6 +845,7 @@ style {
 <form
   ...(props.attributes)
   validate=(input.validate)
+  key=\\"formRef\\"
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
@@ -888,12 +910,16 @@ exports[`Marko Image 1`] = `
     this.state = { scrollListener: null, imageLoaded: false, load: false };
   }
 
+  get pictureRef() {
+    return this.getEl(\\"pictureRef\\");
+  }
+
   onMount() {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -927,7 +953,7 @@ style {
     object-position: center;
   }
 }
-<picture>
+<picture key=\\"pictureRef\\">
   <if(!component.useLazyLoading() || state.load)>
     <img class={'builder-image' + (props._class ? ' ' + props._class : '') + '
     img'} alt=(input.altText) aria-role=(input.altText ? 'presentation' :
@@ -1245,11 +1271,20 @@ exports[`Marko Video 1`] = `
 
 exports[`Marko basicForwardRef 1`] = `
 "class {
-  onCreate(input) {
-    this.state = { name: \\"PatrickJS\\" };
-  }
-}
+    
 
+    onCreate(input) {
+      this.state = { name: 'PatrickJS',}
+    }
+
+    get props.inputRef() { 
+        return this.getEl('props.inputRef')
+      }
+  
+    
+    
+    
+}
 style { 
   .input {
     color: red;
@@ -1257,6 +1292,7 @@ style {
 }
 <div>
   <input
+    key=\\"props.inputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
   />
@@ -1265,11 +1301,20 @@ style {
 
 exports[`Marko basicForwardRefMetadata 1`] = `
 "class {
-  onCreate(input) {
-    this.state = { name: \\"PatrickJS\\" };
-  }
-}
+    
 
+    onCreate(input) {
+      this.state = { name: 'PatrickJS',}
+    }
+
+    get props.inputRef() { 
+        return this.getEl('props.inputRef')
+      }
+  
+    
+    
+    
+}
 style { 
   .input {
     color: red;
@@ -1277,6 +1322,7 @@ style {
 }
 <div>
   <input
+    key=\\"props.inputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
   />
@@ -1376,46 +1422,42 @@ style {
 
 exports[`Marko multipleOnUpdate 1`] = `
 "class {
-       
+    
 
-       
-     
-       
-       
-       onRender() { 
- console.log('Runs on every update/rerender');
-},onRender() { 
- console.log('Runs on every update/rerender as well');
+    
+
+    
+  
+    
+    
+    onRender() { console.log('Runs on every update/rerender') },onRender() { console.log('Runs on every update/rerender as well') }
 }
-   }
 
 <div></div>"
 `;
 
 exports[`Marko multipleOnUpdateWithDeps 1`] = `
 "class {
-       
+      
 
-       onCreate() {
-         this.state = { a: 'a', b: 'b', c: 'c', d: 'd',}
-       }
-     
-       
-       
-       onRender() { 
- console.log('Runs when a or b changes', this.state.a, this.state.b);
+      onCreate() {
+        this.state = { a: 'a', b: 'b', c: 'c', d: 'd',}
+      }
 
- if (this.state.a === 'a') {
-   this.state.a = 'b';
- }
-},onRender() { 
- console.log('Runs when c or d changes', this.state.c, this.state.d);
+      
+    
+      
+      
+      onRender() { console.log('Runs when a or b changes', this.state.a, this.state.b);
 
- if (this.state.a === 'a') {
-   this.state.a = 'b';
- }
-}
-   }
+if (this.state.a === 'a') {
+this.state.a = 'b';
+} },onRender() { console.log('Runs when c or d changes', this.state.c, this.state.d);
+
+if (this.state.a === 'a') {
+this.state.a = 'b';
+} }
+  }
 
 <div></div>"
 `;
