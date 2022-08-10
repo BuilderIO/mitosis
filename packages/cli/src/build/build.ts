@@ -16,12 +16,12 @@ import {
   Target,
   Transpiler,
 } from '@builder.io/mitosis';
-import { fastClone } from '@builder.io/mitosis/src/helpers/fast-clone';
 import debug from 'debug';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
+import { fastClone } from '../helpers/fast-clone';
 import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
