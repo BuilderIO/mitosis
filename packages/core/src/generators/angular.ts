@@ -162,7 +162,7 @@ export const blockToAngular = (
         contextVars,
         outputVars,
         domRefs,
-      });
+      }).replace(/"/g, "\\'");
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -187,9 +187,9 @@ export const blockToAngular = (
           key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(/"/g, "\\'")}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
       } else {
-        str += ` [${key}]='${useValue}' `;
+        str += ` [${key}]="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
