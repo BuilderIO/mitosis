@@ -61,6 +61,7 @@ exports[` 3`] = `
 exports[`Marko AdvancedRef 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
@@ -68,7 +69,7 @@ exports[`Marko AdvancedRef 1`] = `
         inputRef.focus();
       },
       lowerCaseName: function lowerCaseName() {
-        return this.state.name.toLowerCase();
+        return this.name.toLowerCase();
       },
     };
   }
@@ -194,11 +195,12 @@ class {
 exports[`Marko Basic OnMount Update 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
   }
 
   onMount() {
-    state.name = \\"PatrickJS onMount\\" + input.bye;
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
   }
 }
 
@@ -208,12 +210,13 @@ exports[`Marko Basic OnMount Update 1`] = `
 exports[`Marko Basic Outputs 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"PatrickJS\\" };
   }
 
   onMount() {
-    input.onMessage(state.name);
-    input.onEvent(input.message);
+    this.input.onMessage(this.state.name);
+    this.input.onEvent(this.input.message);
   }
 }
 
@@ -223,12 +226,13 @@ exports[`Marko Basic Outputs 1`] = `
 exports[`Marko Basic Outputs Meta 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"PatrickJS\\" };
   }
 
   onMount() {
-    input.onMessage(state.name);
-    input.onEvent(input.message);
+    this.input.onMessage(this.state.name);
+    this.input.onEvent(this.input.message);
   }
 }
 
@@ -246,13 +250,13 @@ class {
 }
 
 <div>
-  <MyBasicComponent id=(state.dev)></MyBasicComponent>
+  <my-basic-component id=(state.dev)></my-basic-component>
 
   <div>
-    <MyBasicOnMountUpdateComponent
+    <my-basic-on-mount-update-component
       hi=(state.name)
       bye=(state.dev)
-    ></MyBasicOnMountUpdateComponent>
+    ></my-basic-on-mount-update-component>
   </div>
 </div>"
 `;
@@ -286,6 +290,7 @@ exports[`Marko BasicFor 1`] = `
 exports[`Marko BasicRef 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       name: \\"PatrickJS\\",
       onBlur: function onBlur() {
@@ -293,7 +298,7 @@ exports[`Marko BasicRef 1`] = `
         inputRef.focus();
       },
       lowerCaseName: function lowerCaseName() {
-        return this.state.name.toLowerCase();
+        return this.name.toLowerCase();
       },
     };
   }
@@ -367,12 +372,12 @@ class {
   }
 
   onRender() {
-    prevCount = state.count;
+    prevCount = this.state.count;
   }
 }
 
 <div>
-  <h1>Now: \${state.count} , before: \${prevCount}</h1>
+  <h-1> Now: \${state.count} , before: \${prevCount} </h-1>
 
   <button on-click(event => state.count += 1)>Increment</button>
 </div>"
@@ -399,14 +404,13 @@ exports[`Marko Button 1`] = `
 exports[`Marko Columns 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       getColumns() {
-        return this.input.columns || [];
+        return input.columns || [];
       },
       getGutterSize() {
-        return typeof this.input.space === \\"number\\"
-          ? this.input.space || 0
-          : 20;
+        return typeof input.space === \\"number\\" ? input.space || 0 : 20;
       },
       getWidth(index: number) {
         const columns = this.getColumns();
@@ -484,6 +488,7 @@ exports[`Marko ContentSlotJSX 1`] = `
 exports[`Marko CustomCode 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       scriptsInserted: [],
       scriptsRun: [],
@@ -497,11 +502,11 @@ exports[`Marko CustomCode 1`] = `
             const script = scripts[i];
 
             if (script.src) {
-              if (this.state.scriptsInserted.includes(script.src)) {
+              if (this.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              this.state.scriptsInserted.push(script.src);
+              this.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -514,12 +519,12 @@ exports[`Marko CustomCode 1`] = `
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (this.state.scriptsRun.includes(script.innerText)) {
+              if (this.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                this.state.scriptsRun.push(script.innerText);
+                this.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -532,7 +537,7 @@ exports[`Marko CustomCode 1`] = `
   }
 
   onMount() {
-    state.findAndRunScripts();
+    this.state.findAndRunScripts();
   }
 }
 
@@ -542,6 +547,7 @@ exports[`Marko CustomCode 1`] = `
 exports[`Marko Embed 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       scriptsInserted: [],
       scriptsRun: [],
@@ -555,11 +561,11 @@ exports[`Marko Embed 1`] = `
             const script = scripts[i];
 
             if (script.src) {
-              if (this.state.scriptsInserted.includes(script.src)) {
+              if (this.scriptsInserted.includes(script.src)) {
                 continue;
               }
 
-              this.state.scriptsInserted.push(script.src);
+              this.scriptsInserted.push(script.src);
               const newScript = document.createElement(\\"script\\");
               newScript.async = true;
               newScript.src = script.src;
@@ -572,12 +578,12 @@ exports[`Marko Embed 1`] = `
                 \\"application/ecmascript\\",
               ].includes(script.type)
             ) {
-              if (this.state.scriptsRun.includes(script.innerText)) {
+              if (this.scriptsRun.includes(script.innerText)) {
                 continue;
               }
 
               try {
-                this.state.scriptsRun.push(script.innerText);
+                this.scriptsRun.push(script.innerText);
                 new Function(script.innerText)();
               } catch (error) {
                 console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -590,7 +596,7 @@ exports[`Marko Embed 1`] = `
   }
 
   onMount() {
-    state.findAndRunScripts();
+    this.state.findAndRunScripts();
   }
 }
 
@@ -606,14 +612,13 @@ import { get } from \\"@fake\\";
 
 class {
   onCreate() {
+    const input = this.input;
     this.state = {
       state: \\"unsubmitted\\",
       responseData: null,
       formErrorMessage: \\"\\",
       get submissionState() {
-        return (
-          (Builder.isEditing && this.input.previewState) || this.state.state
-        );
+        return (Builder.isEditing && input.previewState) || this.state;
       },
       onSubmit(
         event: Event & {
@@ -621,21 +626,19 @@ class {
         }
       ) {
         const sendWithJs =
-          this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
+          input.sendWithJs || input.sendSubmissionsTo === \\"email\\";
 
-        if (this.input.sendSubmissionsTo === \\"zapier\\") {
+        if (input.sendSubmissionsTo === \\"zapier\\") {
           event.preventDefault();
         } else if (sendWithJs) {
-          if (
-            !(this.input.action || this.input.sendSubmissionsTo === \\"email\\")
-          ) {
+          if (!(input.action || input.sendSubmissionsTo === \\"email\\")) {
             event.preventDefault();
             return;
           }
 
           event.preventDefault();
           const el = event.currentTarget;
-          const headers = this.input.customHeaders || {};
+          const headers = input.customHeaders || {};
           let body: any;
           const formData = new FormData(el); // TODO: maybe support null
 
@@ -682,9 +685,9 @@ class {
                 value,
               };
             });
-          let contentType = this.input.contentType;
+          let contentType = input.contentType;
 
-          if (this.input.sendSubmissionsTo === \\"email\\") {
+          if (input.sendSubmissionsTo === \\"email\\") {
             contentType = \\"multipart/form-data\\";
           }
 
@@ -714,7 +717,7 @@ class {
           if (contentType && contentType !== \\"multipart/form-data\\") {
             if (
               /* Zapier doesn't allow content-type header to be sent from browsers */
-              !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
+              !(sendWithJs && input.action?.includes(\\"zapier.com\\"))
             ) {
               headers[\\"content-type\\"] = contentType;
             }
@@ -734,23 +737,21 @@ class {
             }
           }
 
-          this.state.state = \\"sending\\";
+          this.state = \\"sending\\";
           const formUrl = \`\${
             builder.env === \\"dev\\"
               ? \\"http://localhost:5000\\"
               : \\"https://builder.io\\"
           }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-            this.input.sendSubmissionsToEmail || \\"\\"
-          )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
+            input.sendSubmissionsToEmail || \\"\\"
+          )}&name=\${encodeURIComponent(input.name || \\"\\")}\`;
           fetch(
-            this.input.sendSubmissionsTo === \\"email\\"
-              ? formUrl
-              : this.input.action!,
+            input.sendSubmissionsTo === \\"email\\" ? formUrl : input.action!,
             /* TODO: throw error if no action URL */
             {
               body,
               headers,
-              method: this.input.method || \\"post\\",
+              method: input.method || \\"post\\",
             }
           ).then(
             async (res) => {
@@ -766,9 +767,9 @@ class {
                 body = await res.text();
               }
 
-              if (!res.ok && this.input.errorMessagePath) {
+              if (!res.ok && input.errorMessagePath) {
                 /* TODO: allow supplying an error formatter function */
-                let message = get(body, this.input.errorMessagePath);
+                let message = get(body, input.errorMessagePath);
 
                 if (message) {
                   if (typeof message !== \\"string\\") {
@@ -777,12 +778,12 @@ class {
                     message = JSON.stringify(message);
                   }
 
-                  this.state.formErrorMessage = message;
+                  this.formErrorMessage = message;
                 }
               }
 
-              this.state.responseData = body;
-              this.state.state = res.ok ? \\"success\\" : \\"error\\";
+              this.responseData = body;
+              this.state = res.ok ? \\"success\\" : \\"error\\";
 
               if (res.ok) {
                 const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -800,26 +801,26 @@ class {
                   }
                   /* TODO: option to turn this on/off? */
 
-                  if (this.input.resetFormOnSubmit !== false) {
+                  if (input.resetFormOnSubmit !== false) {
                     formRef.reset();
                   }
                 }
                 /* TODO: client side route event first that can be preventDefaulted */
 
-                if (this.input.successUrl) {
+                if (input.successUrl) {
                   if (formRef) {
                     const event = new CustomEvent(\\"route\\", {
                       detail: {
-                        url: this.input.successUrl,
+                        url: input.successUrl,
                       },
                     });
                     formRef.dispatchEvent(event);
 
                     if (!event.defaultPrevented) {
-                      location.href = this.input.successUrl;
+                      location.href = input.successUrl;
                     }
                   } else {
-                    location.href = this.input.successUrl;
+                    location.href = input.successUrl;
                   }
                 }
               }
@@ -839,8 +840,8 @@ class {
                 }
               }
 
-              this.state.responseData = err;
-              this.state.state = \\"error\\";
+              this.responseData = err;
+              this.state = \\"error\\";
             }
           );
         }
@@ -867,25 +868,25 @@ style {
 >
   <if(input.builderBlock && input.builderBlock.children\\">
     <for|block| of=(input.builderBlock?.children)>
-      <BuilderBlockComponent
+      <builder-block-component
         key=(block.id)
         block=(block)
         index=(index)
-      ></BuilderBlockComponent> </for
+      ></builder-block-component> </for
   ></if>
 
   <if _=\\"state.state.submissionState === 'error'\\">
-    <BuilderBlocks
+    <builder-blocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
-    ></BuilderBlocks
+    ></builder-blocks
   ></if>
 
   <if _=\\"state.state.submissionState === 'sending'\\">
-    <BuilderBlocks
+    <builder-blocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
-    ></BuilderBlocks
+    ></builder-blocks
   ></if>
 
   <if _=\\"state.state.submissionState === 'error' && state.state.responseData\\">
@@ -898,9 +899,9 @@ style {
   </if>
 
   <if _=\\"state.state.submissionState === 'success'\\">
-    <BuilderBlocks
+    <builder-blocks
       dataPath=\\"successMessage\\"
-      blocks=\\"(input.successMessage))></BuilderBlocks
+      blocks=\\"(input.successMessage))></builder-blocks
   ></if>
 </form>"
 `;
@@ -908,15 +909,16 @@ style {
 exports[`Marko Image 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = {
       scrollListener: null,
       imageLoaded: false,
       setLoaded() {
-        this.state.imageLoaded = true;
+        this.imageLoaded = true;
       },
       useLazyLoading() {
         // TODO: Add more checks here, like testing for real web browsers
-        return !!this.input.lazy && isBrowser();
+        return !!input.lazy && isBrowser();
       },
       isBrowser: function isBrowser() {
         return (
@@ -929,7 +931,7 @@ exports[`Marko Image 1`] = `
   }
 
   onMount() {
-    if (state.useLazyLoading()) {
+    if (this.state.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef) {
@@ -938,13 +940,13 @@ exports[`Marko Image 1`] = `
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            state.scrollListener = null;
+            this.state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      state.scrollListener = listener;
+      this.state.scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -953,8 +955,8 @@ exports[`Marko Image 1`] = `
     }
   }
   onDestroy() {
-    if (state.scrollListener) {
-      window.removeEventListener(\\"scroll\\", state.scrollListener);
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
     }
   }
 }
@@ -1068,6 +1070,7 @@ exports[`Marko Section 1`] = `
 exports[`Marko Section 2`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { max: 42, items: [42] };
   }
 }
@@ -1111,9 +1114,9 @@ exports[`Marko SlotHtml 1`] = `
 class {}
 
 <div>
-  <ContentSlotCode>
+  <content-slot-code>
     <slot testing=(<div>Hello</div>)></slot>
-  </ContentSlotCode>
+  </content-slot-code>
 </div>"
 `;
 
@@ -1123,7 +1126,7 @@ exports[`Marko SlotJsx 1`] = `
 class {}
 
 <div>
-  <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+  <content-slot-code slotTesting=(<div>Hello</div>)></content-slot-code>
 </div>"
 `;
 
@@ -1133,6 +1136,7 @@ import { snakeCase } from \\"lodash\\";
 
 class {
   onCreate() {
+    const input = this.input;
     this.state = {
       reviews: [],
       name: \\"test\\",
@@ -1149,12 +1153,12 @@ class {
   onMount() {
     fetch(
       \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        input.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${input.productId || \\"2410511106127\\"}\`
+        this.input.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.input.productId || \\"2410511106127\\"}\`
     )
       .then((res) => res.json())
       .then((data) => {
-        state.reviews = data.data;
+        this.state.reviews = data.data;
       });
   }
 }
@@ -1236,6 +1240,7 @@ exports[`Marko Text 1`] = `
 
 class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"Decadef20\\" };
   }
 }
@@ -1289,6 +1294,7 @@ exports[`Marko Video 1`] = `
 exports[`Marko basicForwardRef 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"PatrickJS\\" };
   }
 }
@@ -1310,6 +1316,7 @@ style {
 exports[`Marko basicForwardRefMetadata 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"PatrickJS\\" };
   }
 }
@@ -1342,7 +1349,7 @@ exports[`Marko basicOnUpdateReturn 1`] = `
     })
       .then((response) => response.json())
       .then((data) => {
-        state.name = data.name;
+        this.state.name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -1442,22 +1449,23 @@ exports[`Marko multipleOnUpdateWithDeps 1`] = `
        
 
        onCreate() {
+         
          this.state = { a: 'a', b: 'b', c: 'c', d: 'd',}
        }
      
        
        
        onRender() { 
- console.log('Runs when a or b changes', state.a, state.b);
+ console.log('Runs when a or b changes', this.state.a, this.state.b);
 
- if (state.a === 'a') {
-   state.a = 'b';
+ if (this.state.a === 'a') {
+   this.state.a = 'b';
  }
 },onRender() { 
- console.log('Runs when c or d changes', state.c, state.d);
+ console.log('Runs when c or d changes', this.state.c, this.state.d);
 
- if (state.a === 'a') {
-   state.a = 'b';
+ if (this.state.a === 'a') {
+   this.state.a = 'b';
  }
 }
    }
@@ -1492,6 +1500,7 @@ exports[`Marko onInit 1`] = `
 
 class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"\\" };
   }
 }
@@ -1529,7 +1538,7 @@ exports[`Marko onUpdateWithDeps 1`] = `
   }
 
   onRender() {
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
   }
 }
 
@@ -1557,6 +1566,7 @@ exports[`Marko preserveTyping 1`] = `
 exports[`Marko propsDestructure 1`] = `
 "class {
   onCreate() {
+    const input = this.input;
     this.state = { name: \\"Decadef20\\" };
   }
 }
@@ -1592,7 +1602,7 @@ exports[`Marko self-referencing component 1`] = `
   \${input.name}
 
   <if(input.name === 'Batman'\\">
-    <MyComponent name=\\"Bruce Wayne)></MyComponent
+    <my-component name=\\"Bruce Wayne)></my-component
   ></if>
 </div>"
 `;
@@ -1604,9 +1614,9 @@ exports[`Marko self-referencing component with children 1`] = `
   \${input.name} \${input.children}
 
   <if(input.name === 'Batman'\\">
-    <MyComponent name=\\"Bruce)>
+    <my-component name=\\"Bruce)>
       <div>Wayne</div>
-    </MyComponent></if
+    </my-component></if
   >
 </div>"
 `;

@@ -20,6 +20,7 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 import { dashCase } from '../../helpers/dash-case';
+import { hasProps } from '../../helpers/has-props';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -58,7 +59,7 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
 
   let str = '';
 
-  str += `<${json.name} `;
+  str += `<${dashCase(json.name)} `;
 
   const classString = collectClassString(json);
   if (classString) {
@@ -96,20 +97,20 @@ const blockToMarko = (json: MitosisNode, options: ToMarkoOptions = {}): string =
     str += json.children.map((item) => blockToMarko(item, options)).join('\n');
   }
 
-  str += `</${json.name}>`;
+  str += `</${dashCase(json.name)}>`;
 
   return str;
 };
 
-function processBinding(code: string, type: 'attribute' | 'class' = 'attribute') {
+function processBinding(code: string, type: 'attribute' | 'class' | 'state' = 'attribute') {
   return stripStateAndPropsRefs(
     stripStateAndPropsRefs(code, {
-      replaceWith: type === 'class' ? 'this.input.' : 'input.',
+      replaceWith: type === 'state' ? 'input.' : type === 'class' ? 'this.input.' : 'input.',
       includeProps: true,
       includeState: false,
     }),
     {
-      replaceWith: type === 'class' ? 'this.state.' : 'state.',
+      replaceWith: type === 'state' ? 'this.' : type === 'class' ? 'this.state.' : 'state.',
       includeProps: false,
       includeState: true,
     },
@@ -137,8 +138,10 @@ export const componentToMarko =
       data: true,
       functions: true,
       getters: true,
-      valueMapper: (code) => processBinding(code, 'class'),
+      valueMapper: (code) => processBinding(code, 'state'),
     });
+
+    const thisHasProps = hasProps(json);
 
     const methodsString = '';
 
@@ -165,6 +168,7 @@ export const componentToMarko =
           !hasState
             ? ''
             : `onCreate() {
+          ${thisHasProps ? 'const input = this.input;' : ''}
           this.state = ${dataString}
         }`
         }
@@ -172,17 +176,19 @@ export const componentToMarko =
         ${
           !json.hooks.onMount?.code
             ? ''
-            : `onMount() { ${processBinding(json.hooks.onMount.code)} }`
+            : `onMount() { ${processBinding(json.hooks.onMount.code, 'class')} }`
         }
         ${
           !json.hooks.onUnMount?.code
             ? ''
-            : `onDestroy() { ${processBinding(json.hooks.onUnMount.code)} }`
+            : `onDestroy() { ${processBinding(json.hooks.onUnMount.code, 'class')} }`
         }
         ${
           !json.hooks.onUpdate?.length
             ? ''
-            : json.hooks.onUpdate.map((hook) => `onRender() { ${processBinding(hook.code)} }`)
+            : json.hooks.onUpdate.map(
+                (hook) => `onRender() { ${processBinding(hook.code, 'class')} }`,
+              )
         }
     }
   `;
