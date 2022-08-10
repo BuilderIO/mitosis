@@ -26,7 +26,9 @@ import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
 
-export interface ToAngularOptions extends BaseTranspilerOptions {}
+export interface ToAngularOptions extends BaseTranspilerOptions {
+  standalone?: boolean;
+}
 
 interface AngularBlockOptions {
   contextVars?: string[];
@@ -321,12 +323,22 @@ export const componentToAngular =
     } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
+    ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'angular' })}
 
     @Component({
+      ${
+        options.standalone
+          ? // TODO: also add component imports here as well
+            `
+        imports: [CommonModule],
+        standalone: true,
+      `
+          : ''
+      }
       selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
