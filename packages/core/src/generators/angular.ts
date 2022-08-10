@@ -25,7 +25,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
-import { isUpperCase } from '../helpers/is-upper-case';
+import { getCustomImports } from '../helpers/get-custom-imports';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -162,7 +162,7 @@ export const blockToAngular = (
         contextVars,
         outputVars,
         domRefs,
-      }).replace(/"/g, "&quot;");
+      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -231,14 +231,7 @@ export const componentToAngular =
       });
     });
 
-    const customImports = json.imports
-      .filter((item) => {
-        return item.path.startsWith('.');
-      })
-      .map((item) => {
-        return Object.keys(item.imports).filter((item) => item && !isUpperCase(item[0]));
-      })
-      .flat();
+    const customImports = getCustomImports(json);
 
     const { exports: localExports = {} } = component;
     const localExportVars = Object.keys(localExports)
