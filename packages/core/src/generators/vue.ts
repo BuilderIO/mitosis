@@ -317,18 +317,12 @@ const stringifyBinding =
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
           return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
-            ),
+            removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
           )}" `;
         } else {
           return ` @${event}="${encodeQuotes(
             removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+              removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
             ),
           )}" `;
         }
