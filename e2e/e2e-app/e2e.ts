@@ -5,6 +5,8 @@ import { resolve } from 'path';
 import { spawn } from 'child_process';
 import syncDirectory from 'sync-directory';
 
+import { emitTable, Entry } from './e2e-output';
+
 // Update this array when adding new cases.
 
 const cases = ['01-one-component', '02-two-components'];
@@ -27,12 +29,6 @@ const packages = [
 // as string (untyped) data. Since only a (hopefully near 0) list of
 // allow-to-fail cases is stored, it seems a reasonable tradeoff.
 
-interface Entry {
-  caseName: string;
-  target: string;
-  ok: boolean;
-}
-
 async function yarn(...args) {
   return new Promise((res, reject) => {
     let child = spawn('yarn', args, {
@@ -51,7 +47,7 @@ function allOk(specs: Entry[]) {
 }
 
 async function readSummary(caseName: string): Promise<Entry[]> {
-  const json = await readFile('./results.json', 'utf-8');
+  const json = await readFile('./playwright-results.json', 'utf-8');
   const results = JSON.parse(json);
   return results.suites[0].suites.map((y) => ({
     caseName,
@@ -80,7 +76,7 @@ async function detectFailures(allResults: any[]) {
 }
 
 async function main() {
-  const allResults: any[] = [];
+  const allResults: Entry[] = [];
 
   // Build one case at a time, so we only need one build env per target.
   for (const c of cases) {
@@ -125,10 +121,13 @@ async function main() {
     allResults.push(...(await readSummary(c)));
   }
 
-  console.log('E2E results', allResults);
-  await writeFile('./overall-result.json', JSON.stringify(allResults, undefined, 2), 'utf8');
+  // console.log('E2E results', allResults);
 
-  // TODO format the JSON output as a test status matrix.
+  console.log('Writing E2E status');
+  await writeFile('./e2e-test-status.json', JSON.stringify(allResults, undefined, 2), 'utf8');
+
+  console.log('Updating README with E2E status');
+  await emitTable(allResults);
 
   await detectFailures(allResults);
 }

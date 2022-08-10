@@ -104,6 +104,7 @@ npm exec mitosis build
 🎉 You should now have an `output` directory with your compiled components in all 4 frameworks!
 
 ## Examples
+
 Here are some helpful resources on trying out Mitosis:
 
 - [CKGrafico/papanasi](https://github.com/CKGrafico/papanasi): A framework-agnostic UI library built in Mitosis
@@ -148,6 +149,20 @@ Yup, we've all seen it. But if this is a concern for you, you may be looking at 
 
 Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the-box syntax uses JSX, but we have explored others, such as a Vue/Svelte-like syntax. [Builder.io](https://github.com/builderio/builder) emits Mitosis IR, allowing you to turn designs to code for any supported framework. JSX and Builder.io are the currently supported frontends of the compiler, and the frameworks listed below are the backends.
 
+## E2E test status
+
+| Target  | 01 one component   | 02 two components  |
+| ------- | ------------------ | ------------------ |
+| angular | :white_check_mark: | :white_check_mark: |
+| qwik    | :white_check_mark: | :x:                |
+| react   | :white_check_mark: | :white_check_mark: |
+| solid   | :white_check_mark: | :white_check_mark: |
+| svelte  | :white_check_mark: | :white_check_mark: |
+| vue2    | :white_check_mark: | :white_check_mark: |
+| vue3    | :white_check_mark: | :white_check_mark: |
+
+_NOTE: this matrix is programmatically generated and should not be manually edited._
+
 ## Contribute
 
 Interested in contribute? Head over to the [developer](developer/) docs and see how you can get setup & started!
@@ -158,6 +173,7 @@ Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/is
 
 - [Mitosis Discord](https://discord.gg/SNusEyNGsx)
 - [@Builderio](https://twitter.com/builderio)
+
 ## Related Projects
 
 - [Figma plugin](https://github.com/BuilderIO/figma-html): Convert Figma designs into high quality HTML, React, Vue, Svelte, Angular, Solid, etc code via Mitosis.
