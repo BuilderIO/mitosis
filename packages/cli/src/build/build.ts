@@ -16,6 +16,7 @@ import {
   Target,
   Transpiler,
 } from '@builder.io/mitosis';
+import { fastClone } from '@builder.io/mitosis/src/helpers/fast-clone';
 import debug from 'debug';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
@@ -109,10 +110,15 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
+      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
+      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
+      const files = fastClone(mitosisComponents);
+
       const targetContextWithConfig: TargetContextWithConfig = { ...targetContext, options };
+
       await Promise.all([
         buildAndOutputNonComponentFiles(targetContextWithConfig),
-        buildAndOutputComponentFiles({ ...targetContextWithConfig, files: mitosisComponents }),
+        buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
       ]);
       await outputOverrides(targetContextWithConfig);
     }),
