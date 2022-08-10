@@ -25,21 +25,17 @@
 
 ## Table of contents
 
-- [Table of contents](#table-of-contents)
 - [Getting Started](#getting-started)
-- [Overview](#overview)
 - [Docs](#docs)
 - [Why use Mitosis?](#why-use-mitosis)
   - [Design Systems Maintainers](#design-systems-maintainers)
   - [Teams using multiple web frameworks](#teams-using-multiple-web-frameworks)
   - [Teams building web SDKs](#teams-building-web-sdks)
-- [What about XKCD](#what-about-xkcd)
 - [Status](#status)
-- [E2E test status](#e2e-test-status)
 - [Contribute](#contribute)
 - [Coming soon](#coming-soon)
 - [Community](#community)
-- [ESLint rules](#eslint-rules)
+- [ESLint Rules](#eslint-rules)
 - [Related Projects](#related-projects)
 
 ## Getting Started
