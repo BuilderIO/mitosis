@@ -2,6 +2,7 @@ import {
   componentToAngular,
   componentToCustomElement,
   componentToHtml,
+  componentToMarko,
   componentToQwik,
   componentToReact,
   componentToReactNative,
@@ -21,6 +22,7 @@ import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
+import { fastClone } from '../helpers/fast-clone';
 import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
@@ -109,10 +111,15 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
+      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
+      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
+      const files = fastClone(mitosisComponents);
+
       const targetContextWithConfig: TargetContextWithConfig = { ...targetContext, options };
+
       await Promise.all([
         buildAndOutputNonComponentFiles(targetContextWithConfig),
-        buildAndOutputComponentFiles({ ...targetContextWithConfig, files: mitosisComponents }),
+        buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
       ]);
       await outputOverrides(targetContextWithConfig);
     }),
@@ -185,6 +192,8 @@ const getGeneratorForTarget = ({
       return componentToSvelte(options.options.svelte);
     case 'qwik':
       return componentToQwik(options.options.qwik);
+    case 'marko':
+      return componentToMarko(options.options.marko);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }

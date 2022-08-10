@@ -16,6 +16,7 @@ import { componentToTemplate as template } from './generators/template';
 import { componentToVue2, componentToVue3 } from './generators/vue';
 import { componentToStencil as stencil } from './generators/stencil';
 import { componentToQwik as qwik } from './generators/qwik';
+import { componentToMarko as marko } from './generators/marko';
 
 export const targets = {
   angular,
@@ -36,4 +37,5 @@ export const targets = {
   vue3: componentToVue3,
   stencil,
   qwik,
+  marko,
 };

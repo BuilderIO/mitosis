@@ -4,6 +4,7 @@ export type StripStateAndPropsRefsOptions = {
   includeState?: boolean;
   contextVars?: string[];
   outputVars?: string[];
+  stateVars?: string[];
   context?: string;
   domRefs?: string[];
 };
@@ -26,6 +27,7 @@ export const stripStateAndPropsRefs = (
   const outputVars = options?.outputVars || [];
   const context = options?.context || 'this.';
   const domRefs = options?.domRefs || [];
+  const stateVars = options?.stateVars || [];
 
   if (contextVars.length) {
     contextVars.forEach((_var) => {
@@ -62,11 +64,35 @@ export const stripStateAndPropsRefs = (
       newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replacer(name));
     }
   }
+
+  const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
+  const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
+
   if (domRefs.length) {
     domRefs.forEach((_var) => {
       newCode = newCode.replace(
-        // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+        new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
+        '$1' + 'this.' + _var + '$2',
+      );
+    });
+  }
+  if (stateVars.length) {
+    stateVars.forEach((_var) => {
+      newCode = newCode.replace(
+        /*
+          1. Skip anything that is a class variable declaration
+             myClass() {
+              stuff = 'hi'
+               foo = 'bar'  <-- in the event that formatting is off
+             }
+          2. Skip anything that is the name of a function declaration or a getter
+             stuff = function stuff() {}  or  get stuff
+          3. If the conditions are met then try to match all use cases of the class variables, see above.
+        */
+        new RegExp(
+          `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+          'g',
+        ),
         '$1' + 'this.' + _var + '$2',
       );
     });
