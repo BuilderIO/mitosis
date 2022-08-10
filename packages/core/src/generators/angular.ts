@@ -237,7 +237,8 @@ export const componentToAngular =
       })
       .map((item) => {
         return Object.keys(item.imports).filter((item) => item && !isUpperCase(item[0]));
-      });
+      })
+      .flat();
 
     const { exports: localExports = {} } = component;
     const localExportVars = Object.keys(localExports)
