@@ -332,10 +332,10 @@ export const componentToAngular =
     @Component({
       ${
         options.standalone
-          ? // TODO: also add component imports here as well
+          ? // TODO: also add child component imports here as well
             `
-        imports: [CommonModule],
         standalone: true,
+        imports: [CommonModule],
       `
           : ''
       }
