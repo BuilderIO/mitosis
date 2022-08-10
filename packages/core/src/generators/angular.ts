@@ -162,7 +162,7 @@ export const blockToAngular = (
         contextVars,
         outputVars,
         domRefs,
-      }).replace(/"/g, "\\'");
+      }).replace(/"/g, "&quot;");
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
