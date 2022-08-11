@@ -4,6 +4,7 @@ import {
   preprocessHtml,
   postprocessHtml,
 } from '../generators/marko';
+import { parseJsx } from '../parsers/jsx';
 import { runTestsForTarget } from './shared';
 
 describe('Marko format', () => {
@@ -33,4 +34,15 @@ describe('Marko format', () => {
 
 describe('Marko', () => {
   runTestsForTarget('marko', componentToMarko());
+
+  const exampleSubComponent = `
+    import SubComponent from './foo.lite'
+    export default function Example() {
+      return <SubComponent />
+    }
+  `
+
+  const component = parseJsx(exampleSubComponent);
+  const markoString = componentToMarko()({ component });
+  expect(markoString).toMatchSnapshot();
 });
