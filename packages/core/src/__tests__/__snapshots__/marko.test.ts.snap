@@ -249,13 +249,13 @@ class {
 }
 
 <div>
-  <my-basic-component id=(state.dev)></my-basic-component>
+  <MyBasicComponent id=(state.dev)></MyBasicComponent>
 
   <div>
-    <my-basic-on-mount-update-component
+    <MyBasicOnMountUpdateComponent
       hi=(state.name)
       bye=(state.dev)
-    ></my-basic-on-mount-update-component>
+    ></MyBasicOnMountUpdateComponent>
   </div>
 </div>"
 `;
@@ -861,24 +861,24 @@ style {
 >
   <if(input.builderBlock && input.builderBlock.children)>
     <for|block| of=(input.builderBlock?.children)>
-      <builder-block-component
+      <BuilderBlockComponent
         key=(block.id)
         block=(block)
         index=(index)
-      ></builder-block-component> </for></if>
+      ></BuilderBlockComponent> </for></if>
 
   <if(state.state.submissionState === 'error')>
-    <builder-blocks
+    <BuilderBlocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
-    ></builder-blocks
+    ></BuilderBlocks
   ></if>
 
   <if(state.state.submissionState === 'sending')>
-    <builder-blocks
+    <BuilderBlocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
-    ></builder-blocks
+    ></BuilderBlocks
   ></if>
 
   <if(state.state.submissionState === 'error' && state.state.responseData)>
@@ -890,10 +890,10 @@ style {
   </if>
 
   <if(state.state.submissionState === 'success')>
-    <builder-blocks
+    <BuilderBlocks
       dataPath=\\"successMessage\\"
       blocks=(input.successMessage)
-    ></builder-blocks
+    ></BuilderBlocks
   ></if>
 </form>"
 `;
@@ -1106,9 +1106,9 @@ exports[`Marko SlotHtml 1`] = `
 class {}
 
 <div>
-  <content-slot-code>
+  <ContentSlotCode>
     <slot testing=(<div>Hello</div>)></slot>
-  </content-slot-code>
+  </ContentSlotCode>
 </div>"
 `;
 
@@ -1118,7 +1118,7 @@ exports[`Marko SlotJsx 1`] = `
 class {}
 
 <div>
-  <content-slot-code slotTesting=(<div>Hello</div>)></content-slot-code>
+  <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
 </div>"
 `;
 
@@ -1597,7 +1597,7 @@ exports[`Marko self-referencing component 1`] = `
   \${input.name}
 
   <if(input.name === 'Batman')>
-    <my-component name=\\"Bruce Wayne\\"></my-component
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent
   ></if>
 </div>"
 `;
@@ -1609,9 +1609,9 @@ exports[`Marko self-referencing component with children 1`] = `
   \${input.name} \${input.children}
 
   <if(input.name === 'Batman')>
-    <my-component name=\\"Bruce\\">
+    <MyComponent name=\\"Bruce\\">
       <div>Wayne</div>
-    </my-component></if>
+    </MyComponent></if>
 </div>"
 `;
 

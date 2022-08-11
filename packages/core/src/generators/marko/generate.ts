@@ -22,21 +22,8 @@ import { dashCase } from '../../helpers/dash-case';
 import { hasProps } from '../../helpers/has-props';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { getRefs } from '../../helpers/get-refs';
-import { isUpperCase } from '../../helpers/is-upper-case';
-import { kebabCase } from 'lodash';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
-
-/**
- * Convert a component name to a tagName
- *
- * So things like
- *  'FooBar' -> <foo-bar>
- *  'h1' -> <h1>
- */
-const toTagName = (str: string) => {
-  return isUpperCase(str[0]) ? kebabCase(str) : str;
-};
 
 interface InternalToMarkoOptions extends ToMarkoOptions {
   component: MitosisComponent;
@@ -101,7 +88,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
 
   let str = '';
 
-  str += `<${toTagName(json.name)} `;
+  str += `<${json.name} `;
 
   if (json.bindings._spread?.code) {
     str += ` ...(${json.bindings._spread.code}) `;
@@ -137,7 +124,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
     str += json.children.map((item) => blockToMarko(item, options)).join('\n');
   }
 
-  str += `</${toTagName(json.name)}>`;
+  str += `</${json.name}>`;
 
   return str;
 };
