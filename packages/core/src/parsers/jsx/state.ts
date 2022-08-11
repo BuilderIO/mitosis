@@ -9,6 +9,9 @@ import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-idenifiers';
 import { parseCodeJson, uncapitalize } from './helpers';
+import { flow, pipe } from 'fp-ts/lib/function';
+import { JSONObject } from '../../types/json';
+import { mapJsonObjectToStateValue } from '../../helpers/state';
 
 const { types } = babel;
 
@@ -119,35 +122,35 @@ export const createFunctionStringLiteralObjectProperty = (
   return types.objectProperty(key, createFunctionStringLiteral(node));
 };
 
-export const parseStateObject = (object: babel.types.ObjectExpression) => {
-  const properties = object.properties;
-  const useProperties = properties.map((item) => {
-    if (types.isObjectProperty(item)) {
-      if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
-        return createFunctionStringLiteralObjectProperty(item.key, item.value);
-      }
-    }
-    if (types.isObjectMethod(item)) {
-      return types.objectProperty(
-        item.key,
-        types.stringLiteral(
-          `${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`,
-        ),
-      );
-    }
-    // Remove typescript types, e.g. from
-    // { foo: ('string' as SomeType) }
-    if (types.isObjectProperty(item)) {
-      let value = item.value;
-      if (types.isTSAsExpression(value)) {
-        value = value.expression;
-      }
-      return types.objectProperty(item.key, value);
-    }
-    return item;
-  });
+type ParsedStateValue = babel.types.ObjectProperty | babel.types.SpreadElement;
 
-  const newObject = types.objectExpression(useProperties);
-  const obj = parseCodeJson(newObject);
-  return obj;
+const parseStateValue = (
+  item: babel.types.ObjectMethod | babel.types.ObjectProperty | babel.types.SpreadElement,
+): ParsedStateValue => {
+  if (types.isObjectProperty(item)) {
+    if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
+      return createFunctionStringLiteralObjectProperty(item.key, item.value);
+    }
+  }
+  if (types.isObjectMethod(item)) {
+    return types.objectProperty(
+      item.key,
+      types.stringLiteral(`${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`),
+    );
+  }
+  // Remove typescript types, e.g. from
+  // { foo: ('string' as SomeType) }
+  if (types.isObjectProperty(item)) {
+    let value = item.value;
+    if (types.isTSAsExpression(value)) {
+      value = value.expression;
+    }
+    return types.objectProperty(item.key, value);
+  }
+  return item;
 };
+
+export const parseStateObject = (object: babel.types.ObjectExpression): JSONObject =>
+  pipe(object.properties, (p) => p.map(parseStateValue), types.objectExpression, parseCodeJson);
+
+export const parseStateObjectToMitosisState = flow(parseStateObject, mapJsonObjectToStateValue);

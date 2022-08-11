@@ -6,13 +6,13 @@ import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
-import { JSONObject, JSONOrNode } from '../../types/json';
+import { JSONOrNode } from '../../types/json';
 import { MitosisComponent, MitosisImport, MitosisExport } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { tryParseJson } from '../../helpers/json';
 import { HOOKS } from '../../constants/hooks';
 import { jsonToAst } from './ast';
-import { mapReactIdentifiers, parseStateObject } from './state';
+import { mapReactIdentifiers, parseStateObject, parseStateObjectToMitosisState } from './state';
 import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
@@ -35,7 +35,7 @@ const componentFunctionToJson = (
   context: Context,
 ): JSONOrNode => {
   const hooks: MitosisComponent['hooks'] = {};
-  let state: MitosisComponent['state'] = {};
+  const state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
   const setContext: MitosisComponent['context']['set'] = {};
   const refs: MitosisComponent['refs'] = {};
@@ -55,7 +55,7 @@ const componentFunctionToJson = (
               const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
-                  const value = parseStateObject(valueNode) as JSONObject;
+                  const value = parseStateObject(valueNode);
                   setContext[keyPath] = {
                     name: keyNode.name,
                     value,
@@ -183,7 +183,8 @@ const componentFunctionToJson = (
           if (init.callee.name === HOOKS.STATE || init.callee.name === HOOKS.STORE) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              Object.assign(state, parseStateObject(firstArg));
+              const useStoreState = parseStateObjectToMitosisState(firstArg);
+              Object.assign(state, useStoreState);
             }
           } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
