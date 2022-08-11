@@ -9,10 +9,16 @@ export const DIRECTIVES: Record<
   Show: (node: MitosisNode, blockFn: () => void) =>
     function (this: SrcBuilder) {
       const expr = node.bindings.when?.code;
+      const elseBlockFn = (blockFn as { else?: () => void }).else;
       this.jsxExpression(() => {
         this.emit(expr, '?');
         blockFn();
-        this.emit(':null');
+        this.emit(':');
+        if (elseBlockFn) {
+          elseBlockFn();
+        } else {
+          this.emit('null');
+        }
       });
     },
   For: (node: MitosisNode, blockFn: () => void) =>
@@ -50,7 +56,7 @@ export const DIRECTIVES: Record<
   Host: (node: MitosisNode, blockFn) =>
     function (this: SrcBuilder) {
       const host = this.file.import(this.file.qwikModule, 'Host').localName;
-      this.jsxBegin(host, node.properties, {});
+      this.jsxBegin(host, node.properties, node.bindings);
       blockFn();
       this.jsxEnd(host);
     },
@@ -170,7 +176,7 @@ export function CoreButton(props: {
 }) {
   const hasLink = !!props.link;
   const hProps = {
-    innerHTML: props.text || '',
+    dangerouslySetInnerHTML: props.text || '',
     href: props.link,
     target: props.openInNewTab ? '_blank' : '_self',
     class: props.class,
