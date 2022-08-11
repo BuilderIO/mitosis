@@ -300,7 +300,7 @@ const stringifyBinding =
       return '';
     } else if (key === 'class') {
       return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
-        replaceWith: 'this.',
+        replaceWith: '',
       })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html

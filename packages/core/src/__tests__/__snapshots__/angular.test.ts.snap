@@ -65,6 +65,75 @@ export default class MyBasicRefComponent {
 "
 `;
 
+exports[`Angular AdvancedRef 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-ref-component\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"showInput\\">
+        <div>
+          <input
+            class=\\"input\\"
+            #inputRef
+            [value]=\\"name\\"
+            (blur)=\\"onBlur()\\"
+            (input)=\\"name = $event.target.value\\"
+          />
+
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </div>
+      </ng-container>
+
+      Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicRefComponent {
+  @Input() showInput: Props[\\"showInput\\"];
+
+  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+
+  name = \\"PatrickJS\\";
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.nativeElement.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  ngAfterContentChecked() {
+    console.log(\\"Received an update\\");
+  }
+}
+"
+`;
+
 exports[`Angular Basic 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -133,12 +202,128 @@ export default class MyBasicForShowComponent {
 "
 `;
 
+exports[`Angular Basic 3`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div class=\\"test div\\">
+      <input
+        [value]=\\"DEFAULT_VALUES.name || name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  DEFAULT_VALUES = DEFAULT_VALUES;
+
+  name = \\"Steve\\";
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+}
+"
+`;
+
+exports[`Angular Basic 4`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-for-show-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <ng-container *ngIf=\\"person === name\\">
+          <input
+            [value]=\\"name\\"
+            (input)=\\"
+         name = $event.target.value + ' and ' + person;
+       \\"
+          />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </ng-container>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyBasicForShowComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+}
+"
+`;
+
 exports[`Angular Basic Context 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>
+      {{myService.method('hello') + name}} Hello! I can run in React, Vue,
+      Solid, or Liquid!
+
+      <input (input)=\\"onChange\\" />
+    </div>
+  \`,
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+  onChange = function onChange() {
+    const change = this.myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  constructor(public myService: MyService) {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  }
+
+  ngOnInit() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  }
+}
+"
+`;
+
+exports[`Angular Basic Context 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div>
@@ -201,6 +386,42 @@ export default class MyBasicOnMountUpdateComponent {
 "
 `;
 
+exports[`Angular Basic OnMount Update 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-on-mount-update-component\\",
+  template: \`
+    <div>Hello {{name}}</div>
+  \`,
+})
+export default class MyBasicOnMountUpdateComponent {
+  @Input() hi: Props[\\"hi\\"];
+  @Input() bye: Props[\\"bye\\"];
+
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  constructor() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  }
+
+  ngOnInit() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  }
+}
+"
+`;
+
 exports[`Angular Basic Outputs 1`] = `
 "import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
@@ -226,10 +447,68 @@ export default class MyBasicOutputsComponent {
 "
 `;
 
+exports[`Angular Basic Outputs 2`] = `
+"import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-outputs-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
+  @Output() onMessage = new EventEmitter();
+  @Output() onEvent = new EventEmitter();
+
+  name = \\"PatrickJS\\";
+
+  ngOnInit() {
+    this.onMessage.emit(this.name);
+    this.onEvent.emit(this.message);
+  }
+}
+"
+`;
+
 exports[`Angular Basic Outputs Meta 1`] = `
 "import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-outputs-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicOutputsComponent {
+  @Input() message: any;
+
+  @Output() onMessage = new EventEmitter();
+  @Output() onEvent = new EventEmitter();
+
+  name = \\"PatrickJS\\";
+
+  ngOnInit() {
+    this.onMessage.emit(this.name);
+    this.onEvent.emit(this.message);
+  }
+}
+"
+`;
+
+exports[`Angular Basic Outputs Meta 2`] = `
+"import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-outputs-component\\",
   template: \`
     <div></div>
@@ -279,10 +558,80 @@ export default class MyBasicChildComponent {
 "
 `;
 
+exports[`Angular BasicChildComponent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, MyBasicComponent, MyBasicOnMountUpdateComponent],
+
+  selector: \\"my-basic-child-component\\",
+  template: \`
+    <div>
+      <my-basic-component [id]=\\"dev\\"></my-basic-component>
+
+      <div>
+        <my-basic-on-mount-update-component
+          [hi]=\\"name\\"
+          [bye]=\\"dev\\"
+        ></my-basic-on-mount-update-component>
+      </div>
+    </div>
+  \`,
+})
+export default class MyBasicChildComponent {
+  name = \\"Steve\\";
+  dev = \\"PatrickJS\\";
+}
+"
+`;
+
 exports[`Angular BasicFor 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-for-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let person of names\\">
+        <div>
+          <input
+            [value]=\\"name\\"
+            (input)=\\"
+         name = $event.target.value + ' and ' + person;
+       \\"
+          />
+
+          Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
+          Solid, or Liquid!
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyBasicForComponent {
+  name = \\"PatrickJS\\";
+  names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  ngOnInit() {
+    console.log(\\"onMount code\\");
+  }
+}
+"
+`;
+
+exports[`Angular BasicFor 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-for-component\\",
   template: \`
     <div>
@@ -374,6 +723,71 @@ export default class MyBasicRefComponent {
 "
 `;
 
+exports[`Angular BasicRef 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-ref-component\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"showInput\\">
+        <div>
+          <input
+            class=\\"input\\"
+            #inputRef
+            [value]=\\"name\\"
+            (blur)=\\"onBlur()\\"
+            (input)=\\"name = $event.target.value\\"
+          />
+
+          <label for=\\"cars\\" #inputNoArgRef>Choose a car:</label>
+
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </div>
+      </ng-container>
+
+      Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicRefComponent {
+  @Input() showInput: Props[\\"showInput\\"];
+
+  @ViewChild(\\"inputRef\\") inputRef: ElementRef;
+  @ViewChild(\\"inputNoArgRef\\") inputNoArgRef: ElementRef;
+
+  name = \\"PatrickJS\\";
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.nativeElement.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+}
+"
+`;
+
 exports[`Angular BasicRefAssignment 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -382,6 +796,37 @@ export interface Props {
 }
 
 @Component({
+  selector: \\"my-basic-ref-assignment-component\\",
+  template: \`
+    <div>
+      <button (click)=\\"handlerClick($event)\\">Click</button>
+    </div>
+  \`,
+})
+export default class MyBasicRefAssignmentComponent {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", this._holdValueRef);
+    this._holdValueRef = this._holdValueRef + \\"JS\\";
+  };
+
+  private _holdValueRef = \\"Patrick\\";
+}
+"
+`;
+
+exports[`Angular BasicRefAssignment 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-ref-assignment-component\\",
   template: \`
     <div>
@@ -443,6 +888,52 @@ export default class MyPreviousComponent {
 "
 `;
 
+exports[`Angular BasicRefPrevious 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-previous-component\\",
+  template: \`
+    <div>
+      <h1>Now: {{count}} , before: {{this._prevCount}}</h1>
+
+      <button (click)=\\"count += 1\\">Increment</button>
+    </div>
+  \`,
+})
+export default class MyPreviousComponent {
+  count = 0;
+
+  private _prevCount = this.count;
+
+  ngAfterContentChecked() {
+    prevCount = this.count;
+  }
+}
+"
+`;
+
 exports[`Angular Button 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -454,6 +945,45 @@ export interface ButtonProps {
 }
 
 @Component({
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular Button 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"button\\",
   template: \`
     <div>
@@ -553,6 +1083,85 @@ export default class Column {
 "
 `;
 
+exports[`Angular Columns 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"column\\",
+  template: \`
+    <div class=\\"builder-columns div\\">
+      <ng-container *ngFor=\\"let column of columns\\">
+        <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        line-height: normal;
+      }
+      @media (max-width: 999px) {
+        .div {
+          flex-direction: row;
+        }
+      }
+      @media (max-width: 639px) {
+        .div {
+          flex-direction: row-reverse;
+        }
+      }
+      .div-2 {
+        flex-grow: 1;
+      }
+    \`,
+  ],
+})
+export default class Column {
+  @Input() columns: ColumnProps[\\"columns\\"];
+  @Input() space: ColumnProps[\\"space\\"];
+
+  getColumns() {
+    return this.columns || [];
+  }
+  getGutterSize() {
+    return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+  }
+  getWidth(index) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+  getColumnCssWidth(index) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+}
+"
+`;
+
 exports[`Angular ContentSlotHtml 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -562,6 +1171,38 @@ type Props = {
 };
 
 @Component({
+  selector: \\"content-slot-code\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[testing]\\"></ng-content>
+
+      <div>
+        <hr />
+      </div>
+
+      <div>
+        <ng-content></ng-content>
+      </div>
+    </div>
+  \`,
+})
+export default class ContentSlotCode {}
+"
+`;
+
+exports[`Angular ContentSlotHtml 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, Slot],
+
   selector: \\"content-slot-code\\",
   template: \`
     <div>
@@ -606,6 +1247,35 @@ export default class ContentSlotJsxCode {}
 "
 `;
 
+exports[`Angular ContentSlotJSX 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"content-slot-jsx-code\\",
+  template: \`
+    <div>
+      <ng-content select=\\"[testing]\\"></ng-content>
+
+      <div>
+        <hr />
+      </div>
+
+      <div><ng-content></ng-content></div>
+    </div>
+  \`,
+})
+export default class ContentSlotJsxCode {}
+"
+`;
+
 exports[`Angular CustomCode 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
@@ -615,6 +1285,85 @@ export interface CustomCodeProps {
 }
 
 @Component({
+  selector: \\"custom-code\\",
+  template: \`
+    <div
+      #elem
+      [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+      [innerHTML]=\\"code\\"
+    ></div>
+  \`,
+})
+export default class CustomCode {
+  @Input() replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  @Input() code: CustomCodeProps[\\"code\\"];
+
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  scriptsInserted = [];
+  scriptsRun = [];
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    this.findAndRunScripts();
+  }
+}
+"
+`;
+
+exports[`Angular CustomCode 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"custom-code\\",
   template: \`
     <div
@@ -756,6 +1505,85 @@ export default class CustomCode {
 "
 `;
 
+exports[`Angular Embed 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"custom-code\\",
+  template: \`
+    <div
+      #elem
+      [class]=\\"'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')\\"
+      [innerHTML]=\\"code\\"
+    ></div>
+  \`,
+})
+export default class CustomCode {
+  @Input() replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
+  @Input() code: CustomCodeProps[\\"code\\"];
+
+  @ViewChild(\\"elem\\") elem: ElementRef;
+
+  scriptsInserted = [];
+  scriptsRun = [];
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (this.elem.nativeElement && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = this.elem.nativeElement.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  ngOnInit() {
+    this.findAndRunScripts();
+  }
+}
+"
+`;
+
 exports[`Angular Form 1`] = `
 "import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
 
@@ -790,6 +1618,352 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 @Component({
+  selector: \\"form-component\\",
+  template: \`
+    <form
+      [validate]=\\"validate\\"
+      #formRef
+      [action]=\\"!sendWithJs && action\\"
+      [method]=\\"method\\"
+      [name]=\\"name\\"
+      (submit)=\\"onSubmit($event)\\"
+    >
+      <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
+        <ng-container *ngFor=\\"let block of builderBlock?.children\\">
+          <BuilderBlockComponent
+            [key]=\\"block.id\\"
+            [block]=\\"block\\"
+            [index]=\\"index\\"
+          ></BuilderBlockComponent>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf=\\"submissionState === 'error'\\">
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          [blocks]=\\"errorMessage\\"
+        ></BuilderBlocks>
+      </ng-container>
+
+      <ng-container *ngIf=\\"submissionState === 'sending'\\">
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          [blocks]=\\"sendingMessage\\"
+        ></BuilderBlocks>
+      </ng-container>
+
+      <ng-container *ngIf=\\"submissionState === 'error' && responseData\\">
+        <pre class=\\"builder-form-error-text pre\\">
+                 
+       {{JSON.stringify(responseData, null, 2)}}
+
+               </pre
+        >
+      </ng-container>
+
+      <ng-container *ngIf=\\"submissionState === 'success'\\">
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          [blocks]=\\"successMessage\\"
+        ></BuilderBlocks>
+      </ng-container>
+    </form>
+  \`,
+  styles: [
+    \`
+      .pre {
+        padding: 10px;
+        color: red;
+        text-align: center;
+      }
+    \`,
+  ],
+})
+export default class FormComponent {
+  builder = builder;
+
+  @Input() previewState: FormProps[\\"previewState\\"];
+  @Input() sendWithJs: FormProps[\\"sendWithJs\\"];
+  @Input() sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
+  @Input() action: FormProps[\\"action\\"];
+  @Input() customHeaders: FormProps[\\"customHeaders\\"];
+  @Input() contentType: FormProps[\\"contentType\\"];
+  @Input() sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
+  @Input() name: FormProps[\\"name\\"];
+  @Input() method: FormProps[\\"method\\"];
+  @Input() errorMessagePath: FormProps[\\"errorMessagePath\\"];
+  @Input() resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
+  @Input() successUrl: FormProps[\\"successUrl\\"];
+  @Input() validate: FormProps[\\"validate\\"];
+  @Input() attributes: FormProps[\\"attributes\\"];
+  @Input() builderBlock: FormProps[\\"builderBlock\\"];
+  @Input() errorMessage: FormProps[\\"errorMessage\\"];
+  @Input() sendingMessage: FormProps[\\"sendingMessage\\"];
+  @Input() successMessage: FormProps[\\"successMessage\\"];
+
+  @ViewChild(\\"formRef\\") formRef: ElementRef;
+
+  state = \\"unsubmitted\\";
+  responseData = null;
+  formErrorMessage = \\"\\";
+  get submissionState() {
+    return (Builder.isEditing && this.previewState) || this.state;
+  }
+  onSubmit(event) {
+    const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
+
+    if (this.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = this.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = this.contentType;
+
+      if (this.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (this.formRef.nativeElement) {
+        this.formRef.nativeElement.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      this.state = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        this.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+      fetch(
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: this.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && this.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, this.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              this.formErrorMessage = message;
+            }
+          }
+
+          this.responseData = body;
+          this.state = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (this.formRef.nativeElement) {
+              this.formRef.nativeElement.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (this.resetFormOnSubmit !== false) {
+                this.formRef.nativeElement.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (this.successUrl) {
+              if (this.formRef.nativeElement) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: this.successUrl,
+                  },
+                });
+                this.formRef.nativeElement.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = this.successUrl;
+                }
+              } else {
+                location.href = this.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (this.formRef.nativeElement) {
+            this.formRef.nativeElement.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.responseData = err;
+          this.state = \\"error\\";
+        }
+      );
+    }
+  }
+}
+"
+`;
+
+exports[`Angular Form 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, BuilderBlockComponent, BuilderBlocks],
+
   selector: \\"form-component\\",
   template: \`
     <form
@@ -1214,10 +2388,156 @@ export default class Image {
 "
 `;
 
+exports[`Angular Image 2`] = `
+"import { Component, ViewChild, ElementRef, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"image\\",
+  template: \`
+    <div>
+      <picture #pictureRef>
+        <ng-container *ngIf=\\"!useLazyLoading() || load\\">
+          <img
+            [alt]=\\"altText\\"
+            [aria-role]=\\"altText ? 'presentation' : undefined\\"
+            [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
+            [src]=\\"image\\"
+            (load)=\\"setLoaded()\\"
+            [srcset]=\\"srcset\\"
+            [sizes]=\\"sizes\\"
+          />
+        </ng-container>
+
+        <source [srcset]=\\"srcset\\" />
+      </picture>
+
+      <ng-content></ng-content>
+    </div>
+  \`,
+  styles: [
+    \`
+      .img {
+        opacity: 1;
+        transition: opacity 0.2s ease-in-out;
+        object-fit: cover;
+        object-position: center;
+      }
+    \`,
+  ],
+})
+export default class Image {
+  @Input() lazy: ImageProps[\\"lazy\\"];
+  @Input() altText: ImageProps[\\"altText\\"];
+  @Input() _class: ImageProps[\\"_class\\"];
+  @Input() image: ImageProps[\\"image\\"];
+  @Input() srcset: ImageProps[\\"srcset\\"];
+  @Input() sizes: ImageProps[\\"sizes\\"];
+
+  @ViewChild(\\"pictureRef\\") pictureRef: ElementRef;
+
+  scrollListener = null;
+  imageLoaded = false;
+  setLoaded() {
+    this.imageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && this.isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+  load = false;
+
+  ngOnInit() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  }
+}
+"
+`;
+
 exports[`Angular Image State 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"img-state-component\\",
+  template: \`
+    <div>
+      <ng-container *ngFor=\\"let item of images\\">
+        <div>
+          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+        </div>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class ImgStateComponent {
+  canShow = true;
+  images = [\\"http://example.com/qwik.png\\"];
+}
+"
+`;
+
+exports[`Angular Image State 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"img-state-component\\",
   template: \`
     <div>
@@ -1282,6 +2602,56 @@ export default class ImgComponent {
 "
 `;
 
+exports[`Angular Img 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"img-component\\",
+  template: \`
+    <img
+      [ngStyle]=\\"{
+        objectFit: backgroundSize || 'cover',
+        objectPosition: backgroundPosition || 'center'
+      }\\"
+      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [alt]=\\"altText\\"
+      [src]=\\"imgSrc\\"
+    />
+  \`,
+})
+export default class ImgComponent {
+  @Input() backgroundSize: ImgProps[\\"backgroundSize\\"];
+  @Input() backgroundPosition: ImgProps[\\"backgroundPosition\\"];
+  @Input() attributes: ImgProps[\\"attributes\\"];
+  @Input() imgSrc: ImgProps[\\"imgSrc\\"];
+  @Input() altText: ImgProps[\\"altText\\"];
+}
+"
+`;
+
 exports[`Angular Input 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1298,6 +2668,51 @@ export interface FormInputProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 @Component({
+  selector: \\"form-input-component\\",
+  template: \`
+    <input
+      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [placeholder]=\\"placeholder\\"
+      [type]=\\"type\\"
+      [name]=\\"name\\"
+      [value]=\\"value\\"
+      [defaultValue]=\\"defaultValue\\"
+      [required]=\\"required\\"
+    />
+  \`,
+})
+export default class FormInputComponent {
+  @Input() attributes: FormInputProps[\\"attributes\\"];
+  @Input() defaultValue: FormInputProps[\\"defaultValue\\"];
+  @Input() placeholder: FormInputProps[\\"placeholder\\"];
+  @Input() type: FormInputProps[\\"type\\"];
+  @Input() name: FormInputProps[\\"name\\"];
+  @Input() value: FormInputProps[\\"value\\"];
+  @Input() required: FormInputProps[\\"required\\"];
+}
+"
+`;
+
+exports[`Angular Input 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"form-input-component\\",
   template: \`
     <input
@@ -1347,10 +2762,57 @@ export default class RawText {
 "
 `;
 
+exports[`Angular RawText 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"raw-text\\",
+  template: \`
+    <span
+      [class]=\\"attributes?.class || attributes?.className\\"
+      [innerHTML]=\\"text || ''\\"
+    ></span>
+  \`,
+})
+export default class RawText {
+  @Input() attributes: RawTextProps[\\"attributes\\"];
+  @Input() text: RawTextProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular Remove Internal mitosis package 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>Hello {{name}} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+  \`,
+})
+export default class MyBasicComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular Remove Internal mitosis package 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div>Hello {{name}} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
@@ -1424,6 +2886,76 @@ export default class SectionStateComponent {
 "
 `;
 
+exports[`Angular Section 3`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"section-component\\",
+  template: \`
+    <section
+      [ngStyle]=\\"maxWidth && typeof maxWidth === 'number' ? {
+        maxWidth: maxWidth
+      } : undefined\\"
+    >
+      <ng-content></ng-content>
+    </section>
+  \`,
+})
+export default class SectionComponent {
+  @Input() attributes: SectionProps[\\"attributes\\"];
+  @Input() maxWidth: SectionProps[\\"maxWidth\\"];
+}
+"
+`;
+
+exports[`Angular Section 4`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"section-state-component\\",
+  template: \`
+    <ng-container *ngIf=\\"max\\">
+      <ng-container *ngFor=\\"let item of items\\">
+        <section
+          [ngStyle]=\\"{
+         maxWidth: item + max
+       }\\"
+        >
+          <ng-content></ng-content>
+        </section>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class SectionStateComponent {
+  @Input() attributes: SectionProps[\\"attributes\\"];
+
+  max = 42;
+  items = [42];
+}
+"
+`;
+
 exports[`Angular Select 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1441,6 +2973,53 @@ export interface FormSelectProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 @Component({
+  selector: \\"select-component\\",
+  template: \`
+    <select
+      [value]=\\"value\\"
+      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [defaultValue]=\\"defaultValue\\"
+      [name]=\\"name\\"
+    >
+      <ng-container *ngFor=\\"let option of options\\">
+        <option [value]=\\"option.value\\" [data-index]=\\"index\\">
+          {{option.name || option.value}}
+        </option>
+      </ng-container>
+    </select>
+  \`,
+})
+export default class SelectComponent {
+  @Input() attributes: FormSelectProps[\\"attributes\\"];
+  @Input() value: FormSelectProps[\\"value\\"];
+  @Input() defaultValue: FormSelectProps[\\"defaultValue\\"];
+  @Input() name: FormSelectProps[\\"name\\"];
+  @Input() options: FormSelectProps[\\"options\\"];
+}
+"
+`;
+
+exports[`Angular Select 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"select-component\\",
   template: \`
     <select
@@ -1494,6 +3073,37 @@ export default class SlotCode {}
 "
 `;
 
+exports[`Angular SlotHtml 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, ContentSlotCode, Slot],
+
+  selector: \\"slot-code\\",
+  template: \`
+      <div >
+            
+      <content-slot-code >
+              
+      <ng-content <div>Hello</div>></ng-content>
+
+            </content-slot-code>
+
+          </div>
+    \`,
+})
+export default class SlotCode {}
+"
+`;
+
 exports[`Angular SlotJsx 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -1504,6 +3114,31 @@ type Props = {
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 @Component({
+  selector: \\"slot-code\\",
+  template: \`
+    <div>
+      <content-slot-code><div testing>Hello</div></content-slot-code>
+    </div>
+  \`,
+})
+export default class SlotCode {}
+"
+`;
+
+exports[`Angular SlotJsx 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  [key: string]: string;
+};
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, ContentSlotCode],
+
   selector: \\"slot-code\\",
   template: \`
     <div>
@@ -1624,6 +3259,119 @@ export default class SmileReviews {
 "
 `;
 
+exports[`Angular Stamped.io 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"smile-reviews\\",
+  template: \`
+    <div [data-user]=\\"name\\">
+      <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
+
+      <ng-container *ngIf=\\"showReviewPrompt\\">
+        <input placeholder=\\"Email\\" />
+
+        <input placeholder=\\"Title\\" class=\\"input\\" />
+
+        <textarea
+          placeholder=\\"How was your experience?\\"
+          class=\\"textarea\\"
+        ></textarea>
+
+        <button
+          class=\\"button\\"
+          (click)=\\"
+         $event.preventDefault();
+         showReviewPrompt = false;
+       \\"
+        >
+          Submit
+        </button>
+      </ng-container>
+
+      <ng-container *ngFor=\\"let review of reviews\\">
+        <div class=\\"review\\" [key]=\\"review.id\\">
+          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+
+          <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
+            <div>N: {{index}}</div>
+
+            <div>{{review.author}}</div>
+
+            <div>{{review.reviewMessage}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        display: block;
+      }
+      .textarea {
+        display: block;
+      }
+      .button {
+        display: block;
+      }
+      .review {
+        margin: 10px;
+        padding: 10px;
+        background: white;
+        display: flex;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .img {
+        height: 30px;
+        width: 30px;
+        margin-right: 10px;
+      }
+    \`,
+  ],
+})
+export default class SmileReviews {
+  @Input() apiKey: SmileReviewsProps[\\"apiKey\\"];
+  @Input() productId: SmileReviewsProps[\\"productId\\"];
+
+  reviews = [];
+  name = \\"test\\";
+  showReviewPrompt = false;
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  ngOnInit() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  }
+}
+"
+`;
+
 exports[`Angular Submit 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1633,6 +3381,31 @@ export interface ButtonProps {
 }
 
 @Component({
+  selector: \\"submit-button\\",
+  template: \`
+    <button type=\\"submit\\">{{text}}</button>
+  \`,
+})
+export default class SubmitButton {
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular Submit 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"submit-button\\",
   template: \`
     <button type=\\"submit\\">{{text}}</button>
@@ -1679,6 +3452,44 @@ export default class Text {
 "
 `;
 
+exports[`Angular Text 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"text\\",
+  template: \`
+    <div
+      [contentEditable]=\\"allowEditingText || undefined\\"
+      [data-name]=\\"{
+        test: name || 'any name'
+      }\\"
+      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+    ></div>
+  \`,
+})
+export default class Text {
+  @Input() text: TextProps[\\"text\\"];
+  @Input() content: TextProps[\\"content\\"];
+
+  name = \\"Decadef20\\";
+}
+"
+`;
+
 exports[`Angular Textarea 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -1691,6 +3502,42 @@ export interface TextareaProps {
 }
 
 @Component({
+  selector: \\"textarea\\",
+  template: \`
+    <textarea
+      [placeholder]=\\"placeholder\\"
+      [name]=\\"name\\"
+      [value]=\\"value\\"
+      [defaultValue]=\\"defaultValue\\"
+    ></textarea>
+  \`,
+})
+export default class Textarea {
+  @Input() attributes: TextareaProps[\\"attributes\\"];
+  @Input() placeholder: TextareaProps[\\"placeholder\\"];
+  @Input() name: TextareaProps[\\"name\\"];
+  @Input() value: TextareaProps[\\"value\\"];
+  @Input() defaultValue: TextareaProps[\\"defaultValue\\"];
+}
+"
+`;
+
+exports[`Angular Textarea 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"textarea\\",
   template: \`
     <textarea
@@ -1778,6 +3625,77 @@ export default class Video {
 "
 `;
 
+exports[`Angular Video 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"video\\",
+  template: \`
+    <video
+      preload=\\"none\\"
+      [ngStyle]=\\"{
+        width: '100%',
+        height: '100%',
+        ...attributes?.style,
+        objectFit: fit,
+        objectPosition: position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1
+      }\\"
+      [key]=\\"video || 'no-src'\\"
+      [poster]=\\"posterImage\\"
+      [autoplay]=\\"autoPlay\\"
+      [muted]=\\"muted\\"
+      [controls]=\\"controls\\"
+      [loop]=\\"loop\\"
+    ></video>
+  \`,
+})
+export default class Video {
+  @Input() attributes: VideoProps[\\"attributes\\"];
+  @Input() fit: VideoProps[\\"fit\\"];
+  @Input() position: VideoProps[\\"position\\"];
+  @Input() video: VideoProps[\\"video\\"];
+  @Input() posterImage: VideoProps[\\"posterImage\\"];
+  @Input() autoPlay: VideoProps[\\"autoPlay\\"];
+  @Input() muted: VideoProps[\\"muted\\"];
+  @Input() controls: VideoProps[\\"controls\\"];
+  @Input() loop: VideoProps[\\"loop\\"];
+}
+"
+`;
+
 exports[`Angular basicForwardRef 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -1787,6 +3705,43 @@ export interface Props {
 }
 
 @Component({
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
+exports[`Angular basicForwardRef 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-forward-ref-component\\",
   template: \`
     <div>
@@ -1844,10 +3799,83 @@ export default class MyBasicForwardRefComponent {
 "
 `;
 
+exports[`Angular basicForwardRefMetadata 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-forward-ref-component\\",
+  template: \`
+    <div>
+      <input
+        class=\\"input\\"
+        [value]=\\"name\\"
+        (input)=\\"name = $event.target.value\\"
+      />
+    </div>
+  \`,
+  styles: [
+    \`
+      .input {
+        color: red;
+      }
+    \`,
+  ],
+})
+export default class MyBasicForwardRefComponent {
+  name = \\"PatrickJS\\";
+}
+"
+`;
+
 exports[`Angular basicOnUpdateReturn 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-on-update-return-component\\",
+  template: \`
+    <div>Hello! {{name}}</div>
+  \`,
+})
+export default class MyBasicOnUpdateReturnComponent {
+  name = \\"PatrickJS\\";
+
+  ngAfterContentChecked() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+}
+"
+`;
+
+exports[`Angular basicOnUpdateReturn 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-on-update-return-component\\",
   template: \`
     <div>Hello! {{name}}</div>
@@ -1898,6 +3926,32 @@ export default class MyBasicComponent {}
 "
 `;
 
+exports[`Angular class + ClassName + css 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div class=\\"test2 test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular class + css 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -1920,10 +3974,62 @@ export default class MyBasicComponent {}
 "
 `;
 
+exports[`Angular class + css 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div class=\\"test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular className + css 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div class=\\"test div\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {}
+"
+`;
+
+exports[`Angular className + css 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div class=\\"test div\\">
@@ -1966,10 +4072,67 @@ export default class ClassNameCode {
 "
 `;
 
+exports[`Angular className 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"class-name-code\\",
+  template: \`
+    <div>
+      <div class=\\"no binding\\">Without Binding</div>
+
+      <div [class]=\\"bindings\\">With binding</div>
+    </div>
+  \`,
+})
+export default class ClassNameCode {
+  bindings = \\"a binding\\";
+}
+"
+`;
+
 exports[`Angular classState 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div [class]=\\"classState + ' div'\\" [ngStyle]=\\"styleState\\">
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        padding: 10px;
+      }
+    \`,
+  ],
+})
+export default class MyBasicComponent {
+  classState = \\"testClassName\\";
+  styleState = { color: \\"red\\" };
+}
+"
+`;
+
+exports[`Angular classState 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div [class]=\\"classState + ' div'\\" [ngStyle]=\\"styleState\\">
@@ -2010,10 +4173,69 @@ export default class MultipleOnUpdate {
 "
 `;
 
+exports[`Angular multipleOnUpdate 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"multiple-on-update\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MultipleOnUpdate {
+  ngAfterContentChecked() {
+    console.log(\\"Runs on every update/rerender\\");
+
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
+}
+"
+`;
+
 exports[`Angular multipleOnUpdateWithDeps 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"multiple-on-update-with-deps\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MultipleOnUpdateWithDeps {
+  a = \\"a\\";
+  b = \\"b\\";
+  c = \\"c\\";
+  d = \\"d\\";
+
+  ngAfterContentChecked() {
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+
+    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
+
+    if (this.a === \\"a\\") {
+      this.a = \\"b\\";
+    }
+  }
+}
+"
+`;
+
+exports[`Angular multipleOnUpdateWithDeps 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"multiple-on-update-with-deps\\",
   template: \`
     <div></div>
@@ -2067,10 +4289,64 @@ export default class NestedShow {
 "
 `;
 
+exports[`Angular nestedShow 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngIf=\\"!conditionB\\">
+        <div>if condition A and condition B</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() conditionB: Props[\\"conditionB\\"];
+}
+"
+`;
+
 exports[`Angular onInit & onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"on-init\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnInit {
+  constructor() {
+    console.log(\\"onInit\\");
+  }
+
+  ngOnInit() {
+    console.log(\\"onMount\\");
+  }
+}
+"
+`;
+
+exports[`Angular onInit & onMount 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"on-init\\",
   template: \`
     <div></div>
@@ -2118,10 +4394,69 @@ export default class OnInit {
 "
 `;
 
+exports[`Angular onInit 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"on-init\\",
+  template: \`
+    <div>Default name defined by parent {{name}}</div>
+  \`,
+})
+export default class OnInit {
+  @Input() name: Props[\\"name\\"];
+
+  name = \\"\\";
+
+  constructor() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  }
+}
+"
+`;
+
 exports[`Angular onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"comp\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class Comp {
+  ngOnInit() {
+    console.log(\\"Runs on mount\\");
+  }
+
+  ngOnDestroy() {
+    console.log(\\"Runs on unMount\\");
+  }
+}
+"
+`;
+
+exports[`Angular onMount 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"comp\\",
   template: \`
     <div></div>
@@ -2156,10 +4491,55 @@ export default class OnUpdate {
 "
 `;
 
+exports[`Angular onUpdate 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"on-update\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnUpdate {
+  ngAfterContentChecked() {
+    console.log(\\"Runs on every update/rerender\\");
+  }
+}
+"
+`;
+
 exports[`Angular onUpdateWithDeps 1`] = `
 "import { Component } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"on-update-with-deps\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class OnUpdateWithDeps {
+  a = \\"a\\";
+  b = \\"b\\";
+
+  ngAfterContentChecked() {
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
+  }
+}
+"
+`;
+
+exports[`Angular onUpdateWithDeps 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"on-update-with-deps\\",
   template: \`
     <div></div>
@@ -2202,6 +4582,36 @@ export default class MyBasicComponent {}
 "
 `;
 
+exports[`Angular preserveExportOrLocalStatement 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular preserveTyping 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -2215,6 +4625,37 @@ interface D {
 }
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() name: {
+    name: string;
+    age?: number;
+  }[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular preserveTyping 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export type A = \\"test\\";
+type B = \\"test2\\";
+export interface C {
+  n: \\"test\\";
+}
+interface D {
+  n: \\"test\\";
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
@@ -2255,6 +4696,36 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular propsDestructure 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  children: any;
+  type: string;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>
+      <ng-content></ng-content>
+
+      {{type}} Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() type: Props[\\"type\\"];
+
+  name = \\"Decadef20\\";
+}
+"
+`;
+
 exports[`Angular propsInterface 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -2264,6 +4735,30 @@ interface Person {
 }
 
 @Component({
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() name: Person | never[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular propsInterface 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Person {
+  name: string;
+  age?: number;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"my-basic-component\\",
   template: \`
     <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
@@ -2295,6 +4790,30 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular propsType 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Person = {
+  name: string;
+  age?: number;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"my-basic-component\\",
+  template: \`
+    <div>Hello! I can run in React, Vue, Solid, or Liquid! {{name}}</div>
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() name: Person[\\"name\\"];
+}
+"
+`;
+
 exports[`Angular rootShow 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -2314,10 +4833,58 @@ export default class RenderStyles {
 "
 `;
 
+exports[`Angular rootShow 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"render-styles\\",
+  template: \`
+    <ng-container *ngIf=\\"foo === 'bar'\\">
+      <div>Bar</div>
+    </ng-container>
+  \`,
+})
+export default class RenderStyles {
+  @Input() foo: {
+    foo: string;
+  }[\\"foo\\"];
+}
+"
+`;
+
 exports[`Angular self-referencing component 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 @Component({
+  selector: \\"my-component\\",
+  template: \`
+    <div>
+      {{name}}
+
+      <ng-container *ngIf=\\"name === 'Batman'\\">
+        <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() name: any;
+}
+"
+`;
+
+exports[`Angular self-referencing component 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, MyComponent],
+
   selector: \\"my-component\\",
   template: \`
     <div>
@@ -2360,6 +4927,35 @@ export default class MyComponent {
 "
 `;
 
+exports[`Angular self-referencing component with children 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, MyComponent],
+
+  selector: \\"my-component\\",
+  template: \`
+    <div>
+      {{name}}
+
+      <ng-content></ng-content>
+
+      <ng-container *ngIf=\\"name === 'Batman'\\">
+        <MyComponent name=\\"Bruce\\">
+          <div>Wayne</div>
+        </MyComponent>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class MyComponent {
+  @Input() name: any;
+}
+"
+`;
+
 exports[`Angular showWithFor 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -2369,6 +4965,35 @@ interface Props {
 }
 
 @Component({
+  selector: \\"nested-show\\",
+  template: \`
+    <ng-container *ngIf=\\"conditionA\\">
+      <ng-container *ngFor=\\"let item of items\\">
+        <div [key]=\\"idx\\">{{item}}</div>
+      </ng-container>
+    </ng-container>
+  \`,
+})
+export default class NestedShow {
+  @Input() conditionA: Props[\\"conditionA\\"];
+  @Input() items: Props[\\"items\\"];
+}
+"
+`;
+
+exports[`Angular showWithFor 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
   selector: \\"nested-show\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">

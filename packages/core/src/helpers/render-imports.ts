@@ -33,6 +33,10 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'vue2':
     case 'vue3':
       return '.vue';
+    case 'marko':
+      return '.marko';
+    case 'angular':
+      return '';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to one place.
     default:
@@ -126,10 +130,12 @@ export const renderImports = ({
   imports,
   target,
   asyncComponentImports,
+  excludeMitosisComponents,
 }: {
   imports: MitosisImport[];
   target: Target;
   asyncComponentImports: boolean;
+  excludeMitosisComponents?: boolean;
 }): string =>
   imports
     .filter((theImport) => {
@@ -140,7 +146,7 @@ export const renderImports = ({
         theImport.path.startsWith('@builder.io/mitosis')
       ) {
         return false;
-      } else if (target === 'angular' && theImport.path.includes('.lite')) {
+      } else if (excludeMitosisComponents && theImport.path.includes('.lite')) {
         return false;
       } else {
         return true;
@@ -152,16 +158,19 @@ export const renderImports = ({
 export const renderPreComponent = ({
   component,
   target,
+  excludeMitosisComponents,
   asyncComponentImports = false,
 }: {
   component: MitosisComponent;
   target: Target;
   asyncComponentImports?: boolean;
+  excludeMitosisComponents?: boolean;
 }): string => `
     ${renderImports({
       imports: component.imports,
       target,
       asyncComponentImports,
+      excludeMitosisComponents,
     })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent || ''}

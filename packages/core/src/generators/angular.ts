@@ -26,6 +26,10 @@ import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
+import { getComponentsUsed } from '../helpers/get-components-used';
+import { isUpperCase } from '../helpers/is-upper-case';
+
+const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -279,6 +283,10 @@ export const componentToAngular =
 
     const stateVars = Object.keys(json?.state || {});
 
+    const componentsUsed = Array.from(getComponentsUsed(json)).filter(
+      (item) => item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item),
+    );
+
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
       return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
@@ -330,7 +338,11 @@ export const componentToAngular =
 
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
-    ${renderPreComponent({ component: json, target: 'angular' })}
+    ${renderPreComponent({
+      component: json,
+      target: 'angular',
+      excludeMitosisComponents: !options.standalone,
+    })}
 
     @Component({
       ${
@@ -338,7 +350,7 @@ export const componentToAngular =
           ? // TODO: also add child component imports here as well
             `
         standalone: true,
-        imports: [CommonModule],
+        imports: [CommonModule${componentsUsed.length ? `, ${componentsUsed.join(', ')}` : ''}],
       `
           : ''
       }
