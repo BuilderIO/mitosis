@@ -33,6 +33,8 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'vue2':
     case 'vue3':
       return '.vue';
+    case 'angular':
+      return '';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
     // TO-DO: consolidate file-extension renaming to one place.
     default:
