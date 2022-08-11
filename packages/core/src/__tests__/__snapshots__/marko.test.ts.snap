@@ -22,15 +22,15 @@ exports[` 1`] = `
 exports[` 2`] = `
 "
     <div>
-      <if(input.foo === 'bar'\\">
+      <if(input.foo === 'bar')>
         Hello
       </if>
-      <for|items| of=(some.long ? expression : yo))>
+      <for|items| of=(some.long ? expression : yo)>
         World
       </for>
       <input 
         placeholder=\\"Hello world...\\"
-        value=\\"(this.state.name) 
+        value=(this.state.name) 
         on-click=(event => {
           console.log('hello', \\"world\\")
         })
@@ -42,11 +42,11 @@ exports[` 2`] = `
 
 exports[` 3`] = `
 "<div>
-  <if(input.foo === 'bar'\\"> Hello </if>
-  <for|items| of=(some.long ? expression : yo))> World </for>
+  <if(input.foo === 'bar')> Hello </if>
+  <for|items| of=(some.long ? expression : yo)> World </for>
   <input
     placeholder=\\"Hello world...\\"
-    value=\\"(this.state.name)
+    value=(this.state.name)
     on-click=(event => {
           console.log('hello', \\"world\\")
         })
@@ -90,7 +90,7 @@ style {
   }
 }
 <div>
-  <if(input.showInput\\">
+  <if(input.showInput)>
     <input
       key=\\"inputRef\\"
       value=(state.name)
@@ -103,7 +103,7 @@ style {
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
 
-      <option value=\\"86)>GR 86</option>
+      <option value=\\"86\\">GR 86</option>
     </select>
   </if>
 
@@ -313,7 +313,7 @@ style {
   }
 }
 <div>
-  <if(input.showInput\\">
+  <if(input.showInput)>
     <input
       key=\\"inputRef\\"
       value=(state.name)
@@ -326,7 +326,7 @@ style {
     <select name=\\"cars\\" id=\\"cars\\">
       <option value=\\"supra\\">GR Supra</option>
 
-      <option value=\\"86)>GR 86</option>
+      <option value=\\"86\\">GR 86</option>
     </select>
   </if>
 
@@ -383,7 +383,7 @@ class {
 exports[`Marko Button 1`] = `
 "class {}
 
-<if(input.link\\">
+<if(input.link)>
   <a
     ...(props.attributes)
     href=(input.link)
@@ -393,8 +393,8 @@ exports[`Marko Button 1`] = `
   </a></if
 >
 
-<if _=\\"!input.link\\">
-  <button ...(props.attributes) type=\\"button)>\${input.text}</button></if
+<if(!input.link)>
+  <button ...(props.attributes) type=\\"button\\">\${input.text}</button></if
 >"
 `;
 
@@ -533,7 +533,11 @@ exports[`Marko CustomCode 1`] = `
   }
 }
 
-<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  key=\\"elem\\"  innerHTML=(input.code) ></div>"
+<div
+  class=('builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : ''))
+  key=\\"elem\\"
+  innerHTML=(input.code)
+></div>"
 `;
 
 exports[`Marko Embed 1`] = `
@@ -593,7 +597,11 @@ exports[`Marko Embed 1`] = `
   }
 }
 
-<div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  key=\\"elem\\"  innerHTML=(input.code) ></div>"
+<div
+  class=('builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : ''))
+  key=\\"elem\\"
+  innerHTML=(input.code)
+></div>"
 `;
 
 exports[`Marko Form 1`] = `
@@ -851,7 +859,7 @@ style {
   name=(input.name)
   on-submit(event => state.state.onSubmit(event))
 >
-  <if(input.builderBlock && input.builderBlock.children\\">
+  <if(input.builderBlock && input.builderBlock.children)>
     <for|block| of=(input.builderBlock?.children)>
       <builder-block-component
         key=(block.id)
@@ -860,21 +868,21 @@ style {
       ></builder-block-component> </for
   ></if>
 
-  <if _=\\"state.state.submissionState === 'error'\\">
+  <if(state.state.submissionState === 'error')>
     <builder-blocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
     ></builder-blocks
   ></if>
 
-  <if _=\\"state.state.submissionState === 'sending'\\">
+  <if(state.state.submissionState === 'sending')>
     <builder-blocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
     ></builder-blocks
   ></if>
 
-  <if _=\\"state.state.submissionState === 'error' && state.state.responseData\\">
+  <if(state.state.submissionState === 'error' && state.state.responseData)>
     <pre>
           
 \${JSON.stringify(state.state.responseData, null, 2)}
@@ -883,10 +891,11 @@ style {
     >
   </if>
 
-  <if _=\\"state.state.submissionState === 'success'\\">
+  <if(state.state.submissionState === 'success')>
     <builder-blocks
       dataPath=\\"successMessage\\"
-      blocks=\\"(input.successMessage))></builder-blocks
+      blocks=(input.successMessage)
+    ></builder-blocks
   ></if>
 </form>"
 `;
@@ -955,11 +964,15 @@ style {
 }
 <picture key=\\"pictureRef\\">
   <if(!component.useLazyLoading() || state.load)>
-    <img class={'builder-image' + (props._class ? ' ' + props._class : '') + '
-    img'} alt=(input.altText) aria-role=(input.altText ? 'presentation' :
-    undefined) src=(input.image) on-load(event => component.setLoaded())
-    srcset=(input.srcset) sizes=(input.sizes) /></if
-  >
+    <img
+      class=('builder-image' + (props._class ? ' ' + props._class : '') + ' img')
+      alt=(input.altText)
+      aria-role=(input.altText ? 'presentation' : undefined)
+      src=(input.image)
+      on-load(event => component.setLoaded())
+      srcset=(input.srcset)
+      sizes=(input.sizes)
+  /></if>
 
   <source srcset=(input.srcset) />
 </picture>
@@ -1019,9 +1032,7 @@ exports[`Marko RawText 1`] = `
 "class {}
 
 <span
-  class=\\"{props.attributes?.class\\"
-  ||
-  props.attributes?.className}
+  class=(props.attributes?.class || props.attributes?.className)
   innerHTML=(input.text || '')
 ></span>"
 `;
@@ -1058,13 +1069,14 @@ exports[`Marko Section 2`] = `
   }
 }
 
-<if(state.max\\">
+<if(state.max)>
   <for|item| of=(state.items)>
     <section
       ...(props.attributes)
-      style=\\"({
+      style=({
   maxWidth: item + state.max
-}))>
+})
+    >
       \${input.children}
     </section>
   </for></if
@@ -1166,46 +1178,36 @@ style {
     margin-right: 10px;
   }
 }
-<div  data-user=(state.name) >
-      
-<button  on-click(event => state.showReviewPrompt = true) >Write a review</button>
+<div data-user=(state.name)>
+  <button on-click(event => state.showReviewPrompt = true)>
+    Write a review
+  </button>
 
-      
-<if(state.showReviewPrompt)>
-      <input  placeholder=\\"Email\\"  />
-<input  placeholder=\\"Title\\"  />
-<textarea  placeholder=\\"How was your experience?\\" ></textarea>
-<button  on-click(event => {
+  <if(state.showReviewPrompt)>
+    <input placeholder=\\"Email\\" />
+    <input placeholder=\\"Title\\" />
+    <textarea placeholder=\\"How was your experience?\\"></textarea>
+    <button on-click(event => {
   state.showReviewPrompt = false;
-}) >
-          Submit
-        </button></if>
-    
+})>
+      Submit
+    </button></if
+  >
 
-      
-<for|review| of=(state.reviews)>
-      <div  key=(review.id) >
-            
-<img  src=(review.avatar)  />
+  <for|review| of=(state.reviews)>
+    <div key=(review.id)>
+      <img src=(review.avatar) />
 
-            
-<div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-              
-<div >N: 
-\${index}</div>
+      <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
+        <div>N: \${index}</div>
 
-              
-<div >\${review.author}</div>
+        <div>\${review.author}</div>
 
-              
-<div >\${review.reviewMessage}</div>
-
-            </div>
-
-          </div>
-    </for>
-
-    </div>"
+        <div>\${review.reviewMessage}</div>
+      </div>
+    </div>
+  </for>
+</div>"
 `;
 
 exports[`Marko Submit 1`] = `
@@ -1399,7 +1401,7 @@ exports[`Marko className 1`] = `
 <div>
   <div>Without Binding</div>
 
-  <div class=\\"{state.bindings}\\">With binding</div>
+  <div class=(state.bindings)>With binding</div>
 </div>"
 `;
 
@@ -1415,9 +1417,9 @@ style {
     padding: 10px;
   }
 }
-<div  class={state.classState + ' div'}  style=(state.styleState) >
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>"
+<div class=(state.classState + ' div') style=(state.styleState)>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Marko multipleOnUpdate 1`] = `
@@ -1465,8 +1467,8 @@ this.state.a = 'b';
 exports[`Marko nestedShow 1`] = `
 "class {}
 
-<if(input.conditionA\\">
-  <if _=\\"!input.conditionB)> <div>if condition A and condition B</div></if>
+<if(input.conditionA)>
+  <if(!input.conditionB)> <div>if condition A and condition B</div></if>
   <else><div>else-condition-B</div></else></if
 >
 <else><div>else-condition-A</div></else>"
@@ -1588,8 +1590,8 @@ exports[`Marko self-referencing component 1`] = `
 <div>
   \${input.name}
 
-  <if(input.name === 'Batman'\\">
-    <my-component name=\\"Bruce Wayne)></my-component
+  <if(input.name === 'Batman')>
+    <my-component name=\\"Bruce Wayne\\"></my-component
   ></if>
 </div>"
 `;
@@ -1600,8 +1602,8 @@ exports[`Marko self-referencing component with children 1`] = `
 <div>
   \${input.name} \${input.children}
 
-  <if(input.name === 'Batman'\\">
-    <my-component name=\\"Bruce)>
+  <if(input.name === 'Batman')>
+    <my-component name=\\"Bruce\\">
       <div>Wayne</div>
     </my-component></if
   >
@@ -1611,9 +1613,9 @@ exports[`Marko self-referencing component with children 1`] = `
 exports[`Marko showWithFor 1`] = `
 "class {}
 
-<if(input.conditionA\\">
+<if(input.conditionA)>
   <for|item| of=(input.items)>
-    <div key=\\"(idx))>\${item}</div>
+    <div key=(idx)>\${item}</div>
   </for></if
 >
 <else><div>else-condition-A</div></else>"

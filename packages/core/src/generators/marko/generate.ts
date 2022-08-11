@@ -126,7 +126,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
 
   str += `<${toTagName(json.name)} `;
 
-  const classString = collectClassString(json);
+  const classString = collectClassString(json, '(', ')');
   if (classString) {
     str += ` class=${classString} `;
   }
@@ -372,7 +372,7 @@ export function preprocessHtml(htmlString: string) {
 export function postprocessHtml(htmlString: string) {
   return htmlString
     .replace(/<for \|/g, '<for|')
-    .replace(/<if _="([\s\S]+)"\s*>/g, (_match, group) => {
+    .replace(/<if _="([\s\S]+?)"\s*>/g, (_match, group) => {
       return `<if(${decodeAttributeValue(group)})>`;
     })
     .replace(/="\(([\s\S]*?)\)"(\s*[a-z\/>])/g, (_match, group, after) => {
