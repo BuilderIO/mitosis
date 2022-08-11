@@ -6,18 +6,6 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { parseStateObject } from './state';
 
-const jsxPlugin = require('@babel/plugin-syntax-jsx');
-const tsPreset = require('@babel/preset-typescript');
-
-const { types } = babel;
-
-type Context = {
-  // Babel has other context
-  builder: {
-    component: MitosisComponent;
-  };
-};
-
 const expressionToNode = (str: string) => {
   const code = `export default ${str}`;
   return (
