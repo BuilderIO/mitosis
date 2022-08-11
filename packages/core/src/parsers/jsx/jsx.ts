@@ -13,40 +13,22 @@ import { tryParseJson } from '../../helpers/json';
 import { HOOKS } from '../../constants/hooks';
 import { jsonToAst } from './ast';
 import { mapReactIdentifiers, parseStateObject } from './state';
-import { ParseMitosisOptions } from './types';
+import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
 import { parseCodeJson } from './helpers';
+import {
+  collectInterfaces,
+  collectTypes,
+  getPropsTypeRef,
+  isTypeOrInterface,
+} from './component-types';
+import { undoPropsDestructure } from './props';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 
 const { types } = babel;
-
-type Context = {
-  // Babel has other context
-  builder: {
-    component: MitosisComponent;
-  };
-};
-
-const getPropsTypeRef = (node: babel.types.FunctionDeclaration): string | undefined => {
-  const param = node.params[0];
-  // TODO: component function params name must be props
-  if (
-    babel.types.isIdentifier(param) &&
-    param.name === 'props' &&
-    babel.types.isTSTypeAnnotation(param.typeAnnotation)
-  ) {
-    const paramIdentifier = babel.types.variableDeclaration('let', [
-      babel.types.variableDeclarator(param),
-    ]);
-    return generate(paramIdentifier)
-      .code.replace(/^let\sprops:\s+/, '')
-      .replace(/;/g, '');
-  }
-  return undefined;
-};
 
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
@@ -497,26 +479,6 @@ const jsxElementToJson = (
 const isImportOrDefaultExport = (node: babel.Node) =>
   types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
 
-const isTypeOrInterface = (node: babel.Node) =>
-  types.isTSTypeAliasDeclaration(node) ||
-  types.isTSInterfaceDeclaration(node) ||
-  (types.isExportNamedDeclaration(node) && types.isTSTypeAliasDeclaration(node.declaration)) ||
-  (types.isExportNamedDeclaration(node) && types.isTSInterfaceDeclaration(node.declaration));
-
-const collectTypes = (node: babel.Node, context: Context) => {
-  const typeStr = generate(node).code;
-  const { types = [] } = context.builder.component;
-  types.push(typeStr);
-  context.builder.component.types = types.filter(Boolean);
-};
-
-const collectInterfaces = (node: babel.Node, context: Context) => {
-  const interfaceStr = generate(node).code;
-  const { interfaces = [] } = context.builder.component;
-  interfaces.push(interfaceStr);
-  context.builder.component.interfaces = interfaces.filter(Boolean);
-};
-
 const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   path.traverse({
     FunctionDeclaration(path) {
@@ -524,48 +486,6 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
     },
   });
 };
-
-function undoPropsDestructure(path: babel.NodePath<babel.types.FunctionDeclaration>) {
-  const { node } = path;
-  if (node.params.length && types.isObjectPattern(node.params[0])) {
-    const param = node.params[0];
-    const propsMap = param.properties.reduce((pre, cur) => {
-      if (
-        types.isObjectProperty(cur) &&
-        types.isIdentifier(cur.key) &&
-        types.isIdentifier(cur.value)
-      ) {
-        pre[cur.value.name] = `props.${cur.key.name}`;
-        return pre;
-      }
-      return pre;
-    }, {} as Record<string, string>);
-
-    if (param.typeAnnotation) {
-      node.params = [
-        {
-          ...babel.types.identifier('props'),
-          typeAnnotation: param.typeAnnotation,
-        },
-      ];
-      path.replaceWith(node);
-    }
-
-    path.traverse({
-      JSXExpressionContainer(path) {
-        const { node } = path;
-        if (types.isIdentifier(node.expression)) {
-          const { name } = node.expression;
-          if (propsMap[name]) {
-            path.replaceWith(
-              babel.types.jsxExpressionContainer(babel.types.identifier(propsMap[name])),
-            );
-          }
-        }
-      },
-    });
-  }
-}
 
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
