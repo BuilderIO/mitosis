@@ -456,31 +456,18 @@ export interface ButtonProps {
 @Component({
   selector: \\"button\\",
   template: \`
-      <div>
-            
+    <div>
       <ng-container *ngIf=\\"link\\">
-              
-      <a  [href]='link'  [target]='openLinkInNewTab ? '_blank' : undefined' >
-                
-      {{text}}
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
 
-              </a>
-
-            </ng-container>
-
-            
       <ng-container *ngIf=\\"!link\\">
-              
-      <button  type=\\"button\\" >
-                
-      {{text}}
-
-              </button>
-
-            </ng-container>
-
-          </div>
-    \`,
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
 })
 export default class Button {
   @Input() link: ButtonProps[\\"link\\"];
@@ -796,7 +783,7 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 
-import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
@@ -865,6 +852,8 @@ import { get } from \\"@fake\\";
   ],
 })
 export default class FormComponent {
+  builder = builder;
+
   @Input() previewState: FormProps[\\"previewState\\"];
   @Input() sendWithJs: FormProps[\\"sendWithJs\\"];
   @Input() sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
@@ -1137,10 +1126,15 @@ export interface ImageProps {
     <div>
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
-          <img [alt]='altText' [aria-role]='altText ? 'presentation' :
-          undefined' [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + '
-          img'\\" [src]='image' (load)=\\"setLoaded()\\" [srcset]='srcset'
-          [sizes]='sizes' />
+          <img
+            [alt]=\\"altText\\"
+            [aria-role]=\\"altText ? 'presentation' : undefined\\"
+            [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
+            [src]=\\"image\\"
+            (load)=\\"setLoaded()\\"
+            [srcset]=\\"srcset\\"
+            [sizes]=\\"sizes\\"
+          />
         </ng-container>
 
         <source [srcset]=\\"srcset\\" />
@@ -1177,7 +1171,7 @@ export default class Image {
   }
   useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && isBrowser();
+    return !!this.lazy && this.isBrowser();
   }
   isBrowser = function isBrowser() {
     return (
@@ -1267,9 +1261,15 @@ import { Builder } from \\"@builder.io/sdk\\";
 @Component({
   selector: \\"img-component\\",
   template: \`
-    <img [ngStyle]=\\"{ objectFit: backgroundSize || 'cover', objectPosition:
-    backgroundPosition || 'center' }\\" [key]='Builder.isEditing && imgSrc ||
-    'default-key'' [alt]='altText' [src]='imgSrc' />
+    <img
+      [ngStyle]=\\"{
+        objectFit: backgroundSize || 'cover',
+        objectPosition: backgroundPosition || 'center'
+      }\\"
+      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [alt]=\\"altText\\"
+      [src]=\\"imgSrc\\"
+    />
   \`,
 })
 export default class ImgComponent {
@@ -1300,9 +1300,15 @@ import { Builder } from \\"@builder.io/sdk\\";
 @Component({
   selector: \\"form-input-component\\",
   template: \`
-    <input [key]='Builder.isEditing && defaultValue ? defaultValue :
-    'default-key'' [placeholder]='placeholder' [type]='type' [name]='name'
-    [value]='value' [defaultValue]='defaultValue' [required]='required' />
+    <input
+      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [placeholder]=\\"placeholder\\"
+      [type]=\\"type\\"
+      [name]=\\"name\\"
+      [value]=\\"value\\"
+      [defaultValue]=\\"defaultValue\\"
+      [required]=\\"required\\"
+    />
   \`,
 })
 export default class FormInputComponent {
@@ -1437,16 +1443,19 @@ import { Builder } from \\"@builder.io/sdk\\";
 @Component({
   selector: \\"select-component\\",
   template: \`
-      <select  [value]='value'  [key]='Builder.isEditing && defaultValue ? defaultValue : 'default-key''  [defaultValue]='defaultValue'  [name]='name' >
-            
-      <ng-container *ngFor=\\"let option of options\\"><option  [value]='option.value'  [data-index]='index' >
-                  
-      {{option.name || option.value}}
-
-                </option></ng-container>
-
-          </select>
-    \`,
+    <select
+      [value]=\\"value\\"
+      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [defaultValue]=\\"defaultValue\\"
+      [name]=\\"name\\"
+    >
+      <ng-container *ngFor=\\"let option of options\\">
+        <option [value]=\\"option.value\\" [data-index]=\\"index\\">
+          {{option.name || option.value}}
+        </option>
+      </ng-container>
+    </select>
+  \`,
 })
 export default class SelectComponent {
   @Input() attributes: FormSelectProps[\\"attributes\\"];
@@ -1536,6 +1545,7 @@ import { snakeCase } from \\"lodash\\";
         <button
           class=\\"button\\"
           (click)=\\"
+         $event.preventDefault();
          showReviewPrompt = false;
        \\"
         >
@@ -1651,10 +1661,14 @@ import { Builder } from \\"@builder.io/sdk\\";
 @Component({
   selector: \\"text\\",
   template: \`
-      <div  [contentEditable]='allowEditingText || undefined'  [data-name]='{
+    <div
+      [contentEditable]=\\"allowEditingText || undefined\\"
+      [data-name]=\\"{
         test: name || 'any name'
-      }'  [innerHTML]=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"  ></div>
-    \`,
+      }\\"
+      [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
+    ></div>
+  \`,
 })
 export default class Text {
   @Input() text: TextProps[\\"text\\"];
@@ -1729,7 +1743,9 @@ export interface VideoProps {
 @Component({
   selector: \\"video\\",
   template: \`
-      <video  preload=\\"none\\"  [ngStyle]=\\"{
+    <video
+      preload=\\"none\\"
+      [ngStyle]=\\"{
         width: '100%',
         height: '100%',
         ...attributes?.style,
@@ -1738,8 +1754,15 @@ export interface VideoProps {
         // Hack to get object fit to work as expected and
         // not have the video overflow
         borderRadius: 1
-      }\\"   [key]='video || 'no-src''  [poster]='posterImage'  [autoplay]='autoPlay'  [muted]='muted'  [controls]='controls'  [loop]='loop' ></video>
-    \`,
+      }\\"
+      [key]=\\"video || 'no-src'\\"
+      [poster]=\\"posterImage\\"
+      [autoplay]=\\"autoPlay\\"
+      [muted]=\\"muted\\"
+      [controls]=\\"controls\\"
+      [loop]=\\"loop\\"
+    ></video>
+  \`,
 })
 export default class Video {
   @Input() attributes: VideoProps[\\"attributes\\"];
@@ -2003,13 +2026,13 @@ export default class MultipleOnUpdateWithDeps {
   d = \\"d\\";
 
   ngAfterContentChecked() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
 
-    console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
@@ -2147,7 +2170,7 @@ export default class OnUpdateWithDeps {
   b = \\"b\\";
 
   ngAfterContentChecked() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when this.a or this.b changes\\", this.a, this.b);
   }
 }
 "

@@ -1,17 +1,19 @@
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { JSONObject } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { addPreventDefault } from './add-prevent-default';
 import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 
 Error.stackTraceLimit = 9999;
 
 // TODO(misko): styles are not processed.
 
-const DEBUG = true;
+const DEBUG = false;
 
 export interface ToQwikOptions extends BaseTranspilerOptions {}
 
@@ -38,7 +40,10 @@ type StateValues = Record<
 
 export const componentToQwik =
   (userOptions: ToQwikOptions = {}): Transpiler =>
-  ({ component, path }): string => {
+  ({ component: _component, path }): string => {
+    // Make a copy we can safely mutate, similar to babel's toolchain
+    const component = fastClone(_component);
+    addPreventDefault(component);
     const file = new File(
       component.name + '.js',
       {

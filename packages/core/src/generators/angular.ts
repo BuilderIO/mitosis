@@ -25,8 +25,11 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
+import { getCustomImports } from '../helpers/get-custom-imports';
 
-export interface ToAngularOptions extends BaseTranspilerOptions {}
+export interface ToAngularOptions extends BaseTranspilerOptions {
+  standalone?: boolean;
+}
 
 interface AngularBlockOptions {
   contextVars?: string[];
@@ -159,7 +162,7 @@ export const blockToAngular = (
         contextVars,
         outputVars,
         domRefs,
-      });
+      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -184,9 +187,9 @@ export const blockToAngular = (
           key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(/"/g, "\\'")}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
       } else {
-        str += ` [${key}]='${useValue}' `;
+        str += ` [${key}]="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -227,6 +230,8 @@ export const componentToAngular =
         }
       });
     });
+
+    const customImports = getCustomImports(json);
 
     const { exports: localExports = {} } = component;
     const localExportVars = Object.keys(localExports)
@@ -271,6 +276,9 @@ export const componentToAngular =
 
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+
+    const stateVars = Object.keys(json?.state || {});
+
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
       return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
@@ -308,6 +316,7 @@ export const componentToAngular =
           contextVars,
           outputVars,
           domRefs: Array.from(domRefs),
+          stateVars,
         }),
     });
 
@@ -317,12 +326,22 @@ export const componentToAngular =
     } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
       props.size ? ', Input' : ''
     } } from '@angular/core';
+    ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
     ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'angular' })}
 
     @Component({
+      ${
+        options.standalone
+          ? // TODO: also add child component imports here as well
+            `
+        standalone: true,
+        imports: [CommonModule],
+      `
+          : ''
+      }
       selector: '${kebabCase(json.name || 'my-component')}',
       template: \`
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
@@ -337,6 +356,7 @@ export const componentToAngular =
     })
     export default class ${component.name} {
       ${localExportVars.join('\n')}
+      ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
       ${Array.from(props)
         .filter((item) => !isSlotProperty(item) && item !== 'children')
@@ -365,6 +385,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 })}`
               : ''
           };`;
@@ -403,6 +424,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 })}
                 `
               }
@@ -419,6 +441,7 @@ export const componentToAngular =
                   contextVars,
                   outputVars,
                   domRefs: Array.from(domRefs),
+                  stateVars,
                 });
                 return code + '\n';
               }, '')}
@@ -434,6 +457,7 @@ export const componentToAngular =
                 contextVars,
                 outputVars,
                 domRefs: Array.from(domRefs),
+                stateVars,
               })}
             }`
       }
