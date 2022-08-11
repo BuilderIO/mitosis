@@ -13,7 +13,6 @@ import {
 import { fastClone } from '../../helpers/fast-clone';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
-import { collectClassString } from '../stencil/collect-class-string';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { collectCss } from '../../helpers/styles/collect-css';
@@ -125,11 +124,6 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
   let str = '';
 
   str += `<${toTagName(json.name)} `;
-
-  const classString = collectClassString(json, '(', ')');
-  if (classString) {
-    str += ` class=${classString} `;
-  }
 
   if (json.bindings._spread?.code) {
     str += ` ...(${json.bindings._spread.code}) `;

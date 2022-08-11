@@ -92,6 +92,7 @@ style {
 <div>
   <if(input.showInput)>
     <input
+      class=\\"input\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -132,7 +133,7 @@ style {
     padding: 10px;
   }
 }
-<div>
+<div class=\\"test div\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -315,6 +316,7 @@ style {
 <div>
   <if(input.showInput)>
     <input
+      class=\\"input\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -439,9 +441,9 @@ style {
     flex-grow: 1;
   }
 }
-<div>
+<div class=\\"builder-columns div\\">
   <for|column| of=(input.columns)>
-    <div>\${column.content} \${index}</div>
+    <div class=\\"builder-column div-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -534,8 +536,8 @@ exports[`Marko CustomCode 1`] = `
 }
 
 <div
-  class=('builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : ''))
   key=\\"elem\\"
+  class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
   innerHTML=(input.code)
 ></div>"
 `;
@@ -598,8 +600,8 @@ exports[`Marko Embed 1`] = `
 }
 
 <div
-  class=('builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : ''))
   key=\\"elem\\"
+  class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
   innerHTML=(input.code)
 ></div>"
 `;
@@ -883,7 +885,7 @@ style {
   ></if>
 
   <if(state.state.submissionState === 'error' && state.state.responseData)>
-    <pre>
+    <pre class=\\"builder-form-error-text pre\\">
           
 \${JSON.stringify(state.state.responseData, null, 2)}
 
@@ -965,9 +967,9 @@ style {
 <picture key=\\"pictureRef\\">
   <if(!component.useLazyLoading() || state.load)>
     <img
-      class=('builder-image' + (props._class ? ' ' + props._class : '') + ' img')
       alt=(input.altText)
       aria-role=(input.altText ? 'presentation' : undefined)
+      class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img')
       src=(input.image)
       on-load(event => component.setLoaded())
       srcset=(input.srcset)
@@ -989,7 +991,7 @@ exports[`Marko Image State 1`] = `
 
 <div>
   <for|item| of=(state.images)>
-    <img src=(item) key=(itemIndex) />
+    <img class=\\"custom-class\\" src=(item) key=(itemIndex) />
   </for>
 </div>"
 `;
@@ -1032,7 +1034,7 @@ exports[`Marko RawText 1`] = `
 "class {}
 
 <span
-  class=(props.attributes?.class || props.attributes?.className)
+  class=(input.attributes?.class || input.attributes?.className)
   innerHTML=(input.text || '')
 ></span>"
 `;
@@ -1185,18 +1187,24 @@ style {
 
   <if(state.showReviewPrompt)>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" />
-    <textarea placeholder=\\"How was your experience?\\"></textarea>
-    <button on-click(event => {
+    <input placeholder=\\"Title\\" class=\\"input\\" />
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea\\"
+    ></textarea>
+    <button
+      class=\\"button\\"
+      on-click(event => {
   state.showReviewPrompt = false;
-})>
+})
+    >
       Submit
     </button></if
   >
 
   <for|review| of=(state.reviews)>
-    <div key=(review.id)>
-      <img src=(review.avatar) />
+    <div class=\\"review\\" key=(review.id)>
+      <img class=\\"img\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1294,6 +1302,7 @@ style {
 }
 <div>
   <input
+    class=\\"input\\"
     key=\\"props.inputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1324,6 +1333,7 @@ style {
 }
 <div>
   <input
+    class=\\"input\\"
     key=\\"props.inputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1366,7 +1376,9 @@ style {
     padding: 10px;
   }
 }
-<div>Hello! I can run in React, Vue, Solid, or Liquid!</div>"
+<div class=\\"test2 test div\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
 `;
 
 exports[`Marko class + css 1`] = `
@@ -1377,7 +1389,7 @@ style {
     padding: 10px;
   }
 }
-<div>Hello! I can run in React, Vue, Solid, or Liquid!</div>"
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>"
 `;
 
 exports[`Marko className + css 1`] = `
@@ -1388,7 +1400,7 @@ style {
     padding: 10px;
   }
 }
-<div>Hello! I can run in React, Vue, Solid, or Liquid!</div>"
+<div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>"
 `;
 
 exports[`Marko className 1`] = `
@@ -1399,7 +1411,7 @@ exports[`Marko className 1`] = `
 }
 
 <div>
-  <div>Without Binding</div>
+  <div class=\\"no binding\\">Without Binding</div>
 
   <div class=(state.bindings)>With binding</div>
 </div>"
