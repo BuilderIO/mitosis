@@ -303,11 +303,17 @@ const componentFunctionToJson = (
             // Function as init, like:
             // useState(() => true)
             if (types.isArrowFunctionExpression(value)) {
-              state[varName] = parseCodeJson(value.body);
+              state[varName] = {
+                code: parseCodeJson(value.body),
+                type: 'function',
+              };
             } else {
               // Value as init, like:
               // useState(true)
-              state[varName] = parseCodeJson(value);
+              state[varName] = {
+                code: parseCodeJson(value),
+                type: 'data',
+              };
             }
           }
         }

@@ -1,4 +1,4 @@
-import { Dictionary } from 'src/helpers/typescript';
+import { Dictionary } from '../helpers/typescript';
 import { _JSON, JSONObject } from './json';
 import { MitosisNode } from './mitosis-node';
 

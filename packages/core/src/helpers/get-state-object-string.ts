@@ -1,11 +1,10 @@
 import { MitosisContext } from '../types/mitosis-context';
-import { _JSON } from '../types/json';
 import json5 from 'json5';
-import { mapValues } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { MitosisComponent, StateValue } from '../types/mitosis-component';
 import { GETTER } from './patterns';
+import { mapJsonObjectToStateValue } from './state';
 
 interface GetStateObjectStringOptions {
   data?: boolean;
@@ -88,15 +87,10 @@ export const getMemberObjectString = (
   return `${prefix}${stringifiedProperties}${extraDelimiter}${suffix}`;
 };
 
-const transformContextValueToStateValue = (value: _JSON): StateValue => ({
-  code: value,
-  type: 'data',
-});
-
 export const stringifyContextValue = (
   object: MitosisContext['value'],
   userOptions: GetStateObjectStringOptions = {},
-) => getMemberObjectString(mapValues(object, transformContextValueToStateValue), userOptions);
+) => getMemberObjectString(mapJsonObjectToStateValue(object), userOptions);
 
 export const getStateObjectStringFromComponent = (
   component: MitosisComponent,

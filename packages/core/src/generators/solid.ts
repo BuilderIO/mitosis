@@ -28,6 +28,7 @@ import { hasContext } from './helpers/context';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
+import { checkHasState } from '../helpers/state';
 
 export interface ToSolidOptions extends BaseTranspilerOptions {}
 
@@ -249,7 +250,7 @@ export const componentToSolid =
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     const stateString = getStateObjectStringFromComponent(json);
-    const hasState = Object.keys(component.state).length > 0;
+    const hasState = checkHasState(json);
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 
