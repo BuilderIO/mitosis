@@ -1,4 +1,4 @@
-import { convertMethodToFunction } from '../../generators/qwik/convertMethodToFunction';
+import { convertMethodToFunction } from '../../generators/qwik/convert-method-to-function';
 
 describe('convertMethodToFunction', () => {
   const methodMap: Record<string, 'method' | 'getter'> = {
@@ -17,6 +17,11 @@ describe('convertMethodToFunction', () => {
     test('getter', () => {
       expect(convertMethodToFunction('this.getterB', methodMap, lexicalArgs)).toEqual(
         'getterB(props,state)',
+      );
+    });
+    test('method binding', () => {
+      expect(convertMethodToFunction('this.methodA', methodMap, lexicalArgs)).toEqual(
+        'methodA.bind(null,props,state)',
       );
     });
     test('handle comments', () => {
