@@ -532,7 +532,7 @@ exports[`Vue CustomCode 1`] = `
     ref=\\"elem\\"
     :class=\\"
       _classStringToObject(
-        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
       )
     \\"
     v-html=\\"code\\"
@@ -615,7 +615,7 @@ exports[`Vue Embed 1`] = `
     ref=\\"elem\\"
     :class=\\"
       _classStringToObject(
-        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
       )
     \\"
     v-html=\\"code\\"
@@ -1021,7 +1021,7 @@ exports[`Vue Image 1`] = `
       :aria-role=\\"altText ? 'presentation' : undefined\\"
       :class=\\"
         _classStringToObject(
-          'builder-image' + (this._class ? ' ' + this._class : '') + ' img'
+          'builder-image' + (_class ? ' ' + _class : '') + ' img'
         )
       \\"
       :src=\\"image\\"
@@ -1196,9 +1196,7 @@ export default {
 exports[`Vue RawText 1`] = `
 "<template>
   <span
-    :class=\\"
-      _classStringToObject(this.attributes?.class || this.attributes?.className)
-    \\"
+    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -1369,9 +1367,7 @@ exports[`Vue Stamped.io 1`] = `
       <img class=\\"img\\" :src=\\"review.avatar\\" />
       <div
         :class=\\"
-          _classStringToObject(
-            this.showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-          )
+          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
         \\"
       >
         <div>N: {{ index }}</div>
@@ -1710,7 +1706,7 @@ exports[`Vue className 1`] = `
   <div>
     <div class=\\"no binding\\">Without Binding</div>
 
-    <div :class=\\"_classStringToObject(this.bindings)\\">With binding</div>
+    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
   </div>
 </template>
 <script>
@@ -1739,10 +1735,7 @@ export default {
 
 exports[`Vue classState 1`] = `
 "<template>
-  <div
-    :class=\\"_classStringToObject(this.classState + ' div')\\"
-    :style=\\"styleState\\"
-  >
+  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
