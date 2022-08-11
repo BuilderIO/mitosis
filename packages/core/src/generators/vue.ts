@@ -35,6 +35,7 @@ import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
+import { getCustomImports } from '../helpers/get-custom-imports';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -565,8 +566,6 @@ const componentToVue =
       valueMapper: (code) => processBinding(code, options, component),
     });
 
-    const blocksString = JSON.stringify(component.children);
-
     // Component references to include in `component: { YourComponent, ... }
     const componentsUsed = Array.from(getComponentsUsed(component))
       .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
@@ -574,16 +573,7 @@ const componentToVue =
       .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
-    dataString = dataString.replace(
-      /}$/,
-      `${component.imports
-        .map((thisImport) => Object.keys(thisImport.imports).join(','))
-        // Make sure actually used in template
-        .filter((key) => Boolean(key && blocksString.includes(key)))
-        // Don't include component imports
-        .filter((key) => !componentsUsed.includes(key))
-        .join(',')}}`,
-    );
+    dataString = dataString.replace(/}$/, `${getCustomImports(component).join(',')}}`);
 
     if (localVarAsData.length) {
       dataString = dataString.replace(/}$/, `${localVarAsData.join(',')}}`);

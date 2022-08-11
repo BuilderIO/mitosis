@@ -25,6 +25,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
+import { getCustomImports } from '../helpers/get-custom-imports';
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
@@ -161,7 +162,7 @@ export const blockToAngular = (
         contextVars,
         outputVars,
         domRefs,
-      });
+      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -186,9 +187,9 @@ export const blockToAngular = (
           key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue.replace(/"/g, "\\'")}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
       } else {
-        str += ` [${key}]='${useValue}' `;
+        str += ` [${key}]="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -229,6 +230,8 @@ export const componentToAngular =
         }
       });
     });
+
+    const customImports = getCustomImports(json);
 
     const { exports: localExports = {} } = component;
     const localExportVars = Object.keys(localExports)
@@ -353,6 +356,7 @@ export const componentToAngular =
     })
     export default class ${component.name} {
       ${localExportVars.join('\n')}
+      ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
       ${Array.from(props)
         .filter((item) => !isSlotProperty(item) && item !== 'children')
