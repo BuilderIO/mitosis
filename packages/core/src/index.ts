@@ -55,6 +55,7 @@ export * from './symbols/symbol-processor';
 export * from './generators/html';
 export * from './generators/svelte';
 export * from './generators/stencil';
+export * from './generators/marko';
 export * from './generators/mitosis';
 export * from './generators/template';
 export * from './generators/swift-ui';

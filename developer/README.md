@@ -43,7 +43,7 @@ In `core`, we use jest snapshots for testing. If you are solving a problem that 
 
 PS: don't worry about failing imports in the raw test TSX files. These are not an issue, since the files are standalone and don't actually belong to a cohesive project.
 
-## Running the CI locally, including E2E tests
+## Pre-submit: run the CI locally, including E2E tests
 
 Before submitting a change, run roughly the same process as in CI, including
 Playwright E2E tests.
@@ -56,3 +56,7 @@ yarn ci
 Playwright is in `devDependencies` only at the top level `package.json`, to
 ensure only a single copy is installed for the whole project. See the
 `README.md` for each E2E test harness for commands to run just one.
+
+The E2E tests, run by the above command, will also update the E2E status table
+in the project-level README - please let this happen, rather than manually
+updating that table.

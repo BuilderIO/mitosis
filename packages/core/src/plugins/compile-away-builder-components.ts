@@ -76,6 +76,7 @@ export const components: CompileAwayComponentsMap = {
 
     return createMitosisNode({
       ...node,
+      // TODO: use 'button' tag for no link, and add `all: unset` to CSS string only then
       name: hasLink ? 'a' : node.properties.$tagName || 'span',
       properties: {
         ...omit(node.properties, omitFields),

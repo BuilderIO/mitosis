@@ -1002,8 +1002,9 @@ export function parseJsx(
             };
             for (const specifier of path.node.specifiers) {
               if (types.isImportSpecifier(specifier)) {
-                importObject.imports[(specifier.imported as babel.types.Identifier).name] =
-                  specifier.local.name;
+                importObject.imports[specifier.local.name] = (
+                  specifier.imported as babel.types.Identifier
+                ).name;
               } else if (types.isImportDefaultSpecifier(specifier)) {
                 importObject.imports[specifier.local.name] = 'default';
               } else if (types.isImportNamespaceSpecifier(specifier)) {
