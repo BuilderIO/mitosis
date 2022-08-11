@@ -40,7 +40,7 @@ describe('Marko', () => {
     export default function Example() {
       return <SubComponent />
     }
-  `
+  `;
 
   const component = parseJsx(exampleSubComponent);
   const markoString = componentToMarko()({ component });
