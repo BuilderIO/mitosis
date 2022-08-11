@@ -306,8 +306,11 @@ export const componentToMarko =
       }
     }
 
-    // Convert on-click=(...) -> on-click(...)
-    htmlString = htmlString.replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(');
+    htmlString = htmlString
+      // Convert on-click=(...) -> on-click(...)
+      .replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(')
+      // Fix a weird edge case where </if> becomes </if \n > which is invalid in marko
+      .replace(/<\/([a-z]+)\s+>/g, '</$1>');
 
     let finalStr = `
 ${jsString}
