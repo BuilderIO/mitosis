@@ -245,6 +245,18 @@ export default function Layout(props) {
 }
 ```
 
+For vue component `slot` prop will be compiled into named slot
+
+```html
+<div class="layout">
+  <div class="top"><slot name="top" /></div>
+  <div class="left"><slot name="left" /></div>
+  <div class="center"><slot name="center" /></div>
+  <slot />
+</div>
+}
+```
+
 Mitosis compiles one component at a time and is only concerned with outputting the correct method for each framework. For the two examples above, here are the angular and html outputs.
 
 ```html

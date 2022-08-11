@@ -36,6 +36,7 @@ import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -157,7 +158,7 @@ const NODE_MAPPERS: {
         ${
           isMitosisNode(json.meta.else)
             ? `
-            <template ${SPECIAL_PROPERTIES.V_ELSE}> 
+            <template ${SPECIAL_PROPERTIES.V_ELSE}>
               ${blockToVue(json.meta.else, options)}
             </template>`
             : ''
@@ -230,13 +231,13 @@ const NODE_MAPPERS: {
             : '';
 
           return `
-            
+
             ${ifString}
-            
+
             ${elseIfString}
-            
+
             ${elseString}
-            
+
           `;
         } else {
           const ifString = firstChild
@@ -348,7 +349,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   }
 
   if (isChildren(node)) {
-    return `<slot></slot>`;
+    return `<slot/>`;
   }
 
   if (node.name === 'style') {
@@ -362,8 +363,13 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `${node.properties._text}`;
   }
 
-  if (node.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(node.bindings._text.code as string)}}}`;
+  const textCode = node.bindings._text?.code;
+  if (textCode) {
+    const strippedTextCode = stripStateAndPropsRefs(textCode);
+    if (isSlotProperty(strippedTextCode)) {
+      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    }
+    return `{{${strippedTextCode}}}`;
   }
 
   let str = '';
@@ -597,10 +603,10 @@ const componentToVue =
         `_classStringToObject(str) {
         const obj = {};
         if (typeof str !== 'string') { return obj }
-        const classNames = str.trim().split(/\\s+/); 
+        const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {
           obj[name] = true;
-        } 
+        }
         return obj;
       }  }`,
       );
