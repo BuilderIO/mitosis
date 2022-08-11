@@ -470,7 +470,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 
             component.state[getOnUpdateHookName(index)] = {
               code,
-              type: 'getterMethod',
+              type: 'getter',
             };
           });
       }

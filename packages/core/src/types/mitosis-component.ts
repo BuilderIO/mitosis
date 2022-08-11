@@ -58,7 +58,7 @@ export type MitosisExport = {
   };
 };
 
-type StateValueType = 'function' | 'getterMethod' | 'method' | 'data';
+type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
 export type StateCode = _JSON;
 

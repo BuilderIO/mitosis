@@ -47,7 +47,7 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
               refs,
               mapper,
             ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : ''),
-          type: isGet ? 'getterMethod' : 'method',
+          type: isGet ? 'getter' : 'method',
         };
       } else if (value.startsWith(functionLiteralPrefix)) {
         component.state[key] = {

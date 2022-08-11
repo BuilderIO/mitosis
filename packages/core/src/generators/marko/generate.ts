@@ -58,14 +58,14 @@ function getStateMethodNames(json: MitosisComponent) {
  * Return the names of getter and functions on state
  */
 function getStateGetterNames(json: MitosisComponent) {
-  return Object.keys(json.state).filter((key) => json.state[key]?.type === 'getterMethod');
+  return Object.keys(json.state).filter((key) => json.state[key]?.type === 'getter');
 }
 
 /**
  * Return the names of properties (basic literal values) on state
  */
 function getStatePropertyNames(json: MitosisComponent) {
-  return Object.keys(json.state).filter((key) => json.state[key]?.type === 'data');
+  return Object.keys(json.state).filter((key) => json.state[key]?.type === 'property');
 }
 
 const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): string => {

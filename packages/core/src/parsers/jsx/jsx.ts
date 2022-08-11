@@ -172,7 +172,7 @@ const componentFunctionToJson = (
               // useState(true)
               state[varName] = {
                 code: parseCodeJson(value),
-                type: 'data',
+                type: 'property',
               };
             }
           }

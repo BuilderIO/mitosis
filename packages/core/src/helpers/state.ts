@@ -7,7 +7,7 @@ export const checkHasState = (component: MitosisComponent) =>
 
 const mapJsonToStateValue = (value: _JSON): StateValue => ({
   code: value,
-  type: 'data',
+  type: 'property',
 });
 
 export const mapJsonObjectToStateValue = (value: JSONObject): MitosisComponent['state'] =>
