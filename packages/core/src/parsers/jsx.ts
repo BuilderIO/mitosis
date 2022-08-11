@@ -282,7 +282,10 @@ const componentFunctionToJson = (
 
     if (types.isFunctionDeclaration(item)) {
       if (types.isIdentifier(item.id)) {
-        state[item.id.name] = `${functionLiteralPrefix}${generate(item).code!}`;
+        state[item.id.name] = {
+          code: `${functionLiteralPrefix}${generate(item).code!}`,
+          type: 'function',
+        };
       }
     }
 
@@ -697,11 +700,17 @@ function mapReactIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
   for (const key in json.state) {
-    const value = json.state[key];
+    const value = json.state[key]?.code;
     if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
-      json.state[key] =
-        functionLiteralPrefix +
-        mapReactIdentifiersInExpression(value.replace(functionLiteralPrefix, ''), stateProperties);
+      json.state[key] = {
+        code:
+          functionLiteralPrefix +
+          mapReactIdentifiersInExpression(
+            value.replace(functionLiteralPrefix, ''),
+            stateProperties,
+          ),
+        type: 'function',
+      };
     }
   }
 

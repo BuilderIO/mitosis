@@ -1,5 +1,4 @@
 import { collectCss } from '../../helpers/styles/collect-css';
-import { JSONObject } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { convertMethodToFunction } from './convertMethodToFunction';
 import { renderJSXNodes } from './jsx';
@@ -251,14 +250,14 @@ const GETTER = CODE_PREFIX + 'method:get ';
 
 function emitStateMethods(
   file: File,
-  componentState: JSONObject,
+  componentState: MitosisComponent['state'],
   lexicalArgs: string[],
 ): StateInit {
   const state: Record<string, any> = {};
   const stateInit: StateInit = [state];
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
-    let code = componentState[key]!;
+    let code = componentState[key]?.code!;
     if (isCode(code)) {
       const codeIisGetter = isGetter(code);
       let prefixIdx = code.indexOf(':') + 1;
@@ -312,10 +311,12 @@ function extractGetterBody(code: string): string {
   return code.substring(start + 1, end).trim();
 }
 
-function stateToMethodOrGetter(state: Record<string, any>): Record<string, 'method' | 'getter'> {
+function stateToMethodOrGetter(
+  state: MitosisComponent['state'],
+): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};
   Object.keys(state).forEach((key) => {
-    let code = state[key]!;
+    let code = state[key]?.code;
     if (typeof code == 'string' && code.startsWith(METHOD)) {
       methodMap[key] = code.startsWith(GETTER) ? 'getter' : 'method';
     }

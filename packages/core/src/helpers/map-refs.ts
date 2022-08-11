@@ -33,23 +33,29 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
   const refs = Array.from(refSet);
 
   for (const key of Object.keys(component.state)) {
-    const value = component.state[key];
+    const value = component.state[key]?.code;
     if (typeof value === 'string') {
       if (value.startsWith(methodLiteralPrefix)) {
         const methodValue = value.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(GETTER));
         const isSet = Boolean(methodValue.match(SETTER));
-        component.state[key] =
-          methodLiteralPrefix +
-          replaceRefsInString(
-            methodValue.replace(/^(get |set )?/, 'function '),
-            refs,
-            mapper,
-          ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : '');
+        component.state[key] = {
+          code:
+            methodLiteralPrefix +
+            replaceRefsInString(
+              methodValue.replace(/^(get |set )?/, 'function '),
+              refs,
+              mapper,
+            ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : ''),
+          type: isGet ? 'getterMethod' : 'method',
+        };
       } else if (value.startsWith(functionLiteralPrefix)) {
-        component.state[key] =
-          functionLiteralPrefix +
-          replaceRefsInString(value.replace(functionLiteralPrefix, ''), refs, mapper);
+        component.state[key] = {
+          code:
+            functionLiteralPrefix +
+            replaceRefsInString(value.replace(functionLiteralPrefix, ''), refs, mapper),
+          type: 'function',
+        };
       }
     }
   }

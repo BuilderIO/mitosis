@@ -16,7 +16,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
 import { getPropsRef } from '../helpers/get-props-ref';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
@@ -314,7 +314,7 @@ const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
   const lineItemDelimiter = '\n\n\n';
 
   for (const key in state) {
-    const value = state[key];
+    const value = state[key]?.code;
 
     const defaultCase = `const [${key}, set${capitalize(key)}] = useState(() => (${valueMapper(
       json5.stringify(value),
@@ -374,7 +374,7 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
           ...(value && {
             bindings: {
               value: {
-                code: getMemberObjectString(value),
+                code: stringifyContextValue(value),
               },
             },
           }),

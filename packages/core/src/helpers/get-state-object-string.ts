@@ -1,8 +1,10 @@
+import { MitosisContext } from '../types/mitosis-context';
+import { _JSON } from '../types/json';
 import json5 from 'json5';
-import { JSONObject, JSON } from '../types/json';
+import { mapValues } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent, StateValue } from '../types/mitosis-component';
 import { GETTER } from './patterns';
 
 interface GetStateObjectStringOptions {
@@ -27,18 +29,20 @@ const DEFAULT_OPTIONS: RequiredOptions = {
 
 const convertStateMemberToString =
   ({ data, format, functions, getters, keyPrefix, valueMapper }: RequiredOptions) =>
-  ([key, value]: [string, JSON]) => {
+  ([key, state]: [string, StateValue | undefined]) => {
     const keyValueDelimiter = format === 'object' ? ':' : '=';
 
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
+    const code = state?.code;
+
+    if (typeof code === 'string') {
+      if (code.startsWith(functionLiteralPrefix)) {
         if (functions === false) {
           return undefined;
         }
-        const functionValue = value.replace(functionLiteralPrefix, '');
+        const functionValue = code.replace(functionLiteralPrefix, '');
         return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(functionValue, 'function')}`;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        const methodValue = value.replace(methodLiteralPrefix, '');
+      } else if (code.startsWith(methodLiteralPrefix)) {
+        const methodValue = code.replace(methodLiteralPrefix, '');
         const isGet = Boolean(methodValue.match(GETTER));
         if (isGet && getters === false) {
           return undefined;
@@ -56,11 +60,11 @@ const convertStateMemberToString =
     if (data === false) {
       return undefined;
     }
-    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(json5.stringify(value), 'data')}`;
+    return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(json5.stringify(code), 'data')}`;
   };
 
 export const getMemberObjectString = (
-  object: JSONObject,
+  object: MitosisComponent['state'],
   userOptions: GetStateObjectStringOptions = {},
 ) => {
   const options = { ...DEFAULT_OPTIONS, ...userOptions };
@@ -83,6 +87,16 @@ export const getMemberObjectString = (
 
   return `${prefix}${stringifiedProperties}${extraDelimiter}${suffix}`;
 };
+
+const transformContextValueToStateValue = (value: _JSON): StateValue => ({
+  code: value,
+  type: 'data',
+});
+
+export const stringifyContextValue = (
+  object: MitosisContext['value'],
+  userOptions: GetStateObjectStringOptions = {},
+) => getMemberObjectString(mapValues(object, transformContextValueToStateValue), userOptions);
 
 export const getStateObjectStringFromComponent = (
   component: MitosisComponent,

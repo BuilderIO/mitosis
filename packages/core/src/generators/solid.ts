@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { hasCss } from '../helpers/styles/helpers';
 import { getRefs } from '../helpers/get-refs';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
@@ -224,7 +224,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
         children: json.children,
         ...(value && {
           bindings: {
-            value: { code: getMemberObjectString(value) },
+            value: { code: stringifyContextValue(value) },
           },
         }),
       }),
