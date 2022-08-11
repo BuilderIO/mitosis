@@ -12,6 +12,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
 import { Transpiler } from '../types/transpiler';
+import { checkHasState } from '../helpers/state';
 
 export type ToSwiftOptions = {
   prettier?: boolean;
@@ -240,7 +241,7 @@ const processBinding = (str: string, options: ToSwiftOptions) => {
 };
 
 function componentHasDynamicData(json: MitosisComponent) {
-  const hasState = Object.keys(json.state).length > 0;
+  const hasState = checkHasState(json);
   if (hasState) {
     return true;
   }

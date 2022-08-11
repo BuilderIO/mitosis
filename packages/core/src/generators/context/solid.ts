@@ -1,5 +1,5 @@
 import { format } from 'prettier/standalone';
-import { getMemberObjectString } from '../../helpers/get-state-object-string';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { MitosisContext } from '../../types/mitosis-context';
 
 type ContextToSolidOptions = {
@@ -12,7 +12,7 @@ export const contextToSolid =
     let str = `
     import { createContext } from 'solid-js';
 
-    export default createContext(${getMemberObjectString(context.value)})
+    export default createContext(${stringifyContextValue(context.value)})
     `;
 
     if (options.format !== false) {

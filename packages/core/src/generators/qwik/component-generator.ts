@@ -1,9 +1,9 @@
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { JSONObject } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './add-prevent-default';
 import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
@@ -64,7 +64,7 @@ export const componentToQwik =
       const imports: Record<string, string> | undefined = metadata?.qwik?.imports;
       imports && Object.keys(imports).forEach((key) => file.import(imports[key], key));
       const state: StateInit = emitStateMethodsAndRewriteBindings(file, component, metadata);
-      let hasState = Boolean(Object.keys(component.state).length);
+      let hasState = checkHasState(component);
       let css: string | null = null;
       let topLevelElement = isLightComponent ? null : getTopLevelElement(component);
       const componentBody = arrowFnBlock(
@@ -333,14 +333,14 @@ const GETTER = CODE_PREFIX + 'method:get ';
 
 function emitStateMethods(
   file: File,
-  componentState: JSONObject,
+  componentState: MitosisComponent['state'],
   lexicalArgs: string[],
 ): StateInit {
   const stateValues: StateValues = {};
   const stateInit: StateInit = [stateValues];
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
-    let code = componentState[key]!;
+    let code = componentState[key]?.code!;
     if (isCode(code)) {
       const codeIisGetter = isGetter(code);
       let prefixIdx = code.indexOf(':') + 1;
@@ -392,10 +392,12 @@ function extractGetterBody(code: string): string {
   return code.substring(start + 1, end).trim();
 }
 
-function stateToMethodOrGetter(state: Record<string, any>): Record<string, 'method' | 'getter'> {
+function stateToMethodOrGetter(
+  state: MitosisComponent['state'],
+): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};
   Object.keys(state).forEach((key) => {
-    let code = state[key]!;
+    let code = state[key]?.code;
     if (typeof code == 'string' && code.startsWith(METHOD)) {
       methodMap[key] = code.startsWith(GETTER) ? 'getter' : 'method';
     }

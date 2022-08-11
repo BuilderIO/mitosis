@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { hasCss } from '../helpers/styles/helpers';
 import { getRefs } from '../helpers/get-refs';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { renderPreComponent } from '../helpers/render-imports';
@@ -28,6 +28,7 @@ import { hasContext } from './helpers/context';
 import { babelTransformExpression } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
+import { checkHasState } from '../helpers/state';
 
 export interface ToSolidOptions extends BaseTranspilerOptions {}
 
@@ -224,7 +225,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
         children: json.children,
         ...(value && {
           bindings: {
-            value: { code: getMemberObjectString(value) },
+            value: { code: stringifyContextValue(value) },
           },
         }),
       }),
@@ -249,7 +250,7 @@ export const componentToSolid =
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     const stateString = getStateObjectStringFromComponent(json);
-    const hasState = Object.keys(component.state).length > 0;
+    const hasState = checkHasState(json);
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 

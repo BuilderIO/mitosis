@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
@@ -430,7 +430,7 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
     str += `
       ${name}: ${
       value
-        ? getMemberObjectString(value, {
+        ? stringifyContextValue(value, {
             valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
         : null
@@ -455,9 +455,7 @@ const onUpdatePlugin: Plugin = (options) => ({
         component.hooks.onUpdate
           .filter((hook) => hook.deps?.length)
           .forEach((hook, index) => {
-            component.state[
-              getOnUpdateHookName(index)
-            ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
+            const code = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
             return {
               ${hook.deps
                 ?.slice(1, -1)
@@ -469,6 +467,11 @@ const onUpdatePlugin: Plugin = (options) => ({
                 .join(',')}
             }
           }`;
+
+            component.state[getOnUpdateHookName(index)] = {
+              code,
+              type: 'getter',
+            };
           });
       }
     },

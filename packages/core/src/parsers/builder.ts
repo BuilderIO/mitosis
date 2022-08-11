@@ -13,6 +13,8 @@ import { MitosisNode } from '../types/mitosis-node';
 import { parseJsx, parseStateObject } from './jsx';
 import { parseCode, isExpression } from '../helpers/parsers';
 import { hashCodeAsString } from '..';
+import { mapJsonObjectToStateValue } from '../helpers/state';
+import { JSONObject } from '../types/json';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [
@@ -841,7 +843,7 @@ const builderContentPartToMitosisComponent = (
     })),
     state: parsed?.state || {
       ...state,
-      ...builderContent.data?.state,
+      ...mapJsonObjectToStateValue(builderContent.data?.state as JSONObject),
     },
     hooks: {
       ...((parsed?.hooks.onMount?.code || (customCode && { code: customCode })) && {
