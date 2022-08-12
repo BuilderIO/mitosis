@@ -88,9 +88,10 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
-    return `${wrap ? '<>' : ''}${json.children
+    const tagName = options.preact ? 'Fragment' : '';
+    return `${wrap ? `<${tagName}>` : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}`;
+      .join('\n')}${wrap ? `</${tagName}>` : ''}`;
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
@@ -581,7 +582,7 @@ const _componentToReact = (
     options.preact
       ? `
     /** @jsx h */
-    import { h } from 'preact';
+    import { h, Fragment } from 'preact';
     `
       : options.type !== 'native'
       ? "import * as React from 'react';"

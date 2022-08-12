@@ -2,7 +2,7 @@
 
 exports[`Preact AdvancedRef 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
@@ -31,7 +31,7 @@ export default function MyBasicRefComponent(props: Props) {
     <>
       <div>
         {props.showInput ? (
-          <>
+          <Fragment>
             <input
               className=\\"input\\"
               ref={inputRef}
@@ -49,7 +49,7 @@ export default function MyBasicRefComponent(props: Props) {
 
               <option value=\\"86\\">GR 86</option>
             </select>
-          </>
+          </Fragment>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
@@ -68,7 +68,7 @@ export default function MyBasicRefComponent(props: Props) {
 
 exports[`Preact Basic 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export const DEFAULT_VALUES = {
@@ -104,7 +104,7 @@ export default function MyBasicComponent(props: { id: string }) {
 
 exports[`Preact Basic Context 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useContext, useEffect } from \\"preact/hooks\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
@@ -141,7 +141,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact Basic OnMount Update 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
@@ -174,7 +174,7 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
 
 exports[`Preact Basic Outputs 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOutputsComponent(props: any) {
@@ -192,7 +192,7 @@ export default function MyBasicOutputsComponent(props: any) {
 
 exports[`Preact Basic Outputs Meta 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOutputsComponent(props: any) {
@@ -210,7 +210,7 @@ export default function MyBasicOutputsComponent(props: any) {
 
 exports[`Preact BasicChildComponent 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -235,7 +235,7 @@ export default function MyBasicChildComponent(props) {
 
 exports[`Preact BasicFor 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicForComponent(props) {
@@ -250,7 +250,7 @@ export default function MyBasicForComponent(props) {
   return (
     <div>
       {names?.map((person) => (
-        <>
+        <Fragment>
           <input
             value={name}
             onChange={(event) => {
@@ -260,7 +260,7 @@ export default function MyBasicForComponent(props) {
           Hello
           {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
           Liquid!
-        </>
+        </Fragment>
       ))}
     </div>
   );
@@ -270,7 +270,7 @@ export default function MyBasicForComponent(props) {
 
 exports[`Preact BasicRef 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
 
 export interface Props {
@@ -295,7 +295,7 @@ export default function MyBasicRefComponent(props: Props) {
     <>
       <div>
         {props.showInput ? (
-          <>
+          <Fragment>
             <input
               className=\\"input\\"
               ref={inputRef}
@@ -313,7 +313,7 @@ export default function MyBasicRefComponent(props: Props) {
 
               <option value=\\"86\\">GR 86</option>
             </select>
-          </>
+          </Fragment>
         ) : null}
         Hello
         {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
@@ -332,7 +332,7 @@ export default function MyBasicRefComponent(props: Props) {
 
 exports[`Preact BasicRefAssignment 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useRef } from \\"preact/hooks\\";
 
 export interface Props {
@@ -358,7 +358,7 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
 
 exports[`Preact BasicRefPrevious 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
@@ -404,7 +404,7 @@ export default function MyPreviousComponent(props: Props) {
 
 exports[`Preact Button 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -415,7 +415,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <>
+    <Fragment>
       {props.link ? (
         <>
           <a
@@ -435,7 +435,7 @@ export default function Button(props: ButtonProps) {
           </button>
         </>
       ) : null}
-    </>
+    </Fragment>
   );
 }
 "
@@ -443,7 +443,7 @@ export default function Button(props: ButtonProps) {
 
 exports[`Preact Columns 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -521,7 +521,7 @@ export default function Column(props: ColumnProps) {
 
 exports[`Preact ContentSlotHtml 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -546,7 +546,7 @@ export default function ContentSlotCode(props: Props) {
 
 exports[`Preact ContentSlotJSX 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -570,7 +570,7 @@ export default function ContentSlotJsxCode(props: Props) {
 
 exports[`Preact CustomCode 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface CustomCodeProps {
@@ -645,7 +645,7 @@ export default function CustomCode(props: CustomCodeProps) {
 
 exports[`Preact Embed 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface CustomCodeProps {
@@ -720,7 +720,7 @@ export default function CustomCode(props: CustomCodeProps) {
 
 exports[`Preact Form 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
 
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
@@ -1020,7 +1020,7 @@ export default function FormComponent(props: FormProps) {
 
 exports[`Preact Image 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 // TODO: AMP Support?
@@ -1100,7 +1100,7 @@ export default function Image(props: ImageProps) {
 
   return (
     <>
-      <>
+      <Fragment>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
             <>
@@ -1124,7 +1124,7 @@ export default function Image(props: ImageProps) {
         </picture>
 
         {props.children}
-      </>
+      </Fragment>
       <style jsx>{\`
         .img {
           opacity: 1;
@@ -1141,7 +1141,7 @@ export default function Image(props: ImageProps) {
 
 exports[`Preact Image State 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function ImgStateComponent(props) {
@@ -1152,9 +1152,9 @@ export default function ImgStateComponent(props) {
   return (
     <div>
       {images?.map((item, itemIndex) => (
-        <>
+        <Fragment>
           <img className=\\"custom-class\\" src={item} key={itemIndex} />
-        </>
+        </Fragment>
       ))}
     </div>
   );
@@ -1164,7 +1164,7 @@ export default function ImgStateComponent(props) {
 
 exports[`Preact Img 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -1204,7 +1204,7 @@ export default function ImgComponent(props: ImgProps) {
 
 exports[`Preact Input 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface FormInputProps {
   type?: string;
@@ -1241,7 +1241,7 @@ export default function FormInputComponent(props: FormInputProps) {
 
 exports[`Preact RawText 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -1261,7 +1261,7 @@ export default function RawText(props: RawTextProps) {
 
 exports[`Preact Remove Internal mitosis package 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyBasicComponent(props) {
@@ -1279,7 +1279,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact Section 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -1308,7 +1308,7 @@ export default function SectionComponent(props: SectionProps) {
 
 exports[`Preact Select 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface FormSelectProps {
   options?: {
@@ -1349,7 +1349,7 @@ export default function SelectComponent(props: FormSelectProps) {
 
 exports[`Preact SlotHtml 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string;
@@ -1368,7 +1368,7 @@ export default function SlotCode(props: Props) {
 
 exports[`Preact SlotJsx 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string;
@@ -1387,7 +1387,7 @@ export default function SlotCode(props: Props) {
 
 exports[`Preact Stamped.io 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 type SmileReviewsProps = {
@@ -1500,7 +1500,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
 
 exports[`Preact Submit 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -1519,7 +1519,7 @@ export default function SubmitButton(props: ButtonProps) {
 
 exports[`Preact Text 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export interface TextProps {
@@ -1556,7 +1556,7 @@ export default function Text(props: TextProps) {
 
 exports[`Preact Textarea 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -1582,7 +1582,7 @@ export default function Textarea(props: TextareaProps) {
 
 exports[`Preact Video 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -1639,7 +1639,7 @@ export default function Video(props: VideoProps) {
 
 exports[`Preact basicForwardRef 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, forwardRef } from \\"preact/hooks\\";
 
 export interface Props {
@@ -1675,7 +1675,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 
 exports[`Preact basicForwardRefMetadata 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, forwardRef } from \\"preact/hooks\\";
 
 export interface Props {
@@ -1711,7 +1711,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
 
 exports[`Preact basicOnUpdateReturn 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOnUpdateReturnComponent(props) {
@@ -1746,7 +1746,7 @@ export default function MyBasicOnUpdateReturnComponent(props) {
 
 exports[`Preact class + ClassName + css 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
@@ -1767,7 +1767,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact class + css 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
@@ -1788,7 +1788,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact className + css 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
@@ -1809,7 +1809,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact className 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 type Props = {
@@ -1833,7 +1833,7 @@ export default function ClassNameCode(props: Props) {
 
 exports[`Preact classState 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyBasicComponent(props) {
@@ -1861,7 +1861,7 @@ export default function MyBasicComponent(props) {
 
 exports[`Preact multipleOnUpdate 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
 export default function MultipleOnUpdate(props) {
@@ -1879,7 +1879,7 @@ export default function MultipleOnUpdate(props) {
 
 exports[`Preact multipleOnUpdateWithDeps 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MultipleOnUpdateWithDeps(props) {
@@ -1913,7 +1913,7 @@ export default function MultipleOnUpdateWithDeps(props) {
 
 exports[`Preact nestedShow 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 interface Props {
   conditionA: boolean;
@@ -1944,7 +1944,7 @@ export default function NestedShow(props: Props) {
 
 exports[`Preact onInit & onMount 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
 export default function OnInit(props) {
@@ -1963,7 +1963,7 @@ export default function OnInit(props) {
 
 exports[`Preact onInit 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 type Props = {
@@ -1994,7 +1994,7 @@ export default function OnInit(props: Props) {
 
 exports[`Preact onMount 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
 export default function Comp(props) {
@@ -2015,7 +2015,7 @@ export default function Comp(props) {
 
 exports[`Preact onUpdate 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
 export default function OnUpdate(props) {
@@ -2030,7 +2030,7 @@ export default function OnUpdate(props) {
 
 exports[`Preact onUpdateWithDeps 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function OnUpdateWithDeps(props) {
@@ -2049,7 +2049,7 @@ export default function OnUpdateWithDeps(props) {
 
 exports[`Preact preserveExportOrLocalStatement 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Types = {
   s: any[];
@@ -2072,7 +2072,7 @@ export default function MyBasicComponent(props: { id: string }) {
 
 exports[`Preact preserveTyping 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export type A = \\"test\\";
 type B = \\"test2\\";
@@ -2099,7 +2099,7 @@ export default function MyBasicComponent(props: {
 
 exports[`Preact propsDestructure 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 type Props = {
@@ -2123,7 +2123,7 @@ export default function MyBasicComponent(props: Props) {
 
 exports[`Preact propsInterface 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 interface Person {
   name: string;
@@ -2143,7 +2143,7 @@ export default function MyBasicComponent(props: Person | never) {
 
 exports[`Preact propsType 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 type Person = {
   name: string;
@@ -2163,7 +2163,7 @@ export default function MyBasicComponent(props: Person) {
 
 exports[`Preact rootShow 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function RenderStyles(props: { foo: string }) {
   return (
@@ -2183,7 +2183,7 @@ export default function RenderStyles(props: { foo: string }) {
 
 exports[`Preact self-referencing component 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function MyComponent(props: any) {
   return (
@@ -2203,7 +2203,7 @@ export default function MyComponent(props: any) {
 
 exports[`Preact self-referencing component with children 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 export default function MyComponent(props: any) {
   return (
@@ -2227,7 +2227,7 @@ export default function MyComponent(props: any) {
 
 exports[`Preact showWithFor 1`] = `
 "/** @jsx h */
-import { h } from \\"preact\\";
+import { h, Fragment } from \\"preact\\";
 
 interface Props {
   conditionA: boolean;
