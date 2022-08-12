@@ -28,7 +28,7 @@ export default function MyBasicRefComponent(props: Props) {
   }, [inputRef.current, inputNoArgRef.current]);
 
   return (
-    <>
+    <Fragment>
       <div>
         {props.showInput ? (
           <Fragment>
@@ -60,7 +60,7 @@ export default function MyBasicRefComponent(props: Props) {
           color: red;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -83,7 +83,7 @@ export default function MyBasicComponent(props: { id: string }) {
   }
 
   return (
-    <>
+    <Fragment>
       <div className=\\"test div\\">
         <input
           value={DEFAULT_VALUES.name || name}
@@ -96,7 +96,7 @@ export default function MyBasicComponent(props: { id: string }) {
           padding: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -292,7 +292,7 @@ export default function MyBasicRefComponent(props: Props) {
   }
 
   return (
-    <>
+    <Fragment>
       <div>
         {props.showInput ? (
           <Fragment>
@@ -324,7 +324,7 @@ export default function MyBasicRefComponent(props: Props) {
           color: red;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -417,7 +417,7 @@ export default function Button(props: ButtonProps) {
   return (
     <Fragment>
       {props.link ? (
-        <>
+        <Fragment>
           <a
             {...props.attributes}
             href={props.link}
@@ -425,15 +425,15 @@ export default function Button(props: ButtonProps) {
           >
             {props.text}
           </a>
-        </>
+        </Fragment>
       ) : null}
 
       {!props.link ? (
-        <>
+        <Fragment>
           <button {...props.attributes} type=\\"button\\">
             {props.text}
           </button>
-        </>
+        </Fragment>
       ) : null}
     </Fragment>
   );
@@ -482,7 +482,7 @@ export default function Column(props: ColumnProps) {
   }
 
   return (
-    <>
+    <Fragment>
       <div className=\\"builder-columns div\\">
         {props.columns?.map((column, index) => (
           <div className=\\"builder-column div-2\\">
@@ -513,7 +513,7 @@ export default function Column(props: ColumnProps) {
           flex-grow: 1;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -949,7 +949,7 @@ export default function FormComponent(props: FormProps) {
     }
   }
   return (
-    <>
+    <Fragment>
       {\\" \\"}
       <form
         {...props.attributes}
@@ -962,7 +962,7 @@ export default function FormComponent(props: FormProps) {
       >
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
-          <>
+          <Fragment>
             {props.builderBlock?.children?.map((block, index) => (
               <BuilderBlockComponent
                 key={block.id}
@@ -970,39 +970,39 @@ export default function FormComponent(props: FormProps) {
                 index={index}
               />
             ))}
-          </>
+          </Fragment>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" ? (
-          <>
+          <Fragment>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
               blocks={props.errorMessage}
             />
-          </>
+          </Fragment>
         ) : null}{\\" \\"}
         {submissionState() === \\"sending\\" ? (
-          <>
+          <Fragment>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
               blocks={props.sendingMessage}
             />
-          </>
+          </Fragment>
         ) : null}{\\" \\"}
         {submissionState() === \\"error\\" && responseData ? (
-          <>
+          <Fragment>
             <pre className=\\"builder-form-error-text pre\\">
               {\\" \\"}
               {JSON.stringify(responseData, null, 2)}{\\" \\"}
             </pre>
-          </>
+          </Fragment>
         ) : null}{\\" \\"}
         {submissionState() === \\"success\\" ? (
-          <>
+          <Fragment>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
               blocks={props.successMessage}
             />
-          </>
+          </Fragment>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
       <style jsx>{\`
@@ -1012,7 +1012,7 @@ export default function FormComponent(props: FormProps) {
           text-align: center;
         }
       \`}</style>{\\" \\"}
-    </>
+    </Fragment>
   );
 }
 "
@@ -1099,11 +1099,11 @@ export default function Image(props: ImageProps) {
   }, []);
 
   return (
-    <>
+    <Fragment>
       <Fragment>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
-            <>
+            <Fragment>
               <img
                 alt={props.altText}
                 aria-role={props.altText ? \\"presentation\\" : undefined}
@@ -1117,7 +1117,7 @@ export default function Image(props: ImageProps) {
                 srcset={props.srcset}
                 sizes={props.sizes}
               />
-            </>
+            </Fragment>
           ) : null}
 
           <source srcset={props.srcset} />
@@ -1133,7 +1133,7 @@ export default function Image(props: ImageProps) {
           object-position: center;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1425,14 +1425,14 @@ export default function SmileReviews(props: SmileReviewsProps) {
   }, []);
 
   return (
-    <>
+    <Fragment>
       <div data-user={name}>
         <button onClick={(event) => setShowReviewPrompt(true)}>
           Write a review
         </button>
 
         {showReviewPrompt ? (
-          <>
+          <Fragment>
             <input placeholder=\\"Email\\" />
             <input placeholder=\\"Title\\" className=\\"input\\" />
             <textarea
@@ -1448,7 +1448,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
             >
               Submit
             </button>
-          </>
+          </Fragment>
         ) : null}
 
         {reviews?.map((review, index) => (
@@ -1492,7 +1492,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
           margin-right: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1652,7 +1652,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <>
+      <Fragment>
         <div>
           <input
             className=\\"input\\"
@@ -1666,7 +1666,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
             color: red;
           }
         \`}</style>
-      </>
+      </Fragment>
     );
   }
 );
@@ -1688,7 +1688,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <>
+      <Fragment>
         <div>
           <input
             className=\\"input\\"
@@ -1702,7 +1702,7 @@ export default forwardRef<Props[\\"inputRef\\"]>(
             color: red;
           }
         \`}</style>
-      </>
+      </Fragment>
     );
   }
 );
@@ -1750,7 +1750,7 @@ import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
-    <>
+    <Fragment>
       <div className=\\"test2 test div\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -1759,7 +1759,7 @@ export default function MyBasicComponent(props) {
           padding: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1771,7 +1771,7 @@ import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
-    <>
+    <Fragment>
       <div className=\\"test div\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -1780,7 +1780,7 @@ export default function MyBasicComponent(props) {
           padding: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1792,7 +1792,7 @@ import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props) {
   return (
-    <>
+    <Fragment>
       <div className=\\"test div\\">
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -1801,7 +1801,7 @@ export default function MyBasicComponent(props) {
           padding: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1844,7 +1844,7 @@ export default function MyBasicComponent(props) {
   }));
 
   return (
-    <>
+    <Fragment>
       <div className={classState + \\" div\\"} style={styleState}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -1853,7 +1853,7 @@ export default function MyBasicComponent(props) {
           padding: 10px;
         }
       \`}</style>
-    </>
+    </Fragment>
   );
 }
 "
@@ -1922,21 +1922,21 @@ interface Props {
 
 export default function NestedShow(props: Props) {
   return (
-    <>
+    <Fragment>
       {props.conditionA ? (
-        <>
+        <Fragment>
           {!props.conditionB ? (
-            <>
+            <Fragment>
               <div>if condition A and condition B</div>
-            </>
+            </Fragment>
           ) : (
             <div>else-condition-B</div>
           )}
-        </>
+        </Fragment>
       ) : (
         <div>else-condition-A</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "
@@ -2167,15 +2167,15 @@ import { h, Fragment } from \\"preact\\";
 
 export default function RenderStyles(props: { foo: string }) {
   return (
-    <>
+    <Fragment>
       {props.foo === \\"bar\\" ? (
-        <>
+        <Fragment>
           <div>Bar</div>
-        </>
+        </Fragment>
       ) : (
         <div>Foo</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "
@@ -2191,9 +2191,9 @@ export default function MyComponent(props: any) {
       {props.name}
 
       {props.name === \\"Batman\\" ? (
-        <>
+        <Fragment>
           <MyComponent name=\\"Bruce Wayne\\" />
-        </>
+        </Fragment>
       ) : null}
     </div>
   );
@@ -2213,11 +2213,11 @@ export default function MyComponent(props: any) {
       {props.children}
 
       {props.name === \\"Batman\\" ? (
-        <>
+        <Fragment>
           <MyComponent name=\\"Bruce\\">
             <div>Wayne</div>
           </MyComponent>
-        </>
+        </Fragment>
       ) : null}
     </div>
   );
@@ -2236,17 +2236,17 @@ interface Props {
 
 export default function NestedShow(props: Props) {
   return (
-    <>
+    <Fragment>
       {props.conditionA ? (
-        <>
+        <Fragment>
           {props.items?.map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
-        </>
+        </Fragment>
       ) : (
         <div>else-condition-A</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "

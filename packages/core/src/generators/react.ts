@@ -56,6 +56,13 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   experimental?: any;
 }
 
+const openFrag = (options: ToReactOptions) => getFragment('open', options);
+const closeFrag = (options: ToReactOptions) => getFragment('close', options);
+function getFragment(type: 'open' | 'close', options: ToReactOptions) {
+  const tagName = options.preact ? 'Fragment' : '';
+  return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
+}
+
 /**
  * If the root Mitosis component only has 1 child, and it is a `Show`/`For` node, then we need to wrap it in a fragment.
  * Otherwise, we end up with invalid React render code.
@@ -89,9 +96,9 @@ const NODE_MAPPERS: {
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
     const tagName = options.preact ? 'Fragment' : '';
-    return `${wrap ? `<${tagName}>` : ''}${json.children
+    return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? `</${tagName}>` : ''}`;
+      .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
@@ -100,19 +107,19 @@ const NODE_MAPPERS: {
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)}}`;
   },
 };
@@ -684,12 +691,12 @@ const _componentToReact = (
       }
 
       return (
-        ${wrap ? '<>' : ''}
+        ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx' ? `<style jsx>{\`${css}\`}</style>` : ''
         }
-        ${wrap ? '</>' : ''}
+        ${wrap ? closeFrag(options) : ''}
       );
     }${isForwardRef ? ')' : ''}
 
