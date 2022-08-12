@@ -195,7 +195,7 @@ const getGeneratorForTarget = ({
       return componentToQwik(options.options.qwik);
     case 'marko':
       return componentToMarko(options.options.marko);
-    case 'react':
+    case 'preact':
       return componentToPreact(options.options.preact);
     default:
       throw new Error('CLI does not yet support target: ' + target);

@@ -39,5 +39,5 @@ export const targets = {
   stencil,
   qwik,
   marko,
-  preact
+  preact,
 };
