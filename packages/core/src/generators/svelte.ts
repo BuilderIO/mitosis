@@ -387,7 +387,7 @@ export const componentToSvelte =
     
     let propsTypeRef: string | object | undefined = json.propsTypeRef;
 
-    if (json.propsTypeRef && json.propsTypeRef.startsWith('{')) {      
+    if (json.propsTypeRef?.startsWith('{')) {      
       propsTypeRef = `${json.name}Props`;
 
       if (json.interfaces?.length) {
