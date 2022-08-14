@@ -32,7 +32,7 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { uniq } from 'lodash';
+import { isString, uniq } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
@@ -308,6 +308,7 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   },
 });
 
+
 export const componentToSvelte =
   ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
@@ -380,12 +381,37 @@ export const componentToSvelte =
     const hasData = dataString.length > 4;
 
     const props = Array.from(getProps(json));
+    
+    let propsTypeRef: string | object | undefined = json.propsTypeRef;
+
+    if (json.propsTypeRef && json.propsTypeRef.startsWith('{')) {      
+      propsTypeRef = `${json.name}Props`;
+
+      if (json.interfaces?.length) {
+        json.interfaces.push(`export interface ${propsTypeRef} ${json.propsTypeRef};`);
+      } else {
+        json.interfaces = [`export interface ${propsTypeRef} ${json.propsTypeRef};`];
+      }
+    }
 
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
-    let str = dedent`
-    <script>
+    let str = '';
+
+    if (propsTypeRef) {
+      str += dedent`
+      <script context='module' lang='ts'>
+        ${json.types ? json.types.join('\n\n')  + '\n': ''}
+        ${json.interfaces ? json.interfaces.join('\n\n') + '\n' : ''}
+      </script>
+      \n
+      \n
+      `
+    }
+
+    str += dedent`
+      <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
@@ -398,7 +424,16 @@ export const componentToSvelte =
           if (name === 'children') {
             return '';
           }
-          return `export let ${name};`;
+
+          let propDeclaration = `export let ${name}`;
+
+          if (propsTypeRef && propsTypeRef !== 'any') {
+              propDeclaration += `: ${isString(propsTypeRef) ? propsTypeRef.split(' |')[0] : propsTypeRef}['${name}']`;
+          }
+
+          propDeclaration += ';';
+
+          return propDeclaration;
         })
         .join('\n')}
       ${
