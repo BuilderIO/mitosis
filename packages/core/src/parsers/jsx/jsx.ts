@@ -1,181 +1,41 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { traceReferenceToModulePath } from '../helpers/trace-reference-to-module-path';
-import traverse from 'traverse';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { capitalize } from '../helpers/capitalize';
-import { createMitosisComponent } from '../helpers/create-mitosis-component';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
-import { getBindingsCode } from '../helpers/get-bindings';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import { JSONObject, JSONOrNode, JSONOrNodeObject } from '../types/json';
-import { MitosisComponent, MitosisImport, MitosisExport } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
-import { tryParseJson } from '../helpers/json';
-import { HOOKS } from '../constants/hooks';
+import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
+import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
+import { createMitosisComponent } from '../../helpers/create-mitosis-component';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { getBindingsCode } from '../../helpers/get-bindings';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { JSONOrNode } from '../../types/json';
+import { MitosisComponent, MitosisImport, MitosisExport } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
+import { tryParseJson } from '../../helpers/json';
+import { HOOKS } from '../../constants/hooks';
+import { jsonToAst } from './ast';
+import { mapReactIdentifiers, parseStateObject, parseStateObjectToMitosisState } from './state';
+import { Context, ParseMitosisOptions } from './types';
+import { collectMetadata } from './metadata';
+import { extractContextComponents } from './context';
+import { parseCodeJson } from './helpers';
+import {
+  collectInterfaces,
+  collectTypes,
+  getPropsTypeRef,
+  isTypeOrInterface,
+} from './component-types';
+import { undoPropsDestructure } from './props';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
 
-export const selfClosingTags = new Set([
-  'area',
-  'base',
-  'br',
-  'col',
-  'embed',
-  'hr',
-  'img',
-  'input',
-  'link',
-  'meta',
-  'param',
-  'source',
-  'track',
-  'wbr',
-]);
-
 const { types } = babel;
-
-type Context = {
-  // Babel has other context
-  builder: {
-    component: MitosisComponent;
-  };
-};
-
-const arrayToAst = (array: JSONOrNode[]) => types.arrayExpression(array.map(jsonToAst));
-
-const jsonToAst = (json: JSONOrNode): babel.types.Expression => {
-  if (types.isNode(json)) {
-    if (types.isJSXText(json)) {
-      return types.stringLiteral(json.value);
-    }
-    return json as babel.types.Expression;
-  }
-  switch (typeof json) {
-    case 'undefined':
-      return types.identifier('undefined');
-    case 'string':
-      return types.stringLiteral(json);
-    case 'number':
-      return types.numericLiteral(json);
-    case 'boolean':
-      return types.booleanLiteral(json);
-    case 'object':
-      if (!json) {
-        return types.nullLiteral();
-      }
-      if (Array.isArray(json)) {
-        return arrayToAst(json);
-      }
-      return jsonObjectToAst(json);
-  }
-};
-
-const jsonObjectToAst = (json: JSONOrNodeObject): babel.types.Expression => {
-  if (!json) {
-    // TO-DO: This looks concerning...
-    return json as any;
-  }
-  const properties: babel.types.ObjectProperty[] = [];
-  for (const key in json) {
-    const value = json[key];
-    if (value === undefined) {
-      continue;
-    }
-    const keyAst = types.stringLiteral(key);
-    const valueAst = jsonToAst(value);
-    properties.push(types.objectProperty(keyAst, valueAst as any));
-  }
-  const newNode = types.objectExpression(properties);
-
-  return newNode;
-};
-
-export const createFunctionStringLiteral = (node: babel.types.Node) => {
-  return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
-};
-export const createFunctionStringLiteralObjectProperty = (
-  key: babel.types.Expression | babel.types.PrivateName,
-  node: babel.types.Node,
-) => {
-  return types.objectProperty(key, createFunctionStringLiteral(node));
-};
-
-const uncapitalize = (str: string) => {
-  if (!str) {
-    return str;
-  }
-
-  return str[0].toLowerCase() + str.slice(1);
-};
-
-export const parseStateObject = (object: babel.types.ObjectExpression) => {
-  const properties = object.properties;
-  const useProperties = properties.map((item) => {
-    if (types.isObjectProperty(item)) {
-      if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
-        return createFunctionStringLiteralObjectProperty(item.key, item.value);
-      }
-    }
-    if (types.isObjectMethod(item)) {
-      return types.objectProperty(
-        item.key,
-        types.stringLiteral(
-          `${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`,
-        ),
-      );
-    }
-    // Remove typescript types, e.g. from
-    // { foo: ('string' as SomeType) }
-    if (types.isObjectProperty(item)) {
-      let value = item.value;
-      if (types.isTSAsExpression(value)) {
-        value = value.expression;
-      }
-      return types.objectProperty(item.key, value);
-    }
-    return item;
-  });
-
-  const newObject = types.objectExpression(useProperties);
-  const obj = parseCodeJson(newObject);
-  return obj;
-};
-
-const parseCodeJson = (node: babel.types.Node) => {
-  const code = generate(node).code;
-  return tryParseJson(code);
-};
-
-const getPropsTypeRef = (node: babel.types.FunctionDeclaration): string | undefined => {
-  const param = node.params[0];
-  // TODO: component function params name must be props
-  if (
-    babel.types.isIdentifier(param) &&
-    param.name === 'props' &&
-    babel.types.isTSTypeAnnotation(param.typeAnnotation)
-  ) {
-    const paramIdentifier = babel.types.variableDeclaration('let', [
-      babel.types.variableDeclarator(param),
-    ]);
-    return generate(paramIdentifier)
-      .code.replace(/^let\sprops:\s+/, '')
-      .replace(/;/g, '');
-  }
-  return undefined;
-};
 
 const componentFunctionToJson = (
   node: babel.types.FunctionDeclaration,
   context: Context,
 ): JSONOrNode => {
   const hooks: MitosisComponent['hooks'] = {};
-  let state: MitosisComponent['state'] = {};
+  const state: MitosisComponent['state'] = {};
   const accessedContext: MitosisComponent['context']['get'] = {};
   const setContext: MitosisComponent['context']['set'] = {};
   const refs: MitosisComponent['refs'] = {};
@@ -195,7 +55,7 @@ const componentFunctionToJson = (
               const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
-                  const value = parseStateObject(valueNode) as JSONObject;
+                  const value = parseStateObject(valueNode);
                   setContext[keyPath] = {
                     name: keyNode.name,
                     value,
@@ -282,7 +142,10 @@ const componentFunctionToJson = (
 
     if (types.isFunctionDeclaration(item)) {
       if (types.isIdentifier(item.id)) {
-        state[item.id.name] = `${functionLiteralPrefix}${generate(item).code!}`;
+        state[item.id.name] = {
+          code: `${functionLiteralPrefix}${generate(item).code!}`,
+          type: 'function',
+        };
       }
     }
 
@@ -300,11 +163,17 @@ const componentFunctionToJson = (
             // Function as init, like:
             // useState(() => true)
             if (types.isArrowFunctionExpression(value)) {
-              state[varName] = parseCodeJson(value.body);
+              state[varName] = {
+                code: parseCodeJson(value.body),
+                type: 'function',
+              };
             } else {
               // Value as init, like:
               // useState(true)
-              state[varName] = parseCodeJson(value);
+              state[varName] = {
+                code: parseCodeJson(value),
+                type: 'property',
+              };
             }
           }
         }
@@ -314,7 +183,8 @@ const componentFunctionToJson = (
           if (init.callee.name === HOOKS.STATE || init.callee.name === HOOKS.STORE) {
             const firstArg = init.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              Object.assign(state, parseStateObject(firstArg));
+              const useStoreState = parseStateObjectToMitosisState(firstArg);
+              Object.assign(state, useStoreState);
             }
           } else if (init.callee.name === HOOKS.CONTEXT) {
             const firstArg = init.arguments[0];
@@ -607,209 +477,8 @@ const jsxElementToJson = (
   });
 };
 
-const getHook = (node: babel.Node) => {
-  const item = node;
-  if (types.isExpressionStatement(item)) {
-    const expression = item.expression;
-    if (types.isCallExpression(expression)) {
-      if (types.isIdentifier(expression.callee)) {
-        return expression;
-      }
-    }
-  }
-  return null;
-};
-
-export const METADATA_HOOK_NAME = 'useMetadata';
-
-/**
- * Transform useMetadata({...}) onto the component JSON as
- * meta: { metadataHook: { ... }}
- *
- * This function collects metadata and removes the statement from
- * the returned nodes array
- */
-const collectMetadata = (
-  nodes: babel.types.Statement[],
-  component: MitosisComponent,
-  options: ParseMitosisOptions,
-) => {
-  const hookNames = new Set((options.jsonHookNames || []).concat(METADATA_HOOK_NAME));
-  return nodes.filter((node) => {
-    const hook = getHook(node);
-    if (!hook) {
-      return true;
-    }
-    if (types.isIdentifier(hook.callee) && hookNames.has(hook.callee.name)) {
-      try {
-        component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
-        return false;
-      } catch (e) {
-        console.error(`Error parsing metadata hook ${hook.callee.name}`);
-        throw e;
-      }
-    }
-    return true;
-  });
-};
-
-type ParseMitosisOptions = {
-  format: 'react' | 'simple';
-  jsonHookNames?: string[];
-  compileAwayPackages?: string[];
-};
-
-function mapReactIdentifiersInExpression(expression: string, stateProperties: string[]) {
-  const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
-
-  return babelTransformExpression(
-    // foo -> state.foo
-    replaceIdentifiers(expression, stateProperties, (name) => `state.${name}`),
-    {
-      CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-        if (types.isIdentifier(path.node.callee)) {
-          if (setExpressions.includes(path.node.callee.name)) {
-            // setFoo -> foo
-            const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
-
-            // setFoo(...) -> state.foo = ...
-            path.replaceWith(
-              types.assignmentExpression(
-                '=',
-                types.identifier(`state.${statePropertyName}`),
-                path.node.arguments[0] as any,
-              ),
-            );
-          }
-        }
-      },
-    },
-  );
-}
-
-/**
- * Convert state identifiers from React hooks format to the state.* format Mitosis needs
- * e.g.
- *   text -> state.text
- *   setText(...) -> state.text = ...
- */
-function mapReactIdentifiers(json: MitosisComponent) {
-  const stateProperties = Object.keys(json.state);
-
-  for (const key in json.state) {
-    const value = json.state[key];
-    if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
-      json.state[key] =
-        functionLiteralPrefix +
-        mapReactIdentifiersInExpression(value.replace(functionLiteralPrefix, ''), stateProperties);
-    }
-  }
-
-  traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        const value = item.bindings[key];
-
-        if (value) {
-          item.bindings[key] = {
-            code: mapReactIdentifiersInExpression(value.code as string, stateProperties),
-          };
-          if (value.arguments?.length) {
-            item.bindings[key]!.arguments = value.arguments;
-          }
-        }
-      }
-
-      if (item.bindings.className) {
-        if (item.bindings.class) {
-          // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
-          item.bindings.class = item.bindings.className;
-          console.warn(
-            `[${json.name}]: Found both 'class' and 'className' bindings: removing 'className'.`,
-          );
-        } else {
-          item.bindings.class = item.bindings.className;
-        }
-        delete item.bindings.className;
-      }
-
-      if (item.properties.className) {
-        if (item.properties.class) {
-          item.properties.class = `${item.properties.class} ${item.properties.className}`;
-          console.warn(`[${json.name}]: Found both 'class' and 'className' properties: merging.`);
-        } else {
-          item.properties.class = item.properties.className;
-        }
-        delete item.properties.className;
-      }
-
-      if (item.properties.class && item.bindings.class) {
-        console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
-      }
-    }
-  });
-}
-
-const expressionToNode = (str: string) => {
-  const code = `export default ${str}`;
-  return (
-    (babel.parse(code) as babel.types.File).program.body[0] as babel.types.ExportDefaultDeclaration
-  ).declaration;
-};
-
-/**
- * Convert <Context.Provider /> to hooks formats by mutating the
- * MitosisComponent tree
- */
-function extractContextComponents(json: MitosisComponent) {
-  traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
-      if (item.name.endsWith('.Provider')) {
-        const value = item.bindings?.value?.code;
-        const name = item.name.split('.')[0];
-        const refPath = traceReferenceToModulePath(json.imports, name)!;
-        json.context.set[refPath] = {
-          name,
-          value: value
-            ? parseStateObject(expressionToNode(value) as babel.types.ObjectExpression)
-            : undefined,
-        };
-
-        this.update(
-          createMitosisNode({
-            name: 'Fragment',
-            children: item.children,
-          }),
-        );
-      }
-      // TODO: maybe support Context.Consumer:
-      // if (item.name.endsWith('.Consumer')) { ... }
-    }
-  });
-}
-
 const isImportOrDefaultExport = (node: babel.Node) =>
   types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
-
-const isTypeOrInterface = (node: babel.Node) =>
-  types.isTSTypeAliasDeclaration(node) ||
-  types.isTSInterfaceDeclaration(node) ||
-  (types.isExportNamedDeclaration(node) && types.isTSTypeAliasDeclaration(node.declaration)) ||
-  (types.isExportNamedDeclaration(node) && types.isTSInterfaceDeclaration(node.declaration));
-
-const collectTypes = (node: babel.Node, context: Context) => {
-  const typeStr = generate(node).code;
-  const { types = [] } = context.builder.component;
-  types.push(typeStr);
-  context.builder.component.types = types.filter(Boolean);
-};
-
-const collectInterfaces = (node: babel.Node, context: Context) => {
-  const interfaceStr = generate(node).code;
-  const { interfaces = [] } = context.builder.component;
-  interfaces.push(interfaceStr);
-  context.builder.component.interfaces = interfaces.filter(Boolean);
-};
 
 const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   path.traverse({
@@ -818,48 +487,6 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
     },
   });
 };
-
-function undoPropsDestructure(path: babel.NodePath<babel.types.FunctionDeclaration>) {
-  const { node } = path;
-  if (node.params.length && types.isObjectPattern(node.params[0])) {
-    const param = node.params[0];
-    const propsMap = param.properties.reduce((pre, cur) => {
-      if (
-        types.isObjectProperty(cur) &&
-        types.isIdentifier(cur.key) &&
-        types.isIdentifier(cur.value)
-      ) {
-        pre[cur.value.name] = `props.${cur.key.name}`;
-        return pre;
-      }
-      return pre;
-    }, {} as Record<string, string>);
-
-    if (param.typeAnnotation) {
-      node.params = [
-        {
-          ...babel.types.identifier('props'),
-          typeAnnotation: param.typeAnnotation,
-        },
-      ];
-      path.replaceWith(node);
-    }
-
-    path.traverse({
-      JSXExpressionContainer(path) {
-        const { node } = path;
-        if (types.isIdentifier(node.expression)) {
-          const { name } = node.expression;
-          if (propsMap[name]) {
-            path.replaceWith(
-              babel.types.jsxExpressionContainer(babel.types.identifier(propsMap[name])),
-            );
-          }
-        }
-      },
-    });
-  }
-}
 
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by

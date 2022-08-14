@@ -7,7 +7,7 @@ import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
@@ -107,7 +107,7 @@ const setContextCode = (json: MitosisComponent) => {
     .map((key) => {
       const { value, name } = contextSetters[key];
       return `setContext(${name}.key, ${
-        value ? stripStateAndPropsRefs(getMemberObjectString(value)) : 'undefined'
+        value ? stripStateAndPropsRefs(stringifyContextValue(value)) : 'undefined'
       });`;
     })
     .join('\n');
@@ -295,12 +295,15 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   json: {
     pre: (json) => {
       for (const key in json.state) {
-        const value = json.state[key];
+        const value = json.state[key]?.code;
         if (typeof value === 'string' && value.startsWith(methodLiteralPrefix)) {
           const strippedValue = value.replace(methodLiteralPrefix, '');
           if (!Boolean(strippedValue.match(GETTER))) {
             const newValue = `${functionLiteralPrefix} function ${strippedValue}`;
-            json.state[key] = newValue;
+            json.state[key] = {
+              code: newValue,
+              type: 'function',
+            };
           }
         }
       }

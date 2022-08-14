@@ -7,7 +7,7 @@ import traverse from 'traverse';
  */
 export const gettersToFunctions = (json: MitosisComponent) => {
   const getterKeys = Object.keys(json.state).filter((item) => {
-    const value = json.state[item];
+    const value = json.state[item]?.code;
     if (
       typeof value === 'string' &&
       value.startsWith(methodLiteralPrefix) &&
