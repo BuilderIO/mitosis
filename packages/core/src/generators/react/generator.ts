@@ -3,48 +3,48 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 import traverse from 'traverse';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { capitalize } from '../helpers/capitalize';
-import { collectCss } from '../helpers/styles/collect-css';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getRefs } from '../helpers/get-refs';
-import { getPropsRef } from '../helpers/get-props-ref';
+import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { capitalize } from '../../helpers/capitalize';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getRefs } from '../../helpers/get-refs';
+import { getPropsRef } from '../../helpers/get-props-ref';
 import {
   stringifyContextValue,
   getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { handleMissingState } from '../helpers/handle-missing-state';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { mapRefs } from '../helpers/map-refs';
-import { processHttpRequests } from '../helpers/process-http-requests';
-import { processTagReferences } from '../helpers/process-tag-references';
-import { renderPreComponent } from '../helpers/render-imports';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+} from '../../helpers/get-state-object-string';
+import { gettersToFunctions } from '../../helpers/getters-to-functions';
+import { handleMissingState } from '../../helpers/handle-missing-state';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
+import { mapRefs } from '../../helpers/map-refs';
+import { processHttpRequests } from '../../helpers/process-http-requests';
+import { processTagReferences } from '../../helpers/process-tag-references';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
-import { hasContext } from './helpers/context';
-import { collectReactNativeStyles } from './react-native';
-import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
-import { hasCss } from '../helpers/styles/helpers';
+} from '../../modules/plugins';
+import { selfClosingTags } from '../../parsers/jsx';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
+import { hasContext } from '../helpers/context';
+import { collectReactNativeStyles } from '../react-native';
+import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
+import { hasCss } from '../../helpers/styles/helpers';
 import { pipe } from 'fp-ts/lib/function';
-import { checkHasState } from '../helpers/state';
+import { checkHasState } from '../../helpers/state';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
