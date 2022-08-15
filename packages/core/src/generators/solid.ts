@@ -29,8 +29,11 @@ import { babelTransformExpression } from '../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { checkHasState } from '../helpers/state';
+import { collectCss } from '../helpers/styles/collect-css';
 
-export interface ToSolidOptions extends BaseTranspilerOptions {}
+export interface ToSolidOptions extends BaseTranspilerOptions {
+  stylesType?: 'styled-components' | 'style-tag';
+}
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -60,7 +63,7 @@ function getContextString(component: MitosisComponent, options: ToSolidOptions) 
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
-const collectClassString = (json: MitosisNode): string | null => {
+const collectClassString = (json: MitosisNode, options: ToSolidOptions): string | null => {
   const staticClasses: string[] = [];
 
   if (json.properties.class) {
@@ -81,7 +84,11 @@ const collectClassString = (json: MitosisNode): string | null => {
     dynamicClasses.push(json.bindings.className.code as any);
     delete json.bindings.className;
   }
-  if (typeof json.bindings.css?.code === 'string' && json.bindings.css.code.trim().length > 4) {
+  if (
+    typeof json.bindings.css?.code === 'string' &&
+    json.bindings.css.code.trim().length > 4 &&
+    options.stylesType === 'styled-components'
+  ) {
     dynamicClasses.push(`css(${json.bindings.css.code})`);
   }
   delete json.bindings.css;
@@ -141,7 +148,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string =
     str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
   }
 
-  const classString = collectClassString(json);
+  const classString = collectClassString(json, options);
   if (classString) {
     str += ` class=${classString} `;
   }
@@ -234,20 +241,26 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 }
 
 export const componentToSolid =
-  (options: ToSolidOptions = {}): Transpiler =>
+  (_options: ToSolidOptions = {}): Transpiler =>
   ({ component }) => {
+    const options: ToSolidOptions = {
+      stylesType: 'styled-components',
+      ..._options,
+    };
     let json = fastClone(component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
     addProviderComponents(json, options);
     const componentHasStyles = hasCss(json);
-    const addWrapper = json.children.filter(filterEmptyTextNodes).length !== 1;
+    const addWrapper =
+      json.children.filter(filterEmptyTextNodes).length !== 1 || options.stylesType === 'style-tag';
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
+    const css = options.stylesType === 'style-tag' && collectCss(json);
 
     const stateString = getStateObjectStringFromComponent(json);
     const hasState = checkHasState(json);
@@ -275,7 +288,11 @@ export const componentToSolid =
     }
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
-    ${!componentHasStyles ? '' : `import { css } from "solid-styled-components";`}
+    ${
+      !componentHasStyles && options.stylesType === 'styled-components'
+        ? ''
+        : `import { css } from "solid-styled-components";`
+    }
     ${renderPreComponent({ component: json, target: 'solid' })}
 
     function ${json.name}(props) {
@@ -309,6 +326,12 @@ export const componentToSolid =
           .filter(filterEmptyTextNodes)
           .map((item) => blockToSolid(item, options))
           .join('\n')}
+        ${
+          options.stylesType === 'style-tag' && css && css.trim().length > 4
+            ? // We add the jsx attribute so prettier formats this nicely
+              `<style jsx>{\`${css}\`}</style>`
+            : ''
+        }
         ${addWrapper ? '</>' : ''})
     }
 
@@ -325,7 +348,7 @@ export const componentToSolid =
     if (options.prettier !== false) {
       str = format(str, {
         parser: 'typescript',
-        plugins: [require('prettier/parser-typescript')],
+        plugins: [require('prettier/parser-typescript'), require('prettier/parser-postcss')],
       });
     }
     if (options.plugins) {
