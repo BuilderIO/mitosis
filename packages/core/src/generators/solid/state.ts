@@ -6,7 +6,7 @@ import { capitalize } from '../../helpers/capitalize';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
-import { JSON } from '../../types/json';
+import { _JSON } from '../../types/json';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -68,7 +68,7 @@ export const updateStateCode = (options: ToSolidOptions) =>
 
 const processStateValue = (options: ToSolidOptions) => {
   const mapValue = updateStateCode(options);
-  return ([key, value]: [key: string, value: JSON]): StateValue => {
+  return ([key, value]: [key: string, value: _JSON]): StateValue => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         // functions
