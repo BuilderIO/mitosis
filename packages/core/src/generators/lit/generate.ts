@@ -50,7 +50,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
         .filter(filterEmptyTextNodes)
         .map((item) => blockToLit(item, options))
         .join('\n')}\`
-    ) : ${!json.meta.else ? 'null' : blockToLit(json.meta.else as any, options)}}`;
+    : ${!json.meta.else ? 'null' : blockToLit(json.meta.else as any, options)}}`;
   }
 
   let str = '';
@@ -170,6 +170,9 @@ export const componentToLit =
         });
       } catch (err) {
         console.warn('Could not format html', err);
+        // If can't format HTML (this can happen with lit given it is tagged template strings),
+        // at least remove excess space
+        html = html.replace(/\n{3,}/g, '\n\n');
       }
     }
 
