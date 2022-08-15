@@ -181,6 +181,7 @@ export const componentToLit =
     import { LitElement, html } from 'lit';
     import { customElement, property, css, state } from 'lit/decorators.js';
 
+    ${json.types ? json.types.join('\n') : ''}
 
     @customElement('${json.meta.useMetadata?.tagName || dashCase(json.name)}')
     export default class ${json.name} extends LitElement {
