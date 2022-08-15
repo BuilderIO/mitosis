@@ -178,8 +178,8 @@ export const componentToLit =
 
     let str = dedent`
     ${renderPreComponent({ component: json, target: 'lit' })}
-    import { LitElement, html } from 'lit';
-    import { customElement, property, css, state } from 'lit/decorators.js';
+    import { LitElement, html, css } from 'lit';
+    import { customElement, property, state } from 'lit/decorators.js';
 
     ${json.types ? json.types.join('\n') : ''}
 
