@@ -488,6 +488,12 @@ exports[`Lit Columns 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+
 @customElement(\\"column\\")
 export default class Column extends LitElement {
   static styles = css\`
@@ -552,25 +558,30 @@ exports[`Lit ContentSlotHtml 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
 @customElement(\\"content-slot-code\\")
 export default class ContentSlotCode extends LitElement {
   @property() slotTesting: any;
 
   render() {
     return html\`
-      <div>
-      <slot name=\\"\${this.slotTesting}\\"></slot>
+        <div>
+        <slot name=\\"\${this.slotTesting}\\"></slot>
 
-      <div>
-        <hr />
+        <div>
+          <hr />
+        </div>
+
+        <div>
+          <slot></slot>
+        </div>
       </div>
 
-      <div>
-        <slot></slot>
-      </div>
-    </div>
-
-    \`;
+      \`;
   }
 }
 "
@@ -580,6 +591,10 @@ exports[`Lit ContentSlotJSX 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
 @customElement(\\"content-slot-jsx-code\\")
 export default class ContentSlotJsxCode extends LitElement {
   @property() slotTesting: any;
@@ -587,17 +602,17 @@ export default class ContentSlotJsxCode extends LitElement {
 
   render() {
     return html\`
-      <div>
-      \${this.slotTesting}
+        <div>
+        \${this.slotTesting}
 
-      <div>
-        <hr />
+        <div>
+          <hr />
+        </div>
+
+        <div>\${this.children}</div>
       </div>
 
-      <div>\${this.children}</div>
-    </div>
-
-    \`;
+      \`;
   }
 }
 "
@@ -752,6 +767,8 @@ import { get } from \\"@fake\\";
 
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 @customElement(\\"form-component\\")
 export default class FormComponent extends LitElement {
@@ -1402,20 +1419,24 @@ exports[`Lit SlotHtml 1`] = `
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  [key: string]: string;
+};
+
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   render() {
     return html\`
-      <div >
-          
-    <content-slot-code >
+        <div >
             
-    <slot  testing=\${(<div>Hello</div>)} ></slot>
+      <content-slot-code >
+              
+      <slot  testing=\${(<div>Hello</div>)} ></slot>
 
-          </content-slot-code>
+            </content-slot-code>
 
-        </div>
-    \`;
+          </div>
+      \`;
   }
 }
 "
@@ -1427,16 +1448,22 @@ exports[`Lit SlotJsx 1`] = `
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  [key: string]: string;
+};
+
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
   render() {
     return html\`
-      <div >
-          
-    <content-slot-code  slotTesting=\${(<div>Hello</div>)} ></content-slot-code>
+        <div >
+            
+      <content-slot-code  slotTesting=\${(
+        <div>Hello</div>
+      )} ></content-slot-code>
 
-        </div>
-    \`;
+          </div>
+      \`;
   }
 }
 "
@@ -1448,6 +1475,11 @@ import { snakeCase } from \\"lodash\\";
 
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
 
 @customElement(\\"smile-reviews\\")
 export default class SmileReviews extends LitElement {
@@ -1834,19 +1866,24 @@ exports[`Lit className 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
 @customElement(\\"class-name-code\\")
 export default class ClassNameCode extends LitElement {
   @state() bindings = \\"a binding\\";
 
   render() {
     return html\`
-      <div>
-      <div>Without Binding</div>
+        <div>
+        <div>Without Binding</div>
 
-      <div class=\\"{state.bindings}\\">With binding</div>
-    </div>
+        <div class=\\"{state.bindings}\\">With binding</div>
+      </div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -1882,6 +1919,7 @@ exports[`Lit multipleOnUpdate 1`] = `
 "import { LitElement, html } from 'lit';
    import { customElement, property, css, state } from 'lit/decorators.js';
 
+   
 
    @customElement('multiple-on-update')
    export default class MultipleOnUpdate extends LitElement {
@@ -1916,6 +1954,7 @@ exports[`Lit multipleOnUpdateWithDeps 1`] = `
 "import { LitElement, html } from 'lit';
    import { customElement, property, css, state } from 'lit/decorators.js';
 
+   
 
    @customElement('multiple-on-update-with-deps')
    export default class MultipleOnUpdateWithDeps extends LitElement {
@@ -2019,6 +2058,10 @@ exports[`Lit onInit 1`] = `
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  name: string;
+};
+
 @customElement(\\"on-init\\")
 export default class OnInit extends LitElement {
   @property() name: any;
@@ -2111,13 +2154,17 @@ export function run<T>(value: T) {}
 import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Types = {
+  s: any[];
+};
+
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
   render() {
     return html\`
-      <div></div>
+        <div></div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2126,6 +2173,9 @@ export default class MyBasicComponent extends LitElement {
 exports[`Lit preserveTyping 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+export type A = \\"test\\";
+type B = \\"test2\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -2145,6 +2195,11 @@ exports[`Lit propsDestructure 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Props = {
+  children: any;
+  type: string;
+};
+
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
   @property() children: any;
@@ -2154,12 +2209,12 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-      <div>
-      \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
-      Liquid!
-    </div>
+        <div>
+        \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+        Liquid!
+      </div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2187,15 +2242,20 @@ exports[`Lit propsType 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+type Person = {
+  name: string;
+  age?: number;
+};
+
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
   @property() name: any;
 
   render() {
     return html\`
-      <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+        <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2334,15 +2394,22 @@ exports[`Lit typeDependency 1`] = `
 "import { LitElement, html } from \\"lit\\";
 import { customElement, property, css, state } from \\"lit/decorators.js\\";
 
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
 @customElement(\\"type-dependency\\")
 export default class TypeDependency extends LitElement {
   @property() foo: any;
 
   render() {
     return html\`
-      <div>\${this.foo}</div>
+        <div>\${this.foo}</div>
 
-    \`;
+      \`;
   }
 }
 "
