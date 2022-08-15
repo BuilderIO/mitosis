@@ -70,11 +70,15 @@ exports[`React Native Basic 1`] = `
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
@@ -1972,6 +1976,9 @@ type Types = {
 interface IPost {
   len: number;
 }
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 const b = 3;
 const foo = () => {};
@@ -1979,7 +1986,7 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return <View />;
 }
 "
@@ -1997,11 +2004,12 @@ export interface C {
 interface D {
   n: \\"test\\";
 }
-
-export default function MyBasicComponent(props: {
+export interface MyBasicComponentProps {
   name: string;
   age?: number;
-}) {
+}
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <View>
       <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
@@ -2081,7 +2089,11 @@ exports[`React Native rootShow 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export default function RenderStyles(props: { foo: string }) {
+export interface RenderStylesProps {
+  foo: string;
+}
+
+export default function RenderStyles(props: RenderStylesProps) {
   return (
     <>
       {props.foo === \\"bar\\" ? (

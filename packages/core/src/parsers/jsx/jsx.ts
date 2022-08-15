@@ -243,6 +243,8 @@ const componentFunctionToJson = (
     context.builder.component.exports = localExports;
   }
 
+  const propsTypeRef = getPropsTypeRef(node, context);
+
   return createMitosisComponent({
     ...context.builder.component,
     name: node.id?.name,
@@ -254,7 +256,7 @@ const componentFunctionToJson = (
       get: accessedContext,
       set: setContext,
     },
-    propsTypeRef: getPropsTypeRef(node),
+    propsTypeRef,
   }) as any;
 };
 
