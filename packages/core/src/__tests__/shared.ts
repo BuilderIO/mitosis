@@ -23,6 +23,7 @@ const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-
 const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
+const typeDependency = require('./data/types/type-dependency.raw');
 
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
@@ -94,6 +95,7 @@ const BASIC_TESTS = {
   propsType: propsType,
   propsInterface: propsInterface,
   preserveTyping: preserveTyping,
+  typeDependency,
   propsDestructure: propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,

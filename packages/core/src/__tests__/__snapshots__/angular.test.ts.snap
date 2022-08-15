@@ -5009,3 +5009,47 @@ export default class NestedShow {
 }
 "
 `;
+
+exports[`Angular typeDependency 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+import type { Foo } from \\"./foo-type\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+};
+
+@Component({
+  selector: \\"type-dependency\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+})
+export default class TypeDependency {
+  @Input() foo: TypeDependencyProps[\\"foo\\"];
+}
+"
+`;
+
+exports[`Angular typeDependency 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import type { Foo } from \\"./foo-type\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"type-dependency\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+})
+export default class TypeDependency {
+  @Input() foo: TypeDependencyProps[\\"foo\\"];
+}
+"
+`;
