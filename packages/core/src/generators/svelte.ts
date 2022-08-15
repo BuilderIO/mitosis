@@ -384,24 +384,13 @@ export const componentToSvelte =
 
     const props = Array.from(getProps(json));
 
-    let propsTypeRef: string | object | undefined = json.propsTypeRef;
-
-    if (json.propsTypeRef?.startsWith('{')) {
-      propsTypeRef = `${json.name}Props`;
-
-      if (json.interfaces?.length) {
-        json.interfaces.push(`export interface ${propsTypeRef} ${json.propsTypeRef};`);
-      } else {
-        json.interfaces = [`export interface ${propsTypeRef} ${json.propsTypeRef};`];
-      }
-    }
 
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
     let str = '';
 
-    if (propsTypeRef) {
+    if (json.propsTypeRef) {
       str += dedent`
       <script context='module' lang='ts'>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
@@ -429,10 +418,8 @@ export const componentToSvelte =
 
           let propDeclaration = `export let ${name}`;
 
-          if (propsTypeRef && propsTypeRef !== 'any') {
-            propDeclaration += `: ${
-              isString(propsTypeRef) ? propsTypeRef.split(' |')[0] : propsTypeRef
-            }['${name}']`;
+          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
           }
 
           propDeclaration += ';';
