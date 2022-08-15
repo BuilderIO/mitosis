@@ -59,6 +59,70 @@ export default MyBasicRefComponent;
 "
 `;
 
+exports[`Solid AdvancedRef 2`] = `
+"import { Show, on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    onBlur: function onBlur() {
+      // Maintain focus
+      inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return state.name.toLowerCase();
+    },
+  });
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-4eba9ae5\\"
+              ref={inputRef}
+              value={state.name}
+              onBlur={(event) => state.onBlur()}
+              onInput={(event) => (state.name = event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-4eba9ae5 {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
 exports[`Solid Basic 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
@@ -136,6 +200,86 @@ export default MyBasicForShowComponent;
 "
 `;
 
+exports[`Solid Basic 3`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+function MyBasicComponent(props) {
+  const state = createMutable({
+    name: \\"Steve\\",
+    underscore_fn_name() {
+      return \\"bar\\";
+    },
+  });
+
+  return (
+    <>
+      <div class=\\"test div-2bff66e9\\">
+        <input
+          value={DEFAULT_VALUES.name || state.name}
+          onInput={(myEvent) => (state.name = myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-2bff66e9 {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Basic 4`] = `
+"import { Show, For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForShowComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
+  });
+
+  return (
+    <>
+      <div>
+        <For each={state.names}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === state.name}>
+                <input
+                  value={state.name}
+                  onInput={(event) => {
+                    state.name = event.target.value + \\" and \\" + person;
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
+`;
+
 exports[`Solid Basic Context 1`] = `
 "import { useContext, onMount } from \\"solid-js\\";
 import { Dynamic } from \\"solid-js/web\\";
@@ -174,6 +318,47 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid Basic Context 2`] = `
+"import { useContext, onMount } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+function MyBasicComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    onChange: function onChange() {
+      const change = myService.method(\\"change\\");
+      console.log(change);
+    },
+  });
+
+  const myService = useContext(MyService);
+
+  onMount(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  });
+
+  return (
+    <>
+      <Dynamic component={Injector.Provider}>
+        <div>
+          {myService.method(\\"hello\\") + state.name}
+          Hello! I can run in React, Vue, Solid, or Liquid!
+          <input onInput={(event) => state.onChange} />
+        </div>
+      </Dynamic>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid Basic OnMount Update 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -201,6 +386,36 @@ export default MyBasicOnMountUpdateComponent;
 "
 `;
 
+exports[`Solid Basic OnMount Update 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicOnMountUpdateComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
+  });
+
+  onMount(() => {
+    state.name = \\"PatrickJS onMount\\" + props.bye;
+  });
+
+  return (
+    <>
+      <div>
+        Hello
+        {state.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicOnMountUpdateComponent;
+"
+`;
+
 exports[`Solid Basic Outputs 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -215,6 +430,31 @@ function MyBasicOutputsComponent(props) {
   });
 
   return <div></div>;
+}
+
+export default MyBasicOutputsComponent;
+"
+`;
+
+exports[`Solid Basic Outputs 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicOutputsComponent(props) {
+  const state = createMutable({ name: \\"PatrickJS\\" });
+
+  onMount(() => {
+    props.onMessage(state.name);
+    props.onEvent(props.message);
+  });
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MyBasicOutputsComponent;
@@ -241,6 +481,31 @@ export default MyBasicOutputsComponent;
 "
 `;
 
+exports[`Solid Basic Outputs Meta 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicOutputsComponent(props) {
+  const state = createMutable({ name: \\"PatrickJS\\" });
+
+  onMount(() => {
+    props.onMessage(state.name);
+    props.onEvent(props.message);
+  });
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default MyBasicOutputsComponent;
+"
+`;
+
 exports[`Solid BasicChildComponent 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
@@ -260,6 +525,35 @@ function MyBasicChildComponent(props) {
         ></MyBasicOnMountUpdateComponent>
       </div>
     </div>
+  );
+}
+
+export default MyBasicChildComponent;
+"
+`;
+
+exports[`Solid BasicChildComponent 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+function MyBasicChildComponent(props) {
+  const state = createMutable({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+
+  return (
+    <>
+      <div>
+        <MyBasicComponent id={state.dev}></MyBasicComponent>
+        <div>
+          <MyBasicOnMountUpdateComponent
+            hi={state.name}
+            bye={state.dev}
+          ></MyBasicOnMountUpdateComponent>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -303,6 +597,52 @@ function MyBasicForComponent(props) {
         }}
       </For>
     </div>
+  );
+}
+
+export default MyBasicForComponent;
+"
+`;
+
+exports[`Solid BasicFor 2`] = `
+"import { For, onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
+  });
+
+  onMount(() => {
+    console.log(\\"onMount code\\");
+  });
+
+  return (
+    <>
+      <div>
+        <For each={state.names}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <>
+                <input
+                  value={state.name}
+                  onInput={(event) => {
+                    state.name = event.target.value + \\" and \\" + person;
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -364,6 +704,65 @@ export default MyBasicRefComponent;
 "
 `;
 
+exports[`Solid BasicRef 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    onBlur: function onBlur() {
+      // Maintain focus
+      inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return state.name.toLowerCase();
+    },
+  });
+
+  let inputRef;
+  let inputNoArgRef;
+
+  return (
+    <>
+      <div>
+        <Show when={props.showInput}>
+          <>
+            <input
+              class=\\"input-3ca8ff31\\"
+              ref={inputRef}
+              value={state.name}
+              onBlur={(event) => state.onBlur()}
+              onInput={(event) => (state.name = event.target.value)}
+            />
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </>
+        </Show>
+        Hello
+        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input-3ca8ff31 {
+          color: red;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
 exports[`Solid BasicRefAssignment 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
@@ -380,6 +779,32 @@ function MyBasicRefAssignmentComponent(props) {
     <div>
       <button onClick={(evt) => state.handlerClick(evt)}>Click</button>
     </div>
+  );
+}
+
+export default MyBasicRefAssignmentComponent;
+"
+`;
+
+exports[`Solid BasicRefAssignment 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefAssignmentComponent(props) {
+  const state = createMutable({
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", holdValueRef);
+      holdValueRef = holdValueRef + \\"JS\\";
+    },
+  });
+
+  return (
+    <>
+      <div>
+        <button onClick={(evt) => state.handlerClick(evt)}>Click</button>
+      </div>
+    </>
   );
 }
 
@@ -429,6 +854,51 @@ export default MyPreviousComponent;
 "
 `;
 
+exports[`Solid BasicRefPrevious 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+function MyPreviousComponent(props) {
+  const state = createMutable({ count: 0 });
+
+  function onUpdateFn_0() {
+    prevCount = state.count;
+  }
+  createEffect(on(() => [state.count], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <h1>
+          Now:
+          {state.count}, before:
+          {prevCount}
+        </h1>
+        <button onClick={(event) => (state.count += 1)}>Increment</button>
+      </div>
+    </>
+  );
+}
+
+export default MyPreviousComponent;
+"
+`;
+
 exports[`Solid Button 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -449,6 +919,38 @@ function Button(props) {
           {props.text}
         </button>
       </Show>
+    </>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid Button 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Show>
+      </>
     </>
   );
 }
@@ -528,6 +1030,77 @@ export default Column;
 "
 `;
 
+exports[`Solid Columns 2`] = `
+"import { For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function Column(props) {
+  const state = createMutable({
+    getColumns() {
+      return props.columns || [];
+    },
+    getGutterSize() {
+      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+    },
+    getWidth(index: number) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index: number) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  });
+
+  return (
+    <>
+      <div class=\\"builder-columns div-fb40bc64\\">
+        <For each={props.columns}>
+          {(column, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"builder-column div-fb40bc64-2\\">
+                {column.content}
+                {index}
+              </div>
+            );
+          }}
+        </For>
+      </div>
+      <style jsx>{\`
+        .div-fb40bc64 {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        @media (max-width: 999px) {
+          .div-fb40bc64 {
+            flex-direction: row;
+          }
+        }
+        @media (max-width: 639px) {
+          .div-fb40bc64 {
+            flex-direction: row-reverse;
+          }
+        }
+        .div-fb40bc64-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default Column;
+"
+`;
+
 exports[`Solid ContentSlotHtml 1`] = `
 "function ContentSlotCode(props) {
   return (
@@ -547,6 +1120,29 @@ export default ContentSlotCode;
 "
 `;
 
+exports[`Solid ContentSlotHtml 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function ContentSlotCode(props) {
+  return (
+    <>
+      <div>
+        <Slot name={props.slotTesting}></Slot>
+        <div>
+          <hr />
+        </div>
+        <div>
+          <Slot></Slot>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default ContentSlotCode;
+"
+`;
+
 exports[`Solid ContentSlotJSX 1`] = `
 "function ContentSlotJsxCode(props) {
   return (
@@ -557,6 +1153,27 @@ exports[`Solid ContentSlotJSX 1`] = `
       </div>
       <div>{props.children}</div>
     </div>
+  );
+}
+
+export default ContentSlotJsxCode;
+"
+`;
+
+exports[`Solid ContentSlotJSX 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function ContentSlotJsxCode(props) {
+  return (
+    <>
+      <div>
+        {props.slotTesting}
+        <div>
+          <hr />
+        </div>
+        <div>{props.children}</div>
+      </div>
+    </>
   );
 }
 
@@ -637,6 +1254,82 @@ export default CustomCode;
 "
 `;
 
+exports[`Solid CustomCode 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function CustomCode(props) {
+  const state = createMutable({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  let elem;
+
+  onMount(() => {
+    state.findAndRunScripts();
+  });
+
+  return (
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={props.code}
+      ></div>
+    </>
+  );
+}
+
+export default CustomCode;
+"
+`;
+
 exports[`Solid Embed 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -703,6 +1396,82 @@ function CustomCode(props) {
       ref={elem}
       innerHTML={props.code}
     ></div>
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Solid Embed 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function CustomCode(props) {
+  const state = createMutable({
+    scriptsInserted: [],
+    scriptsRun: [],
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = elem.getElementsByTagName(\\"script\\");
+
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
+
+          if (script.src) {
+            if (state.scriptsInserted.includes(script.src)) {
+              continue;
+            }
+
+            state.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (state.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
+
+            try {
+              state.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
+      }
+    },
+  });
+
+  let elem;
+
+  onMount(() => {
+    state.findAndRunScripts();
+  });
+
+  return (
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={props.code}
+      ></div>
+    </>
   );
 }
 
@@ -1019,6 +1788,315 @@ export default FormComponent;
 "
 `;
 
+exports[`Solid Form 2`] = `
+"import { Show, For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+function FormComponent(props) {
+  const state = createMutable({
+    state: \\"unsubmitted\\",
+    responseData: null,
+    formErrorMessage: \\"\\",
+    get submissionState() {
+      return (Builder.isEditing && props.previewState) || state.state;
+    },
+    onSubmit(
+      event: Event & {
+        currentTarget: HTMLFormElement;
+      }
+    ) {
+      const sendWithJs =
+        props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+      if (props.sendSubmissionsTo === \\"zapier\\") {
+        event.preventDefault();
+      } else if (sendWithJs) {
+        if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+          event.preventDefault();
+          return;
+        }
+
+        event.preventDefault();
+        const el = event.currentTarget;
+        const headers = props.customHeaders || {};
+        let body: any;
+        const formData = new FormData(el); // TODO: maybe support null
+
+        const formPairs: {
+          key: string;
+          value: File | boolean | number | string | FileList;
+        }[] = Array.from(
+          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+        )
+          .filter((el) => !!(el as HTMLInputElement).name)
+          .map((el) => {
+            let value: any;
+            const key = (el as HTMLImageElement).name;
+
+            if (el instanceof HTMLInputElement) {
+              if (el.type === \\"radio\\") {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value,
+                  };
+                }
+              } else if (el.type === \\"checkbox\\") {
+                value = el.checked;
+              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                const num = el.valueAsNumber;
+
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === \\"file\\") {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = (el as HTMLInputElement).value;
+            }
+
+            return {
+              key,
+              value,
+            };
+          });
+        let contentType = props.contentType;
+
+        if (props.sendSubmissionsTo === \\"email\\") {
+          contentType = \\"multipart/form-data\\";
+        }
+
+        Array.from(formPairs).forEach(({ value }) => {
+          if (
+            value instanceof File ||
+            (Array.isArray(value) && value[0] instanceof File) ||
+            value instanceof FileList
+          ) {
+            contentType = \\"multipart/form-data\\";
+          }
+        }); // TODO: send as urlEncoded or multipart by default
+        // because of ease of use and reliability in browser API
+        // for encoding the form?
+
+        if (contentType !== \\"application/json\\") {
+          body = formData;
+        } else {
+          // Json
+          const json = {};
+          Array.from(formPairs).forEach(({ value, key }) => {
+            set(json, key, value);
+          });
+          body = JSON.stringify(json);
+        }
+
+        if (contentType && contentType !== \\"multipart/form-data\\") {
+          if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */
+            !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+          ) {
+            headers[\\"content-type\\"] = contentType;
+          }
+        }
+
+        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+          detail: {
+            body,
+          },
+        });
+
+        if (formRef) {
+          formRef.dispatchEvent(presubmitEvent);
+
+          if (presubmitEvent.defaultPrevented) {
+            return;
+          }
+        }
+
+        state.state = \\"sending\\";
+        const formUrl = \`\${
+          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+          props.sendSubmissionsToEmail || \\"\\"
+        )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+        fetch(
+          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
+          /* TODO: throw error if no action URL */
+          {
+            body,
+            headers,
+            method: props.method || \\"post\\",
+          }
+        ).then(
+          async (res) => {
+            let body;
+            const contentType = res.headers.get(\\"content-type\\");
+
+            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+
+            if (!res.ok && props.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */
+              let message = get(body, props.errorMessagePath);
+
+              if (message) {
+                if (typeof message !== \\"string\\") {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                  message = JSON.stringify(message);
+                }
+
+                state.formErrorMessage = message;
+              }
+            }
+
+            state.responseData = body;
+            state.state = res.ok ? \\"success\\" : \\"error\\";
+
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                detail: {
+                  res,
+                  body,
+                },
+              });
+
+              if (formRef) {
+                formRef.dispatchEvent(submitSuccessEvent);
+
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */
+
+                if (props.resetFormOnSubmit !== false) {
+                  formRef.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
+
+              if (props.successUrl) {
+                if (formRef) {
+                  const event = new CustomEvent(\\"route\\", {
+                    detail: {
+                      url: props.successUrl,
+                    },
+                  });
+                  formRef.dispatchEvent(event);
+
+                  if (!event.defaultPrevented) {
+                    location.href = props.successUrl;
+                  }
+                } else {
+                  location.href = props.successUrl;
+                }
+              }
+            }
+          },
+          (err) => {
+            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+              detail: {
+                error: err,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitErrorEvent);
+
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+
+            state.responseData = err;
+            state.state = \\"error\\";
+          }
+        );
+      }
+    },
+  });
+
+  let formRef;
+
+  return (
+    <>
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => state.onSubmit(event)}
+      >
+        <Show when={props.builderBlock && props.builderBlock.children}>
+          <For each={props.builderBlock?.children}>
+            {(block, _index) => {
+              const index = _index();
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }}
+          </For>
+        </Show>
+        <Show when={state.submissionState === \\"error\\"}>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={state.submissionState === \\"sending\\"}>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={state.submissionState === \\"error\\" && state.responseData}>
+          <pre class=\\"builder-form-error-text pre-194cd728\\">
+            {JSON.stringify(state.responseData, null, 2)}
+          </pre>
+        </Show>
+        <Show when={state.submissionState === \\"success\\"}>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+        </Show>
+      </form>
+      <style jsx>{\`
+        .pre-194cd728 {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default FormComponent;
+"
+`;
+
 exports[`Solid Image 1`] = `
 "import { Show, onMount } from \\"solid-js\\";
 
@@ -1107,6 +2185,98 @@ export default Image;
 "
 `;
 
+exports[`Solid Image 2`] = `
+"import { Show, onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function Image(props) {
+  const state = createMutable({
+    scrollListener: null,
+    imageLoaded: false,
+    setLoaded() {
+      state.imageLoaded = true;
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && isBrowser();
+    },
+    isBrowser: function isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    load: false,
+  });
+
+  let pictureRef;
+
+  onMount(() => {
+    if (state.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef) {
+          const rect = pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  });
+
+  return (
+    <>
+      <>
+        <picture ref={pictureRef}>
+          <Show when={!state.useLazyLoading() || state.load}>
+            <img
+              class={
+                \\"builder-image\\" +
+                (props._class ? \\" \\" + props._class : \\"\\") +
+                \\" img-2eb246b7\\"
+              }
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              src={props.image}
+              onLoad={(event) => state.setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+            />
+          </Show>
+          <source srcset={props.srcset} />
+        </picture>
+        {props.children}
+      </>
+      <style jsx>{\`
+        .img-2eb246b7 {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default Image;
+"
+`;
+
 exports[`Solid Image State 1`] = `
 "import { For } from \\"solid-js\\";
 
@@ -1138,6 +2308,40 @@ export default ImgStateComponent;
 "
 `;
 
+exports[`Solid Image State 2`] = `
+"import { For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function ImgStateComponent(props) {
+  const state = createMutable({
+    canShow: true,
+    images: [\\"http://example.com/qwik.png\\"],
+  });
+
+  return (
+    <>
+      <div>
+        <For each={state.images}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <>
+                <img class=\\"custom-class\\" src={item} key={itemIndex} />
+              </>
+            );
+          }}
+        </For>
+      </div>
+    </>
+  );
+}
+
+export default ImgStateComponent;
+"
+`;
+
 exports[`Solid Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1153,6 +2357,32 @@ function ImgComponent(props) {
       alt={props.altText}
       src={props.imgSrc}
     />
+  );
+}
+
+export default ImgComponent;
+"
+`;
+
+exports[`Solid Img 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <>
+      <img
+        {...props.attributes}
+        style={{
+          \\"object-fit\\": props.backgroundSize || \\"cover\\",
+          \\"object-position\\": props.backgroundPosition || \\"center\\",
+        }}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
   );
 }
 
@@ -1186,6 +2416,36 @@ export default FormInputComponent;
 "
 `;
 
+exports[`Solid Input 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+      />
+    </>
+  );
+}
+
+export default FormInputComponent;
+"
+`;
+
 exports[`Solid RawText 1`] = `
 "function RawText(props) {
   return (
@@ -1193,6 +2453,24 @@ exports[`Solid RawText 1`] = `
       class={props.attributes?.class || props.attributes?.className}
       innerHTML={props.text || \\"\\"}
     ></span>
+  );
+}
+
+export default RawText;
+"
+`;
+
+exports[`Solid RawText 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function RawText(props) {
+  return (
+    <>
+      <span
+        class={props.attributes?.class || props.attributes?.className}
+        innerHTML={props.text || \\"\\"}
+      ></span>
+    </>
   );
 }
 
@@ -1211,6 +2489,27 @@ function MyBasicComponent(props) {
       Hello
       {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
     </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Remove Internal mitosis package 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const state = createMutable({ name: \\"PatrickJS\\" });
+
+  return (
+    <>
+      <div>
+        Hello
+        {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      </div>
+    </>
   );
 }
 
@@ -1273,6 +2572,68 @@ export default SectionStateComponent;
 "
 `;
 
+exports[`Solid Section 3`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SectionComponent(props) {
+  return (
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                \\"max-width\\": props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
+  );
+}
+
+export default SectionComponent;
+"
+`;
+
+exports[`Solid Section 4`] = `
+"import { Show, For } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function SectionStateComponent(props) {
+  const state = createMutable({ max: 42, items: [42] });
+
+  return (
+    <>
+      <Show when={state.max}>
+        <For each={state.items}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  \\"max-width\\": item + state.max,
+                }}
+              >
+                {props.children}
+              </section>
+            );
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default SectionStateComponent;
+"
+`;
+
 exports[`Solid Select 1`] = `
 "import { For } from \\"solid-js\\";
 
@@ -1309,6 +2670,46 @@ export default SelectComponent;
 "
 `;
 
+exports[`Solid Select 2`] = `
+"import { For } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        <For each={props.options}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <option value={option.value} data-index={index}>
+                {option.name || option.value}
+              </option>
+            );
+          }}
+        </For>
+      </select>
+    </>
+  );
+}
+
+export default SelectComponent;
+"
+`;
+
 exports[`Solid SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1326,6 +2727,27 @@ export default SlotCode;
 "
 `;
 
+exports[`Solid SlotHtml 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <ContentSlotCode>
+          <Slot testing={<div>Hello</div>}></Slot>
+        </ContentSlotCode>
+      </div>
+    </>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
 exports[`Solid SlotJsx 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1334,6 +2756,25 @@ function SlotCode(props) {
     <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
     </div>
+  );
+}
+
+export default SlotCode;
+"
+`;
+
+exports[`Solid SlotJsx 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+function SlotCode(props) {
+  return (
+    <>
+      <div>
+        <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    </>
   );
 }
 
@@ -1451,12 +2892,139 @@ export default SmileReviews;
 "
 `;
 
+exports[`Solid Stamped.io 2`] = `
+"import { Show, For, onMount } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+function SmileReviews(props) {
+  const state = createMutable({
+    reviews: [],
+    name: \\"test\\",
+    showReviewPrompt: false,
+    kebabCaseValue() {
+      return kebabCase(\\"testThat\\");
+    },
+    snakeCaseValue() {
+      return snakeCase(\\"testThis\\");
+    },
+  });
+
+  onMount(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        state.reviews = data.data;
+      });
+  });
+
+  return (
+    <>
+      <div data-user={state.name}>
+        <button onClick={(event) => (state.showReviewPrompt = true)}>
+          Write a review
+        </button>
+        <Show when={state.showReviewPrompt}>
+          <input placeholder=\\"Email\\" />
+          <input class=\\"input-ec998a60\\" placeholder=\\"Title\\" />
+          <textarea
+            class=\\"textarea-ec998a60\\"
+            placeholder=\\"How was your experience?\\"
+          ></textarea>
+          <button
+            class=\\"button-ec998a60\\"
+            onClick={(event) => {
+              event.preventDefault();
+              state.showReviewPrompt = false;
+            }}
+          >
+            Submit
+          </button>
+        </Show>
+        <For each={state.reviews}>
+          {(review, _index) => {
+            const index = _index();
+            return (
+              <div class=\\"div-ec998a60\\" key={review.id}>
+                <img class=\\"img-ec998a60\\" src={review.avatar} />
+                <div
+                  class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
+                >
+                  <div>
+                    N:
+                    {index}
+                  </div>
+                  <div>{review.author}</div>
+                  <div>{review.reviewMessage}</div>
+                </div>
+              </div>
+            );
+          }}
+        </For>
+      </div>
+      <style jsx>{\`
+        .input-ec998a60 {
+          display: block;
+        }
+        .textarea-ec998a60 {
+          display: block;
+        }
+        .button-ec998a60 {
+          display: block;
+        }
+        .div-ec998a60 {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .img-ec998a60 {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default SmileReviews;
+"
+`;
+
 exports[`Solid Submit 1`] = `
 "function SubmitButton(props) {
   return (
     <button {...props.attributes} type=\\"submit\\">
       {props.text}
     </button>
+  );
+}
+
+export default SubmitButton;
+"
+`;
+
+exports[`Solid Submit 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function SubmitButton(props) {
+  return (
+    <>
+      <button {...props.attributes} type=\\"submit\\">
+        {props.text}
+      </button>
+    </>
   );
 }
 
@@ -1492,6 +3060,37 @@ export default Text;
 "
 `;
 
+exports[`Solid Text 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function Text(props) {
+  const state = createMutable({ name: \\"Decadef20\\" });
+
+  return (
+    <>
+      <div
+        contentEditable={allowEditingText || undefined}
+        data-name={{
+          test: state.name || \\"any name\\",
+        }}
+        innerHTML={
+          props.text ||
+          props.content ||
+          state.name ||
+          '<p class=\\"text-lg\\">my name</p>'
+        }
+      ></div>
+    </>
+  );
+}
+
+export default Text;
+"
+`;
+
 exports[`Solid Textarea 1`] = `
 "function Textarea(props) {
   return (
@@ -1502,6 +3101,27 @@ exports[`Solid Textarea 1`] = `
       value={props.value}
       defaultValue={props.defaultValue}
     ></textarea>
+  );
+}
+
+export default Textarea;
+"
+`;
+
+exports[`Solid Textarea 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function Textarea(props) {
+  return (
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
   );
 }
 
@@ -1532,6 +3152,40 @@ exports[`Solid Video 1`] = `
       controls={props.controls}
       loop={props.loop}
     ></video>
+  );
+}
+
+export default Video;
+"
+`;
+
+exports[`Solid Video 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function Video(props) {
+  return (
+    <>
+      <video
+        {...props.attributes}
+        preload=\\"none\\"
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          \\"object-fit\\": props.fit,
+          \\"object-position\\": props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          \\"border-radius\\": 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoplay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
   );
 }
 
@@ -1577,6 +3231,47 @@ export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
+exports[`Solid basicOnUpdateReturn 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicOnUpdateReturnComponent(props) {
+  const state = createMutable({ name: \\"PatrickJS\\" });
+
+  function onUpdateFn_0() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        state.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+  createEffect(on(() => [state.name], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        Hello!
+        {state.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicOnUpdateReturnComponent;
+"
+`;
+
 exports[`Solid class + ClassName + css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
@@ -1592,6 +3287,28 @@ function MyBasicComponent(props) {
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid class + ClassName + css 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test2 test div-45c59d97\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-45c59d97 {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
   );
 }
 
@@ -1621,6 +3338,28 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid class + css 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid className + css 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
@@ -1643,6 +3382,28 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid className + css 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div class=\\"test div-74a0302e\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-74a0302e {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid className 1`] = `
 "import { createMutable } from \\"solid-js/store\\";
 
@@ -1654,6 +3415,27 @@ function ClassNameCode(props) {
       <div class=\\"no binding\\">Without Binding</div>
       <div class={state.bindings}>With binding</div>
     </div>
+  );
+}
+
+export default ClassNameCode;
+"
+`;
+
+exports[`Solid className 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function ClassNameCode(props) {
+  const state = createMutable({ bindings: \\"a binding\\" });
+
+  return (
+    <>
+      <div>
+        <div class=\\"no binding\\">Without Binding</div>
+        <div class={state.bindings}>With binding</div>
+      </div>
+    </>
   );
 }
 
@@ -1691,11 +3473,56 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid classState 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const state = createMutable({
+    classState: \\"testClassName\\",
+    styleState: { color: \\"red\\" },
+  });
+
+  return (
+    <>
+      <div class={state.classState + \\" div-61288f44\\"} style={state.styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div-61288f44 {
+          padding: 10px;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid multipleOnUpdate 1`] = `
 "import { on, createEffect } from \\"solid-js\\";
 
 function MultipleOnUpdate(props) {
   return <div></div>;
+}
+
+export default MultipleOnUpdate;
+"
+`;
+
+exports[`Solid multipleOnUpdate 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MultipleOnUpdate(props) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default MultipleOnUpdate;
@@ -1735,6 +3562,44 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
+exports[`Solid multipleOnUpdateWithDeps 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MultipleOnUpdateWithDeps(props) {
+  const state = createMutable({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
+
+  function onUpdateFn_0() {
+    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+
+    if (state.a === \\"a\\") {
+      state.a = \\"b\\";
+    }
+  }
+  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+
+  function onUpdateFn_1() {
+    console.log(\\"Runs when c or d changes\\", state.c, state.d);
+
+    if (state.a === \\"a\\") {
+      state.a = \\"b\\";
+    }
+  }
+  createEffect(on(() => [state.c, state.d], onUpdateFn_1));
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default MultipleOnUpdateWithDeps;
+"
+`;
+
 exports[`Solid nestedShow 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -1752,6 +3617,27 @@ export default NestedShow;
 "
 `;
 
+exports[`Solid nestedShow 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <Show fallback={<div>else-condition-B</div>} when={!props.conditionB}>
+          <div>if condition A and condition B</div>
+        </Show>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
+`;
+
 exports[`Solid onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -1761,6 +3647,27 @@ function OnInit(props) {
   });
 
   return <div></div>;
+}
+
+export default OnInit;
+"
+`;
+
+exports[`Solid onInit & onMount 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function OnInit(props) {
+  onMount(() => {
+    console.log(\\"onMount\\");
+  });
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnInit;
@@ -1789,6 +3696,31 @@ export default OnInit;
 "
 `;
 
+exports[`Solid onInit 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+function OnInit(props) {
+  const state = createMutable({ name: \\"\\" });
+
+  return (
+    <>
+      <div>
+        Default name defined by parent
+        {state.name}
+      </div>
+    </>
+  );
+}
+
+export default OnInit;
+"
+`;
+
 exports[`Solid onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
@@ -1804,11 +3736,49 @@ export default Comp;
 "
 `;
 
+exports[`Solid onMount 2`] = `
+"import { onMount } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Comp(props) {
+  onMount(() => {
+    console.log(\\"Runs on mount\\");
+  });
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default Comp;
+"
+`;
+
 exports[`Solid onUpdate 1`] = `
 "import { on, createEffect } from \\"solid-js\\";
 
 function OnUpdate(props) {
   return <div></div>;
+}
+
+export default OnUpdate;
+"
+`;
+
+exports[`Solid onUpdate 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function OnUpdate(props) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
 }
 
 export default OnUpdate;
@@ -1835,6 +3805,31 @@ export default OnUpdateWithDeps;
 "
 `;
 
+exports[`Solid onUpdateWithDeps 2`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function OnUpdateWithDeps(props) {
+  const state = createMutable({ a: \\"a\\", b: \\"b\\" });
+
+  function onUpdateFn_0() {
+    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+  }
+  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default OnUpdateWithDeps;
+"
+`;
+
 exports[`Solid preserveExportOrLocalStatement 1`] = `
 "const b = 3;
 const foo = () => {};
@@ -1850,6 +3845,27 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid preserveExportOrLocalStatement 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div></div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid preserveTyping 1`] = `
 "function MyBasicComponent(props) {
   return (
@@ -1857,6 +3873,24 @@ exports[`Solid preserveTyping 1`] = `
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid preserveTyping 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -1883,6 +3917,28 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid propsDestructure 2`] = `
+"import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const state = createMutable({ name: \\"Decadef20\\" });
+
+  return (
+    <>
+      <div>
+        {props.children}
+        {props.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid propsInterface 1`] = `
 "function MyBasicComponent(props) {
   return (
@@ -1897,6 +3953,24 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid propsInterface 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid propsType 1`] = `
 "function MyBasicComponent(props) {
   return (
@@ -1904,6 +3978,24 @@ exports[`Solid propsType 1`] = `
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid propsType 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {props.name}
+      </div>
+    </>
   );
 }
 
@@ -1926,6 +4018,25 @@ export default RenderStyles;
 "
 `;
 
+exports[`Solid rootShow 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function RenderStyles(props) {
+  return (
+    <>
+      <Show fallback={<div>Foo</div>} when={props.foo === \\"bar\\"}>
+        <div>Bar</div>
+      </Show>
+    </>
+  );
+}
+
+export default RenderStyles;
+"
+`;
+
 exports[`Solid self-referencing component 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -1937,6 +4048,28 @@ function MyComponent(props) {
         <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
       </Show>
     </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid self-referencing component 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div>
+        {props.name}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+        </Show>
+      </div>
+    </>
   );
 }
 
@@ -1965,6 +4098,31 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid self-referencing component with children 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <div>
+        {props.name}
+        {props.children}
+        <Show when={props.name === \\"Batman\\"}>
+          <MyComponent name=\\"Bruce\\">
+            <div>Wayne</div>
+          </MyComponent>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid showWithFor 1`] = `
 "import { Show, For } from \\"solid-js\\";
 
@@ -1985,6 +4143,30 @@ export default NestedShow;
 "
 `;
 
+exports[`Solid showWithFor 2`] = `
+"import { Show, For } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function NestedShow(props) {
+  return (
+    <>
+      <Show fallback={<div>else-condition-A</div>} when={props.conditionA}>
+        <For each={props.items}>
+          {(item, _index) => {
+            const index = _index();
+            return <div key={idx}>{item}</div>;
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default NestedShow;
+"
+`;
+
 exports[`Solid subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.jsx\\";
 
@@ -1996,9 +4178,41 @@ export default SubComponent;
 "
 `;
 
+exports[`Solid subComponent 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+import Foo from \\"./foo-sub-component.jsx\\";
+
+function SubComponent(props) {
+  return (
+    <>
+      <Foo></Foo>
+    </>
+  );
+}
+
+export default SubComponent;
+"
+`;
+
 exports[`Solid typeDependency 1`] = `
 "function TypeDependency(props) {
   return <div>{props.foo}</div>;
+}
+
+export default TypeDependency;
+"
+`;
+
+exports[`Solid typeDependency 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function TypeDependency(props) {
+  return (
+    <>
+      <div>{props.foo}</div>
+    </>
+  );
 }
 
 export default TypeDependency;
