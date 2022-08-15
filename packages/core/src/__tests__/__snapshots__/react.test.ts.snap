@@ -2252,12 +2252,25 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`Preact subComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
 exports[`Preact typeDependency 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
+  foo2: Foo2;
 };
 
 export default function TypeDependency(props: TypeDependencyProps) {
@@ -4570,11 +4583,23 @@ const Img = styled.img\`
 "
 `;
 
+exports[`React subComponent 1`] = `
+"import * as React from \\"react\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
 exports[`React typeDependency 1`] = `
 "import * as React from \\"react\\";
 import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
+  foo2: Foo2;
 };
 
 export default function TypeDependency(props: TypeDependencyProps) {

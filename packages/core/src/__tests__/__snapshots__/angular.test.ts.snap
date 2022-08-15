@@ -5010,12 +5010,46 @@ export default class NestedShow {
 "
 `;
 
+exports[`Angular subComponent 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"sub-component\\",
+  template: \`
+    <foo></foo>
+  \`,
+})
+export default class SubComponent {}
+"
+`;
+
+exports[`Angular subComponent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import Foo from \\"./foo-sub-component\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, Foo],
+
+  selector: \\"sub-component\\",
+  template: \`
+    <foo></foo>
+  \`,
+})
+export default class SubComponent {}
+"
+`;
+
 exports[`Angular typeDependency 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
+  foo2: Foo2;
 };
 
 @Component({
@@ -5035,8 +5069,10 @@ exports[`Angular typeDependency 2`] = `
 import { CommonModule } from \\"@angular/common\\";
 
 import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
   foo: Foo;
+  foo2: Foo2;
 };
 
 @Component({

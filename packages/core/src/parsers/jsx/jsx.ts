@@ -538,6 +538,14 @@ export function parseJsx(
 
             for (const statement of path.node.body) {
               if (isTypeImport(statement)) {
+                const importDeclaration = statement as babel.types.ImportDeclaration;
+                // Remove .lite from path if exists, as that will be stripped
+                if (importDeclaration.source.value.endsWith('.lite')) {
+                  importDeclaration.source.value = importDeclaration.source.value.replace(
+                    /\.lite$/,
+                    '',
+                  );
+                }
                 collectTypes(statement, context);
               }
             }
