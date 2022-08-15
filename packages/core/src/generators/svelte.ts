@@ -384,7 +384,6 @@ export const componentToSvelte =
 
     const props = Array.from(getProps(json));
 
-
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 

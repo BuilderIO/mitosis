@@ -255,7 +255,7 @@ const componentFunctionToJson = (
       get: accessedContext,
       set: setContext,
     },
-    propsTypeRef
+    propsTypeRef,
   }) as any;
 };
 
