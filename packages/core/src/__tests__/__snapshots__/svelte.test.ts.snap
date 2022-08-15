@@ -2138,8 +2138,19 @@ exports[`Svelte subComponent 1`] = `
 `;
 
 exports[`Svelte typeDependency 1`] = `
-"<script>
-  export let foo;
+"<script context=\\"module\\" lang=\\"ts\\">
+  import type { Foo } from \\"./foo-type\\";
+
+  import type { Foo as Foo2 } from \\"./type-export\\";
+
+  export type TypeDependencyProps = {
+    foo: Foo;
+    foo2: Foo2;
+  };
+</script>
+
+<script>
+  export let foo: TypeDependencyProps[\\"foo\\"];
 </script>
 
 <div>{foo}</div>
