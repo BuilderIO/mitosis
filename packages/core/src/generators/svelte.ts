@@ -311,7 +311,6 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   },
 });
 
-
 export const componentToSvelte =
   ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
@@ -384,10 +383,10 @@ export const componentToSvelte =
     const hasData = dataString.length > 4;
 
     const props = Array.from(getProps(json));
-    
+
     let propsTypeRef: string | object | undefined = json.propsTypeRef;
 
-    if (json.propsTypeRef?.startsWith('{')) {      
+    if (json.propsTypeRef?.startsWith('{')) {
       propsTypeRef = `${json.name}Props`;
 
       if (json.interfaces?.length) {
@@ -405,12 +404,12 @@ export const componentToSvelte =
     if (propsTypeRef) {
       str += dedent`
       <script context='module' lang='ts'>
-        ${json.types ? json.types.join('\n\n')  + '\n': ''}
+        ${json.types ? json.types.join('\n\n') + '\n' : ''}
         ${json.interfaces ? json.interfaces.join('\n\n') + '\n' : ''}
       </script>
       \n
       \n
-      `
+      `;
     }
 
     str += dedent`
@@ -431,7 +430,9 @@ export const componentToSvelte =
           let propDeclaration = `export let ${name}`;
 
           if (propsTypeRef && propsTypeRef !== 'any') {
-              propDeclaration += `: ${isString(propsTypeRef) ? propsTypeRef.split(' |')[0] : propsTypeRef}['${name}']`;
+            propDeclaration += `: ${
+              isString(propsTypeRef) ? propsTypeRef.split(' |')[0] : propsTypeRef
+            }['${name}']`;
           }
 
           propDeclaration += ';';
