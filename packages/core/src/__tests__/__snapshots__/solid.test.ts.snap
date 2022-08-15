@@ -1,22 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Solid AdvancedRef 1`] = `
-"import { Show, on, createEffect } from \\"solid-js\\";
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    onBlur: function onBlur() {
-      // Maintain focus
-      inputRef.focus();
-    },
-    lowerCaseName: function lowerCaseName() {
-      return state.name.toLowerCase();
-    },
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
 
   let inputRef;
   let inputNoArgRef;
@@ -35,9 +34,9 @@ function MyBasicRefComponent(props) {
               color: \\"red\\",
             })}
             ref={inputRef}
-            value={state.name}
-            onBlur={(event) => state.onBlur()}
-            onInput={(event) => (state.name = event.target.value)}
+            value={name}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => (name = event.target.value)}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
             Choose a car:
@@ -49,8 +48,7 @@ function MyBasicRefComponent(props) {
         </>
       </Show>
       Hello
-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-      Component!
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
     </div>
   );
 }
@@ -60,22 +58,21 @@ export default MyBasicRefComponent;
 `;
 
 exports[`Solid AdvancedRef 2`] = `
-"import { Show, on, createEffect } from \\"solid-js\\";
+"import { Show, on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    onBlur: function onBlur() {
-      // Maintain focus
-      inputRef.focus();
-    },
-    lowerCaseName: function lowerCaseName() {
-      return state.name.toLowerCase();
-    },
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
 
   let inputRef;
   let inputNoArgRef;
@@ -91,11 +88,11 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-4eba9ae5\\"
+              class=\\"input-5d10c56a\\"
               ref={inputRef}
-              value={state.name}
-              onBlur={(event) => state.onBlur()}
-              onInput={(event) => (state.name = event.target.value)}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => (name = event.target.value)}
             />
             <label for=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
@@ -107,11 +104,11 @@ function MyBasicRefComponent(props) {
           </>
         </Show>
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
-        .input-4eba9ae5 {
+        .input-5d10c56a {
           color: red;
         }
       \`}</style>
@@ -133,7 +130,7 @@ export const DEFAULT_VALUES = {
 };
 
 function MyBasicComponent(props) {
-  const [name, setName] = useSignal(\\"Steve\\");
+  const [name, setName] = createSignal(\\"Steve\\");
 
   function underscore_fn_name() {
     return \\"bar\\";
@@ -149,8 +146,8 @@ function MyBasicComponent(props) {
       }
     >
       <input
-        value={DEFAULT_VALUES.name || state.name}
-        onInput={(myEvent) => (state.name = myEvent.target.value)}
+        value={DEFAULT_VALUES.name || name}
+        onInput={(myEvent) => (name = myEvent.target.value)}
       />
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -165,21 +162,21 @@ exports[`Solid Basic 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 function MyBasicForShowComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
-  const [names, setNames] = useSignal([\\"Steve\\", \\"PatrickJS\\"]);
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   return (
     <div>
-      <For each={state.names}>
+      <For each={names}>
         {(person, _index) => {
           const index = _index();
           return (
-            <Show when={person === state.name}>
+            <Show when={person === name}>
               <input
-                value={state.name}
+                value={name}
                 onInput={(event) => {
-                  state.name = event.target.value + \\" and \\" + person;
+                  name = event.target.value + \\" and \\" + person;
                 }}
               />
               Hello
@@ -198,7 +195,8 @@ export default MyBasicForShowComponent;
 `;
 
 exports[`Solid Basic 3`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 export const DEFAULT_VALUES = {
@@ -206,19 +204,18 @@ export const DEFAULT_VALUES = {
 };
 
 function MyBasicComponent(props) {
-  const state = createMutable({
-    name: \\"Steve\\",
-    underscore_fn_name() {
-      return \\"bar\\";
-    },
-  });
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
 
   return (
     <>
       <div class=\\"test div-2bff66e9\\">
         <input
-          value={DEFAULT_VALUES.name || state.name}
-          onInput={(myEvent) => (state.name = myEvent.target.value)}
+          value={DEFAULT_VALUES.name || name}
+          onInput={(myEvent) => (name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
@@ -236,29 +233,27 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Basic 4`] = `
-"import { Show, For } from \\"solid-js\\";
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicForShowComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   return (
     <>
       <div>
-        <For each={state.names}>
+        <For each={names}>
           {(person, _index) => {
             const index = _index();
             return (
-              <Show when={person === state.name}>
+              <Show when={person === name}>
                 <input
-                  value={state.name}
+                  value={name}
                   onInput={(event) => {
-                    state.name = event.target.value + \\" and \\" + person;
+                    name = event.target.value + \\" and \\" + person;
                   }}
                 />
                 Hello
@@ -284,7 +279,7 @@ import { Dynamic } from \\"solid-js/web\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -301,9 +296,9 @@ function MyBasicComponent(props) {
   return (
     <Dynamic component={Injector.Provider}>
       <div>
-        {myService.method(\\"hello\\") + state.name}
+        {myService.method(\\"hello\\") + name}
         Hello! I can run in React, Vue, Solid, or Liquid!
-        <input onInput={(event) => state.onChange} />
+        <input onInput={(event) => onChange} />
       </div>
     </Dynamic>
   );
@@ -314,21 +309,20 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Basic Context 2`] = `
-"import { useContext, onMount } from \\"solid-js\\";
+"import { useContext, onMount, createSignal } from \\"solid-js\\";
 import { Dynamic } from \\"solid-js/web\\";
-import { createMutable } from \\"solid-js/store\\";
+
 import { css } from \\"solid-styled-components\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    onChange: function onChange() {
-      const change = myService.method(\\"change\\");
-      console.log(change);
-    },
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
 
   const myService = useContext(MyService);
 
@@ -341,9 +335,9 @@ function MyBasicComponent(props) {
     <>
       <Dynamic component={Injector.Provider}>
         <div>
-          {myService.method(\\"hello\\") + state.name}
+          {myService.method(\\"hello\\") + name}
           Hello! I can run in React, Vue, Solid, or Liquid!
-          <input onInput={(event) => state.onChange} />
+          <input onInput={(event) => onChange} />
         </div>
       </Dynamic>
     </>
@@ -358,18 +352,18 @@ exports[`Solid Basic OnMount Update 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOnMountUpdateComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
-  const [names, setNames] = useSignal([\\"Steve\\", \\"PatrickJS\\"]);
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   onMount(() => {
-    state.name = \\"PatrickJS onMount\\" + props.bye;
+    name = \\"PatrickJS onMount\\" + props.bye;
   });
 
   return (
     <div>
       Hello
-      {state.name}
+      {name}
     </div>
   );
 }
@@ -379,26 +373,24 @@ export default MyBasicOnMountUpdateComponent;
 `;
 
 exports[`Solid Basic OnMount Update 2`] = `
-"import { onMount } from \\"solid-js\\";
+"import { onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOnMountUpdateComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   onMount(() => {
-    state.name = \\"PatrickJS onMount\\" + props.bye;
+    name = \\"PatrickJS onMount\\" + props.bye;
   });
 
   return (
     <>
       <div>
         Hello
-        {state.name}
+        {name}
       </div>
     </>
   );
@@ -412,10 +404,10 @@ exports[`Solid Basic Outputs 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessage(name);
     props.onEvent(props.message);
   });
 
@@ -427,16 +419,15 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid Basic Outputs 2`] = `
-"import { onMount } from \\"solid-js\\";
+"import { onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOutputsComponent(props) {
-  const state = createMutable({ name: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessage(name);
     props.onEvent(props.message);
   });
 
@@ -455,10 +446,10 @@ exports[`Solid Basic Outputs Meta 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessage(name);
     props.onEvent(props.message);
   });
 
@@ -470,16 +461,15 @@ export default MyBasicOutputsComponent;
 `;
 
 exports[`Solid Basic Outputs Meta 2`] = `
-"import { onMount } from \\"solid-js\\";
+"import { onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOutputsComponent(props) {
-  const state = createMutable({ name: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   onMount(() => {
-    props.onMessage(state.name);
+    props.onMessage(name);
     props.onEvent(props.message);
   });
 
@@ -501,17 +491,17 @@ import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 function MyBasicChildComponent(props) {
-  const [name, setName] = useSignal(\\"Steve\\");
+  const [name, setName] = createSignal(\\"Steve\\");
 
-  const [dev, setDev] = useSignal(\\"PatrickJS\\");
+  const [dev, setDev] = createSignal(\\"PatrickJS\\");
 
   return (
     <div>
-      <MyBasicComponent id={state.dev}></MyBasicComponent>
+      <MyBasicComponent id={dev}></MyBasicComponent>
       <div>
         <MyBasicOnMountUpdateComponent
-          hi={state.name}
-          bye={state.dev}
+          hi={name}
+          bye={dev}
         ></MyBasicOnMountUpdateComponent>
       </div>
     </div>
@@ -523,23 +513,26 @@ export default MyBasicChildComponent;
 `;
 
 exports[`Solid BasicChildComponent 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 function MyBasicChildComponent(props) {
-  const state = createMutable({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"Steve\\");
+
+  const [dev, setDev] = createSignal(\\"PatrickJS\\");
 
   return (
     <>
       <div>
-        <MyBasicComponent id={state.dev}></MyBasicComponent>
+        <MyBasicComponent id={dev}></MyBasicComponent>
         <div>
           <MyBasicOnMountUpdateComponent
-            hi={state.name}
-            bye={state.dev}
+            hi={name}
+            bye={dev}
           ></MyBasicOnMountUpdateComponent>
         </div>
       </div>
@@ -555,9 +548,9 @@ exports[`Solid BasicFor 1`] = `
 "import { For, onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicForComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
-  const [names, setNames] = useSignal([\\"Steve\\", \\"PatrickJS\\"]);
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   onMount(() => {
     console.log(\\"onMount code\\");
@@ -565,15 +558,15 @@ function MyBasicForComponent(props) {
 
   return (
     <div>
-      <For each={state.names}>
+      <For each={names}>
         {(person, _index) => {
           const index = _index();
           return (
             <>
               <input
-                value={state.name}
+                value={name}
                 onInput={(event) => {
-                  state.name = event.target.value + \\" and \\" + person;
+                  name = event.target.value + \\" and \\" + person;
                 }}
               />
               Hello
@@ -592,16 +585,14 @@ export default MyBasicForComponent;
 `;
 
 exports[`Solid BasicFor 2`] = `
-"import { For, onMount } from \\"solid-js\\";
+"import { For, onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicForComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    names: [\\"Steve\\", \\"PatrickJS\\"],
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
 
   onMount(() => {
     console.log(\\"onMount code\\");
@@ -610,15 +601,15 @@ function MyBasicForComponent(props) {
   return (
     <>
       <div>
-        <For each={state.names}>
+        <For each={names}>
           {(person, _index) => {
             const index = _index();
             return (
               <>
                 <input
-                  value={state.name}
+                  value={name}
                   onInput={(event) => {
-                    state.name = event.target.value + \\" and \\" + person;
+                    name = event.target.value + \\" and \\" + person;
                   }}
                 />
                 Hello
@@ -643,7 +634,7 @@ exports[`Solid BasicRef 1`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onBlur() {
     // Maintain focus
@@ -666,9 +657,9 @@ function MyBasicRefComponent(props) {
               color: \\"red\\",
             })}
             ref={inputRef}
-            value={state.name}
-            onBlur={(event) => state.onBlur()}
-            onInput={(event) => (state.name = event.target.value)}
+            value={name}
+            onBlur={(event) => onBlur()}
+            onInput={(event) => (name = event.target.value)}
           />
           <label for=\\"cars\\" ref={inputNoArgRef}>
             Choose a car:
@@ -680,8 +671,7 @@ function MyBasicRefComponent(props) {
         </>
       </Show>
       Hello
-      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
-      Component!
+      {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web Component!
     </div>
   );
 }
@@ -691,22 +681,21 @@ export default MyBasicRefComponent;
 `;
 
 exports[`Solid BasicRef 2`] = `
-"import { Show } from \\"solid-js\\";
+"import { Show, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const state = createMutable({
-    name: \\"PatrickJS\\",
-    onBlur: function onBlur() {
-      // Maintain focus
-      inputRef.focus();
-    },
-    lowerCaseName: function lowerCaseName() {
-      return state.name.toLowerCase();
-    },
-  });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
 
   let inputRef;
   let inputNoArgRef;
@@ -719,9 +708,9 @@ function MyBasicRefComponent(props) {
             <input
               class=\\"input-3ca8ff31\\"
               ref={inputRef}
-              value={state.name}
-              onBlur={(event) => state.onBlur()}
-              onInput={(event) => (state.name = event.target.value)}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onInput={(event) => (name = event.target.value)}
             />
             <label for=\\"cars\\" ref={inputNoArgRef}>
               Choose a car:
@@ -733,7 +722,7 @@ function MyBasicRefComponent(props) {
           </>
         </Show>
         Hello
-        {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
         Component!
       </div>
       <style jsx>{\`
@@ -761,7 +750,7 @@ function MyBasicRefAssignmentComponent(props) {
 
   return (
     <div>
-      <button onClick={(evt) => state.handlerClick(evt)}>Click</button>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
     </div>
   );
 }
@@ -771,22 +760,21 @@ export default MyBasicRefAssignmentComponent;
 `;
 
 exports[`Solid BasicRefAssignment 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefAssignmentComponent(props) {
-  const state = createMutable({
-    handlerClick: function handlerClick(event) {
-      event.preventDefault();
-      console.log(\\"current value\\", holdValueRef);
-      holdValueRef = holdValueRef + \\"JS\\";
-    },
-  });
+  function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  }
 
   return (
     <>
       <div>
-        <button onClick={(evt) => state.handlerClick(evt)}>Click</button>
+        <button onClick={(evt) => handlerClick(evt)}>Click</button>
       </div>
     </>
   );
@@ -813,21 +801,21 @@ export function usePrevious<T>(value: T) {
 }
 
 function MyPreviousComponent(props) {
-  const [count, setCount] = useSignal(0);
+  const [count, setCount] = createSignal(0);
 
   function onUpdateFn_0() {
-    prevCount = state.count;
+    prevCount = count;
   }
-  createEffect(on(() => [state.count], onUpdateFn_0));
+  createEffect(on(() => [count], onUpdateFn_0));
 
   return (
     <div>
       <h1>
         Now:
-        {state.count}, before:
+        {count}, before:
         {prevCount}
       </h1>
-      <button onClick={(event) => (state.count += 1)}>Increment</button>
+      <button onClick={(event) => (count += 1)}>Increment</button>
     </div>
   );
 }
@@ -837,9 +825,8 @@ export default MyPreviousComponent;
 `;
 
 exports[`Solid BasicRefPrevious 2`] = `
-"import { on, createEffect } from \\"solid-js\\";
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 export function usePrevious<T>(value: T) {
@@ -856,22 +843,22 @@ export function usePrevious<T>(value: T) {
 }
 
 function MyPreviousComponent(props) {
-  const state = createMutable({ count: 0 });
+  const [count, setCount] = createSignal(0);
 
   function onUpdateFn_0() {
-    prevCount = state.count;
+    prevCount = count;
   }
-  createEffect(on(() => [state.count], onUpdateFn_0));
+  createEffect(on(() => [count], onUpdateFn_0));
 
   return (
     <>
       <div>
         <h1>
           Now:
-          {state.count}, before:
+          {count}, before:
           {prevCount}
         </h1>
-        <button onClick={(event) => (state.count += 1)}>Increment</button>
+        <button onClick={(event) => (count += 1)}>Increment</button>
       </div>
     </>
   );
@@ -955,12 +942,12 @@ function Column(props) {
     return typeof props.space === \\"number\\" ? props.space || 0 : 20;
   }
 
-  function getWidth(index) {
+  function getWidth(index: number) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
-  function getColumnCssWidth(index) {
+  function getColumnCssWidth(index: number) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -1012,31 +999,30 @@ export default Column;
 `;
 
 exports[`Solid Columns 2`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function Column(props) {
-  const state = createMutable({
-    getColumns() {
-      return props.columns || [];
-    },
-    getGutterSize() {
-      return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-    },
-    getWidth(index: number) {
-      const columns = this.getColumns();
-      return (columns[index] && columns[index].width) || 100 / columns.length;
-    },
-    getColumnCssWidth(index: number) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-    },
-  });
+  function getColumns() {
+    return props.columns || [];
+  }
+
+  function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  }
+
+  function getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+
+  function getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
 
   return (
     <>
@@ -1166,9 +1152,9 @@ exports[`Solid CustomCode 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function CustomCode(props) {
-  const [scriptsInserted, setScriptsInserted] = useSignal([]);
+  const [scriptsInserted, setScriptsInserted] = createSignal([]);
 
-  const [scriptsRun, setScriptsRun] = useSignal([]);
+  const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -1215,7 +1201,7 @@ function CustomCode(props) {
   let elem;
 
   onMount(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
   });
 
   return (
@@ -1233,13 +1219,15 @@ export default CustomCode;
 "
 `;
 
-exports[`Solid Embed 1`] = `
+exports[`Solid CustomCode 2`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
-function CustomCode(props) {
-  const [scriptsInserted, setScriptsInserted] = useSignal([]);
+import { css } from \\"solid-styled-components\\";
 
-  const [scriptsRun, setScriptsRun] = useSignal([]);
+function CustomCode(props) {
+  const [scriptsInserted, setScriptsInserted] = createSignal([]);
+
+  const [scriptsRun, setScriptsRun] = createSignal([]);
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -1286,7 +1274,153 @@ function CustomCode(props) {
   let elem;
 
   onMount(() => {
-    state.findAndRunScripts();
+    findAndRunScripts();
+  });
+
+  return (
+    <>
+      <div
+        class={
+          \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+        }
+        ref={elem}
+        innerHTML={props.code}
+      ></div>
+    </>
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Solid Embed 1`] = `
+"import { onMount, createSignal } from \\"solid-js\\";
+
+function CustomCode(props) {
+  const [scriptsInserted, setScriptsInserted] = createSignal([]);
+
+  const [scriptsRun, setScriptsRun] = createSignal([]);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  let elem;
+
+  onMount(() => {
+    findAndRunScripts();
+  });
+
+  return (
+    <div
+      class={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      ref={elem}
+      innerHTML={props.code}
+    ></div>
+  );
+}
+
+export default CustomCode;
+"
+`;
+
+exports[`Solid Embed 2`] = `
+"import { onMount, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function CustomCode(props) {
+  const [scriptsInserted, setScriptsInserted] = createSignal([]);
+
+  const [scriptsRun, setScriptsRun] = createSignal([]);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  let elem;
+
+  onMount(() => {
+    findAndRunScripts();
   });
 
   return (
@@ -1318,17 +1452,23 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 function FormComponent(props) {
-  const [state, setState] = useSignal(\\"unsubmitted\\");
+  const [state, setState] = createSignal(\\"unsubmitted\\");
 
-  const [responseData, setResponseData] = useSignal(null);
+  const [responseData, setResponseData] = createSignal(null);
 
-  const [formErrorMessage, setFormErrorMessage] = useSignal(\\"\\");
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
 
-  function submissionState() {
+  function _getter_submissionState() {
     return (Builder.isEditing && props.previewState) || state;
   }
 
-  function onSubmit(event) {
+  const submissionState = _getter_submissionState();
+
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
     if (props.sendSubmissionsTo === \\"zapier\\") {
@@ -1342,16 +1482,19 @@ function FormComponent(props) {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = props.customHeaders || {};
-      let body;
+      let body: any;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs = Array.from(
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!el.name)
+        .filter((el) => !!(el as HTMLInputElement).name)
         .map((el) => {
-          let value;
-          const key = el.name;
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1377,7 +1520,7 @@ function FormComponent(props) {
               value = el.value;
             }
           } else {
-            value = el.value;
+            value = (el as HTMLInputElement).value;
           }
 
           return {
@@ -1437,14 +1580,14 @@ function FormComponent(props) {
         }
       }
 
-      setState(\\"sending\\");
+      state = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
         props.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
       fetch(
-        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1473,12 +1616,12 @@ function FormComponent(props) {
                 message = JSON.stringify(message);
               }
 
-              setFormErrorMessage(message);
+              formErrorMessage = message;
             }
           }
 
-          setResponseData(body);
-          setState(res.ok ? \\"success\\" : \\"error\\");
+          responseData = body;
+          state = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1535,8 +1678,8 @@ function FormComponent(props) {
             }
           }
 
-          setResponseData(err);
-          setState(\\"error\\");
+          responseData = err;
+          state = \\"error\\";
         }
       );
     }
@@ -1552,7 +1695,7 @@ function FormComponent(props) {
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
-      onSubmit={(event) => state.onSubmit(event)}
+      onSubmit={(event) => onSubmit(event)}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
@@ -1568,19 +1711,19 @@ function FormComponent(props) {
           }}
         </For>
       </Show>
-      <Show when={state.submissionState === \\"error\\"}>
+      <Show when={submissionState === \\"error\\"}>
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage}
         ></BuilderBlocks>
       </Show>
-      <Show when={state.submissionState === \\"sending\\"}>
+      <Show when={submissionState === \\"sending\\"}>
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage}
         ></BuilderBlocks>
       </Show>
-      <Show when={state.submissionState === \\"error\\" && state.responseData}>
+      <Show when={submissionState === \\"error\\" && responseData}>
         <pre
           class={
             \\"builder-form-error-text \\" +
@@ -1591,10 +1734,10 @@ function FormComponent(props) {
             })
           }
         >
-          {JSON.stringify(state.responseData, null, 2)}
+          {JSON.stringify(responseData, null, 2)}
         </pre>
       </Show>
-      <Show when={state.submissionState === \\"success\\"}>
+      <Show when={submissionState === \\"success\\"}>
         <BuilderBlocks
           dataPath=\\"successMessage\\"
           blocks={props.successMessage}
@@ -1608,257 +1751,250 @@ export default FormComponent;
 "
 `;
 
-exports[`Solid Image 1`] = `
-"import { Show, onMount, createSignal } from \\"solid-js\\";
+exports[`Solid Form 2`] = `
+"import { Show, For, createSignal } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
-function Image(props) {
-  const [scrollListener, setScrollListener] = useSignal(null);
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
-  const [imageLoaded, setImageLoaded] = useSignal(false);
+function FormComponent(props) {
+  const [state, setState] = createSignal(\\"unsubmitted\\");
 
-  function setLoaded() {
-    setImageLoaded(true);
+  const [responseData, setResponseData] = createSignal(null);
+
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
+
+  function _getter_submissionState() {
+    return (Builder.isEditing && props.previewState) || state;
   }
 
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
-  }
+  const submissionState = _getter_submissionState();
 
-  function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  }
+  function onSubmit(
+    event: Event & {
+      currentTarget: HTMLFormElement;
+    }
+  ) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
-  const [load, setLoad] = useSignal(false);
-
-  let pictureRef;
-
-  onMount(() => {
-    if (state.useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef) {
-          const rect = pictureRef.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-      if (props.sendSubmissionsTo === \\"zapier\\") {
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
         event.preventDefault();
-      } else if (sendWithJs) {
-        if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
-          event.preventDefault();
-          return;
-        }
+        return;
+      }
 
-        event.preventDefault();
-        const el = event.currentTarget;
-        const headers = props.customHeaders || {};
-        let body: any;
-        const formData = new FormData(el); // TODO: maybe support null
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body: any;
+      const formData = new FormData(el); // TODO: maybe support null
 
-        const formPairs: {
-          key: string;
-          value: File | boolean | number | string | FileList;
-        }[] = Array.from(
-          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-        )
-          .filter((el) => !!(el as HTMLInputElement).name)
-          .map((el) => {
-            let value: any;
-            const key = (el as HTMLImageElement).name;
+      const formPairs: {
+        key: string;
+        value: File | boolean | number | string | FileList;
+      }[] = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!(el as HTMLInputElement).name)
+        .map((el) => {
+          let value: any;
+          const key = (el as HTMLImageElement).name;
 
-            if (el instanceof HTMLInputElement) {
-              if (el.type === \\"radio\\") {
-                if (el.checked) {
-                  value = el.name;
-                  return {
-                    key,
-                    value,
-                  };
-                }
-              } else if (el.type === \\"checkbox\\") {
-                value = el.checked;
-              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-                const num = el.valueAsNumber;
-
-                if (!isNaN(num)) {
-                  value = num;
-                }
-              } else if (el.type === \\"file\\") {
-                // TODO: one vs multiple files
-                value = el.files;
-              } else {
-                value = el.value;
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
               }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
             } else {
-              value = (el as HTMLInputElement).value;
+              value = el.value;
             }
+          } else {
+            value = (el as HTMLInputElement).value;
+          }
 
-            return {
-              key,
-              value,
-            };
-          });
-        let contentType = props.contentType;
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
 
-        if (props.sendSubmissionsTo === \\"email\\") {
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
           contentType = \\"multipart/form-data\\";
         }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
 
-        Array.from(formPairs).forEach(({ value }) => {
-          if (
-            value instanceof File ||
-            (Array.isArray(value) && value[0] instanceof File) ||
-            value instanceof FileList
-          ) {
-            contentType = \\"multipart/form-data\\";
-          }
-        }); // TODO: send as urlEncoded or multipart by default
-        // because of ease of use and reliability in browser API
-        // for encoding the form?
-
-        if (contentType !== \\"application/json\\") {
-          body = formData;
-        } else {
-          // Json
-          const json = {};
-          Array.from(formPairs).forEach(({ value, key }) => {
-            set(json, key, value);
-          });
-          body = JSON.stringify(json);
-        }
-
-        if (contentType && contentType !== \\"multipart/form-data\\") {
-          if (
-            /* Zapier doesn't allow content-type header to be sent from browsers */
-            !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-          ) {
-            headers[\\"content-type\\"] = contentType;
-          }
-        }
-
-        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
-          detail: {
-            body,
-          },
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
         });
+        body = JSON.stringify(json);
+      }
 
-        if (formRef) {
-          formRef.dispatchEvent(presubmitEvent);
-
-          if (presubmitEvent.defaultPrevented) {
-            return;
-          }
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
         }
+      }
 
-        state.state = \\"sending\\";
-        const formUrl = \`\${
-          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-          props.sendSubmissionsToEmail || \\"\\"
-        )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-        fetch(
-          props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
-          /* TODO: throw error if no action URL */
-          {
-            body,
-            headers,
-            method: props.method || \\"post\\",
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      state = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action!,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: props.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
           }
-        ).then(
-          async (res) => {
-            let body;
-            const contentType = res.headers.get(\\"content-type\\");
 
-            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-              body = await res.json();
-            } else {
-              body = await res.text();
-            }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, props.errorMessagePath);
 
-            if (!res.ok && props.errorMessagePath) {
-              /* TODO: allow supplying an error formatter function */
-              let message = get(body, props.errorMessagePath);
-
-              if (message) {
-                if (typeof message !== \\"string\\") {
-                  /* TODO: ideally convert json to yaml so it woul dbe like
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
            error: - email has been taken */
-                  message = JSON.stringify(message);
-                }
-
-                state.formErrorMessage = message;
+                message = JSON.stringify(message);
               }
+
+              formErrorMessage = message;
             }
+          }
 
-            state.responseData = body;
-            state.state = res.ok ? \\"success\\" : \\"error\\";
+          responseData = body;
+          state = res.ok ? \\"success\\" : \\"error\\";
 
-            if (res.ok) {
-              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-                detail: {
-                  res,
-                  body,
-                },
-              });
-
-              if (formRef) {
-                formRef.dispatchEvent(submitSuccessEvent);
-
-                if (submitSuccessEvent.defaultPrevented) {
-                  return;
-                }
-                /* TODO: option to turn this on/off? */
-
-                if (props.resetFormOnSubmit !== false) {
-                  formRef.reset();
-                }
-              }
-              /* TODO: client side route event first that can be preventDefaulted */
-
-              if (props.successUrl) {
-                if (formRef) {
-                  const event = new CustomEvent(\\"route\\", {
-                    detail: {
-                      url: props.successUrl,
-                    },
-                  });
-                  formRef.dispatchEvent(event);
-
-                  if (!event.defaultPrevented) {
-                    location.href = props.successUrl;
-                  }
-                } else {
-                  location.href = props.successUrl;
-                }
-              }
-            }
-          },
-          (err) => {
-            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: {
-                error: err,
+                res,
+                body,
               },
             });
 
             if (formRef) {
-              formRef.dispatchEvent(submitErrorEvent);
+              formRef.dispatchEvent(submitSuccessEvent);
 
-              if (submitErrorEvent.defaultPrevented) {
+              if (submitSuccessEvent.defaultPrevented) {
                 return;
               }
-            }
+              /* TODO: option to turn this on/off? */
 
-            state.responseData = err;
-            state.state = \\"error\\";
+              if (props.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (props.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: props.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
           }
-        );
-      }
-    },
-  });
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          responseData = err;
+          state = \\"error\\";
+        }
+      );
+    }
+  }
 
   let formRef;
 
@@ -1871,7 +2007,7 @@ function Image(props) {
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
-        onSubmit={(event) => state.onSubmit(event)}
+        onSubmit={(event) => onSubmit(event)}
       >
         <Show when={props.builderBlock && props.builderBlock.children}>
           <For each={props.builderBlock?.children}>
@@ -1887,24 +2023,24 @@ function Image(props) {
             }}
           </For>
         </Show>
-        <Show when={state.submissionState === \\"error\\"}>
+        <Show when={submissionState === \\"error\\"}>
           <BuilderBlocks
             dataPath=\\"errorMessage\\"
             blocks={props.errorMessage}
           ></BuilderBlocks>
         </Show>
-        <Show when={state.submissionState === \\"sending\\"}>
+        <Show when={submissionState === \\"sending\\"}>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
             blocks={props.sendingMessage}
           ></BuilderBlocks>
         </Show>
-        <Show when={state.submissionState === \\"error\\" && state.responseData}>
+        <Show when={submissionState === \\"error\\" && responseData}>
           <pre class=\\"builder-form-error-text pre-194cd728\\">
-            {JSON.stringify(state.responseData, null, 2)}
+            {JSON.stringify(responseData, null, 2)}
           </pre>
         </Show>
-        <Show when={state.submissionState === \\"success\\"}>
+        <Show when={submissionState === \\"success\\"}>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
             blocks={props.successMessage}
@@ -1927,35 +2063,36 @@ export default FormComponent;
 `;
 
 exports[`Solid Image 1`] = `
-"import { Show, onMount } from \\"solid-js\\";
+"import { Show, onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function Image(props) {
-  const state = createMutable({
-    scrollListener: null,
-    imageLoaded: false,
-    setLoaded() {
-      state.imageLoaded = true;
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
-    },
-    isBrowser: function isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    load: false,
-  });
+  const [scrollListener, setScrollListener] = createSignal(null);
+
+  const [imageLoaded, setImageLoaded] = createSignal(false);
+
+  const [load, setLoad] = createSignal(false);
+
+  function setLoaded() {
+    imageLoaded = true;
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
 
   let pictureRef;
 
   onMount(() => {
-    if (state.useLazyLoading()) {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef) {
@@ -1964,13 +2101,13 @@ function Image(props) {
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            state.scrollListener = null;
+            scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      state.scrollListener = listener;
+      scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -1982,7 +2119,7 @@ function Image(props) {
   return (
     <>
       <picture ref={pictureRef}>
-        <Show when={!state.useLazyLoading() || state.load}>
+        <Show when={!useLazyLoading() || load}>
           <img
             class={
               \\"builder-image\\" +
@@ -1998,7 +2135,7 @@ function Image(props) {
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
             src={props.image}
-            onLoad={(event) => state.setLoaded()}
+            onLoad={(event) => setLoaded()}
             srcset={props.srcset}
             sizes={props.sizes}
           />
@@ -2015,35 +2152,36 @@ export default Image;
 `;
 
 exports[`Solid Image 2`] = `
-"import { Show, onMount } from \\"solid-js\\";
+"import { Show, onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function Image(props) {
-  const state = createMutable({
-    scrollListener: null,
-    imageLoaded: false,
-    setLoaded() {
-      state.imageLoaded = true;
-    },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && isBrowser();
-    },
-    isBrowser: function isBrowser() {
-      return (
-        typeof window !== \\"undefined\\" &&
-        window.navigator.product != \\"ReactNative\\"
-      );
-    },
-    load: false,
-  });
+  const [scrollListener, setScrollListener] = createSignal(null);
+
+  const [imageLoaded, setImageLoaded] = createSignal(false);
+
+  const [load, setLoad] = createSignal(false);
+
+  function setLoaded() {
+    imageLoaded = true;
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
 
   let pictureRef;
 
   onMount(() => {
-    if (state.useLazyLoading()) {
+    if (useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
         if (pictureRef) {
@@ -2052,13 +2190,13 @@ function Image(props) {
 
           if (rect.top < window.innerHeight + buffer) {
             setLoad(true);
-            state.scrollListener = null;
+            scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
         }
       };
 
-      state.scrollListener = listener;
+      scrollListener = listener;
       window.addEventListener(\\"scroll\\", listener, {
         capture: true,
         passive: true,
@@ -2071,17 +2209,17 @@ function Image(props) {
     <>
       <>
         <picture ref={pictureRef}>
-          <Show when={!state.useLazyLoading() || state.load}>
+          <Show when={!useLazyLoading() || load}>
             <img
               class={
                 \\"builder-image\\" +
                 (props._class ? \\" \\" + props._class : \\"\\") +
-                \\" img-2eb246b7\\"
+                \\" img-4666eb25\\"
               }
               alt={props.altText}
               aria-role={props.altText ? \\"presentation\\" : undefined}
               src={props.image}
-              onLoad={(event) => state.setLoaded()}
+              onLoad={(event) => setLoaded()}
               srcset={props.srcset}
               sizes={props.sizes}
             />
@@ -2091,7 +2229,7 @@ function Image(props) {
         {props.children}
       </>
       <style jsx>{\`
-        .img-2eb246b7 {
+        .img-4666eb25 {
           opacity: 1;
           transition: opacity 0.2s ease-in-out;
           object-fit: cover;
@@ -2110,13 +2248,13 @@ exports[`Solid Image State 1`] = `
 "import { For, createSignal } from \\"solid-js\\";
 
 function ImgStateComponent(props) {
-  const [canShow, setCanShow] = useSignal(true);
+  const [canShow, setCanShow] = createSignal(true);
 
-  const [images, setImages] = useSignal([\\"http://example.com/qwik.png\\"]);
+  const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
 
   return (
     <div>
-      <For each={state.images}>
+      <For each={images}>
         {(item, _index) => {
           const index = _index();
           return (
@@ -2135,21 +2273,19 @@ export default ImgStateComponent;
 `;
 
 exports[`Solid Image State 2`] = `
-"import { For } from \\"solid-js\\";
+"import { For, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function ImgStateComponent(props) {
-  const state = createMutable({
-    canShow: true,
-    images: [\\"http://example.com/qwik.png\\"],
-  });
+  const [canShow, setCanShow] = createSignal(true);
+
+  const [images, setImages] = createSignal([\\"http://example.com/qwik.png\\"]);
 
   return (
     <>
       <div>
-        <For each={state.images}>
+        <For each={images}>
           {(item, _index) => {
             const index = _index();
             return (
@@ -2308,12 +2444,12 @@ exports[`Solid Remove Internal mitosis package 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = useSignal(\\"PatrickJS\\");
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
     <div>
       Hello
-      {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
     </div>
   );
 }
@@ -2323,17 +2459,18 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Remove Internal mitosis package 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const state = createMutable({ name: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   return (
     <>
       <div>
         Hello
-        {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+        {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
       </div>
     </>
   );
@@ -2369,20 +2506,20 @@ exports[`Solid Section 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 function SectionStateComponent(props) {
-  const [max, setMax] = useSignal(42);
+  const [max, setMax] = createSignal(42);
 
-  const [items, setItems] = useSignal([42]);
+  const [items, setItems] = createSignal([42]);
 
   return (
-    <Show when={state.max}>
-      <For each={state.items}>
+    <Show when={max}>
+      <For each={items}>
         {(item, _index) => {
           const index = _index();
           return (
             <section
               {...props.attributes}
               style={{
-                \\"max-width\\": item + state.max,
+                \\"max-width\\": item + max,
               }}
             >
               {props.children}
@@ -2425,25 +2562,26 @@ export default SectionComponent;
 `;
 
 exports[`Solid Section 4`] = `
-"import { Show, For } from \\"solid-js\\";
+"import { Show, For, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function SectionStateComponent(props) {
-  const state = createMutable({ max: 42, items: [42] });
+  const [max, setMax] = createSignal(42);
+
+  const [items, setItems] = createSignal([42]);
 
   return (
     <>
-      <Show when={state.max}>
-        <For each={state.items}>
+      <Show when={max}>
+        <For each={items}>
           {(item, _index) => {
             const index = _index();
             return (
               <section
                 {...props.attributes}
                 style={{
-                  \\"max-width\\": item + state.max,
+                  \\"max-width\\": item + max,
                 }}
               >
                 {props.children}
@@ -2617,11 +2755,11 @@ import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
-  const [reviews, setReviews] = useSignal([]);
+  const [reviews, setReviews] = createSignal([]);
 
-  const [name, setName] = useSignal(\\"test\\");
+  const [name, setName] = createSignal(\\"test\\");
 
-  const [showReviewPrompt, setShowReviewPrompt] = useSignal(false);
+  const [showReviewPrompt, setShowReviewPrompt] = createSignal(false);
 
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
@@ -2639,16 +2777,16 @@ function SmileReviews(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-        state.reviews = data.data;
+        reviews = data.data;
       });
   });
 
   return (
-    <div data-user={state.name}>
-      <button onClick={(event) => (state.showReviewPrompt = true)}>
+    <div data-user={name}>
+      <button onClick={(event) => (showReviewPrompt = true)}>
         Write a review
       </button>
-      <Show when={state.showReviewPrompt}>
+      <Show when={showReviewPrompt}>
         <input placeholder=\\"Email\\" />
         <input
           class={css({
@@ -2668,13 +2806,13 @@ function SmileReviews(props) {
           })}
           onClick={(event) => {
             event.preventDefault();
-            state.showReviewPrompt = false;
+            showReviewPrompt = false;
           }}
         >
           Submit
         </button>
       </Show>
-      <For each={state.reviews}>
+      <For each={reviews}>
         {(review, _index) => {
           const index = _index();
           return (
@@ -2697,9 +2835,7 @@ function SmileReviews(props) {
                 })}
                 src={review.avatar}
               />
-              <div
-                class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
-              >
+              <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                 <div>
                   N:
                   {index}
@@ -2720,26 +2856,27 @@ export default SmileReviews;
 `;
 
 exports[`Solid Stamped.io 2`] = `
-"import { Show, For, onMount } from \\"solid-js\\";
+"import { Show, For, onMount, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
 function SmileReviews(props) {
-  const state = createMutable({
-    reviews: [],
-    name: \\"test\\",
-    showReviewPrompt: false,
-    kebabCaseValue() {
-      return kebabCase(\\"testThat\\");
-    },
-    snakeCaseValue() {
-      return snakeCase(\\"testThis\\");
-    },
-  });
+  const [reviews, setReviews] = createSignal([]);
+
+  const [name, setName] = createSignal(\\"test\\");
+
+  const [showReviewPrompt, setShowReviewPrompt] = createSignal(false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
 
   onMount(() => {
     fetch(
@@ -2749,42 +2886,40 @@ function SmileReviews(props) {
     )
       .then((res) => res.json())
       .then((data) => {
-        state.reviews = data.data;
+        reviews = data.data;
       });
   });
 
   return (
     <>
-      <div data-user={state.name}>
-        <button onClick={(event) => (state.showReviewPrompt = true)}>
+      <div data-user={name}>
+        <button onClick={(event) => (showReviewPrompt = true)}>
           Write a review
         </button>
-        <Show when={state.showReviewPrompt}>
+        <Show when={showReviewPrompt}>
           <input placeholder=\\"Email\\" />
-          <input class=\\"input-ec998a60\\" placeholder=\\"Title\\" />
+          <input class=\\"input-4d3ebeb4\\" placeholder=\\"Title\\" />
           <textarea
-            class=\\"textarea-ec998a60\\"
+            class=\\"textarea-4d3ebeb4\\"
             placeholder=\\"How was your experience?\\"
           ></textarea>
           <button
-            class=\\"button-ec998a60\\"
+            class=\\"button-4d3ebeb4\\"
             onClick={(event) => {
               event.preventDefault();
-              state.showReviewPrompt = false;
+              showReviewPrompt = false;
             }}
           >
             Submit
           </button>
         </Show>
-        <For each={state.reviews}>
+        <For each={reviews}>
           {(review, _index) => {
             const index = _index();
             return (
-              <div class=\\"div-ec998a60\\" key={review.id}>
-                <img class=\\"img-ec998a60\\" src={review.avatar} />
-                <div
-                  class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
-                >
+              <div class=\\"div-4d3ebeb4\\" key={review.id}>
+                <img class=\\"img-4d3ebeb4\\" src={review.avatar} />
+                <div class={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
                   <div>
                     N:
                     {index}
@@ -2798,16 +2933,16 @@ function SmileReviews(props) {
         </For>
       </div>
       <style jsx>{\`
-        .input-ec998a60 {
+        .input-4d3ebeb4 {
           display: block;
         }
-        .textarea-ec998a60 {
+        .textarea-4d3ebeb4 {
           display: block;
         }
-        .button-ec998a60 {
+        .button-4d3ebeb4 {
           display: block;
         }
-        .div-ec998a60 {
+        .div-4d3ebeb4 {
           margin: 10px;
           padding: 10px;
           background: white;
@@ -2815,7 +2950,7 @@ function SmileReviews(props) {
           border-radius: 5px;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
-        .img-ec998a60 {
+        .img-4d3ebeb4 {
           height: 30px;
           width: 30px;
           margin-right: 10px;
@@ -2865,19 +3000,16 @@ exports[`Solid Text 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
-  const [name, setName] = useSignal(\\"Decadef20\\");
+  const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
     <div
       contentEditable={allowEditingText || undefined}
       data-name={{
-        test: state.name || \\"any name\\",
+        test: name || \\"any name\\",
       }}
       innerHTML={
-        props.text ||
-        props.content ||
-        state.name ||
-        '<p class=\\"text-lg\\">my name</p>'
+        props.text || props.content || name || '<p class=\\"text-lg\\">my name</p>'
       }
     ></div>
   );
@@ -2888,25 +3020,26 @@ export default Text;
 `;
 
 exports[`Solid Text 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
-  const state = createMutable({ name: \\"Decadef20\\" });
+  const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
     <>
       <div
         contentEditable={allowEditingText || undefined}
         data-name={{
-          test: state.name || \\"any name\\",
+          test: name || \\"any name\\",
         }}
         innerHTML={
           props.text ||
           props.content ||
-          state.name ||
+          name ||
           '<p class=\\"text-lg\\">my name</p>'
         }
       ></div>
@@ -3021,12 +3154,10 @@ export default Video;
 `;
 
 exports[`Solid basicOnUpdateReturn 1`] = `
-"import { on, createEffect } from \\"solid-js\\";
-
-import { createMutable } from \\"solid-js/store\\";
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function MyBasicOnUpdateReturnComponent(props) {
-  const state = createMutable({ name: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onUpdateFn_0() {
     const controller = new AbortController();
@@ -3036,7 +3167,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        state.name = data.name;
+        name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -3044,12 +3175,12 @@ function MyBasicOnUpdateReturnComponent(props) {
       }
     };
   }
-  createEffect(on(() => [state.name], onUpdateFn_0));
+  createEffect(on(() => [name], onUpdateFn_0));
 
   return (
     <div>
       Hello!
-      {state.name}
+      {name}
     </div>
   );
 }
@@ -3059,13 +3190,12 @@ export default MyBasicOnUpdateReturnComponent;
 `;
 
 exports[`Solid basicOnUpdateReturn 2`] = `
-"import { on, createEffect } from \\"solid-js\\";
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOnUpdateReturnComponent(props) {
-  const state = createMutable({ name: \\"PatrickJS\\" });
+  const [name, setName] = createSignal(\\"PatrickJS\\");
 
   function onUpdateFn_0() {
     const controller = new AbortController();
@@ -3075,7 +3205,7 @@ function MyBasicOnUpdateReturnComponent(props) {
     })
       .then((response) => response.json())
       .then((data) => {
-        state.name = data.name;
+        name = data.name;
       });
     return () => {
       if (!signal.aborted) {
@@ -3083,13 +3213,13 @@ function MyBasicOnUpdateReturnComponent(props) {
       }
     };
   }
-  createEffect(on(() => [state.name], onUpdateFn_0));
+  createEffect(on(() => [name], onUpdateFn_0));
 
   return (
     <>
       <div>
         Hello!
-        {state.name}
+        {name}
       </div>
     </>
   );
@@ -3235,12 +3365,12 @@ exports[`Solid className 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function ClassNameCode(props) {
-  const [bindings, setBindings] = useSignal(\\"a binding\\");
+  const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
     <div>
       <div class=\\"no binding\\">Without Binding</div>
-      <div class={state.bindings}>With binding</div>
+      <div class={bindings}>With binding</div>
     </div>
   );
 }
@@ -3250,17 +3380,18 @@ export default ClassNameCode;
 `;
 
 exports[`Solid className 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 function ClassNameCode(props) {
-  const state = createMutable({ bindings: \\"a binding\\" });
+  const [bindings, setBindings] = createSignal(\\"a binding\\");
 
   return (
     <>
       <div>
         <div class=\\"no binding\\">Without Binding</div>
-        <div class={state.bindings}>With binding</div>
+        <div class={bindings}>With binding</div>
       </div>
     </>
   );
@@ -3276,22 +3407,20 @@ exports[`Solid classState 1`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const [classState, setClassState] = useSignal(\\"testClassName\\");
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
 
-  const [styleState, setStyleState] = useSignal({
-    color: \\"red\\",
-  });
+  const [styleState, setStyleState] = createSignal({ color: \\"red\\" });
 
   return (
     <div
       class={
-        state.classState +
+        classState +
         \\" \\" +
         css({
           padding: \\"10px\\",
         })
       }
-      style={state.styleState}
+      style={styleState}
     >
       Hello! I can run in React, Vue, Solid, or Liquid!
     </div>
@@ -3303,18 +3432,18 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid classState 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const state = createMutable({
-    classState: \\"testClassName\\",
-    styleState: { color: \\"red\\" },
-  });
+  const [classState, setClassState] = createSignal(\\"testClassName\\");
+
+  const [styleState, setStyleState] = createSignal({ color: \\"red\\" });
 
   return (
     <>
-      <div class={state.classState + \\" div-61288f44\\"} style={state.styleState}>
+      <div class={classState + \\" div-61288f44\\"} style={styleState}>
         Hello! I can run in React, Vue, Solid, or Liquid!
       </div>
       <style jsx>{\`
@@ -3362,31 +3491,31 @@ exports[`Solid multipleOnUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function MultipleOnUpdateWithDeps(props) {
-  const [a, setA] = useSignal(\\"a\\");
+  const [a, setA] = createSignal(\\"a\\");
 
-  const [b, setB] = useSignal(\\"b\\");
+  const [b, setB] = createSignal(\\"b\\");
 
-  const [c, setC] = useSignal(\\"c\\");
+  const [c, setC] = createSignal(\\"c\\");
 
-  const [d, setD] = useSignal(\\"d\\");
+  const [d, setD] = createSignal(\\"d\\");
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    console.log(\\"Runs when a or b changes\\", a, b);
 
-    if (state.a === \\"a\\") {
-      state.a = \\"b\\";
+    if (a === \\"a\\") {
+      a = \\"b\\";
     }
   }
-  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+  createEffect(on(() => [a, b], onUpdateFn_0));
 
   function onUpdateFn_1() {
-    console.log(\\"Runs when c or d changes\\", state.c, state.d);
+    console.log(\\"Runs when c or d changes\\", c, d);
 
-    if (state.a === \\"a\\") {
-      state.a = \\"b\\";
+    if (a === \\"a\\") {
+      a = \\"b\\";
     }
   }
-  createEffect(on(() => [state.c, state.d], onUpdateFn_1));
+  createEffect(on(() => [c, d], onUpdateFn_1));
 
   return <div></div>;
 }
@@ -3396,31 +3525,36 @@ export default MultipleOnUpdateWithDeps;
 `;
 
 exports[`Solid multipleOnUpdateWithDeps 2`] = `
-"import { on, createEffect } from \\"solid-js\\";
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function MultipleOnUpdateWithDeps(props) {
-  const state = createMutable({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
+  const [a, setA] = createSignal(\\"a\\");
+
+  const [b, setB] = createSignal(\\"b\\");
+
+  const [c, setC] = createSignal(\\"c\\");
+
+  const [d, setD] = createSignal(\\"d\\");
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    console.log(\\"Runs when a or b changes\\", a, b);
 
-    if (state.a === \\"a\\") {
-      state.a = \\"b\\";
+    if (a === \\"a\\") {
+      a = \\"b\\";
     }
   }
-  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+  createEffect(on(() => [a, b], onUpdateFn_0));
 
   function onUpdateFn_1() {
-    console.log(\\"Runs when c or d changes\\", state.c, state.d);
+    console.log(\\"Runs when c or d changes\\", c, d);
 
-    if (state.a === \\"a\\") {
-      state.a = \\"b\\";
+    if (a === \\"a\\") {
+      a = \\"b\\";
     }
   }
-  createEffect(on(() => [state.c, state.d], onUpdateFn_1));
+  createEffect(on(() => [c, d], onUpdateFn_1));
 
   return (
     <>
@@ -3508,19 +3642,19 @@ export default OnInit;
 `;
 
 exports[`Solid onInit 1`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
 function OnInit(props) {
-  const state = createMutable({ name: \\"\\" });
+  const [name, setName] = createSignal(\\"\\");
 
   return (
     <div>
       Default name defined by parent
-      {state.name}
+      {name}
     </div>
   );
 }
@@ -3529,27 +3663,23 @@ export default OnInit;
 "
 `;
 
-<<<<<<< HEAD
-exports[`Solid onInit 1`] = `
-"import { createSignal } from \\"solid-js\\";
-=======
 exports[`Solid onInit 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
->>>>>>> b2eea1c773553e2aad10dc0eeca4727c6f2a1622
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
 function OnInit(props) {
-  const [name, setName] = useSignal(\\"\\");
+  const [name, setName] = createSignal(\\"\\");
 
   return (
     <>
       <div>
         Default name defined by parent
-        {state.name}
+        {name}
       </div>
     </>
   );
@@ -3627,14 +3757,14 @@ exports[`Solid onUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function OnUpdateWithDeps(props) {
-  const [a, setA] = useSignal(\\"a\\");
+  const [a, setA] = createSignal(\\"a\\");
 
-  const [b, setB] = useSignal(\\"b\\");
+  const [b, setB] = createSignal(\\"b\\");
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    console.log(\\"Runs when a or b changes\\", a, b);
   }
-  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+  createEffect(on(() => [a, b], onUpdateFn_0));
 
   return <div></div>;
 }
@@ -3644,18 +3774,19 @@ export default OnUpdateWithDeps;
 `;
 
 exports[`Solid onUpdateWithDeps 2`] = `
-"import { on, createEffect } from \\"solid-js\\";
+"import { on, createEffect, createSignal } from \\"solid-js\\";
 
-import { createMutable } from \\"solid-js/store\\";
 import { css } from \\"solid-styled-components\\";
 
 function OnUpdateWithDeps(props) {
-  const state = createMutable({ a: \\"a\\", b: \\"b\\" });
+  const [a, setA] = createSignal(\\"a\\");
+
+  const [b, setB] = createSignal(\\"b\\");
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    console.log(\\"Runs when a or b changes\\", a, b);
   }
-  createEffect(on(() => [state.a, state.b], onUpdateFn_0));
+  createEffect(on(() => [a, b], onUpdateFn_0));
 
   return (
     <>
@@ -3740,7 +3871,7 @@ exports[`Solid propsDestructure 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = useSignal(\\"Decadef20\\");
+  const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
     <div>
@@ -3756,11 +3887,12 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid propsDestructure 2`] = `
-"import { createMutable } from \\"solid-js/store\\";
+"import { createSignal } from \\"solid-js\\";
+
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const state = createMutable({ name: \\"Decadef20\\" });
+  const [name, setName] = createSignal(\\"Decadef20\\");
 
   return (
     <>

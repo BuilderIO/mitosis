@@ -329,7 +329,6 @@ export const componentToSolid =
     ${solidJSImports.length > 0 ? `import { ${solidJSImports.join(', ')} } from 'solid-js';` : ''}
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
     ${storeImports.length > 0 ? `import { ${storeImports.join(', ')} } from 'solid-js/store';` : ''}
-    ${!componentHasStyles ? '' : `import { css } from "solid-styled-components";`}
     ${
       !componentHasStyles && options.stylesType === 'styled-components'
         ? ''

@@ -9,6 +9,7 @@ import { ToSolidOptions } from './types';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { flow, pipe } from 'fp-ts/lib/function';
+import { checkHasState } from '../../helpers/state';
 
 type State = {
   str: string;
@@ -52,12 +53,19 @@ const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) =>
     case 'mutable':
       return value;
     case 'signals':
-      return stripStateAndPropsRefs(value, { includeState: true, includeProps: false });
+      return stripStateAndPropsRefs(value, {
+        includeState: true,
+        includeProps: false,
+      });
   }
 };
 
 export const updateStateCode = (options: ToSolidOptions) =>
-  flow(updateStateSettersInCode(options), updateStateGettersInCode(options), (x) => x.trim());
+  flow(
+    // updateStateSettersInCode(options),
+    updateStateGettersInCode(options),
+    (x) => x.trim(),
+  );
 
 const processStateValue = (options: ToSolidOptions) => {
   const mapValue = updateStateCode(options);
@@ -138,7 +146,7 @@ const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
     .join(LINE_ITEM_DELIMITER);
 
 export const getState = (json: MitosisComponent, options: ToSolidOptions): State | undefined => {
-  const hasState = Object.keys(json.state).length > 0;
+  const hasState = checkHasState(json);
 
   if (!hasState) {
     return undefined;
