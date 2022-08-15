@@ -6,9 +6,8 @@ import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { pipe } from 'fp-ts/lib/function';
-import { _JSON } from '../../types/json';
 import { ToReactOptions } from './types';
 import { processBinding } from './helpers';
 
@@ -31,7 +30,8 @@ const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
 
 const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
-  return ([key, value]: [key: string, value: _JSON]) => {
+  return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    const value = stateVal?.code;
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         // functions
