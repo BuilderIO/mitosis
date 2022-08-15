@@ -7,6 +7,7 @@ const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const basicContext = require('./data/basic-context.raw');
 const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
 const basicOutputs = require('./data/basic-outputs.raw');
+const subComponent = require('./data/sub-component.lite.jsx');
 
 const basic = require('./data/basic.raw');
 const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
@@ -23,6 +24,7 @@ const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-
 const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
+const typeDependency = require('./data/types/type-dependency.raw');
 
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
@@ -94,6 +96,8 @@ const BASIC_TESTS = {
   propsType: propsType,
   propsInterface: propsInterface,
   preserveTyping: preserveTyping,
+  typeDependency,
+  subComponent,
   propsDestructure: propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,

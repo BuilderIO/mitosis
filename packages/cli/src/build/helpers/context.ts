@@ -36,6 +36,7 @@ export const buildContextFile = async ({
       case 'solid':
         return contextToSolid()({ context });
       case 'react':
+      case 'preact':
       case 'reactNative':
         return contextToReact()({ context });
       case 'qwik':

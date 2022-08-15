@@ -22,6 +22,7 @@ import { dashCase } from '../../helpers/dash-case';
 import { hasProps } from '../../helpers/has-props';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { getRefs } from '../../helpers/get-refs';
+import { camelCase } from 'lodash';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -105,7 +106,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
     }
 
     if (key === 'ref') {
-      str += ` key="${code}" `;
+      str += ` key="${camelCase(code)}" `;
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${dashCase(useKey)}=(${cusArgs.join(',')} => ${processBinding(
@@ -168,7 +169,7 @@ export const componentToMarko =
     let css = collectCss(json);
 
     const domRefs = getRefs(json);
-    mapRefs(json, (refName) => `this.${refName}`);
+    mapRefs(json, (refName) => `this.${camelCase(refName)}`);
 
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
@@ -222,8 +223,8 @@ export const componentToMarko =
 
         ${Array.from(domRefs)
           .map(
-            (refName) => `get ${refName}() { 
-            return this.getEl('${refName}')
+            (refName) => `get ${camelCase(refName)}() { 
+            return this.getEl('${camelCase(refName)}')
           }`,
           )
           .join('\n')}
@@ -241,9 +242,9 @@ export const componentToMarko =
         ${
           !json.hooks.onUpdate?.length
             ? ''
-            : json.hooks.onUpdate.map(
-                (hook) => `onRender() { ${processBinding(json, hook.code, 'class')} }`,
-              )
+            : `onRender() { ${json.hooks.onUpdate
+                .map((hook) => processBinding(json, hook.code, 'class'))
+                .join('\n\n')} }`
         }
     }
   `;

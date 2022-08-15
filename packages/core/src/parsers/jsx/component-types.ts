@@ -38,6 +38,12 @@ export const getPropsTypeRef = (
   return undefined;
 };
 
+export const isTypeImport = (node: babel.Node) =>
+  types.isImportDeclaration(node) &&
+  node.importKind === 'type' &&
+  // Babel adds an implicit JSX type import that we don't want
+  node.specifiers[0]?.local.name !== 'JSX';
+
 export const isTypeOrInterface = (node: babel.Node) =>
   types.isTSTypeAliasDeclaration(node) ||
   types.isTSInterfaceDeclaration(node) ||
