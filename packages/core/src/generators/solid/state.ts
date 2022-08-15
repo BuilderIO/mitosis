@@ -62,6 +62,7 @@ const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) =>
 
 export const updateStateCode = (options: ToSolidOptions) =>
   flow(
+    // we can't use this in `preProcessBlockCode` because the strings are not valid babel nodes
     // updateStateSettersInCode(options),
     updateStateGettersInCode(options),
     (x) => x.trim(),
