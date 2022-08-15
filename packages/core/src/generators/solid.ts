@@ -30,6 +30,7 @@ import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { checkHasState } from '../helpers/state';
 import { collectCss } from '../helpers/styles/collect-css';
+import hash from 'hash-sum';
 
 export interface ToSolidOptions extends BaseTranspilerOptions {
   stylesType?: 'styled-components' | 'style-tag';
@@ -260,7 +261,11 @@ export const componentToSolid =
     }
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
-    const css = options.stylesType === 'style-tag' && collectCss(json);
+    const css =
+      options.stylesType === 'style-tag' &&
+      collectCss(json, {
+        prefix: hash(json),
+      });
 
     const stateString = getStateObjectStringFromComponent(json);
     const hasState = checkHasState(json);
