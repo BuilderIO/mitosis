@@ -4,9 +4,8 @@ import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
-import { _JSON } from '../../types/json';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { flow, pipe } from 'fp-ts/lib/function';
@@ -17,7 +16,6 @@ type State = {
     store?: [string];
     solidjs?: [string];
   };
-  values?: StateValue[];
 };
 
 const getStateSetterName = (stateName: string) => `set${capitalize(stateName)}`;
@@ -54,12 +52,7 @@ const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) =>
     case 'mutable':
       return value;
     case 'signals':
-      return stripStateAndPropsRefs(value, {
-        includeState: true,
-        includeProps: false,
-        // signals accessor are functions
-        replaceWith: (stategetter) => `${stategetter}()`,
-      });
+      return stripStateAndPropsRefs(value, { includeState: true, includeProps: false });
   }
 };
 
@@ -68,17 +61,18 @@ export const updateStateCode = (options: ToSolidOptions) =>
 
 const processStateValue = (options: ToSolidOptions) => {
   const mapValue = updateStateCode(options);
-  return ([key, value]: [key: string, value: _JSON]): StateValue => {
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
+  return ([key, state]: [key: string, state: StateValue | undefined]): string => {
+    const code = state?.code;
+    if (typeof code === 'string') {
+      if (code.startsWith(functionLiteralPrefix)) {
         // functions
-        const useValue = value.replace(functionLiteralPrefix, '');
+        const useValue = code.replace(functionLiteralPrefix, '');
         const mappedVal = mapValue(useValue);
 
-        return { str: mappedVal, type: StateValueType.function };
-      } else if (value.startsWith(methodLiteralPrefix)) {
+        return mappedVal;
+      } else if (code.startsWith(methodLiteralPrefix)) {
         // methods
-        const methodValue = value.replace(methodLiteralPrefix, '');
+        const methodValue = code.replace(methodLiteralPrefix, '');
         const isGetter = methodValue.startsWith('get ');
 
         const strippedMethodvalue = pipe(methodValue.replace('get ', ''), mapValue);
@@ -99,47 +93,40 @@ const processStateValue = (options: ToSolidOptions) => {
          *
          * const foo = _getter_foo()
          */
-        // if (isGetter) {
-        //   const FUNCTION_NAME_PREFIX = '_getter_';
-        //   return `
-        //     function ${FUNCTION_NAME_PREFIX}${strippedMethodvalue}
+        if (isGetter) {
+          const FUNCTION_NAME_PREFIX = '_getter_';
+          return `
+            function ${FUNCTION_NAME_PREFIX}${strippedMethodvalue}
 
-        //     const ${key} = ${FUNCTION_NAME_PREFIX}${key}();
-        //     `;
-        // } else {
-        //   return `function ${strippedMethodvalue}`;
-        // }
-
-        return { str: `function ${strippedMethodvalue}`, type: StateValueType.method };
+            const ${key} = ${FUNCTION_NAME_PREFIX}${key}();
+          `;
+        } else {
+          return `function ${strippedMethodvalue}`;
+        }
       }
     }
 
     // Other (data)
-    const transformedValue = pipe(value, json5.stringify, mapValue);
+    const transformedValue = pipe(code, json5.stringify, mapValue);
 
     const defaultCase = `const [${key}, ${getStateSetterName(
       key,
     )}] = createSignal(${transformedValue})`;
 
-    return { str: defaultCase, type: StateValueType.data };
+    return defaultCase;
   };
 };
 
-interface StateValue {
-  str: string;
-  type: StateValueType;
-}
-
 const LINE_ITEM_DELIMITER = '\n\n\n';
-const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) => {
-  const values = Object.entries(json.state)
+const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
+  Object.entries(json.state)
     .map(processStateValue(options))
     /**
      * We need to sort state so that signals are at the top.
      */
     .sort((a, b) => {
-      const aHasSignal = a.str.includes('createSignal(');
-      const bHasSignal = b.str.includes('createSignal(');
+      const aHasSignal = a.includes('createSignal(');
+      const bHasSignal = b.includes('createSignal(');
       if (aHasSignal && !bHasSignal) {
         return -1;
       } else if (!aHasSignal && bHasSignal) {
@@ -147,9 +134,8 @@ const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) => {
       } else {
         return 0;
       }
-    });
-  return { str: values.join(LINE_ITEM_DELIMITER), values };
-};
+    })
+    .join(LINE_ITEM_DELIMITER);
 
 export const getState = (json: MitosisComponent, options: ToSolidOptions): State | undefined => {
   const hasState = Object.keys(json.state).length > 0;
@@ -169,11 +155,9 @@ export const getState = (json: MitosisComponent, options: ToSolidOptions): State
         import: { store: ['createMutable'] },
       };
     case 'signals':
-      const signalsCode = getSignalsCode(json, options);
       return {
-        str: signalsCode.str,
+        str: getSignalsCode(json, options),
         import: { solidjs: ['createSignal'] },
-        values: signalsCode.values,
       };
   }
 };
