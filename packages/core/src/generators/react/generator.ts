@@ -45,6 +45,7 @@ import { collectStyledComponents } from '../../helpers/styles/collect-styled-com
 import { hasCss } from '../../helpers/styles/helpers';
 import { pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
+import { _JSON } from '../../types/json';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
@@ -311,7 +312,7 @@ const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
 
 const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
-  return ([key, value]: [key: string, value: JSON]) => {
+  return ([key, value]: [key: string, value: _JSON]) => {
     if (typeof value === 'string') {
       if (value.startsWith(functionLiteralPrefix)) {
         // functions
