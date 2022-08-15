@@ -2177,3 +2177,34 @@ export default function NestedShow(props: Props) {
 }
 "
 `;
+
+exports[`React Native subComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
+exports[`React Native typeDependency 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+export default function TypeDependency(props: TypeDependencyProps) {
+  return (
+    <View>
+      <Text>{props.foo}</Text>
+    </View>
+  );
+}
+"
+`;

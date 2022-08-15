@@ -51,8 +51,16 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  preact?: boolean;
   forwardRef?: string;
   experimental?: any;
+}
+
+const openFrag = (options: ToReactOptions) => getFragment('open', options);
+const closeFrag = (options: ToReactOptions) => getFragment('close', options);
+function getFragment(type: 'open' | 'close', options: ToReactOptions) {
+  const tagName = options.preact ? 'Fragment' : '';
+  return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
 }
 
 /**
@@ -87,9 +95,10 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
-    return `${wrap ? '<>' : ''}${json.children
+    const tagName = options.preact ? 'Fragment' : '';
+    return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}`;
+      .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
@@ -98,19 +107,19 @@ const NODE_MAPPERS: {
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)}}`;
   },
 };
@@ -437,6 +446,12 @@ const DEFAULT_OPTIONS: ToReactOptions = {
   stylesType: 'styled-jsx',
 };
 
+export const componentToPreact = (reactOptions: ToReactOptions = {}): Transpiler =>
+  componentToReact({
+    ...reactOptions,
+    preact: true,
+  });
+
 export const componentToReact =
   (reactOptions: ToReactOptions = {}): Transpiler =>
   ({ component }) => {
@@ -571,7 +586,12 @@ const _componentToReact = (
 
   let str = dedent`
   ${
-    options.type !== 'native'
+    options.preact
+      ? `
+    /** @jsx h */
+    import { h, Fragment } from 'preact';
+    `
+      : options.type !== 'native'
       ? "import * as React from 'react';"
       : `
   import * as React from 'react';
@@ -579,7 +599,13 @@ const _componentToReact = (
   `
   }
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
-  ${reactLibImports.size ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'` : ''}
+  ${
+    reactLibImports.size
+      ? `import { ${Array.from(reactLibImports).join(', ')} } from '${
+          options.preact ? 'preact/hooks' : 'react'
+        }'`
+      : ''
+  }
   ${
     componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
@@ -665,12 +691,12 @@ const _componentToReact = (
       }
 
       return (
-        ${wrap ? '<>' : ''}
+        ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx' ? `<style jsx>{\`${css}\`}</style>` : ''
         }
-        ${wrap ? '</>' : ''}
+        ${wrap ? closeFrag(options) : ''}
       );
     }${isForwardRef ? ')' : ''}
 
