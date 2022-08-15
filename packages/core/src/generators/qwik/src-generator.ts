@@ -316,7 +316,11 @@ export class SrcBuilder {
           // special case for classes as they can have both static and dynamic binding
           binding = quote(props.class + ' ') + '+' + binding;
         }
-        const key = lastProperty(rawKey);
+        let key = lastProperty(rawKey);
+        if (isEvent(key)) {
+          key = key + '$';
+          binding = `(event)=>${binding}`;
+        }
         if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
@@ -344,6 +348,7 @@ export class SrcBuilder {
 
     function emitJsxProp(key: string, value: any) {
       if (value) {
+        if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
         if (self.isJSX) {
           self.emit(' ', key, '=');
           if (typeof value == 'string' && value.startsWith('"') && value.endsWith('"')) {
@@ -395,6 +400,14 @@ export class SrcBuilder {
   toString() {
     return this.buf.join('');
   }
+}
+
+function isEvent(name: string): boolean {
+  return name.startsWith('on') && isUppercase(name.charAt(2)) && !name.endsWith('$');
+}
+
+function isUppercase(ch: string): boolean {
+  return ch == ch.toUpperCase();
 }
 
 export class Symbol {

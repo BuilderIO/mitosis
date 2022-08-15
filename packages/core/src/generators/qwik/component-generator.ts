@@ -1,12 +1,13 @@
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { JSONObject } from '../../types/json';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { convertMethodToFunction } from './convertMethodToFunction';
+import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { checkHasState } from '../../helpers/state';
+import { addPreventDefault } from './add-prevent-default';
+import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
-import { MitosisNode } from '../../types/mitosis-node';
 
 Error.stackTraceLimit = 9999;
 
@@ -16,11 +17,33 @@ const DEBUG = false;
 
 export interface ToQwikOptions extends BaseTranspilerOptions {}
 
-type StateInit = [Record<string, any>, ...string[]];
+/**
+ * Stores getters and initialization map.
+ */
+type StateInit = [
+  StateValues,
+  /**
+   * Set of state initializers.
+   */
+  ...string[],
+];
+
+/**
+ * Map of getters that need to be rewritten to function invocations.
+ */
+type StateValues = Record<
+  /// property name
+  string,
+  /// State value
+  any
+>;
 
 export const componentToQwik =
   (userOptions: ToQwikOptions = {}): Transpiler =>
-  ({ component, path }): string => {
+  ({ component: _component, path }): string => {
+    // Make a copy we can safely mutate, similar to babel's toolchain
+    const component = fastClone(_component);
+    addPreventDefault(component);
     const file = new File(
       component.name + '.js',
       {
@@ -36,30 +59,36 @@ export const componentToQwik =
     try {
       emitImports(file, component);
       emitTypes(file, component);
-      const state: StateInit = emitStateMethodsAndRewriteBindings(file, component);
-      let hasState = Boolean(Object.keys(component.state).length);
+      const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
+      const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
+      const imports: Record<string, string> | undefined = metadata?.qwik?.imports;
+      imports && Object.keys(imports).forEach((key) => file.import(imports[key], key));
+      const state: StateInit = emitStateMethodsAndRewriteBindings(file, component, metadata);
+      let hasState = checkHasState(component);
       let css: string | null = null;
+      const componentBody = arrowFnBlock(
+        ['props'],
+        [
+          function (this: SrcBuilder) {
+            css = emitUseStyles(file, component);
+            emitUseContext(file, component);
+            emitUseRef(file, component);
+            hasState && emitUseStore(file, state);
+            emitUseContextProvider(file, component);
+            emitUseMount(file, component);
+            emitUseWatch(file, component);
+            emitUseCleanup(file, component);
+            emitTagNameHack(file, component);
+            emitJSX(file, component);
+          },
+        ],
+        [component.propsTypeRef || 'any'],
+      );
       file.src.const(
         component.name,
-        invoke(file.import(file.qwikModule, 'component$'), [
-          arrowFnBlock(
-            ['props'],
-            [
-              function (this: SrcBuilder) {
-                css = emitUseStyles(file, component);
-                emitUseContext(file, component);
-                emitUseRef(file, component);
-                hasState && emitUseStore(file, state);
-                emitUseContextProvider(file, component);
-                emitUseMount(file, component);
-                emitUseWatch(file, component);
-                emitUseCleanup(file, component);
-                emitJSX(file, component);
-              },
-            ],
-            [component.propsTypeRef || 'any'],
-          ),
-        ]),
+        isLightComponent
+          ? componentBody
+          : invoke(file.import(file.qwikModule, 'component$'), [componentBody]),
         true,
         true,
       );
@@ -72,6 +101,22 @@ export const componentToQwik =
       return (e as Error).stack || String(e);
     }
   };
+
+function emitTagNameHack(file: File, component: MitosisComponent) {
+  const elementTag = component.meta.useMetadata?.elementTag as string | undefined;
+  if (elementTag) {
+    file.src.emit(
+      elementTag,
+      '=',
+      convertMethodToFunction(
+        elementTag,
+        stateToMethodOrGetter(component.state),
+        getLexicalScopeVars(component),
+      ),
+      ';',
+    );
+  }
+}
 
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onMount) {
@@ -89,9 +134,10 @@ function emitUseMount(file: File, component: MitosisComponent) {
 function emitUseWatch(file: File, component: MitosisComponent) {
   if (component.hooks.onUpdate) {
     component.hooks.onUpdate.forEach((onUpdate) => {
-      file.src.emit(file.import(file.qwikModule, 'useWatch$').localName, '((track)=>{');
+      file.src.emit(file.import(file.qwikModule, 'useWatch$').localName, '(({track})=>{');
       emitTrackExpressions(file.src, onUpdate.deps);
-      file.src.emit(convertTypeScriptToJS(onUpdate.code), '});');
+      file.src.emit(convertTypeScriptToJS(onUpdate.code));
+      file.src.emit('});');
     });
   }
 }
@@ -101,9 +147,11 @@ function emitTrackExpressions(src: SrcBuilder, deps?: string) {
     const dependencies = deps.substring(1, deps.length - 1).split(',');
     dependencies.forEach((dep) => {
       const lastDotIdx = dep.lastIndexOf('.');
-      const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
-      const objProp = dep.substring(lastDotIdx + 1);
-      src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      if (lastDotIdx > 0) {
+        const objExp = dep.substring(0, lastDotIdx).replace(/\?$/, '');
+        const objProp = dep.substring(lastDotIdx + 1);
+        objExp && src.emit(objExp, '&&track(', objExp, ',"', objProp, '");');
+      }
     });
   }
 }
@@ -141,13 +189,7 @@ function emitUseContextProvider(file: File, component: MitosisComponent) {
         const propValue = context.value![prop];
         file.src.emit(prop, ':');
         if (isGetter(propValue)) {
-          const methodMap = stateToMethodOrGetter(component.state);
-          const code = convertMethodToFunction(
-            extractGetterBody(propValue),
-            methodMap,
-            getLexicalScopeVars(component),
-          );
-          file.src.emit('(()=>{', code, '})(),');
+          file.src.emit('(()=>{', extractGetterBody(propValue), '})(),');
         } else if (typeof propValue == 'function') {
           throw new Error('Qwik: Functions are not supported in context');
         } else {
@@ -180,9 +222,9 @@ function emitUseRef(file: File, component: MitosisComponent) {
 }
 
 function emitUseStyles(file: File, component: MitosisComponent): string {
-  const css = collectCss(component);
+  const css = collectCss(component, { prefix: component.name });
   if (css) {
-    file.src.emit(file.import(file.qwikModule, 'useScopedStyles$').localName, '(STYLES);');
+    file.src.emit(file.import(file.qwikModule, 'useStylesScoped$').localName, '(STYLES);');
   }
   return css;
 }
@@ -193,18 +235,21 @@ function emitStyles(file: File, css: string | null) {
   }
 }
 
+/**
+ * @param file
+ * @param stateInit
+ */
 function emitUseStore(file: File, stateInit: StateInit) {
   const state = stateInit[0];
-  file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
-  if (stateInit.length == 1) {
+  const hasState = state && Object.keys(state).length > 0;
+  if (hasState) {
+    file.src.emit('const state=', file.import(file.qwikModule, 'useStore').localName, '(');
     file.src.emit(JSON.stringify(state));
+    file.src.emit(');');
   } else {
-    file.src.emit('()=>{const state=', JSON.stringify(state), ';');
-    file.src.emitList(stateInit.slice(1), ';');
-    file.src.emit(';return state;');
-    file.src.emit('}');
+    // TODO hack for now so that `state` variable is defined, even though it is never read.
+    file.src.emit('const state={};');
   }
-  file.src.emit(');');
 }
 
 function emitTypes(file: File, component: MitosisComponent) {
@@ -214,13 +259,42 @@ function emitTypes(file: File, component: MitosisComponent) {
   }
 }
 
-function emitStateMethodsAndRewriteBindings(file: File, component: MitosisComponent): StateInit {
+function emitStateMethodsAndRewriteBindings(
+  file: File,
+  component: MitosisComponent,
+  metadata: Record<string, any>,
+): StateInit {
   const lexicalArgs = getLexicalScopeVars(component);
   const state: StateInit = emitStateMethods(file, component.state, lexicalArgs);
   const methodMap = stateToMethodOrGetter(component.state);
-
-  component.children?.forEach((node) => rewriteBindings(node, methodMap, lexicalArgs));
+  rewriteCodeExpr(component, methodMap, lexicalArgs, metadata.qwik?.replace);
   return state;
+}
+
+function rewriteCodeExpr(
+  obj: any,
+  methodMap: Record<string, 'method' | 'getter'>,
+  lexicalArgs: string[],
+  replace: Record<string, string> | undefined,
+) {
+  if (obj && typeof obj == 'object') {
+    if (Array.isArray(obj)) {
+      obj.forEach((item) => rewriteCodeExpr(item, methodMap, lexicalArgs, replace));
+    } else {
+      Object.keys(obj).forEach((key) => {
+        const value = obj[key];
+        if (typeof value == 'string') {
+          if (value.startsWith(CODE_PREFIX) || key == 'code') {
+            let code = convertMethodToFunction(value, methodMap, lexicalArgs);
+            replace &&
+              Object.keys(replace).forEach((key) => (code = code.replace(key, replace[key])));
+            obj[key] = code;
+          }
+        }
+        rewriteCodeExpr(value, methodMap, lexicalArgs, replace);
+      });
+    }
+  }
 }
 
 function getLexicalScopeVars(component: MitosisComponent) {
@@ -245,14 +319,14 @@ const GETTER = CODE_PREFIX + 'method:get ';
 
 function emitStateMethods(
   file: File,
-  componentState: JSONObject,
+  componentState: MitosisComponent['state'],
   lexicalArgs: string[],
 ): StateInit {
-  const state: Record<string, any> = {};
-  const stateInit: StateInit = [state];
+  const stateValues: StateValues = {};
+  const stateInit: StateInit = [stateValues];
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
-    let code = componentState[key]!;
+    let code = componentState[key]?.code!;
     if (isCode(code)) {
       const codeIisGetter = isGetter(code);
       let prefixIdx = code.indexOf(':') + 1;
@@ -276,15 +350,13 @@ function emitStateMethods(
       }
       file.exportConst(functionName, 'function ' + code, true);
     } else {
-      state[key] = code;
+      stateValues[key] = code;
     }
   });
   return stateInit;
 }
 
 function convertTypeScriptToJS(code: string): string {
-  // HACK, proper implementation should use Babel
-  // return code.replace(/(\w+):\s+[\w\[\]"']+/gm, (_, ident) => ident);
   return babelTransformExpression(code, {});
 }
 
@@ -306,33 +378,15 @@ function extractGetterBody(code: string): string {
   return code.substring(start + 1, end).trim();
 }
 
-function stateToMethodOrGetter(state: Record<string, any>): Record<string, 'method' | 'getter'> {
+function stateToMethodOrGetter(
+  state: MitosisComponent['state'],
+): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};
   Object.keys(state).forEach((key) => {
-    let code = state[key]!;
+    let code = state[key]?.code;
     if (typeof code == 'string' && code.startsWith(METHOD)) {
       methodMap[key] = code.startsWith(GETTER) ? 'getter' : 'method';
     }
   });
   return methodMap;
-}
-
-function rewriteBindings(
-  node: MitosisNode,
-  methodMap: Record<string, 'method' | 'getter'>,
-  lexicalArgs: string[],
-) {
-  Object.keys(node.bindings).forEach((key) => {
-    const binding = node.bindings[key];
-    if (binding?.code) {
-      binding.code = convertMethodToFunction(binding.code, methodMap, lexicalArgs);
-    }
-    if (key.startsWith('on') && binding?.code) {
-      const args = binding?.arguments || [];
-      binding.code = `(${args.join(',')}) => ${binding.code}`;
-      delete node.bindings[key];
-      node.bindings[key + '$'] = binding;
-    }
-  });
-  node.children?.forEach((child) => rewriteBindings(child, methodMap, lexicalArgs));
 }

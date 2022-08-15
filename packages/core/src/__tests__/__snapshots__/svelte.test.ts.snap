@@ -1,5 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Svelte AdvancedRef 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  export let inputRef;
+  export let inputNoArgRef;
+  export let showInput;
+
+  const onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  };
+
+  const lowerCaseName = function lowerCaseName() {
+    return name.toLowerCase();
+  };
+
+  let name = \\"PatrickJS\\";
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  $: onUpdateFn_0(...[inputRef, inputNoArgRef]);
+</script>
+
+<div>
+  {#if showInput}
+    <input
+      class=\\"input\\"
+      bind:this={inputRef}
+      on:blur={(event) => {
+        onBlur();
+      }}
+      bind:value={name}
+    />
+
+    <label for=\\"cars\\" bind:this={inputNoArgRef}> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  {/if}
+
+  Hello
+
+  {lowerCaseName()}
+  ! I can run in React, Qwik, Vue, Solid, or Web Component!
+</div>
+
+<style>
+  .input {
+    color: red;
+  }
+</style>
+"
+`;
+
 exports[`Svelte Basic 1`] = `
 "<script>
   export const DEFAULT_VALUES = {
@@ -539,7 +598,7 @@ exports[`Svelte Embed 1`] = `
 
 exports[`Svelte Form 1`] = `
 "<script>
-  import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+  import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
   import { Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
   import { set } from \\"@fake\\";
@@ -800,7 +859,7 @@ exports[`Svelte Form 1`] = `
 >
   {#if builderBlock && builderBlock.children}
     {#each builderBlock?.children as block, index (block.id)}
-      <svelte:component this={BuilderBlockComponent} {block} {index} />
+      <BuilderBlockComponent {block} {index} />
     {/each}
   {/if}
 
@@ -1159,6 +1218,7 @@ exports[`Svelte Stamped.io 1`] = `
     <button
       class=\\"button\\"
       on:click={(event) => {
+        event.preventDefault();
         showReviewPrompt = false;
       }}
     >
@@ -1334,6 +1394,38 @@ exports[`Svelte basicForwardRefMetadata 1`] = `
     color: red;
   }
 </style>
+"
+`;
+
+exports[`Svelte basicOnUpdateReturn 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  let name = \\"PatrickJS\\";
+
+  function onUpdateFn_0() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+  $: onUpdateFn_0(...[name]);
+</script>
+
+<div>
+  Hello!
+  {name}
+</div>
 "
 `;
 
@@ -1665,5 +1757,23 @@ exports[`Svelte showWithFor 1`] = `
 {:else}
   <div>else-condition-A</div>
 {/if}
+"
+`;
+
+exports[`Svelte subComponent 1`] = `
+"<script>
+  import Foo from \\"./foo-sub-component.svelte\\";
+</script>
+
+<Foo />
+"
+`;
+
+exports[`Svelte typeDependency 1`] = `
+"<script>
+  export let foo;
+</script>
+
+<div>{foo}</div>
 "
 `;

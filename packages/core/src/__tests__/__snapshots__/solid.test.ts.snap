@@ -1,5 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Solid AdvancedRef 1`] = `
+"import { Show, on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicRefComponent(props) {
+  const state = createMutable({
+    name: \\"PatrickJS\\",
+    onBlur: function onBlur() {
+      // Maintain focus
+      inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return state.name.toLowerCase();
+    },
+  });
+
+  let inputRef;
+  let inputNoArgRef;
+
+  function onUpdateFn_0() {
+    console.log(\\"Received an update\\");
+  }
+  createEffect(on(() => [inputRef, inputNoArgRef], onUpdateFn_0));
+
+  return (
+    <div>
+      <Show when={props.showInput}>
+        <>
+          <input
+            class={css({
+              color: \\"red\\",
+            })}
+            ref={inputRef}
+            value={state.name}
+            onBlur={(event) => state.onBlur()}
+            onInput={(event) => (state.name = event.target.value)}
+          />
+          <label for=\\"cars\\" ref={inputNoArgRef}>
+            Choose a car:
+          </label>
+          <select name=\\"cars\\" id=\\"cars\\">
+            <option value=\\"supra\\">GR Supra</option>
+            <option value=\\"86\\">GR 86</option>
+          </select>
+        </>
+      </Show>
+      Hello
+      {state.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+      Component!
+    </div>
+  );
+}
+
+export default MyBasicRefComponent;
+"
+`;
+
 exports[`Solid Basic 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
@@ -633,7 +692,7 @@ exports[`Solid Form 1`] = `
 
 import { css } from \\"solid-styled-components\\";
 
-import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
@@ -1309,6 +1368,7 @@ function SmileReviews(props) {
             display: \\"block\\",
           })}
           onClick={(event) => {
+            event.preventDefault();
             state.showReviewPrompt = false;
           }}
         >
@@ -1445,6 +1505,44 @@ exports[`Solid Video 1`] = `
 }
 
 export default Video;
+"
+`;
+
+exports[`Solid basicOnUpdateReturn 1`] = `
+"import { on, createEffect } from \\"solid-js\\";
+
+import { createMutable } from \\"solid-js/store\\";
+
+function MyBasicOnUpdateReturnComponent(props) {
+  const state = createMutable({ name: \\"PatrickJS\\" });
+
+  function onUpdateFn_0() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        state.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+  createEffect(on(() => [state.name], onUpdateFn_0));
+
+  return (
+    <div>
+      Hello!
+      {state.name}
+    </div>
+  );
+}
+
+export default MyBasicOnUpdateReturnComponent;
 "
 `;
 
@@ -1859,5 +1957,25 @@ function NestedShow(props) {
 }
 
 export default NestedShow;
+"
+`;
+
+exports[`Solid subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.jsx\\";
+
+function SubComponent(props) {
+  return <Foo></Foo>;
+}
+
+export default SubComponent;
+"
+`;
+
+exports[`Solid typeDependency 1`] = `
+"function TypeDependency(props) {
+  return <div>{props.foo}</div>;
+}
+
+export default TypeDependency;
 "
 `;

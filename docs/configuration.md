@@ -16,4 +16,4 @@ TypeScript includes a full-fledged JSX compiler. Add the following configuration
 }
 ```
 
-More example see [e2e-app](../packages/e2e-app/tsconfig.json)
+For an example of TS configuration, look at our [basic example](../examples/basic/tsconfig.json)'s `tsconfig.json`.

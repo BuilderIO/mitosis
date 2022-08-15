@@ -14,6 +14,7 @@ export const babelTransform = <VisitorContextType = any>(
     configFile: false,
     babelrc: false,
     presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    parserOpts: { allowReturnOutsideFunction: true },
     plugins: [[decorators, { legacy: true }], jsxPlugin, ...(visitor ? [() => ({ visitor })] : [])],
   });
 };

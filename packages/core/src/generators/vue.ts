@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
@@ -35,6 +35,8 @@ import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
+import { getCustomImports } from '../helpers/get-custom-imports';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -156,7 +158,7 @@ const NODE_MAPPERS: {
         ${
           isMitosisNode(json.meta.else)
             ? `
-            <template ${SPECIAL_PROPERTIES.V_ELSE}> 
+            <template ${SPECIAL_PROPERTIES.V_ELSE}>
               ${blockToVue(json.meta.else, options)}
             </template>`
             : ''
@@ -229,13 +231,13 @@ const NODE_MAPPERS: {
             : '';
 
           return `
-            
+
             ${ifString}
-            
+
             ${elseIfString}
-            
+
             ${elseString}
-            
+
           `;
         } else {
           const ifString = firstChild
@@ -299,7 +301,7 @@ const stringifyBinding =
       return '';
     } else if (key === 'class') {
       return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
-        replaceWith: 'this.',
+        replaceWith: '',
       })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
@@ -317,18 +319,12 @@ const stringifyBinding =
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
           return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
-            ),
+            removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
           )}" `;
         } else {
           return ` @${event}="${encodeQuotes(
             removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+              removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
             ),
           )}" `;
         }
@@ -353,7 +349,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   }
 
   if (isChildren(node)) {
-    return `<slot></slot>`;
+    return `<slot/>`;
   }
 
   if (node.name === 'style') {
@@ -367,8 +363,13 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return `${node.properties._text}`;
   }
 
-  if (node.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(node.bindings._text.code as string)}}}`;
+  const textCode = node.bindings._text?.code;
+  if (textCode) {
+    const strippedTextCode = stripStateAndPropsRefs(textCode);
+    if (isSlotProperty(strippedTextCode)) {
+      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    }
+    return `{{${strippedTextCode}}}`;
   }
 
   let str = '';
@@ -435,7 +436,7 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
     str += `
       ${name}: ${
       value
-        ? getMemberObjectString(value, {
+        ? stringifyContextValue(value, {
             valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
         : null
@@ -460,9 +461,7 @@ const onUpdatePlugin: Plugin = (options) => ({
         component.hooks.onUpdate
           .filter((hook) => hook.deps?.length)
           .forEach((hook, index) => {
-            component.state[
-              getOnUpdateHookName(index)
-            ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
+            const code = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
             return {
               ${hook.deps
                 ?.slice(1, -1)
@@ -474,6 +473,11 @@ const onUpdatePlugin: Plugin = (options) => ({
                 .join(',')}
             }
           }`;
+
+            component.state[getOnUpdateHookName(index)] = {
+              code,
+              type: 'getter',
+            };
           });
       }
     },
@@ -571,8 +575,6 @@ const componentToVue =
       valueMapper: (code) => processBinding(code, options, component),
     });
 
-    const blocksString = JSON.stringify(component.children);
-
     // Component references to include in `component: { YourComponent, ... }
     const componentsUsed = Array.from(getComponentsUsed(component))
       .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
@@ -580,16 +582,7 @@ const componentToVue =
       .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
-    dataString = dataString.replace(
-      /}$/,
-      `${component.imports
-        .map((thisImport) => Object.keys(thisImport.imports).join(','))
-        // Make sure actually used in template
-        .filter((key) => Boolean(key && blocksString.includes(key)))
-        // Don't include component imports
-        .filter((key) => !componentsUsed.includes(key))
-        .join(',')}}`,
-    );
+    dataString = dataString.replace(/}$/, `${getCustomImports(component).join(',')}}`);
 
     if (localVarAsData.length) {
       dataString = dataString.replace(/}$/, `${localVarAsData.join(',')}}`);
@@ -610,10 +603,10 @@ const componentToVue =
         `_classStringToObject(str) {
         const obj = {};
         if (typeof str !== 'string') { return obj }
-        const classNames = str.trim().split(/\\s+/); 
+        const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {
           obj[name] = true;
-        } 
+        }
         return obj;
       }  }`,
       );

@@ -1,5 +1,5 @@
 import { format } from 'prettier/standalone';
-import { getMemberObjectString } from '../../helpers/get-state-object-string';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { MitosisContext } from '../../types/mitosis-context';
 
 type ContextToReactOptions = {
@@ -12,7 +12,7 @@ export const contextToReact =
     let str = `
   import { createContext } from 'react';
 
-  export default createContext(${getMemberObjectString(context.value)})
+  export default createContext(${stringifyContextValue(context.value)})
   `;
 
     if (options.format !== false) {

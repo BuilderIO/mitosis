@@ -9,7 +9,7 @@ export function processHttpRequests(json: MitosisComponent) {
   if (httpRequests) {
     for (const key in httpRequests) {
       if (!json.state[key]) {
-        json.state[key] = null;
+        json.state[key] = { code: null, type: 'property' };
       }
 
       const value = httpRequests[key];

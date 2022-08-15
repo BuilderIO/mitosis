@@ -3,6 +3,7 @@ import {
   contextToSolid,
   contextToSvelte,
   contextToVue,
+  contextToQwik,
   MitosisConfig,
   parseContext,
   Target,
@@ -35,8 +36,11 @@ export const buildContextFile = async ({
       case 'solid':
         return contextToSolid()({ context });
       case 'react':
+      case 'preact':
       case 'reactNative':
         return contextToReact()({ context });
+      case 'qwik':
+        return contextToQwik()({ context });
       default:
         console.warn('Context files are not supported for this target. Outputting no-op');
         return contextToVue(context);

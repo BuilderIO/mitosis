@@ -26,9 +26,11 @@ export function renderJSXNodes(
   root = true,
 ): any {
   return function (this: SrcBuilder) {
+    const srcBuilder = this;
     if (children.length == 0) return;
     if (root) this.emit('(');
-    const needsFragment = root && (children.length > 1 || isInlinedDirective(children[0]));
+    const needsFragment =
+      root && (children.length > 1 || (children.length && isInlinedDirective(children[0])));
     file.import(file.qwikModule, 'h');
     const fragmentSymbol = file.import(file.qwikModule, 'Fragment');
     if (needsFragment) {
@@ -37,32 +39,30 @@ export function renderJSXNodes(
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
-        if (child.bindings._text?.code !== undefined) {
-          if (child.bindings._text.code == 'props.children') {
-            this.file.import(this.file.qwikModule, 'Slot');
-            this.jsxBegin('Slot', {}, {});
-            this.jsxEnd('Slot');
-          } else {
-            this.jsxTextBinding(child.bindings._text.code);
-          }
-        } else {
-          this.isJSX
-            ? this.emit(child.properties._text)
-            : this.jsxTextBinding(quote(child.properties._text!));
+        const text = child.properties._text;
+        const textExpr = child.bindings._text?.code;
+        if (typeof text == 'string') {
+          this.isJSX ? this.emit(text) : this.jsxTextBinding(quote(text));
+        } else if (typeof textExpr == 'string') {
+          this.isJSX ? this.emit('{', textExpr, '}') : this.jsxTextBinding(textExpr);
         }
+      } else if (isSlotProjection(child)) {
+        this.file.import(this.file.qwikModule, 'Slot');
+        this.jsxBegin('Slot', {}, {});
+        this.jsxEnd('Slot');
       } else {
         let childName = child.name;
         const directive = DIRECTIVES[childName];
         if (typeof directive == 'function') {
-          this.emit(
-            directive(child, () => {
-              let children = child.children.filter((c) => !isEmptyTextNode(c));
-              const needsFragment = children.length > 1 || isTextNode(children[0]);
-              needsFragment && this.jsxBeginFragment(fragmentSymbol);
-              renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(this);
-              needsFragment && this.jsxEndFragment();
-            }),
-          );
+          const blockFn = mitosisNodeToRenderBlock(child.children);
+          const meta = child.meta;
+          Object.keys(meta).forEach((key) => {
+            const value = meta[key];
+            if (isMitosisNode(value)) {
+              (blockFn as any)[key] = mitosisNodeToRenderBlock([value]);
+            }
+          });
+          this.emit(directive(child, blockFn));
           !this.isJSX && this.emit(',');
         } else {
           if (typeof directive == 'string') {
@@ -123,6 +123,17 @@ export function renderJSXNodes(
       this.jsxEndFragment();
     }
     if (root) this.emit(')');
+
+    function mitosisNodeToRenderBlock(children: MitosisNode[]) {
+      return () => {
+        children = children.filter((c) => !isEmptyTextNode(c));
+        const childNeedsFragment =
+          children.length > 1 || (children.length && isTextNode(children[0]));
+        childNeedsFragment && srcBuilder.jsxBeginFragment(fragmentSymbol);
+        renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(srcBuilder);
+        childNeedsFragment && srcBuilder.jsxEndFragment();
+      };
+    }
   };
 }
 
@@ -139,7 +150,18 @@ function isEmptyTextNode(child: MitosisNode) {
 }
 
 function isTextNode(child: MitosisNode) {
-  return child.properties._text !== undefined || child.bindings._text?.code !== undefined;
+  if (child.properties._text !== undefined) {
+    return true;
+  }
+  const code = child.bindings._text?.code;
+  if (code !== undefined && code !== 'props.children') {
+    return true;
+  }
+  return false;
+}
+
+function isSlotProjection(child: MitosisNode) {
+  return child.bindings._text?.code === 'props.children';
 }
 
 /**

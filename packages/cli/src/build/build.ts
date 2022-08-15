@@ -2,6 +2,8 @@ import {
   componentToAngular,
   componentToCustomElement,
   componentToHtml,
+  componentToMarko,
+  componentToPreact,
   componentToQwik,
   componentToReact,
   componentToReactNative,
@@ -21,6 +23,7 @@ import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
+import { fastClone } from '../helpers/fast-clone';
 import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
@@ -109,10 +112,15 @@ export async function build(config?: MitosisConfig) {
 
   await Promise.all(
     targetContexts.map(async (targetContext) => {
+      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
+      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
+      const files = fastClone(mitosisComponents);
+
       const targetContextWithConfig: TargetContextWithConfig = { ...targetContext, options };
+
       await Promise.all([
         buildAndOutputNonComponentFiles(targetContextWithConfig),
-        buildAndOutputComponentFiles({ ...targetContextWithConfig, files: mitosisComponents }),
+        buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
       ]);
       await outputOverrides(targetContextWithConfig);
     }),
@@ -168,7 +176,7 @@ const getGeneratorForTarget = ({
     case 'vue2':
       return componentToVue2(options.options.vue2);
     case 'vue':
-      console.log('Targetting Vue: defaulting to vue v3');
+      console.log('Targeting Vue: defaulting to vue v3');
     case 'vue3':
       return componentToVue3(options.options.vue3);
     case 'angular':
@@ -185,6 +193,10 @@ const getGeneratorForTarget = ({
       return componentToSvelte(options.options.svelte);
     case 'qwik':
       return componentToQwik(options.options.qwik);
+    case 'marko':
+      return componentToMarko(options.options.marko);
+    case 'preact':
+      return componentToPreact(options.options.preact);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
@@ -261,6 +273,7 @@ async function buildAndOutputComponentFiles({
         });
         break;
       case 'reactNative':
+      case 'preact':
       case 'react':
         transpiled = await transpile({
           path,

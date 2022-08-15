@@ -19,8 +19,10 @@
     "mitosis-vue2": "mitosis build vue2",
     "mitosis-vue3": "mitosis build vue3",
     "mitosis-webcomponent": "mitosis build webcomponent",
-    "build": "concurrently \"npm:mitosis-*\" --max-processes 3 --group || echo continuing",
-    "e2e": "../../node_modules/.bin/playwright test",
+    "run-mitosis-separately": "concurrently \"npm:mitosis-*\" --max-processes 3 --group || echo continuing",
+    "run-mitosis-all": "mitosis build",
+    "e2e": "ts-node --project tsconfig.node.json e2e",
+    "playwright": "../../node_modules/.bin/playwright test",
     "report": "../../node_modules/.bin/playwright show-report"
   },
   "dependencies": {
@@ -28,16 +30,19 @@
     "@builder.io/mitosis-cli": "workspace:*"
   },
   "devDependencies": {
-    "@builder.io/qwik": "0.0.38",
-    "concurrently": "^7.2.2",
+    "@builder.io/qwik": "0.0.100",
+    "concurrently": "^7.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "solid-js": "^1.4.5",
     "solid-styled-components": "^0.28.4",
+    "sync-directory": "^5.1.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4",
     "vue": "~2.6"
   },
   "peerDependencies": {
-    "@builder.io/qwik": "0.0.38",
+    "@builder.io/qwik": "0.0.100",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "solid-js": "^1.4.5",

@@ -12,6 +12,7 @@ import { METADATA_HOOK_NAME, selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
+import { checkHasState } from '../helpers/state';
 
 export interface ToMitosisOptions {
   prettier?: boolean;
@@ -162,7 +163,7 @@ export const componentToMitosis =
     const mitosisComponents = components.filter((item) => mitosisCoreComponents.includes(item));
     const otherComponents = components.filter((item) => !mitosisCoreComponents.includes(item));
 
-    const hasState = Boolean(Object.keys(component.state).length);
+    const hasState = checkHasState(component);
 
     const needsMitosisCoreImport = Boolean(hasState || refs.length || mitosisComponents.length);
 
@@ -183,7 +184,11 @@ export const componentToMitosis =
 
     ${renderPreComponent({ component: json, target: 'mitosis' })}
 
-    ${stringifiedUseMetadata !== '{}' ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})` : ''}
+    ${
+      stringifiedUseMetadata && stringifiedUseMetadata !== '{}'
+        ? `${METADATA_HOOK_NAME}(${stringifiedUseMetadata})`
+        : ''
+    }
 
     export default function ${component.name}(props) {
       ${!hasState ? '' : `const state = useStore(${getStateObjectStringFromComponent(json)});`}

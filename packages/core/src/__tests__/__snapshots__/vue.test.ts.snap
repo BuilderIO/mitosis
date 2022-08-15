@@ -1,5 +1,70 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Vue AdvancedRef 1`] = `
+"<template>
+  <div>
+    <input
+      class=\\"input\\"
+      ref=\\"inputRef\\"
+      :value=\\"name\\"
+      @blur=\\"onBlur()\\"
+      @input=\\"name = $event.target.value\\"
+    />
+
+    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+      <option value=\\"86\\">GR 86</option>
+    </select>
+
+    Hello
+    {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
+    Component!
+  </div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-ref-component\\",
+
+  props: [\\"showInput\\"],
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Received an update\\");
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.$refs.inputRef,
+        1: this.$refs.inputNoArgRef,
+      };
+    },
+  },
+
+  methods: {
+    onBlur: function onBlur() {
+      // Maintain focus
+      this.$refs.inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return this.name.toLowerCase();
+    },
+  },
+};
+</script>
+<style scoped>
+.input {
+  color: red;
+}
+</style>
+"
+`;
+
 exports[`Vue Basic 1`] = `
 "<template>
   <div class=\\"test div\\">
@@ -444,11 +509,11 @@ export default {
 exports[`Vue ContentSlotJSX 1`] = `
 "<template>
   <div>
-    {{ slotTesting }}
+    <slot name=\\"testing\\" />
     <div>
       <hr />
     </div>
-    <div><slot></slot></div>
+    <div><slot /></div>
   </div>
 </template>
 <script>
@@ -467,7 +532,7 @@ exports[`Vue CustomCode 1`] = `
     ref=\\"elem\\"
     :class=\\"
       _classStringToObject(
-        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
       )
     \\"
     v-html=\\"code\\"
@@ -550,7 +615,7 @@ exports[`Vue Embed 1`] = `
     ref=\\"elem\\"
     :class=\\"
       _classStringToObject(
-        'builder-custom-code' + (this.replaceNodes ? ' replace-nodes' : '')
+        'builder-custom-code' + (replaceNodes ? ' replace-nodes' : '')
       )
     \\"
     v-html=\\"code\\"
@@ -674,7 +739,7 @@ exports[`Vue Form 1`] = `
   </form>
 </template>
 <script>
-import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
@@ -711,7 +776,7 @@ export default {
     state: \\"unsubmitted\\",
     responseData: null,
     formErrorMessage: \\"\\",
-    BuilderBlock,
+    builder,
   }),
 
   computed: {
@@ -956,7 +1021,7 @@ exports[`Vue Image 1`] = `
       :aria-role=\\"altText ? 'presentation' : undefined\\"
       :class=\\"
         _classStringToObject(
-          'builder-image' + (this._class ? ' ' + this._class : '') + ' img'
+          'builder-image' + (_class ? ' ' + _class : '') + ' img'
         )
       \\"
       :src=\\"image\\"
@@ -968,7 +1033,7 @@ exports[`Vue Image 1`] = `
     <source :srcset=\\"srcset\\" />
   </picture>
 
-  <slot></slot>
+  <slot />
 </template>
 <script>
 export default {
@@ -1090,8 +1155,6 @@ export default {
     \\"imgSrc\\",
     \\"altText\\",
   ],
-
-  data: () => ({ Builder }),
 };
 </script>
 "
@@ -1125,8 +1188,6 @@ export default {
     \\"value\\",
     \\"required\\",
   ],
-
-  data: () => ({ Builder }),
 };
 </script>
 "
@@ -1135,9 +1196,7 @@ export default {
 exports[`Vue RawText 1`] = `
 "<template>
   <span
-    :class=\\"
-      _classStringToObject(this.attributes?.class || this.attributes?.className)
-    \\"
+    :class=\\"_classStringToObject(attributes?.class || attributes?.className)\\"
     v-html=\\"text || ''\\"
   ></span>
 </template>
@@ -1191,7 +1250,7 @@ exports[`Vue Section 1`] = `
         : undefined
     \\"
   >
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <script>
@@ -1215,7 +1274,7 @@ exports[`Vue Section 2`] = `
     }\\"
     :key=\\"index\\"
   >
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <script>
@@ -1256,8 +1315,6 @@ export default {
   name: \\"select-component\\",
 
   props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
-
-  data: () => ({ Builder }),
 };
 </script>
 "
@@ -1310,9 +1367,7 @@ exports[`Vue Stamped.io 1`] = `
       <img class=\\"img\\" :src=\\"review.avatar\\" />
       <div
         :class=\\"
-          _classStringToObject(
-            this.showReviewPrompt ? 'bg-primary' : 'bg-secondary'
-          )
+          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
         \\"
       >
         <div>N: {{ index }}</div>
@@ -1552,6 +1607,47 @@ export default {
 "
 `;
 
+exports[`Vue basicOnUpdateReturn 1`] = `
+"<template>
+  <div>Hello! {{ name }}</div>
+</template>
+<script>
+export default {
+  name: \\"my-basic-on-update-return-component\\",
+
+  data: () => ({ name: \\"PatrickJS\\" }),
+
+  watch: {
+    onUpdateHook0() {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.name,
+      };
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue class + ClassName + css 1`] = `
 "<template>
   <div class=\\"test2 test div\\">
@@ -1610,7 +1706,7 @@ exports[`Vue className 1`] = `
   <div>
     <div class=\\"no binding\\">Without Binding</div>
 
-    <div :class=\\"_classStringToObject(this.bindings)\\">With binding</div>
+    <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
   </div>
 </template>
 <script>
@@ -1639,10 +1735,7 @@ export default {
 
 exports[`Vue classState 1`] = `
 "<template>
-  <div
-    :class=\\"_classStringToObject(this.classState + ' div')\\"
-    :style=\\"styleState\\"
-  >
+  <div :class=\\"_classStringToObject(classState + ' div')\\" :style=\\"styleState\\">
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -1892,7 +1985,7 @@ export default {
 exports[`Vue propsDestructure 1`] = `
 "<template>
   <div>
-    <slot></slot> {{ type }}
+    <slot /> {{ type }}
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
@@ -1973,7 +2066,7 @@ exports[`Vue self-referencing component with children 1`] = `
 "<template>
   <div>
     {{ name }}
-    <slot></slot>
+    <slot />
 
     <my-component name=\\"Bruce\\" v-if=\\"name === 'Batman'\\">
       <div>Wayne</div>
@@ -2002,6 +2095,35 @@ export default {
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"items\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue subComponent 1`] = `
+"<template>
+  <foo></foo>
+</template>
+<script>
+import Foo from \\"./foo-sub-component.vue\\";
+
+export default {
+  name: \\"sub-component\\",
+  components: { foo: Foo },
+};
+</script>
+"
+`;
+
+exports[`Vue typeDependency 1`] = `
+"<template>
+  <div>{{ foo }}</div>
+</template>
+<script>
+export default {
+  name: \\"type-dependency\\",
+
+  props: [\\"foo\\"],
 };
 </script>
 "

@@ -2,7 +2,11 @@ import { MitosisNode } from '../../types/mitosis-node';
 
 // This should really be a preprocessor mapping the `class` attribute binding based on what other values have
 // to make this more pluggable
-export function collectClassString(json: MitosisNode): string | null {
+export function collectClassString(
+  json: MitosisNode,
+  bindingOpenChar = '{',
+  bindingCloseChar = '}',
+): string | null {
   const staticClasses: string[] = [];
 
   const hasStaticClasses = Boolean(staticClasses.length);
@@ -36,11 +40,11 @@ export function collectClassString(json: MitosisNode): string | null {
   }
 
   if (hasDynamicClasses && !hasStaticClasses) {
-    return `{${dynamicClassesString}}`;
+    return `${bindingOpenChar}${dynamicClassesString}${bindingCloseChar}`;
   }
 
   if (hasDynamicClasses && hasStaticClasses) {
-    return `{"${staticClassesString} " + ${dynamicClassesString}}`;
+    return `${bindingOpenChar}"${staticClassesString} " + ${dynamicClassesString}${bindingCloseChar}`;
   }
 
   return null;

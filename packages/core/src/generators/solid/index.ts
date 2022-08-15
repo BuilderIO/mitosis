@@ -2,7 +2,6 @@ import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import { hasCss } from '../../helpers/styles/helpers';
 import { getRefs } from '../../helpers/get-refs';
-import { getMemberObjectString } from '../../helpers/get-state-object-string';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
@@ -28,6 +27,7 @@ import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
 import { getState, updateStateCode } from './state';
 import { checkIsDefined } from '../../helpers/nullable';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
@@ -248,7 +248,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
         children: json.children,
         ...(value && {
           bindings: {
-            value: { code: getMemberObjectString(value) },
+            value: { code: stringifyContextValue(value) },
           },
         }),
       }),
@@ -296,7 +296,6 @@ export const componentToSolid =
     const foundDynamicComponents = processDynamicComponents(json, options);
 
     const state = getState(json, options);
-
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 

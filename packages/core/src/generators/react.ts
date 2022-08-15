@@ -16,7 +16,7 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { getRefs } from '../helpers/get-refs';
 import { getPropsRef } from '../helpers/get-props-ref';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
@@ -43,16 +43,24 @@ import { hasContext } from './helpers/context';
 import { collectReactNativeStyles } from './react-native';
 import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
 import { hasCss } from '../helpers/styles/helpers';
-import { JSON } from '../types/json';
 import { pipe } from 'fp-ts/lib/function';
+import { checkHasState } from '../helpers/state';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
+  preact?: boolean;
   forwardRef?: string;
   experimental?: any;
+}
+
+const openFrag = (options: ToReactOptions) => getFragment('open', options);
+const closeFrag = (options: ToReactOptions) => getFragment('close', options);
+function getFragment(type: 'open' | 'close', options: ToReactOptions) {
+  const tagName = options.preact ? 'Fragment' : '';
+  return type === 'open' ? `<${tagName}>` : `</${tagName}>`;
 }
 
 /**
@@ -87,9 +95,10 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
-    return `${wrap ? '<>' : ''}${json.children
+    const tagName = options.preact ? 'Fragment' : '';
+    return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}`;
+      .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
   For(json, options) {
     const wrap = wrapInFragment(json);
@@ -98,19 +107,19 @@ const NODE_MAPPERS: {
       json.bindings.each?.code as string,
       options,
     )}?.map((${forArguments}) => (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ))}`;
   },
   Show(json, options) {
     const wrap = wrapInFragment(json);
     return `{${processBinding(json.bindings.when?.code as string, options)} ? (
-      ${wrap ? '<>' : ''}${json.children
+      ${wrap ? openFrag(options) : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToReact(item, options))
-      .join('\n')}${wrap ? '</>' : ''}
+      .join('\n')}${wrap ? closeFrag(options) : ''}
     ) : ${!json.meta.else ? 'null' : blockToReact(json.meta.else as any, options)}}`;
   },
 };
@@ -298,7 +307,6 @@ const valueMapper = (options: ToReactOptions) => (val: string) => {
   const x = processBinding(updateStateSettersInCode(val, options), options);
   return stripThisRefs(x, options);
 };
-
 const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
 
 const processStateValue = (options: ToReactOptions) => {
@@ -367,7 +375,7 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
           ...(value && {
             bindings: {
               value: {
-                code: getMemberObjectString(value),
+                code: stringifyContextValue(value),
               },
             },
           }),
@@ -429,6 +437,12 @@ const DEFAULT_OPTIONS: ToReactOptions = {
   stateType: 'useState',
   stylesType: 'styled-jsx',
 };
+
+export const componentToPreact = (reactOptions: ToReactOptions = {}): Transpiler =>
+  componentToReact({
+    ...reactOptions,
+    preact: true,
+  });
 
 export const componentToReact =
   (reactOptions: ToReactOptions = {}): Transpiler =>
@@ -492,7 +506,7 @@ const _componentToReact = (
   const allRefs = Object.keys(json.refs);
   mapRefs(json, (refName) => `${refName}.current`);
 
-  let hasState = Boolean(Object.keys(json.state).length);
+  let hasState = checkHasState(json);
 
   const [forwardRef, hasPropRef] = getPropsRef(json);
   const isForwardRef = Boolean(json.meta.useMetadata?.forwardRef || hasPropRef);
@@ -564,15 +578,26 @@ const _componentToReact = (
 
   let str = dedent`
   ${
-    options.type !== 'native'
-      ? ''
+    options.preact
+      ? `
+    /** @jsx h */
+    import { h, Fragment } from 'preact';
+    `
+      : options.type !== 'native'
+      ? "import * as React from 'react';"
       : `
   import * as React from 'react';
   import { View, StyleSheet, Image, Text } from 'react-native';
   `
   }
   ${styledComponentsCode ? `import styled from 'styled-components';\n` : ''}
-  ${reactLibImports.size ? `import { ${Array.from(reactLibImports).join(', ')} } from 'react'` : ''}
+  ${
+    reactLibImports.size
+      ? `import { ${Array.from(reactLibImports).join(', ')} } from '${
+          options.preact ? 'preact/hooks' : 'react'
+        }'`
+      : ''
+  }
   ${
     componentHasStyles && stylesType === 'emotion' && options.format !== 'lite'
       ? `/** @jsx jsx */
@@ -632,18 +657,16 @@ const _componentToReact = (
       }
 
       ${
-        json.hooks.onUpdate?.length
-          ? json.hooks.onUpdate
-              .map(
-                (hook) => `useEffect(() => {
+        json.hooks.onUpdate
+          ?.map(
+            (hook) => `useEffect(() => {
             ${processBinding(updateStateSettersInCode(hook.code, options), options)}
           }, 
           ${
             hook.deps ? processBinding(updateStateSettersInCode(hook.deps, options), options) : ''
           })`,
-              )
-              .join(';')
-          : ''
+          )
+          .join(';') ?? ''
       }
 
       ${
@@ -660,12 +683,12 @@ const _componentToReact = (
       }
 
       return (
-        ${wrap ? '<>' : ''}
+        ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx' ? `<style jsx>{\`${css}\`}</style>` : ''
         }
-        ${wrap ? '</>' : ''}
+        ${wrap ? closeFrag(options) : ''}
       );
     }${isForwardRef ? ')' : ''}
 

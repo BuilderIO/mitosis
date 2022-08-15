@@ -16,6 +16,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
 import { TranspilerArgs } from '../types/transpiler';
 import { hashCodeAsString } from '../symbols/symbol-processor';
+import { checkHasState } from '../helpers/state';
 
 export interface ToBuilderOptions {
   includeIds?: boolean;
@@ -291,7 +292,7 @@ export const blockToBuilder = (
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs) => {
-    const hasState = Boolean(Object.keys(component.state).length);
+    const hasState = checkHasState(component);
 
     const result = fastClone({
       data: {

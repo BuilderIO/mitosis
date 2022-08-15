@@ -1,6 +1,8 @@
 import json5 from 'json5';
 
-export const tryParseJson = (jsonStr: string) => {
+type ParsedJson = any;
+
+export const tryParseJson = (jsonStr: string): ParsedJson => {
   try {
     return json5.parse(jsonStr);
   } catch (err) {

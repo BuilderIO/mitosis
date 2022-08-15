@@ -1,5 +1,66 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Stencil AdvancedRef 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-ref-component\\",
+  styles: \`
+       .input {
+         color: red;
+       }
+\`,
+})
+export default class MyBasicRefComponent {
+  @Prop() showInput: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  componentDidUpdate() {
+    console.log(\\"Received an update\\");
+  }
+
+  render() {
+    return (
+      <div>
+        {this.showInput ? (
+          <Fragment>
+            <input
+              ref={(el) => (this.inputRef = el)}
+              value={this.name}
+              onBlur={(event) => this.onBlur()}
+              onInput={(event) => (this.name = event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil Basic 1`] = `
 "export const DEFAULT_VALUES = {
   name: \\"Steve\\",
@@ -652,7 +713,7 @@ export default class CustomCode {
 `;
 
 exports[`Stencil Form 1`] = `
-"import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
@@ -1410,6 +1471,7 @@ export default class SmileReviews {
             <textarea placeholder=\\"How was your experience?\\"></textarea>
             <button
               onClick={(event) => {
+                event.preventDefault();
                 this.showReviewPrompt = false;
               }}
             >
@@ -1624,6 +1686,44 @@ export default class MyBasicForwardRefComponent {
           value={this.name}
           onInput={(event) => (this.name = event.target.value)}
         />
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil basicOnUpdateReturn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-on-update-return-component\\",
+})
+export default class MyBasicOnUpdateReturnComponent {
+  @State() name = \\"PatrickJS\\";
+
+  componentDidUpdate() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        Hello!
+        {this.name}
       </div>
     );
   }
@@ -2001,6 +2101,38 @@ export default class MyComponent {
         ) : null}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"sub-component\\",
+})
+export default class SubComponent {
+  render() {
+    return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil typeDependency 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"type-dependency\\",
+})
+export default class TypeDependency {
+  @Prop() foo: any;
+
+  render() {
+    return <div>{this.foo}</div>;
   }
 }
 "

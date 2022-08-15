@@ -4,6 +4,7 @@ export type StripStateAndPropsRefsOptions = {
   includeState?: boolean;
   contextVars?: string[];
   outputVars?: string[];
+  stateVars?: string[];
   context?: string;
   domRefs?: string[];
 };
@@ -12,6 +13,7 @@ const DEFAULT_OPTIONS: Required<StripStateAndPropsRefsOptions> = {
   replaceWith: '',
   contextVars: [],
   outputVars: [],
+  stateVars: [],
   context: 'this.',
   domRefs: [],
   includeProps: true,
@@ -32,7 +34,16 @@ export const stripStateAndPropsRefs = (
 ): string => {
   let newCode = code || '';
 
-  const { replaceWith, contextVars, outputVars, context, domRefs, includeProps, includeState } = {
+  const {
+    replaceWith,
+    contextVars,
+    outputVars,
+    context,
+    domRefs,
+    includeProps,
+    includeState,
+    stateVars,
+  } = {
     ...DEFAULT_OPTIONS,
     ..._options,
   };
@@ -70,11 +81,35 @@ export const stripStateAndPropsRefs = (
       newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
     }
   }
+
+  const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
+  const matchVariableUseInClass = '^|\\n|\\r| |;|\\(|\\[|!|,'; //  foo | (foo | !foo | foo, | [foo etc.
+
   if (domRefs.length) {
     domRefs.forEach((_var) => {
       newCode = newCode.replace(
-        // determine expression edge cases - https://regex101.com/r/iNcTSM/1
-        new RegExp('(^|\\n|\\r| |;|\\(|\\[|!)' + _var + '(\\?\\.|\\.|\\(| |;|\\)|$)', 'g'),
+        new RegExp(`(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`, 'g'),
+        '$1' + 'this.' + _var + '$2',
+      );
+    });
+  }
+  if (stateVars.length) {
+    stateVars.forEach((_var) => {
+      newCode = newCode.replace(
+        /*
+          1. Skip anything that is a class variable declaration
+             myClass() {
+              stuff = 'hi'
+               foo = 'bar'  <-- in the event that formatting is off
+             }
+          2. Skip anything that is the name of a function declaration or a getter
+             stuff = function stuff() {}  or  get stuff
+          3. If the conditions are met then try to match all use cases of the class variables, see above.
+        */
+        new RegExp(
+          `(?!^${_var}|^ ${_var})(?<!function|get)(${matchVariableUseInClass})${_var}(${matchPropertyAccessorsArguments})`,
+          'g',
+        ),
         '$1' + 'this.' + _var + '$2',
       );
     });

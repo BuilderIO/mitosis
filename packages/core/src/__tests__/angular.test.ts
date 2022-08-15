@@ -3,4 +3,10 @@ import { runTestsForTarget } from './shared';
 
 describe('Angular', () => {
   runTestsForTarget('angular', componentToAngular());
+  runTestsForTarget(
+    'angular',
+    componentToAngular({
+      standalone: true,
+    }),
+  );
 });

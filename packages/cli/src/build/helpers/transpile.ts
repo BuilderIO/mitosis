@@ -6,8 +6,11 @@ import { getFileExtensionForTarget } from './extensions';
 const getDefaultFormatForTarget = (target: Target): Format => {
   switch (target) {
     case 'reactNative':
+    case 'preact':
     case 'solid':
     case 'qwik':
+    case 'marko':
+    case 'angular':
     case 'svelte':
       return 'esm';
     default:
