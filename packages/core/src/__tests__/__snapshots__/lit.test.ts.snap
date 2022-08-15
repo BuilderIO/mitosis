@@ -1,0 +1,2387 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Lit AdvancedRef 1`] = `
+"import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('my-basic-ref-component')
+   export default class MyBasicRefComponent extends LitElement {
+     static styles = css\`
+     .input {
+         color: red;
+       }
+\`;
+
+     
+         @query('[ref=\\"inputRef\\"]')
+         inputRef!: HTMLElement;
+         
+
+         @query('[ref=\\"inputNoArgRef\\"]')
+         inputNoArgRef!: HTMLElement;
+         
+   
+ 
+     @property() showInput: any
+
+       @state()  name= 'PatrickJS'
+
+        onBlur = function onBlur() {
+ // Maintain focus
+ inputRef.focus();
+}
+lowerCaseName = function lowerCaseName() {
+ return this.name.toLowerCase();
+}
+
+     
+       
+       
+       updated() { 
+ console.log('Received an update');
+}
+   
+     render() {
+       return html\`
+         <div>
+         \${this.showInput ? html\`<fragment>
+           <input ref=\\"inputRef\\" value=\${this.name} @blur=\${event => this.onBlur()}
+           @input=\${event => this.name = event.target.value} />
+
+           <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+
+           <select name=\\"cars\\" id=\\"cars\\">
+             <option value=\\"supra\\">GR Supra</option>
+
+             <option value=\\"86\\">GR 86</option>
+           </select> </fragment
+         >\` ) : null} Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+         Solid, or Web Component!
+       </div>
+
+       \`
+     }
+   }"
+`;
+
+exports[`Lit Basic 1`] = `
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  static styles = css\`
+    .div {
+        padding: 10px;
+      }
+\`;
+
+  @state() name = \\"Steve\\";
+
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  render() {
+    return html\`
+        <div>
+        <input value=\${DEFAULT_VALUES.name || this.name} @input=\${(myEvent) =>
+      (this.name =
+        myEvent.target.value)} /> Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit Basic 2`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('my-basic-for-show-component')
+export default class MyBasicForShowComponent extends LitElement {
+  
+
+  
+
+
+  
+
+    @state()  name= 'PatrickJS'
+@state()  names= ['Steve','PatrickJS']
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      <div>
+      \${this.names?.map((person, index) => ( html\`\${person === this.name ?
+      html\`<input value=\${this.name} @input=\${event => { this.name =
+      event.target.value + ' and ' + person; }} /> Hello \${person} ! I can run in
+      Qwik, Web Component, React, Vue, Solid, or Liquid! \` ) : null}\` ))}
+    </div>
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit Basic Context 1`] = `
+"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @state() name = \\"PatrickJS\\";
+
+  onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  connectedCallback() {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }
+
+  render() {
+    return html\`
+         <div>
+         \${
+           myService.method(\\"hello\\") + this.name
+         } Hello! I can run in React, Vue,
+         Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+       </div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Basic OnMount Update 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-on-mount-update-component\\")
+export default class MyBasicOnMountUpdateComponent extends LitElement {
+  @property() hi: any;
+  @property() bye: any;
+
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  connectedCallback() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  }
+
+  render() {
+    return html\`
+         <div>Hello \${this.name}</div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Basic Outputs 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-outputs-component\\")
+export default class MyBasicOutputsComponent extends LitElement {
+  @property() onMessage: any;
+  @property() onEvent: any;
+  @property() message: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  connectedCallback() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Basic Outputs Meta 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-outputs-component\\")
+export default class MyBasicOutputsComponent extends LitElement {
+  @property() onMessage: any;
+  @property() onEvent: any;
+  @property() message: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  connectedCallback() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit BasicChildComponent 1`] = `
+"import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-child-component\\")
+export default class MyBasicChildComponent extends LitElement {
+  @state() name = \\"Steve\\";
+  @state() dev = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+      <div>
+      <my-basic-component id=\\"\${this.dev}\\"></my-basic-component>
+
+      <div>
+        <my-basic-on-mount-update-component
+          hi=\\"\${this.name}\\"
+          bye=\\"\${this.dev}\\"
+        ></my-basic-on-mount-update-component>
+      </div>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit BasicFor 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-for-component\\")
+export default class MyBasicForComponent extends LitElement {
+  @state() name = \\"PatrickJS\\";
+  @state() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  connectedCallback() {
+    console.log(\\"onMount code\\");
+  }
+
+  render() {
+    return html\`
+         <div>
+         \${this.names?.map(
+           (person, index) => html\`<fragment>
+           <input value=\${this.name} @input=\${(event) => {
+             this.name = event.target.value + \\" and \\" + person;
+           }} /> Hello \${person} ! I can run in Qwik, Web
+           Component, React, Vue, Solid, or Liquid! </fragment
+         >\`
+         )}
+       </div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit BasicRef 1`] = `
+"import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('my-basic-ref-component')
+   export default class MyBasicRefComponent extends LitElement {
+     static styles = css\`
+     .input {
+         color: red;
+       }
+\`;
+
+     
+         @query('[ref=\\"inputRef\\"]')
+         inputRef!: HTMLElement;
+         
+
+         @query('[ref=\\"inputNoArgRef\\"]')
+         inputNoArgRef!: HTMLElement;
+         
+   
+ 
+     @property() showInput: any
+
+       @state()  name= 'PatrickJS'
+
+        onBlur = function onBlur() {
+ // Maintain focus
+ inputRef.focus();
+}
+lowerCaseName = function lowerCaseName() {
+ return this.name.toLowerCase();
+}
+
+     
+       
+       
+       
+   
+     render() {
+       return html\`
+         <div>
+         \${this.showInput ? html\`<fragment>
+           <input ref=\\"inputRef\\" value=\${this.name} @blur=\${event => this.onBlur()}
+           @input=\${event => this.name = event.target.value} />
+
+           <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+
+           <select name=\\"cars\\" id=\\"cars\\">
+             <option value=\\"supra\\">GR Supra</option>
+
+             <option value=\\"86\\">GR 86</option>
+           </select> </fragment
+         >\` ) : null} Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
+         Solid, or Web Component!
+       </div>
+
+       \`
+     }
+   }"
+`;
+
+exports[`Lit BasicRefAssignment 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-ref-assignment-component\\")
+export default class MyBasicRefAssignmentComponent extends LitElement {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  };
+
+  render() {
+    return html\`
+        <div >
+            
+      <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
+
+          </div>
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit BasicRefPrevious 1`] = `
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-previous-component\\")
+export default class MyPreviousComponent extends LitElement {
+  @state() count = 0;
+
+  updated() {
+    prevCount = this.count;
+  }
+
+  render() {
+    return html\`
+         <div >
+             
+       <h1 >
+               Now: 
+       \${this.count}
+       , before: 
+       \${prevCount}
+
+             </h1>
+
+             
+       <button  @click=\${(event) => (this.count += 1)} >Increment</button>
+
+           </div>
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Button 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('button')
+export default class Button extends LitElement {
+  
+
+  
+
+
+  @property() link: any
+@property() attributes: any
+@property() openLinkInNewTab: any
+@property() text: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      <fragment >
+          
+    \${this.link ?
+          html\`<a  href=\${this.link}  target=\${this.openLinkInNewTab ? '_blank' : undefined} >
+              
+    \${this.text}
+
+            </a>\`
+        ) : null}
+
+          
+    \${!this.link ?
+          html\`<button  type=\\"button\\" >
+              
+    \${this.text}
+
+            </button>\`
+        ) : null}
+
+        </fragment>
+    \`
+  }
+}"
+`;
+
+exports[`Lit Columns 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"column\\")
+export default class Column extends LitElement {
+  static styles = css\`
+     .div {
+         display: flex;
+         flex-direction: column;
+         align-items: stretch;
+         line-height: normal;
+       }
+       @media (max-width: 999px) {
+         .div {
+           flex-direction: row;
+         }
+       }
+       @media (max-width: 639px) {
+         .div {
+           flex-direction: row-reverse;
+         }
+       }
+       .div-2 {
+         flex-grow: 1;
+       }
+\`;
+
+  @property() columns: any;
+  @property() space: any;
+
+  getColumns() {
+    return this.columns || [];
+  }
+  getGutterSize() {
+    return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+  }
+  getWidth(index: number) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+  getColumnCssWidth(index: number) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+
+  render() {
+    return html\`
+         <div>
+         \${this.columns?.map(
+           (column, index) => html\`
+         <div>\${column.content} \${index}</div>
+         \`
+         )}
+       </div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit ContentSlotHtml 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"content-slot-code\\")
+export default class ContentSlotCode extends LitElement {
+  @property() slotTesting: any;
+
+  render() {
+    return html\`
+      <div>
+      <slot name=\\"\${this.slotTesting}\\"></slot>
+
+      <div>
+        <hr />
+      </div>
+
+      <div>
+        <slot></slot>
+      </div>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit ContentSlotJSX 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"content-slot-jsx-code\\")
+export default class ContentSlotJsxCode extends LitElement {
+  @property() slotTesting: any;
+  @property() children: any;
+
+  render() {
+    return html\`
+      <div>
+      \${this.slotTesting}
+
+      <div>
+        <hr />
+      </div>
+
+      <div>\${this.children}</div>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit CustomCode 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"custom-code\\")
+export default class CustomCode extends LitElement {
+  @query('[ref=\\"elem\\"]')
+  elem!: HTMLElement;
+
+  @property() replaceNodes: any;
+  @property() code: any;
+
+  @state() scriptsInserted = [];
+  @state() scriptsRun = [];
+
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  connectedCallback() {
+    this.findAndRunScripts();
+  }
+
+  render() {
+    return html\`
+         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  innerHTML=\${this.code} ></div>
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Embed 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"custom-code\\")
+export default class CustomCode extends LitElement {
+  @query('[ref=\\"elem\\"]')
+  elem!: HTMLElement;
+
+  @property() replaceNodes: any;
+  @property() code: any;
+
+  @state() scriptsInserted = [];
+  @state() scriptsRun = [];
+
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  connectedCallback() {
+    this.findAndRunScripts();
+  }
+
+  render() {
+    return html\`
+         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  innerHTML=\${this.code} ></div>
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Form 1`] = `
+"import { BuilderBlock as BuilderBlockComponent } from '@fake';
+import { Builder, builder } from '@builder.io/sdk';
+import { BuilderBlocks } from '@fake';
+import { set } from '@fake';
+import { get } from '@fake';
+   
+   
+ 
+   import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('form-component')
+   export default class FormComponent extends LitElement {
+     static styles = css\`
+     .pre {
+         padding: 10px;
+         color: red;
+         text-align: center;
+       }
+\`;
+
+     
+         @query('[ref=\\"formRef\\"]')
+         formRef!: HTMLElement;
+         
+   
+ 
+     @property() previewState: any
+@property() sendWithJs: any
+@property() sendSubmissionsTo: any
+@property() action: any
+@property() customHeaders: any
+@property() contentType: any
+@property() sendSubmissionsToEmail: any
+@property() name: any
+@property() method: any
+@property() errorMessagePath: any
+@property() resetFormOnSubmit: any
+@property() successUrl: any
+@property() validate: any
+@property() attributes: any
+@property() builderBlock: any
+@property() errorMessage: any
+@property() sendingMessage: any
+@property() successMessage: any
+
+       @state()  state= 'unsubmitted'
+@state()  responseData= null
+@state()  formErrorMessage= ''
+
+        get submissionState() {
+ return Builder.isEditing && this.previewState || this.state;
+}
+onSubmit(event: Event & {
+ currentTarget: HTMLFormElement;
+}) {
+ const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === 'email';
+
+ if (this.sendSubmissionsTo === 'zapier') {
+   event.preventDefault();
+ } else if (sendWithJs) {
+   if (!(this.action || this.sendSubmissionsTo === 'email')) {
+     event.preventDefault();
+     return;
+   }
+
+   event.preventDefault();
+   const el = event.currentTarget;
+   const headers = this.customHeaders || {};
+   let body: any;
+   const formData = new FormData(el); // TODO: maybe support null
+
+   const formPairs: {
+     key: string;
+     value: File | boolean | number | string | FileList;
+   }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!(el as HTMLInputElement).name).map(el => {
+     let value: any;
+     const key = (el as HTMLImageElement).name;
+
+     if (el instanceof HTMLInputElement) {
+       if (el.type === 'radio') {
+         if (el.checked) {
+           value = el.name;
+           return {
+             key,
+             value
+           };
+         }
+       } else if (el.type === 'checkbox') {
+         value = el.checked;
+       } else if (el.type === 'number' || el.type === 'range') {
+         const num = el.valueAsNumber;
+
+         if (!isNaN(num)) {
+           value = num;
+         }
+       } else if (el.type === 'file') {
+         // TODO: one vs multiple files
+         value = el.files;
+       } else {
+         value = el.value;
+       }
+     } else {
+       value = (el as HTMLInputElement).value;
+     }
+
+     return {
+       key,
+       value
+     };
+   });
+   let contentType = this.contentType;
+
+   if (this.sendSubmissionsTo === 'email') {
+     contentType = 'multipart/form-data';
+   }
+
+   Array.from(formPairs).forEach(({
+     value
+   }) => {
+     if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+       contentType = 'multipart/form-data';
+     }
+   }); // TODO: send as urlEncoded or multipart by default
+   // because of ease of use and reliability in browser API
+   // for encoding the form?
+
+   if (contentType !== 'application/json') {
+     body = formData;
+   } else {
+     // Json
+     const json = {};
+     Array.from(formPairs).forEach(({
+       value,
+       key
+     }) => {
+       set(json, key, value);
+     });
+     body = JSON.stringify(json);
+   }
+
+   if (contentType && contentType !== 'multipart/form-data') {
+     if (
+     /* Zapier doesn't allow content-type header to be sent from browsers */
+     !(sendWithJs && this.action?.includes('zapier.com'))) {
+       headers['content-type'] = contentType;
+     }
+   }
+
+   const presubmitEvent = new CustomEvent('presubmit', {
+     detail: {
+       body
+     }
+   });
+
+   if (formRef) {
+     formRef.dispatchEvent(presubmitEvent);
+
+     if (presubmitEvent.defaultPrevented) {
+       return;
+     }
+   }
+
+   this.state = 'sending';
+   const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(this.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(this.name || '')}\`;
+   fetch(this.sendSubmissionsTo === 'email' ? formUrl : this.action!
+   /* TODO: throw error if no action URL */
+   , {
+     body,
+     headers,
+     method: this.method || 'post'
+   }).then(async res => {
+     let body;
+     const contentType = res.headers.get('content-type');
+
+     if (contentType && contentType.indexOf('application/json') !== -1) {
+       body = await res.json();
+     } else {
+       body = await res.text();
+     }
+
+     if (!res.ok && this.errorMessagePath) {
+       /* TODO: allow supplying an error formatter function */
+       let message = get(body, this.errorMessagePath);
+
+       if (message) {
+         if (typeof message !== 'string') {
+           /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+           message = JSON.stringify(message);
+         }
+
+         this.formErrorMessage = message;
+       }
+     }
+
+     this.responseData = body;
+     this.state = res.ok ? 'success' : 'error';
+
+     if (res.ok) {
+       const submitSuccessEvent = new CustomEvent('submit:success', {
+         detail: {
+           res,
+           body
+         }
+       });
+
+       if (formRef) {
+         formRef.dispatchEvent(submitSuccessEvent);
+
+         if (submitSuccessEvent.defaultPrevented) {
+           return;
+         }
+         /* TODO: option to turn this on/off? */
+
+
+         if (this.resetFormOnSubmit !== false) {
+           formRef.reset();
+         }
+       }
+       /* TODO: client side route event first that can be preventDefaulted */
+
+
+       if (this.successUrl) {
+         if (formRef) {
+           const event = new CustomEvent('route', {
+             detail: {
+               url: this.successUrl
+             }
+           });
+           formRef.dispatchEvent(event);
+
+           if (!event.defaultPrevented) {
+             location.href = this.successUrl;
+           }
+         } else {
+           location.href = this.successUrl;
+         }
+       }
+     }
+   }, err => {
+     const submitErrorEvent = new CustomEvent('submit:error', {
+       detail: {
+         error: err
+       }
+     });
+
+     if (formRef) {
+       formRef.dispatchEvent(submitErrorEvent);
+
+       if (submitErrorEvent.defaultPrevented) {
+         return;
+       }
+     }
+
+     this.responseData = err;
+     this.state = 'error';
+   });
+ }
+}
+
+     
+       
+       
+       
+   
+     render() {
+       return html\`
+         <form  validate=\${this.validate}  ref=\\"formRef\\"  action=\${!this.sendWithJs && this.action}  method=\${this.method}  name=\${this.name}  @submit=\${event => this.this.onSubmit(event)} >
+             
+       \${this.builderBlock && this.builderBlock.children ?
+             html\`\${this.builderBlock?.children?.map((block, index) => (
+             html\`<builder-block-component  key=\${block.id}  block=\${block}  index=\${index} ></builder-block-component>\`
+           ))}\`
+           ) : null}
+
+
+             
+       \${this.this.submissionState === 'error' ?
+             html\`<builder-blocks  dataPath=\\"errorMessage\\"  blocks=\${this.errorMessage} ></builder-blocks>\`
+           ) : null}
+
+
+             
+       \${this.this.submissionState === 'sending' ?
+             html\`<builder-blocks  dataPath=\\"sendingMessage\\"  blocks=\${this.sendingMessage} ></builder-blocks>\`
+           ) : null}
+
+
+             
+       \${this.this.submissionState === 'error' && this.this.responseData ?
+             html\`<pre >
+                 
+       \${JSON.stringify(this.this.responseData, null, 2)}
+
+               </pre>\`
+           ) : null}
+
+
+             
+       \${this.this.submissionState === 'success' ?
+             html\`<builder-blocks  dataPath=\\"successMessage\\"  blocks=\${this.successMessage} ></builder-blocks>\`
+           ) : null}
+
+           </form>
+       \`
+     }
+   }"
+`;
+
+exports[`Lit Image 1`] = `
+"import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('image')
+   export default class Image extends LitElement {
+     static styles = css\`
+     .img {
+         opacity: 1;
+         transition: opacity 0.2s ease-in-out;
+         object-fit: cover;
+         object-position: center;
+       }
+\`;
+
+     
+         @query('[ref=\\"pictureRef\\"]')
+         pictureRef!: HTMLElement;
+         
+   
+ 
+     @property() lazy: any
+@property() altText: any
+@property() _class: any
+@property() image: any
+@property() srcset: any
+@property() sizes: any
+@property() children: any
+
+       @state()  scrollListener= null
+@state()  imageLoaded= false
+@state()  load= false
+
+        setLoaded() {
+ this.imageLoaded = true;
+}
+useLazyLoading() {
+ // TODO: Add more checks here, like testing for real web browsers
+ return !!this.lazy && isBrowser();
+}
+isBrowser = function isBrowser() {
+ return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+}
+
+     
+       connectedCallback() { 
+ if (this.useLazyLoading()) {
+   // throttled scroll capture listener
+   const listener = () => {
+     if (pictureRef) {
+       const rect = pictureRef.getBoundingClientRect();
+       const buffer = window.innerHeight / 2;
+
+       if (rect.top < window.innerHeight + buffer) {
+         setLoad(true);
+         this.scrollListener = null;
+         window.removeEventListener('scroll', listener);
+       }
+     }
+   };
+
+   this.scrollListener = listener;
+   window.addEventListener('scroll', listener, {
+     capture: true,
+     passive: true
+   });
+   listener();
+ }
+}
+       disconnectedCallback() { 
+ if (this.scrollListener) {
+   window.removeEventListener('scroll', this.scrollListener);
+ }
+}
+       
+   
+     render() {
+       return html\`
+         <fragment>
+         <picture ref=\\"pictureRef\\">
+           \${!this.useLazyLoading() || this.load ? html\`<img class={'builder-image' +
+           (props._class ? ' ' + props._class : '') + ' img'} alt=\${this.altText}
+           aria-role=\${this.altText ? 'presentation' : undefined} src=\${this.image}
+           @load=\${event => this.setLoaded()} srcset=\${this.srcset} sizes=\${this.sizes}
+           />\` ) : null}
+
+           <source srcset=\\"\${this.srcset}\\" />
+         </picture>
+
+         \${this.children}
+       </fragment>
+
+       \`
+     }
+   }"
+`;
+
+exports[`Lit Image State 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"img-state-component\\")
+export default class ImgStateComponent extends LitElement {
+  @state() canShow = true;
+  @state() images = [\\"http://example.com/qwik.png\\"];
+
+  render() {
+    return html\`
+      <div>
+      \${this.images?.map(
+        (item, index) => html\`<fragment>
+        <img src=\\"\${item}\\" key=\\"\${itemIndex}\\" /> </fragment
+      >\`
+      )}
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Img 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"img-component\\")
+export default class ImgComponent extends LitElement {
+  @property() backgroundSize: any;
+  @property() backgroundPosition: any;
+  @property() attributes: any;
+  @property() imgSrc: any;
+  @property() altText: any;
+
+  render() {
+    return html\`
+      <img style=\${{
+        objectFit: this.backgroundSize || \\"cover\\",
+        objectPosition: this.backgroundPosition || \\"center\\",
+      }} key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} alt=\${
+      this.altText
+    } src=\${this.imgSrc} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Input 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"form-input-component\\")
+export default class FormInputComponent extends LitElement {
+  @property() attributes: any;
+  @property() defaultValue: any;
+  @property() placeholder: any;
+  @property() type: any;
+  @property() name: any;
+  @property() value: any;
+  @property() required: any;
+
+  render() {
+    return html\`
+      <input key=\${
+        Builder.isEditing && this.defaultValue
+          ? this.defaultValue
+          : \\"default-key\\"
+      } placeholder=\${this.placeholder} type=\${this.type}
+    name=\${this.name} value=\${this.value} defaultValue=\${this.defaultValue}
+    required=\${this.required} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit RawText 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"raw-text\\")
+export default class RawText extends LitElement {
+  @property() attributes: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+      <span  class={props.attributes?.class || props.attributes?.className}  innerHTML=\${
+        this.text || \\"\\"
+      } ></span>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Remove Internal mitosis package 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @state() name = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+      <div>Hello \${this.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Section 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"section-component\\")
+export default class SectionComponent extends LitElement {
+  @property() attributes: any;
+  @property() maxWidth: any;
+  @property() children: any;
+
+  render() {
+    return html\`
+      <section  style=\${
+        this.maxWidth && typeof this.maxWidth === \\"number\\"
+          ? {
+              maxWidth: this.maxWidth,
+            }
+          : undefined
+      } >
+          
+    \${this.children}
+
+        </section>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Section 2`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('section-state-component')
+export default class SectionStateComponent extends LitElement {
+  
+
+  
+
+
+  @property() attributes: any
+@property() children: any
+
+    @state()  max= 42
+@state()  items= [42]
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      \${this.max ?
+          html\`\${this.items?.map((item, index) => (
+          html\`<section  style=\${{
+      maxWidth: item + this.max
+    }} >
+                
+    \${this.children}
+
+              </section>\`
+        ))}\`
+        ) : null}
+    \`
+  }
+}"
+`;
+
+exports[`Lit Select 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"select-component\\")
+export default class SelectComponent extends LitElement {
+  @property() attributes: any;
+  @property() value: any;
+  @property() defaultValue: any;
+  @property() name: any;
+  @property() options: any;
+
+  render() {
+    return html\`
+      <select  value=\${this.value}  key=\${
+      Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
+    }  defaultValue=\${this.defaultValue}  name=\${this.name} >
+          
+    \${this.options?.map(
+      (option, index) =>
+        html\`<option  value=\${option.value}  data-index=\${index} >
+                
+    \${option.name || option.value}
+
+              </option>\`
+    )}
+
+        </select>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit SlotHtml 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"slot-code\\")
+export default class SlotCode extends LitElement {
+  render() {
+    return html\`
+      <div >
+          
+    <content-slot-code >
+            
+    <slot  testing=\${(<div>Hello</div>)} ></slot>
+
+          </content-slot-code>
+
+        </div>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit SlotJsx 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"slot-code\\")
+export default class SlotCode extends LitElement {
+  render() {
+    return html\`
+      <div >
+          
+    <content-slot-code  slotTesting=\${(<div>Hello</div>)} ></content-slot-code>
+
+        </div>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Stamped.io 1`] = `
+"import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+   
+   
+ 
+   import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('smile-reviews')
+   export default class SmileReviews extends LitElement {
+     static styles = css\`
+     .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
+\`;
+
+     
+   
+ 
+     @property() apiKey: any
+@property() productId: any
+
+       @state()  reviews= []
+@state()  name= 'test'
+@state()  showReviewPrompt= false
+
+        kebabCaseValue() {
+ return kebabCase('testThat');
+}
+snakeCaseValue() {
+ return snakeCase('testThis');
+}
+
+     
+       connectedCallback() { 
+ fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+   this.reviews = data.data;
+ });
+}
+       
+       
+   
+     render() {
+       return html\`
+         <div  data-user=\${this.name} >
+             
+       <button  @click=\${event => this.showReviewPrompt = true} >Write a review</button>
+
+             
+       \${this.showReviewPrompt ?
+             html\`<input  placeholder=\\"Email\\"  />
+       <input  placeholder=\\"Title\\"  />
+       <textarea  placeholder=\\"How was your experience?\\" ></textarea>
+       <button  @click=\${event => {
+         event.preventDefault();
+         this.showReviewPrompt = false;
+       }} >
+                 Submit
+               </button>\`
+           ) : null}
+
+             
+       \${this.reviews?.map((review, index) => (
+             html\`<div  key=\${review.id} >
+                   
+       <img  src=\${review.avatar}  />
+
+                   
+       <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
+                     
+       <div >N: 
+       \${index}</div>
+
+                     
+       <div >\${review.author}</div>
+
+                     
+       <div >\${review.reviewMessage}</div>
+
+                   </div>
+
+                 </div>\`
+           ))}
+
+           </div>
+       \`
+     }
+   }"
+`;
+
+exports[`Lit Submit 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"submit-button\\")
+export default class SubmitButton extends LitElement {
+  @property() attributes: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+      <button type=\\"submit\\">\${this.text}</button>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"text\\")
+export default class Text extends LitElement {
+  @property() text: any;
+  @property() content: any;
+
+  @state() name = \\"Decadef20\\";
+
+  render() {
+    return html\`
+      <div  contentEditable=\${allowEditingText || undefined}  data-name=\${{
+      test: this.name || \\"any name\\",
+    }}  innerHTML=\${
+      this.text || this.content || this.name || '<p class=\\"text-lg\\">my name</p>'
+    } ></div>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Textarea 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"textarea\\")
+export default class Textarea extends LitElement {
+  @property() attributes: any;
+  @property() placeholder: any;
+  @property() name: any;
+  @property() value: any;
+  @property() defaultValue: any;
+
+  render() {
+    return html\`
+      <textarea
+      placeholder=\\"\${this.placeholder}\\"
+      name=\\"\${this.name}\\"
+      value=\\"\${this.value}\\"
+      defaultValue=\\"\${this.defaultValue}\\"
+    ></textarea>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Video 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"video\\")
+export default class Video extends LitElement {
+  @property() attributes: any;
+  @property() fit: any;
+  @property() position: any;
+  @property() video: any;
+  @property() posterImage: any;
+  @property() autoPlay: any;
+  @property() muted: any;
+  @property() controls: any;
+  @property() loop: any;
+
+  render() {
+    return html\`
+      <video  preload=\\"none\\"  style=\${{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...this.attributes?.style,
+        objectFit: this.fit,
+        objectPosition: this.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}  key=\${this.video || \\"no-src\\"}  poster=\${this.posterImage}  autoplay=\${
+      this.autoPlay
+    }  muted=\${this.muted}  controls=\${this.controls}  loop=\${
+      this.loop
+    } ></video>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit basicForwardRef 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-forward-ref-component\\")
+export default class MyBasicForwardRefComponent extends LitElement {
+  static styles = css\`
+  .input {
+      color: red;
+    }
+\`;
+
+  @query('[ref=\\"props.inputRef\\"]')
+  propsInputRef!: HTMLElement;
+
+  @property() inputRef: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+      <div>
+      <input ref=\\"props.inputRef\\" value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)} />
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit basicForwardRefMetadata 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-forward-ref-component\\")
+export default class MyBasicForwardRefComponent extends LitElement {
+  static styles = css\`
+  .input {
+      color: red;
+    }
+\`;
+
+  @query('[ref=\\"props.inputRef\\"]')
+  propsInputRef!: HTMLElement;
+
+  @property() inputRef: any;
+
+  @state() name = \\"PatrickJS\\";
+
+  render() {
+    return html\`
+      <div>
+      <input ref=\\"props.inputRef\\" value=\${this.name} @input=\${(event) =>
+      (this.name = event.target.value)} />
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit basicOnUpdateReturn 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-on-update-return-component\\")
+export default class MyBasicOnUpdateReturnComponent extends LitElement {
+  @state() name = \\"PatrickJS\\";
+
+  updated() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+
+  render() {
+    return html\`
+         <div>Hello! \${this.name}</div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit class + ClassName + css 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  static styles = css\`
+  .div {
+      padding: 10px;
+    }
+\`;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit class + css 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  static styles = css\`
+  .div {
+      padding: 10px;
+    }
+\`;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit className + css 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  static styles = css\`
+  .div {
+      padding: 10px;
+    }
+\`;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit className 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"class-name-code\\")
+export default class ClassNameCode extends LitElement {
+  @state() bindings = \\"a binding\\";
+
+  render() {
+    return html\`
+      <div>
+      <div>Without Binding</div>
+
+      <div class=\\"{state.bindings}\\">With binding</div>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit classState 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  static styles = css\`
+  .div {
+      padding: 10px;
+    }
+\`;
+
+  @state() classState = \\"testClassName\\";
+  @state() styleState = { color: \\"red\\" };
+
+  render() {
+    return html\`
+      <div  class={state.classState + ' div'}  style=\${this.styleState} >
+          Hello! I can run in React, Vue, Solid, or Liquid!
+        </div>
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit multipleOnUpdate 1`] = `
+"import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('multiple-on-update')
+   export default class MultipleOnUpdate extends LitElement {
+     
+
+     
+   
+ 
+     
+
+       
+       
+     
+       
+       
+       updated() { 
+ console.log('Runs on every update/rerender');
+},updated() { 
+ console.log('Runs on every update/rerender as well');
+}
+   
+     render() {
+       return html\`
+         <div></div>
+
+       \`
+     }
+   }"
+`;
+
+exports[`Lit multipleOnUpdateWithDeps 1`] = `
+"import { LitElement, html } from 'lit';
+   import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+   @customElement('multiple-on-update-with-deps')
+   export default class MultipleOnUpdateWithDeps extends LitElement {
+     
+
+     
+   
+ 
+     
+
+       @state()  a= 'a'
+@state()  b= 'b'
+@state()  c= 'c'
+@state()  d= 'd'
+
+       
+     
+       
+       
+       updated() { 
+ console.log('Runs when a or b changes', this.a, this.b);
+
+ if (this.a === 'a') {
+   this.a = 'b';
+ }
+},updated() { 
+ console.log('Runs when c or d changes', this.c, this.d);
+
+ if (this.a === 'a') {
+   this.a = 'b';
+ }
+}
+   
+     render() {
+       return html\`
+         <div></div>
+
+       \`
+     }
+   }"
+`;
+
+exports[`Lit nestedShow 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('nested-show')
+export default class NestedShow extends LitElement {
+  
+
+  
+
+
+  @property() conditionA: any
+@property() conditionB: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      \${this.conditionA ? html\`\${!this.conditionB ? html\`
+    <div>if condition A and condition B</div>
+    \` ) :
+    <div>else-condition-B</div>
+    }\` ) :
+    <div>else-condition-A</div>
+    }
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit onInit & onMount 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init\\")
+export default class OnInit extends LitElement {
+  connectedCallback() {
+    console.log(\\"onMount\\");
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit onInit 1`] = `
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-init\\")
+export default class OnInit extends LitElement {
+  @property() name: any;
+
+  @state() name = \\"\\";
+
+  render() {
+    return html\`
+        <div>Default name defined by parent \${this.name}</div>
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit onMount 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"comp\\")
+export default class Comp extends LitElement {
+  connectedCallback() {
+    console.log(\\"Runs on mount\\");
+  }
+  disconnectedCallback() {
+    console.log(\\"Runs on unMount\\");
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit onUpdate 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-update\\")
+export default class OnUpdate extends LitElement {
+  updated() {
+    console.log(\\"Runs on every update/rerender\\");
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit onUpdateWithDeps 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"on-update-with-deps\\")
+export default class OnUpdateWithDeps extends LitElement {
+  @state() a = \\"a\\";
+  @state() b = \\"b\\";
+
+  updated() {
+    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+  }
+
+  render() {
+    return html\`
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit preserveExportOrLocalStatement 1`] = `
+"const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  render() {
+    return html\`
+      <div></div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit preserveTyping 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @property() name: any;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit propsDestructure 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @property() children: any;
+  @property() type: any;
+
+  @state() name = \\"Decadef20\\";
+
+  render() {
+    return html\`
+      <div>
+      \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
+      Liquid!
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit propsInterface 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @property() name: any;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit propsType 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  @property() name: any;
+
+  render() {
+    return html\`
+      <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit rootShow 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('render-styles')
+export default class RenderStyles extends LitElement {
+  
+
+  
+
+
+  @property() foo: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      \${this.foo === 'bar' ? html\`
+    <div>Bar</div>
+    \` ) :
+    <div>Foo</div>
+    }
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit self-referencing component 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+
+  
+
+
+  @property() name: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      <div>
+      \${this.name} \${this.name === 'Batman' ? html\`<my-component
+        name=\\"Bruce Wayne\\"
+      ></my-component
+      >\` ) : null}
+    </div>
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit self-referencing component with children 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+
+  
+
+
+  @property() name: any
+@property() children: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      <div>
+      \${this.name} \${this.children} \${this.name === 'Batman' ? html\`<my-component
+        name=\\"Bruce\\"
+      >
+        <div>Wayne</div> </my-component
+      >\` ) : null}
+    </div>
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit showWithFor 1`] = `
+"import { LitElement, html } from 'lit';
+import { customElement, property, css, state } from 'lit/decorators.js';
+
+
+@customElement('nested-show')
+export default class NestedShow extends LitElement {
+  
+
+  
+
+
+  @property() conditionA: any
+@property() items: any
+
+    
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      \${this.conditionA ? html\`\${this.items?.map((item, index) => ( html\`
+    <div key=\\"\${idx}\\">\${item}</div>
+    \` ))}\` ) :
+    <div>else-condition-A</div>
+    }
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit subComponent 1`] = `
+"import \\"./foo-sub-component.js\\";
+
+import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"sub-component\\")
+export default class SubComponent extends LitElement {
+  render() {
+    return html\`
+      <foo></foo>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit typeDependency 1`] = `
+"import { LitElement, html } from \\"lit\\";
+import { customElement, property, css, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"type-dependency\\")
+export default class TypeDependency extends LitElement {
+  @property() foo: any;
+
+  render() {
+    return html\`
+      <div>\${this.foo}</div>
+
+    \`;
+  }
+}
+"
+`;
