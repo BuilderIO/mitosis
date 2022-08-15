@@ -1,14 +1,8 @@
-import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
-import traverse from 'traverse';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
-import { babelTransformExpression } from '../../helpers/babel-transform';
-import { capitalize } from '../../helpers/capitalize';
+import { Transpiler } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { fastClone } from '../../helpers/fast-clone';
@@ -21,7 +15,6 @@ import {
 } from '../../helpers/get-state-object-string';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { handleMissingState } from '../../helpers/handle-missing-state';
-import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
 import { mapRefs } from '../../helpers/map-refs';
 import { processHttpRequests } from '../../helpers/process-http-requests';
@@ -29,7 +22,6 @@ import { processTagReferences } from '../../helpers/process-tag-references';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -43,19 +35,10 @@ import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
 import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
 import { hasCss } from '../../helpers/styles/helpers';
-import { pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
-import { _JSON } from '../../types/json';
-
-export interface ToReactOptions extends BaseTranspilerOptions {
-  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
-  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-  format?: 'lite' | 'safe';
-  type?: 'dom' | 'native';
-  preact?: boolean;
-  forwardRef?: string;
-  experimental?: any;
-}
+import { ToReactOptions } from './types';
+import { getUseStateCode, updateStateSetters, updateStateSettersInCode } from './state';
+import { processBinding } from './helpers';
 
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
@@ -282,89 +265,6 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
   return [hasStateArgument, code];
 };
 
-/**
- * Removes all `this.` references.
- */
-const stripThisRefs = (str: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return str;
-  }
-
-  return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
-};
-
-const processBinding = (str: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return str;
-  }
-
-  return stripStateAndPropsRefs(str, {
-    includeState: true,
-    includeProps: false,
-  });
-};
-
-const valueMapper = (options: ToReactOptions) => (val: string) => {
-  const x = processBinding(updateStateSettersInCode(val, options), options);
-  return stripThisRefs(x, options);
-};
-const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
-
-const processStateValue = (options: ToReactOptions) => {
-  const mapValue = valueMapper(options);
-  return ([key, value]: [key: string, value: _JSON]) => {
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        // functions
-        const useValue = value.replace(functionLiteralPrefix, '');
-        const mappedVal = mapValue(useValue);
-
-        return mappedVal;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        // methods
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const useValue = methodValue.replace(/^(get )?/, 'function ');
-        return mapValue(useValue);
-      }
-    }
-
-    // Other (data)
-    const transformedValue = pipe(value, json5.stringify, mapValue);
-    const defaultCase = `const [${key}, ${getSetStateFnName(
-      key,
-    )}] = useState(() => (${transformedValue}))`;
-
-    return defaultCase;
-  };
-};
-
-const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
-  const lineItemDelimiter = '\n\n\n';
-
-  const stringifiedState = Object.entries(json.state).map(processStateValue(options));
-  return stringifiedState.join(lineItemDelimiter);
-};
-
-const updateStateSetters = (json: MitosisComponent, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return;
-  }
-  traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        let values = item.bindings[key];
-        const newValue = updateStateSettersInCode(values?.code as string, options);
-        if (newValue !== values?.code) {
-          item.bindings[key] = {
-            code: newValue,
-            arguments: values?.arguments,
-          };
-        }
-      }
-    }
-  });
-};
-
 function addProviderComponents(json: MitosisComponent, options: ToReactOptions) {
   for (const key in json.context.set) {
     const { name, value } = json.context.set[key];
@@ -385,31 +285,6 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
     }
   }
 }
-
-const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return value;
-  }
-  return babelTransformExpression(value, {
-    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
-      const { node } = path;
-      if (types.isMemberExpression(node.left)) {
-        if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
-          if (node.left.object.name === 'state') {
-            // TODO: ultimately support other property access like strings
-            const propertyName = (node.left.property as types.Identifier).name;
-            path.replaceWith(
-              types.callExpression(types.identifier(`${getSetStateFnName(propertyName)}`), [
-                node.right,
-              ]),
-            );
-          }
-        }
-      }
-    },
-  });
-};
 
 function getContextString(component: MitosisComponent, options: ToReactOptions) {
   let str = '';
