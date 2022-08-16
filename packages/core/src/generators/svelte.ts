@@ -389,7 +389,7 @@ export const componentToSvelte =
 
     let str = '';
 
-    if (json.propsTypeRef) {
+    if (json.types?.length) {
       str += dedent`
       <script context='module' lang='ts'>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
