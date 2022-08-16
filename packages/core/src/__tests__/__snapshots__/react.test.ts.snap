@@ -1946,6 +1946,37 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`Preact nestedStyles 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function NestedStyles(props) {
+  return (
+    <Fragment>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
 exports[`Preact onInit & onMount 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4187,6 +4218,36 @@ export default function NestedShow(props: Props) {
       ) : (
         <div>else-condition-A</div>
       )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React nestedStyles 1`] = `
+"import * as React from \\"react\\";
+
+export default function NestedStyles(props) {
+  return (
+    <>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
     </>
   );
 }

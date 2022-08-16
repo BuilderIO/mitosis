@@ -2113,6 +2113,40 @@ export default class NestedShow extends LitElement {
 "
 `;
 
+exports[`Lit nestedStyles 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state } from \\"lit/decorators.js\\";
+
+@customElement(\\"nested-styles\\")
+export default class NestedStyles extends LitElement {
+  static styles = css\`
+  .div {
+      display: flex;
+      foo: var(--bar);
+    }
+    @media (max-width: env(--mobile)) {
+      .div {
+        display: block;
+      }
+    }
+    .div:hover {
+      display: flex;
+    }
+    .div .nested-selector {
+      display: grid;
+    }
+\`;
+
+  render() {
+    return html\`
+      <div>Hello world</div>
+
+    \`;
+  }
+}
+"
+`;
+
 exports[`Lit onInit & onMount 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state } from \\"lit/decorators.js\\";

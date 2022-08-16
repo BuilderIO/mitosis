@@ -3638,6 +3638,67 @@ export default NestedShow;
 "
 `;
 
+exports[`Solid nestedStyles 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function NestedStyles(props) {
+  return (
+    <div
+      class={css({
+        display: \\"flex\\",
+        foo: \\"var(--bar)\\",
+        \\"@media (max-width: env(--mobile))\\": {
+          display: \\"block\\",
+        },
+        \\"&:hover\\": {
+          display: \\"flex\\",
+        },
+        \\".nested-selector\\": {
+          display: \\"grid\\",
+        },
+      })}
+    >
+      Hello world
+    </div>
+  );
+}
+
+export default NestedStyles;
+"
+`;
+
+exports[`Solid nestedStyles 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function NestedStyles(props) {
+  return (
+    <>
+      <div class=\\"div-92502f5c\\">Hello world</div>
+      <style jsx>{\`
+        .div-92502f5c {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div-92502f5c {
+            display: block;
+          }
+        }
+        .div-92502f5c:hover {
+          display: flex;
+        }
+        .div-92502f5c .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default NestedStyles;
+"
+`;
+
 exports[`Solid onInit & onMount 1`] = `
 "import { onMount } from \\"solid-js\\";
 
