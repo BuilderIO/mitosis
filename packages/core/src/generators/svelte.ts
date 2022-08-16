@@ -401,7 +401,7 @@ export const componentToSvelte =
     }
 
     str += dedent`
-      <script>
+      <script lang='ts'>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
