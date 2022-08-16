@@ -4,6 +4,7 @@ import {
   componentToHtml,
   componentToMarko,
   componentToPreact,
+  componentToLit,
   componentToQwik,
   componentToReact,
   componentToReactNative,
@@ -197,6 +198,8 @@ const getGeneratorForTarget = ({
       return componentToMarko(options.options.marko);
     case 'preact':
       return componentToPreact(options.options.preact);
+    case 'lit':
+      return componentToLit(options.options.lit);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }

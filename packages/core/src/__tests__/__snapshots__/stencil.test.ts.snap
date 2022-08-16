@@ -1836,6 +1836,37 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil nestedStyles 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-styles\\",
+  styles: \`
+    .div {
+      display: flex;
+      foo: var(--bar);
+    }
+    @media (max-width: env(--mobile)) {
+      .div {
+        display: block;
+      }
+    }
+    .div:hover {
+      display: flex;
+    }
+    .div .nested-selector {
+      display: grid;
+    }
+\`,
+})
+export default class NestedStyles {
+  render() {
+    return <div>Hello world</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil onInit & onMount 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 

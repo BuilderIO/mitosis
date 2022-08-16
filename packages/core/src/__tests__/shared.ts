@@ -19,6 +19,7 @@ const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
+const nestedStyles = require('./data/nested-styles.lite');
 const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
 
 const propsType = require('./data/types/component-props-type.raw');
@@ -98,6 +99,7 @@ const BASIC_TESTS = {
   preserveTyping: preserveTyping,
   typeDependency,
   subComponent,
+  nestedStyles,
   propsDestructure: propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,
@@ -168,6 +170,17 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS,
   ],
   angular: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+  ],
+  lit: [
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,

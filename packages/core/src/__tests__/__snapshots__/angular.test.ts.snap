@@ -4326,6 +4326,74 @@ export default class NestedShow {
 "
 `;
 
+exports[`Angular nestedStyles 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"nested-styles\\",
+  template: \`
+    <div class=\\"div\\">Hello world</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        foo: var(--bar);
+      }
+      @media (max-width: env(--mobile)) {
+        .div {
+          display: block;
+        }
+      }
+      .div:hover {
+        display: flex;
+      }
+      .div .nested-selector {
+        display: grid;
+      }
+    \`,
+  ],
+})
+export default class NestedStyles {}
+"
+`;
+
+exports[`Angular nestedStyles 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"nested-styles\\",
+  template: \`
+    <div class=\\"div\\">Hello world</div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        foo: var(--bar);
+      }
+      @media (max-width: env(--mobile)) {
+        .div {
+          display: block;
+        }
+      }
+      .div:hover {
+        display: flex;
+      }
+      .div .nested-selector {
+        display: grid;
+      }
+    \`,
+  ],
+})
+export default class NestedStyles {}
+"
+`;
+
 exports[`Angular onInit & onMount 1`] = `
 "import { Component } from \\"@angular/core\\";
 
