@@ -19,6 +19,7 @@ const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
+const nestedStyles = require('./data/nested-styles.lite');
 const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
 
 const propsType = require('./data/types/component-props-type.raw');
@@ -98,6 +99,7 @@ const BASIC_TESTS = {
   preserveTyping: preserveTyping,
   typeDependency,
   subComponent,
+  nestedStyles,
   propsDestructure: propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,
