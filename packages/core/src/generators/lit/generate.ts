@@ -24,6 +24,7 @@ import { mapRefs } from '../../helpers/map-refs';
 import { getRefs } from '../../helpers/get-refs';
 import { camelCase } from 'lodash';
 import { isUpperCase } from '../../helpers/is-upper-case';
+import { has } from '../../helpers/has';
 
 export interface ToLitOptions extends BaseTranspilerOptions {}
 
@@ -64,9 +65,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
   }
 
   if (json.bindings._spread?.code) {
-    // Lit currently does not support spread, it's been an open PR
-    // for a year https://github.com/lit/lit/pull/1960/files
-    // str += ` \${...(${json.bindings._spread.code})} `;
+    str += ` \${spread(${json.bindings._spread.code})} `;
   }
 
   for (const key in json.properties) {
@@ -80,13 +79,17 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
     }
 
     if (key === 'ref') {
+      // TODO: maybe use ref directive instead
+      // https://lit.dev/docs/templates/directives/#ref
       str += ` ref="${code}" `;
     } else if (key.startsWith('on')) {
       let useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       useKey = '@' + useKey.substring(2).toLowerCase();
       str += ` ${useKey}=\${${cusArgs.join(',')} => ${processBinding(code as string)}} `;
     } else {
-      str += ` ${key}=\${${processBinding(code as string)}} `;
+      // TODO: handle boolean attributes too by matching list of html boolean attributes
+      // https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions
+      str += ` .${key}=\${${processBinding(code as string)}} `;
     }
   }
   if (selfClosingTags.has(json.name)) {
@@ -154,6 +157,8 @@ export const componentToLit =
 
     let html = json.children.map((item) => blockToLit(item, options)).join('\n');
 
+    const hasSpread = has(json, (node) => Boolean(node.bindings._spread));
+
     if (options.prettier !== false) {
       try {
         css = format(css, {
@@ -182,6 +187,19 @@ export const componentToLit =
     import { customElement, property, state } from 'lit/decorators.js';
 
     ${json.types ? json.types.join('\n') : ''}
+    ${
+      hasSpread
+        ? `
+      const spread = (properties) =>
+        directive((part) => {
+          for (const property in properties) {
+            const value = properties[attr];
+            part.element[property] = value;
+          }
+        });
+    `
+        : ''
+    }
 
     @customElement('${json.meta.useMetadata?.tagName || dashCase(json.name)}')
     export default class ${json.name} extends LitElement {
