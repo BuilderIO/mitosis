@@ -7,7 +7,7 @@ exports[`Svelte AdvancedRef 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   export let inputRef: Props[\\"inputRef\\"];
@@ -72,7 +72,7 @@ exports[`Svelte Basic 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export const DEFAULT_VALUES = {
     name: \\"Steve\\",
   };
@@ -104,7 +104,7 @@ exports[`Svelte Basic 1`] = `
 `;
 
 exports[`Svelte Basic 2`] = `
-"<script>
+"<script lang=\\"ts\\">
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
 </script>
@@ -129,20 +129,21 @@ exports[`Svelte Basic 2`] = `
 `;
 
 exports[`Svelte Basic Context 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   import { getContext, setContext } from \\"svelte\\";
 
+  let myService = getContext(MyService.key);
+  setContext(Injector.key, undefined);
+
   const onChange = function onChange() {
     const change = myService.method(\\"change\\");
     console.log(change);
   };
 
-  let myService = getContext(MyService.key);
-  setContext(Injector.key, undefined);
   let name = \\"PatrickJS\\";
 
   onMount(() => {
@@ -173,7 +174,7 @@ exports[`Svelte Basic OnMount Update 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   export let hi: Props[\\"hi\\"];
@@ -198,7 +199,7 @@ exports[`Svelte Basic Outputs 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   export let onMessage;
@@ -221,7 +222,7 @@ exports[`Svelte Basic Outputs Meta 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   export let onMessage;
@@ -241,7 +242,7 @@ exports[`Svelte Basic Outputs Meta 1`] = `
 `;
 
 exports[`Svelte BasicChildComponent 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import MyBasicComponent from \\"./basic.raw\\";
   import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -260,7 +261,7 @@ exports[`Svelte BasicChildComponent 1`] = `
 `;
 
 exports[`Svelte BasicFor 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   let name = \\"PatrickJS\\";
@@ -295,7 +296,7 @@ exports[`Svelte BasicRef 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
   export let inputNoArgRef: Props[\\"inputNoArgRef\\"];
   export let showInput: Props[\\"showInput\\"];
@@ -353,7 +354,7 @@ exports[`Svelte BasicRefAssignment 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   const handlerClick = function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
@@ -378,7 +379,7 @@ exports[`Svelte BasicRefPrevious 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   export function usePrevious<T>(value: T) {
@@ -429,7 +430,7 @@ exports[`Svelte Button 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let link: ButtonProps[\\"link\\"];
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
@@ -473,7 +474,7 @@ exports[`Svelte Columns 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let columns: ColumnProps[\\"columns\\"];
   export let space: ColumnProps[\\"space\\"];
 
@@ -540,7 +541,7 @@ exports[`Svelte CustomCode 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   export let elem: CustomCodeProps[\\"elem\\"];
@@ -614,7 +615,7 @@ exports[`Svelte Embed 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   export let elem: CustomCodeProps[\\"elem\\"];
@@ -708,7 +709,7 @@ exports[`Svelte Form 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
   import { Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
@@ -1027,7 +1028,7 @@ exports[`Svelte Image 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { onDestroy } from \\"svelte\\";
@@ -1123,7 +1124,7 @@ exports[`Svelte Image 1`] = `
 `;
 
 exports[`Svelte Image State 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   let canShow = true;
   let images = [\\"http://example.com/qwik.png\\"];
 </script>
@@ -1156,7 +1157,7 @@ exports[`Svelte Img 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
   export let backgroundSize: ImgProps[\\"backgroundSize\\"];
@@ -1198,7 +1199,7 @@ exports[`Svelte Input 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
   export let attributes: FormInputProps[\\"attributes\\"];
@@ -1231,7 +1232,7 @@ exports[`Svelte RawText 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: RawTextProps[\\"attributes\\"];
   export let text: RawTextProps[\\"text\\"];
 </script>
@@ -1243,7 +1244,7 @@ exports[`Svelte RawText 1`] = `
 `;
 
 exports[`Svelte Remove Internal mitosis package 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   let name = \\"PatrickJS\\";
 </script>
 
@@ -1264,7 +1265,7 @@ exports[`Svelte Section 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: SectionProps[\\"attributes\\"];
   export let maxWidth: SectionProps[\\"maxWidth\\"];
 
@@ -1297,7 +1298,7 @@ exports[`Svelte Section 2`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: SectionProps[\\"attributes\\"];
 
   function mitosis_styling(node, vars) {
@@ -1339,7 +1340,7 @@ exports[`Svelte Select 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
   export let attributes: FormSelectProps[\\"attributes\\"];
@@ -1373,7 +1374,7 @@ exports[`Svelte Stamped.io 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { kebabCase } from \\"lodash\\";
@@ -1485,7 +1486,7 @@ exports[`Svelte Submit 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: ButtonProps[\\"attributes\\"];
   export let text: ButtonProps[\\"text\\"];
 </script>
@@ -1507,7 +1508,7 @@ exports[`Svelte Text 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   import { Builder } from \\"@builder.io/sdk\\";
 
   export let text: TextProps[\\"text\\"];
@@ -1538,7 +1539,7 @@ exports[`Svelte Textarea 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: TextareaProps[\\"attributes\\"];
   export let placeholder: TextareaProps[\\"placeholder\\"];
   export let name: TextareaProps[\\"name\\"];
@@ -1579,7 +1580,7 @@ exports[`Svelte Video 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let attributes: VideoProps[\\"attributes\\"];
   export let fit: VideoProps[\\"fit\\"];
   export let position: VideoProps[\\"position\\"];
@@ -1628,7 +1629,7 @@ exports[`Svelte basicForwardRef 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
 
   let name = \\"PatrickJS\\";
@@ -1654,7 +1655,7 @@ exports[`Svelte basicForwardRefMetadata 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
 
   let name = \\"PatrickJS\\";
@@ -1673,7 +1674,7 @@ exports[`Svelte basicForwardRefMetadata 1`] = `
 `;
 
 exports[`Svelte basicOnUpdateReturn 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   let name = \\"PatrickJS\\";
@@ -1705,7 +1706,7 @@ exports[`Svelte basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte class + ClassName + css 1`] = `
-"<script>
+"<script lang=\\"ts\\">
 </script>
 
 <div class=\\"test2 test div\\">
@@ -1721,7 +1722,7 @@ exports[`Svelte class + ClassName + css 1`] = `
 `;
 
 exports[`Svelte class + css 1`] = `
-"<script>
+"<script lang=\\"ts\\">
 </script>
 
 <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
@@ -1735,7 +1736,7 @@ exports[`Svelte class + css 1`] = `
 `;
 
 exports[`Svelte className + css 1`] = `
-"<script>
+"<script lang=\\"ts\\">
 </script>
 
 <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
@@ -1756,7 +1757,7 @@ exports[`Svelte className 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   let bindings = \\"a binding\\";
 </script>
 
@@ -1769,7 +1770,7 @@ exports[`Svelte className 1`] = `
 `;
 
 exports[`Svelte multipleOnUpdate 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   afterUpdate(() => {
@@ -1785,7 +1786,7 @@ exports[`Svelte multipleOnUpdate 1`] = `
 `;
 
 exports[`Svelte multipleOnUpdateWithDeps 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   let a = \\"a\\";
@@ -1823,7 +1824,7 @@ exports[`Svelte nestedShow 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let conditionA: Props[\\"conditionA\\"];
   export let conditionB: Props[\\"conditionB\\"];
 </script>
@@ -1841,7 +1842,7 @@ exports[`Svelte nestedShow 1`] = `
 `;
 
 exports[`Svelte nestedStyles 1`] = `
-"<script>
+"<script lang=\\"ts\\">
 </script>
 
 <div class=\\"div\\">Hello world</div>
@@ -1867,7 +1868,7 @@ exports[`Svelte nestedStyles 1`] = `
 `;
 
 exports[`Svelte onInit & onMount 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   onMount(() => {
@@ -1886,7 +1887,7 @@ exports[`Svelte onInit 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export const defaultValues = {
     name: \\"PatrickJS\\",
   };
@@ -1904,7 +1905,7 @@ exports[`Svelte onInit 1`] = `
 `;
 
 exports[`Svelte onMount 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
   import { onDestroy } from \\"svelte\\";
@@ -1923,7 +1924,7 @@ exports[`Svelte onMount 1`] = `
 `;
 
 exports[`Svelte onUpdate 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   afterUpdate(() => {
@@ -1936,7 +1937,7 @@ exports[`Svelte onUpdate 1`] = `
 `;
 
 exports[`Svelte onUpdateWithDeps 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
 
   let a = \\"a\\";
@@ -1967,7 +1968,7 @@ exports[`Svelte preserveExportOrLocalStatement 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   const b = 3;
   const foo = () => {};
   export const a = 3;
@@ -1999,7 +2000,7 @@ exports[`Svelte preserveTyping 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let name: MyBasicComponentProps[\\"name\\"];
 </script>
 
@@ -2018,7 +2019,7 @@ exports[`Svelte propsDestructure 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let type: Props[\\"type\\"];
 
   let name = \\"Decadef20\\";
@@ -2042,7 +2043,7 @@ exports[`Svelte propsInterface 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let name: Person[\\"name\\"];
 </script>
 
@@ -2061,7 +2062,7 @@ exports[`Svelte propsType 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let name: Person[\\"name\\"];
 </script>
 
@@ -2079,7 +2080,7 @@ exports[`Svelte rootShow 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let foo: RenderStylesProps[\\"foo\\"];
 </script>
 
@@ -2095,7 +2096,7 @@ exports[`Svelte self-referencing component 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let name;
 </script>
 
@@ -2113,7 +2114,7 @@ exports[`Svelte self-referencing component with children 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let name;
 </script>
 
@@ -2139,7 +2140,7 @@ exports[`Svelte showWithFor 1`] = `
   }
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let conditionA: Props[\\"conditionA\\"];
   export let items: Props[\\"items\\"];
 </script>
@@ -2155,7 +2156,7 @@ exports[`Svelte showWithFor 1`] = `
 `;
 
 exports[`Svelte subComponent 1`] = `
-"<script>
+"<script lang=\\"ts\\">
   import Foo from \\"./foo-sub-component.svelte\\";
 </script>
 
@@ -2175,7 +2176,7 @@ exports[`Svelte typeDependency 1`] = `
   };
 </script>
 
-<script>
+<script lang=\\"ts\\">
   export let foo: TypeDependencyProps[\\"foo\\"];
 </script>
 
