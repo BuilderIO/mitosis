@@ -137,6 +137,10 @@ export default class MyBasicRefComponent {
 exports[`Angular Basic 1`] = `
 "import { Component } from \\"@angular/core\\";
 
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -205,6 +209,10 @@ export default class MyBasicForShowComponent {
 exports[`Angular Basic 3`] = `
 "import { Component } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
@@ -4565,6 +4573,9 @@ type Types = {
 interface IPost {
   len: number;
 }
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 const b = 3;
 const foo = () => {};
@@ -4591,6 +4602,9 @@ type Types = {
 };
 interface IPost {
   len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
 }
 
 const b = 3;
@@ -4623,6 +4637,10 @@ export interface C {
 interface D {
   n: \\"test\\";
 }
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
 
 @Component({
   selector: \\"my-basic-component\\",
@@ -4631,10 +4649,7 @@ interface D {
   \`,
 })
 export default class MyBasicComponent {
-  @Input() name: {
-    name: string;
-    age?: number;
-  }[\\"name\\"];
+  @Input() name: MyBasicComponentProps[\\"name\\"];
 }
 "
 `;
@@ -4651,6 +4666,10 @@ export interface C {
 interface D {
   n: \\"test\\";
 }
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
 
 @Component({
   standalone: true,
@@ -4662,10 +4681,7 @@ interface D {
   \`,
 })
 export default class MyBasicComponent {
-  @Input() name: {
-    name: string;
-    age?: number;
-  }[\\"name\\"];
+  @Input() name: MyBasicComponentProps[\\"name\\"];
 }
 "
 `;
@@ -4817,6 +4833,10 @@ export default class MyBasicComponent {
 exports[`Angular rootShow 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
+export interface RenderStylesProps {
+  foo: string;
+}
+
 @Component({
   selector: \\"render-styles\\",
   template: \`
@@ -4826,9 +4846,7 @@ exports[`Angular rootShow 1`] = `
   \`,
 })
 export default class RenderStyles {
-  @Input() foo: {
-    foo: string;
-  }[\\"foo\\"];
+  @Input() foo: RenderStylesProps[\\"foo\\"];
 }
 "
 `;
@@ -4836,6 +4854,10 @@ export default class RenderStyles {
 exports[`Angular rootShow 2`] = `
 "import { Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
+
+export interface RenderStylesProps {
+  foo: string;
+}
 
 @Component({
   standalone: true,
@@ -4849,9 +4871,7 @@ import { CommonModule } from \\"@angular/common\\";
   \`,
 })
 export default class RenderStyles {
-  @Input() foo: {
-    foo: string;
-  }[\\"foo\\"];
+  @Input() foo: RenderStylesProps[\\"foo\\"];
 }
 "
 `;
@@ -5006,6 +5026,86 @@ interface Props {
 export default class NestedShow {
   @Input() conditionA: Props[\\"conditionA\\"];
   @Input() items: Props[\\"items\\"];
+}
+"
+`;
+
+exports[`Angular subComponent 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"sub-component\\",
+  template: \`
+    <foo></foo>
+  \`,
+})
+export default class SubComponent {}
+"
+`;
+
+exports[`Angular subComponent 2`] = `
+"import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import Foo from \\"./foo-sub-component\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, Foo],
+
+  selector: \\"sub-component\\",
+  template: \`
+    <foo></foo>
+  \`,
+})
+export default class SubComponent {}
+"
+`;
+
+exports[`Angular typeDependency 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+@Component({
+  selector: \\"type-dependency\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+})
+export default class TypeDependency {
+  @Input() foo: TypeDependencyProps[\\"foo\\"];
+}
+"
+`;
+
+exports[`Angular typeDependency 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"type-dependency\\",
+  template: \`
+    <div>{{foo}}</div>
+  \`,
+})
+export default class TypeDependency {
+  @Input() foo: TypeDependencyProps[\\"foo\\"];
 }
 "
 `;

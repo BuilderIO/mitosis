@@ -21,6 +21,7 @@ import {
   collectInterfaces,
   collectTypes,
   getPropsTypeRef,
+  isTypeImport,
   isTypeOrInterface,
 } from './component-types';
 import { undoPropsDestructure } from './props';
@@ -242,6 +243,8 @@ const componentFunctionToJson = (
     context.builder.component.exports = localExports;
   }
 
+  const propsTypeRef = getPropsTypeRef(node, context);
+
   return createMitosisComponent({
     ...context.builder.component,
     name: node.id?.name,
@@ -253,7 +256,7 @@ const componentFunctionToJson = (
       get: accessedContext,
       set: setContext,
     },
-    propsTypeRef: getPropsTypeRef(node),
+    propsTypeRef,
   }) as any;
 };
 
@@ -534,6 +537,20 @@ export function parseJsx(
             const keepStatements = path.node.body.filter(
               (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
             );
+
+            for (const statement of path.node.body) {
+              if (isTypeImport(statement)) {
+                const importDeclaration = statement as babel.types.ImportDeclaration;
+                // Remove .lite from path if exists, as that will be stripped
+                if (importDeclaration.source.value.endsWith('.lite')) {
+                  importDeclaration.source.value = importDeclaration.source.value.replace(
+                    /\.lite$/,
+                    '',
+                  );
+                }
+                collectTypes(statement, context);
+              }
+            }
 
             const exportsOrLocalVariables = path.node.body.filter(
               (statement) =>

@@ -2105,3 +2105,35 @@ export default class MyComponent {
 }
 "
 `;
+
+exports[`Stencil subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"sub-component\\",
+})
+export default class SubComponent {
+  render() {
+    return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil typeDependency 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"type-dependency\\",
+})
+export default class TypeDependency {
+  @Prop() foo: any;
+
+  render() {
+    return <div>{this.foo}</div>;
+  }
+}
+"
+`;

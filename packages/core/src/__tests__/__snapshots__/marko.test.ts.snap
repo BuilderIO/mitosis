@@ -1276,20 +1276,15 @@ exports[`Marko Video 1`] = `
 
 exports[`Marko basicForwardRef 1`] = `
 "class {
-    
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
 
-    onCreate(input) {
-      this.state = { name: 'PatrickJS',}
-    }
-
-    get props.inputRef() { 
-        return this.getEl('props.inputRef')
-      }
-  
-    
-    
-    
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
 }
+
 style { 
   .input {
     color: red;
@@ -1298,7 +1293,7 @@ style {
 <div>
   <input
     class=\\"input\\"
-    key=\\"props.inputRef\\"
+    key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
   />
@@ -1307,20 +1302,15 @@ style {
 
 exports[`Marko basicForwardRefMetadata 1`] = `
 "class {
-    
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
 
-    onCreate(input) {
-      this.state = { name: 'PatrickJS',}
-    }
-
-    get props.inputRef() { 
-        return this.getEl('props.inputRef')
-      }
-  
-    
-    
-    
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
 }
+
 style { 
   .input {
     color: red;
@@ -1329,7 +1319,7 @@ style {
 <div>
   <input
     class=\\"input\\"
-    key=\\"props.inputRef\\"
+    key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
   />
@@ -1431,15 +1421,11 @@ style {
 
 exports[`Marko multipleOnUpdate 1`] = `
 "class {
-    
+  onRender() {
+    console.log(\\"Runs on every update/rerender\\");
 
-    
-
-    
-  
-    
-    
-    onRender() { console.log('Runs on every update/rerender') },onRender() { console.log('Runs on every update/rerender as well') }
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
 }
 
 <div></div>"
@@ -1447,26 +1433,24 @@ exports[`Marko multipleOnUpdate 1`] = `
 
 exports[`Marko multipleOnUpdateWithDeps 1`] = `
 "class {
-      
-
-      onCreate() {
-        this.state = { a: 'a', b: 'b', c: 'c', d: 'd',}
-      }
-
-      
-    
-      
-      
-      onRender() { console.log('Runs when a or b changes', this.state.a, this.state.b);
-
-if (this.state.a === 'a') {
-this.state.a = 'b';
-} },onRender() { console.log('Runs when c or d changes', this.state.c, this.state.d);
-
-if (this.state.a === 'a') {
-this.state.a = 'b';
-} }
+  onCreate() {
+    this.state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
   }
+
+  onRender() {
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
+
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
+    }
+
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
+
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
+    }
+  }
+}
 
 <div></div>"
 `;
@@ -1623,4 +1607,18 @@ exports[`Marko showWithFor 1`] = `
     <div key=(idx)>\${item}</div>
   </for></if>
 <else><div>else-condition-A</div></else>"
+`;
+
+exports[`Marko subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.marko\\";
+
+class {}
+
+<Foo></Foo>"
+`;
+
+exports[`Marko typeDependency 1`] = `
+"class {}
+
+<div>\${input.foo}</div>"
 `;

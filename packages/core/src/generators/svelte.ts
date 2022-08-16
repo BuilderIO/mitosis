@@ -387,8 +387,21 @@ export const componentToSvelte =
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
-    let str = dedent`
-    <script>
+    let str = '';
+
+    if (json.propsTypeRef) {
+      str += dedent`
+      <script context='module' lang='ts'>
+        ${json.types ? json.types.join('\n\n') + '\n' : ''}
+        ${json.interfaces ? json.interfaces.join('\n\n') + '\n' : ''}
+      </script>
+      \n
+      \n
+      `;
+    }
+
+    str += dedent`
+      <script>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
@@ -401,7 +414,16 @@ export const componentToSvelte =
           if (name === 'children') {
             return '';
           }
-          return `export let ${name};`;
+
+          let propDeclaration = `export let ${name}`;
+
+          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          }
+
+          propDeclaration += ';';
+
+          return propDeclaration;
         })
         .join('\n')}
       ${
