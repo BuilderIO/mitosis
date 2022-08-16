@@ -14,6 +14,8 @@ import {
   componentToSolid,
   componentToSvelte,
   componentToSwift,
+  componentToPreact,
+  componentToLit,
   componentToTemplate,
   liquidToBuilder,
   angularToMitosisComponent,
@@ -335,6 +337,10 @@ export default function Fiddle() {
             ? componentToHtml({ plugins })({ component: json })
             : state.outputTab === 'webcomponents'
             ? componentToCustomElement({ plugins })({ component: json })
+            : state.outputTab === 'preact'
+            ? componentToPreact({ plugins })({ component: json })
+            : state.outputTab === 'lit'
+            ? componentToLit({ plugins })({ component: json })
             : state.outputTab === 'react'
             ? componentToReact({
                 stylesType: state.options.reactStyleType,
@@ -619,24 +625,6 @@ export default function Fiddle() {
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
                 css={{ marginLeft: 10 }}
                 alt="Figma Logo"
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              css={{
-                marginRight: 25,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-              href="https://github.com/builderio/vscode"
-            >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>VS Code</span>
-              <img
-                width={30}
-                src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
-                css={{ marginLeft: 10 }}
-                alt="VS Code Logo"
               />
             </a>
             <a
@@ -963,6 +951,8 @@ export default function Fiddle() {
                 />
                 <Tab label={<TabLabelWithIcon label="Stencil" />} value="stencil" />
                 <Tab label={<TabLabelWithIcon label="Marko" />} value="marko" />
+                <Tab label={<TabLabelWithIcon label="Preact" />} value="preact" />
+                <Tab label={<TabLabelWithIcon label="Lit" />} value="lit" />
                 <Tab label={<TabLabelWithIcon label="Webcomponents" />} value="webcomponents" />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
@@ -1182,6 +1172,8 @@ export default function Fiddle() {
                       : state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
+                        state.outputTab === 'preact' ||
+                        state.outputTab === 'lit' ||
                         state.outputTab === 'reactNative' ||
                         state.outputTab === 'mitosis' ||
                         state.outputTab === 'template' ||

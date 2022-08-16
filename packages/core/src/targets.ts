@@ -18,6 +18,7 @@ import { componentToVue2, componentToVue3 } from './generators/vue';
 import { componentToStencil as stencil } from './generators/stencil';
 import { componentToQwik as qwik } from './generators/qwik';
 import { componentToMarko as marko } from './generators/marko';
+import { componentToLit as lit } from './generators/lit';
 
 export const targets = {
   angular,
@@ -40,4 +41,5 @@ export const targets = {
   qwik,
   marko,
   preact,
+  lit,
 };
