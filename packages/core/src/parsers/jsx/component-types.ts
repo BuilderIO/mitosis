@@ -25,8 +25,8 @@ export const getPropsTypeRef = (
     if (generatedTypes.startsWith('{')) {
       const propsTypeRef = `${node.id?.name}Props`;
 
-      context.builder.component.interfaces = [
-        ...(context.builder.component.interfaces || []),
+      context.builder.component.types = [
+        ...(context.builder.component.types || []),
         `export interface ${propsTypeRef} ${generatedTypes}`,
       ];
 
@@ -55,11 +55,4 @@ export const collectTypes = (node: babel.Node, context: Context) => {
   const { types = [] } = context.builder.component;
   types.push(typeStr);
   context.builder.component.types = types.filter(Boolean);
-};
-
-export const collectInterfaces = (node: babel.Node, context: Context) => {
-  const interfaceStr = generate(node).code;
-  const { interfaces = [] } = context.builder.component;
-  interfaces.push(interfaceStr);
-  context.builder.component.interfaces = interfaces.filter(Boolean);
 };

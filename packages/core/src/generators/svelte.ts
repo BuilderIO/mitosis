@@ -393,7 +393,6 @@ export const componentToSvelte =
       str += dedent`
       <script context='module' lang='ts'>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
-        ${json.interfaces ? json.interfaces.join('\n\n') + '\n' : ''}
       </script>
       \n
       \n
