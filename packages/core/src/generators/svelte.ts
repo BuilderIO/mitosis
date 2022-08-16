@@ -435,11 +435,12 @@ export const componentToSvelte =
       `
           : ''
       }
+      ${getContextCode(json)}
+      ${setContextCode(json)}
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
-      ${getContextCode(json)}
-      ${setContextCode(json)}
       ${
         options.stateType === 'proxies'
           ? dataString.length < 4
