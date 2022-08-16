@@ -66,8 +66,8 @@ const mappers: {
     }
 
     return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}, ${
-      json.scope.For[1]
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}${
+      json.scope.For[1] ? `, ${json.scope.For[1]}` : ''
     } ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
