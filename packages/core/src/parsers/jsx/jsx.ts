@@ -17,13 +17,7 @@ import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
 import { parseCodeJson } from './helpers';
-import {
-  collectInterfaces,
-  collectTypes,
-  getPropsTypeRef,
-  isTypeImport,
-  isTypeOrInterface,
-} from './component-types';
+import { collectTypes, getPropsTypeRef, isTypeImport, isTypeOrInterface } from './component-types';
 import { undoPropsDestructure } from './props';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
@@ -668,11 +662,10 @@ export function parseJsx(
           },
           ExportNamedDeclaration(path, context) {
             const { node } = path;
-            const newTypeStr = generate(node).code;
-            if (babel.types.isTSInterfaceDeclaration(node.declaration)) {
-              collectInterfaces(path.node, context);
-            }
-            if (babel.types.isTSTypeAliasDeclaration(node.declaration)) {
+            if (
+              babel.types.isTSInterfaceDeclaration(node.declaration) ||
+              babel.types.isTSTypeAliasDeclaration(node.declaration)
+            ) {
               collectTypes(path.node, context);
             }
           },
@@ -680,7 +673,7 @@ export function parseJsx(
             collectTypes(path.node, context);
           },
           TSInterfaceDeclaration(path, context) {
-            collectInterfaces(path.node, context);
+            collectTypes(path.node, context);
           },
         },
       }),

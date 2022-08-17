@@ -66,8 +66,8 @@ const mappers: {
     }
 
     return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}, ${
-      json.scope.For[1]
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}${
+      json.scope.For[1] ? `, ${json.scope.For[1]}` : ''
     } ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
@@ -389,11 +389,10 @@ export const componentToSvelte =
 
     let str = '';
 
-    if (json.propsTypeRef) {
+    if (json.types?.length) {
       str += dedent`
       <script context='module' lang='ts'>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
-        ${json.interfaces ? json.interfaces.join('\n\n') + '\n' : ''}
       </script>
       \n
       \n

@@ -942,7 +942,6 @@ export const componentToCustomElement =
 
     let str = `
       ${json.types ? json.types.join('\n') : ''}
-      ${json.interfaces ? json.interfaces?.join('\n') : ''}
       ${renderPreComponent({ component: json, target: 'customElement' })}
       /**
        * Usage:
