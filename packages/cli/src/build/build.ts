@@ -349,12 +349,16 @@ async function buildNonComponentFiles({ target, options }: TargetContextWithConf
         // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }
-      output = await transpile({
-        path,
-        target,
-        content: output,
-        options,
-      });
+      if (!shouldOutputOriginalGeneratedFile({ target, options })) {
+        output = await transpile({
+          path,
+          target,
+          content: output,
+          options,
+        });
+      } else {
+        output = await readFile(path, 'utf8');
+      }
 
       return {
         path,
