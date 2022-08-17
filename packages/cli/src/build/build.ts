@@ -339,7 +339,9 @@ async function outputNonComponentFiles({
  * Transpiles all non-component files, including Context files.
  */
 async function buildNonComponentFiles({ target, options }: TargetContextWithConfig) {
-  const tsFiles = await glob(`src/**/*.ts`, { cwd });
+  const tsFiles = (await glob(options.files, { cwd })).filter(
+    (file) => file.endsWith('.ts') || file.endsWith('.js'),
+  );
 
   return await Promise.all(
     tsFiles.map(async (path) => {
