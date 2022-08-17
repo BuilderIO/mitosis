@@ -1,5 +1,7 @@
 # Generators
 
+Want to contribute a new generator? Take a look at this Loom where we add the Stencil generator in about 40mins! https://www.loom.com/share/3e8bf7e667314a829a0b5d4b61c58cc0
+
 Generators are made up of 2 main functions: `componentTo<framework>` and `blockTo<framework>`, where `<framework>` is the target framework.
 
 ## `componentTo<framework>`
@@ -22,7 +24,7 @@ General structure of a generator:
 
 Visually, it looks exactly like a component of the target framework. Each part (imports, name, styles, render body, lifecycle methods) is injected using the Mitosis JSON data, such that it is valid code for that framework.
 
-## blockTo<framework>
+## `blockTo<framework>`
 
 This is code that handles each individual DOM node within the overall component.
 

@@ -8,6 +8,7 @@ import {
 import { componentToMitosis as mitosis } from './generators/mitosis';
 import { componentToLiquid as liquid } from './generators/liquid';
 import { componentToReact as react } from './generators/react';
+import { componentToPreact as preact } from './generators/react';
 import { componentToReactNative as reactNative } from './generators/react-native';
 import { componentToSolid as solid } from './generators/solid';
 import { componentToSvelte as svelte } from './generators/svelte';
@@ -17,6 +18,7 @@ import { componentToVue2, componentToVue3 } from './generators/vue';
 import { componentToStencil as stencil } from './generators/stencil';
 import { componentToQwik as qwik } from './generators/qwik';
 import { componentToMarko as marko } from './generators/marko';
+import { componentToLit as lit } from './generators/lit';
 
 export const targets = {
   angular,
@@ -38,4 +40,6 @@ export const targets = {
   stencil,
   qwik,
   marko,
+  preact,
+  lit,
 };

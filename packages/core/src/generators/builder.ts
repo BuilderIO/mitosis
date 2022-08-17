@@ -10,7 +10,7 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { attempt, omit, omitBy, set } from 'lodash';
+import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
@@ -202,7 +202,7 @@ export const blockToBuilder = (
     }
   }
 
-  const builderBindings: Record<string, any> = {};
+  const builderBindings: Record<string, string> = {};
   const componentOptions: Record<string, any> = omitMetaProperties(json.properties);
 
   if (thisIsComponent) {
@@ -216,7 +216,7 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key];
+        builderBindings[`component.options.${key}`] = bindings[key]!.code;
       }
     }
   }
@@ -257,7 +257,7 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      bindings[`component.options.${key}`] = json.bindings[key];
+      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
     }
   }
 
@@ -279,7 +279,12 @@ export const blockToBuilder = (
         actions,
       },
       properties: thisIsComponent ? undefined : omitMetaProperties(json.properties),
-      bindings: thisIsComponent ? builderBindings : omit(bindings, 'css'),
+      bindings: thisIsComponent
+        ? builderBindings
+        : omit(
+            mapValues(bindings, (value) => value?.code!),
+            'css',
+          ),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)

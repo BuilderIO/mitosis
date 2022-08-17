@@ -492,6 +492,28 @@ exports[`Liquid nestedShow 1`] = `
 "
 `;
 
+exports[`Liquid nestedStyles 1`] = `
+"<div class=\\"div\\">Hello world</div>
+<style>
+  .div {
+    display: flex;
+    foo: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div {
+      display: block;
+    }
+  }
+  .div:hover {
+    display: flex;
+  }
+  .div .nested-selector {
+    display: grid;
+  }
+</style>
+"
+`;
+
 exports[`Liquid onInit & onMount 1`] = `
 "<div></div>
 "
@@ -560,5 +582,15 @@ exports[`Liquid showWithFor 1`] = `
 "{% if conditionA %} {% for item in items %}
 <div key=\\"{{idx}}\\">{{item}}</div>
 {% endfor %} {% endif %}
+"
+`;
+
+exports[`Liquid subComponent 1`] = `
+"<Foo></Foo>
+"
+`;
+
+exports[`Liquid typeDependency 1`] = `
+"<div>{{foo}}</div>
 "
 `;

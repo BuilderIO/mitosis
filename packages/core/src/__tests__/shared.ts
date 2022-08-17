@@ -7,6 +7,7 @@ const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
 const basicContext = require('./data/basic-context.raw');
 const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
 const basicOutputs = require('./data/basic-outputs.raw');
+const subComponent = require('./data/sub-component.lite.jsx');
 
 const basic = require('./data/basic.raw');
 const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
@@ -18,11 +19,13 @@ const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
 const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = require('./data/basic-ref-assignment.raw');
 const propsDestructure = require('./data/basic-props-destructure.raw');
+const nestedStyles = require('./data/nested-styles.lite');
 const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
 
 const propsType = require('./data/types/component-props-type.raw');
 const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
+const typeDependency = require('./data/types/type-dependency.raw');
 
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
@@ -94,6 +97,9 @@ const BASIC_TESTS = {
   propsType: propsType,
   propsInterface: propsInterface,
   preserveTyping: preserveTyping,
+  typeDependency,
+  subComponent,
+  nestedStyles,
   propsDestructure: propsDestructure,
   'onInit & onMount': onInitonMount,
   'Basic Context': basicContext,
@@ -164,6 +170,17 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS,
   ],
   angular: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+  ],
+  lit: [
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,

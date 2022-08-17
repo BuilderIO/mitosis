@@ -1849,6 +1849,35 @@ export default {
 "
 `;
 
+exports[`Vue nestedStyles 1`] = `
+"<template>
+  <div class=\\"div\\">Hello world</div>
+</template>
+<script>
+export default {
+  name: \\"nested-styles\\",
+};
+</script>
+<style scoped>
+.div {
+  display: flex;
+  foo: var(--bar);
+}
+@media (max-width: env(--mobile)) {
+  .div {
+    display: block;
+  }
+}
+.div:hover {
+  display: flex;
+}
+.div .nested-selector {
+  display: grid;
+}
+</style>
+"
+`;
+
 exports[`Vue onInit & onMount 1`] = `
 "<template>
   <div></div>
@@ -2095,6 +2124,35 @@ export default {
   name: \\"nested-show\\",
 
   props: [\\"conditionA\\", \\"items\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue subComponent 1`] = `
+"<template>
+  <foo></foo>
+</template>
+<script>
+import Foo from \\"./foo-sub-component.vue\\";
+
+export default {
+  name: \\"sub-component\\",
+  components: { foo: Foo },
+};
+</script>
+"
+`;
+
+exports[`Vue typeDependency 1`] = `
+"<template>
+  <div>{{ foo }}</div>
+</template>
+<script>
+export default {
+  name: \\"type-dependency\\",
+
+  props: [\\"foo\\"],
 };
 </script>
 "

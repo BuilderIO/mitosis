@@ -1,5 +1,2327 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Preact AdvancedRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Basic 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        <input
+          value={DEFAULT_VALUES.name || name}
+          onChange={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Basic Context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext, useEffect } from \\"preact/hooks\\";
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  useEffect(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  });
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <div>
+      {myService.method(\\"hello\\") + name}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      <input onChange={(event) => onChange} />
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Basic OnMount Update 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export interface Props {
+  hi: string;
+  bye: string;
+}
+
+export default function MyBasicOnMountUpdateComponent(props: Props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    setName(\\"PatrickJS onInit\\" + props.hi);
+  });
+
+  useEffect(() => {
+    setName(\\"PatrickJS onMount\\" + props.bye);
+  }, []);
+
+  return (
+    <div>
+      Hello
+      {name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Basic Outputs 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyBasicOutputsComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact Basic Outputs Meta 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyBasicOutputsComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact BasicChildComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+export default function MyBasicChildComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      <MyBasicComponent id={dev} />
+
+      <div>
+        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+      </div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact BasicFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyBasicForComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
+
+  return (
+    <div>
+      {names?.map((person) => (
+        <Fragment>
+          <input
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value + \\" and \\" + person);
+            }}
+          />
+          Hello
+          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+          Liquid!
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact BasicRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact BasicRefAssignment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export default function MyBasicRefAssignmentComponent(props: Props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  }
+
+  return (
+    <div>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact BasicRefPrevious 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+}
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props: Props) {
+  const [count, setCount] = useState(() => 0);
+
+  const prevCount = useRef(count);
+
+  useEffect(() => {
+    prevCount.current = count;
+  }, [count]);
+
+  return (
+    <div>
+      <h1>
+        Now:
+        {count}, before:
+        {prevCount.current}
+      </h1>
+
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Button 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Columns 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
+
+  width?: number;
+};
+export interface ColumnProps {
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
+
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
+
+  reverseColumnsWhenStacked?: boolean;
+}
+
+export default function Column(props: ColumnProps) {
+  function getColumns() {
+    return props.columns || [];
+  }
+
+  function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  }
+
+  function getWidth(index) {
+    const columns = getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+
+  function getColumnCssWidth(index) {
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+
+  return (
+    <Fragment>
+      <div className=\\"builder-columns div\\">
+        {props.columns?.map((column, index) => (
+          <div className=\\"builder-column div-2\\">
+            {column.content}
+
+            {index}
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        @media (max-width: 999px) {
+          .div {
+            flex-direction: row;
+          }
+        }
+        @media (max-width: 639px) {
+          .div {
+            flex-direction: row-reverse;
+          }
+        }
+        .div-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact ContentSlotHtml 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+export default function ContentSlotCode(props: Props) {
+  return (
+    <div>
+      {props.slotTesting}
+
+      <div>
+        <hr />
+      </div>
+
+      <div>{props.children}</div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact ContentSlotJSX 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+};
+
+export default function ContentSlotJsxCode(props: Props) {
+  return (
+    <div>
+      {props.slotTesting}
+
+      <div>
+        <hr />
+      </div>
+
+      <div>{props.children}</div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact CustomCode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
+  const elem = useRef<HTMLDivElement>(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Embed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
+}
+
+export default function CustomCode(props: CustomCodeProps) {
+  const elem = useRef<HTMLDivElement>(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Form 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
+
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
+}
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+export default function FormComponent(props: FormProps) {
+  const formRef = useRef<HTMLFormElement>(null);
+  const [state, setState] = useState(() => \\"unsubmitted\\");
+
+  const [responseData, setResponseData] = useState(() => null);
+
+  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || state;
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+      setState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                  JSON.stringify(message);
+              }
+              setFormErrorMessage(message);
+            }
+          }
+          setResponseData(body);
+          setState(res.ok ? \\"success\\" : \\"error\\");
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: { res, body },
+            });
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
+                formRef.current.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
+              if (formRef.current) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: { url: props.successUrl },
+                });
+                formRef.current.dispatchEvent(event);
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: { error: err },
+          });
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+          setResponseData(err);
+          setState(\\"error\\");
+        }
+      );
+    }
+  }
+  return (
+    <Fragment>
+      {\\" \\"}
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+      >
+        {\\" \\"}
+        {props.builderBlock && props.builderBlock.children ? (
+          <Fragment>
+            {props.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              />
+            ))}
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={props.errorMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"sending\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={props.sendingMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" && responseData ? (
+          <Fragment>
+            <pre className=\\"builder-form-error-text pre\\">
+              {\\" \\"}
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
+            </pre>
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"success\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={props.successMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+      </form>{\\" \\"}
+      <style jsx>{\`
+        .pre {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>{\\" \\"}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Image 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
+
+// TODO: AMP Support?
+export interface ImageProps {
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+
+  srcset?: string; // TODO: Implement support for custom aspect ratios
+
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+
+  children?: any;
+}
+
+export default function Image(props: ImageProps) {
+  const pictureRef = useRef<HTMLElement>(null);
+  const [scrollListener, setScrollListener] = useState(() => null);
+
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+
+  function setLoaded() {
+    setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+
+  const [load, setLoad] = useState(() => false);
+
+  useEffect(() => {
+    if (useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            setScrollListener(null);
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      setScrollListener(listener);
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
+  }, []);
+
+  return (
+    <Fragment>
+      <Fragment>
+        <picture ref={pictureRef}>
+          {!useLazyLoading() || load ? (
+            <Fragment>
+              <img
+                alt={props.altText}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
+                className={
+                  \\"builder-image\\" +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
+                  \\" img\\"
+                }
+                src={props.image}
+                onLoad={(event) => setLoaded()}
+                srcset={props.srcset}
+                sizes={props.sizes}
+              />
+            </Fragment>
+          ) : null}
+
+          <source srcset={props.srcset} />
+        </picture>
+
+        {props.children}
+      </Fragment>
+      <style jsx>{\`
+        .img {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Image State 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function ImgStateComponent(props) {
+  const [canShow, setCanShow] = useState(() => true);
+
+  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+
+  return (
+    <div>
+      {images?.map((item, itemIndex) => (
+        <Fragment>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </Fragment>
+      ))}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Img 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function ImgComponent(props: ImgProps) {
+  return (
+    <img
+      {...props.attributes}
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Input 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function FormInputComponent(props: FormInputProps) {
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact RawText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
+}
+
+export default function RawText(props: RawTextProps) {
+  return (
+    <span
+      className={props.attributes?.class || props.attributes?.className}
+      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Remove Internal mitosis package 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      Hello
+      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Section 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
+}
+
+export default function SectionComponent(props: SectionProps) {
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+"
+`;
+
+exports[`Preact Select 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function SelectComponent(props: FormSelectProps) {
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      {props.options?.map((option, index) => (
+        <option value={option.value} data-index={index}>
+          {option.name || option.value}
+        </option>
+      ))}
+    </select>
+  );
+}
+"
+`;
+
+exports[`Preact SlotHtml 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default function SlotCode(props: Props) {
+  return (
+    <div>
+      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact SlotJsx 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  [key: string]: string;
+};
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default function SlotCode(props: Props) {
+  return (
+    <div>
+      <ContentSlotCode slotTesting={<div>Hello</div>} />
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Stamped.io 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
+};
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+export default function SmileReviews(props: SmileReviewsProps) {
+  const [reviews, setReviews] = useState(() => []);
+
+  const [name, setName] = useState(() => \\"test\\");
+
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.data);
+      });
+  }, []);
+
+  return (
+    <Fragment>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
+
+        {showReviewPrompt ? (
+          <Fragment>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea\\"
+            />
+            <button
+              className=\\"button\\"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </Fragment>
+        ) : null}
+
+        {reviews?.map((review, index) => (
+          <div className=\\"review\\" key={review.id}>
+            <img className=\\"img\\" src={review.avatar} />
+
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Submit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+}
+
+export default function SubmitButton(props: ButtonProps) {
+  return (
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
+  );
+}
+"
+`;
+
+exports[`Preact Text 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
+}
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function Text(props: TextProps) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <div
+      contentEditable={allowEditingText || undefined}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Textarea 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
+}
+
+export default function Textarea(props: TextareaProps) {
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact Video 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
+}
+
+export default function Video(props: VideoProps) {
+  return (
+    <video
+      {...props.attributes}
+      preload=\\"none\\"
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    />
+  );
+}
+"
+`;
+
+exports[`Preact basicForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, forwardRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+export default forwardRef<Props[\\"inputRef\\"]>(
+  function MyBasicForwardRefComponent(props: Props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
+
+    return (
+      <Fragment>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </Fragment>
+    );
+  }
+);
+"
+`;
+
+exports[`Preact basicForwardRefMetadata 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, forwardRef } from \\"preact/hooks\\";
+
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
+}
+
+export default forwardRef<Props[\\"inputRef\\"]>(
+  function MyBasicForwardRefComponent(props: Props, inputRef) {
+    const [name, setName] = useState(() => \\"PatrickJS\\");
+
+    return (
+      <Fragment>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </Fragment>
+    );
+  }
+);
+"
+`;
+
+exports[`Preact basicOnUpdateReturn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyBasicOnUpdateReturnComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setName(data.name);
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }, [name]);
+
+  return (
+    <div>
+      Hello!
+      {name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact class + ClassName + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <Fragment>
+      <div className=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact class + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact className + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <Fragment>
+      <div className=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact className 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
+};
+
+export default function ClassNameCode(props: Props) {
+  const [bindings, setBindings] = useState(() => \\"a binding\\");
+
+  return (
+    <div>
+      <div className=\\"no binding\\">Without Binding</div>
+
+      <div className={bindings}>With binding</div>
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact classState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  const [styleState, setStyleState] = useState(() => ({
+    color: \\"red\\",
+  }));
+
+  return (
+    <Fragment>
+      <div className={classState + \\" div\\"} style={styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact multipleOnUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function MultipleOnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender as well\\");
+  });
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact multipleOnUpdateWithDeps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MultipleOnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  const [c, setC] = useState(() => \\"c\\");
+
+  const [d, setD] = useState(() => \\"d\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\", a, b);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
+  }, [a, b]);
+  useEffect(() => {
+    console.log(\\"Runs when c or d changes\\", c, d);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
+  }, [c, d]);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact nestedShow 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
+}
+
+export default function NestedShow(props: Props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>
+          {!props.conditionB ? (
+            <Fragment>
+              <div>if condition A and condition B</div>
+            </Fragment>
+          ) : (
+            <div>else-condition-B</div>
+          )}
+        </Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact nestedStyles 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function NestedStyles(props) {
+  return (
+    <Fragment>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact onInit & onMount 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnInit(props) {
+  useEffect(() => {
+    console.log(\\"onInit\\");
+  });
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact onInit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+type Props = {
+  name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+export default function OnInit(props: Props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  });
+
+  return (
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact onMount 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function Comp(props) {
+  useEffect(() => {
+    console.log(\\"Runs on mount\\");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"Runs on unMount\\");
+    };
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact onUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact onUpdateWithDeps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\", a, b);
+  }, [a, b]);
+
+  return <div />;
+}
+"
+`;
+
+exports[`Preact preserveExportOrLocalStatement 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Types = {
+  s: any[];
+};
+interface IPost {
+  len: number;
+}
+export interface MyBasicComponentProps {
+  id: string;
+}
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
+  return <div />;
+}
+"
+`;
+
+exports[`Preact preserveTyping 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export type A = \\"test\\";
+type B = \\"test2\\";
+export interface C {
+  n: \\"test\\";
+}
+interface D {
+  n: \\"test\\";
+}
+export interface MyBasicComponentProps {
+  name: string;
+  age?: number;
+}
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact propsDestructure 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+type Props = {
+  children: any;
+  type: string;
+};
+
+export default function MyBasicComponent(props: Props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <div>
+      {props.children}
+      {props.type}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact propsInterface 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Person {
+  name: string;
+  age?: number;
+}
+
+export default function MyBasicComponent(props: Person | never) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact propsType 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Person = {
+  name: string;
+  age?: number;
+};
+
+export default function MyBasicComponent(props: Person) {
+  return (
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact rootShow 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface RenderStylesProps {
+  foo: string;
+}
+
+export default function RenderStyles(props: RenderStylesProps) {
+  return (
+    <Fragment>
+      {props.foo === \\"bar\\" ? (
+        <Fragment>
+          <div>Bar</div>
+        </Fragment>
+      ) : (
+        <div>Foo</div>
+      )}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact self-referencing component 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.name}
+
+      {props.name === \\"Batman\\" ? (
+        <Fragment>
+          <MyComponent name=\\"Bruce Wayne\\" />
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact self-referencing component with children 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <div>
+      {props.name}
+
+      {props.children}
+
+      {props.name === \\"Batman\\" ? (
+        <Fragment>
+          <MyComponent name=\\"Bruce\\">
+            <div>Wayne</div>
+          </MyComponent>
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact showWithFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+interface Props {
+  conditionA: boolean;
+  items: string[];
+}
+
+export default function NestedShow(props: Props) {
+  return (
+    <Fragment>
+      {props.conditionA ? (
+        <Fragment>
+          {props.items?.map((item, idx) => (
+            <div key={idx}>{item}</div>
+          ))}
+        </Fragment>
+      ) : (
+        <div>else-condition-A</div>
+      )}
+    </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact subComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
+exports[`Preact typeDependency 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+export default function TypeDependency(props: TypeDependencyProps) {
+  return <div>{props.foo}</div>;
+}
+"
+`;
+
 exports[`React AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -1902,6 +4224,36 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`React nestedStyles 1`] = `
+"import * as React from \\"react\\";
+
+export default function NestedStyles(props) {
+  return (
+    <>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
@@ -2313,5 +4665,30 @@ const Img = styled.img\`
   width: 30px;
   margin-right: 10px;
 \`;
+"
+`;
+
+exports[`React subComponent 1`] = `
+"import * as React from \\"react\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
+exports[`React typeDependency 1`] = `
+"import * as React from \\"react\\";
+import type { Foo } from \\"./foo-type\\";
+import type { Foo as Foo2 } from \\"./type-export\\";
+export type TypeDependencyProps = {
+  foo: Foo;
+  foo2: Foo2;
+};
+
+export default function TypeDependency(props: TypeDependencyProps) {
+  return <div>{props.foo}</div>;
+}
 "
 `;

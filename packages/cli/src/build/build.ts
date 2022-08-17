@@ -3,6 +3,8 @@ import {
   componentToCustomElement,
   componentToHtml,
   componentToMarko,
+  componentToPreact,
+  componentToLit,
   componentToQwik,
   componentToReact,
   componentToReactNative,
@@ -194,6 +196,10 @@ const getGeneratorForTarget = ({
       return componentToQwik(options.options.qwik);
     case 'marko':
       return componentToMarko(options.options.marko);
+    case 'preact':
+      return componentToPreact(options.options.preact);
+    case 'lit':
+      return componentToLit(options.options.lit);
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
@@ -270,6 +276,7 @@ async function buildAndOutputComponentFiles({
         });
         break;
       case 'reactNative':
+      case 'preact':
       case 'react':
         transpiled = await transpile({
           path,

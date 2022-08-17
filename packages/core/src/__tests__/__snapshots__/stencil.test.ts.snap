@@ -1836,6 +1836,37 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil nestedStyles 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-styles\\",
+  styles: \`
+    .div {
+      display: flex;
+      foo: var(--bar);
+    }
+    @media (max-width: env(--mobile)) {
+      .div {
+        display: block;
+      }
+    }
+    .div:hover {
+      display: flex;
+    }
+    .div .nested-selector {
+      display: grid;
+    }
+\`,
+})
+export default class NestedStyles {
+  render() {
+    return <div>Hello world</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil onInit & onMount 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -2101,6 +2132,38 @@ export default class MyComponent {
         ) : null}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"sub-component\\",
+})
+export default class SubComponent {
+  render() {
+    return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil typeDependency 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"type-dependency\\",
+})
+export default class TypeDependency {
+  @Prop() foo: any;
+
+  render() {
+    return <div>{this.foo}</div>;
   }
 }
 "
