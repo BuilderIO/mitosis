@@ -36,6 +36,7 @@ import { uniq } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
+import { isUpperCase } from '../helpers/is-upper-case';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -191,7 +192,8 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
   }
 
-  if (json.bindings.style?.code || json.properties.style) {
+  const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
+  if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = stripStateAndProps(
       json.bindings.style?.code || json.properties.style,
       options,
