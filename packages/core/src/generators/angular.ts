@@ -192,6 +192,8 @@ export const blockToAngular = (
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
         str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
+      } else if (key.includes('-')) {
+        str += ` [attr.${key}]="${useValue}" `;
       } else {
         str += ` [${key}]="${useValue}" `;
       }
