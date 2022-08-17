@@ -2200,6 +2200,66 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
+exports[`Lit defaultProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"button\\")
+export default class Button extends LitElement {
+  @property() link: any;
+  @property() attributes: any;
+  @property() openLinkInNewTab: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+        <fragment >
+            
+      \${
+        this.link
+          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
+              this.openLinkInNewTab ? \\"_blank\\" : undefined
+            } >
+                
+      \${this.text}
+
+              </a>\`
+          : null
+      }
+
+            
+      \${
+        !this.link
+          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+                
+      \${this.text}
+
+              </button>\`
+          : null
+      }
+
+          </fragment>
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit multipleOnUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state } from \\"lit/decorators.js\\";

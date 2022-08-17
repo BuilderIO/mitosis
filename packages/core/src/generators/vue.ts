@@ -37,6 +37,7 @@ import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { PropsDefinition, DefaultProps } from 'vue/types/options';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -620,6 +621,23 @@ const componentToVue =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
+    let propsDefinition: PropsDefinition<DefaultProps> = Array.from(elementProps).filter(
+      (prop) => prop !== 'children' && prop !== 'class',
+    );
+
+    if (component.defaultProps) {
+      propsDefinition = propsDefinition.reduce(
+        (propsDefinition: DefaultProps, curr: string) => (
+          (propsDefinition[curr] =
+            component.defaultProps && component.defaultProps.hasOwnProperty(curr)
+              ? { default: component.defaultProps[curr] }
+              : {}),
+          propsDefinition
+        ),
+        {},
+      );
+    }
+
     let str = dedent`
     <template>
       ${template}
@@ -641,13 +659,7 @@ const componentToVue =
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${
-          elementProps.size
-            ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter((prop) => prop !== 'children' && prop !== 'class'),
-              )},`
-            : ''
-        }
+        ${elementProps.size ? `props: ${JSON.stringify(propsDefinition)},` : ''}
         ${
           dataString.length < 4
             ? ''

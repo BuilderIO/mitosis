@@ -712,6 +712,12 @@ const _componentToReact = (
     }${isForwardRef ? ')' : ''}
 
     ${
+      !json.defaultProps
+        ? ''
+        : `${json.name || 'MyComponent'}.defaultProps = ${json5.stringify(json.defaultProps)};`
+    }
+
+    ${
       !nativeStyles
         ? ''
         : `
