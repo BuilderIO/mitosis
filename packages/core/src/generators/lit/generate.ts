@@ -51,7 +51,7 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
         .filter(filterEmptyTextNodes)
         .map((item) => blockToLit(item, options))
         .join('\n')}\`
-    : ${!json.meta.else ? 'null' : blockToLit(json.meta.else as any, options)}}`;
+    : ${!json.meta.else ? 'null' : `html\`${blockToLit(json.meta.else as any, options)}\``}}`;
   }
 
   let str = '';

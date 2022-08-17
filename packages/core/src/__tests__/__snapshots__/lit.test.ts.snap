@@ -2274,19 +2274,19 @@ export default class NestedShow extends LitElement {
   render() {
     return html\`
         \${
-          this.conditionA ? (
-            html\`\${
-              !this.conditionB ? (
-                html\`
+          this.conditionA
+            ? html\`\${
+                !this.conditionB
+                  ? html\`
       <div>if condition A and condition B</div>
       \`
-              ) : (
-                <div>else-condition-B</div>
-              )
-            }\`
-          ) : (
-            <div>else-condition-A</div>
-          )
+                  : html\`
+      <div>else-condition-B</div>
+      \`
+              }\`
+            : html\`
+      <div>else-condition-A</div>
+      \`
         }
 
       \`;
@@ -2596,13 +2596,13 @@ export default class RenderStyles extends LitElement {
   render() {
     return html\`
         \${
-          this.foo === \\"bar\\" ? (
-            html\`
+          this.foo === \\"bar\\"
+            ? html\`
       <div>Bar</div>
       \`
-          ) : (
-            <div>Foo</div>
-          )
+            : html\`
+      <div>Foo</div>
+      \`
         }
 
       \`;
@@ -2684,15 +2684,15 @@ export default class NestedShow extends LitElement {
   render() {
     return html\`
         \${
-          this.conditionA ? (
-            html\`\${this.items?.map(
-              (item, index) => html\`
+          this.conditionA
+            ? html\`\${this.items?.map(
+                (item, index) => html\`
       <div .key=\\"\${idx}\\">\${item}</div>
       \`
-            )}\`
-          ) : (
-            <div>else-condition-A</div>
-          )
+              )}\`
+            : html\`
+      <div>else-condition-A</div>
+      \`
         }
 
       \`;
