@@ -174,7 +174,6 @@ export const componentToLit =
           plugins: [require('prettier/parser-html')],
         });
       } catch (err) {
-        console.warn('Could not format html', err);
         // If can't format HTML (this can happen with lit given it is tagged template strings),
         // at least remove excess space
         html = html.replace(/\n{3,}/g, '\n\n');
@@ -240,7 +239,9 @@ export const componentToLit =
         ${
           !json.hooks.onUpdate?.length
             ? ''
-            : json.hooks.onUpdate.map((hook) => `updated() { ${processBinding(hook.code)} }`)
+            : `updated() { 
+              ${json.hooks.onUpdate.map((hook) => processBinding(hook.code)).join('\n\n')} 
+            }`
         }
     
       render() {

@@ -337,7 +337,6 @@ export const componentToAngular =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent({
       component: json,
       target: 'angular',

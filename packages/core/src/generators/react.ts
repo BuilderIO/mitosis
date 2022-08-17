@@ -45,9 +45,10 @@ import { collectStyledComponents } from '../helpers/styles/collect-styled-compon
 import { hasCss } from '../helpers/styles/helpers';
 import { isSlotProperty } from '../helpers/slots';
 import { checkHasState } from '../helpers/state';
+import hash from 'hash-sum';
 
 export interface ToReactOptions extends BaseTranspilerOptions {
-  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native';
+  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native' | 'style-tag';
   stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
   format?: 'lite' | 'safe';
   type?: 'dom' | 'native';
@@ -539,7 +540,14 @@ const _componentToReact = (
     json = runPostJsonPlugins(json, options.plugins);
   }
 
-  const css = stylesType === 'styled-jsx' && collectCss(json);
+  const css =
+    stylesType === 'styled-jsx'
+      ? collectCss(json)
+      : stylesType === 'style-tag'
+      ? collectCss(json, {
+          prefix: hash(json),
+        })
+      : null;
 
   const styledComponentsCode =
     stylesType === 'styled-components' && componentHasStyles && collectStyledComponents(json);
@@ -572,7 +580,7 @@ const _componentToReact = (
 
   const wrap =
     wrapInFragment(json) ||
-    (componentHasStyles && stylesType === 'styled-jsx') ||
+    (componentHasStyles && (stylesType === 'styled-jsx' || stylesType === 'style-tag')) ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
@@ -620,7 +628,6 @@ const _componentToReact = (
         : ''
     }
     ${json.types ? json.types.join('\n') : ''}
-    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'react' })}
     ${isSubComponent ? '' : 'export default '}${
     isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''
@@ -694,7 +701,11 @@ const _componentToReact = (
         ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
-          componentHasStyles && stylesType === 'styled-jsx' ? `<style jsx>{\`${css}\`}</style>` : ''
+          componentHasStyles && stylesType === 'styled-jsx'
+            ? `<style jsx>{\`${css}\`}</style>`
+            : componentHasStyles && stylesType === 'style-tag'
+            ? `<style>{\`${css}\`}</style>`
+            : ''
         }
         ${wrap ? closeFrag(options) : ''}
       );

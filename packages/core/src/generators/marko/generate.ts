@@ -23,6 +23,7 @@ import { hasProps } from '../../helpers/has-props';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { getRefs } from '../../helpers/get-refs';
 import { camelCase } from 'lodash';
+import hash from 'hash-sum';
 
 export interface ToMarkoOptions extends BaseTranspilerOptions {}
 
@@ -166,7 +167,9 @@ export const componentToMarko =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
-    let css = collectCss(json);
+    let css = collectCss(json, {
+      prefix: hash(json),
+    });
 
     const domRefs = getRefs(json);
     mapRefs(json, (refName) => `this.${camelCase(refName)}`);
@@ -276,7 +279,7 @@ export const componentToMarko =
       // Convert on-click=(...) -> on-click(...)
       .replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(')
       // Fix a weird edge case where </if> becomes </if \n > which is invalid in marko
-      .replace(/<\/([a-z]+)\s+>/g, '</$1>');
+      .replace(/<\/([a-z]+)\s+>/gi, '</$1>');
 
     let finalStr = `
 ${jsString}
