@@ -2,7 +2,7 @@
 
 exports[`Lit AdvancedRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -43,7 +43,7 @@ export default class MyBasicRefComponent extends LitElement {
          <div>
          \${
            this.showInput
-             ? html\`<fragment>
+             ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
@@ -54,7 +54,7 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"supra\\">GR Supra</option>
 
              <option value=\\"86\\">GR 86</option>
-           </select> </fragment
+           </select> </my-fragment
          >\`
              : null
          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
@@ -73,7 +73,7 @@ exports[`Lit Basic 1`] = `
 };
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface MyBasicComponentProps {
   id: string;
@@ -110,7 +110,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit Basic 2`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-for-show-component\\")
 export default class MyBasicForShowComponent extends LitElement {
@@ -143,7 +143,7 @@ exports[`Lit Basic Context 1`] = `
 "import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -176,7 +176,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit Basic OnMount Update 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   hi: string;
@@ -207,7 +207,7 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
 exports[`Lit Basic Outputs 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
 export default class MyBasicOutputsComponent extends LitElement {
@@ -234,7 +234,7 @@ export default class MyBasicOutputsComponent extends LitElement {
 
 exports[`Lit Basic Outputs Meta 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
 export default class MyBasicOutputsComponent extends LitElement {
@@ -264,7 +264,7 @@ exports[`Lit BasicChildComponent 1`] = `
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-child-component\\")
 export default class MyBasicChildComponent extends LitElement {
@@ -292,7 +292,7 @@ export default class MyBasicChildComponent extends LitElement {
 
 exports[`Lit BasicFor 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-for-component\\")
 export default class MyBasicForComponent extends LitElement {
@@ -307,11 +307,11 @@ export default class MyBasicForComponent extends LitElement {
     return html\`
          <div>
          \${this.names?.map(
-           (person, index) => html\`<fragment>
+           (person, index) => html\`<my-fragment>
            <input .value=\${this.name} @input=\${(event) => {
              this.name = event.target.value + \\" and \\" + person;
            }} /> Hello \${person} ! I can run in
-           Qwik, Web Component, React, Vue, Solid, or Liquid! </fragment
+           Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
          >\`
          )}
        </div>
@@ -324,7 +324,7 @@ export default class MyBasicForComponent extends LitElement {
 
 exports[`Lit BasicRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -361,7 +361,7 @@ export default class MyBasicRefComponent extends LitElement {
          <div>
          \${
            this.showInput
-             ? html\`<fragment>
+             ? html\`<my-fragment>
            <input ref=\\"inputRef\\" .value=\${this.name} @blur=\${(event) =>
                  this.onBlur()}
            @input=\${(event) => (this.name = event.target.value)} />
@@ -372,7 +372,7 @@ export default class MyBasicRefComponent extends LitElement {
              <option value=\\"supra\\">GR Supra</option>
 
              <option value=\\"86\\">GR 86</option>
-           </select> </fragment
+           </select> </my-fragment
          >\`
              : null
          } Hello \${this.lowerCaseName()} ! I can run in React, Qwik, Vue,
@@ -387,7 +387,7 @@ export default class MyBasicRefComponent extends LitElement {
 
 exports[`Lit BasicRefAssignment 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -429,7 +429,7 @@ exports[`Lit BasicRefPrevious 1`] = `
 }
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -467,7 +467,7 @@ export default class MyPreviousComponent extends LitElement {
 
 exports[`Lit Button 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -484,7 +484,7 @@ const spread = (properties) =>
     }
   });
 
-@customElement(\\"button\\")
+@customElement(\\"my-button\\")
 export default class Button extends LitElement {
   @property() link: any;
   @property() attributes: any;
@@ -493,7 +493,7 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
-        <fragment >
+        <my-fragment >
             
       \${
         this.link
@@ -518,7 +518,7 @@ export default class Button extends LitElement {
           : null
       }
 
-          </fragment>
+          </my-fragment>
       \`;
   }
 }
@@ -527,7 +527,7 @@ export default class Button extends LitElement {
 
 exports[`Lit Columns 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -544,7 +544,7 @@ export interface ColumnProps {
   reverseColumnsWhenStacked?: boolean;
 }
 
-@customElement(\\"column\\")
+@customElement(\\"my-column\\")
 export default class Column extends LitElement {
   static styles = css\`
      .div {
@@ -606,7 +606,7 @@ export default class Column extends LitElement {
 
 exports[`Lit ContentSlotHtml 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -620,14 +620,14 @@ export default class ContentSlotCode extends LitElement {
   render() {
     return html\`
         <div>
-        <slot .name=\\"\${this.slotTesting}\\"></slot>
+        <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
 
         <div>
           <hr />
         </div>
 
         <div>
-          <slot></slot>
+          <my-slot></my-slot>
         </div>
       </div>
 
@@ -639,7 +639,7 @@ export default class ContentSlotCode extends LitElement {
 
 exports[`Lit ContentSlotJSX 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -670,7 +670,7 @@ export default class ContentSlotJsxCode extends LitElement {
 
 exports[`Lit CustomCode 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -745,7 +745,7 @@ export default class CustomCode extends LitElement {
 
 exports[`Lit Embed 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -826,7 +826,7 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface FormProps {
   attributes?: any;
@@ -1178,7 +1178,7 @@ export default class FormComponent extends LitElement {
 
 exports[`Lit Image 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 // TODO: AMP Support?
 export interface ImageProps {
@@ -1199,7 +1199,7 @@ export interface ImageProps {
   children?: any;
 }
 
-@customElement(\\"image\\")
+@customElement(\\"my-image\\")
 export default class Image extends LitElement {
   static styles = css\`
      .img {
@@ -1270,7 +1270,7 @@ export default class Image extends LitElement {
 
   render() {
     return html\`
-         <fragment>
+         <my-fragment>
          <picture ref=\\"pictureRef\\">
            \${
              !this.useLazyLoading() || this.load
@@ -1290,7 +1290,7 @@ export default class Image extends LitElement {
          </picture>
 
          \${this.children}
-       </fragment>
+       </my-fragment>
 
        \`;
   }
@@ -1300,7 +1300,7 @@ export default class Image extends LitElement {
 
 exports[`Lit Image State 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"img-state-component\\")
 export default class ImgStateComponent extends LitElement {
@@ -1311,8 +1311,8 @@ export default class ImgStateComponent extends LitElement {
     return html\`
       <div>
       \${this.images?.map(
-        (item, index) => html\`<fragment>
-        <img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /> </fragment
+        (item, index) => html\`<my-fragment>
+        <img .src=\\"\${item}\\" .key=\\"\${itemIndex}\\" /> </my-fragment
       >\`
       )}
     </div>
@@ -1327,7 +1327,7 @@ exports[`Lit Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -1383,7 +1383,7 @@ exports[`Lit Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface FormInputProps {
   type?: string;
@@ -1429,7 +1429,7 @@ export default class FormInputComponent extends LitElement {
 
 exports[`Lit RawText 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -1454,7 +1454,7 @@ export default class RawText extends LitElement {
 
 exports[`Lit Remove Internal mitosis package 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -1472,7 +1472,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit Section 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -1515,7 +1515,7 @@ export default class SectionComponent extends LitElement {
 
 exports[`Lit Section 2`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -1565,7 +1565,7 @@ exports[`Lit Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface FormSelectProps {
   options?: {
@@ -1620,7 +1620,7 @@ exports[`Lit SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string;
@@ -1634,7 +1634,7 @@ export default class SlotCode extends LitElement {
             
       <content-slot-code >
               
-      <slot  .testing=\${(<div>Hello</div>)} ></slot>
+      <my-slot  .testing=\${(<div>Hello</div>)} ></my-slot>
 
             </content-slot-code>
 
@@ -1649,7 +1649,7 @@ exports[`Lit SlotJsx 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string;
@@ -1677,7 +1677,7 @@ exports[`Lit Stamped.io 1`] = `
 import { snakeCase } from \\"lodash\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -1792,7 +1792,7 @@ export default class SmileReviews extends LitElement {
 
 exports[`Lit Submit 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -1826,7 +1826,7 @@ exports[`Lit Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface TextProps {
   attributes?: any;
@@ -1836,7 +1836,7 @@ export interface TextProps {
   builderBlock?: any;
 }
 
-@customElement(\\"text\\")
+@customElement(\\"my-text\\")
 export default class Text extends LitElement {
   @property() text: any;
   @property() content: any;
@@ -1858,7 +1858,7 @@ export default class Text extends LitElement {
 
 exports[`Lit Textarea 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -1876,7 +1876,7 @@ const spread = (properties) =>
     }
   });
 
-@customElement(\\"textarea\\")
+@customElement(\\"my-textarea\\")
 export default class Textarea extends LitElement {
   @property() attributes: any;
   @property() placeholder: any;
@@ -1902,7 +1902,7 @@ export default class Textarea extends LitElement {
 
 exports[`Lit Video 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -1938,7 +1938,7 @@ const spread = (properties) =>
     }
   });
 
-@customElement(\\"video\\")
+@customElement(\\"my-video\\")
 export default class Video extends LitElement {
   @property() attributes: any;
   @property() fit: any;
@@ -1974,7 +1974,7 @@ export default class Video extends LitElement {
 
 exports[`Lit basicForwardRef 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -2011,7 +2011,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
 exports[`Lit basicForwardRefMetadata 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface Props {
   showInput: boolean;
@@ -2048,7 +2048,7 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
 exports[`Lit basicOnUpdateReturn 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-on-update-return-component\\")
 export default class MyBasicOnUpdateReturnComponent extends LitElement {
@@ -2083,7 +2083,7 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 
 exports[`Lit class + ClassName + css 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -2105,7 +2105,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit class + css 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -2127,7 +2127,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit className + css 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -2149,7 +2149,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit className 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -2176,7 +2176,7 @@ export default class ClassNameCode extends LitElement {
 
 exports[`Lit classState 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
@@ -2262,7 +2262,7 @@ export default class Button extends LitElement {
 
 exports[`Lit multipleOnUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"multiple-on-update\\")
 export default class MultipleOnUpdate extends LitElement {
@@ -2284,7 +2284,7 @@ export default class MultipleOnUpdate extends LitElement {
 
 exports[`Lit multipleOnUpdateWithDeps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"multiple-on-update-with-deps\\")
 export default class MultipleOnUpdateWithDeps extends LitElement {
@@ -2319,7 +2319,7 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
 
 exports[`Lit nestedShow 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 interface Props {
   conditionA: boolean;
@@ -2334,19 +2334,19 @@ export default class NestedShow extends LitElement {
   render() {
     return html\`
         \${
-          this.conditionA ? (
-            html\`\${
-              !this.conditionB ? (
-                html\`
+          this.conditionA
+            ? html\`\${
+                !this.conditionB
+                  ? html\`
       <div>if condition A and condition B</div>
       \`
-              ) : (
-                <div>else-condition-B</div>
-              )
-            }\`
-          ) : (
-            <div>else-condition-A</div>
-          )
+                  : html\`
+      <div>else-condition-B</div>
+      \`
+              }\`
+            : html\`
+      <div>else-condition-A</div>
+      \`
         }
 
       \`;
@@ -2357,7 +2357,7 @@ export default class NestedShow extends LitElement {
 
 exports[`Lit nestedStyles 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"nested-styles\\")
 export default class NestedStyles extends LitElement {
@@ -2391,7 +2391,7 @@ export default class NestedStyles extends LitElement {
 
 exports[`Lit onInit & onMount 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-init\\")
 export default class OnInit extends LitElement {
@@ -2415,7 +2415,7 @@ exports[`Lit onInit 1`] = `
 };
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   name: string;
@@ -2439,9 +2439,9 @@ export default class OnInit extends LitElement {
 
 exports[`Lit onMount 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-@customElement(\\"comp\\")
+@customElement(\\"my-comp\\")
 export default class Comp extends LitElement {
   connectedCallback() {
     console.log(\\"Runs on mount\\");
@@ -2462,7 +2462,7 @@ export default class Comp extends LitElement {
 
 exports[`Lit onUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-update\\")
 export default class OnUpdate extends LitElement {
@@ -2482,7 +2482,7 @@ export default class OnUpdate extends LitElement {
 
 exports[`Lit onUpdateWithDeps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-update-with-deps\\")
 export default class OnUpdateWithDeps extends LitElement {
@@ -2511,7 +2511,7 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Types = {
   s: any[];
@@ -2537,7 +2537,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit preserveTyping 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export type A = \\"test\\";
 export interface C {
@@ -2568,7 +2568,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit propsDestructure 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Props = {
   children: any;
@@ -2597,7 +2597,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit propsInterface 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 interface Person {
   name: string;
@@ -2620,7 +2620,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit propsType 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 type Person = {
   name: string;
@@ -2643,7 +2643,7 @@ export default class MyBasicComponent extends LitElement {
 
 exports[`Lit rootShow 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 export interface RenderStylesProps {
   foo: string;
@@ -2656,13 +2656,13 @@ export default class RenderStyles extends LitElement {
   render() {
     return html\`
         \${
-          this.foo === \\"bar\\" ? (
-            html\`
+          this.foo === \\"bar\\"
+            ? html\`
       <div>Bar</div>
       \`
-          ) : (
-            <div>Foo</div>
-          )
+            : html\`
+      <div>Foo</div>
+      \`
         }
 
       \`;
@@ -2673,7 +2673,7 @@ export default class RenderStyles extends LitElement {
 
 exports[`Lit self-referencing component 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-component\\")
 export default class MyComponent extends LitElement {
@@ -2700,7 +2700,7 @@ export default class MyComponent extends LitElement {
 
 exports[`Lit self-referencing component with children 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-component\\")
 export default class MyComponent extends LitElement {
@@ -2729,7 +2729,7 @@ export default class MyComponent extends LitElement {
 
 exports[`Lit showWithFor 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 interface Props {
   conditionA: boolean;
@@ -2744,15 +2744,15 @@ export default class NestedShow extends LitElement {
   render() {
     return html\`
         \${
-          this.conditionA ? (
-            html\`\${this.items?.map(
-              (item, index) => html\`
+          this.conditionA
+            ? html\`\${this.items?.map(
+                (item, index) => html\`
       <div .key=\\"\${idx}\\">\${item}</div>
       \`
-            )}\`
-          ) : (
-            <div>else-condition-A</div>
-          )
+              )}\`
+            : html\`
+      <div>else-condition-A</div>
+      \`
         }
 
       \`;
@@ -2765,13 +2765,13 @@ exports[`Lit subComponent 1`] = `
 "import \\"./foo-sub-component.js\\";
 
 import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"sub-component\\")
 export default class SubComponent extends LitElement {
   render() {
     return html\`
-      <foo></foo>
+      <my-foo></my-foo>
 
     \`;
   }
@@ -2781,7 +2781,7 @@ export default class SubComponent extends LitElement {
 
 exports[`Lit typeDependency 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state } from \\"lit/decorators.js\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";

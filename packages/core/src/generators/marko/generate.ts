@@ -70,7 +70,8 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
   }
 
   if (json.name === 'For') {
-    return `<for|${json.properties._forName}| of=(${processBinding(
+    const forArguments = (json?.scope?.For || []).join(',');
+    return `<for|${forArguments}| of=(${processBinding(
       options.component,
       json.bindings.each?.code as string,
     )})>
