@@ -290,6 +290,12 @@ async function buildAndOutputComponentFiles({
       case 'vue3':
         // TODO: transform to CJS (?)
         transpiled = transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1');
+        transpiled = await transpile({
+          path,
+          content: transpiled,
+          target,
+          options,
+        });
     }
 
     const outputDir = `${options.dest}/${outputPath}`;
