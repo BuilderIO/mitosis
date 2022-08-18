@@ -1836,6 +1836,47 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil defaultProps 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() link: any;
+  @Prop() attributes: any;
+  @Prop() openLinkInNewTab: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <Fragment>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
+
+        {!this.link ? (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </Fragment>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil nestedStyles 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 

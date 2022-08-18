@@ -35,22 +35,6 @@ interface InternalToMarkoOptions extends ToMarkoOptions {
 const USE_MARKO_PRETTIER = false;
 
 /**
- * Return the names of methods and functions on state
- */
-function getStateMethodNames(json: MitosisComponent) {
-  return Object.keys(json.state).filter((key) => {
-    const type = json.state[key]?.type;
-    return type === 'function' || type === 'method';
-  });
-}
-/**
- * Return the names of getter and functions on state
- */
-function getStateGetterNames(json: MitosisComponent) {
-  return Object.keys(json.state).filter((key) => json.state[key]?.type === 'getter');
-}
-
-/**
  * Return the names of properties (basic literal values) on state
  */
 function getStatePropertyNames(json: MitosisComponent) {
@@ -70,7 +54,8 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
   }
 
   if (json.name === 'For') {
-    return `<for|${json.properties._forName}| of=(${processBinding(
+    const forArguments = (json?.scope?.For || []).join(',');
+    return `<for|${forArguments}| of=(${processBinding(
       options.component,
       json.bindings.each?.code as string,
     )})>
@@ -114,7 +99,7 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
         options.component,
         code as string,
       )}) `;
-    } else {
+    } else if (key !== 'innerHTML') {
       str += ` ${key}=(${processBinding(options.component, code as string)}) `;
     }
   }
@@ -122,6 +107,11 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
     return str + ' />';
   }
   str += '>';
+
+  if (json.bindings.innerHTML?.code) {
+    str += `$!{${processBinding(options.component, json.bindings.innerHTML.code as string)}}`;
+  }
+
   if (json.children) {
     str += json.children.map((item) => blockToMarko(item, options)).join('\n');
   }
@@ -279,7 +269,7 @@ export const componentToMarko =
       // Convert on-click=(...) -> on-click(...)
       .replace(/(on-[a-z]+)=\(/g, (_match, group) => group + '(')
       // Fix a weird edge case where </if> becomes </if \n > which is invalid in marko
-      .replace(/<\/([a-z]+)\s+>/g, '</$1>');
+      .replace(/<\/([a-z]+)\s+>/gi, '</$1>');
 
     let finalStr = `
 ${jsString}

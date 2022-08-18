@@ -890,7 +890,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -936,7 +936,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -2310,7 +2310,7 @@ export interface ImageProps {
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
             [alt]=\\"altText\\"
-            [aria-role]=\\"altText ? 'presentation' : undefined\\"
+            [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
             [src]=\\"image\\"
             (load)=\\"setLoaded()\\"
@@ -2366,8 +2366,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2430,7 +2430,7 @@ export interface ImageProps {
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
             [alt]=\\"altText\\"
-            [aria-role]=\\"altText ? 'presentation' : undefined\\"
+            [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
             [src]=\\"image\\"
             (load)=\\"setLoaded()\\"
@@ -2486,8 +2486,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2990,7 +2990,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options\\">
-        <option [value]=\\"option.value\\" [data-index]=\\"index\\">
+        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -3037,7 +3037,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options\\">
-        <option [value]=\\"option.value\\" [data-index]=\\"index\\">
+        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -3172,7 +3172,7 @@ import { snakeCase } from \\"lodash\\";
 @Component({
   selector: \\"smile-reviews\\",
   template: \`
-    <div [data-user]=\\"name\\">
+    <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
 
       <ng-container *ngIf=\\"showReviewPrompt\\">
@@ -3285,7 +3285,7 @@ import { snakeCase } from \\"lodash\\";
 
   selector: \\"smile-reviews\\",
   template: \`
-    <div [data-user]=\\"name\\">
+    <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
 
       <ng-container *ngIf=\\"showReviewPrompt\\">
@@ -3444,7 +3444,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   template: \`
     <div
       [contentEditable]=\\"allowEditingText || undefined\\"
-      [data-name]=\\"{
+      [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
       [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
@@ -3482,7 +3482,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   template: \`
     <div
       [contentEditable]=\\"allowEditingText || undefined\\"
-      [data-name]=\\"{
+      [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
       [innerHTML]=\\"text || content || name || '<p class=&quot;text-lg&quot;>my name</p>'\\"
@@ -4162,6 +4162,80 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular defaultProps 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular defaultProps 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular multipleOnUpdate 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -4174,7 +4248,6 @@ exports[`Angular multipleOnUpdate 1`] = `
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4197,7 +4270,6 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4225,7 +4297,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
@@ -4261,7 +4332,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {

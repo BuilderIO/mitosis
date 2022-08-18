@@ -1862,6 +1862,51 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`Preact defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: false,
+  openLinkInNewTab: false,
+};
+"
+`;
+
 exports[`Preact multipleOnUpdate 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4139,6 +4184,50 @@ export default function MyBasicComponent(props) {
     </>
   );
 }
+"
+`;
+
+exports[`React defaultProps 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <>
+      {props.link ? (
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </>
+      ) : null}
+    </>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: false,
+  openLinkInNewTab: false,
+};
 "
 `;
 

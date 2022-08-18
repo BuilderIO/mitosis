@@ -26,7 +26,23 @@ import { camelCase } from 'lodash';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { has } from '../../helpers/has';
 
-export interface ToLitOptions extends BaseTranspilerOptions {}
+const getCustomTagName = (name: string, options: ToLitOptions) => {
+  if (!name || !isUpperCase(name[0])) {
+    return name;
+  }
+
+  const kebabCaseName = dashCase(name);
+  if (!kebabCaseName.includes('-')) {
+    // TODO: option to choose your prefix
+    return 'my-' + kebabCaseName;
+  }
+
+  return kebabCaseName;
+};
+
+export interface ToLitOptions extends BaseTranspilerOptions {
+  useShadowDom?: boolean;
+}
 
 const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
   if (json.properties._text) {
@@ -51,12 +67,12 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
         .filter(filterEmptyTextNodes)
         .map((item) => blockToLit(item, options))
         .join('\n')}\`
-    : ${!json.meta.else ? 'null' : blockToLit(json.meta.else as any, options)}}`;
+    : ${!json.meta.else ? 'null' : `html\`${blockToLit(json.meta.else as any, options)}\``}}`;
   }
 
   let str = '';
 
-  const tagName = isUpperCase(json.name[0]) ? dashCase(json.name) : json.name;
+  const tagName = getCustomTagName(json.name, options);
   str += `<${tagName} `;
 
   const classString = collectClassString(json);
@@ -183,7 +199,7 @@ export const componentToLit =
     let str = dedent`
     ${renderPreComponent({ component: json, target: 'lit' })}
     import { LitElement, html, css } from 'lit';
-    import { customElement, property, state } from 'lit/decorators.js';
+    import { customElement, property, state, query } from 'lit/decorators.js';
 
     ${json.types ? json.types.join('\n') : ''}
     ${
@@ -200,10 +216,20 @@ export const componentToLit =
         : ''
     }
 
-    @customElement('${json.meta.useMetadata?.tagName || dashCase(json.name)}')
+    @customElement('${json.meta.useMetadata?.tagName || getCustomTagName(json.name, options)}')
     export default class ${json.name} extends LitElement {
       ${
-        css.length
+        options.useShadowDom
+          ? ''
+          : `
+        createRenderRoot() {
+          return this;
+        }
+        `
+      }
+
+      ${
+        options.useShadowDom && css.length
           ? `static styles = css\`
       ${indent(css, 8)}\`;`
           : ''
@@ -246,6 +272,8 @@ export const componentToLit =
     
       render() {
         return html\`
+          ${options.useShadowDom || !css.length ? '' : `<style>${css}</style>`}
+        }
           ${indent(html, 8)}
         \`
       }

@@ -36,6 +36,8 @@ import { uniq } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
+import { isUpperCase } from '../helpers/is-upper-case';
+import json5 from 'json5';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -191,7 +193,8 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
   }
 
-  if (json.bindings.style?.code || json.properties.style) {
+  const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
+  if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = stripStateAndProps(
       json.bindings.style?.code || json.properties.style,
       options,
@@ -418,6 +421,10 @@ export const componentToSvelte =
 
           if (json.propsTypeRef && json.propsTypeRef !== 'any') {
             propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          }
+
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
+            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
           }
 
           propDeclaration += ';';

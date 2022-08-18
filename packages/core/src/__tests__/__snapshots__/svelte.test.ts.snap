@@ -1763,6 +1763,41 @@ exports[`Svelte className 1`] = `
 "
 `;
 
+exports[`Svelte defaultProps 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"] = false;
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
+  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+</script>
+
+{#if link}
+  <a
+    {...attributes}
+    href={link}
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+  >
+    {text}
+  </a>
+{/if}
+
+{#if !link}
+  <button {...attributes} type=\\"button\\">
+    {text}
+  </button>
+{/if}
+"
+`;
+
 exports[`Svelte multipleOnUpdate 1`] = `
 "<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";

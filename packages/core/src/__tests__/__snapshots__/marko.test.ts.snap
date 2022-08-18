@@ -440,7 +440,7 @@ style {
   }
 }
 <div class=\\"builder-columns div-68e62774\\">
-  <for|column| of=(input.columns)>
+  <for|column,index| of=(input.columns)>
     <div class=\\"builder-column div-68e62774-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
@@ -536,8 +536,9 @@ exports[`Marko CustomCode 1`] = `
 <div
   key=\\"elem\\"
   class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
-  innerHTML=(input.code)
-></div>"
+>
+  $!{input.code}
+</div>"
 `;
 
 exports[`Marko Embed 1`] = `
@@ -600,8 +601,9 @@ exports[`Marko Embed 1`] = `
 <div
   key=\\"elem\\"
   class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
-  innerHTML=(input.code)
-></div>"
+>
+  $!{input.code}
+</div>"
 `;
 
 exports[`Marko Form 1`] = `
@@ -860,7 +862,7 @@ style {
   on-submit(event => state.state.onSubmit(event))
 >
   <if(input.builderBlock && input.builderBlock.children)>
-    <for|block| of=(input.builderBlock?.children)>
+    <for|block,index| of=(input.builderBlock?.children)>
       <BuilderBlockComponent
         key=(block.id)
         block=(block)
@@ -871,15 +873,13 @@ style {
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
-    ></BuilderBlocks
-  ></if>
+    ></BuilderBlocks></if>
 
   <if(state.state.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
-    ></BuilderBlocks
-  ></if>
+    ></BuilderBlocks></if>
 
   <if(state.state.submissionState === 'error' && state.state.responseData)>
     <pre class=\\"builder-form-error-text pre-61e0231b\\">
@@ -893,8 +893,7 @@ style {
     <BuilderBlocks
       dataPath=\\"successMessage\\"
       blocks=(input.successMessage)
-    ></BuilderBlocks
-  ></if>
+    ></BuilderBlocks></if>
 </form>"
 `;
 
@@ -986,7 +985,7 @@ exports[`Marko Image State 1`] = `
 }
 
 <div>
-  <for|item| of=(state.images)>
+  <for|item,itemIndex| of=(state.images)>
     <img class=\\"custom-class\\" src=(item) key=(itemIndex) />
   </for>
 </div>"
@@ -1029,10 +1028,8 @@ class {}
 exports[`Marko RawText 1`] = `
 "class {}
 
-<span
-  class=(input.attributes?.class || input.attributes?.className)
-  innerHTML=(input.text || '')
-></span>"
+<span class=(input.attributes?.class || input.attributes?.className)
+  >$!{input.text || ''}</span>"
 `;
 
 exports[`Marko Remove Internal mitosis package 1`] = `
@@ -1092,7 +1089,7 @@ class {}
   defaultValue=(input.defaultValue)
   name=(input.name)
 >
-  <for|option| of=(input.options)>
+  <for|option,index| of=(input.options)>
     <option value=(option.value) data-index=(index)>
       \${option.name || option.value}
     </option>
@@ -1197,7 +1194,7 @@ style {
       Submit
     </button></if>
 
-  <for|review| of=(state.reviews)>
+  <for|review,index| of=(state.reviews)>
     <div class=\\"review-29af8e03\\" key=(review.id)>
       <img class=\\"img-29af8e03\\" src=(review.avatar) />
 
@@ -1233,8 +1230,11 @@ class {
   data-name=({
   test: state.name || 'any name'
 })
-  innerHTML=(input.text || input.content || state.name || '<p class=\\"text-lg\\">my name</p>')
-></div>"
+>
+  $!{input.text || input.content || state.name || '
+  <p class=\\"text-lg\\">my name</p>
+  '}
+</div>"
 `;
 
 exports[`Marko Textarea 1`] = `
@@ -1423,6 +1423,22 @@ style {
 </div>"
 `;
 
+exports[`Marko defaultProps 1`] = `
+"class {}
+
+<if(input.link)>
+  <a
+    ...(props.attributes)
+    href=(input.link)
+    target=(input.openLinkInNewTab ? '_blank' : undefined)
+  >
+    \${input.text}
+  </a></if>
+
+<if(!input.link)>
+  <button ...(props.attributes) type=\\"button\\">\${input.text}</button></if>"
+`;
+
 exports[`Marko multipleOnUpdate 1`] = `
 "class {
   onRender() {
@@ -1608,8 +1624,7 @@ exports[`Marko self-referencing component 1`] = `
   \${input.name}
 
   <if(input.name === 'Batman')>
-    <MyComponent name=\\"Bruce Wayne\\"></MyComponent
-  ></if>
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent></if>
 </div>"
 `;
 
@@ -1630,7 +1645,7 @@ exports[`Marko showWithFor 1`] = `
 "class {}
 
 <if(input.conditionA)>
-  <for|item| of=(input.items)>
+  <for|item,idx| of=(input.items)>
     <div key=(idx)>\${item}</div>
   </for></if>
 <else><div>else-condition-A</div></else>"
