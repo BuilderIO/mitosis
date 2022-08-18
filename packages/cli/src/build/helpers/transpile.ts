@@ -53,18 +53,9 @@ export const transpile = async ({
       console.warn(`Warnings found in file: ${path}`, output.warnings);
     }
 
-    let contents = output.code;
-
-    if (target === 'reactNative') {
-      // esbuild does not add the reactNative import, so we need to add it
-      if (!contents.match(/from\s+['"]react['"]/)) {
-        contents = `import * as React from 'react';\n${output.code}`;
-      }
-    }
-
     // Remove .lite extensions from imports without having to load a slow parser like babel
     // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
-    contents = contents
+    const contents = output.code
       .replace(
         // we start by replacing all `context.lite` imports with `context`
         /\.context\.lite(['"][;\)])/g,
