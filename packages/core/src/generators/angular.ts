@@ -1,4 +1,5 @@
 import dedent from 'dedent';
+import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -339,6 +340,7 @@ export const componentToAngular =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
+    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
     ${renderPreComponent({
       component: json,
       target: 'angular',
@@ -375,7 +377,11 @@ export const componentToAngular =
         .filter((item) => !isSlotProperty(item) && item !== 'children')
         .map((item) => {
           const propType = propsTypeRef ? `${propsTypeRef}["${item}"]` : 'any';
-          return `@Input() ${item}: ${propType}`;
+          let propDeclaration = `@Input() ${item}: ${propType}`;
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(item)) {
+            propDeclaration += ` = defaultProps["${item}"]`;
+          }
+          return propDeclaration;
         })
         .join('\n')}
 
