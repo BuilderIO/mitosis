@@ -536,8 +536,9 @@ exports[`Marko CustomCode 1`] = `
 <div
   key=\\"elem\\"
   class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
-  innerHTML=(input.code)
-></div>"
+>
+  $!{input.code}
+</div>"
 `;
 
 exports[`Marko Embed 1`] = `
@@ -600,8 +601,9 @@ exports[`Marko Embed 1`] = `
 <div
   key=\\"elem\\"
   class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
-  innerHTML=(input.code)
-></div>"
+>
+  $!{input.code}
+</div>"
 `;
 
 exports[`Marko Form 1`] = `
@@ -1026,10 +1028,8 @@ class {}
 exports[`Marko RawText 1`] = `
 "class {}
 
-<span
-  class=(input.attributes?.class || input.attributes?.className)
-  innerHTML=(input.text || '')
-></span>"
+<span class=(input.attributes?.class || input.attributes?.className)
+  >$!{input.text || ''}</span>"
 `;
 
 exports[`Marko Remove Internal mitosis package 1`] = `
@@ -1230,8 +1230,11 @@ class {
   data-name=({
   test: state.name || 'any name'
 })
-  innerHTML=(input.text || input.content || state.name || '<p class=\\"text-lg\\">my name</p>')
-></div>"
+>
+  $!{input.text || input.content || state.name || '
+  <p class=\\"text-lg\\">my name</p>
+  '}
+</div>"
 `;
 
 exports[`Marko Textarea 1`] = `
