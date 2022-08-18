@@ -23,6 +23,18 @@ describe('src-generator', () => {
       expect(isStatement('var x; return x;')).toBe(true);
       expect(isStatement('var x')).toBe(true);
     });
+
+    test('regressions', () => {
+      expect(
+        isStatement(
+          "if(state.deviceSize == \"small\"){    \r\n    return\r\n}\r\n\r\nif (state.imageLeft){    \r\n    return 'row-reverse'\r\n}\r\n\r\nreturn 'row'",
+        ),
+      ).toBe(true);
+      expect(isStatement("if (state.imageLeft){     return 'flex-direction: row-reverse;' }")).toBe(
+        true,
+      );
+      expect(isStatement('() => null')).toBe(true);
+    });
   });
 
   describe('import', () => {

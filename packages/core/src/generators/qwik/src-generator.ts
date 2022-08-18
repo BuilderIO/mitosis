@@ -320,8 +320,7 @@ export class SrcBuilder {
         if (isEvent(key)) {
           key = key + '$';
           binding = `(event)=>${binding}`;
-        }
-        if (!binding && rawKey in props) {
+        } else if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
@@ -547,7 +546,10 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
  */
 export function isStatement(code: string) {
   code = code.trim();
-  if (code.startsWith('(') || code.startsWith('{') || code.endsWith('}')) {
+  if (
+    (code.startsWith('(') && code.endsWith(')')) ||
+    (code.startsWith('{') && code.endsWith('}'))
+  ) {
     // Code starting with `(` is most likely and IFF and hence is an expression.
     return false;
   }
