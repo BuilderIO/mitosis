@@ -216,6 +216,11 @@ export const componentToLit =
 
     @customElement('${json.meta.useMetadata?.tagName || getCustomTagName(json.name, options)}')
     export default class ${json.name} extends LitElement {
+      // Do not use Shadow DOM
+      createRenderRoot() {
+        return this;
+      }
+
       ${
         css.length
           ? `static styles = css\`
