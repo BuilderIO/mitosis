@@ -2419,6 +2419,66 @@ padding: 10px;
 "
 `;
 
+exports[`Lit defaultProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  @property() link: any;
+  @property() attributes: any;
+  @property() openLinkInNewTab: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+        <my-fragment >
+            
+      \${
+        this.link
+          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
+              this.openLinkInNewTab ? \\"_blank\\" : undefined
+            } >
+                
+      \${this.text}
+
+              </a>\`
+          : null
+      }
+
+            
+      \${
+        !this.link
+          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+                
+      \${this.text}
+
+              </button>\`
+          : null
+      }
+
+          </my-fragment>
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit multipleOnUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";

@@ -1771,6 +1771,51 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
+exports[`React Native defaultProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View {...props.attributes} type=\\"button\\">
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: false,
+  openLinkInNewTab: false,
+};
+"
+`;
+
 exports[`React Native multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
