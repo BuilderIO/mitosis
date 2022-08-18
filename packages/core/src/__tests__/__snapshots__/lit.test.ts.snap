@@ -10,16 +10,9 @@ export interface Props {
 
 @customElement(\\"my-basic-ref-component\\")
 export default class MyBasicRefComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .input {
-         color: red;
-       }
-\`;
 
   @query('[ref=\\"inputRef\\"]')
   inputRef!: HTMLElement;
@@ -45,6 +38,11 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
+         <style>.input {
+ color: red;
+}
+</style>
+       }
          <div>
          \${
            this.showInput
@@ -86,16 +84,9 @@ export interface MyBasicComponentProps {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-    .div {
-        padding: 10px;
-      }
-\`;
 
   @state() name = \\"Steve\\";
 
@@ -105,6 +96,11 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+        <style>.div {
+padding: 10px;
+}
+</style>
+      }
         <div>
         <input .value=\${DEFAULT_VALUES.name || this.name} @input=\${(myEvent) =>
       (this.name =
@@ -124,7 +120,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-for-show-component\\")
 export default class MyBasicForShowComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -134,6 +129,8 @@ export default class MyBasicForShowComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>
       \${this.names?.map(
         (person, index) =>
@@ -162,7 +159,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -181,6 +177,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div>
          \${
            myService.method(\\"hello\\") + this.name
@@ -205,7 +203,6 @@ export interface Props {
 
 @customElement(\\"my-basic-on-mount-update-component\\")
 export default class MyBasicOnMountUpdateComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -222,6 +219,8 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div>Hello \${this.name}</div>
 
        \`;
@@ -236,7 +235,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
 export default class MyBasicOutputsComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -254,6 +252,8 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div></div>
 
        \`;
@@ -268,7 +268,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-outputs-component\\")
 export default class MyBasicOutputsComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -286,6 +285,8 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div></div>
 
        \`;
@@ -303,7 +304,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-child-component\\")
 export default class MyBasicChildComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -313,6 +313,8 @@ export default class MyBasicChildComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>
       <my-basic-component .id=\\"\${this.dev}\\"></my-basic-component>
 
@@ -336,7 +338,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-for-component\\")
 export default class MyBasicForComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -350,6 +351,8 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div>
          \${this.names?.map(
            (person, index) => html\`<my-fragment>
@@ -377,16 +380,9 @@ export interface Props {
 
 @customElement(\\"my-basic-ref-component\\")
 export default class MyBasicRefComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .input {
-         color: red;
-       }
-\`;
 
   @query('[ref=\\"inputRef\\"]')
   inputRef!: HTMLElement;
@@ -408,6 +404,11 @@ export default class MyBasicRefComponent extends LitElement {
 
   render() {
     return html\`
+         <style>.input {
+ color: red;
+}
+</style>
+       }
          <div>
          \${
            this.showInput
@@ -445,7 +446,6 @@ export interface Props {
 
 @customElement(\\"my-basic-ref-assignment-component\\")
 export default class MyBasicRefAssignmentComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -458,6 +458,8 @@ export default class MyBasicRefAssignmentComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div >
             
       <button  @click=\${(evt) => this.handlerClick(evt)} >Click</button>
@@ -492,7 +494,6 @@ export interface Props {
 
 @customElement(\\"my-previous-component\\")
 export default class MyPreviousComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -505,6 +506,8 @@ export default class MyPreviousComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div >
             
       <h1 >
@@ -546,7 +549,6 @@ const spread = (properties) =>
 
 @customElement(\\"my-button\\")
 export default class Button extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -558,6 +560,8 @@ export default class Button extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <my-fragment >
             
       \${
@@ -611,32 +615,9 @@ export interface ColumnProps {
 
 @customElement(\\"my-column\\")
 export default class Column extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .div {
-         display: flex;
-         flex-direction: column;
-         align-items: stretch;
-         line-height: normal;
-       }
-       @media (max-width: 999px) {
-         .div {
-           flex-direction: row;
-         }
-       }
-       @media (max-width: 639px) {
-         .div {
-           flex-direction: row-reverse;
-         }
-       }
-       .div-2 {
-         flex-grow: 1;
-       }
-\`;
 
   @property() columns: any;
   @property() space: any;
@@ -660,6 +641,27 @@ export default class Column extends LitElement {
 
   render() {
     return html\`
+         <style>.div {
+ display: flex;
+ flex-direction: column;
+ align-items: stretch;
+ line-height: normal;
+}
+@media (max-width: 999px) {
+ .div {
+   flex-direction: row;
+ }
+}
+@media (max-width: 639px) {
+ .div {
+   flex-direction: row-reverse;
+ }
+}
+.div-2 {
+ flex-grow: 1;
+}
+</style>
+       }
          <div>
          \${this.columns?.map(
            (column, index) => html\`
@@ -685,7 +687,6 @@ type Props = {
 
 @customElement(\\"content-slot-code\\")
 export default class ContentSlotCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -694,6 +695,8 @@ export default class ContentSlotCode extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>
         <my-slot .name=\\"\${this.slotTesting}\\"></my-slot>
 
@@ -722,7 +725,6 @@ type Props = {
 
 @customElement(\\"content-slot-jsx-code\\")
 export default class ContentSlotJsxCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -732,6 +734,8 @@ export default class ContentSlotJsxCode extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>
         \${this.slotTesting}
 
@@ -759,7 +763,6 @@ export interface CustomCodeProps {
 
 @customElement(\\"custom-code\\")
 export default class CustomCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -821,6 +824,8 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
        \`;
   }
@@ -839,7 +844,6 @@ export interface CustomCodeProps {
 
 @customElement(\\"custom-code\\")
 export default class CustomCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -901,6 +905,8 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
        \`;
   }
@@ -952,18 +958,9 @@ const spread = (properties) =>
 
 @customElement(\\"form-component\\")
 export default class FormComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .pre {
-         padding: 10px;
-         color: red;
-         text-align: center;
-       }
-\`;
 
   @query('[ref=\\"formRef\\"]')
   formRef!: HTMLElement;
@@ -1217,6 +1214,13 @@ export default class FormComponent extends LitElement {
 
   render() {
     return html\`
+         <style>.pre {
+ padding: 10px;
+ color: red;
+ text-align: center;
+}
+</style>
+       }
          <form  \${spread(props.attributes)}  .validate=\${
       this.validate
     }  ref=\\"formRef\\"  .action=\${!this.sendWithJs && this.action}  .method=\${
@@ -1296,19 +1300,9 @@ export interface ImageProps {
 
 @customElement(\\"my-image\\")
 export default class Image extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .img {
-         opacity: 1;
-         transition: opacity 0.2s ease-in-out;
-         object-fit: cover;
-         object-position: center;
-       }
-\`;
 
   @query('[ref=\\"pictureRef\\"]')
   pictureRef!: HTMLElement;
@@ -1370,6 +1364,14 @@ export default class Image extends LitElement {
 
   render() {
     return html\`
+         <style>.img {
+ opacity: 1;
+ transition: opacity 0.2s ease-in-out;
+ object-fit: cover;
+ object-position: center;
+}
+</style>
+       }
          <my-fragment>
          <picture ref=\\"pictureRef\\">
            \${
@@ -1404,7 +1406,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"img-state-component\\")
 export default class ImgStateComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1414,6 +1415,8 @@ export default class ImgStateComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>
       \${this.images?.map(
         (item, index) => html\`<my-fragment>
@@ -1461,7 +1464,6 @@ const spread = (properties) =>
 
 @customElement(\\"img-component\\")
 export default class ImgComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1474,6 +1476,8 @@ export default class ImgComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <img \${spread(props.attributes)} .style=\${{
       objectFit: this.backgroundSize || \\"cover\\",
       objectPosition: this.backgroundPosition || \\"center\\",
@@ -1515,7 +1519,6 @@ const spread = (properties) =>
 
 @customElement(\\"form-input-component\\")
 export default class FormInputComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1530,6 +1533,8 @@ export default class FormInputComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <input \${spread(props.attributes)} .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     } .placeholder=\${this.placeholder}
@@ -1553,7 +1558,6 @@ export interface RawTextProps {
 
 @customElement(\\"raw-text\\")
 export default class RawText extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1563,6 +1567,8 @@ export default class RawText extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <span  class={props.attributes?.class || props.attributes?.className}  .innerHTML=\${
           this.text || \\"\\"
         } ></span>
@@ -1578,7 +1584,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1587,6 +1592,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>Hello \${this.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 
     \`;
@@ -1615,7 +1622,6 @@ const spread = (properties) =>
 
 @customElement(\\"section-component\\")
 export default class SectionComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1626,6 +1632,8 @@ export default class SectionComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <section  \${spread(props.attributes)}  .style=\${
       this.maxWidth && typeof this.maxWidth === \\"number\\"
         ? {
@@ -1663,7 +1671,6 @@ const spread = (properties) =>
 
 @customElement(\\"section-state-component\\")
 export default class SectionStateComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1676,6 +1683,8 @@ export default class SectionStateComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         \${
           this.max
             ? html\`\${this.items?.map(
@@ -1723,7 +1732,6 @@ const spread = (properties) =>
 
 @customElement(\\"select-component\\")
 export default class SelectComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1736,6 +1744,8 @@ export default class SelectComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <select  \${spread(props.attributes)}  .value=\${this.value}  .key=\${
       Builder.isEditing && this.defaultValue ? this.defaultValue : \\"default-key\\"
     }  .defaultValue=\${this.defaultValue}  .name=\${this.name} >
@@ -1768,13 +1778,14 @@ type Props = {
 
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
   render() {
     return html\`
+        
+      }
         <div >
             
       <content-slot-code >
@@ -1802,13 +1813,14 @@ type Props = {
 
 @customElement(\\"slot-code\\")
 export default class SlotCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
   render() {
     return html\`
+        
+      }
         <div >
             
       <content-slot-code  .slotTesting=\${(
@@ -1836,35 +1848,9 @@ type SmileReviewsProps = {
 
 @customElement(\\"smile-reviews\\")
 export default class SmileReviews extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-     .input {
-         display: block;
-       }
-       .textarea {
-         display: block;
-       }
-       .button {
-         display: block;
-       }
-       .review {
-         margin: 10px;
-         padding: 10px;
-         background: white;
-         display: flex;
-         border-radius: 5px;
-         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-       }
-       .img {
-         height: 30px;
-         width: 30px;
-         margin-right: 10px;
-       }
-\`;
 
   @property() apiKey: any;
   @property() productId: any;
@@ -1894,6 +1880,30 @@ export default class SmileReviews extends LitElement {
 
   render() {
     return html\`
+         <style>.input {
+ display: block;
+}
+.textarea {
+ display: block;
+}
+.button {
+ display: block;
+}
+.review {
+ margin: 10px;
+ padding: 10px;
+ background: white;
+ display: flex;
+ border-radius: 5px;
+ box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.img {
+ height: 30px;
+ width: 30px;
+ margin-right: 10px;
+}
+</style>
+       }
          <div  .data-user=\${this.name} >
              
        <button  @click=\${(event) =>
@@ -1964,7 +1974,6 @@ const spread = (properties) =>
 
 @customElement(\\"submit-button\\")
 export default class SubmitButton extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -1974,6 +1983,8 @@ export default class SubmitButton extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <button \${spread(props.attributes)} type=\\"submit\\">\${this.text}</button>
 
       \`;
@@ -1998,7 +2009,6 @@ export interface TextProps {
 
 @customElement(\\"my-text\\")
 export default class Text extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2010,6 +2020,8 @@ export default class Text extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div  .contentEditable=\${allowEditingText || undefined}  .data-name=\${{
       test: this.name || \\"any name\\",
     }}  .innerHTML=\${
@@ -2043,7 +2055,6 @@ const spread = (properties) =>
 
 @customElement(\\"my-textarea\\")
 export default class Textarea extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2056,6 +2067,8 @@ export default class Textarea extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <textarea
         \${spread(props.attributes)}
         .placeholder=\\"\${this.placeholder}\\"
@@ -2110,7 +2123,6 @@ const spread = (properties) =>
 
 @customElement(\\"my-video\\")
 export default class Video extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2127,6 +2139,8 @@ export default class Video extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <video  \${spread(props.attributes)}  preload=\\"none\\"  .style=\${{
       width: \\"100%\\",
       height: \\"100%\\",
@@ -2158,16 +2172,9 @@ export interface Props {
 
 @customElement(\\"my-basic-forward-ref-component\\")
 export default class MyBasicForwardRefComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-    .input {
-        color: red;
-      }
-\`;
 
   @query('[ref=\\"props.inputRef\\"]')
   propsInputRef!: HTMLElement;
@@ -2178,6 +2185,11 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
+        <style>.input {
+color: red;
+}
+</style>
+      }
         <div>
         <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
@@ -2200,16 +2212,9 @@ export interface Props {
 
 @customElement(\\"my-basic-forward-ref-component\\")
 export default class MyBasicForwardRefComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-    .input {
-        color: red;
-      }
-\`;
 
   @query('[ref=\\"props.inputRef\\"]')
   propsInputRef!: HTMLElement;
@@ -2220,6 +2225,11 @@ export default class MyBasicForwardRefComponent extends LitElement {
 
   render() {
     return html\`
+        <style>.input {
+color: red;
+}
+</style>
+      }
         <div>
         <input ref=\\"props.inputRef\\" .value=\${this.name} @input=\${(event) =>
       (this.name = event.target.value)} />
@@ -2237,7 +2247,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-on-update-return-component\\")
 export default class MyBasicOnUpdateReturnComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2263,6 +2272,8 @@ export default class MyBasicOnUpdateReturnComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>Hello! \${this.name}</div>
 
       \`;
@@ -2277,22 +2288,20 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
-  static styles = css\`
-  .div {
-      padding: 10px;
-    }
-\`;
-
   render() {
     return html\`
-      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        <style>.div {
+padding: 10px;
+}
+</style>
+      }
+        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2304,22 +2313,20 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
-  static styles = css\`
-  .div {
-      padding: 10px;
-    }
-\`;
-
   render() {
     return html\`
-      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        <style>.div {
+padding: 10px;
+}
+</style>
+      }
+        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2331,22 +2338,20 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
-  static styles = css\`
-  .div {
-      padding: 10px;
-    }
-\`;
-
   render() {
     return html\`
-      <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
+        <style>.div {
+padding: 10px;
+}
+</style>
+      }
+        <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2363,7 +2368,6 @@ type Props = {
 
 @customElement(\\"class-name-code\\")
 export default class ClassNameCode extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2372,6 +2376,8 @@ export default class ClassNameCode extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>
         <div>Without Binding</div>
 
@@ -2390,26 +2396,24 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
-
-  static styles = css\`
-  .div {
-      padding: 10px;
-    }
-\`;
 
   @state() classState = \\"testClassName\\";
   @state() styleState = { color: \\"red\\" };
 
   render() {
     return html\`
-      <div  class={state.classState + ' div'}  .style=\${this.styleState} >
-          Hello! I can run in React, Vue, Solid, or Liquid!
-        </div>
-    \`;
+        <style>.div {
+padding: 10px;
+}
+</style>
+      }
+        <div  class={state.classState + ' div'}  .style=\${this.styleState} >
+            Hello! I can run in React, Vue, Solid, or Liquid!
+          </div>
+      \`;
   }
 }
 "
@@ -2421,7 +2425,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"multiple-on-update\\")
 export default class MultipleOnUpdate extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2434,6 +2437,8 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div></div>
 
       \`;
@@ -2448,7 +2453,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"multiple-on-update-with-deps\\")
 export default class MultipleOnUpdateWithDeps extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2474,6 +2478,8 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div></div>
 
       \`;
@@ -2493,7 +2499,6 @@ interface Props {
 
 @customElement(\\"nested-show\\")
 export default class NestedShow extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2503,6 +2508,8 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
+        
+      }
         \${
           this.conditionA
             ? html\`\${
@@ -2531,34 +2538,32 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"nested-styles\\")
 export default class NestedStyles extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
-  static styles = css\`
-  .div {
-      display: flex;
-      foo: var(--bar);
-    }
-    @media (max-width: env(--mobile)) {
-      .div {
-        display: block;
-      }
-    }
-    .div:hover {
-      display: flex;
-    }
-    .div .nested-selector {
-      display: grid;
-    }
-\`;
-
   render() {
     return html\`
-      <div>Hello world</div>
+        <style>.div {
+display: flex;
+foo: var(--bar);
+}
+@media (max-width: env(--mobile)) {
+.div {
+  display: block;
+}
+}
+.div:hover {
+display: flex;
+}
+.div .nested-selector {
+display: grid;
+}
+</style>
+      }
+        <div>Hello world</div>
 
-    \`;
+      \`;
   }
 }
 "
@@ -2570,7 +2575,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-init\\")
 export default class OnInit extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2581,6 +2585,8 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div></div>
 
        \`;
@@ -2603,7 +2609,6 @@ type Props = {
 
 @customElement(\\"on-init\\")
 export default class OnInit extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2614,6 +2619,8 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>Default name defined by parent \${this.name}</div>
 
       \`;
@@ -2628,7 +2635,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-comp\\")
 export default class Comp extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2642,6 +2648,8 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
+         
+       }
          <div></div>
 
        \`;
@@ -2656,7 +2664,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-update\\")
 export default class OnUpdate extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2667,6 +2674,8 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div></div>
 
       \`;
@@ -2681,7 +2690,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"on-update-with-deps\\")
 export default class OnUpdateWithDeps extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2695,6 +2703,8 @@ export default class OnUpdateWithDeps extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div></div>
 
       \`;
@@ -2725,13 +2735,14 @@ export interface MyBasicComponentProps {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
   render() {
     return html\`
+        
+      }
         <div></div>
 
       \`;
@@ -2759,7 +2770,6 @@ export interface MyBasicComponentProps {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2768,6 +2778,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
       \`;
@@ -2787,7 +2799,6 @@ type Props = {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2799,6 +2810,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>
         \${this.children} \${this.type} Hello! I can run in React, Vue, Solid, or
         Liquid!
@@ -2821,7 +2834,6 @@ interface Person {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2830,6 +2842,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
       \`;
@@ -2849,7 +2863,6 @@ type Person = {
 
 @customElement(\\"my-basic-component\\")
 export default class MyBasicComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2858,6 +2871,8 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
       \`;
@@ -2876,7 +2891,6 @@ export interface RenderStylesProps {
 
 @customElement(\\"render-styles\\")
 export default class RenderStyles extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2885,6 +2899,8 @@ export default class RenderStyles extends LitElement {
 
   render() {
     return html\`
+        
+      }
         \${
           this.foo === \\"bar\\"
             ? html\`
@@ -2907,7 +2923,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-component\\")
 export default class MyComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2916,6 +2931,8 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>
       \${this.name} \${
       this.name === \\"Batman\\"
@@ -2939,7 +2956,6 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"my-component\\")
 export default class MyComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2949,6 +2965,8 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
+      
+    }
       <div>
       \${this.name} \${this.children} \${
       this.name === \\"Batman\\"
@@ -2978,7 +2996,6 @@ interface Props {
 
 @customElement(\\"nested-show\\")
 export default class NestedShow extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -2988,6 +3005,8 @@ export default class NestedShow extends LitElement {
 
   render() {
     return html\`
+        
+      }
         \${
           this.conditionA
             ? html\`\${this.items?.map(
@@ -3014,13 +3033,14 @@ import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
 @customElement(\\"sub-component\\")
 export default class SubComponent extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
 
   render() {
     return html\`
+      
+    }
       <my-foo></my-foo>
 
     \`;
@@ -3042,7 +3062,6 @@ export type TypeDependencyProps = {
 
 @customElement(\\"type-dependency\\")
 export default class TypeDependency extends LitElement {
-  // Do not use Shadow DOM
   createRenderRoot() {
     return this;
   }
@@ -3051,6 +3070,8 @@ export default class TypeDependency extends LitElement {
 
   render() {
     return html\`
+        
+      }
         <div>\${this.foo}</div>
 
       \`;
