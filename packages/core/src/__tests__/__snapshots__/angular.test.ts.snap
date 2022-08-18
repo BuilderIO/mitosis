@@ -4248,6 +4248,60 @@ export default class Button {
 "
 `;
 
+exports[`Angular defaultValsWithTypes 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+@Component({
+  selector: \\"component-with-types\\",
+  template: \`
+    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
+  \`,
+})
+export default class ComponentWithTypes {
+  DEFAULT_VALUES = DEFAULT_VALUES;
+
+  @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular defaultValsWithTypes 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"component-with-types\\",
+  template: \`
+    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
+  \`,
+})
+export default class ComponentWithTypes {
+  DEFAULT_VALUES = DEFAULT_VALUES;
+
+  @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
 exports[`Angular multipleOnUpdate 1`] = `
 "import { Component } from \\"@angular/core\\";
 
