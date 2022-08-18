@@ -40,7 +40,9 @@ const getCustomTagName = (name: string, options: ToLitOptions) => {
   return kebabCaseName;
 };
 
-export interface ToLitOptions extends BaseTranspilerOptions {}
+export interface ToLitOptions extends BaseTranspilerOptions {
+  useShadowDom?: boolean;
+}
 
 const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
   if (json.properties._text) {
@@ -217,7 +219,17 @@ export const componentToLit =
     @customElement('${json.meta.useMetadata?.tagName || getCustomTagName(json.name, options)}')
     export default class ${json.name} extends LitElement {
       ${
-        css.length
+        options.useShadowDom
+          ? ''
+          : `
+        createRenderRoot() {
+          return this;
+        }
+        `
+      }
+
+      ${
+        options.useShadowDom && css.length
           ? `static styles = css\`
       ${indent(css, 8)}\`;`
           : ''
@@ -260,6 +272,8 @@ export const componentToLit =
     
       render() {
         return html\`
+          ${options.useShadowDom || !css.length ? '' : `<style>${css}</style>`}
+        }
           ${indent(html, 8)}
         \`
       }

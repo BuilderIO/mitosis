@@ -890,7 +890,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -936,7 +936,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -2366,8 +2366,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2486,8 +2486,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -4174,7 +4174,6 @@ exports[`Angular multipleOnUpdate 1`] = `
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4197,7 +4196,6 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4225,7 +4223,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
@@ -4261,7 +4258,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {

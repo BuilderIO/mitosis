@@ -218,9 +218,9 @@ export const blockToAngular = (
 
 export const componentToAngular =
   (options: ToAngularOptions = {}): Transpiler =>
-  ({ component }) => {
+  ({ component: _component }) => {
     // Make a copy we can safely mutate, similar to babel's toolchain
-    let json = fastClone(component);
+    let json = fastClone(_component);
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -239,7 +239,7 @@ export const componentToAngular =
 
     const customImports = getCustomImports(json);
 
-    const { exports: localExports = {} } = component;
+    const { exports: localExports = {} } = json;
     const localExportVars = Object.keys(localExports)
       .filter((key) => localExports[key].usedInLocal)
       .map((key) => `${key} = ${key};`);
@@ -256,16 +256,16 @@ export const componentToAngular =
       }
       return `public ${variableName} : ${variableType}`;
     });
-    const hasConstructor = Boolean(injectables.length || component.hooks?.onInit);
+    const hasConstructor = Boolean(injectables.length || json.hooks?.onInit);
 
-    const props = getProps(component);
+    const props = getProps(json);
     // prevent jsx props from showing up as @Input
     if (hasPropRef) {
       props.delete(forwardProp);
     }
     props.delete('children');
 
-    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(component)]);
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
@@ -278,7 +278,7 @@ export const componentToAngular =
       return `@Output() ${variableName} = new EventEmitter()`;
     });
 
-    const hasOnMount = Boolean(component.hooks?.onMount);
+    const hasOnMount = Boolean(json.hooks?.onMount);
 
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
@@ -367,7 +367,7 @@ export const componentToAngular =
           : ''
       }
     })
-    export default class ${component.name} {
+    export default class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -389,8 +389,8 @@ export const componentToAngular =
 
       ${jsRefs
         .map((ref) => {
-          const argument = component.refs[ref].argument;
-          const typeParameter = component.refs[ref].typeParameter;
+          const argument = json.refs[ref].argument;
+          const typeParameter = json.refs[ref].typeParameter;
           return `private _${ref}${typeParameter ? `: ${typeParameter}` : ''}${
             argument
               ? ` = ${stripStateAndPropsRefs(argument, {
@@ -410,10 +410,10 @@ export const componentToAngular =
           ? ''
           : `constructor(\n${injectables.join(',\n')}) {
             ${
-              !component.hooks?.onInit
+              !json.hooks?.onInit
                 ? ''
                 : `
-              ${stripStateAndPropsRefs(component.hooks.onInit?.code, {
+              ${stripStateAndPropsRefs(json.hooks.onInit?.code, {
                 replaceWith: 'this.',
                 contextVars,
                 outputVars,
@@ -429,10 +429,10 @@ export const componentToAngular =
           : `ngOnInit() {
               
               ${
-                !component.hooks?.onMount
+                !json.hooks?.onMount
                   ? ''
                   : `
-                ${stripStateAndPropsRefs(component.hooks.onMount?.code, {
+                ${stripStateAndPropsRefs(json.hooks.onMount?.code, {
                   replaceWith: 'this.',
                   contextVars,
                   outputVars,
@@ -445,10 +445,10 @@ export const componentToAngular =
       }
 
       ${
-        !component.hooks.onUpdate?.length
+        !json.hooks.onUpdate?.length
           ? ''
           : `ngAfterContentChecked() {
-              ${component.hooks.onUpdate.reduce((code, hook) => {
+              ${json.hooks.onUpdate.reduce((code, hook) => {
                 code += stripStateAndPropsRefs(hook.code, {
                   replaceWith: 'this.',
                   contextVars,
@@ -462,10 +462,10 @@ export const componentToAngular =
       }
 
       ${
-        !component.hooks.onUnMount
+        !json.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(component.hooks.onUnMount.code, {
+              ${stripStateAndPropsRefs(json.hooks.onUnMount.code, {
                 replaceWith: 'this.',
                 contextVars,
                 outputVars,
