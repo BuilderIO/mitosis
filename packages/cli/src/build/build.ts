@@ -277,15 +277,16 @@ async function buildAndOutputComponentFiles({
       case 'reactNative':
       case 'preact':
       case 'react':
-      case 'vue':
-      case 'vue2':
-      case 'vue3':
         transpiled = await transpile({
           path,
           content: transpiled,
           target,
           options,
         });
+        break;
+      case 'vue':
+      case 'vue2':
+      case 'vue3':
         break;
     }
 
