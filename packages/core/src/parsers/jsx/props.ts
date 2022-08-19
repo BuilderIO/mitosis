@@ -1,5 +1,4 @@
 import * as babel from '@babel/core';
-import { Context } from './types';
 
 const { types } = babel;
 
@@ -41,34 +40,6 @@ export function undoPropsDestructure(path: babel.NodePath<babel.types.FunctionDe
           }
         }
       },
-    });
-  }
-}
-
-export function collectDefaultProps(path: babel.NodePath<babel.types.Program>, context: Context) {
-  const expressionStatements = path.node.body.filter((statement) =>
-    types.isExpressionStatement(statement),
-  );
-
-  const defaultPropsStatement: any =
-    expressionStatements?.filter((i: any) => {
-      const { expression } = i;
-      return (
-        types.isAssignmentExpression(expression) &&
-        types.isMemberExpression(expression.left) &&
-        types.isIdentifier(expression.left.property) &&
-        expression.left.property.name === 'defaultProps'
-      );
-    })[0] ?? null;
-
-  if (defaultPropsStatement) {
-    defaultPropsStatement?.expression.right.properties.forEach((i: any) => {
-      if (i.key?.name) {
-        context.builder.component.defaultProps = {
-          ...(context.builder.component.defaultProps ?? {}),
-          [i.key?.name]: i.value.value,
-        };
-      }
     });
   }
 }
