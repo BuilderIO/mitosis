@@ -292,22 +292,20 @@ export const MyBasicForShowComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
   return (
     <div>
-      {(state.names || []).map(
-        function (person) {
-          return person === state.name ? (
-            <>
-              <input
-                value={state.name}
-                onChange$={(event) => {
-                  state.name = event.target.value + \\" and \\" + person;
-                }}
-              ></input>
-              Hello {person}! I can run in Qwik, Web Component, React, Vue,
-              Solid, or Liquid!
-            </>
-          ) : null;
-        }.bind(state)
-      )}
+      {(state.names || []).map(function (person) {
+        return person === state.name ? (
+          <>
+            <input
+              value={state.name}
+              onChange$={(event) => {
+                state.name = event.target.value + \\" and \\" + person;
+              }}
+            ></input>
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+            or Liquid!
+          </>
+        ) : null;
+      })}
     </div>
   );
 });
@@ -458,22 +456,20 @@ export const MyBasicForComponent = component$((props) => {
   });
   return (
     <div>
-      {(state.names || []).map(
-        function (person) {
-          return (
-            <Fragment>
-              <input
-                value={state.name}
-                onChange$={(event) => {
-                  state.name = event.target.value + \\" and \\" + person;
-                }}
-              ></input>
-              Hello {person}! I can run in Qwik, Web Component, React, Vue,
-              Solid, or Liquid!
-            </Fragment>
-          );
-        }.bind(state)
-      )}
+      {(state.names || []).map(function (person) {
+        return (
+          <Fragment>
+            <input
+              value={state.name}
+              onChange$={(event) => {
+                state.name = event.target.value + \\" and \\" + person;
+              }}
+            ></input>
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+            or Liquid!
+          </Fragment>
+        );
+      })}
     </div>
   );
 });
@@ -656,16 +652,14 @@ export const Column = component$((props) => {
   const state = {};
   return (
     <div class=\\"builder-columns div-Column\\">
-      {(props.columns || []).map(
-        function (column, index) {
-          return (
-            <div class=\\"builder-column div-Column-2\\">
-              {column.content}
-              {index}
-            </div>
-          );
-        }.bind(state)
-      )}
+      {(props.columns || []).map(function (column, index) {
+        return (
+          <div class=\\"builder-column div-Column-2\\">
+            {column.content}
+            {index}
+          </div>
+        );
+      })}
     </div>
   );
 });
@@ -1197,17 +1191,15 @@ export const FormComponent = component$((props) => {
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map(
-            function (block, index) {
-              return (
-                <BuilderBlockComponent
-                  key={block.id}
-                  block={block}
-                  index={index}
-                ></BuilderBlockComponent>
-              );
-            }.bind(state)
-          )
+        ? (props.builderBlock?.children || []).map(function (block, index) {
+            return (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            );
+          })
         : null}
       {submissionState(props, state, formRef) === \\"error\\" ? (
         <BuilderBlocks
@@ -1528,15 +1520,13 @@ export const ImgStateComponent = component$((props) => {
   });
   return (
     <div>
-      {(state.images || []).map(
-        function (item, itemIndex) {
-          return (
-            <Fragment>
-              <img class=\\"custom-class\\" src={item} key={itemIndex}></img>
-            </Fragment>
-          );
-        }.bind(state)
-      )}
+      {(state.images || []).map(function (item, itemIndex) {
+        return (
+          <Fragment>
+            <img class=\\"custom-class\\" src={item} key={itemIndex}></img>
+          </Fragment>
+        );
+      })}
     </div>
   );
 });
@@ -1832,20 +1822,18 @@ export const SectionStateComponent = component$((props) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map(
-            function (item) {
-              return (
-                <section
-                  {...props.attributes}
-                  style={{
-                    maxWidth: item + state.max,
-                  }}
-                >
-                  <Slot></Slot>
-                </section>
-              );
-            }.bind(state)
-          )
+        ? (state.items || []).map(function (item) {
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  maxWidth: item + state.max,
+                }}
+              >
+                <Slot></Slot>
+              </section>
+            );
+          })
         : null}
     </>
   );
@@ -1872,15 +1860,13 @@ export const SelectComponent = component$((props) => {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map(
-        function (option, index) {
-          return (
-            <option value={option.value} data-index={index}>
-              {option.name || option.value}
-            </option>
-          );
-        }.bind(state)
-      )}
+      {(props.options || []).map(function (option, index) {
+        return (
+          <option value={option.value} data-index={index}>
+            {option.name || option.value}
+          </option>
+        );
+      })}
     </select>
   );
 });
@@ -1992,22 +1978,18 @@ export const SmileReviews = component$((props) => {
           </button>
         </>
       ) : null}
-      {(state.reviews || []).map(
-        function (review, index) {
-          return (
-            <div class=\\"review-SmileReviews\\" key={review.id}>
-              <img class=\\"img-SmileReviews\\" src={review.avatar}></img>
-              <div
-                class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
-              >
-                <div>N: {index}</div>
-                <div>{review.author}</div>
-                <div>{review.reviewMessage}</div>
-              </div>
+      {(state.reviews || []).map(function (review, index) {
+        return (
+          <div class=\\"review-SmileReviews\\" key={review.id}>
+            <img class=\\"img-SmileReviews\\" src={review.avatar}></img>
+            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>N: {index}</div>
+              <div>{review.author}</div>
+              <div>{review.reviewMessage}</div>
             </div>
-          );
-        }.bind(state)
-      )}
+          </div>
+        );
+      })}
     </div>
   );
 });
@@ -3374,11 +3356,9 @@ export const NestedShow = component$((props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map(
-          function (item, idx) {
-            return <div key={idx}>{item}</div>;
-          }.bind(state)
-        )
+        (props.items || []).map(function (item, idx) {
+          return <div key={idx}>{item}</div>;
+        })
       ) : (
         <div>else-condition-A</div>
       )}
