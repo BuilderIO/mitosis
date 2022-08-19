@@ -518,6 +518,14 @@ const generateComponents = (componentsUsed: string[], options: ToVueOptions): st
   }
 };
 
+const appendToDataString = ({
+  dataString,
+  newContent,
+}: {
+  dataString: string;
+  newContent: string;
+}) => dataString.replace(/}$/, `${newContent}}`);
+
 const componentToVue =
   (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
@@ -583,10 +591,13 @@ const componentToVue =
       .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
-    dataString = dataString.replace(/}$/, `${getCustomImports(component).join(',')}}`);
+    dataString = appendToDataString({
+      dataString,
+      newContent: getCustomImports(component).join(','),
+    });
 
     if (localVarAsData.length) {
-      dataString = dataString.replace(/}$/, `${localVarAsData.join(',')}}`);
+      dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
     }
 
     const elementProps = getProps(component);
