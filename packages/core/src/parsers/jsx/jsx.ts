@@ -18,7 +18,7 @@ import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
 import { parseCodeJson } from './helpers';
 import { collectTypes, getPropsTypeRef, isTypeImport, isTypeOrInterface } from './component-types';
-import { collectDefaultProps, undoPropsDestructure } from './props';
+import { undoPropsDestructure } from './props';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -129,6 +129,21 @@ const componentFunctionToJson = (
                 .replace(/^{/, '')
                 .replace(/}$/, '');
               hooks.onInit = { code };
+            }
+          } else if (expression.callee.name === HOOKS.DEFAULT_PROPS) {
+            const firstArg = expression.arguments[0];
+            if (types.isObjectExpression(firstArg)) {
+              const objectProperties = firstArg.properties?.filter((i) =>
+                types.isObjectProperty(i),
+              );
+              objectProperties?.forEach((i: any) => {
+                if (i.key?.name) {
+                  context.builder.component.defaultProps = {
+                    ...(context.builder.component.defaultProps ?? {}),
+                    [i.key?.name]: i.value.value,
+                  };
+                }
+              });
             }
           }
         }
@@ -545,8 +560,6 @@ export function parseJsx(
                 collectTypes(statement, context);
               }
             }
-
-            collectDefaultProps(path, context);
 
             const exportsOrLocalVariables = path.node.body.filter(
               (statement) =>
