@@ -38,7 +38,7 @@ const vueConfig = {
  * @type {import('@builder.io/mitosis'.MitosisConfig)}
  */
 module.exports = {
-  files: 'cases/**/*',
+  files: 'src/**',
   targets,
   // Each run needs a separate output dest, as Mitosis clears it first.
   dest: [outputDir],
