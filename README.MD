@@ -153,7 +153,7 @@ Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the
 | Target  | 01 one component   | 02 two components  |
 | ------- | ------------------ | ------------------ |
 | angular | :white_check_mark: | :white_check_mark: |
-| qwik    | :white_check_mark: | :white_check_mark: |
+| qwik    | :white_check_mark: | :x:                |
 | react   | :white_check_mark: | :white_check_mark: |
 | solid   | :white_check_mark: | :white_check_mark: |
 | svelte  | :white_check_mark: | :white_check_mark: |
