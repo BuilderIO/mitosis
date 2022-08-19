@@ -71,9 +71,9 @@ function getCommonStyles(fileSet: FileSet): {
 export function addComponent(
   fileSet: FileSet,
   component: MitosisComponent,
-  opts: { isRoot?: boolean; shareStyles?: boolean; hostProps?: Record<string, string> } = {},
+  opts: { isRoot?: boolean; shareStyles?: boolean } = {},
 ) {
-  const _opts = { isRoot: false, shareStyles: false, hostProps: null, ...opts };
+  const _opts = { isRoot: false, shareStyles: false, ...opts };
   compileAwayBuilderComponentsFromTree(component, {
     ...compileAwayComponents,
     // A set of components that should not be compiled away because they are implemented as runtime components.
@@ -110,15 +110,6 @@ export function addComponent(
   }
   const directives: Map<string, string> = new Map();
   let rootChildren = component.children;
-  if (_opts.hostProps) {
-    rootChildren = [
-      createMitosisNode({
-        name: 'Host',
-        properties: _opts.hostProps,
-        children: component.children,
-      }),
-    ];
-  }
   addComponentOnMount(
     onRenderFile,
     function (this: SrcBuilder) {
