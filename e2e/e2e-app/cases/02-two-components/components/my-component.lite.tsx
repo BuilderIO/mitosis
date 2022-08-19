@@ -1,6 +1,13 @@
-import { useStore } from '@builder.io/mitosis';
+import { useStore, useMetadata } from '@builder.io/mitosis';
 
 import ItemList from './item-list.lite';
+
+// eslint-disable-next-line @builder.io/mitosis/only-default-function-and-imports
+useMetadata({
+  qwik: {
+    mutable: ['state.list'],
+  },
+});
 
 export interface State {
   list: string[];

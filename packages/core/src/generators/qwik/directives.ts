@@ -27,16 +27,9 @@ export const DIRECTIVES: Record<
       this.jsxExpression(() => {
         const forName: string = node.properties._forName || '_';
         const indexName: string | undefined = node.properties._indexName;
-        this.emit(
-          '(',
-          expr,
-          '||[]).map(',
-          '((function(',
-          forName,
-          indexName ? ',' : '',
-          indexName ? indexName : '',
-          '){',
-        );
+        this.emit('(', expr, '||[]).map(');
+        this.isBuilder && this.emit('('),
+          this.emit('function(', forName, indexName ? ',' : '', indexName ? indexName : '', '){');
         if (this.isBuilder) {
           this.emit(
             'var state=Object.assign({},this,{',
@@ -50,7 +43,9 @@ export const DIRECTIVES: Record<
         }
         this.emit('return(');
         blockFn();
-        this.emit(');}).bind(state)))');
+        this.emit(');}');
+        this.isBuilder && this.emit(').bind(state))');
+        this.emit(')');
       });
     },
   Image: minify`${Image}`,
