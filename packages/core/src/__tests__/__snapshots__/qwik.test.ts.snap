@@ -292,20 +292,22 @@ export const MyBasicForShowComponent = component$((props) => {
   const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
   return (
     <div>
-      {(state.names || []).map((person) => {
-        return person === state.name ? (
-          <>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            ></input>
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </>
-        ) : null;
-      })}
+      {(state.names || []).map(
+        function (person) {
+          return person === state.name ? (
+            <>
+              <input
+                value={state.name}
+                onChange$={(event) => {
+                  state.name = event.target.value + \\" and \\" + person;
+                }}
+              ></input>
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
+            </>
+          ) : null;
+        }.bind(state)
+      )}
     </div>
   );
 });
@@ -456,20 +458,22 @@ export const MyBasicForComponent = component$((props) => {
   });
   return (
     <div>
-      {(state.names || []).map((person) => {
-        return (
-          <Fragment>
-            <input
-              value={state.name}
-              onChange$={(event) => {
-                state.name = event.target.value + \\" and \\" + person;
-              }}
-            ></input>
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
-          </Fragment>
-        );
-      })}
+      {(state.names || []).map(
+        function (person) {
+          return (
+            <Fragment>
+              <input
+                value={state.name}
+                onChange$={(event) => {
+                  state.name = event.target.value + \\" and \\" + person;
+                }}
+              ></input>
+              Hello {person}! I can run in Qwik, Web Component, React, Vue,
+              Solid, or Liquid!
+            </Fragment>
+          );
+        }.bind(state)
+      )}
     </div>
   );
 });
@@ -652,14 +656,16 @@ export const Column = component$((props) => {
   const state = {};
   return (
     <div class=\\"builder-columns div-Column\\">
-      {(props.columns || []).map((column, index) => {
-        return (
-          <div class=\\"builder-column div-Column-2\\">
-            {column.content}
-            {index}
-          </div>
-        );
-      })}
+      {(props.columns || []).map(
+        function (column, index) {
+          return (
+            <div class=\\"builder-column div-Column-2\\">
+              {column.content}
+              {index}
+            </div>
+          );
+        }.bind(state)
+      )}
     </div>
   );
 });
@@ -901,26 +907,28 @@ export const MyComponent_onMount = (props) => {
         builder-id=\\"builder-a58a66676d9b4ecc826c1b8bc5ad91f1\\"
         class=\\"cz5wnof\\"
       >
-        {(state.simpleList.results || []).map((item) => {
-          var state = Object.assign({}, this, {
-            resultsItem: item == null ? {} : item,
-          });
-          return (
-            <div class=\\"cdrk993\\">
-              <div
-                class=\\"builder-text\\"
-                dangerouslySetInnerHTML={(() => {
-                  try {
-                    var _virtual_index = state.resultsItem.data.title;
-                    return _virtual_index;
-                  } catch (err) {
-                    console.warn(\\"Builder code error\\", err);
-                  }
-                })()}
-              ></div>
-            </div>
-          );
-        })}
+        {(state.simpleList.results || []).map(
+          function (item) {
+            var state = Object.assign({}, this, {
+              resultsItem: item == null ? {} : item,
+            });
+            return (
+              <div class=\\"cdrk993\\">
+                <div
+                  class=\\"builder-text\\"
+                  dangerouslySetInnerHTML={(() => {
+                    try {
+                      var _virtual_index = state.resultsItem.data.title;
+                      return _virtual_index;
+                    } catch (err) {
+                      console.warn(\\"Builder code error\\", err);
+                    }
+                  })()}
+                ></div>
+              </div>
+            );
+          }.bind(state)
+        )}
       </section>
     </div>
   );
@@ -1189,15 +1197,17 @@ export const FormComponent = component$((props) => {
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
-        ? (props.builderBlock?.children || []).map((block, index) => {
-            return (
-              <BuilderBlockComponent
-                key={block.id}
-                block={block}
-                index={index}
-              ></BuilderBlockComponent>
-            );
-          })
+        ? (props.builderBlock?.children || []).map(
+            function (block, index) {
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }.bind(state)
+          )
         : null}
       {submissionState(props, state, formRef) === \\"error\\" ? (
         <BuilderBlocks
@@ -1412,7 +1422,8 @@ export const Image = function Image(props) {
   var jsx = props.children || [];
   var image = props.image;
   if (image) {
-    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isBuilderIoImage =
+      !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
     var isPixel =
       (_a = props.builderBlock) === null || _a === void 0
         ? void 0
@@ -1517,13 +1528,15 @@ export const ImgStateComponent = component$((props) => {
   });
   return (
     <div>
-      {(state.images || []).map((item, itemIndex) => {
-        return (
-          <Fragment>
-            <img class=\\"custom-class\\" src={item} key={itemIndex}></img>
-          </Fragment>
-        );
-      })}
+      {(state.images || []).map(
+        function (item, itemIndex) {
+          return (
+            <Fragment>
+              <img class=\\"custom-class\\" src={item} key={itemIndex}></img>
+            </Fragment>
+          );
+        }.bind(state)
+      )}
     </div>
   );
 });
@@ -1609,7 +1622,8 @@ export const Image = function Image(props) {
   var jsx = props.children || [];
   var image = props.image;
   if (image) {
-    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isBuilderIoImage =
+      !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
     var isPixel =
       (_a = props.builderBlock) === null || _a === void 0
         ? void 0
@@ -1818,18 +1832,20 @@ export const SectionStateComponent = component$((props) => {
   return (
     <>
       {state.max
-        ? (state.items || []).map((item) => {
-            return (
-              <section
-                {...props.attributes}
-                style={{
-                  maxWidth: item + state.max,
-                }}
-              >
-                <Slot></Slot>
-              </section>
-            );
-          })
+        ? (state.items || []).map(
+            function (item) {
+              return (
+                <section
+                  {...props.attributes}
+                  style={{
+                    maxWidth: item + state.max,
+                  }}
+                >
+                  <Slot></Slot>
+                </section>
+              );
+            }.bind(state)
+          )
         : null}
     </>
   );
@@ -1856,13 +1872,15 @@ export const SelectComponent = component$((props) => {
       defaultValue={props.defaultValue}
       name={props.name}
     >
-      {(props.options || []).map((option, index) => {
-        return (
-          <option value={option.value} data-index={index}>
-            {option.name || option.value}
-          </option>
-        );
-      })}
+      {(props.options || []).map(
+        function (option, index) {
+          return (
+            <option value={option.value} data-index={index}>
+              {option.name || option.value}
+            </option>
+          );
+        }.bind(state)
+      )}
     </select>
   );
 });
@@ -1974,18 +1992,22 @@ export const SmileReviews = component$((props) => {
           </button>
         </>
       ) : null}
-      {(state.reviews || []).map((review, index) => {
-        return (
-          <div class=\\"review-SmileReviews\\" key={review.id}>
-            <img class=\\"img-SmileReviews\\" src={review.avatar}></img>
-            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-              <div>N: {index}</div>
-              <div>{review.author}</div>
-              <div>{review.reviewMessage}</div>
+      {(state.reviews || []).map(
+        function (review, index) {
+          return (
+            <div class=\\"review-SmileReviews\\" key={review.id}>
+              <img class=\\"img-SmileReviews\\" src={review.avatar}></img>
+              <div
+                class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}
+              >
+                <div>N: {index}</div>
+                <div>{review.author}</div>
+                <div>{review.reviewMessage}</div>
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        }.bind(state)
+      )}
     </div>
   );
 });
@@ -2489,20 +2511,24 @@ export const MyComponent_onMount = (props) => {
     <>
       <div
         builder-id=\\"builder-50b2438beaa4498b985eb9d8a7659afa\\"
+        builder-content-id=\\"d187055af171488fad843acf045d6bf7\\"
         class=\\"c713ty2 builder-block\\"
       >
         <ComponentD187055AF171488FAD843ACF045D6BF7
-          builder-id=\\"builder-l6nwek\\"
+          builder-content-id=\\"d187055af171488fad843acf045d6bf7\\"
+          builder-id=\\"builder-dbaw2p\\"
           title=\\"First title from parent\\"
           serverStateId=\\"w8x6w6\\"
         ></ComponentD187055AF171488FAD843ACF045D6BF7>
       </div>
       <div
         builder-id=\\"builder-33f427415bef4725b0c9fcd4fed325f2\\"
+        builder-content-id=\\"d187055af171488fad843acf045d6bf7\\"
         class=\\"c713ty2 builder-block\\"
       >
         <ComponentD187055AF171488FAD843ACF045D6BF7
-          builder-id=\\"builder-1iryyq\\"
+          builder-content-id=\\"d187055af171488fad843acf045d6bf7\\"
+          builder-id=\\"builder-ahaljp\\"
           title=\\"Second title from parent\\"
           serverStateId=\\"w8x6w6\\"
         ></ComponentD187055AF171488FAD843ACF045D6BF7>
@@ -2682,29 +2708,31 @@ exports.Component000012_onMount = (props) => {
       \\"builder-id\\": \\"builder-d2b6ee30433348ffa51a17334b8b6c73\\",
       class: \\"cv6ku2d builder-block\\",
     },
-    (state.hits || []).map((item) => {
-      var state = Object.assign({}, this, {
-        hitsItem: item == null ? {} : item,
-      });
-      return h(
-        \\"div\\",
-        {
-          \\"builder-id\\": \\"builder-cc43bc95cde743a59b269cb0157b99cd\\",
-          class: \\"c3j7e6c\\",
-        },
-        h(Component000013, {
-          \\"builder-id\\": \\"builder-cx8eewmyu3\\",
-          altText: \\"\\",
-          serverStateId: \\"woo8b6\\",
-          title: state.hitsItem.name,
-          linkUrl: state.hitsItem.url,
-          subCategory: state.hitsItem.blogSubcategory,
-          imageUrl: state.hitsItem.heroImage,
-          publicationDate: state.hitsItem.createdDate,
-          heroImageAltText: state.hitsItem.heroImageAltText,
-        })
-      );
-    })
+    (state.hits || []).map(
+      function (item) {
+        var state = Object.assign({}, this, {
+          hitsItem: item == null ? {} : item,
+        });
+        return h(
+          \\"div\\",
+          {
+            \\"builder-id\\": \\"builder-cc43bc95cde743a59b269cb0157b99cd\\",
+            class: \\"c3j7e6c\\",
+          },
+          h(Component000013, {
+            \\"builder-id\\": \\"builder-cx8eewmyu3\\",
+            altText: \\"\\",
+            serverStateId: \\"woo8b6\\",
+            title: state.hitsItem.name,
+            linkUrl: state.hitsItem.url,
+            subCategory: state.hitsItem.blogSubcategory,
+            imageUrl: state.hitsItem.heroImage,
+            publicationDate: state.hitsItem.createdDate,
+            heroImageAltText: state.hitsItem.heroImageAltText,
+          })
+        );
+      }.bind(state)
+    )
   );
 };
 ",
@@ -3257,7 +3285,8 @@ export const Image = function Image(props) {
   var jsx = props.children || [];
   var image = props.image;
   if (image) {
-    var isBuilderIoImage = !!(image || \\"\\").match(/\\\\.builder\\\\.io/);
+    var isBuilderIoImage =
+      !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
     var isPixel =
       (_a = props.builderBlock) === null || _a === void 0
         ? void 0
@@ -3345,9 +3374,11 @@ export const NestedShow = component$((props) => {
   return (
     <>
       {props.conditionA ? (
-        (props.items || []).map((item, idx) => {
-          return <div key={idx}>{item}</div>;
-        })
+        (props.items || []).map(
+          function (item, idx) {
+            return <div key={idx}>{item}</div>;
+          }.bind(state)
+        )
       ) : (
         <div>else-condition-A</div>
       )}
@@ -3666,12 +3697,14 @@ export const Todos_onMount = (props) => {
         ></input>
       ) : null}
       <ul class=\\"todo-list\\">
-        {(todosState.todos || []).map((todo) => {
-          var state = Object.assign({}, this, {
-            todosItem: todo == null ? {} : todo,
-          });
-          return <Todo todo={todo}></Todo>;
-        })}
+        {(todosState.todos || []).map(
+          function (todo) {
+            var state = Object.assign({}, this, {
+              todosItem: todo == null ? {} : todo,
+            });
+            return <Todo todo={todo}></Todo>;
+          }.bind(state)
+        )}
       </ul>
     </section>
   );
