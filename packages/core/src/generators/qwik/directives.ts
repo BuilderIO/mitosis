@@ -28,7 +28,7 @@ export const DIRECTIVES: Record<
         const forName: string = node.properties._forName || '_';
         const indexName: string | undefined = node.properties._indexName;
         this.emit('(', expr, '||[]).map(');
-        this.isBuilder && this.emit('('),
+        this.isBuilder && this.emit('(('),
           this.emit('function(', forName, indexName ? ',' : '', indexName ? indexName : '', '){');
         if (this.isBuilder) {
           this.emit(
