@@ -605,11 +605,8 @@ export const builderElementToMitosisNode = (
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
-      ...(block.component
-        ? {
-            $tagName: block.tagName,
-          }
-        : null),
+      ...(block.component && { $tagName: block.tagName }),
+      ...(block.class && { class: block.class }),
       ...properties,
     },
     bindings: {
@@ -860,6 +857,7 @@ const builderContentPartToMitosisComponent = (
       useMetadata: {
         httpRequests: builderContent.data?.httpRequests,
       },
+      ...(builderContent.data?.cssCode && { cssCode: builderContent.data.cssCode }),
     },
     inputs: builderContent.data?.inputs?.map((input) => ({
       name: input.name,
