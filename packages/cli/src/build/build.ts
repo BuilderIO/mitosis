@@ -28,7 +28,6 @@ import { fastClone } from '../helpers/fast-clone';
 import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
-import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
@@ -288,8 +287,7 @@ async function buildAndOutputComponentFiles({
       case 'vue':
       case 'vue2':
       case 'vue3':
-        // TODO: transform to CJS (?)
-        transpiled = transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1');
+        break;
     }
 
     const outputDir = `${options.dest}/${outputPath}`;
@@ -339,7 +337,9 @@ async function outputNonComponentFiles({
  * Transpiles all non-component files, including Context files.
  */
 async function buildNonComponentFiles({ target, options }: TargetContextWithConfig) {
-  const tsFiles = await glob(`src/**/*.ts`, { cwd });
+  const tsFiles = (await glob(options.files, { cwd })).filter(
+    (file) => file.endsWith('.ts') || file.endsWith('.js'),
+  );
 
   return await Promise.all(
     tsFiles.map(async (path) => {

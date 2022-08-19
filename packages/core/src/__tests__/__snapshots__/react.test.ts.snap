@@ -112,7 +112,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState, useContext, useEffect } from \\"preact/hooks\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -219,7 +219,7 @@ import { useState } from \\"preact/hooks\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default function MyBasicChildComponent(props) {
+export default function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -242,7 +242,7 @@ exports[`Preact BasicFor 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MyBasicForComponent(props) {
+export default function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -1147,7 +1147,7 @@ exports[`Preact Image State 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function ImgStateComponent(props) {
+export default function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -1267,7 +1267,7 @@ exports[`Preact Remove Internal mitosis package 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -1717,7 +1717,7 @@ exports[`Preact basicOnUpdateReturn 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MyBasicOnUpdateReturnComponent(props) {
+export default function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -1751,7 +1751,7 @@ exports[`Preact class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test2 test div\\">
@@ -1772,7 +1772,7 @@ exports[`Preact class + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test div\\">
@@ -1793,7 +1793,7 @@ exports[`Preact className + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test div\\">
@@ -1839,7 +1839,7 @@ exports[`Preact classState 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -1907,12 +1907,36 @@ Button.defaultProps = {
 "
 `;
 
+exports[`Preact defaultValsWithTypes 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+export default function ComponentWithTypes(props: Props) {
+  return (
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact multipleOnUpdate 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function MultipleOnUpdate(props) {
+export default function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -1930,7 +1954,7 @@ exports[`Preact multipleOnUpdateWithDeps 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MultipleOnUpdateWithDeps(props) {
+export default function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -1994,7 +2018,7 @@ exports[`Preact nestedStyles 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function NestedStyles(props) {
+export default function NestedStyles(props: any) {
   return (
     <Fragment>
       <div className=\\"div\\">Hello world</div>
@@ -2026,7 +2050,7 @@ exports[`Preact onInit & onMount 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function OnInit(props) {
+export default function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
   });
@@ -2076,7 +2100,7 @@ exports[`Preact onMount 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function Comp(props) {
+export default function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -2097,7 +2121,7 @@ exports[`Preact onUpdate 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function OnUpdate(props) {
+export default function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -2112,7 +2136,7 @@ exports[`Preact onUpdateWithDeps 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function OnUpdateWithDeps(props) {
+export default function OnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2344,7 +2368,7 @@ exports[`Preact subComponent 1`] = `
 import { h, Fragment } from \\"preact\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props) {
+export default function SubComponent(props: any) {
   return <Foo />;
 }
 "
@@ -2475,7 +2499,7 @@ exports[`React Basic Context 1`] = `
 import { useState, useContext, useEffect } from \\"react\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -2578,7 +2602,7 @@ import { useState } from \\"react\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default function MyBasicChildComponent(props) {
+export default function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -2600,7 +2624,7 @@ exports[`React BasicFor 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props) {
+export default function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -3493,7 +3517,7 @@ exports[`React Image State 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props) {
+export default function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -3609,7 +3633,7 @@ exports[`React Remove Internal mitosis package 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -4047,7 +4071,7 @@ exports[`React basicOnUpdateReturn 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props) {
+export default function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -4080,7 +4104,7 @@ export default function MyBasicOnUpdateReturnComponent(props) {
 exports[`React class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test2 test div\\">
@@ -4100,7 +4124,7 @@ export default function MyBasicComponent(props) {
 exports[`React class + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4120,7 +4144,7 @@ export default function MyBasicComponent(props) {
 exports[`React className + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4164,7 +4188,7 @@ exports[`React classState 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -4231,11 +4255,34 @@ Button.defaultProps = {
 "
 `;
 
+exports[`React defaultValsWithTypes 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+export default function ComponentWithTypes(props: Props) {
+  return (
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
+  );
+}
+"
+`;
+
 exports[`React multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props) {
+export default function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -4252,7 +4299,7 @@ exports[`React multipleOnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props) {
+export default function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -4314,7 +4361,7 @@ export default function NestedShow(props: Props) {
 exports[`React nestedStyles 1`] = `
 "import * as React from \\"react\\";
 
-export default function NestedStyles(props) {
+export default function NestedStyles(props: any) {
   return (
     <>
       <div className=\\"div\\">Hello world</div>
@@ -4345,7 +4392,7 @@ exports[`React onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props) {
+export default function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
   });
@@ -4393,7 +4440,7 @@ exports[`React onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props) {
+export default function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -4413,7 +4460,7 @@ exports[`React onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props) {
+export default function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -4427,7 +4474,7 @@ exports[`React onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props) {
+export default function OnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -4750,7 +4797,7 @@ exports[`React subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props) {
+export default function SubComponent(props: any) {
   return <Foo />;
 }
 "
