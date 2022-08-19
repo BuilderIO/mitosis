@@ -31,11 +31,11 @@ export const DIRECTIVES: Record<
           '(',
           expr,
           '||[]).map(',
-          '((',
+          '((function(',
           forName,
           indexName ? ',' : '',
           indexName ? indexName : '',
-          ') => {',
+          '){',
         );
         if (this.isBuilder) {
           this.emit(
@@ -50,7 +50,7 @@ export const DIRECTIVES: Record<
         }
         this.emit('return(');
         blockFn();
-        this.emit(');}))');
+        this.emit(');}).bind(state)))');
       });
     },
   Image: minify`${Image}`,
