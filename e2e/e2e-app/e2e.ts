@@ -9,7 +9,11 @@ import { emitTable, Entry } from './e2e-output';
 
 // Update this array when adding new cases.
 
-const cases = ['01-one-component', '02-two-components', '03-types'];
+const cases = [
+  '01-one-component',
+  '02-two-components',
+  // '03-types'
+];
 
 // Update this array when Mitosis adds new targets
 
