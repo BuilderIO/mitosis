@@ -642,13 +642,15 @@ const componentToVue =
     <template>
       ${template}
     </template>
-    <script>
+    <script lang="ts">
     ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
+
+      ${component.types?.join('\n') || ''}
 
       export default {
         ${
