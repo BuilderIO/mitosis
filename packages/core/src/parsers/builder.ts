@@ -457,33 +457,34 @@ export const builderElementToMitosisNode = (
   // Special builder properties
   // TODO: support hide and repeat
   const blockBindings = getBlockBindings(block, options);
-  const showBinding = blockBindings.show;
-  if (showBinding) {
+  let code: string | undefined = undefined;
+  if (blockBindings.show) {
+    code = wrapBindingIfNeeded(blockBindings.show, options);
+  } else if (blockBindings.hide) {
+    code = `!(${wrapBindingIfNeeded(blockBindings.hide, options)})`;
+  }
+  if (code) {
     const isFragment = block.component?.name === 'Fragment';
     // TODO: handle having other things, like a repeat too
     if (isFragment) {
       return createMitosisNode({
         name: 'Show',
-        bindings: {
-          when: { code: wrapBindingIfNeeded(showBinding, options) },
-        },
+        bindings: { when: { code: code } },
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
     } else {
       return createMitosisNode({
         name: 'Show',
-        bindings: {
-          when: { code: wrapBindingIfNeeded(showBinding, options) },
-        },
+        bindings: { when: { code: code } },
         children: [
           builderElementToMitosisNode(
             {
               ...block,
               code: {
                 ...block.code,
-                bindings: omit(blockBindings, 'show'),
+                bindings: omit(blockBindings, 'show', 'hide'),
               },
-              bindings: omit(blockBindings, 'show'),
+              bindings: omit(blockBindings, 'show', 'hide'),
             },
             options,
           ),

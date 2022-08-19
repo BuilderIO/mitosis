@@ -1,4 +1,5 @@
 import { format } from 'prettier/standalone';
+import { convertExportDefaultToReturn } from '../../parsers/builder';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -516,6 +517,9 @@ export function iif(code: any) {
   code = code.trim();
   if (code.endsWith(_virtual_index) && !code.endsWith(return_virtual_index)) {
     code = code.substr(0, code.length - _virtual_index.length) + return_virtual_index;
+  }
+  if (code.indexOf('export') !== -1) {
+    code = convertExportDefaultToReturn(code);
   }
   return function (this: SrcBuilder) {
     code && this.emit('(()=>{', code, '})()');
