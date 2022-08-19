@@ -133,7 +133,9 @@ const componentFunctionToJson = (
           } else if (expression.callee.name === 'useDefaultProps') {
             const firstArg = expression.arguments[0];
             if (types.isObjectExpression(firstArg)) {
-              const objectProperties = firstArg.properties?.filter(i => types.isObjectProperty(i));
+              const objectProperties = firstArg.properties?.filter((i) =>
+                types.isObjectProperty(i),
+              );
               objectProperties?.forEach((i: any) => {
                 if (i.key?.name) {
                   context.builder.component.defaultProps = {
