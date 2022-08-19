@@ -28,7 +28,6 @@ import { fastClone } from '../helpers/fast-clone';
 import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
-import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
@@ -288,8 +287,6 @@ async function buildAndOutputComponentFiles({
       case 'vue':
       case 'vue2':
       case 'vue3':
-        // TODO: transform to CJS (?)
-        transpiled = transpileOptionalChaining(transpiled).replace(/\.lite(['"];)/g, '$1');
         transpiled = await transpile({
           path,
           content: transpiled,
