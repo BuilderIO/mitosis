@@ -592,9 +592,10 @@ const componentToVue =
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children
-      .map((item) => blockToVue(item, options, { isRootNode: true }))
-      .join('\n');
+    const template = pipe(
+      component.children.map((item) => blockToVue(item, options, { isRootNode: true })).join('\n'),
+      renameMitosisComponentsToKebabCase,
+    );
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
@@ -774,11 +775,7 @@ const componentToVue =
       str = str.replace(pattern, '');
     }
 
-    // Transform <FooBar> to <foo-bar> as Vue2 needs
-    // TO-DO: this breaks generic types i.e. `Foo<SomeBar>` -> `Foo<some-bar>`
-    return str.replace(/<\/?\w+/g, (match) =>
-      match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
-    );
+    return str;
   };
 
 type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
@@ -788,6 +785,10 @@ export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
 
 export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: 3 });
+
+// Transform <FooBar> to <foo-bar> as Vue2 needs
+const renameMitosisComponentsToKebabCase = (str: string) =>
+  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [
