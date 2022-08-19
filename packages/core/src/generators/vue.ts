@@ -775,6 +775,7 @@ const componentToVue =
     }
 
     // Transform <FooBar> to <foo-bar> as Vue2 needs
+    // TO-DO: this breaks generic types i.e. `Foo<SomeBar>` -> `Foo<some-bar>`
     return str.replace(/<\/?\w+/g, (match) =>
       match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
     );
