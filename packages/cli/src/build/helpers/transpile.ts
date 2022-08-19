@@ -21,8 +21,8 @@ export const transpile = async ({
     const transpilerOptions = options.options[target]?.transpiler;
     const format = transpilerOptions?.format || 'esm';
 
-    let useContent = content ?? (await readFile(path, 'utf8'));
-    useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);
+    const useContent = content ?? (await readFile(path, 'utf8'));
+
     const output = await esbuild.transform(useContent, {
       format: format,
       /**
