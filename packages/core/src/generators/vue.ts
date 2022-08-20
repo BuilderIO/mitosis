@@ -1,4 +1,5 @@
 import dedent from 'dedent';
+import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -26,7 +27,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
-import { kebabCase, size } from 'lodash';
+import { kebabCase, size, uniq } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
@@ -44,6 +45,7 @@ function encodeQuotes(string: string) {
 }
 
 export type VueVersion = 2 | 3;
+export type Api = 'options' | 'composition';
 
 interface VueVersionOpt {
   vueVersion: VueVersion;
@@ -53,6 +55,7 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
+  api?: Api
 }
 
 const SPECIAL_PROPERTIES = {
@@ -450,7 +453,7 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
 }
 
 /**
- * This plugin handle `onUpdate` code that watches depdendencies.
+ * This plugin handle `onUpdate` code that watches dedendencies.
  * We need to apply this workaround to be able to watch specific dependencies in Vue 2: https://stackoverflow.com/a/45853349
  *
  * We add a `computed` property for the dependencies, and a matching `watch` function for the `onUpdate` code
@@ -488,6 +491,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
   vueVersion: 2,
+  api: 'composition'
 };
 
 const mergeOptions = (
@@ -637,34 +641,37 @@ const componentToVue =
       (prop) => prop !== 'children' && prop !== 'class',
     );
 
-    if (component.defaultProps) {
-      propsDefinition = propsDefinition.reduce(
-        (propsDefinition: DefaultProps, curr: string) => (
-          (propsDefinition[curr] =
-            component.defaultProps && component.defaultProps.hasOwnProperty(curr)
-              ? { default: component.defaultProps[curr] }
-              : {}),
-          propsDefinition
-        ),
-        {},
-      );
+    propsDefinition = propsDefinition.reduce(
+      (propsDefinition: DefaultProps, curr: string) => (
+        (propsDefinition[curr] =
+          component.defaultProps?.hasOwnProperty(curr)
+            ? { default: component.defaultProps[curr] }
+            : {}),
+        propsDefinition
+      ),
+      {},
+    );
+
+    let vueImports = ['defineComponent'];
+    if (options.vueVersion >= 3 && options.asyncComponentImports) {
+      vueImports.push('defineAsyncComponent');
+    }
+    if (options.api === 'composition') {
+      getterString.length > 3 && vueImports.push('computed')
+      onUpdateWithDeps.length && vueImports.push('watch');
+      elementProps.size && vueImports.push('defineProps');
+      component.defaultProps && vueImports.push('withDefaults');
+      component.hooks.onMount?.code && vueImports.push('onMounted')
+      component.hooks.onUnMount?.code && vueImports.push('onUnMounted')
+      onUpdateWithoutDeps.length && vueImports.push('onUpdated')
+      size(component.context.set) && vueImports.push('provide');
+      size(component.context.get) && vueImports.push('inject');
+      size(Object.keys(component.state).filter((key) => component.state[key]?.type === 'property')) && vueImports.push('ref');
     }
 
-    let str = dedent`
-    <template>
-      ${template}
-    </template>
-    <script lang="ts">
-    ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
-      ${renderPreComponent({
-        component,
-        target: 'vue',
-        asyncComponentImports: options.asyncComponentImports,
-      })}
-
-      ${component.types?.join('\n') || ''}
-
-      export default {
+    function generateOptionsApiScript() {
+      return `
+        export default defineComponent({
         ${
           !component.name
             ? ''
@@ -673,7 +680,7 @@ const componentToVue =
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${elementProps.size ? `props: ${JSON.stringify(propsDefinition)},` : ''}
+        ${elementProps.size ? `props: ${json5.stringify(propsDefinition)},` : ''}
         ${
           dataString.length < 4
             ? ''
@@ -749,7 +756,55 @@ const componentToVue =
           methods: ${functionsString},
         `
         }
-      }
+      })`
+    }
+
+    const getCompositionPropDefinition = () => {
+      if (component.defaultProps) {
+        return `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(component.defaultProps)})`;
+      } 
+      return `defineProps(${component.propsTypeRef})`;
+    }
+
+    const formatCompositionApiMethods = (methods: Array<string>, refKeys: Array<string>, methodKeys: Array<string>,): Array<string> => {
+      methods = methods.map(m => {
+        refKeys.forEach(ref => {
+          m = m.replaceAll(`this.${ref}`, `${ref}.value}`)
+        })
+        methodKeys.forEach(ref => {
+          m = m.replaceAll(`this.${ref}`, `${ref}`)
+        });
+        return m;
+      })
+      return methods;
+    }
+
+    function generateCompositionApiScript() {
+      const refKeys = Object.keys(component.state).filter((key) => component.state[key]?.type === 'property')
+      const refs = refKeys.map(key => `const ${key} = ref(${json5.stringify(component.state[key]?.code)})`);
+      const methodKeys = Object.keys(component.state).filter((key) => component.state[key]?.type === 'method')
+      let methods = methodKeys.map(key => `${component.state[key]?.code?.toString().replace('@builder.io/mitosis/method:', 'function ')}`);
+      methods = formatCompositionApiMethods(methods, refKeys, methodKeys);
+      return dedent`
+        ${elementProps.size ? getCompositionPropDefinition() : ''}
+        ${refs.join('\n')}
+        ${methods.join('\n')}
+      ` 
+    }
+
+    let str = dedent`
+    <template>
+      ${template}
+    </template>
+    <script ${options.api === 'composition' ? 'setup' : ''} lang="ts">
+      import { ${uniq(vueImports).sort().join(', ')} } from "vue"
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
+      ${component.types?.join('\n') || ''}
+      ${options.api === 'composition' ? generateCompositionApiScript() : generateOptionsApiScript()}
     </script>
     ${
       !css.trim().length
