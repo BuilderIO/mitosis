@@ -246,7 +246,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   if (json.children) {
     str += json.children
       .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
+      .join('');
   }
 
   str += `</${tagName}>`;
