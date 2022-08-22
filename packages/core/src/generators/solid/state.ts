@@ -64,8 +64,13 @@ const updateStateGettersInCode =
           includeProps: false,
           replaceWith: (name) => {
             const state = component.state[name];
-            // signal accessors are lazy, so we need to add a function call
-            if (options.state === 'signals' && state?.type === 'property') {
+            if (
+              options.state === 'signals' &&
+              // signal accessors are lazy, so we need to add a function call to property calls
+              (state?.type === 'property' ||
+                // getters become plain functions, requiring a function call to access their value
+                state?.type === 'getter')
+            ) {
               return `${name}()`;
             }
             return name;
@@ -109,36 +114,9 @@ const processStateValue = ({
       } else if (code.startsWith(methodLiteralPrefix)) {
         // methods
         const methodValue = code.replace(methodLiteralPrefix, '');
-        const isGetter = methodValue.startsWith('get ');
-
         const strippedMethodvalue = pipe(methodValue.replace('get ', ''), mapValue);
 
-        /**
-         * FROM:
-         * get foo() {
-         *   const bar = 'asdf'
-         *   return bar
-         * }
-         *
-         *
-         * TO:
-         * function _getter_foo() {
-         *   const bar = 'asdf'
-         *   return bar
-         * }
-         *
-         * const foo = _getter_foo()
-         */
-        if (isGetter) {
-          const FUNCTION_NAME_PREFIX = '_getter_';
-          return `
-            function ${FUNCTION_NAME_PREFIX}${strippedMethodvalue}
-
-            const ${key} = ${FUNCTION_NAME_PREFIX}${key}();
-          `;
-        } else {
-          return `function ${strippedMethodvalue}`;
-        }
+        return `function ${strippedMethodvalue}`;
       }
     }
 
