@@ -87,7 +87,12 @@ export const updateStateCode = ({
   updateSetters?: boolean;
 }) =>
   flow(
-    updateSetters ? updateStateSettersInCode(options) : identity,
+    updateSetters
+      ? (x: string) => {
+          console.log('skipping, ', x);
+          return updateStateSettersInCode(options)(x);
+        }
+      : identity,
     updateStateGettersInCode(options, component),
     (x) => x.trim(),
   );

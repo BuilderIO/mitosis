@@ -6,7 +6,7 @@ exports[`Solid AdvancedRef 1`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onBlur() {
     // Maintain focus
@@ -63,7 +63,7 @@ exports[`Solid AdvancedRef 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onBlur() {
     // Maintain focus
@@ -88,7 +88,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-108276ea\\"
+              class=\\"input-d2c6e094\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -108,7 +108,7 @@ function MyBasicRefComponent(props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-108276ea {
+        .input-d2c6e094 {
           color: red;
         }
       \`}</style>
@@ -121,50 +121,12 @@ export default MyBasicRefComponent;
 `;
 
 exports[`Solid Basic 1`] = `
-"import { createSignal } from \\"solid-js\\";
-
-import { css } from \\"solid-styled-components\\";
-
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"Steve\\");
-
-  function underscore_fn_name() {
-    return \\"bar\\";
-  }
-
-  return (
-    <div
-      class={
-        \\"test \\" +
-        css({
-          padding: \\"10px\\",
-        })
-      }
-    >
-      <input
-        value={DEFAULT_VALUES.name || name()}
-        onInput={(myEvent) => setName(myEvent.target.value)}
-      />
-      Hello! I can run in React, Vue, Solid, or Liquid!
-    </div>
-  );
-}
-
-export default MyBasicComponent;
-"
-`;
-
-exports[`Solid Basic 2`] = `
 "import { Show, For, createSignal } from \\"solid-js\\";
 
 function MyBasicForShowComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
-
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
 
   return (
     <div>
@@ -187,6 +149,46 @@ function MyBasicForShowComponent(props) {
         }}
       </For>
     </div>
+  );
+}
+
+export default MyBasicForShowComponent;
+"
+`;
+
+exports[`Solid Basic 2`] = `
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicForShowComponent(props) {
+  const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
+
+  return (
+    <>
+      <div>
+        <For each={names()}>
+          {(person, _index) => {
+            const index = _index();
+            return (
+              <Show when={person === name()}>
+                <input
+                  value={name()}
+                  onInput={(event) => {
+                    setName(event.target.value + \\" and \\" + person);
+                  }}
+                />
+                Hello
+                {person}! I can run in Qwik, Web Component, React, Vue, Solid,
+                or Liquid!
+              </Show>
+            );
+          }}
+        </For>
+      </div>
+    </>
   );
 }
 
@@ -279,7 +281,7 @@ import { Dynamic } from \\"solid-js/web\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -317,7 +319,7 @@ import { css } from \\"solid-styled-components\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -352,9 +354,9 @@ exports[`Solid Basic OnMount Update 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOnMountUpdateComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
-
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
 
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -378,9 +380,9 @@ exports[`Solid Basic OnMount Update 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOnMountUpdateComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
-
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
 
   onMount(() => {
     setName(\\"PatrickJS onMount\\" + props.bye);
@@ -404,7 +406,7 @@ exports[`Solid Basic Outputs 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   onMount(() => {
     props.onMessage(name());
@@ -424,7 +426,7 @@ exports[`Solid Basic Outputs 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   onMount(() => {
     props.onMessage(name());
@@ -446,7 +448,7 @@ exports[`Solid Basic Outputs Meta 1`] = `
 "import { onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   onMount(() => {
     props.onMessage(name());
@@ -466,7 +468,7 @@ exports[`Solid Basic Outputs Meta 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOutputsComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   onMount(() => {
     props.onMessage(name());
@@ -491,9 +493,9 @@ import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 function MyBasicChildComponent(props) {
-  const [name, setName] = createSignal(\\"Steve\\");
+  Steve;
 
-  const [dev, setDev] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   return (
     <div>
@@ -521,9 +523,9 @@ import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 function MyBasicChildComponent(props) {
-  const [name, setName] = createSignal(\\"Steve\\");
+  Steve;
 
-  const [dev, setDev] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   return (
     <>
@@ -548,9 +550,9 @@ exports[`Solid BasicFor 1`] = `
 "import { For, onMount, createSignal } from \\"solid-js\\";
 
 function MyBasicForComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
-
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
 
   onMount(() => {
     console.log(\\"onMount code\\");
@@ -590,9 +592,9 @@ exports[`Solid BasicFor 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicForComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
-
   const [names, setNames] = createSignal([\\"Steve\\", \\"PatrickJS\\"]);
+
+  PatrickJS;
 
   onMount(() => {
     console.log(\\"onMount code\\");
@@ -634,7 +636,7 @@ exports[`Solid BasicRef 1`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onBlur() {
     // Maintain focus
@@ -686,7 +688,7 @@ exports[`Solid BasicRef 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicRefComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onBlur() {
     // Maintain focus
@@ -706,7 +708,7 @@ function MyBasicRefComponent(props) {
         <Show when={props.showInput}>
           <>
             <input
-              class=\\"input-6da48258\\"
+              class=\\"input-a7d46d4c\\"
               ref={inputRef}
               value={name()}
               onBlur={(event) => onBlur()}
@@ -726,7 +728,7 @@ function MyBasicRefComponent(props) {
         Component!
       </div>
       <style jsx>{\`
-        .input-6da48258 {
+        .input-a7d46d4c {
           color: red;
         }
       \`}</style>
@@ -2426,7 +2428,7 @@ exports[`Solid Remove Internal mitosis package 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   return (
     <div>
@@ -2446,7 +2448,7 @@ exports[`Solid Remove Internal mitosis package 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   return (
     <>
@@ -2982,7 +2984,7 @@ exports[`Solid Text 1`] = `
 import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
-  const [name, setName] = createSignal(\\"Decadef20\\");
+  Decadef20;
 
   return (
     <div
@@ -3012,7 +3014,7 @@ import { css } from \\"solid-styled-components\\";
 import { Builder } from \\"@builder.io/sdk\\";
 
 function Text(props) {
-  const [name, setName] = createSignal(\\"Decadef20\\");
+  Decadef20;
 
   return (
     <>
@@ -3142,7 +3144,7 @@ exports[`Solid basicOnUpdateReturn 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function MyBasicOnUpdateReturnComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onUpdateFn_0() {
     const controller = new AbortController();
@@ -3180,7 +3182,7 @@ exports[`Solid basicOnUpdateReturn 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicOnUpdateReturnComponent(props) {
-  const [name, setName] = createSignal(\\"PatrickJS\\");
+  PatrickJS;
 
   function onUpdateFn_0() {
     const controller = new AbortController();
@@ -3392,11 +3394,11 @@ exports[`Solid classState 1`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const [classState, setClassState] = createSignal(\\"testClassName\\");
-
   const [styleState, setStyleState] = createSignal({
     color: \\"red\\",
   });
+
+  testClassName;
 
   return (
     <div
@@ -3424,11 +3426,11 @@ exports[`Solid classState 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const [classState, setClassState] = createSignal(\\"testClassName\\");
-
   const [styleState, setStyleState] = createSignal({
     color: \\"red\\",
   });
+
+  testClassName;
 
   return (
     <>
@@ -3580,13 +3582,13 @@ exports[`Solid multipleOnUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function MultipleOnUpdateWithDeps(props) {
-  const [a, setA] = createSignal(\\"a\\");
+  a;
 
-  const [b, setB] = createSignal(\\"b\\");
+  b;
 
-  const [c, setC] = createSignal(\\"c\\");
+  c;
 
-  const [d, setD] = createSignal(\\"d\\");
+  d;
 
   function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a(), b());
@@ -3619,13 +3621,13 @@ exports[`Solid multipleOnUpdateWithDeps 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MultipleOnUpdateWithDeps(props) {
-  const [a, setA] = createSignal(\\"a\\");
+  a;
 
-  const [b, setB] = createSignal(\\"b\\");
+  b;
 
-  const [c, setC] = createSignal(\\"c\\");
+  c;
 
-  const [d, setD] = createSignal(\\"d\\");
+  d;
 
   function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a(), b());
@@ -3799,8 +3801,6 @@ export const defaultValues = {
 };
 
 function OnInit(props) {
-  const [name, setName] = createSignal(\\"\\");
-
   return (
     <div>
       Default name defined by parent
@@ -3823,8 +3823,6 @@ export const defaultValues = {
 };
 
 function OnInit(props) {
-  const [name, setName] = createSignal(\\"\\");
-
   return (
     <>
       <div>
@@ -3907,9 +3905,9 @@ exports[`Solid onUpdateWithDeps 1`] = `
 "import { on, createEffect, createSignal } from \\"solid-js\\";
 
 function OnUpdateWithDeps(props) {
-  const [a, setA] = createSignal(\\"a\\");
+  a;
 
-  const [b, setB] = createSignal(\\"b\\");
+  b;
 
   function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a(), b());
@@ -3929,9 +3927,9 @@ exports[`Solid onUpdateWithDeps 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function OnUpdateWithDeps(props) {
-  const [a, setA] = createSignal(\\"a\\");
+  a;
 
-  const [b, setB] = createSignal(\\"b\\");
+  b;
 
   function onUpdateFn_0() {
     console.log(\\"Runs when a or b changes\\", a(), b());
@@ -4021,7 +4019,7 @@ exports[`Solid propsDestructure 1`] = `
 "import { createSignal } from \\"solid-js\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"Decadef20\\");
+  Decadef20;
 
   return (
     <div>
@@ -4042,7 +4040,7 @@ exports[`Solid propsDestructure 2`] = `
 import { css } from \\"solid-styled-components\\";
 
 function MyBasicComponent(props) {
-  const [name, setName] = createSignal(\\"Decadef20\\");
+  Decadef20;
 
   return (
     <>

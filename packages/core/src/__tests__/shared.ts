@@ -318,9 +318,14 @@ export const runTestsForTarget = (target: Target, generator: Transpiler) => {
     testsArray.forEach((tests) => {
       Object.keys(tests).forEach((key) => {
         test(key, () => {
-          const component = parseJsx(tests[key]);
-          const output = generator({ component, path });
-          expect(output).toMatchSnapshot();
+          try {
+            const component = parseJsx(tests[key]);
+            const output = generator({ component, path });
+            expect(output).toMatchSnapshot();
+          } catch (error) {
+            console.log('failed to parse', error);
+            throw error;
+          }
         });
       });
     });
