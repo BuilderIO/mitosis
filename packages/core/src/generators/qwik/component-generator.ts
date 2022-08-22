@@ -8,6 +8,7 @@ import { addPreventDefault } from './add-prevent-default';
 import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
+import { runPostJsonPlugins, runPreJsonPlugins } from '../../modules/plugins';
 
 Error.stackTraceLimit = 9999;
 
@@ -42,8 +43,15 @@ export const componentToQwik =
   (userOptions: ToQwikOptions = {}): Transpiler =>
   ({ component: _component, path }): string => {
     // Make a copy we can safely mutate, similar to babel's toolchain
-    const component = fastClone(_component);
+    let component = fastClone(_component);
+    if (userOptions.plugins) {
+      component = runPreJsonPlugins(component, userOptions.plugins);
+    }
     addPreventDefault(component);
+    if (userOptions.plugins) {
+      component = runPostJsonPlugins(component, userOptions.plugins);
+    }
+
     const file = new File(
       component.name + '.js',
       {
@@ -255,7 +263,6 @@ function emitUseStore(file: File, stateInit: StateInit) {
 function emitTypes(file: File, component: MitosisComponent) {
   if (file.options.isTypeScript) {
     component.types?.forEach((t) => file.src.emit(t, '\n'));
-    component.interfaces?.forEach((i) => file.src.emit(i));
   }
 }
 

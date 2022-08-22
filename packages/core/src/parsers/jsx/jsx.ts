@@ -17,13 +17,7 @@ import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
 import { parseCodeJson } from './helpers';
-import {
-  collectInterfaces,
-  collectTypes,
-  getPropsTypeRef,
-  isTypeImport,
-  isTypeOrInterface,
-} from './component-types';
+import { collectTypes, getPropsTypeRef, isTypeImport, isTypeOrInterface } from './component-types';
 import { undoPropsDestructure } from './props';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
@@ -136,6 +130,21 @@ const componentFunctionToJson = (
                 .replace(/}$/, '');
               hooks.onInit = { code };
             }
+          } else if (expression.callee.name === HOOKS.DEFAULT_PROPS) {
+            const firstArg = expression.arguments[0];
+            if (types.isObjectExpression(firstArg)) {
+              const objectProperties = firstArg.properties?.filter((i) =>
+                types.isObjectProperty(i),
+              );
+              objectProperties?.forEach((i: any) => {
+                if (i.key?.name) {
+                  context.builder.component.defaultProps = {
+                    ...(context.builder.component.defaultProps ?? {}),
+                    [i.key?.name]: i.value.value,
+                  };
+                }
+              });
+            }
           }
         }
       }
@@ -243,6 +252,8 @@ const componentFunctionToJson = (
     context.builder.component.exports = localExports;
   }
 
+  const propsTypeRef = getPropsTypeRef(node, context);
+
   return createMitosisComponent({
     ...context.builder.component,
     name: node.id?.name,
@@ -254,7 +265,7 @@ const componentFunctionToJson = (
       get: accessedContext,
       set: setContext,
     },
-    propsTypeRef: getPropsTypeRef(node),
+    propsTypeRef,
   }) as any;
 };
 
@@ -666,11 +677,10 @@ export function parseJsx(
           },
           ExportNamedDeclaration(path, context) {
             const { node } = path;
-            const newTypeStr = generate(node).code;
-            if (babel.types.isTSInterfaceDeclaration(node.declaration)) {
-              collectInterfaces(path.node, context);
-            }
-            if (babel.types.isTSTypeAliasDeclaration(node.declaration)) {
+            if (
+              babel.types.isTSInterfaceDeclaration(node.declaration) ||
+              babel.types.isTSTypeAliasDeclaration(node.declaration)
+            ) {
               collectTypes(path.node, context);
             }
           },
@@ -678,7 +688,7 @@ export function parseJsx(
             collectTypes(path.node, context);
           },
           TSInterfaceDeclaration(path, context) {
-            collectInterfaces(path.node, context);
+            collectTypes(path.node, context);
           },
         },
       }),

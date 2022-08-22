@@ -37,6 +37,7 @@ import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { PropsDefinition, DefaultProps } from 'vue/types/options';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -517,6 +518,14 @@ const generateComponents = (componentsUsed: string[], options: ToVueOptions): st
   }
 };
 
+const appendToDataString = ({
+  dataString,
+  newContent,
+}: {
+  dataString: string;
+  newContent: string;
+}) => dataString.replace(/}$/, `${newContent}}`);
+
 const componentToVue =
   (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
@@ -582,18 +591,22 @@ const componentToVue =
       .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
-    dataString = dataString.replace(/}$/, `${getCustomImports(component).join(',')}}`);
+    dataString = appendToDataString({
+      dataString,
+      newContent: getCustomImports(component).join(','),
+    });
 
     if (localVarAsData.length) {
-      dataString = dataString.replace(/}$/, `${localVarAsData.join(',')}}`);
+      dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
     }
 
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children
-      .map((item) => blockToVue(item, options, { isRootNode: true }))
-      .join('\n');
+    const template = pipe(
+      component.children.map((item) => blockToVue(item, options, { isRootNode: true })).join('\n'),
+      renameMitosisComponentsToKebabCase,
+    );
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
@@ -620,17 +633,36 @@ const componentToVue =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
+    let propsDefinition: PropsDefinition<DefaultProps> = Array.from(elementProps).filter(
+      (prop) => prop !== 'children' && prop !== 'class',
+    );
+
+    if (component.defaultProps) {
+      propsDefinition = propsDefinition.reduce(
+        (propsDefinition: DefaultProps, curr: string) => (
+          (propsDefinition[curr] =
+            component.defaultProps && component.defaultProps.hasOwnProperty(curr)
+              ? { default: component.defaultProps[curr] }
+              : {}),
+          propsDefinition
+        ),
+        {},
+      );
+    }
+
     let str = dedent`
     <template>
       ${template}
     </template>
-    <script>
+    <script lang="ts">
     ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
+
+      ${component.types?.join('\n') || ''}
 
       export default {
         ${
@@ -641,13 +673,7 @@ const componentToVue =
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${
-          elementProps.size
-            ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter((prop) => prop !== 'children' && prop !== 'class'),
-              )},`
-            : ''
-        }
+        ${elementProps.size ? `props: ${JSON.stringify(propsDefinition)},` : ''}
         ${
           dataString.length < 4
             ? ''
@@ -760,10 +786,7 @@ const componentToVue =
       str = str.replace(pattern, '');
     }
 
-    // Transform <FooBar> to <foo-bar> as Vue2 needs
-    return str.replace(/<\/?\w+/g, (match) =>
-      match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
-    );
+    return str;
   };
 
 type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
@@ -773,6 +796,10 @@ export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
 
 export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: 3 });
+
+// Transform <FooBar> to <foo-bar> as Vue2 needs
+const renameMitosisComponentsToKebabCase = (str: string) =>
+  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

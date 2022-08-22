@@ -33,6 +33,7 @@ export const useMetadata = (obj: object) => {
   throw new Error('useMetadata: Mitosis hook should have been compiled away');
   return null as any;
 };
+export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null as unknown as T;
 
 export * from './parsers/jsx';
 export * from './parsers/builder';
@@ -59,6 +60,7 @@ export * from './generators/marko';
 export * from './generators/mitosis';
 export * from './generators/template';
 export * from './generators/swift-ui';
+export * from './generators/lit';
 export * from './generators/react-native';
 export * from './helpers/parse-reactive-script';
 export * from './helpers/is-mitosis-node';

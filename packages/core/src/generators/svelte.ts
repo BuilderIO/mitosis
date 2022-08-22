@@ -36,6 +36,8 @@ import { uniq } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
+import { isUpperCase } from '../helpers/is-upper-case';
+import json5 from 'json5';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -66,8 +68,8 @@ const mappers: {
     }
 
     return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}, ${
-      json.scope.For[1]
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}${
+      json.scope.For[1] ? `, ${json.scope.For[1]}` : ''
     } ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
@@ -191,7 +193,8 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
   }
 
-  if (json.bindings.style?.code || json.properties.style) {
+  const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
+  if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = stripStateAndProps(
       json.bindings.style?.code || json.properties.style,
       options,
@@ -243,7 +246,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   if (json.children) {
     str += json.children
       .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
+      .join('');
   }
 
   str += `</${tagName}>`;
@@ -387,8 +390,20 @@ export const componentToSvelte =
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
-    let str = dedent`
-    <script>
+    let str = '';
+
+    if (json.types?.length) {
+      str += dedent`
+      <script context='module' lang='ts'>
+        ${json.types ? json.types.join('\n\n') + '\n' : ''}
+      </script>
+      \n
+      \n
+      `;
+    }
+
+    str += dedent`
+      <script lang='ts'>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
       ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
@@ -401,7 +416,20 @@ export const componentToSvelte =
           if (name === 'children') {
             return '';
           }
-          return `export let ${name};`;
+
+          let propDeclaration = `export let ${name}`;
+
+          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          }
+
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
+            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
+          }
+
+          propDeclaration += ';';
+
+          return propDeclaration;
         })
         .join('\n')}
       ${
@@ -413,11 +441,12 @@ export const componentToSvelte =
       `
           : ''
       }
+      ${getContextCode(json)}
+      ${setContextCode(json)}
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
-      ${getContextCode(json)}
-      ${setContextCode(json)}
       ${
         options.stateType === 'proxies'
           ? dataString.length < 4

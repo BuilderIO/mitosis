@@ -1,22 +1,7 @@
 import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
-import { Format, MitosisConfig, Target } from '@builder.io/mitosis';
+import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
-
-const getDefaultFormatForTarget = (target: Target): Format => {
-  switch (target) {
-    case 'reactNative':
-    case 'preact':
-    case 'solid':
-    case 'qwik':
-    case 'marko':
-    case 'angular':
-    case 'svelte':
-      return 'esm';
-    default:
-      return 'cjs';
-  }
-};
 
 /**
  * Runs `esbuild` on a file, and performs some additional transformations.
@@ -34,10 +19,10 @@ export const transpile = async ({
 }) => {
   try {
     const transpilerOptions = options.options[target]?.transpiler;
-    const format = transpilerOptions?.format || getDefaultFormatForTarget(target);
+    const format = transpilerOptions?.format || 'esm';
 
-    let useContent = content ?? (await readFile(path, 'utf8'));
-    useContent = useContent.replace(/getTarget\(\)/g, `"${target}"`);
+    const useContent = content ?? (await readFile(path, 'utf8'));
+
     const output = await esbuild.transform(useContent, {
       format: format,
       /**
@@ -52,18 +37,9 @@ export const transpile = async ({
       console.warn(`Warnings found in file: ${path}`, output.warnings);
     }
 
-    let contents = output.code;
-
-    if (target === 'reactNative') {
-      // esbuild does not add the reactNative import, so we need to add it
-      if (!contents.match(/from\s+['"]react['"]/)) {
-        contents = `import * as React from 'react';\n${output.code}`;
-      }
-    }
-
     // Remove .lite extensions from imports without having to load a slow parser like babel
     // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
-    contents = contents
+    const contents = output.code
       .replace(
         // we start by replacing all `context.lite` imports with `context`
         /\.context\.lite(['"][;\)])/g,

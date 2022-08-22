@@ -39,6 +39,7 @@ import { checkHasState } from '../../helpers/state';
 import { ToReactOptions } from './types';
 import { getUseStateCode, updateStateSetters, updateStateSettersInCode } from './state';
 import { processBinding } from './helpers';
+import hash from 'hash-sum';
 
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
@@ -407,7 +408,14 @@ const _componentToReact = (
     json = runPostJsonPlugins(json, options.plugins);
   }
 
-  const css = stylesType === 'styled-jsx' && collectCss(json);
+  const css =
+    stylesType === 'styled-jsx'
+      ? collectCss(json)
+      : stylesType === 'style-tag'
+      ? collectCss(json, {
+          prefix: hash(json),
+        })
+      : null;
 
   const styledComponentsCode =
     stylesType === 'styled-components' && componentHasStyles && collectStyledComponents(json);
@@ -440,17 +448,14 @@ const _componentToReact = (
 
   const wrap =
     wrapInFragment(json) ||
-    (componentHasStyles && stylesType === 'styled-jsx') ||
+    (componentHasStyles && (stylesType === 'styled-jsx' || stylesType === 'style-tag')) ||
     isRootSpecialNode(json);
 
   const [hasStateArgument, refsString] = getRefsString(json, allRefs, options);
   const nativeStyles =
     stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
 
-  let propsArgs = 'props';
-  if (json.propsTypeRef) {
-    propsArgs = `props: ${json.propsTypeRef}`;
-  }
+  const propsArgs = `props: ${json.propsTypeRef || 'any'}`;
 
   let str = dedent`
   ${
@@ -488,7 +493,6 @@ const _componentToReact = (
         : ''
     }
     ${json.types ? json.types.join('\n') : ''}
-    ${json.interfaces ? json.interfaces?.join('\n') : ''}
     ${renderPreComponent({ component: json, target: 'react' })}
     ${isSubComponent ? '' : 'export default '}${
     isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''
@@ -562,11 +566,21 @@ const _componentToReact = (
         ${wrap ? openFrag(options) : ''}
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
-          componentHasStyles && stylesType === 'styled-jsx' ? `<style jsx>{\`${css}\`}</style>` : ''
+          componentHasStyles && stylesType === 'styled-jsx'
+            ? `<style jsx>{\`${css}\`}</style>`
+            : componentHasStyles && stylesType === 'style-tag'
+            ? `<style>{\`${css}\`}</style>`
+            : ''
         }
         ${wrap ? closeFrag(options) : ''}
       );
     }${isForwardRef ? ')' : ''}
+
+    ${
+      !json.defaultProps
+        ? ''
+        : `${json.name || 'MyComponent'}.defaultProps = ${json5.stringify(json.defaultProps)};`
+    }
 
     ${
       !nativeStyles

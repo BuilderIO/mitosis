@@ -674,22 +674,30 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "ComponentWithContext",
-  "propsTypeRef": "{
-  content: string
-}",
+  "propsTypeRef": "ComponentWithContextProps",
   "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
+  "types": Array [
+    "export interface ComponentWithContextProps {
+  content: string
+}",
+  ],
 }
 `;
 
 exports[`Context Use and set context in components 2`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: { content: string }) {
+export default function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -719,10 +727,15 @@ exports[`Context Use and set context in components 3`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: { content: string }) {
+export default function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (

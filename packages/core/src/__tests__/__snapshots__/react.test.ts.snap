@@ -71,11 +71,15 @@ exports[`Preact Basic 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
@@ -108,7 +112,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState, useContext, useEffect } from \\"preact/hooks\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -215,7 +219,7 @@ import { useState } from \\"preact/hooks\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default function MyBasicChildComponent(props) {
+export default function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -238,7 +242,7 @@ exports[`Preact BasicFor 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MyBasicForComponent(props) {
+export default function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -723,7 +727,6 @@ exports[`Preact Form 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useRef } from \\"preact/hooks\\";
 
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -746,7 +749,7 @@ export interface FormProps {
   resetFormOnSubmit?: boolean;
   errorMessagePath?: string;
 }
-
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -1144,7 +1147,7 @@ exports[`Preact Image State 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function ImgStateComponent(props) {
+export default function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -1264,7 +1267,7 @@ exports[`Preact Remove Internal mitosis package 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -1714,7 +1717,7 @@ exports[`Preact basicOnUpdateReturn 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MyBasicOnUpdateReturnComponent(props) {
+export default function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -1748,7 +1751,7 @@ exports[`Preact class + ClassName + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test2 test div\\">
@@ -1769,7 +1772,7 @@ exports[`Preact class + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test div\\">
@@ -1790,7 +1793,7 @@ exports[`Preact className + css 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <Fragment>
       <div className=\\"test div\\">
@@ -1836,7 +1839,7 @@ exports[`Preact classState 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -1859,12 +1862,81 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`Preact defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </Fragment>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`Preact defaultValsWithTypes 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+export default function ComponentWithTypes(props: Props) {
+  return (
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact multipleOnUpdate 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function MultipleOnUpdate(props) {
+export default function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -1882,7 +1954,7 @@ exports[`Preact multipleOnUpdateWithDeps 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function MultipleOnUpdateWithDeps(props) {
+export default function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -1942,12 +2014,43 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`Preact nestedStyles 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function NestedStyles(props: any) {
+  return (
+    <Fragment>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </Fragment>
+  );
+}
+"
+`;
+
 exports[`Preact onInit & onMount 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function OnInit(props) {
+export default function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
   });
@@ -1997,7 +2100,7 @@ exports[`Preact onMount 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function Comp(props) {
+export default function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -2018,7 +2121,7 @@ exports[`Preact onUpdate 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useEffect } from \\"preact/hooks\\";
 
-export default function OnUpdate(props) {
+export default function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -2033,7 +2136,7 @@ exports[`Preact onUpdateWithDeps 1`] = `
 import { h, Fragment } from \\"preact\\";
 import { useState, useEffect } from \\"preact/hooks\\";
 
-export default function OnUpdateWithDeps(props) {
+export default function OnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -2057,6 +2160,9 @@ type Types = {
 interface IPost {
   len: number;
 }
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 const b = 3;
 const foo = () => {};
@@ -2064,7 +2170,7 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return <div />;
 }
 "
@@ -2075,18 +2181,19 @@ exports[`Preact preserveTyping 1`] = `
 import { h, Fragment } from \\"preact\\";
 
 export type A = \\"test\\";
-type B = \\"test2\\";
 export interface C {
   n: \\"test\\";
 }
+type B = \\"test2\\";
 interface D {
   n: \\"test\\";
 }
-
-export default function MyBasicComponent(props: {
+export interface MyBasicComponentProps {
   name: string;
   age?: number;
-}) {
+}
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -2165,7 +2272,11 @@ exports[`Preact rootShow 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
-export default function RenderStyles(props: { foo: string }) {
+export interface RenderStylesProps {
+  foo: string;
+}
+
+export default function RenderStyles(props: RenderStylesProps) {
   return (
     <Fragment>
       {props.foo === \\"bar\\" ? (
@@ -2257,7 +2368,7 @@ exports[`Preact subComponent 1`] = `
 import { h, Fragment } from \\"preact\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props) {
+export default function SubComponent(props: any) {
   return <Foo />;
 }
 "
@@ -2348,11 +2459,15 @@ exports[`React Basic 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
+export interface MyBasicComponentProps {
+  id: string;
+}
+
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   function underscore_fn_name() {
@@ -2384,7 +2499,7 @@ exports[`React Basic Context 1`] = `
 import { useState, useContext, useEffect } from \\"react\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   function onChange() {
@@ -2487,7 +2602,7 @@ import { useState } from \\"react\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default function MyBasicChildComponent(props) {
+export default function MyBasicChildComponent(props: any) {
   const [name, setName] = useState(() => \\"Steve\\");
 
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
@@ -2509,7 +2624,7 @@ exports[`React BasicFor 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicForComponent(props) {
+export default function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
@@ -2984,7 +3099,6 @@ exports[`React Form 1`] = `
 "import * as React from \\"react\\";
 import { useState, useRef } from \\"react\\";
 
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -3007,7 +3121,7 @@ export interface FormProps {
   resetFormOnSubmit?: boolean;
   errorMessagePath?: string;
 }
-
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -3403,7 +3517,7 @@ exports[`React Image State 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props) {
+export default function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
 
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
@@ -3519,7 +3633,7 @@ exports[`React Remove Internal mitosis package 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   return (
@@ -3957,7 +4071,7 @@ exports[`React basicOnUpdateReturn 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MyBasicOnUpdateReturnComponent(props) {
+export default function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
 
   useEffect(() => {
@@ -3990,7 +4104,7 @@ export default function MyBasicOnUpdateReturnComponent(props) {
 exports[`React class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test2 test div\\">
@@ -4010,7 +4124,7 @@ export default function MyBasicComponent(props) {
 exports[`React class + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4030,7 +4144,7 @@ export default function MyBasicComponent(props) {
 exports[`React className + css 1`] = `
 "import * as React from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   return (
     <>
       <div className=\\"test div\\">
@@ -4074,7 +4188,7 @@ exports[`React classState 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props) {
+export default function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
 
   const [styleState, setStyleState] = useState(() => ({
@@ -4097,11 +4211,78 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`React defaultProps 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <>
+      {props.link ? (
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </>
+      ) : null}
+    </>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React defaultValsWithTypes 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+export default function ComponentWithTypes(props: Props) {
+  return (
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
+  );
+}
+"
+`;
+
 exports[`React multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function MultipleOnUpdate(props) {
+export default function MultipleOnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -4118,7 +4299,7 @@ exports[`React multipleOnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props) {
+export default function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -4177,11 +4358,41 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`React nestedStyles 1`] = `
+"import * as React from \\"react\\";
+
+export default function NestedStyles(props: any) {
+  return (
+    <>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props) {
+export default function OnInit(props: any) {
   useEffect(() => {
     console.log(\\"onInit\\");
   });
@@ -4229,7 +4440,7 @@ exports[`React onMount 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function Comp(props) {
+export default function Comp(props: any) {
   useEffect(() => {
     console.log(\\"Runs on mount\\");
   }, []);
@@ -4249,7 +4460,7 @@ exports[`React onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
 
-export default function OnUpdate(props) {
+export default function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
@@ -4263,7 +4474,7 @@ exports[`React onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props) {
+export default function OnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
@@ -4286,6 +4497,9 @@ type Types = {
 interface IPost {
   len: number;
 }
+export interface MyBasicComponentProps {
+  id: string;
+}
 
 const b = 3;
 const foo = () => {};
@@ -4293,7 +4507,7 @@ export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-export default function MyBasicComponent(props: { id: string }) {
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return <div />;
 }
 "
@@ -4303,18 +4517,19 @@ exports[`React preserveTyping 1`] = `
 "import * as React from \\"react\\";
 
 export type A = \\"test\\";
-type B = \\"test2\\";
 export interface C {
   n: \\"test\\";
 }
+type B = \\"test2\\";
 interface D {
   n: \\"test\\";
 }
-
-export default function MyBasicComponent(props: {
+export interface MyBasicComponentProps {
   name: string;
   age?: number;
-}) {
+}
+
+export default function MyBasicComponent(props: MyBasicComponentProps) {
   return (
     <div>
       Hello! I can run in React, Vue, Solid, or Liquid!
@@ -4389,7 +4604,11 @@ export default function MyBasicComponent(props: Person) {
 exports[`React rootShow 1`] = `
 "import * as React from \\"react\\";
 
-export default function RenderStyles(props: { foo: string }) {
+export interface RenderStylesProps {
+  foo: string;
+}
+
+export default function RenderStyles(props: RenderStylesProps) {
   return (
     <>
       {props.foo === \\"bar\\" ? (
@@ -4475,7 +4694,6 @@ export default function NestedShow(props: Props) {
 
 exports[`React stamped 1`] = `
 "import * as React from \\"react\\";
-import styled from \\"styled-components\\";
 import { useState, useEffect } from \\"react\\";
 
 type SmileReviewsProps = {
@@ -4513,73 +4731,65 @@ export default function SmileReviews(props: SmileReviewsProps) {
   }, []);
 
   return (
-    <div data-user={name}>
-      <button onClick={(event) => setShowReviewPrompt(true)}>
-        Write a review
-      </button>
+    <>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
 
-      {showReviewPrompt ? (
-        <>
-          <input placeholder=\\"Email\\" />
-          <Input placeholder=\\"Title\\" />
-          <Textarea placeholder=\\"How was your experience?\\" />
-          <Button
-            onClick={(event) => {
-              event.preventDefault();
-              setShowReviewPrompt(false);
-            }}
-          >
-            Submit
-          </Button>
-        </>
-      ) : null}
+        {showReviewPrompt ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input-0b991088\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea-0b991088\\"
+            />
+            <button
+              className=\\"button-0b991088\\"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </>
+        ) : null}
 
-      {reviews?.map((review, index) => (
-        <Review key={review.id}>
-          <Img src={review.avatar} />
+        {reviews?.map((review, index) => (
+          <div className=\\"review-0b991088\\" key={review.id}>
+            <img className=\\"img-0b991088\\" src={review.avatar} />
 
-          <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
-            <div>
-              N:
-              {index}
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
             </div>
-
-            <div>{review.author}</div>
-
-            <div>{review.reviewMessage}</div>
           </div>
-        </Review>
-      ))}
-    </div>
+        ))}
+      </div>
+      <style>{\`.input-0b991088 { 
+display: block; }.textarea-0b991088 { 
+display: block; }.button-0b991088 { 
+display: block; }.review-0b991088 { 
+margin: 10px;
+padding: 10px;
+background: white;
+display: flex;
+border-radius: 5px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-0b991088 { 
+height: 30px;
+width: 30px;
+margin-right: 10px; }\`}</style>
+    </>
   );
 }
-
-const Input = styled.input\`
-  display: block;
-\`;
-
-const Textarea = styled.textarea\`
-  display: block;
-\`;
-
-const Button = styled.button\`
-  display: block;
-\`;
-
-const Review = styled.div\`
-  margin: 10px;
-  padding: 10px;
-  background: white;
-  display: flex;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-\`;
-
-const Img = styled.img\`
-  height: 30px;
-  width: 30px;
-  margin-right: 10px;
-\`;
 "
 `;
 
@@ -4587,7 +4797,7 @@ exports[`React subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
-export default function SubComponent(props) {
+export default function SubComponent(props: any) {
   return <Foo />;
 }
 "

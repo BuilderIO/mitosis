@@ -18,7 +18,14 @@ export function getCustomImports(json: MitosisComponent) {
   const blocksString = JSON.stringify(json.children);
   const customImports = json.imports
     .map((item) => {
-      return Object.keys(item.imports).filter((item) => item && !isUpperCase(item[0]));
+      return Object.keys(item.imports).filter(
+        (item) =>
+          item &&
+          // this ignores component imports, which are CamelCased.
+          (!isUpperCase(item[0]) ||
+            // this includes constants which are typically CAPITALIZED.
+            item.toUpperCase() === item),
+      );
     })
     .flat()
     // This is imperfect. Basically, if the string of this import name
