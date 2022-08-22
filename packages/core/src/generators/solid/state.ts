@@ -6,8 +6,6 @@ import { capitalize } from '../../helpers/capitalize';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
 
@@ -104,20 +102,9 @@ const processStateValue = ({
   const mapValue = updateStateCode({ options, component });
   return ([key, state]: [key: string, state: StateValue | undefined]): string => {
     const code = state?.code;
+    const type = state?.type;
     if (typeof code === 'string') {
-      if (code.startsWith(functionLiteralPrefix)) {
-        // functions
-        const useValue = code.replace(functionLiteralPrefix, '');
-        const mappedVal = mapValue(useValue);
-
-        return mappedVal;
-      } else if (code.startsWith(methodLiteralPrefix)) {
-        // methods
-        const methodValue = code.replace(methodLiteralPrefix, '');
-        const strippedMethodvalue = pipe(methodValue.replace('get ', ''), mapValue);
-
-        return `function ${strippedMethodvalue}`;
-      }
+      return pipe(type === 'getter' ? code.replace(/^(get )?/, 'function ') : code, mapValue);
     }
 
     // Other (data)

@@ -1,8 +1,6 @@
 import { types } from '@babel/core';
 import json5 from 'json5';
 import traverse from 'traverse';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -35,19 +33,9 @@ const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
     const value = stateVal?.code;
+    const type = stateVal?.type;
     if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        // functions
-        const useValue = value.replace(functionLiteralPrefix, '');
-        const mappedVal = mapValue(useValue);
-
-        return mappedVal;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        // methods
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const useValue = methodValue.replace(/^(get )?/, 'function ');
-        return mapValue(useValue);
-      }
+      return pipe(type === 'getter' ? value.replace(/^(get )?/, 'function ') : value, mapValue);
     }
 
     // Other (data)
@@ -101,9 +89,7 @@ export const updateStateSettersInCode = (value: string, options: ToReactOptions)
             // TODO: ultimately support other property access like strings
             const propertyName = (node.left.property as types.Identifier).name;
             path.replaceWith(
-              types.callExpression(types.identifier(`${getSetStateFnName(propertyName)}`), [
-                node.right,
-              ]),
+              types.callExpression(types.identifier(getSetStateFnName(propertyName)), [node.right]),
             );
           }
         }
