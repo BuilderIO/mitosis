@@ -453,7 +453,7 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
 }
 
 /**
- * This plugin handle `onUpdate` code that watches dedendencies.
+ * This plugin handle `onUpdate` code that watches dependencies.
  * We need to apply this workaround to be able to watch specific dependencies in Vue 2: https://stackoverflow.com/a/45853349
  *
  * We add a `computed` property for the dependencies, and a matching `watch` function for the `onUpdate` code
