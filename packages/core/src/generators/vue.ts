@@ -55,7 +55,7 @@ export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
   asyncComponentImports?: boolean;
-  api?: Api
+  api?: Api;
 }
 
 const SPECIAL_PROPERTIES = {
@@ -489,9 +489,9 @@ const onUpdatePlugin: Plugin = (options) => ({
 });
 
 const BASE_OPTIONS: ToVueOptions = {
-  plugins: [onUpdatePlugin],
+  plugins: [],
   vueVersion: 2,
-  api: 'composition'
+  api: 'composition',
 };
 
 const mergeOptions = (
@@ -534,6 +534,9 @@ const componentToVue =
   (userOptions: ToVueOptions): Transpiler =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
+    if (options.api === 'options') {
+      options.plugins?.unshift(onUpdatePlugin);
+    }
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
     processHttpRequests(component);
@@ -544,7 +547,9 @@ const componentToVue =
       component = runPreJsonPlugins(component, options.plugins);
     }
 
-    mapRefs(component, (refName) => `this.$refs.${refName}`);
+    if (options.api === 'options') {
+      mapRefs(component, (refName) => `this.$refs.${refName}`);
+    }
 
     if (options.plugins) {
       component = runPostJsonPlugins(component, options.plugins);
@@ -643,10 +648,9 @@ const componentToVue =
 
     propsDefinition = propsDefinition.reduce(
       (propsDefinition: DefaultProps, curr: string) => (
-        (propsDefinition[curr] =
-          component.defaultProps?.hasOwnProperty(curr)
-            ? { default: component.defaultProps[curr] }
-            : {}),
+        (propsDefinition[curr] = component.defaultProps?.hasOwnProperty(curr)
+          ? { default: component.defaultProps[curr] }
+          : {}),
         propsDefinition
       ),
       {},
@@ -657,16 +661,17 @@ const componentToVue =
       vueImports.push('defineAsyncComponent');
     }
     if (options.api === 'composition') {
-      getterString.length > 3 && vueImports.push('computed')
       onUpdateWithDeps.length && vueImports.push('watch');
       elementProps.size && vueImports.push('defineProps');
       component.defaultProps && vueImports.push('withDefaults');
-      component.hooks.onMount?.code && vueImports.push('onMounted')
-      component.hooks.onUnMount?.code && vueImports.push('onUnMounted')
-      onUpdateWithoutDeps.length && vueImports.push('onUpdated')
+      component.hooks.onMount?.code && vueImports.push('onMounted');
+      component.hooks.onUnMount?.code && vueImports.push('onUnMounted');
+      onUpdateWithoutDeps.length && vueImports.push('onUpdated');
       size(component.context.set) && vueImports.push('provide');
       size(component.context.get) && vueImports.push('inject');
-      size(Object.keys(component.state).filter((key) => component.state[key]?.type === 'property')) && vueImports.push('ref');
+      size(
+        Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
+      ) && vueImports.push('ref');
     }
 
     function generateOptionsApiScript() {
@@ -756,40 +761,95 @@ const componentToVue =
           methods: ${functionsString},
         `
         }
-      })`
+      })`;
     }
 
     const getCompositionPropDefinition = () => {
       if (component.defaultProps) {
-        return `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(component.defaultProps)})`;
-      } 
+        return `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(
+          component.defaultProps,
+        )})`;
+      }
       return `defineProps(${component.propsTypeRef})`;
-    }
-
-    const formatCompositionApiMethods = (methods: Array<string>, refKeys: Array<string>, methodKeys: Array<string>,): Array<string> => {
-      methods = methods.map(m => {
-        refKeys.forEach(ref => {
-          m = m.replaceAll(`this.${ref}`, `${ref}.value}`)
-        })
-        methodKeys.forEach(ref => {
-          m = m.replaceAll(`this.${ref}`, `${ref}`)
-        });
-        return m;
-      })
-      return methods;
-    }
+    };
 
     function generateCompositionApiScript() {
-      const refKeys = Object.keys(component.state).filter((key) => component.state[key]?.type === 'property')
-      const refs = refKeys.map(key => `const ${key} = ref(${json5.stringify(component.state[key]?.code)})`);
-      const methodKeys = Object.keys(component.state).filter((key) => component.state[key]?.type === 'method')
-      let methods = methodKeys.map(key => `${component.state[key]?.code?.toString().replace('@builder.io/mitosis/method:', 'function ')}`);
-      methods = formatCompositionApiMethods(methods, refKeys, methodKeys);
+      let refs = getStateObjectStringFromComponent(component, {
+        data: true,
+        functions: false,
+        getters: false,
+        format: 'variables',
+        valueMapper: (code) => {
+          return processBinding(`ref(${code})`, options, component);
+        },
+        keyPrefix: 'const',
+      });
+
+      let methods = getStateObjectStringFromComponent(component, {
+        data: false,
+        getters: false,
+        functions: true,
+        valueMapper: (code) => processBinding(code, options, component),
+        format: 'variables',
+        keyPrefix: 'function',
+      });
+
       return dedent`
         ${elementProps.size ? getCompositionPropDefinition() : ''}
-        ${refs.join('\n')}
-        ${methods.join('\n')}
-      ` 
+        ${refs}
+
+        ${Object.keys(component.context.get)
+          ?.map((key) => `const ${key} = inject(${component.context.get[key].name})`)
+          .join('\n')}
+
+        ${Object.keys(component.context.set)
+          ?.map(
+            (key) =>
+              `provide(${component.context.set[key].name}, ${component.context.set[key].ref})`,
+          )
+          .join('\n')}
+
+        ${Object.keys(component.refs)
+          ?.map((key) => `const ${key} = ref<${component.refs[key].typeParameter}>()`)
+          .join('\n')}
+        ${
+          !component.hooks.onMount?.code
+            ? ''
+            : `onMounted(() => { ${processBinding(
+                component.hooks.onMount.code,
+                options,
+                component,
+              )}})`
+        }
+        ${
+          !component.hooks.onUnMount?.code
+            ? ''
+            : `onMounted(() => { ${processBinding(
+                component.hooks.onUnMount.code,
+                options,
+                component,
+              )}})`
+        }
+        ${
+          !onUpdateWithoutDeps?.length
+            ? ''
+            : onUpdateWithoutDeps.map((hook) => {
+                return `onUpdated(() => ${hook.code})`;
+              })
+        }
+        ${
+          !onUpdateWithDeps?.length
+            ? ''
+            : onUpdateWithDeps.map((hook) => {
+                return `watch(${hook.deps?.replaceAll('state.', '')}, (${
+                  hook.deps ? hook.deps.replaceAll('state.', '') : ''
+                }) => { 
+                  ${hook.code.replaceAll('state.', '')}
+                })\n`;
+              })
+        }
+        ${methods?.length ? methods : ''}
+      `.replace(/this\./g, ''); // strip this
     }
 
     let str = dedent`
