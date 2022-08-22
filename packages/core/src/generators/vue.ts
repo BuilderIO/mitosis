@@ -27,7 +27,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
-import { kebabCase, size, uniq } from 'lodash';
+import { kebabCase, pickBy, size, uniq } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
@@ -39,6 +39,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
+import { notStrictEqual } from 'assert';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -793,6 +794,8 @@ const componentToVue =
         keyPrefix: 'const',
       });
 
+      let refKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
+
       let methods = getStateObjectStringFromComponent(component, {
         data: false,
         getters: false,
@@ -802,7 +805,7 @@ const componentToVue =
         keyPrefix: 'function',
       });
 
-      return dedent`
+      let str = dedent`
         ${elementProps.size ? getCompositionPropDefinition() : ''}
         ${refs}
 
@@ -857,7 +860,14 @@ const componentToVue =
               })
         }
         ${methods?.length ? methods : ''}
-      `.replace(/this\./g, ''); // strip this
+      `;
+
+      refKeys.forEach((ref) => {
+        str = str.replaceAll(`this.${ref} =`, `${ref}.value =`);
+      });
+
+      str = str.replace(/this\./g, ''); // strip this
+      return str;
     }
 
     let str = dedent`

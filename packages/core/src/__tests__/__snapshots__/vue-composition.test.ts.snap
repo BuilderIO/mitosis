@@ -200,7 +200,7 @@ const names= ref(['Steve', 'PatrickJS'])
 
 
 
-onMounted(() => { name = 'PatrickJS onMount' + bye})
+onMounted(() => { name.value = 'PatrickJS onMount' + bye})
 </script>
 "
 `;
@@ -984,7 +984,7 @@ if (formRef) {
   }
 }
 
-formState = 'sending';
+formState.value = 'sending';
 const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(name || '')}\`;
 fetch(sendSubmissionsTo === 'email' ? formUrl : action
 /* TODO: throw error if no action URL */
@@ -1013,12 +1013,12 @@ fetch(sendSubmissionsTo === 'email' ? formUrl : action
         message = JSON.stringify(message);
       }
 
-      formErrorMessage = message;
+      formErrorMessage.value = message;
     }
   }
 
-  responseData = body;
-  formState = res.ok ? 'success' : 'error';
+  responseData.value = body;
+  formState.value = res.ok ? 'success' : 'error';
 
   if (res.ok) {
     const submitSuccessEvent = new CustomEvent('submit:success', {
@@ -1076,8 +1076,8 @@ fetch(sendSubmissionsTo === 'email' ? formUrl : action
     }
   }
 
-  responseData = err;
-  formState = 'error';
+  responseData.value = err;
+  formState.value = 'error';
 });
 }
 }
@@ -1160,13 +1160,13 @@ if (pictureRef) {
 
   if (rect.top < window.innerHeight + buffer) {
     setLoad(true);
-    scrollListener = null;
+    scrollListener.value = null;
     window.removeEventListener('scroll', listener);
   }
 }
 };
 
-scrollListener = listener;
+scrollListener.value = listener;
 window.addEventListener('scroll', listener, {
 capture: true,
 passive: true
@@ -1179,7 +1179,7 @@ window.removeEventListener('scroll', scrollListener);
 
 
     function  setLoaded() {
-imageLoaded = true;
+imageLoaded.value = true;
 }
 function  useLazyLoading() {
 // TODO: Add more checks here, like testing for real web browsers
@@ -1520,7 +1520,7 @@ const showReviewPrompt= ref(false)
 
 
     onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews = data.data;
+reviews.value = data.data;
 })})
 
 
