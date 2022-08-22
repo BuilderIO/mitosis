@@ -751,12 +751,12 @@ export default class FormComponent {
   @Prop() sendingMessage: any;
   @Prop() successMessage: any;
 
-  @State() state = \\"unsubmitted\\";
+  @State() formState = \\"unsubmitted\\";
   @State() responseData = null;
   @State() formErrorMessage = \\"\\";
 
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(
     event: Event & {
@@ -874,7 +874,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -915,7 +915,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -973,7 +973,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -988,7 +988,7 @@ export default class FormComponent {
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
-        onSubmit={(event) => this.this.onSubmit(event)}
+        onSubmit={(event) => this.onSubmit(event)}
       >
         {this.builderBlock && this.builderBlock.children ? (
           <>
@@ -1002,7 +1002,7 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"error\\" ? (
+        {this.submissionState === \\"error\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
@@ -1011,7 +1011,7 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"sending\\" ? (
+        {this.submissionState === \\"sending\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
@@ -1020,13 +1020,13 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"error\\" && this.this.responseData ? (
+        {this.submissionState === \\"error\\" && this.responseData ? (
           <>
-            <pre>{JSON.stringify(this.this.responseData, null, 2)}</pre>
+            <pre>{JSON.stringify(this.responseData, null, 2)}</pre>
           </>
         ) : null}
 
-        {this.this.submissionState === \\"success\\" ? (
+        {this.submissionState === \\"success\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"

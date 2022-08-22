@@ -1452,17 +1452,15 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 function FormComponent(props) {
-  const [state, setState] = createSignal(\\"unsubmitted\\");
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
 
   const [responseData, setResponseData] = createSignal(null);
 
   const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
 
-  function _getter_submissionState() {
-    return (Builder.isEditing && props.previewState) || state();
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
   }
-
-  const submissionState = _getter_submissionState();
 
   function onSubmit(event) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
@@ -1573,7 +1571,7 @@ function FormComponent(props) {
         }
       }
 
-      setState(\\"sending\\");
+      setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1614,7 +1612,7 @@ function FormComponent(props) {
           }
 
           setResponseData(body);
-          setState(res.ok ? \\"success\\" : \\"error\\");
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1672,7 +1670,7 @@ function FormComponent(props) {
           }
 
           setResponseData(err);
-          setState(\\"error\\");
+          setFormState(\\"error\\");
         }
       );
     }
@@ -1688,7 +1686,7 @@ function FormComponent(props) {
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
-      onSubmit={(event) => state().onSubmit(event)}
+      onSubmit={(event) => onSubmit(event)}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
@@ -1704,19 +1702,19 @@ function FormComponent(props) {
           }}
         </For>
       </Show>
-      <Show when={state().submissionState === \\"error\\"}>
+      <Show when={submissionState() === \\"error\\"}>
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage}
         ></BuilderBlocks>
       </Show>
-      <Show when={state().submissionState === \\"sending\\"}>
+      <Show when={submissionState() === \\"sending\\"}>
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage}
         ></BuilderBlocks>
       </Show>
-      <Show when={state().submissionState === \\"error\\" && state().responseData}>
+      <Show when={submissionState() === \\"error\\" && responseData()}>
         <pre
           class={
             \\"builder-form-error-text \\" +
@@ -1727,10 +1725,10 @@ function FormComponent(props) {
             })
           }
         >
-          {JSON.stringify(state().responseData, null, 2)}
+          {JSON.stringify(responseData(), null, 2)}
         </pre>
       </Show>
-      <Show when={state().submissionState === \\"success\\"}>
+      <Show when={submissionState() === \\"success\\"}>
         <BuilderBlocks
           dataPath=\\"successMessage\\"
           blocks={props.successMessage}
@@ -1756,17 +1754,15 @@ import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
 
 function FormComponent(props) {
-  const [state, setState] = createSignal(\\"unsubmitted\\");
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
 
   const [responseData, setResponseData] = createSignal(null);
 
   const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
 
-  function _getter_submissionState() {
-    return (Builder.isEditing && props.previewState) || state();
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
   }
-
-  const submissionState = _getter_submissionState();
 
   function onSubmit(event) {
     const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
@@ -1877,7 +1873,7 @@ function FormComponent(props) {
         }
       }
 
-      setState(\\"sending\\");
+      setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1918,7 +1914,7 @@ function FormComponent(props) {
           }
 
           setResponseData(body);
-          setState(res.ok ? \\"success\\" : \\"error\\");
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1976,7 +1972,7 @@ function FormComponent(props) {
           }
 
           setResponseData(err);
-          setState(\\"error\\");
+          setFormState(\\"error\\");
         }
       );
     }
@@ -1993,7 +1989,7 @@ function FormComponent(props) {
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
-        onSubmit={(event) => state().onSubmit(event)}
+        onSubmit={(event) => onSubmit(event)}
       >
         <Show when={props.builderBlock && props.builderBlock.children}>
           <For each={props.builderBlock?.children}>
@@ -2009,26 +2005,24 @@ function FormComponent(props) {
             }}
           </For>
         </Show>
-        <Show when={state().submissionState === \\"error\\"}>
+        <Show when={submissionState() === \\"error\\"}>
           <BuilderBlocks
             dataPath=\\"errorMessage\\"
             blocks={props.errorMessage}
           ></BuilderBlocks>
         </Show>
-        <Show when={state().submissionState === \\"sending\\"}>
+        <Show when={submissionState() === \\"sending\\"}>
           <BuilderBlocks
             dataPath=\\"sendingMessage\\"
             blocks={props.sendingMessage}
           ></BuilderBlocks>
         </Show>
-        <Show
-          when={state().submissionState === \\"error\\" && state().responseData}
-        >
-          <pre class=\\"builder-form-error-text pre-6d087565\\">
-            {JSON.stringify(state().responseData, null, 2)}
+        <Show when={submissionState() === \\"error\\" && responseData()}>
+          <pre class=\\"builder-form-error-text pre-edd9d6ca\\">
+            {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
-        <Show when={state().submissionState === \\"success\\"}>
+        <Show when={submissionState() === \\"success\\"}>
           <BuilderBlocks
             dataPath=\\"successMessage\\"
             blocks={props.successMessage}
@@ -2036,7 +2030,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-6d087565 {
+        .pre-edd9d6ca {
           padding: 10px;
           color: red;
           text-align: center;

@@ -819,7 +819,7 @@ exports[`Svelte Form 1`] = `
         }
       }
 
-      state = \\"sending\\";
+      formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -860,7 +860,7 @@ exports[`Svelte Form 1`] = `
           }
 
           responseData = body;
-          state = res.ok ? \\"success\\" : \\"error\\";
+          formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -918,16 +918,16 @@ exports[`Svelte Form 1`] = `
           }
 
           responseData = err;
-          state = \\"error\\";
+          formState = \\"error\\";
         }
       );
     }
   };
   $: submissionState = () => {
-    return (Builder.isEditing && previewState) || state;
+    return (Builder.isEditing && previewState) || formState;
   };
 
-  let state = \\"unsubmitted\\";
+  let formState = \\"unsubmitted\\";
   let responseData = null;
   let formErrorMessage = \\"\\";
 </script>

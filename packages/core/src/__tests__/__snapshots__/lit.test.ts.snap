@@ -966,12 +966,12 @@ export default class FormComponent extends LitElement {
   @property() sendingMessage: any;
   @property() successMessage: any;
 
-  @state() state = \\"unsubmitted\\";
+  @state() formState = \\"unsubmitted\\";
   @state() responseData = null;
   @state() formErrorMessage = \\"\\";
 
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(
     event: Event & {
@@ -1089,7 +1089,7 @@ export default class FormComponent extends LitElement {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1130,7 +1130,7 @@ export default class FormComponent extends LitElement {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1188,7 +1188,7 @@ export default class FormComponent extends LitElement {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -1206,7 +1206,7 @@ export default class FormComponent extends LitElement {
       this.validate
     }  ref=\\"formRef\\"  .action=\${!this.sendWithJs && this.action}  .method=\${
       this.method
-    }  .name=\${this.name}  @submit=\${(event) => this.this.onSubmit(event)} >
+    }  .name=\${this.name}  @submit=\${(event) => this.onSubmit(event)} >
              
        \${
          this.builderBlock && this.builderBlock.children
@@ -1219,24 +1219,24 @@ export default class FormComponent extends LitElement {
 
              
        \${
-         this.this.submissionState === \\"error\\"
+         this.submissionState === \\"error\\"
            ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
            : null
        }
 
              
        \${
-         this.this.submissionState === \\"sending\\"
+         this.submissionState === \\"sending\\"
            ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
            : null
        }
 
              
        \${
-         this.this.submissionState === \\"error\\" && this.this.responseData
+         this.submissionState === \\"error\\" && this.responseData
            ? html\`<pre >
                  
-       \${JSON.stringify(this.this.responseData, null, 2)}
+       \${JSON.stringify(this.responseData, null, 2)}
 
                </pre>\`
            : null
@@ -1244,7 +1244,7 @@ export default class FormComponent extends LitElement {
 
              
        \${
-         this.this.submissionState === \\"success\\"
+         this.submissionState === \\"success\\"
            ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
            : null
        }
