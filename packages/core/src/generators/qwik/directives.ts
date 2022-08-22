@@ -78,13 +78,14 @@ interface ImageProps {
   lazy?: boolean;
   class?: string;
   children?: any[];
+  noWebp?: boolean;
 }
 
 export function Image(props: ImageProps) {
   let jsx: any[] = props.children || [];
   let image = props.image;
   if (image) {
-    const isBuilderIoImage = !!(image || '').match(/\.builder\.io/);
+    const isBuilderIoImage = !!(image || '').match(/\.builder\.io/) && !props.noWebp;
     const isPixel = props.builderBlock?.id.startsWith('builder-pixel-');
     const imgProps = {
       src: props.image,

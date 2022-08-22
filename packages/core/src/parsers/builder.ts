@@ -562,6 +562,7 @@ export const builderElementToMitosisNode = (
       ['builder-id']: block.id!,
       // class: `builder-block ${block.id} ${block.properties?.class || ''}`,
     }),
+    ...(options.includeBuilderExtras && getBuilderPropsForSymbol(block)),
   };
 
   if (block.layerName) {
@@ -647,6 +648,19 @@ export const builderElementToMitosisNode = (
   node.children = (block.children || []).map((item) => builderElementToMitosisNode(item, options));
 
   return node;
+};
+
+const getBuilderPropsForSymbol = (
+  block: BuilderElement,
+): undefined | { 'builder-content-id': string } => {
+  if (block.children?.length === 1) {
+    const child = block.children[0];
+    const builderContentId = child.properties?.['builder-content-id'];
+    if (builderContentId) {
+      return { 'builder-content-id': builderContentId };
+    }
+  }
+  return undefined;
 };
 
 const getHooks = (content: BuilderContent) => {
