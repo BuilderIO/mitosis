@@ -8,7 +8,7 @@ import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
-import { flow, pipe } from 'fp-ts/lib/function';
+import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
 
 type State = {
@@ -48,28 +48,50 @@ const updateStateSettersInCode = (options: ToSolidOptions) => (value: string) =>
   }
 };
 
-const updateStateGettersInCode = (options: ToSolidOptions) => (value: string) => {
-  switch (options.state) {
-    case 'mutable':
-      return value;
-    case 'signals':
-      return stripStateAndPropsRefs(value, {
-        includeState: true,
-        includeProps: false,
-      });
-  }
-};
+const updateStateGettersInCode =
+  (options: ToSolidOptions, component: MitosisComponent) => (value: string) => {
+    switch (options.state) {
+      case 'mutable':
+        return value;
+      case 'signals':
+        return stripStateAndPropsRefs(value, {
+          includeState: true,
+          includeProps: false,
+          replaceWith: (name) => {
+            const state = component.state[name];
+            if (state?.type === 'property') {
+              return `${name}()`;
+            }
+            return name;
+          },
+        });
+    }
+  };
 
-export const updateStateCode = (options: ToSolidOptions) =>
+export const updateStateCode = ({
+  options,
+  component,
+  updateSetters = true,
+}: {
+  options: ToSolidOptions;
+  component: MitosisComponent;
+  updateSetters?: boolean;
+}) =>
   flow(
     // we can't use this in `preProcessBlockCode` because the strings are not valid babel nodes
-    // updateStateSettersInCode(options),
-    updateStateGettersInCode(options),
+    updateSetters ? updateStateSettersInCode(options) : identity,
+    updateStateGettersInCode(options, component),
     (x) => x.trim(),
   );
 
-const processStateValue = (options: ToSolidOptions) => {
-  const mapValue = updateStateCode(options);
+const processStateValue = ({
+  options,
+  component,
+}: {
+  options: ToSolidOptions;
+  component: MitosisComponent;
+}) => {
+  const mapValue = updateStateCode({ options, component });
   return ([key, state]: [key: string, state: StateValue | undefined]): string => {
     const code = state?.code;
     if (typeof code === 'string') {
@@ -127,9 +149,9 @@ const processStateValue = (options: ToSolidOptions) => {
 };
 
 const LINE_ITEM_DELIMITER = '\n\n\n';
-const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
+const getSignalsCode = ({ json, options }: { json: MitosisComponent; options: ToSolidOptions }) =>
   Object.entries(json.state)
-    .map(processStateValue(options))
+    .map(processStateValue({ options, component: json }))
     /**
      * We need to sort state so that signals are at the top.
      */
@@ -146,7 +168,13 @@ const getSignalsCode = (json: MitosisComponent, options: ToSolidOptions) =>
     })
     .join(LINE_ITEM_DELIMITER);
 
-export const getState = (json: MitosisComponent, options: ToSolidOptions): State | undefined => {
+export const getState = ({
+  json,
+  options,
+}: {
+  json: MitosisComponent;
+  options: ToSolidOptions;
+}): State | undefined => {
   const hasState = checkHasState(json);
 
   if (!hasState) {
@@ -165,7 +193,7 @@ export const getState = (json: MitosisComponent, options: ToSolidOptions): State
       };
     case 'signals':
       return {
-        str: getSignalsCode(json, options),
+        str: getSignalsCode({ json, options }),
         import: { solidjs: ['createSignal'] },
       };
   }

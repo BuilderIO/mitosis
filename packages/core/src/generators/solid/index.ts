@@ -115,8 +115,16 @@ const collectClassString = (json: MitosisNode, options: ToSolidOptions): string 
   return null;
 };
 
-const preProcessBlockCode = (json: MitosisNode, options: ToSolidOptions) => {
-  const processCode = updateStateCode(options);
+const preProcessBlockCode = ({
+  json,
+  options,
+  component,
+}: {
+  json: MitosisNode;
+  options: ToSolidOptions;
+  component: MitosisComponent;
+}) => {
+  const processCode = updateStateCode({ options, component, updateSetters: false });
 
   for (const key in json.properties) {
     const value = json.properties[key];
@@ -135,8 +143,16 @@ const preProcessBlockCode = (json: MitosisNode, options: ToSolidOptions) => {
   }
 };
 
-const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
-  preProcessBlockCode(json, options);
+const blockToSolid = ({
+  json,
+  options,
+  component,
+}: {
+  json: MitosisNode;
+  options: ToSolidOptions;
+  component: MitosisComponent;
+}): string => {
+  preProcessBlockCode({ json, options, component });
 
   if (json.properties._text) {
     return json.properties._text;
@@ -154,7 +170,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
       const index = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((child) => blockToSolid(child, options))}}}
+      .map((child) => blockToSolid({ component, json: child, options }))}}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -168,7 +184,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
   }
 
   if (json.name === 'Show' && json.meta.else) {
-    str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
+    str += `fallback={${blockToSolid({ component, json: json.meta.else as any, options })}}`;
   }
 
   const classString = collectClassString(json, options);
@@ -228,7 +244,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions): string => {
   if (json.children) {
     str += json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToSolid(item, options))
+      .map((item) => blockToSolid({ component, json: item, options }))
       .join('\n');
   }
 
@@ -264,7 +280,7 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
 }
 
 const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions) => {
-  const processCode = updateStateCode(options);
+  const processCode = updateStateCode({ options, component: json });
 
   if (json.hooks.onMount?.code) {
     json.hooks.onMount.code = processCode(json.hooks.onMount.code);
@@ -307,7 +323,7 @@ export const componentToSolid =
         prefix: hash(json),
       });
 
-    const state = getState(json, options);
+    const state = getState({ json, options });
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 
@@ -365,7 +381,7 @@ export const componentToSolid =
       return (${addWrapper ? '<>' : ''}
         ${json.children
           .filter(filterEmptyTextNodes)
-          .map((item) => blockToSolid(item, options))
+          .map((item) => blockToSolid({ component, json: item, options }))
           .join('\n')}
         ${
           options.stylesType === 'style-tag' && css && css.trim().length > 4
