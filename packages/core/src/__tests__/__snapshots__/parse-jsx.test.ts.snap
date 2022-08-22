@@ -278,14 +278,14 @@ Object {
       "code": "@builder.io/mitosis/method:setLoaded() {
   state.imageLoaded = true;
 }",
-      "type": "property",
+      "type": "method",
     },
     "useLazyLoading": Object {
       "code": "@builder.io/mitosis/method:useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && isBrowser();
 }",
-      "type": "property",
+      "type": "method",
     },
   },
   "subComponents": Array [],
@@ -728,6 +728,209 @@ Object {
     },
   },
   "subComponents": Array [],
+}
+`;
+
+exports[`Parse JSX parseStateObject 1`] = `
+Object {
+  "allRegisteredComponents": Object {
+    "code": "@builder.io/mitosis/method:get allRegisteredComponents() {
+  const allComponentsArray = [...getDefaultRegisteredComponents(), // While this \`components\` object is deprecated, we must maintain support for it.
+  // Since users are able to override our default components, we need to make sure that we do not break such
+  // existing usage.
+  // This is why we spread \`components\` after the default Builder.io components, but before the \`props.customComponents\`,
+  // which is the new standard way of providing custom components, and must therefore take precedence.
+  ...components, ...(props.customComponents || [])];
+  const allComponents = allComponentsArray.reduce((acc, curr) => ({ ...acc,
+    [curr.name]: curr
+  }), ({} as RegisteredComponents));
+  return allComponents;
+}",
+    "type": "getter",
+  },
+  "canTrackToUse": Object {
+    "code": "@builder.io/mitosis/method:get canTrackToUse() {
+  return props.canTrack || true;
+}",
+    "type": "getter",
+  },
+  "contentState": Object {
+    "code": "@builder.io/mitosis/method:get contentState() {
+  return { ...props.content?.data?.state,
+    ...props.data,
+    ...state.overrideState
+  };
+}",
+    "type": "getter",
+  },
+  "contextContext": Object {
+    "code": "@builder.io/mitosis/method:get contextContext() {
+  return props.context || {};
+}",
+    "type": "getter",
+  },
+  "emitStateUpdate": Object {
+    "code": "@builder.io/mitosis/method:emitStateUpdate() {
+  if (isEditing()) {
+    window.dispatchEvent(new CustomEvent<BuilderComponentStateChange>('builder:component:stateChange', {
+      detail: {
+        state: state.contentState,
+        ref: {
+          name: props.model
+        }
+      }
+    }));
+  }
+}",
+    "type": "method",
+  },
+  "evalExpression": Object {
+    "code": "@builder.io/mitosis/method:evalExpression(expression: string) {
+  return expression.replace(/{{([^}]+)}}/g, (_match, group) => evaluate({
+    code: group,
+    context: state.contextContext,
+    state: state.contentState
+  }));
+}",
+    "type": "method",
+  },
+  "evaluateJsCode": Object {
+    "code": "@builder.io/mitosis/method:evaluateJsCode() {
+  // run any dynamic JS code attached to content
+  const jsCode = state.useContent?.data?.jsCode;
+
+  if (jsCode) {
+    evaluate({
+      code: jsCode,
+      context: state.contextContext,
+      state: state.contentState
+    });
+  }
+}",
+    "type": "method",
+  },
+  "forceReRenderCount": Object {
+    "code": 0,
+    "type": "property",
+  },
+  "handleRequest": Object {
+    "code": "@builder.io/mitosis/method:handleRequest({
+  url,
+  key
+}: {
+  key: string;
+  url: string;
+}) {
+  const fetchAndSetState = async () => {
+    const fetch = await getFetch();
+    const response = await fetch(url);
+    const json = await response.json();
+    const newOverrideState = { ...state.overrideState,
+      [key]: json
+    };
+    state.overrideState = newOverrideState;
+  };
+
+  fetchAndSetState();
+}",
+    "type": "method",
+  },
+  "httpReqsData": Object {
+    "code": "@builder.io/mitosis/method:get httpReqsData() {
+  return {};
+}",
+    "type": "getter",
+  },
+  "onClick": Object {
+    "code": "@builder.io/mitosis/method:onClick(_event: MouseEvent) {
+  if (state.useContent) {
+    track({
+      type: 'click',
+      canTrack: state.canTrackToUse,
+      contentId: state.useContent.id,
+      orgId: props.apiKey
+    });
+  }
+}",
+    "type": "method",
+  },
+  "overrideContent": Object {
+    "code": null,
+    "type": "property",
+  },
+  "overrideState": Object {
+    "code": Object {},
+    "type": "property",
+  },
+  "processMessage": Object {
+    "code": "@builder.io/mitosis/method:processMessage(event: MessageEvent) {
+  const {
+    data
+  } = event;
+
+  if (data) {
+    switch (data.type) {
+      case 'builder.contentUpdate':
+        {
+          const messageContent = data.data;
+          const key = messageContent.key || messageContent.alias || messageContent.entry || messageContent.modelName;
+          const contentData = messageContent.data;
+
+          if (key === props.model) {
+            state.overrideContent = contentData;
+          }
+
+          break;
+        }
+
+      case 'builder.patchUpdates':
+        {
+          // TODO
+          break;
+        }
+    }
+  }
+}",
+    "type": "method",
+  },
+  "runHttpRequests": Object {
+    "code": "@builder.io/mitosis/method:runHttpRequests() {
+  const requests = state.useContent?.data?.httpRequests ?? {};
+  Object.entries(requests).forEach(([key, url]) => {
+    if (url && (!state.httpReqsData[key] || isEditing())) {
+      const evaluatedUrl = state.evalExpression(url);
+      state.handleRequest({
+        url: evaluatedUrl,
+        key
+      });
+    }
+  });
+}",
+    "type": "method",
+  },
+  "shouldRenderContentStyles": Object {
+    "code": "@builder.io/mitosis/method:get shouldRenderContentStyles() {
+  return Boolean((state.useContent?.data?.cssCode || state.useContent?.data?.customFonts?.length) && TARGET !== 'reactNative');
+}",
+    "type": "getter",
+  },
+  "update": Object {
+    "code": 0,
+    "type": "property",
+  },
+  "useContent": Object {
+    "code": "@builder.io/mitosis/method:get useContent() {
+  const mergedContent: BuilderContent = { ...props.content,
+    ...state.overrideContent,
+    data: { ...props.content?.data,
+      ...props.data,
+      ...state.overrideContent?.data
+    }
+  };
+  return mergedContent;
+}",
+    "type": "getter",
+  },
 }
 `;
 

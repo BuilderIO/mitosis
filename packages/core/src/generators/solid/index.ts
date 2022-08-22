@@ -1,40 +1,40 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { hasCss } from '../helpers/styles/helpers';
-import { getRefs } from '../helpers/get-refs';
-import {
-  stringifyContextValue,
-  getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { renderPreComponent } from '../helpers/render-imports';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { hasCss } from '../../helpers/styles/helpers';
+import { getRefs } from '../../helpers/get-refs';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { selfClosingTags } from '../../parsers/jsx';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { fastClone } from '../helpers/fast-clone';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { getComponentsUsed } from '../helpers/get-components-used';
+} from '../../modules/plugins';
+import { fastClone } from '../../helpers/fast-clone';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { getComponentsUsed } from '../../helpers/get-components-used';
 import traverse from 'traverse';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { hasContext } from './helpers/context';
-import { babelTransformExpression } from '../helpers/babel-transform';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { Transpiler } from '../../types/transpiler';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { hasContext } from '../helpers/context';
+import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
-import { checkHasState } from '../helpers/state';
-import { collectCss } from '../helpers/styles/collect-css';
+import { ToSolidOptions } from './types';
+import { getState, updateStateCode } from './state';
+import { checkIsDefined } from '../../helpers/nullable';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
+import { collectCss } from '../../helpers/styles/collect-css';
 import hash from 'hash-sum';
 
-export interface ToSolidOptions extends BaseTranspilerOptions {
-  stylesType?: 'styled-components' | 'style-tag';
-}
+const DEFAULT_OPTIONS: ToSolidOptions = {
+  state: 'signals',
+  stylesType: 'styled-components',
+};
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -115,7 +115,43 @@ const collectClassString = (json: MitosisNode, options: ToSolidOptions): string 
   return null;
 };
 
-const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string => {
+const preProcessBlockCode = ({
+  json,
+  options,
+  component,
+}: {
+  json: MitosisNode;
+  options: ToSolidOptions;
+  component: MitosisComponent;
+}) => {
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    if (value) {
+      json.properties[key] = updateStateCode({ options, component, updateSetters: false })(value);
+    }
+  }
+  for (const key in json.bindings) {
+    const value = json.bindings[key];
+    if (value?.code) {
+      json.bindings[key] = {
+        arguments: value.arguments,
+        code: updateStateCode({ options, component, updateSetters: true })(value.code),
+      };
+    }
+  }
+};
+
+const blockToSolid = ({
+  json,
+  options,
+  component,
+}: {
+  json: MitosisNode;
+  options: ToSolidOptions;
+  component: MitosisComponent;
+}): string => {
+  preProcessBlockCode({ json, options, component });
+
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -132,7 +168,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string =
       const index = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
-      .map((child) => blockToSolid(child, options))}}}
+      .map((child) => blockToSolid({ component, json: child, options }))}}}
       ${needsWrapper ? '</>' : ''}
     </For>`;
   }
@@ -146,7 +182,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string =
   }
 
   if (json.name === 'Show' && json.meta.else) {
-    str += `fallback={${blockToSolid(json.meta.else as any, options)}}`;
+    str += `fallback={${blockToSolid({ component, json: json.meta.else as any, options })}}`;
   }
 
   const classString = collectClassString(json, options);
@@ -206,7 +242,7 @@ const blockToSolid = (json: MitosisNode, options: ToSolidOptions = {}): string =
   if (json.children) {
     str += json.children
       .filter(filterEmptyTextNodes)
-      .map((item) => blockToSolid(item, options))
+      .map((item) => blockToSolid({ component, json: item, options }))
       .join('\n');
   }
 
@@ -241,12 +277,29 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
   }
 }
 
+const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions) => {
+  const processCode = updateStateCode({ options, component: json });
+
+  if (json.hooks.onMount?.code) {
+    json.hooks.onMount.code = processCode(json.hooks.onMount.code);
+  }
+
+  if (json.hooks.onUpdate) {
+    for (const hook of json.hooks.onUpdate) {
+      hook.code = processCode(hook.code);
+      if (hook.deps) {
+        hook.deps = processCode(hook.deps);
+      }
+    }
+  }
+};
+
 export const componentToSolid =
-  (_options: ToSolidOptions = {}): Transpiler =>
+  (passedOptions: Partial<ToSolidOptions> = DEFAULT_OPTIONS): Transpiler =>
   ({ component }) => {
-    const options: ToSolidOptions = {
-      stylesType: 'styled-components',
-      ..._options,
+    const options = {
+      ...DEFAULT_OPTIONS,
+      ...passedOptions,
     };
     let json = fastClone(component);
     if (options.plugins) {
@@ -259,6 +312,7 @@ export const componentToSolid =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
+    preProcessComponentCode(json, options);
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
     const css =
@@ -267,8 +321,7 @@ export const componentToSolid =
         prefix: hash(json),
       });
 
-    const stateString = getStateObjectStringFromComponent(json);
-    const hasState = checkHasState(json);
+    const state = getState({ json, options });
     const componentsUsed = getComponentsUsed(json);
     const componentHasContext = hasContext(json);
 
@@ -281,18 +334,15 @@ export const componentToSolid =
       hasForComponent ? 'For' : undefined,
       json.hooks.onMount?.code ? 'onMount' : undefined,
       ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
-    ].filter(Boolean);
+      ...(state?.import.solidjs ?? []),
+    ].filter(checkIsDefined);
+
+    const storeImports = state?.import.store ?? [];
 
     let str = dedent`
-    ${
-      solidJSImports.length > 0
-        ? `import { 
-          ${solidJSImports.map((item) => item).join(', ')}
-         } from 'solid-js';`
-        : ''
-    }
+    ${solidJSImports.length > 0 ? `import { ${solidJSImports.join(', ')} } from 'solid-js';` : ''}
     ${!foundDynamicComponents ? '' : `import { Dynamic } from 'solid-js/web';`}
-    ${!hasState ? '' : `import { createMutable } from 'solid-js/store';`}
+    ${storeImports.length > 0 ? `import { ${storeImports.join(', ')} } from 'solid-js/store';` : ''}
     ${
       !componentHasStyles && options.stylesType === 'styled-components'
         ? ''
@@ -301,7 +351,7 @@ export const componentToSolid =
     ${renderPreComponent({ component: json, target: 'solid' })}
 
     function ${json.name}(props) {
-      ${!hasState ? '' : `const state = createMutable(${stateString});`}
+      ${state?.str ?? ''}
       
       ${getRefsString(json)}
       ${getContextString(json, options)}
@@ -329,7 +379,7 @@ export const componentToSolid =
       return (${addWrapper ? '<>' : ''}
         ${json.children
           .filter(filterEmptyTextNodes)
-          .map((item) => blockToSolid(item, options))
+          .map((item) => blockToSolid({ component, json: item, options }))
           .join('\n')}
         ${
           options.stylesType === 'style-tag' && css && css.trim().length > 4

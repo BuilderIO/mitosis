@@ -953,7 +953,7 @@ import {
   set,
 } from \\"@fake\\";
 export const submissionState = function submissionState(props, state, formRef) {
-  return (Builder.isEditing && props.previewState) || state.state;
+  return (Builder.isEditing && props.previewState) || state.formState;
 };
 export const onSubmit = function onSubmit(props, state, formRef, event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
@@ -1064,7 +1064,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
       }
     }
 
-    state.state = \\"sending\\";
+    state.formState = \\"sending\\";
     const formUrl = \`\${
       builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
     }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1105,7 +1105,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
         }
 
         state.responseData = body;
-        state.state = res.ok ? \\"success\\" : \\"error\\";
+        state.formState = res.ok ? \\"success\\" : \\"error\\";
 
         if (res.ok) {
           const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1163,7 +1163,7 @@ export const onSubmit = function onSubmit(props, state, formRef, event) {
         }
 
         state.responseData = err;
-        state.state = \\"error\\";
+        state.formState = \\"error\\";
       }
     );
   }
@@ -1172,7 +1172,7 @@ export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
   const formRef = useRef();
   const state = useStore({
-    state: \\"unsubmitted\\",
+    formState: \\"unsubmitted\\",
     responseData: null,
     formErrorMessage: \\"\\",
   });
@@ -1185,7 +1185,7 @@ export const FormComponent = component$((props) => {
       })()}
       method={props.method}
       name={props.name}
-      onSubmit$={(event) => state.onSubmit(props, state, formRef, event)}
+      onSubmit$={(event) => onSubmit(props, state, formRef, event)}
       {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
@@ -1199,25 +1199,25 @@ export const FormComponent = component$((props) => {
             );
           })
         : null}
-      {state.submissionState(props, state, formRef) === \\"error\\" ? (
+      {submissionState(props, state, formRef) === \\"error\\" ? (
         <BuilderBlocks
           dataPath=\\"errorMessage\\"
           blocks={props.errorMessage}
         ></BuilderBlocks>
       ) : null}
-      {state.submissionState(props, state, formRef) === \\"sending\\" ? (
+      {submissionState(props, state, formRef) === \\"sending\\" ? (
         <BuilderBlocks
           dataPath=\\"sendingMessage\\"
           blocks={props.sendingMessage}
         ></BuilderBlocks>
       ) : null}
-      {state.submissionState(props, state, formRef) === \\"error\\" &&
-      state.state.responseData ? (
+      {submissionState(props, state, formRef) === \\"error\\" &&
+      state.responseData ? (
         <pre class=\\"builder-form-error-text pre-FormComponent\\">
-          {JSON.stringify(state.state.responseData, null, 2)}
+          {JSON.stringify(state.responseData, null, 2)}
         </pre>
       ) : null}
-      {state.submissionState(props, state, formRef) === \\"success\\" ? (
+      {submissionState(props, state, formRef) === \\"success\\" ? (
         <BuilderBlocks
           dataPath=\\"successMessage\\"
           blocks={props.successMessage}

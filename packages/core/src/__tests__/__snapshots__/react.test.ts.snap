@@ -758,14 +758,14 @@ import { get } from \\"@fake\\";
 
 export default function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, setState] = useState(() => \\"unsubmitted\\");
+  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
   const [responseData, setResponseData] = useState(() => null);
 
   const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
 
   function submissionState() {
-    return (Builder.isEditing && props.previewState) || state;
+    return (Builder.isEditing && props.previewState) || formState;
   }
 
   function onSubmit(event) {
@@ -870,7 +870,7 @@ export default function FormComponent(props: FormProps) {
           return;
         }
       }
-      setState(\\"sending\\");
+      setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -902,7 +902,7 @@ export default function FormComponent(props: FormProps) {
             }
           }
           setResponseData(body);
-          setState(res.ok ? \\"success\\" : \\"error\\");
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
@@ -946,7 +946,7 @@ export default function FormComponent(props: FormProps) {
             }
           }
           setResponseData(err);
-          setState(\\"error\\");
+          setFormState(\\"error\\");
         }
       );
     }
@@ -3130,14 +3130,14 @@ import { get } from \\"@fake\\";
 
 export default function FormComponent(props: FormProps) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, setState] = useState(() => \\"unsubmitted\\");
+  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
 
   const [responseData, setResponseData] = useState(() => null);
 
   const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
 
   function submissionState() {
-    return (Builder.isEditing && props.previewState) || state;
+    return (Builder.isEditing && props.previewState) || formState;
   }
 
   function onSubmit(event) {
@@ -3242,7 +3242,7 @@ export default function FormComponent(props: FormProps) {
           return;
         }
       }
-      setState(\\"sending\\");
+      setFormState(\\"sending\\");
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -3274,7 +3274,7 @@ export default function FormComponent(props: FormProps) {
             }
           }
           setResponseData(body);
-          setState(res.ok ? \\"success\\" : \\"error\\");
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
               detail: { res, body },
@@ -3318,7 +3318,7 @@ export default function FormComponent(props: FormProps) {
             }
           }
           setResponseData(err);
-          setState(\\"error\\");
+          setFormState(\\"error\\");
         }
       );
     }

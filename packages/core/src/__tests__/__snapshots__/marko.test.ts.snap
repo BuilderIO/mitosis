@@ -129,11 +129,11 @@ class {
 }
 
 style { 
-  .div-54c6b6be {
+  .div-6ebf7548 {
     padding: 10px;
   }
 }
-<div class=\\"test div-54c6b6be\\">
+<div class=\\"test div-6ebf7548\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -419,29 +419,29 @@ exports[`Marko Columns 1`] = `
 }
 
 style { 
-  .div-68e62774 {
+  .div-45826968 {
     display: flex;
     flex-direction: column;
     align-items: stretch;
     line-height: normal;
   }
   @media (max-width: 999px) {
-    .div-68e62774 {
+    .div-45826968 {
       flex-direction: row;
     }
   }
   @media (max-width: 639px) {
-    .div-68e62774 {
+    .div-45826968 {
       flex-direction: row-reverse;
     }
   }
-  .div-68e62774-2 {
+  .div-45826968-2 {
     flex-grow: 1;
   }
 }
-<div class=\\"builder-columns div-68e62774\\">
+<div class=\\"builder-columns div-45826968\\">
   <for|column,index| of=(input.columns)>
-    <div class=\\"builder-column div-68e62774-2\\">\${column.content} \${index}</div>
+    <div class=\\"builder-column div-45826968-2\\">\${column.content} \${index}</div>
   </for>
 </div>"
 `;
@@ -615,7 +615,9 @@ import { get } from \\"@fake\\";
 
 class {
   get submissionState() {
-    return (Builder.isEditing && this.input.previewState) || this.state.state;
+    return (
+      (Builder.isEditing && this.input.previewState) || this.state.formState
+    );
   }
   onSubmit(event) {
     const sendWithJs =
@@ -727,7 +729,7 @@ class {
         }
       }
 
-      this.state.state = \\"sending\\";
+      this.state.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -768,7 +770,7 @@ class {
           }
 
           this.state.responseData = body;
-          this.state.state = res.ok ? \\"success\\" : \\"error\\";
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -826,7 +828,7 @@ class {
           }
 
           this.state.responseData = err;
-          this.state.state = \\"error\\";
+          this.state.formState = \\"error\\";
         }
       );
     }
@@ -834,7 +836,7 @@ class {
 
   onCreate(input) {
     this.state = {
-      state: \\"unsubmitted\\",
+      formState: \\"unsubmitted\\",
       responseData: null,
       formErrorMessage: \\"\\",
     };
@@ -846,7 +848,7 @@ class {
 }
 
 style { 
-  .pre-61e0231b {
+  .pre-edd9d6ca {
     padding: 10px;
     color: red;
     text-align: center;
@@ -859,7 +861,7 @@ style {
   action=(!input.sendWithJs && input.action)
   method=(input.method)
   name=(input.name)
-  on-submit(event => state.state.onSubmit(event))
+  on-submit(event => component.onSubmit(event))
 >
   <if(input.builderBlock && input.builderBlock.children)>
     <for|block,index| of=(input.builderBlock?.children)>
@@ -869,27 +871,27 @@ style {
         index=(index)
       ></BuilderBlockComponent> </for></if>
 
-  <if(state.state.submissionState === 'error')>
+  <if(component.submissionState === 'error')>
     <BuilderBlocks
       dataPath=\\"errorMessage\\"
       blocks=(input.errorMessage)
     ></BuilderBlocks></if>
 
-  <if(state.state.submissionState === 'sending')>
+  <if(component.submissionState === 'sending')>
     <BuilderBlocks
       dataPath=\\"sendingMessage\\"
       blocks=(input.sendingMessage)
     ></BuilderBlocks></if>
 
-  <if(state.state.submissionState === 'error' && state.state.responseData)>
-    <pre class=\\"builder-form-error-text pre-61e0231b\\">
+  <if(component.submissionState === 'error' && state.responseData)>
+    <pre class=\\"builder-form-error-text pre-edd9d6ca\\">
           
-\${JSON.stringify(state.state.responseData, null, 2)}
+\${JSON.stringify(state.responseData, null, 2)}
 
         </pre>
   </if>
 
-  <if(state.state.submissionState === 'success')>
+  <if(component.submissionState === 'success')>
     <BuilderBlocks
       dataPath=\\"successMessage\\"
       blocks=(input.successMessage)
@@ -952,7 +954,7 @@ exports[`Marko Image 1`] = `
 }
 
 style { 
-  .img-9cb645fc {
+  .img-41e286b6 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -964,7 +966,7 @@ style {
     <img
       alt=(input.altText)
       aria-role=(input.altText ? 'presentation' : undefined)
-      class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-9cb645fc')
+      class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-41e286b6')
       src=(input.image)
       on-load(event => component.setLoaded())
       srcset=(input.srcset)
@@ -1149,16 +1151,16 @@ class {
 }
 
 style { 
-  .input-29af8e03 {
+  .input-361877c4 {
     display: block;
   }
-  .textarea-29af8e03 {
+  .textarea-361877c4 {
     display: block;
   }
-  .button-29af8e03 {
+  .button-361877c4 {
     display: block;
   }
-  .review-29af8e03 {
+  .review-361877c4 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1166,7 +1168,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-29af8e03 {
+  .img-361877c4 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1179,13 +1181,13 @@ style {
 
   <if(state.showReviewPrompt)>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-29af8e03\\" />
+    <input placeholder=\\"Title\\" class=\\"input-361877c4\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-29af8e03\\"
+      class=\\"textarea-361877c4\\"
     ></textarea>
     <button
-      class=\\"button-29af8e03\\"
+      class=\\"button-361877c4\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1195,8 +1197,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-29af8e03\\" key=(review.id)>
-      <img class=\\"img-29af8e03\\" src=(review.avatar) />
+    <div class=\\"review-361877c4\\" key=(review.id)>
+      <img class=\\"img-361877c4\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
