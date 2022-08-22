@@ -8,7 +8,7 @@ import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
-import { flow, pipe } from 'fp-ts/lib/function';
+import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
 
 type State = {
@@ -84,12 +84,7 @@ export const updateStateCode = ({
   updateSetters?: boolean;
 }) =>
   flow(
-    updateSetters
-      ? updateStateSettersInCode(options)
-      : (x: string) => {
-          console.log('skipping...', { x });
-          return x;
-        },
+    updateSetters ? updateStateSettersInCode(options) : identity,
     updateStateGettersInCode(options, component),
     (x) => x.trim(),
   );
