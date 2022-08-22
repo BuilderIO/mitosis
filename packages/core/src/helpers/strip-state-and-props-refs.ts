@@ -58,7 +58,7 @@ export const stripStateAndPropsRefs = (
 
   outputVars.forEach((_var) => {
     // determine expression edge cases onMessage( to this.onMessage.emit(
-    const regexp = '( |;|\\()(props\\.?)' + _var + '\\(';
+    const regexp = '(^|\\s|;|\\()(props\\.?)' + _var + '\\(';
     const replacer = '$1' + context + _var + '.emit(';
     newCode = newCode.replace(new RegExp(regexp, 'g'), replacer);
   });
