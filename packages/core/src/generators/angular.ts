@@ -115,6 +115,7 @@ export const blockToAngular = (
   const needsToRenderSlots = [];
 
   if (json.name === 'For') {
+    const indexName = json.scope.For[1];
     str += `<ng-container *ngFor="let ${json.properties._forName} of ${stripStateAndPropsRefs(
       json.bindings.each?.code,
       {
@@ -122,7 +123,7 @@ export const blockToAngular = (
         outputVars,
         domRefs,
       },
-    )}">`;
+    )}${indexName ? `; let ${indexName} = index` : ''}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {

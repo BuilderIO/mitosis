@@ -1038,7 +1038,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; let index = index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1117,7 +1117,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; let index = index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1637,7 +1637,9 @@ import { get } from \\"@fake\\";
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container *ngFor=\\"let block of builderBlock?.children\\">
+        <ng-container
+          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+        >
           <BuilderBlockComponent
             [key]=\\"block.id\\"
             [block]=\\"block\\"
@@ -1711,11 +1713,11 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef: ElementRef;
 
-  state = \\"unsubmitted\\";
+  formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
@@ -1826,7 +1828,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1867,7 +1869,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1925,7 +1927,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -1983,7 +1985,9 @@ import { get } from \\"@fake\\";
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container *ngFor=\\"let block of builderBlock?.children\\">
+        <ng-container
+          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+        >
           <BuilderBlockComponent
             [key]=\\"block.id\\"
             [block]=\\"block\\"
@@ -2057,11 +2061,11 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef: ElementRef;
 
-  state = \\"unsubmitted\\";
+  formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
@@ -2172,7 +2176,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -2213,7 +2217,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -2271,7 +2275,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -2523,7 +2527,7 @@ exports[`Angular Image State 1`] = `
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images\\">
+      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
           <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
         </div>
@@ -2549,7 +2553,7 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images\\">
+      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
           <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
         </div>
@@ -2989,7 +2993,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [defaultValue]=\\"defaultValue\\"
       [name]=\\"name\\"
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -3036,7 +3040,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [defaultValue]=\\"defaultValue\\"
       [name]=\\"name\\"
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -3196,7 +3200,7 @@ import { snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
 
-      <ng-container *ngFor=\\"let review of reviews\\">
+      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
         <div class=\\"review\\" [key]=\\"review.id\\">
           <img class=\\"img\\" [src]=\\"review.avatar\\" />
 
@@ -3309,7 +3313,7 @@ import { snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
 
-      <ng-container *ngFor=\\"let review of reviews\\">
+      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
         <div class=\\"review\\" [key]=\\"review.id\\">
           <img class=\\"img\\" [src]=\\"review.avatar\\" />
 
@@ -5192,7 +5196,7 @@ interface Props {
   selector: \\"nested-show\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items\\">
+      <ng-container *ngFor=\\"let item of items; let idx = index\\">
         <div [key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
@@ -5221,7 +5225,7 @@ interface Props {
   selector: \\"nested-show\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items\\">
+      <ng-container *ngFor=\\"let item of items; let idx = index\\">
         <div [key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>

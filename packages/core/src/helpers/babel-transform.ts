@@ -24,6 +24,7 @@ export const babelTransformCode = <VisitorContextType = any>(
 ) => {
   return babelTransform(code, visitor)?.code || '';
 };
+
 export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
@@ -57,7 +58,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
     type === 'expression'
       ? null
       : attempt(() => {
-          let result = babelTransform(useCode, visitor)?.code || '';
+          let result = babelTransformCode(useCode, visitor);
           if (type === 'functionBody') {
             return result.replace(/^function\(\)\{/, '').replace(/\};$/, '');
           } else {
@@ -85,7 +86,7 @@ export const babelTransformExpression = <VisitorContextType = any>(
       // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
       // that is an object
       useCode = `let _ = ${useCode}`;
-      result = (babelTransform(useCode, visitor)?.code || '')
+      result = babelTransformCode(useCode, visitor)
         // Babel adds trailing semicolons, but for expressions we need those gone
         .replace(/;$/, '')
         // Remove our fake variable assignment
