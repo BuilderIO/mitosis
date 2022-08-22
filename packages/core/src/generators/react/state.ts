@@ -22,8 +22,11 @@ const stripThisRefs = (str: string, options: ToReactOptions) => {
   return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
 };
 
+export const processHookCode = ({ str, options }: { str: string; options: ToReactOptions }) =>
+  processBinding(updateStateSettersInCode(str, options), options);
+
 const valueMapper = (options: ToReactOptions) => (val: string) => {
-  const x = processBinding(updateStateSettersInCode(val, options), options);
+  const x = processHookCode({ str: val, options });
   return stripThisRefs(x, options);
 };
 const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;

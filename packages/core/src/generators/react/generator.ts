@@ -37,7 +37,12 @@ import { collectStyledComponents } from '../../helpers/styles/collect-styled-com
 import { hasCss } from '../../helpers/styles/helpers';
 import { checkHasState } from '../../helpers/state';
 import { ToReactOptions } from './types';
-import { getUseStateCode, updateStateSetters, updateStateSettersInCode } from './state';
+import {
+  getUseStateCode,
+  processHookCode,
+  updateStateSetters,
+  updateStateSettersInCode,
+} from './state';
 import { processBinding } from './helpers';
 import hash from 'hash-sum';
 
@@ -257,10 +262,10 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
     // domRefs must have null argument
     const argument = json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
     hasStateArgument = /state\./.test(argument);
-    code += `\nconst ${ref} = useRef${typeParameter ? `<${typeParameter}>` : ''}(${processBinding(
-      updateStateSettersInCode(argument, options),
+    code += `\nconst ${ref} = useRef${typeParameter ? `<${typeParameter}>` : ''}(${processHookCode({
+      str: argument,
       options,
-    )});`;
+    })});`;
   }
 
   return [hasStateArgument, code];
@@ -523,7 +528,10 @@ const _componentToReact = (
         json.hooks.onInit?.code
           ? `
           useEffect(() => {
-            ${processBinding(updateStateSettersInCode(json.hooks.onInit.code, options), options)}
+            ${processHookCode({
+              str: json.hooks.onInit.code,
+              options,
+            })}
           })
           `
           : ''
@@ -531,7 +539,10 @@ const _componentToReact = (
       ${
         json.hooks.onMount?.code
           ? `useEffect(() => {
-            ${processBinding(updateStateSettersInCode(json.hooks.onMount.code, options), options)}
+            ${processHookCode({
+              str: json.hooks.onMount.code,
+              options,
+            })}
           }, [])`
           : ''
       }
@@ -540,11 +551,9 @@ const _componentToReact = (
         json.hooks.onUpdate
           ?.map(
             (hook) => `useEffect(() => {
-            ${processBinding(updateStateSettersInCode(hook.code, options), options)}
+            ${processHookCode({ str: hook.code, options })}
           }, 
-          ${
-            hook.deps ? processBinding(updateStateSettersInCode(hook.deps, options), options) : ''
-          })`,
+          ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
           )
           .join(';') ?? ''
       }
@@ -553,10 +562,10 @@ const _componentToReact = (
         json.hooks.onUnMount?.code
           ? `useEffect(() => {
             return () => {
-              ${processBinding(
-                updateStateSettersInCode(json.hooks.onUnMount.code, options),
+              ${processHookCode({
+                str: json.hooks.onUnMount.code,
                 options,
-              )}
+              })}
             }
           }, [])`
           : ''
