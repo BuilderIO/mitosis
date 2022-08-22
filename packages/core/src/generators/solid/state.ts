@@ -26,25 +26,30 @@ const updateStateSettersInCode = (options: ToSolidOptions) => (value: string) =>
     case 'mutable':
       return value;
     case 'signals':
-      return babelTransformExpression(value, {
-        AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
-          const { node } = path;
-          if (types.isMemberExpression(node.left)) {
-            if (types.isIdentifier(node.left.object)) {
-              // TODO: utillity to properly trace this reference to the beginning
-              if (node.left.object.name === 'state') {
-                // TODO: ultimately support other property access like strings
-                const propertyName = (node.left.property as types.Identifier).name;
-                path.replaceWith(
-                  types.callExpression(types.identifier(getStateSetterName(propertyName)), [
-                    node.right,
-                  ]),
-                );
+      try {
+        return babelTransformExpression(value, {
+          AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
+            const { node } = path;
+            if (types.isMemberExpression(node.left)) {
+              if (types.isIdentifier(node.left.object)) {
+                // TODO: utillity to properly trace this reference to the beginning
+                if (node.left.object.name === 'state') {
+                  // TODO: ultimately support other property access like strings
+                  const propertyName = (node.left.property as types.Identifier).name;
+                  path.replaceWith(
+                    types.callExpression(types.identifier(getStateSetterName(propertyName)), [
+                      node.right,
+                    ]),
+                  );
+                }
               }
             }
-          }
-        },
-      });
+          },
+        });
+      } catch (error) {
+        console.log('[Solid.js]: could not update state setters in signals code', value);
+        throw error;
+      }
   }
 };
 
@@ -59,7 +64,8 @@ const updateStateGettersInCode =
           includeProps: false,
           replaceWith: (name) => {
             const state = component.state[name];
-            if (state?.type === 'property') {
+            // signal accessors are lazy, so we need to add a function call
+            if (options.state === 'signals' && state?.type === 'property') {
               return `${name}()`;
             }
             return name;
