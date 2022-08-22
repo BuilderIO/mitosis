@@ -124,12 +124,10 @@ const preProcessBlockCode = ({
   options: ToSolidOptions;
   component: MitosisComponent;
 }) => {
-  const processCode = updateStateCode({ options, component, updateSetters: false });
-
   for (const key in json.properties) {
     const value = json.properties[key];
     if (value) {
-      json.properties[key] = processCode(value);
+      json.properties[key] = updateStateCode({ options, component, updateSetters: false })(value);
     }
   }
   for (const key in json.bindings) {
@@ -137,7 +135,7 @@ const preProcessBlockCode = ({
     if (value?.code) {
       json.bindings[key] = {
         arguments: value.arguments,
-        code: processCode(value.code),
+        code: updateStateCode({ options, component, updateSetters: true })(value.code),
       };
     }
   }

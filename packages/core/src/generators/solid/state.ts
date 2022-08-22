@@ -8,7 +8,7 @@ import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
 import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
-import { flow, identity, pipe } from 'fp-ts/lib/function';
+import { flow, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
 
 type State = {
@@ -84,8 +84,12 @@ export const updateStateCode = ({
   updateSetters?: boolean;
 }) =>
   flow(
-    // we can't use this in `preProcessBlockCode` because the strings are not valid babel nodes
-    updateSetters ? updateStateSettersInCode(options) : identity,
+    updateSetters
+      ? updateStateSettersInCode(options)
+      : (x: string) => {
+          console.log('skipping...', { x });
+          return x;
+        },
     updateStateGettersInCode(options, component),
     (x) => x.trim(),
   );
