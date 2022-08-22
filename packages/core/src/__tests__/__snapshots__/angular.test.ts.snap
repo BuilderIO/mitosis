@@ -1713,11 +1713,11 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef: ElementRef;
 
-  state = \\"unsubmitted\\";
+  formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
@@ -1828,7 +1828,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -1869,7 +1869,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -1927,7 +1927,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -2061,11 +2061,11 @@ export default class FormComponent {
 
   @ViewChild(\\"formRef\\") formRef: ElementRef;
 
-  state = \\"unsubmitted\\";
+  formState = \\"unsubmitted\\";
   responseData = null;
   formErrorMessage = \\"\\";
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
@@ -2176,7 +2176,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -2217,7 +2217,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -2275,7 +2275,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }

@@ -15,7 +15,7 @@ interface GetStateObjectStringOptions {
   keyPrefix?: string;
 }
 
-interface RequiredOptions extends Required<GetStateObjectStringOptions> {}
+type RequiredOptions = Required<GetStateObjectStringOptions>;
 
 const DEFAULT_OPTIONS: RequiredOptions = {
   format: 'object',

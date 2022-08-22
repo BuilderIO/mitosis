@@ -1,61 +1,50 @@
-import { types } from '@babel/core';
 import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
-import traverse from 'traverse';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { capitalize } from '../helpers/capitalize';
-import { collectCss } from '../helpers/styles/collect-css';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { fastClone } from '../helpers/fast-clone';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { getRefs } from '../helpers/get-refs';
-import { getPropsRef } from '../helpers/get-props-ref';
+import { Transpiler } from '../../types/transpiler';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { fastClone } from '../../helpers/fast-clone';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { getRefs } from '../../helpers/get-refs';
+import { getPropsRef } from '../../helpers/get-props-ref';
 import {
   stringifyContextValue,
   getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { handleMissingState } from '../helpers/handle-missing-state';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { mapRefs } from '../helpers/map-refs';
-import { processHttpRequests } from '../helpers/process-http-requests';
-import { processTagReferences } from '../helpers/process-tag-references';
-import { renderPreComponent } from '../helpers/render-imports';
-import { stripNewlinesInStrings } from '../helpers/replace-new-lines-in-strings';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
+} from '../../helpers/get-state-object-string';
+import { gettersToFunctions } from '../../helpers/getters-to-functions';
+import { handleMissingState } from '../../helpers/handle-missing-state';
+import { isValidAttributeName } from '../../helpers/is-valid-attribute-name';
+import { mapRefs } from '../../helpers/map-refs';
+import { processHttpRequests } from '../../helpers/process-http-requests';
+import { processTagReferences } from '../../helpers/process-tag-references';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
-import { hasContext } from './helpers/context';
-import { collectReactNativeStyles } from './react-native';
-import { collectStyledComponents } from '../helpers/styles/collect-styled-components';
-import { hasCss } from '../helpers/styles/helpers';
-import { isSlotProperty } from '../helpers/slots';
-import { checkHasState } from '../helpers/state';
+} from '../../modules/plugins';
+import { selfClosingTags } from '../../parsers/jsx';
+import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisNode } from '../../types/mitosis-node';
+import { hasContext } from '../helpers/context';
+import { collectReactNativeStyles } from '../react-native';
+import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
+import { hasCss } from '../../helpers/styles/helpers';
+import { checkHasState } from '../../helpers/state';
+import { ToReactOptions } from './types';
+import {
+  getUseStateCode,
+  processHookCode,
+  updateStateSetters,
+  updateStateSettersInCode,
+} from './state';
+import { processBinding } from './helpers';
 import hash from 'hash-sum';
-
-export interface ToReactOptions extends BaseTranspilerOptions {
-  stylesType?: 'emotion' | 'styled-components' | 'styled-jsx' | 'react-native' | 'style-tag';
-  stateType?: 'useState' | 'mobx' | 'valtio' | 'solid' | 'builder';
-  format?: 'lite' | 'safe';
-  type?: 'dom' | 'native';
-  preact?: boolean;
-  forwardRef?: string;
-  experimental?: any;
-}
 
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
@@ -273,104 +262,13 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
     // domRefs must have null argument
     const argument = json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
     hasStateArgument = /state\./.test(argument);
-    code += `\nconst ${ref} = useRef${typeParameter ? `<${typeParameter}>` : ''}(${processBinding(
-      updateStateSettersInCode(argument, options),
+    code += `\nconst ${ref} = useRef${typeParameter ? `<${typeParameter}>` : ''}(${processHookCode({
+      str: argument,
       options,
-    )});`;
+    })});`;
   }
 
   return [hasStateArgument, code];
-};
-
-/**
- * Removes all `this.` references.
- */
-const stripThisRefs = (str: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return str;
-  }
-
-  return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
-};
-
-const processBinding = (str: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return str;
-  }
-
-  if (isSlotProperty(str)) {
-    return stripStateAndPropsRefs(str, {
-      includeState: true,
-      includeProps: false,
-    });
-  }
-
-  return stripStateAndPropsRefs(str, {
-    includeState: true,
-    includeProps: false,
-  });
-};
-
-const getUseStateCode = (json: MitosisComponent, options: ToReactOptions) => {
-  let str = '';
-
-  const { state } = json;
-
-  const valueMapper = (val: string) => {
-    const x = processBinding(updateStateSettersInCode(val, options), options);
-    return stripThisRefs(x, options);
-  };
-
-  const lineItemDelimiter = '\n\n\n';
-
-  for (const key in state) {
-    const value = state[key]?.code;
-
-    const defaultCase = `const [${key}, set${capitalize(key)}] = useState(() => (${valueMapper(
-      json5.stringify(value),
-    )}))`;
-
-    if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        const useValue = value.replace(functionLiteralPrefix, '');
-        const mappedVal = valueMapper(useValue);
-
-        str += mappedVal;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const useValue = methodValue.replace(/^(get )?/, 'function ');
-        str += valueMapper(useValue);
-      } else {
-        str += defaultCase;
-      }
-    } else {
-      str += defaultCase;
-    }
-
-    str += lineItemDelimiter;
-  }
-
-  return str;
-};
-
-const updateStateSetters = (json: MitosisComponent, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return;
-  }
-  traverse(json).forEach(function (item) {
-    if (isMitosisNode(item)) {
-      for (const key in item.bindings) {
-        let values = item.bindings[key];
-        const newValue = updateStateSettersInCode(values?.code as string, options);
-        if (newValue !== values?.code) {
-          item.bindings[key] = {
-            code: newValue,
-            arguments: values?.arguments,
-          };
-        }
-      }
-    }
-  });
 };
 
 function addProviderComponents(json: MitosisComponent, options: ToReactOptions) {
@@ -393,31 +291,6 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
     }
   }
 }
-
-const updateStateSettersInCode = (value: string, options: ToReactOptions) => {
-  if (options.stateType !== 'useState') {
-    return value;
-  }
-  return babelTransformExpression(value, {
-    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
-      const { node } = path;
-      if (types.isMemberExpression(node.left)) {
-        if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
-          if (node.left.object.name === 'state') {
-            // TODO: ultimately support other property access like strings
-            const propertyName = (node.left.property as types.Identifier).name;
-            path.replaceWith(
-              types.callExpression(types.identifier(`set${capitalize(propertyName)}`), [
-                node.right,
-              ]),
-            );
-          }
-        }
-      }
-    },
-  });
-};
 
 function getContextString(component: MitosisComponent, options: ToReactOptions) {
   let str = '';
@@ -655,7 +528,10 @@ const _componentToReact = (
         json.hooks.onInit?.code
           ? `
           useEffect(() => {
-            ${processBinding(updateStateSettersInCode(json.hooks.onInit.code, options), options)}
+            ${processHookCode({
+              str: json.hooks.onInit.code,
+              options,
+            })}
           })
           `
           : ''
@@ -663,7 +539,10 @@ const _componentToReact = (
       ${
         json.hooks.onMount?.code
           ? `useEffect(() => {
-            ${processBinding(updateStateSettersInCode(json.hooks.onMount.code, options), options)}
+            ${processHookCode({
+              str: json.hooks.onMount.code,
+              options,
+            })}
           }, [])`
           : ''
       }
@@ -672,11 +551,9 @@ const _componentToReact = (
         json.hooks.onUpdate
           ?.map(
             (hook) => `useEffect(() => {
-            ${processBinding(updateStateSettersInCode(hook.code, options), options)}
+            ${processHookCode({ str: hook.code, options })}
           }, 
-          ${
-            hook.deps ? processBinding(updateStateSettersInCode(hook.deps, options), options) : ''
-          })`,
+          ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
           )
           .join(';') ?? ''
       }
@@ -685,10 +562,10 @@ const _componentToReact = (
         json.hooks.onUnMount?.code
           ? `useEffect(() => {
             return () => {
-              ${processBinding(
-                updateStateSettersInCode(json.hooks.onUnMount.code, options),
+              ${processHookCode({
+                str: json.hooks.onUnMount.code,
                 options,
-              )}
+              })}
             }
           }, [])`
           : ''

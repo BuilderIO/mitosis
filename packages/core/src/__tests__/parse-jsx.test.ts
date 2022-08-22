@@ -1,4 +1,6 @@
+import { parseStateObjectToMitosisState } from '../parsers/jsx/state';
 import { parseJsx } from '../parsers/jsx';
+import { SPEC } from './data/jsx-json.spec';
 
 const buttonWithMetadata = require('./data/blocks/button-with-metadata.raw');
 const image = require('./data/blocks/image.raw');
@@ -9,6 +11,10 @@ const basicPropsRaw = require('./data/basic-props.raw');
 const basicPropsDestructureRaw = require('./data/basic-props-destructure.raw');
 
 describe('Parse JSX', () => {
+  test('parseStateObject', () => {
+    const out = parseStateObjectToMitosisState(SPEC as any);
+    expect(out).toMatchSnapshot();
+  });
   test('metadata', () => {
     const json = parseJsx(buttonWithMetadata);
     expect(json).toMatchSnapshot();

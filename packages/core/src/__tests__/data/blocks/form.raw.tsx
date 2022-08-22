@@ -30,12 +30,12 @@ export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
 
 export default function FormComponent(props: FormProps) {
   const state = useStore({
-    state: 'unsubmitted' as FormState,
+    formState: 'unsubmitted' as FormState,
     // TODO: separate response and error?
     responseData: null as any,
     formErrorMessage: '',
     get submissionState(): FormState {
-      return (Builder.isEditing && props.previewState) || state.state;
+      return (Builder.isEditing && props.previewState) || state.formState;
     },
     onSubmit(event: Event & { currentTarget: HTMLFormElement }) {
       const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
@@ -144,7 +144,7 @@ export default function FormComponent(props: FormProps) {
           }
         }
 
-        state.state = 'sending';
+        state.formState = 'sending';
 
         const formUrl = `${
           builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'
@@ -186,7 +186,7 @@ export default function FormComponent(props: FormProps) {
             }
 
             state.responseData = body;
-            state.state = res.ok ? 'success' : 'error';
+            state.formState = res.ok ? 'success' : 'error';
 
             if (res.ok) {
               const submitSuccessEvent = new CustomEvent('submit:success', {
@@ -238,7 +238,7 @@ export default function FormComponent(props: FormProps) {
             }
 
             state.responseData = err;
-            state.state = 'error';
+            state.formState = 'error';
           },
         );
       }
