@@ -53,15 +53,10 @@ export function mapReactIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
   for (const key in json.state) {
-    const value = json.state[key]?.code;
-    if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
+    const stateVal = json.state[key];
+    if (typeof stateVal?.code === 'string' && stateVal.type === 'function') {
       json.state[key] = {
-        code:
-          functionLiteralPrefix +
-          mapReactIdentifiersInExpression(
-            value.replace(functionLiteralPrefix, ''),
-            stateProperties,
-          ),
+        code: mapReactIdentifiersInExpression(stateVal.code, stateProperties),
         type: 'function',
       };
     }
@@ -108,15 +103,11 @@ export function mapReactIdentifiers(json: MitosisComponent) {
   });
 }
 
-const createFunctionStringLiteral = (node: babel.types.Node) => {
-  return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
-};
-export const createFunctionStringLiteralObjectProperty = (
+const createFunctionStringLiteralObjectProperty = (
   key: babel.types.Expression | babel.types.PrivateName,
   node: babel.types.Node,
-) => {
-  return types.objectProperty(key, createFunctionStringLiteral(node));
-};
+) =>
+  types.objectProperty(key, types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`));
 
 type ParsedStateValue = babel.types.ObjectProperty | babel.types.SpreadElement;
 

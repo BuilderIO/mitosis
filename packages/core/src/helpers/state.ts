@@ -1,8 +1,8 @@
 import { mapValues } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { JSONObject, _JSON } from '../types/json';
-import { MitosisComponent, StateValue, StateValueType } from '../types/mitosis-component';
+import { JSONObject } from '../types/json';
+import { MitosisComponent, StateValue } from '../types/mitosis-component';
 import { GETTER } from './patterns';
 
 export const checkHasState = (component: MitosisComponent) =>
@@ -14,26 +14,20 @@ export const checkHasState = (component: MitosisComponent) =>
  * This is a temporary workaround until we eliminate the prefixes and make this StateValueType the
  * source of truth.
  */
-export const getStateTypeOfValue = (value: any): StateValueType => {
+const mapJsonToStateValue = (value: any): StateValue => {
   if (typeof value === 'string') {
     if (value.startsWith(functionLiteralPrefix)) {
-      return 'function';
+      return { type: 'function', code: value.replace(functionLiteralPrefix, '') };
     } else if (value.startsWith(methodLiteralPrefix)) {
-      const isGet = Boolean(value.replace(methodLiteralPrefix, '').match(GETTER));
+      const strippedValue = value.replace(methodLiteralPrefix, '');
+      const isGet = Boolean(strippedValue.match(GETTER));
       if (isGet) {
-        return 'getter';
+        return { type: 'getter', code: strippedValue.replace(GETTER, '') };
       }
-      return 'method';
+      return { type: 'method', code: strippedValue };
     }
   }
-  return 'property';
-};
-
-const mapJsonToStateValue = (value: _JSON): StateValue => {
-  return {
-    code: value,
-    type: getStateTypeOfValue(value),
-  };
+  return { type: 'property', code: value };
 };
 
 export const mapJsonObjectToStateValue = (value: JSONObject): MitosisComponent['state'] =>

@@ -1,7 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { getBindingsCode } from '../../helpers/get-bindings';
@@ -153,7 +152,7 @@ const componentFunctionToJson = (
     if (types.isFunctionDeclaration(item)) {
       if (types.isIdentifier(item.id)) {
         state[item.id.name] = {
-          code: `${functionLiteralPrefix}${generate(item).code!}`,
+          code: generate(item).code,
           type: 'function',
         };
       }
