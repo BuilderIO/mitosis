@@ -103,9 +103,15 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
       useKey = '@' + useKey.substring(2).toLowerCase();
       str += ` ${useKey}=\${${cusArgs.join(',')} => ${processBinding(code as string)}} `;
     } else {
-      // TODO: handle boolean attributes too by matching list of html boolean attributes
-      // https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions
-      str += ` .${key}=\${${processBinding(code as string)}} `;
+      const value = processBinding(code as string);
+      // If they key includes a '-' it's an attribute, not a property
+      if (key.includes('-')) {
+        str += ` ${key}=\${${value}} `;
+      } else {
+        // TODO: handle boolean attributes too by matching list of html boolean attributes
+        // https://lit.dev/docs/templates/expressions/#boolean-attribute-expressions
+        str += ` .${key}=\${${value}} `;
+      }
     }
   }
   if (selfClosingTags.has(json.name)) {
@@ -273,7 +279,6 @@ export const componentToLit =
       render() {
         return html\`
           ${options.useShadowDom || !css.length ? '' : `<style>${css}</style>`}
-        }
           ${indent(html, 8)}
         \`
       }
