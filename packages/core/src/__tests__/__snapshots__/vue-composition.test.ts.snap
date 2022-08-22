@@ -508,7 +508,7 @@ exports[`Vue Columns 1`] = `
   </div>
 </template>
 <script setup lang=\\"ts\\">
-    import { defineComponent, defineProps, ref } from \\"vue\\"
+    import { defineComponent, defineProps } from \\"vue\\"
 
 
 
@@ -865,7 +865,7 @@ errorMessagePath?: string;
 }
 export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
     defineProps(FormProps)
-    const state= ref('unsubmitted')
+    const formState= ref('unsubmitted')
 const responseData= ref(null)
 const formErrorMessage= ref('')
 
@@ -984,7 +984,7 @@ if (formRef) {
   }
 }
 
-state = 'sending';
+formState = 'sending';
 const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(name || '')}\`;
 fetch(sendSubmissionsTo === 'email' ? formUrl : action
 /* TODO: throw error if no action URL */
@@ -1018,7 +1018,7 @@ fetch(sendSubmissionsTo === 'email' ? formUrl : action
   }
 
   responseData = body;
-  state = res.ok ? 'success' : 'error';
+  formState = res.ok ? 'success' : 'error';
 
   if (res.ok) {
     const submitSuccessEvent = new CustomEvent('submit:success', {
@@ -1077,7 +1077,7 @@ fetch(sendSubmissionsTo === 'email' ? formUrl : action
   }
 
   responseData = err;
-  state = 'error';
+  formState = 'error';
 });
 }
 }

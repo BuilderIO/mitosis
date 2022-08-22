@@ -656,7 +656,15 @@ const componentToVue =
       {},
     );
 
+    // If no types and default values are set, default to the array definition (e.g. props: ['disabled', 'size'])
+    if (!Object.values(propsDefinition)?.filter((i) => Object.keys(i).length).length) {
+      propsDefinition = Object.keys(propsDefinition);
+    }
+
+    // To let TypeScript properly infer types inside component options, we need to define components with defineComponent():
+    // defineComponent() also enables type inference for components defined in plain JavaScript.
     let vueImports = ['defineComponent'];
+
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
