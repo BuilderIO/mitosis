@@ -27,6 +27,8 @@ const propsInterface = require('./data/types/component-props-interface.raw');
 const preserveTyping = require('./data/types/preserve-typing.raw');
 const typeDependency = require('./data/types/type-dependency.raw');
 
+const defaultProps = require('./data/default-props/default-props.raw');
+
 const classRaw = require('./data/styles/class.raw');
 const className = require('./data/styles/className.raw');
 const classAndClassName = require('./data/styles/class-and-className.raw');
@@ -96,8 +98,10 @@ const BASIC_TESTS = {
   onMount: onMount,
   propsType: propsType,
   propsInterface: propsInterface,
+  defaultProps: defaultProps,
   preserveTyping: preserveTyping,
   typeDependency,
+  defaultValsWithTypes: require('./data/types/component-with-default-values-types.raw'),
   subComponent,
   nestedStyles,
   propsDestructure: propsDestructure,

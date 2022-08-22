@@ -890,7 +890,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -936,7 +936,7 @@ export default class MyPreviousComponent {
   private _prevCount = this.count;
 
   ngAfterContentChecked() {
-    prevCount = this.count;
+    this._prevCount = this.count;
   }
 }
 "
@@ -1038,7 +1038,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; let index = index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1117,7 +1117,7 @@ export interface ColumnProps {
   selector: \\"column\\",
   template: \`
     <div class=\\"builder-columns div\\">
-      <ng-container *ngFor=\\"let column of columns\\">
+      <ng-container *ngFor=\\"let column of columns; let index = index\\">
         <div class=\\"builder-column div-2\\">{{column.content}} {{index}}</div>
       </ng-container>
     </div>
@@ -1637,7 +1637,9 @@ import { get } from \\"@fake\\";
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container *ngFor=\\"let block of builderBlock?.children\\">
+        <ng-container
+          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+        >
           <BuilderBlockComponent
             [key]=\\"block.id\\"
             [block]=\\"block\\"
@@ -1983,7 +1985,9 @@ import { get } from \\"@fake\\";
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
-        <ng-container *ngFor=\\"let block of builderBlock?.children\\">
+        <ng-container
+          *ngFor=\\"let block of builderBlock?.children; let index = index\\"
+        >
           <BuilderBlockComponent
             [key]=\\"block.id\\"
             [block]=\\"block\\"
@@ -2366,8 +2370,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2486,8 +2490,8 @@ export default class Image {
     if (this.useLazyLoading()) {
       // throttled scroll capture listener
       const listener = () => {
-        if (this.pictureRef) {
-          const rect = this.pictureRef.getBoundingClientRect();
+        if (this.pictureRef.nativeElement) {
+          const rect = this.pictureRef.nativeElement.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
@@ -2523,7 +2527,7 @@ exports[`Angular Image State 1`] = `
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images\\">
+      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
           <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
         </div>
@@ -2549,7 +2553,7 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"img-state-component\\",
   template: \`
     <div>
-      <ng-container *ngFor=\\"let item of images\\">
+      <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
           <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
         </div>
@@ -2989,7 +2993,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [defaultValue]=\\"defaultValue\\"
       [name]=\\"name\\"
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -3036,7 +3040,7 @@ import { Builder } from \\"@builder.io/sdk\\";
       [defaultValue]=\\"defaultValue\\"
       [name]=\\"name\\"
     >
-      <ng-container *ngFor=\\"let option of options\\">
+      <ng-container *ngFor=\\"let option of options; let index = index\\">
         <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
@@ -3196,7 +3200,7 @@ import { snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
 
-      <ng-container *ngFor=\\"let review of reviews\\">
+      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
         <div class=\\"review\\" [key]=\\"review.id\\">
           <img class=\\"img\\" [src]=\\"review.avatar\\" />
 
@@ -3309,7 +3313,7 @@ import { snakeCase } from \\"lodash\\";
         </button>
       </ng-container>
 
-      <ng-container *ngFor=\\"let review of reviews\\">
+      <ng-container *ngFor=\\"let review of reviews; let index = index\\">
         <div class=\\"review\\" [key]=\\"review.id\\">
           <img class=\\"img\\" [src]=\\"review.avatar\\" />
 
@@ -4162,6 +4166,146 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular defaultProps 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular defaultProps 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular defaultValsWithTypes 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+@Component({
+  selector: \\"component-with-types\\",
+  template: \`
+    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
+  \`,
+})
+export default class ComponentWithTypes {
+  DEFAULT_VALUES = DEFAULT_VALUES;
+
+  @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular defaultValsWithTypes 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"component-with-types\\",
+  template: \`
+    <div>Hello {{name || DEFAULT_VALUES.name}}</div>
+  \`,
+})
+export default class ComponentWithTypes {
+  DEFAULT_VALUES = DEFAULT_VALUES;
+
+  @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
 exports[`Angular multipleOnUpdate 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -4174,7 +4318,6 @@ exports[`Angular multipleOnUpdate 1`] = `
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4197,7 +4340,6 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MultipleOnUpdate {
   ngAfterContentChecked() {
     console.log(\\"Runs on every update/rerender\\");
-
     console.log(\\"Runs on every update/rerender as well\\");
   }
 }
@@ -4225,7 +4367,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
@@ -4261,7 +4402,6 @@ export default class MultipleOnUpdateWithDeps {
     if (this.a === \\"a\\") {
       this.a = \\"b\\";
     }
-
     console.log(\\"Runs when this.c or this.d changes\\", this.c, this.d);
 
     if (this.a === \\"a\\") {
@@ -5056,7 +5196,7 @@ interface Props {
   selector: \\"nested-show\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items\\">
+      <ng-container *ngFor=\\"let item of items; let idx = index\\">
         <div [key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
@@ -5085,7 +5225,7 @@ interface Props {
   selector: \\"nested-show\\",
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
-      <ng-container *ngFor=\\"let item of items\\">
+      <ng-container *ngFor=\\"let item of items; let idx = index\\">
         <div [key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>

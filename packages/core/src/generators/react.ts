@@ -587,10 +587,7 @@ const _componentToReact = (
   const nativeStyles =
     stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
 
-  let propsArgs = 'props';
-  if (json.propsTypeRef) {
-    propsArgs = `props: ${json.propsTypeRef}`;
-  }
+  const propsArgs = `props: ${json.propsTypeRef || 'any'}`;
 
   let str = dedent`
   ${
@@ -710,6 +707,12 @@ const _componentToReact = (
         ${wrap ? closeFrag(options) : ''}
       );
     }${isForwardRef ? ')' : ''}
+
+    ${
+      !json.defaultProps
+        ? ''
+        : `${json.name || 'MyComponent'}.defaultProps = ${json5.stringify(json.defaultProps)};`
+    }
 
     ${
       !nativeStyles

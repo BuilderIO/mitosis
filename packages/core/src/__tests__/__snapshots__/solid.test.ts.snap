@@ -3501,6 +3501,108 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid defaultProps 1`] = `
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button {...props.attributes} type=\\"button\\">
+          {props.text}
+        </button>
+      </Show>
+    </>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid defaultProps 2`] = `
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Show>
+      </>
+    </>
+  );
+}
+
+export default Button;
+"
+`;
+
+exports[`Solid defaultValsWithTypes 1`] = `
+"const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+function ComponentWithTypes(props) {
+  return (
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
+  );
+}
+
+export default ComponentWithTypes;
+"
+`;
+
+exports[`Solid defaultValsWithTypes 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+function ComponentWithTypes(props) {
+  return (
+    <>
+      <div>
+        {\\" \\"}
+        Hello
+        {props.name || DEFAULT_VALUES.name}
+      </div>
+    </>
+  );
+}
+
+export default ComponentWithTypes;
+"
+`;
+
 exports[`Solid multipleOnUpdate 1`] = `
 "import { on, createEffect } from \\"solid-js\\";
 

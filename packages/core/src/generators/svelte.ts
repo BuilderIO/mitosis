@@ -37,6 +37,7 @@ import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { GETTER } from '../helpers/patterns';
 import { isUpperCase } from '../helpers/is-upper-case';
+import json5 from 'json5';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -245,7 +246,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   if (json.children) {
     str += json.children
       .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
+      .join('');
   }
 
   str += `</${tagName}>`;
@@ -420,6 +421,10 @@ export const componentToSvelte =
 
           if (json.propsTypeRef && json.propsTypeRef !== 'any') {
             propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          }
+
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
+            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
           }
 
           propDeclaration += ';';
