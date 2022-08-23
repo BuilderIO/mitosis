@@ -65,6 +65,10 @@ const SPECIAL_PROPERTIES = {
   V_ELSE_IF: 'v-else-if',
 } as const;
 
+// Transform <FooBar> to <foo-bar> as Vue2 needs
+const renameMitosisComponentsToKebabCase = (str: string) =>
+  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
+
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
@@ -660,7 +664,7 @@ const componentToVue =
     }
 
     // import from vue
-    let vueImports = [];
+    let vueImports: string[] = [];
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
@@ -813,6 +817,18 @@ const componentToVue =
         keyPrefix: 'function',
       });
 
+      if (includeClassMapHelper) {
+        methods += ` function _classStringToObject(str) {
+        const obj = {};
+        if (typeof str !== 'string') { return obj }
+        const classNames = str.trim().split(/\\s+/);
+        for (const name of classNames) {
+          obj[name] = true;
+        }
+        return obj;
+        } `;
+      }
+
       let str = dedent`
         ${elementProps.size ? getCompositionPropDefinition() : ''}
         ${refs}
@@ -876,11 +892,15 @@ const componentToVue =
         str = str.replaceAll(`this.${ref} =`, `${ref}.value =`);
       });
 
+      elementProps.forEach((prop) => {
+        str = str.replaceAll(`this.${prop}`, `props.${prop}`);
+      });
+
       str = str.replace(/this\./g, ''); // strip this elsewhere
       return str;
     }
 
-    let str = dedent`
+    let str: string = dedent`
     <template>
       ${template}
     </template>
@@ -912,6 +932,7 @@ const componentToVue =
           parser: 'vue',
           plugins: [
             // To support running in browsers
+            require('prettier/parser-typescript'),
             require('prettier/parser-html'),
             require('prettier/parser-postcss'),
             require('prettier/parser-babel'),
@@ -939,10 +960,6 @@ export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
 
 export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: 3 });
-
-// Transform <FooBar> to <foo-bar> as Vue2 needs
-const renameMitosisComponentsToKebabCase = (str: string) =>
-  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [
