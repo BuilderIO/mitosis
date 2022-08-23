@@ -52,7 +52,7 @@ const checkIsComponentImport = (theImport: MitosisImport) =>
 const transformImportPath = (theImport: MitosisImport, target: Target) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
-    return theImport.path.replace('.lite', '');
+    return theImport.path.replace('.lite', '.js');
   }
 
   if (checkIsComponentImport(theImport)) {
