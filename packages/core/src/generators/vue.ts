@@ -39,7 +39,6 @@ import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { notStrictEqual } from 'assert';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -647,32 +646,26 @@ const componentToVue =
       (prop) => prop !== 'children' && prop !== 'class',
     );
 
-    propsDefinition = propsDefinition.reduce(
-      (propsDefinition: DefaultProps, curr: string) => (
-        (propsDefinition[curr] = component.defaultProps?.hasOwnProperty(curr)
-          ? { default: component.defaultProps[curr] }
-          : {}),
-        propsDefinition
-      ),
-      {},
-    );
-
-    // If no types and default values are set, default to the array definition (e.g. props: ['disabled', 'size'])
-    if (!Object.values(propsDefinition)?.filter((i) => Object.keys(i).length).length) {
-      propsDefinition = Object.keys(propsDefinition);
+    // add default props (if set)
+    if (component.defaultProps) {
+      propsDefinition = propsDefinition.reduce(
+        (propsDefinition: DefaultProps, curr: string) => (
+          (propsDefinition[curr] = component.defaultProps?.hasOwnProperty(curr)
+            ? { default: component.defaultProps[curr] }
+            : {}),
+          propsDefinition
+        ),
+        {},
+      );
     }
 
-    // To let TypeScript properly infer types inside component options, we need to define components with defineComponent():
-    // defineComponent() also enables type inference for components defined in plain JavaScript.
-    let vueImports = ['defineComponent'];
-
+    // import from vue
+    let vueImports = [];
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
       vueImports.push('defineAsyncComponent');
     }
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');
-      elementProps.size && vueImports.push('defineProps');
-      component.defaultProps && vueImports.push('withDefaults');
       component.hooks.onMount?.code && vueImports.push('onMounted');
       component.hooks.onUnMount?.code && vueImports.push('onUnMounted');
       onUpdateWithoutDeps.length && vueImports.push('onUpdated');
@@ -681,9 +674,13 @@ const componentToVue =
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
       ) && vueImports.push('ref');
+    } else {
+      vueImports.push('defineComponent');
     }
 
     function generateOptionsApiScript() {
+      // To let TypeScript properly infer types inside component options, we need to define components with defineComponent():
+      // defineComponent() also enables type inference for components defined in plain JavaScript
       return `
         export default defineComponent({
         ${
@@ -759,7 +756,7 @@ const componentToVue =
         ${
           getterString.length < 4
             ? ''
-            : `
+            : ` 
           computed: ${getterString},
         `
         }
@@ -774,12 +771,23 @@ const componentToVue =
     }
 
     const getCompositionPropDefinition = () => {
+      let props = Object.assign(Array.from(elementProps, (v) => ({ [v]: 'any' }))).reduce(
+        (r: any, c: any) => Object.assign(r, c),
+        {},
+      );
+
+      let str = 'const props = ';
+
       if (component.defaultProps) {
-        return `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(
+        str += `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(
           component.defaultProps,
         )})`;
+      } else if (component.propsTypeRef) {
+        str += `defineProps<${component.propsTypeRef}>()`;
+      } else {
+        str += `defineProps(${props})`;
       }
-      return `defineProps(${component.propsTypeRef})`;
+      return str;
     };
 
     function generateCompositionApiScript() {
@@ -862,11 +870,13 @@ const componentToVue =
         ${methods?.length ? methods : ''}
       `;
 
+      // replace this.{ref} with {ref}.value, as vue refs are reactive and mutable objects with a .value property pointing to the value
+      // you also need to assign new values to .value
       refKeys.forEach((ref) => {
         str = str.replaceAll(`this.${ref} =`, `${ref}.value =`);
       });
 
-      str = str.replace(/this\./g, ''); // strip this
+      str = str.replace(/this\./g, ''); // strip this elsewhere
       return str;
     }
 
@@ -875,7 +885,7 @@ const componentToVue =
       ${template}
     </template>
     <script ${options.api === 'composition' ? 'setup' : ''} lang="ts">
-      import { ${uniq(vueImports).sort().join(', ')} } from "vue"
+      ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
       ${renderPreComponent({
         component,
         target: 'vue',
