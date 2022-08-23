@@ -40,7 +40,7 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'angular':
       return '';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
-    // TO-DO: consolidate file-extension renaming to one place.
+    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`.
     default:
       return '.lite';
   }
