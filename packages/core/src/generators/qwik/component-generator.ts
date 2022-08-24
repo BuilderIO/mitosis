@@ -327,7 +327,7 @@ function emitStateMethods(
     const stateValue = componentState[key];
     if (checkIsCodeValue(stateValue)) {
       let code = stateValue.code;
-      let prefixIdx = code.indexOf(':') + 1;
+      let prefixIdx = 0;
       if (stateValue.type === 'getter') {
         prefixIdx += 'get '.length;
       } else if (stateValue.type === 'function') {
