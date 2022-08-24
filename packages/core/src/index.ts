@@ -62,6 +62,7 @@ export * from './generators/template';
 export * from './generators/swift-ui';
 export * from './generators/lit';
 export * from './generators/react-native';
+export * from './helpers/parse-reactive-script';
 export * from './helpers/is-mitosis-node';
 
 export * from './types/mitosis-node';
