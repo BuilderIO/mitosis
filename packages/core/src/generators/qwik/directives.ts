@@ -27,16 +27,9 @@ export const DIRECTIVES: Record<
       this.jsxExpression(() => {
         const forName: string = node.properties._forName || '_';
         const indexName: string | undefined = node.properties._indexName;
-        this.emit(
-          '(',
-          expr,
-          '||[]).map(',
-          '((',
-          forName,
-          indexName ? ',' : '',
-          indexName ? indexName : '',
-          ') => {',
-        );
+        this.emit('(', expr, '||[]).map(');
+        this.isBuilder && this.emit('(('),
+          this.emit('function(', forName, indexName ? ',' : '', indexName ? indexName : '', '){');
         if (this.isBuilder) {
           this.emit(
             'var state=Object.assign({},this,{',
@@ -50,15 +43,10 @@ export const DIRECTIVES: Record<
         }
         this.emit('return(');
         blockFn();
-        this.emit(');}))');
+        this.emit(');}');
+        this.isBuilder && this.emit(').bind(state))');
+        this.emit(')');
       });
-    },
-  Host: (node: MitosisNode, blockFn) =>
-    function (this: SrcBuilder) {
-      const host = this.file.import(this.file.qwikModule, 'Host').localName;
-      this.jsxBegin(host, node.properties, node.bindings);
-      blockFn();
-      this.jsxEnd(host);
     },
   Image: minify`${Image}`,
   CoreButton: minify`${CoreButton}`,
@@ -85,13 +73,14 @@ interface ImageProps {
   lazy?: boolean;
   class?: string;
   children?: any[];
+  noWebp?: boolean;
 }
 
 export function Image(props: ImageProps) {
   let jsx: any[] = props.children || [];
   let image = props.image;
   if (image) {
-    const isBuilderIoImage = !!(image || '').match(/\.builder\.io/);
+    const isBuilderIoImage = !!(image || '').match(/\.builder\.io/) && !props.noWebp;
     const isPixel = props.builderBlock?.id.startsWith('builder-pixel-');
     const imgProps = {
       src: props.image,
