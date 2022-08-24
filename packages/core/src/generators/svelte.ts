@@ -33,9 +33,6 @@ import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { uniq } from 'lodash';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { GETTER } from '../helpers/patterns';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 
@@ -299,15 +296,13 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
     pre: (json) => {
       for (const key in json.state) {
         const value = json.state[key]?.code;
-        if (typeof value === 'string' && value.startsWith(methodLiteralPrefix)) {
-          const strippedValue = value.replace(methodLiteralPrefix, '');
-          if (!Boolean(strippedValue.match(GETTER))) {
-            const newValue = `${functionLiteralPrefix} function ${strippedValue}`;
-            json.state[key] = {
-              code: newValue,
-              type: 'function',
-            };
-          }
+        const type = json.state[key]?.type;
+        if (typeof value === 'string' && type === 'method') {
+          const newValue = `function ${value}`;
+          json.state[key] = {
+            code: newValue,
+            type: 'function',
+          };
         }
       }
     },
@@ -361,10 +356,8 @@ export const componentToSvelte =
         keyPrefix: '$: ',
         valueMapper: (code) =>
           pipe(
-            stripStateAndProps(
-              code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
-              options,
-            ),
+            code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
+            (str) => stripStateAndProps(str, options),
             stripThisRefs,
           ),
       }),

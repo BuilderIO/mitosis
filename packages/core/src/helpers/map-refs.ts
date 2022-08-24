@@ -4,10 +4,8 @@ import * as babel from '@babel/core';
 import { MitosisComponent } from '../types/mitosis-component';
 import { getRefs } from './get-refs';
 import { isMitosisNode } from './is-mitosis-node';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
-import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { babelTransformExpression } from './babel-transform';
-import { GETTER, SETTER } from './patterns';
+import { SETTER } from './patterns';
 
 const tsPreset = require('@babel/preset-typescript');
 
@@ -33,29 +31,32 @@ export const mapRefs = (component: MitosisComponent, mapper: RefMapper): void =>
   const refs = Array.from(refSet);
 
   for (const key of Object.keys(component.state)) {
-    const value = component.state[key]?.code;
-    if (typeof value === 'string') {
-      if (value.startsWith(methodLiteralPrefix)) {
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const isGet = Boolean(methodValue.match(GETTER));
-        const isSet = Boolean(methodValue.match(SETTER));
-        component.state[key] = {
-          code:
-            methodLiteralPrefix +
-            replaceRefsInString(
-              methodValue.replace(/^(get |set )?/, 'function '),
+    const stateVal = component.state[key];
+
+    if (typeof stateVal?.code === 'string') {
+      const value = stateVal.code;
+      switch (stateVal.type) {
+        case 'method':
+        case 'getter':
+          const isGet = stateVal.type === 'getter';
+          const isSet = Boolean(value.match(SETTER));
+          component.state[key] = {
+            code: replaceRefsInString(
+              value.replace(/^(get |set )?/, 'function '),
               refs,
               mapper,
             ).replace(/^function /, isGet ? 'get ' : isSet ? 'set ' : ''),
-          type: isGet ? 'getter' : 'method',
-        };
-      } else if (value.startsWith(functionLiteralPrefix)) {
-        component.state[key] = {
-          code:
-            functionLiteralPrefix +
-            replaceRefsInString(value.replace(functionLiteralPrefix, ''), refs, mapper),
-          type: 'function',
-        };
+            type: stateVal.type,
+          };
+          break;
+        case 'function':
+          component.state[key] = {
+            code: replaceRefsInString(value, refs, mapper),
+            type: 'function',
+          };
+          break;
+        default:
+          break;
       }
     }
   }
