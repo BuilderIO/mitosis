@@ -279,6 +279,10 @@ function emitStateMethodsAndRewriteBindings(
   return state;
 }
 
+const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
+  return typeof obj == 'object' && typeof obj.code === 'string';
+};
+
 function rewriteCodeExpr(
   component: MitosisComponent,
   methodMap: Record<string, 'method' | 'getter'>,
@@ -286,7 +290,7 @@ function rewriteCodeExpr(
   replace: Record<string, string> | undefined = {},
 ) {
   traverse(component).forEach(function (item) {
-    if (!checkIsCodeValue(item)) {
+    if (!(checkIsCodeValue(item) || checkIsObjectWithCodeBlock(item))) {
       return;
     }
 
