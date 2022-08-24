@@ -775,11 +775,6 @@ const componentToVue =
     }
 
     const getCompositionPropDefinition = () => {
-      let props = Object.assign(Array.from(elementProps, (v) => ({ [v]: 'any' }))).reduce(
-        (r: any, c: any) => Object.assign(r, c),
-        {},
-      );
-
       let str = 'const props = ';
 
       if (component.defaultProps) {
@@ -896,7 +891,7 @@ const componentToVue =
         str = str.replaceAll(`this.${prop}`, `props.${prop}`);
       });
 
-      str = str.replace(/this\./g, ''); // strip this elsewhere
+      str = str.replace(/this\./g, ''); // strip this elsewhere (e.g. functions)
       return str;
     }
 
