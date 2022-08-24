@@ -786,10 +786,10 @@ const componentToVue =
         str += `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(
           component.defaultProps,
         )})`;
-      } else if (component.propsTypeRef) {
+      } else if (component.propsTypeRef && component.propsTypeRef !== 'any') {
         str += `defineProps<${component.propsTypeRef}>()`;
       } else {
-        str += `defineProps(${props})`;
+        str += `defineProps(${json5.stringify(Array.from(elementProps))})`;
       }
       return str;
     };
