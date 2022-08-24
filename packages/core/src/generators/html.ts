@@ -8,7 +8,7 @@ import { getRefs } from '../helpers/get-refs';
 import { mapRefs } from '../helpers/map-refs';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect-css';
 import { dashCase } from '../helpers/dash-case';
 import { fastClone } from '../helpers/fast-clone';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
@@ -17,9 +17,8 @@ import { hasBindingsText } from '../helpers/has-bindings-text';
 import { isComponent } from '../helpers/is-component';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { isHtmlAttribute } from '../helpers/is-html-attribute';
-import { isValidAttributeName } from '../helpers/is-valid-attribute-name';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { getProps } from '../helpers/get-props';
+import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
@@ -36,7 +35,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
 
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
@@ -119,10 +118,7 @@ const generateSetElementAttributeCode = (
   ].join('\n');
 };
 
-const addUpdateAfterSet = (
-  json: MitosisComponent,
-  options: InternalToHtmlOptions,
-) => {
+const addUpdateAfterSet = (json: MitosisComponent, options: InternalToHtmlOptions) => {
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
@@ -137,10 +133,7 @@ const addUpdateAfterSet = (
   });
 };
 
-const getChildComponents = (
-  json: MitosisComponent,
-  options: InternalToHtmlOptions,
-) => {
+const getChildComponents = (json: MitosisComponent, options: InternalToHtmlOptions) => {
   const childComponents: string[] = [];
   json.imports.forEach(({ imports }) => {
     Object.keys(imports).forEach((key) => {
@@ -157,10 +150,7 @@ const getScopeVars = (parentScopeVars: ScopeVars, value: string | boolean) => {
     if (typeof value === 'boolean') {
       return value;
     }
-    const checkVar = new RegExp(
-      '(\\.\\.\\.|,| |;|\\(|^|!)' + scopeVar + '(\\.|,| |;|\\)|$)',
-      'g',
-    );
+    const checkVar = new RegExp('(\\.\\.\\.|,| |;|\\(|^|!)' + scopeVar + '(\\.|,| |;|\\)|$)', 'g');
     return checkVar.test(value);
   });
 };
@@ -184,9 +174,7 @@ const mappers: {
   ) => string;
 } = {
   Fragment: (json, options, blockOptions) => {
-    return json.children
-      .map((item) => blockToHtml(item, options, blockOptions))
-      .join('\n');
+    return json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
   },
 };
 
@@ -244,11 +232,7 @@ const updateReferencesInCode = (
   return code;
 };
 
-const addOnChangeJs = (
-  id: string,
-  options: InternalToHtmlOptions,
-  code: string,
-) => {
+const addOnChangeJs = (id: string, options: InternalToHtmlOptions, code: string) => {
   if (!options.onChangeJsById[id]) {
     options.onChangeJsById[id] = '';
   }
@@ -304,9 +288,7 @@ const blockToHtml = (
             options.format === 'class' ? 'this.' : ''
           }getScope(el, "${scopeVar}");`,
       )}
-      ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${
-        json.bindings._text.code
-      });`,
+      ${options.format === 'class' ? 'this.' : ''}renderTextNode(el, ${json.bindings._text.code});`,
     );
 
     return `<template data-el="${elId}"><!-- ${json.bindings._text?.code} --></template>`;
@@ -325,9 +307,7 @@ const blockToHtml = (
       // querying dom potentially
       `
         let array = ${json.bindings.each?.code};
-        ${
-          options.format === 'class' ? 'this.' : ''
-        }renderLoop(el, array, ${argsStr});
+        ${options.format === 'class' ? 'this.' : ''}renderLoop(el, array, ${argsStr});
       `,
     );
     // TODO: decide on how to handle this...
@@ -345,10 +325,7 @@ const blockToHtml = (
     }
     str += '</template>';
   } else if (json.name === 'Show') {
-    const whenCondition = (json.bindings.when?.code as string).replace(
-      /;$/,
-      '',
-    );
+    const whenCondition = (json.bindings.when?.code as string).replace(/;$/, '');
     addOnChangeJs(
       elId,
       options,
@@ -370,9 +347,7 @@ const blockToHtml = (
 
     str += `<template data-el="${elId}">`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToHtml(item, options, blockOptions))
-        .join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
     }
 
     str += '</template>';
@@ -397,9 +372,7 @@ const blockToHtml = (
       if (key.startsWith('$')) {
         continue;
       }
-      const value = (json.properties[key] || '')
-        .replace(/"/g, '&quot;')
-        .replace(/\n/g, '\\n');
+      const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
       str += ` ${key}="${value}" `;
     }
 
@@ -444,9 +417,7 @@ const blockToHtml = (
             ${codeContent}
           }
         `;
-        const fnIdentifier = `${
-          options.format === 'class' ? 'this.' : ''
-        }${fnName}`;
+        const fnIdentifier = `${options.format === 'class' ? 'this.' : ''}${fnName}`;
 
         addOnChangeJs(
           elId,
@@ -485,15 +456,9 @@ const blockToHtml = (
             options,
             `
             ${injectOnce ? '' : startInjectVar}
-            ${generateSetElementAttributeCode(
-              key,
-              elSelector,
-              useValue,
-              options,
-              {
-                component,
-              },
-            )}
+            ${generateSetElementAttributeCode(key, elSelector, useValue, options, {
+              component,
+            })}
             `,
           );
           if (!injectOnce) {
@@ -528,9 +493,7 @@ const blockToHtml = (
     }
     str += '>';
     if (json.children) {
-      str += json.children
-        .map((item) => blockToHtml(item, options, blockOptions))
-        .join('\n');
+      str += json.children.map((item) => blockToHtml(item, options, blockOptions)).join('\n');
     }
     if (json.properties.innerHTML) {
       // Maybe put some kind of safety here for broken HTML such as no close tag
@@ -549,9 +512,7 @@ function addUpdateAfterSetInCode(
 ) {
   let updates = 0;
   return babelTransformExpression(code, {
-    AssignmentExpression(
-      path: babel.NodePath<babel.types.AssignmentExpression>,
-    ) {
+    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
       const { node } = path;
       if (types.isMemberExpression(node.left)) {
         if (types.isIdentifier(node.left.object)) {
@@ -580,19 +541,13 @@ function addUpdateAfterSetInCode(
             //   return;
             // }
             if (options?.experimental?.addUpdateAfterSetInCode) {
-              useString = options?.experimental?.addUpdateAfterSetInCode(
-                useString,
-                options,
-                {
-                  node,
-                  code,
-                  types,
-                },
-              );
+              useString = options?.experimental?.addUpdateAfterSetInCode(useString, options, {
+                node,
+                code,
+                types,
+              });
             }
-            path.insertAfter(
-              types.callExpression(types.identifier(useString), []),
-            );
+            path.insertAfter(types.callExpression(types.identifier(useString), []));
           }
         }
       }
@@ -631,35 +586,23 @@ export const componentToHtml =
       prefix: options.prefix,
     });
 
-    let str = json.children
-      .map((item) => blockToHtml(item, useOptions))
-      .join('\n');
+    let str = json.children.map((item) => blockToHtml(item, useOptions)).join('\n');
 
     if (css.trim().length) {
       str += `<style>${css}</style>`;
     }
 
-    const hasChangeListeners = Boolean(
-      Object.keys(useOptions.onChangeJsById).length,
-    );
+    const hasChangeListeners = Boolean(Object.keys(useOptions.onChangeJsById).length);
     const hasGeneratedJs = Boolean(useOptions.js.trim().length);
 
-    if (
-      hasChangeListeners ||
-      hasGeneratedJs ||
-      json.hooks.onMount?.code ||
-      hasLoop
-    ) {
+    if (hasChangeListeners || hasGeneratedJs || json.hooks.onMount?.code || hasLoop) {
       // TODO: collectJs helper for here and liquid
       str += `
       <script>
       (() => {
         const state = ${getStateObjectStringFromComponent(json, {
           valueMapper: (value) =>
-            addUpdateAfterSetInCode(
-              updateReferencesInCode(value, useOptions),
-              useOptions,
-            ),
+            addUpdateAfterSetInCode(updateReferencesInCode(value, useOptions), useOptions),
         })};
         ${componentHasProps ? `let props = {};` : ''}
         let context = null;
@@ -903,14 +846,22 @@ export const componentToCustomElement =
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
+
+    const [forwardProp, hasPropRef] = getPropsRef(json, true);
+
     const contextVars = Object.keys(json?.context?.get || {});
     const childComponents = getChildComponents(json, useOptions);
     const componentHasProps = hasProps(json);
     const componentHasStatefulDom = hasStatefulDom(json);
     const props = getProps(json);
+    // prevent jsx props from showing up as @Input
+    if (hasPropRef) {
+      props.delete(forwardProp);
+    }
     const outputs = getPropFunctions(json);
-    const refs = Array.from(getRefs(json));
-    mapRefs(json, (refName) => `self.${refName}`);
+    const domRefs = getRefs(json);
+    const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
+    mapRefs(json, (refName) => `self._${refName}`);
     const context: string[] = contextVars.map((variableName) => {
       const token = json?.context?.get[variableName].name;
       if (options?.experimental?.htmlContext) {
@@ -961,12 +912,7 @@ export const componentToCustomElement =
       )
       .join('\n');
     if (useOptions?.experimental?.childrenHtml) {
-      html = useOptions?.experimental?.childrenHtml(
-        html,
-        kebabName,
-        json,
-        useOptions,
-      );
+      html = useOptions?.experimental?.childrenHtml(html, kebabName, json, useOptions);
     }
 
     if (useOptions?.experimental?.cssHtml) {
@@ -995,7 +941,8 @@ export const componentToCustomElement =
     }
 
     let str = `
-      ${renderPreComponent(json)}
+      ${json.types ? json.types.join('\n') : ''}
+      ${renderPreComponent({ component: json, target: 'customElement' })}
       /**
        * Usage:
        * 
@@ -1007,13 +954,15 @@ export const componentToCustomElement =
         ? useOptions?.experimental?.classExtends(json, useOptions)
         : 'HTMLElement'
     } {
-        ${refs.map((ref) => {
-          return `
-        get ${ref}() {
+        ${Array.from(domRefs)
+          .map((ref) => {
+            return `
+        get _${ref}() {
           return this._root.querySelector("[data-ref='${ComponentName}-${ref}']")
         }
             `;
-        })}
+          })
+          .join('\n')}
 
         get _root() {
           return this.shadowRoot || this;
@@ -1034,15 +983,12 @@ export const componentToCustomElement =
           this.state = ${getStateObjectStringFromComponent(json, {
             valueMapper: (value) => {
               return stripStateAndPropsRefs(
-                stripStateAndPropsRefs(
-                  addUpdateAfterSetInCode(value, useOptions, 'self.update'),
-                  {
-                    includeProps: false,
-                    includeState: true,
-                    // TODO: if it's an arrow function it's this.state.
-                    replaceWith: 'self.state.',
-                  },
-                ),
+                stripStateAndPropsRefs(addUpdateAfterSetInCode(value, useOptions, 'self.update'), {
+                  includeProps: false,
+                  includeState: true,
+                  // TODO: if it's an arrow function it's this.state.
+                  replaceWith: 'self.state.',
+                }),
                 {
                   // TODO: replace with `this.` and add setters that call this.update()
                   includeProps: true,
@@ -1073,9 +1019,7 @@ export const componentToCustomElement =
               ? ''
               : `
             this.updateDeps = [${json.hooks.onUpdate
-              ?.map((hook) =>
-                updateReferencesInCode(hook?.deps || '[]', useOptions),
-              )
+              ?.map((hook) => updateReferencesInCode(hook?.deps || '[]', useOptions))
               .join(',')}];
             `
           }
@@ -1092,6 +1036,14 @@ export const componentToCustomElement =
 
           ${useOptions.js}
 
+          ${jsRefs
+            .map((ref) => {
+              // const typeParameter = json['refs'][ref]?.typeParameter || '';
+              const argument = json['refs'][ref]?.argument || 'null';
+              return `this._${ref} = ${argument}`;
+            })
+            .join('\n')}
+
           if (${json.meta.useMetadata?.isAttachedToShadowDom}) {
             this.attachShadow({ mode: 'open' })
           }
@@ -1105,10 +1057,7 @@ export const componentToCustomElement =
           disconnectedCallback() {
             ${
               useOptions?.experimental?.disconnectedCallback
-                ? useOptions?.experimental?.disconnectedCallback(
-                    json,
-                    useOptions,
-                  )
+                ? useOptions?.experimental?.disconnectedCallback(json, useOptions)
                 : `
             // onUnMount
             ${updateReferencesInCode(
@@ -1154,11 +1103,7 @@ export const componentToCustomElement =
           }
           ${
             useOptions?.experimental?.connectedCallbackUpdate
-              ? useOptions?.experimental?.connectedCallbackUpdate(
-                  json,
-                  html,
-                  useOptions,
-                )
+              ? useOptions?.experimental?.connectedCallbackUpdate(json, html, useOptions)
               : `
               this._root.innerHTML = \`
       ${html}\`;
@@ -1182,10 +1127,7 @@ export const componentToCustomElement =
                   : `
                   if (!this.onInitOnce) {
                     ${updateReferencesInCode(
-                      addUpdateAfterSetInCode(
-                        json.hooks?.onInit?.code,
-                        useOptions,
-                      ),
+                      addUpdateAfterSetInCode(json.hooks?.onInit?.code, useOptions),
                       useOptions,
                       {
                         contextVars,
@@ -1247,7 +1189,9 @@ export const componentToCustomElement =
                 ${updateReferencesInCode(
                   addUpdateAfterSetInCode(json.hooks.onMount.code, useOptions),
                   useOptions,
-                  { contextVars },
+                  {
+                    contextVars,
+                  },
                 )}
                 `
           }
@@ -1374,16 +1318,8 @@ export const componentToCustomElement =
               }
               let code = '';
               if (useOptions?.experimental?.updateBindings) {
-                key = useOptions?.experimental?.updateBindings?.key(
-                  key,
-                  value,
-                  useOptions,
-                );
-                code = useOptions?.experimental?.updateBindings?.code(
-                  key,
-                  value,
-                  useOptions,
-                );
+                key = useOptions?.experimental?.updateBindings?.key(key, value, useOptions);
+                code = useOptions?.experimental?.updateBindings?.code(key, value, useOptions);
               } else {
                 code = updateReferencesInCode(value, useOptions, {
                   contextVars,
@@ -1507,11 +1443,7 @@ export const componentToCustomElement =
 
       ${
         useOptions?.experimental?.customElementsDefine
-          ? useOptions?.experimental?.customElementsDefine(
-              kebabName,
-              component,
-              useOptions,
-            )
+          ? useOptions?.experimental?.customElementsDefine(kebabName, component, useOptions)
           : `customElements.define('${kebabName}', ${ComponentName});`
       }
     `;

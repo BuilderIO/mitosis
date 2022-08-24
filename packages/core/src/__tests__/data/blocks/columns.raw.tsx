@@ -1,4 +1,4 @@
-import { useState, For } from '@builder.io/mitosis';
+import { useStore, For } from '@builder.io/mitosis';
 
 type Column = {
   content: any;
@@ -18,7 +18,7 @@ export interface ColumnProps {
 }
 
 export default function Column(props: ColumnProps) {
-  const state = useState({
+  const state = useStore({
     getColumns(): Column[] {
       return props.columns || [];
     },
@@ -32,8 +32,7 @@ export default function Column(props: ColumnProps) {
     getColumnCssWidth(index: number) {
       const columns = this.getColumns();
       const gutterSize = this.getGutterSize();
-      const subtractWidth =
-        (gutterSize * (columns.length - 1)) / columns.length;
+      const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
       return `calc(${this.getWidth(index)}% - ${subtractWidth}px)`;
     },
   });

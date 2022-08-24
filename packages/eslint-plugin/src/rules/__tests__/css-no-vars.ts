@@ -71,10 +71,7 @@ ruleTester.run('css-no-vars', rule, {
     {
       ...opts,
       code: '<button css={{backgroundColor: state.red, color: red }} />',
-      errors: [
-        "Css properties can't be a member expression",
-        "Css properties can't be a variable",
-      ],
+      errors: ["Css properties can't be a member expression", "Css properties can't be a variable"],
     },
   ],
 });

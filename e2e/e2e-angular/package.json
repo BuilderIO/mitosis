@@ -1,0 +1,38 @@
+{
+  "name": "@builder.io/e2e-angular",
+  "version": "0.0.1",
+  "scripts": {
+    "clean": "rimraf src dist",
+    "build": "yarn run mitosis && ng build",
+    "mitosis": "syncdir ../e2e-app/src src --deleteOrphaned --quiet && mitosis build && node generate_component_list",
+    "ng": "ng",
+    "start": "yarn run mitosis && ng serve",
+    "serve": "http-server dist/e2e-angular",
+    "watch": "yarn run mitosis && ng build --watch --configuration development"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^14.0.0",
+    "@angular/common": "^14.0.0",
+    "@angular/compiler": "^14.0.0",
+    "@angular/core": "^14.0.0",
+    "@angular/forms": "^14.0.0",
+    "@angular/platform-browser": "^14.0.0",
+    "@angular/platform-browser-dynamic": "^14.0.0",
+    "@builder.io/e2e-app": "workspace:*",
+    "@builder.io/mitosis-cli": "workspace:*",
+    "http-server": "^14.1.1",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^14.0.2",
+    "@angular/cli": "~14.0.2",
+    "@angular/compiler-cli": "^14.0.0",
+    "fast-glob": "^3.2.11",
+    "rimraf": "^3.0.2",
+    "sync-directory": "^5.1.5",
+    "typescript": "~4.7.2"
+  }
+}

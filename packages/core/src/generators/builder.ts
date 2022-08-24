@@ -10,11 +10,13 @@ import { mediaQueryRegex, sizes } from '../constants/media-sizes';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { isComponent } from '../helpers/is-component';
 import { hasProps } from '../helpers/has-props';
-import { attempt, omit, omitBy, set } from 'lodash';
+import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
-import { TranspilerArgs } from '../types/config';
+import { TranspilerArgs } from '../types/transpiler';
+import { hashCodeAsString } from '../symbols/symbol-processor';
+import { checkHasState } from '../helpers/state';
 
 export interface ToBuilderOptions {
   includeIds?: boolean;
@@ -40,10 +42,7 @@ const mapComponentName = (name: string) => {
 };
 
 const componentMappers: {
-  [key: string]: (
-    node: MitosisNode,
-    options: ToBuilderOptions,
-  ) => BuilderElement;
+  [key: string]: (node: MitosisNode, options: ToBuilderOptions) => BuilderElement;
 } = {
   // TODO: add back if this direction (blocks as children not prop) is desired
   ...(!symbolBlocksAsChildren
@@ -52,8 +51,7 @@ const componentMappers: {
         Symbol(node, options) {
           const child = node.children[0];
           const symbolOptions =
-            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) ||
-            {};
+            (node.bindings.symbol && json5.parse(node.bindings.symbol.code)) || {};
 
           if (child) {
             set(
@@ -132,7 +130,7 @@ const el = (
 ): BuilderElement => ({
   '@type': '@builder.io/sdk:Element',
   ...(toBuilderOptions.includeIds && {
-    id: 'builder-' + Math.random().toString(36).split('.')[1],
+    id: 'builder-' + hashCodeAsString(options),
   }),
   ...options,
 });
@@ -196,23 +194,16 @@ export const blockToBuilder = (
 
   for (const key in bindings) {
     const eventBindingKeyRegex = /^on([A-Z])/;
-    const firstCharMatchForEventBindingKey =
-      key.match(eventBindingKeyRegex)?.[1];
+    const firstCharMatchForEventBindingKey = key.match(eventBindingKeyRegex)?.[1];
     if (firstCharMatchForEventBindingKey) {
-      actions[
-        key.replace(
-          eventBindingKeyRegex,
-          firstCharMatchForEventBindingKey.toLowerCase(),
-        )
-      ] = removeSurroundingBlock(bindings[key]?.code as string);
+      actions[key.replace(eventBindingKeyRegex, firstCharMatchForEventBindingKey.toLowerCase())] =
+        removeSurroundingBlock(bindings[key]?.code as string);
       delete bindings[key];
     }
   }
 
-  const builderBindings: Record<string, any> = {};
-  const componentOptions: Record<string, any> = omitMetaProperties(
-    json.properties,
-  );
+  const builderBindings: Record<string, string> = {};
+  const componentOptions: Record<string, any> = omitMetaProperties(json.properties);
 
   if (thisIsComponent) {
     for (const key in bindings) {
@@ -225,7 +216,7 @@ export const blockToBuilder = (
       if (!(parsed instanceof Error)) {
         componentOptions[key] = parsed;
       } else {
-        builderBindings[`component.options.${key}`] = bindings[key];
+        builderBindings[`component.options.${key}`] = bindings[key]!.code;
       }
     }
   }
@@ -266,7 +257,7 @@ export const blockToBuilder = (
 
   if (thisIsComponent) {
     for (const key in json.bindings) {
-      bindings[`component.options.${key}`] = json.bindings[key];
+      builderBindings[`component.options.${key}`] = json.bindings[key]!.code;
     }
   }
 
@@ -287,10 +278,13 @@ export const blockToBuilder = (
         bindings: builderBindings,
         actions,
       },
-      properties: thisIsComponent
-        ? undefined
-        : omitMetaProperties(json.properties),
-      bindings: thisIsComponent ? builderBindings : omit(bindings, 'css'),
+      properties: thisIsComponent ? undefined : omitMetaProperties(json.properties),
+      bindings: thisIsComponent
+        ? builderBindings
+        : omit(
+            mapValues(bindings, (value) => value?.code!),
+            'css',
+          ),
       actions,
       children: json.children
         .filter(filterEmptyTextNodes)
@@ -303,7 +297,7 @@ export const blockToBuilder = (
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
   ({ component }: TranspilerArgs) => {
-    const hasState = Boolean(Object.keys(component.state).length);
+    const hasState = checkHasState(component);
 
     const result = fastClone({
       data: {
@@ -311,24 +305,14 @@ export const componentToBuilder =
         jsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
-        ${
-          !hasState
-            ? ''
-            : `Object.assign(state, ${getStateObjectStringFromComponent(
-                component,
-              )});`
-        }
+        ${!hasState ? '' : `Object.assign(state, ${getStateObjectStringFromComponent(component)});`}
         
         ${!component.hooks.onMount?.code ? '' : component.hooks.onMount.code}
       `),
         tsCode: tryFormat(dedent`
         ${!hasProps(component) ? '' : `var props = state;`}
 
-        ${
-          !hasState
-            ? ''
-            : `useState(${getStateObjectStringFromComponent(component)});`
-        }
+        ${!hasState ? '' : `useState(${getStateObjectStringFromComponent(component)});`}
 
         ${
           !component.hooks.onMount?.code

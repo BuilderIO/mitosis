@@ -1,35 +1,33 @@
 import {
+  componentToAngular,
+  componentToCustomElement,
+  componentToHtml,
+  componentToMarko,
+  componentToPreact,
+  componentToLit,
+  componentToQwik,
   componentToReact,
   componentToReactNative,
   componentToSolid,
+  componentToSvelte,
   componentToSwift,
-  componentToVue,
-  componentToHtml,
-  componentToCustomElement,
-  contextToReact,
-  contextToSolid,
-  contextToVue,
-  contextToSvelte,
+  componentToVue2,
+  componentToVue3,
   MitosisComponent,
-  parseContext,
-  parseJsx,
   MitosisConfig,
+  parseJsx,
   Target,
   Transpiler,
-  componentToSvelte,
-  componentToAngular,
 } from '@builder.io/mitosis';
 import debug from 'debug';
-import dedent from 'dedent';
 import glob from 'fast-glob';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
-import * as json5 from 'json5';
-import { camelCase, kebabCase, last, upperFirst } from 'lodash';
+import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
+import { fastClone } from '../helpers/fast-clone';
+import { buildContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
-import { getSimpleId } from './helpers/get-simple-id';
 import { transpile } from './helpers/transpile';
-import { transpileOptionalChaining } from './helpers/transpile-optional-chaining';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
@@ -41,59 +39,14 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   overridesDir: 'overrides',
 };
 
-const DEFAULT_OPTIONS: MitosisConfig['options'] = {
-  vue: {
-    cssNamespace: () => getSimpleId(),
-    namePrefix: (path) => (path.includes('/blocks/') ? 'builder' : undefined),
+const getOptions = (config?: MitosisConfig): MitosisConfig => ({
+  ...DEFAULT_CONFIG,
+  ...config,
+  options: {
+    ...DEFAULT_CONFIG.options,
+    ...config?.options,
   },
-};
-
-export async function build(config?: MitosisConfig) {
-  const options: MitosisConfig = {
-    ...DEFAULT_CONFIG,
-    ...config,
-    options: {
-      ...DEFAULT_OPTIONS,
-      ...config?.options,
-      vue: {
-        ...DEFAULT_OPTIONS.vue,
-        ...config?.options?.vue,
-      },
-    },
-  };
-
-  await clean(options);
-
-  const tsLiteFiles = await Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(
-      async (path) => {
-        try {
-          const parsed = parseJsx(await readFile(path, 'utf8'));
-          return {
-            path,
-            mitosisJson: parsed,
-          };
-        } catch (err) {
-          console.error('Could not parse file:', path);
-          throw err;
-        }
-      },
-    ),
-  );
-
-  await Promise.all(
-    options.targets.map(async (target) => {
-      const jsFiles = await buildTsFiles({ target, options });
-      await Promise.all([
-        outputTsFiles(target, jsFiles, options),
-        outputTsxLiteFiles(target, tsLiteFiles, options),
-      ]);
-      await outputOverrides(target, options);
-    }),
-  );
-
-  console.info('Done!');
-}
+});
 
 async function clean(options: MitosisConfig) {
   const files = await glob(`${options.dest}/**/*/${options.files}`);
@@ -104,45 +57,115 @@ async function clean(options: MitosisConfig) {
   );
 }
 
-async function outputOverrides(target: Target, options: MitosisConfig) {
-  const kebabTarget = kebabCase(target);
-  const outputDirPath = `${options.overridesDir}/${kebabTarget}`;
-  const files = await glob([
-    `${outputDirPath}/**/*`,
-    `!${outputDirPath}/node_modules/**/*`,
+const getMitosisComponentJSONs = async (options: MitosisConfig) => {
+  return Promise.all(
+    micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(async (path) => {
+      try {
+        const parsed = parseJsx(await readFile(path, 'utf8'));
+        return {
+          path,
+          mitosisJson: parsed,
+        };
+      } catch (err) {
+        console.error('Could not parse file:', path);
+        throw err;
+      }
+    }),
+  );
+};
+
+interface TargetContext {
+  target: Target;
+  generator: Transpiler;
+  outputPath: string;
+}
+
+interface TargetContextWithConfig extends TargetContext {
+  options: MitosisConfig;
+}
+
+const getTargetContexts = (options: MitosisConfig) =>
+  options.targets.map(
+    (target): TargetContext => ({
+      target,
+      generator: getGeneratorForTarget({ target, options }),
+      outputPath: getTargetPath({ target }),
+    }),
+  );
+
+const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
+  const jsFiles = await buildNonComponentFiles(targetContext);
+  await outputNonComponentFiles({ ...targetContext, files: jsFiles });
+};
+
+export async function build(config?: MitosisConfig) {
+  // merge default options
+  const options = getOptions(config);
+
+  // clean output directory
+  await clean(options);
+
+  // get all mitosis component JSONs
+  const mitosisComponents = await getMitosisComponentJSONs(options);
+
+  const targetContexts = getTargetContexts(options);
+
+  await Promise.all(
+    targetContexts.map(async (targetContext) => {
+      // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
+      // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
+      const files = fastClone(mitosisComponents);
+
+      const targetContextWithConfig: TargetContextWithConfig = { ...targetContext, options };
+
+      await Promise.all([
+        buildAndOutputNonComponentFiles(targetContextWithConfig),
+        buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
+      ]);
+      await outputOverrides(targetContextWithConfig);
+    }),
+  );
+
+  console.info('Done!');
+}
+
+async function outputOverrides({ target, options, outputPath }: TargetContextWithConfig) {
+  const targetOverrides = `${options.overridesDir}/${outputPath}`;
+
+  // get all overrides files
+  const overrideFileNames = await glob([
+    `${targetOverrides}/**/*`,
+    `!${targetOverrides}/node_modules/**/*`,
   ]);
   await Promise.all(
-    files.map(async (file) => {
-      let contents = await readFile(file, 'utf8');
+    overrideFileNames.map(async (overrideFileName) => {
+      let contents = await readFile(overrideFileName, 'utf8');
 
-      const esbuildTranspile = file.match(/\.tsx?$/);
+      // transpile `.tsx` files to `.js`
+      const esbuildTranspile = overrideFileName.match(/\.tsx?$/);
       if (esbuildTranspile) {
-        contents = await transpile({ path: file, target, options });
+        contents = await transpile({ path: overrideFileName, target, options });
       }
 
-      const targetPaths = getTargetPaths(target);
+      const newFile = overrideFileName
+        // replace any reference to the overrides directory with the target directory
+        // e.g. `overrides/react/components/Button.tsx` -> `output/react/components/Button.tsx`
+        .replace(`${targetOverrides}`, `${options.dest}/${outputPath}`)
+        // replace `.tsx` references with `.js`
+        .replace(/\.tsx?$/, '.js');
 
-      await Promise.all(
-        targetPaths.map((targetPath) =>
-          outputFile(
-            file
-              .replace(`${outputDirPath}`, `${options.dest}/${targetPath}`)
-              .replace(/\.tsx?$/, '.js'),
-            contents,
-          ),
-        ),
-      );
+      await outputFile(newFile, contents);
     }),
   );
 }
 
-const getTranspilerForTarget = ({
+const getGeneratorForTarget = ({
   target,
   options,
 }: {
   target: Target;
   options: MitosisConfig;
-}): Transpiler => {
+}): TargetContext['generator'] => {
   switch (target) {
     case 'customElement':
       return componentToCustomElement(options.options.customElement);
@@ -150,8 +173,12 @@ const getTranspilerForTarget = ({
       return componentToHtml(options.options.html);
     case 'reactNative':
       return componentToReactNative({ stateType: 'useState' });
+    case 'vue2':
+      return componentToVue2(options.options.vue2);
     case 'vue':
-      return componentToVue(options.options.vue);
+      console.log('Targeting Vue: defaulting to vue v3');
+    case 'vue3':
+      return componentToVue3(options.options.vue3);
     case 'angular':
       return componentToAngular(options.options.angular);
     case 'react':
@@ -164,38 +191,58 @@ const getTranspilerForTarget = ({
       return componentToCustomElement(options.options.webcomponent);
     case 'svelte':
       return componentToSvelte(options.options.svelte);
+    case 'qwik':
+      return componentToQwik(options.options.qwik);
+    case 'marko':
+      return componentToMarko(options.options.marko);
+    case 'preact':
+      return componentToPreact(options.options.preact);
+    case 'lit':
+      return componentToLit(options.options.lit);
     default:
-      throw new Error('CLI does not support target: ' + target);
+      throw new Error('CLI does not yet support target: ' + target);
   }
 };
 
-const replaceFileExtensionForTarget = ({
+/**
+ * Output generated component file, before it is minified and transpiled into JS.
+ */
+const shouldOutputOriginalGeneratedFile = ({
   target,
-  path,
+  options,
 }: {
   target: Target;
-  path: string;
-}) => path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
+  options: MitosisConfig;
+}): boolean => {
+  const languages = options.options[target]?.transpiler?.languages;
+  if (languages?.includes('ts')) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
+  path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
 
 /**
  * Transpiles and outputs Mitosis component files.
  */
-async function outputTsxLiteFiles(
-  target: Target,
-  files: { path: string; mitosisJson: MitosisComponent }[],
-  options: MitosisConfig,
-) {
-  const kebabTarget = kebabCase(target);
+async function buildAndOutputComponentFiles({
+  target,
+  files,
+  options,
+  generator,
+  outputPath,
+}: TargetContextWithConfig & {
+  files: { path: string; mitosisJson: MitosisComponent }[];
+}) {
   const debugTarget = debug(`mitosis:${target}`);
-  const transpiler = getTranspilerForTarget({ options, target });
   const output = files.map(async ({ path, mitosisJson }) => {
-    const outputFilePath = replaceFileExtensionForTarget({
-      target,
-      path,
-    });
+    const outputFilePath = replaceFileExtensionForTarget({ target, path });
 
-    // try to find override file
-    const overrideFilePath = `${options.overridesDir}/${kebabTarget}/${outputFilePath}`;
+    // try to find override component file
+    const overrideFilePath = `${options.overridesDir}/${outputPath}/${outputFilePath}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;
@@ -207,10 +254,8 @@ async function outputTsxLiteFiles(
       debugTarget(`override exists for ${path}: ${!!overrideFile}`);
     }
     try {
-      transpiled = overrideFile ?? transpiler({ path, component: mitosisJson });
-      debugTarget(
-        `Success: transpiled ${path}. Output length: ${transpiled.length}`,
-      );
+      transpiled = overrideFile ?? generator({ path, component: mitosisJson });
+      debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
       debugTarget(error);
@@ -230,6 +275,7 @@ async function outputTsxLiteFiles(
         });
         break;
       case 'reactNative':
+      case 'preact':
       case 'react':
         transpiled = await transpile({
           path,
@@ -239,116 +285,61 @@ async function outputTsxLiteFiles(
         });
         break;
       case 'vue':
-        // TODO: transform to CJS (?)
-        transpiled = transpileOptionalChaining(transpiled).replace(
-          /\.lite(['"];)/g,
-          '$1',
-        );
-    }
-
-    const outputDir = `${options.dest}/${kebabTarget}`;
-
-    // output files
-    switch (target) {
-      case 'vue':
-        // Nuxt
-        await outputFile(`${outputDir}/nuxt2/${outputFilePath}`, transpiled);
-        break;
-
-      default:
-        await Promise.all([
-          // this is the default output
-          outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-          // output generated component file, before it is minified and transpiled into JS.
-          // we skip these targets because the files would be invalid.
-          ...(target === 'swift' || target === 'svelte'
-            ? []
-            : [outputFile(`${outputDir}/${path}`, original)]),
-        ]);
+      case 'vue2':
+      case 'vue3':
         break;
     }
+
+    const outputDir = `${options.dest}/${outputPath}`;
+
+    await Promise.all([
+      // this is the default output
+      outputFile(`${outputDir}/${outputFilePath}`, transpiled),
+      ...(shouldOutputOriginalGeneratedFile({ target, options })
+        ? [outputFile(`${outputDir}/${path}`, original)]
+        : []),
+    ]);
   });
   await Promise.all(output);
 }
 
-function getTargetPaths(target: Target) {
-  const kebabTarget = kebabCase(target);
-  const targetPaths =
-    target === 'vue' ? ['vue/nuxt2', 'vue/vue2', 'vue/vue3'] : [kebabTarget];
-
-  return targetPaths;
-}
-
-/**
- * Outputs non-component files to the destination directory, without modifying them.
- */
-async function outputTsFiles(
-  target: Target,
-  files: { path: string; output: string }[],
-  options: MitosisConfig,
-) {
-  const targetPaths = getTargetPaths(target);
-  const output = [];
-  for (const targetPath of targetPaths) {
-    output.push(
-      ...files.map(({ path, output }) => {
-        return outputFile(
-          `${options.dest}/${targetPath}/${path.replace(/\.tsx?$/, '.js')}`,
-          output,
-        );
-      }),
-    );
-  }
-  await Promise.all(output);
-}
-
-const buildContextFile = async ({
-  path,
-  options,
-  target,
-}: {
-  path: string;
-  options: MitosisConfig;
-  target: Target;
-}) => {
-  // 'foo/bar/my-thing.context.ts' -> 'MyThing'
-  const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
-  const context = parseContext(await readFile(path, 'utf8'), { name });
-  if (!context) {
-    console.warn('Could not parse context from file', path);
-  } else {
-    switch (target) {
-      case 'svelte':
-        return contextToSvelte(options.options.svelte)({ context });
-      case 'vue':
-        return contextToVue(context);
-      case 'solid':
-        return contextToSolid()({ context });
-      case 'react':
-      case 'reactNative':
-        return contextToReact()({ context });
-      default:
-        console.warn(
-          'Context files are not supported for this target. Outputting no-op',
-        );
-        return contextToVue(context);
-    }
+const getTargetPath = ({ target }: { target: Target }): string => {
+  switch (target) {
+    case 'vue2':
+      return 'vue/vue2';
+    case 'vue':
+    case 'vue3':
+      return 'vue/vue3';
+    default:
+      return kebabCase(target);
   }
 };
 
 /**
- * Transpiles all non-component files, including Context files.
+ * Outputs non-component files to the destination directory, without modifying them.
  */
-async function buildTsFiles({
-  target,
+async function outputNonComponentFiles({
+  files,
   options,
-}: {
-  target: Target;
+  outputPath,
+}: TargetContext & {
+  files: { path: string; output: string }[];
   options: MitosisConfig;
 }) {
-  const tsFiles = await glob(`src/**/*.ts`, {
-    cwd: cwd,
-  });
+  await Promise.all(
+    files.map(({ path, output }) =>
+      outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, '.js')}`, output),
+    ),
+  );
+}
+
+/**
+ * Transpiles all non-component files, including Context files.
+ */
+async function buildNonComponentFiles({ target, options }: TargetContextWithConfig) {
+  const tsFiles = (await glob(options.files, { cwd })).filter(
+    (file) => file.endsWith('.ts') || file.endsWith('.js'),
+  );
 
   return await Promise.all(
     tsFiles.map(async (path) => {
@@ -358,12 +349,16 @@ async function buildTsFiles({
         // we remove the `.lite` extension from the path for Context files.
         path = path.replace('.lite.ts', '.ts');
       }
-      output = await transpile({
-        path,
-        target,
-        content: output,
-        options,
-      });
+      if (!shouldOutputOriginalGeneratedFile({ target, options })) {
+        output = await transpile({
+          path,
+          target,
+          content: output,
+          options,
+        });
+      } else {
+        output = await readFile(path, 'utf8');
+      }
 
       return {
         path,

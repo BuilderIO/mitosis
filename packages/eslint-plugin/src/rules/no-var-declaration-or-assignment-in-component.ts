@@ -1,4 +1,5 @@
 import { Rule } from 'eslint';
+import { HOOKS } from '../constants/hooks';
 import { match, not, when } from 'ts-pattern';
 import isMitosisPath from '../helpers/isMitosisPath';
 import noOp from '../helpers/noOp';
@@ -43,7 +44,13 @@ const rule: Rule.RuleModule = {
                     type: 'CallExpression',
                     callee: {
                       type: 'Identifier',
-                      name: when((v) => v === 'useState' || v === 'useContext'),
+                      name: when(
+                        (v) =>
+                          v === HOOKS.STATE ||
+                          v === HOOKS.CONTEXT ||
+                          v === HOOKS.STORE ||
+                          v === HOOKS.REF,
+                      ),
                     },
                   },
                 }),
@@ -61,8 +68,7 @@ const rule: Rule.RuleModule = {
             (node) => {
               context.report({
                 node: node as any,
-                message:
-                  'Variable declaration inside component is ignored during compilation',
+                message: 'Variable declaration inside component is ignored during compilation',
               });
             },
           )
@@ -88,8 +94,7 @@ const rule: Rule.RuleModule = {
             (node) => {
               context.report({
                 node: node as any,
-                message:
-                  'Variable assignment inside component is ignored during compilation',
+                message: 'Variable assignment inside component is ignored during compilation',
               });
             },
           )

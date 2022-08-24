@@ -1,56 +1,13 @@
-import MonacoEditor, { MonacoEditorProps } from 'react-monaco-editor';
 import { Linter as ESLinter } from 'eslint';
-import * as monaco from 'monaco-editor';
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import types from 'raw-loader!@builder.io/mitosis/dist/src/jsx-types';
-import React, { useState } from 'react';
+// import JsxTypes from '@builder.io/mitosis/jsx-runtime';
+import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
 // import { rules } from 'eslint-plugin-mitosis';
 
+import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
+
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
-
-monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
-  target: monaco.languages.typescript.ScriptTarget.Latest,
-  allowNonTsExtensions: true,
-  moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
-  module: monaco.languages.typescript.ModuleKind.CommonJS,
-  noEmit: true,
-  esModuleInterop: true,
-  jsx: monaco.languages.typescript.JsxEmit.React,
-  reactNamespace: 'React',
-  allowJs: true,
-  typeRoots: ['node_modules/@types'],
-});
-
-monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-  noSemanticValidation: false,
-  noSyntaxValidation: false,
-});
-
-monaco.languages.typescript.typescriptDefaults.addExtraLib(
-  types,
-  `file:///node_modules/@react/types/index.d.ts`,
-);
-
-monaco.languages.registerDocumentFormattingEditProvider('typescript', {
-  async provideDocumentFormattingEdits(model) {
-    const prettier = await import('prettier/standalone');
-    const typescript = await import('prettier/parser-typescript');
-    const text = prettier.format(model.getValue(), {
-      parser: 'typescript',
-      plugins: [typescript],
-      singleQuote: true,
-    });
-
-    return [
-      {
-        range: model.getFullModelRange(),
-        text,
-      },
-    ];
-  },
-});
 
 const linter = new Linter();
 // TODO: add back when build fixed
@@ -94,16 +51,67 @@ function eslint(code: string, version: any) {
   }
 }
 
+type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
+type Editor = EditorRefArgs[0];
+
 export function CodeEditor(props: MonacoEditorProps) {
-  const [editor, setEditor] = useState(
-    null as null | monaco.editor.IStandaloneCodeEditor,
-  );
+  const monaco = useMonaco();
+
+  useEffect(() => {
+    if (!monaco) {
+      return;
+    }
+
+    monaco.languages.typescript.typescriptDefaults.setCompilerOptions({
+      target: monaco.languages.typescript.ScriptTarget.Latest,
+      allowNonTsExtensions: true,
+      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
+      module: monaco.languages.typescript.ModuleKind.CommonJS,
+      noEmit: true,
+      esModuleInterop: true,
+      jsx: monaco.languages.typescript.JsxEmit.React,
+      reactNamespace: 'React',
+      allowJs: true,
+      typeRoots: ['node_modules/@types'],
+    });
+
+    monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
+    });
+
+    // monaco.languages.typescript.typescriptDefaults.addExtraLib(
+    // JsxTypes,
+    // `file:///node_modules/@builder.io/types/index.d.ts`,
+    // );
+
+    monaco.languages.registerDocumentFormattingEditProvider('typescript', {
+      async provideDocumentFormattingEdits(model) {
+        const prettier = await import('prettier/standalone');
+        const typescript = await import('prettier/parser-typescript');
+        const text = prettier.format(model.getValue(), {
+          parser: 'typescript',
+          plugins: [typescript],
+          singleQuote: true,
+        });
+
+        return [
+          {
+            range: model.getFullModelRange(),
+            text,
+          },
+        ];
+      },
+    });
+  }, [monaco]);
+
+  const [editor, setEditor] = useState<Editor | null>(null);
   useDebounce(
     () => {
       if (typeof props.value !== 'string') {
         return;
       }
-      if (!editor) {
+      if (!editor || !monaco) {
         return;
       }
       const model = editor.getModel();
@@ -122,9 +130,9 @@ export function CodeEditor(props: MonacoEditorProps) {
 
   return (
     <MonacoEditor
-      editorDidMount={(editor, monaco) => {
+      onMount={(editor, monaco) => {
         setEditor(editor);
-        props.editorDidMount?.(editor, monaco);
+        props.onMount?.(editor, monaco);
       }}
       options={{
         renderLineHighlightOnlyWhenFocus: true,

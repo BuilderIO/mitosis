@@ -12,6 +12,7 @@ Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports gener
 - [Gotchas](./gotchas.md)
 - [Customizability](./customizability.md)
 - [Configuration](./configuration.md)
+- [CLI](./cli.md)
 
 ## How does it work
 
@@ -19,16 +20,13 @@ Mitosis uses a static subset of JSX, inspired by [Solid](https://www.solidjs.com
 
 ```tsx
 export function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
   });
 
   return (
     <div>
-      <input
-        value={state.name}
-        onChange={(event) => (state.name = event.target.value)}
-      />
+      <input value={state.name} onChange={(event) => (state.name = event.target.value)} />
     </div>
   );
 }

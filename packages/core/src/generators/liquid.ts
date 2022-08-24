@@ -1,5 +1,5 @@
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
@@ -12,7 +12,7 @@ import {
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 
 export interface ToLiquidOptions extends BaseTranspilerOptions {
   reactive?: boolean;
@@ -42,17 +42,12 @@ const mappers: {
   [key: string]: (json: MitosisNode, options: ToLiquidOptions) => string;
 } = {
   Fragment: (json, options) => {
-    return `<div>${json.children
-      .map((item) => blockToLiquid(item, options))
-      .join('\n')}</div>`;
+    return `<div>${json.children.map((item) => blockToLiquid(item, options)).join('\n')}</div>`;
   },
 };
 
 // TODO: spread support
-const blockToLiquid = (
-  json: MitosisNode,
-  options: ToLiquidOptions = {},
-): string => {
+const blockToLiquid = (json: MitosisNode, options: ToLiquidOptions = {}): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }
@@ -85,9 +80,7 @@ const blockToLiquid = (
       json.bindings.each?.code,
     )} %}`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += '{% endfor %}';
@@ -97,9 +90,7 @@ const blockToLiquid = (
     }
     str += `{% if ${stripStateAndPropsRefs(json.bindings.when?.code)} %}`;
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += '{% endif %}';
@@ -141,9 +132,7 @@ const blockToLiquid = (
     }
     str += '>';
     if (json.children) {
-      str += json.children
-        .map((item) => blockToLiquid(item, options))
-        .join('\n');
+      str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }
 
     str += `</${json.name}>`;

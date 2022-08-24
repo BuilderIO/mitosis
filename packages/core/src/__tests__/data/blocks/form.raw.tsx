@@ -1,4 +1,4 @@
-import { useState, useRef, Show, For } from '@builder.io/mitosis';
+import { useStore, useRef, Show, For } from '@builder.io/mitosis';
 import { BuilderBlock as BuilderBlockComponent } from '@fake';
 import { BuilderElement, Builder, builder } from '@builder.io/sdk';
 import { BuilderBlocks } from '@fake';
@@ -29,17 +29,16 @@ export interface FormProps {
 export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
 
 export default function FormComponent(props: FormProps) {
-  const state = useState({
-    state: 'unsubmitted' as FormState,
+  const state = useStore({
+    formState: 'unsubmitted' as FormState,
     // TODO: separate response and error?
     responseData: null as any,
     formErrorMessage: '',
     get submissionState(): FormState {
-      return (Builder.isEditing && props.previewState) || state.state;
+      return (Builder.isEditing && props.previewState) || state.formState;
     },
     onSubmit(event: Event & { currentTarget: HTMLFormElement }) {
-      const sendWithJs =
-        props.sendWithJs || props.sendSubmissionsTo === 'email';
+      const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
 
       if (props.sendSubmissionsTo === 'zapier') {
         event.preventDefault();
@@ -61,9 +60,7 @@ export default function FormComponent(props: FormProps) {
         const formPairs: {
           key: string;
           value: File | boolean | number | string | FileList;
-        }[] = Array.from(
-          event.currentTarget.querySelectorAll('input,select,textarea'),
-        )
+        }[] = Array.from(event.currentTarget.querySelectorAll('input,select,textarea'))
           .filter((el) => !!(el as HTMLInputElement).name)
           .map((el) => {
             let value: any;
@@ -147,7 +144,7 @@ export default function FormComponent(props: FormProps) {
           }
         }
 
-        state.state = 'sending';
+        state.formState = 'sending';
 
         const formUrl = `${
           builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'
@@ -189,7 +186,7 @@ export default function FormComponent(props: FormProps) {
             }
 
             state.responseData = body;
-            state.state = res.ok ? 'success' : 'error';
+            state.formState = res.ok ? 'success' : 'error';
 
             if (res.ok) {
               const submitSuccessEvent = new CustomEvent('submit:success', {
@@ -241,14 +238,14 @@ export default function FormComponent(props: FormProps) {
             }
 
             state.responseData = err;
-            state.state = 'error';
+            state.formState = 'error';
           },
         );
       }
     },
   });
 
-  const formRef = useRef();
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <form
@@ -262,9 +259,7 @@ export default function FormComponent(props: FormProps) {
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
-          {(block, index) => (
-            <BuilderBlockComponent key={block.id} block={block} index={index} />
-          )}
+          {(block, index) => <BuilderBlockComponent key={block.id} block={block} index={index} />}
         </For>
       </Show>
 
@@ -273,10 +268,7 @@ export default function FormComponent(props: FormProps) {
       </Show>
 
       <Show when={state.submissionState === 'sending'}>
-        <BuilderBlocks
-          dataPath="sendingMessage"
-          blocks={props.sendingMessage!}
-        />
+        <BuilderBlocks dataPath="sendingMessage" blocks={props.sendingMessage!} />
       </Show>
 
       <Show when={state.submissionState === 'error' && state.responseData}>
@@ -289,10 +281,7 @@ export default function FormComponent(props: FormProps) {
       </Show>
 
       <Show when={state.submissionState === 'success'}>
-        <BuilderBlocks
-          dataPath="successMessage"
-          blocks={props.successMessage!}
-        />
+        <BuilderBlocks dataPath="successMessage" blocks={props.successMessage!} />
       </Show>
     </form>
   );

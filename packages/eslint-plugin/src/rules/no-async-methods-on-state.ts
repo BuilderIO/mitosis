@@ -1,5 +1,6 @@
 import * as types from '@babel/types';
 import { Rule } from 'eslint';
+import { HOOKS } from '../constants/hooks';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 // ------------------------------------------------------------------------------
@@ -38,14 +39,15 @@ const rule: Rule.RuleModule = {
 
         if (!types.isProgram(program)) return;
 
-        const importSpecifiers = program.body.find((n) =>
-          types.isImportDeclaration(n),
-        );
+        const importSpecifiers = program.body.find((n) => types.isImportDeclaration(n));
 
         if (!types.isImportDeclaration(importSpecifiers)) return;
 
         const useState = importSpecifiers.specifiers.find((n) => {
-          if (types.isImportSpecifier(n) && n.imported.name === 'useState') {
+          if (
+            types.isImportSpecifier(n) &&
+            (n.imported.name === HOOKS.STATE || n.imported.name === HOOKS.STORE)
+          ) {
             return true;
           }
         });
@@ -65,8 +67,7 @@ const rule: Rule.RuleModule = {
           )
             continue;
 
-          const { async } = (prop as types.Property)
-            .value as types.ArrowFunctionExpression;
+          const { async } = (prop as types.Property).value as types.ArrowFunctionExpression;
 
           if (async) {
             context.report({

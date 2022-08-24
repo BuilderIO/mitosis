@@ -1,7 +1,7 @@
 import { outputFileAsync } from 'fs-extra-promise';
 import { File } from '../generators/qwik';
+import { componentToQwik } from '../generators/qwik/component-generator';
 import { addComponent, createFileSet, FileSet } from '../generators/qwik/index';
-import { isStatement } from '../generators/qwik/src-generator';
 import { builderContentToMitosisComponent } from '../parsers/builder';
 import { parseJsx } from '../parsers/jsx';
 import {
@@ -12,6 +12,7 @@ import {
   convertBuilderContentToSymbolHierarchy,
   convertBuilderElementToMitosisComponent,
 } from '../symbols/symbol-processor';
+import { runTestsForTarget } from './shared';
 
 const todo = require('../../../../examples/todo/src/components/todo.lite');
 const todos = require('../../../../examples/todo/src/components/todos.lite');
@@ -30,6 +31,8 @@ const debugOutput = async (fileSet: FileSet) => {
 };
 
 describe('qwik', () => {
+  runTestsForTarget('qwik', componentToQwik());
+
   describe('todo', () => {
     test('Todo.tsx', async () => {
       const json = parseJsx(todo);
@@ -71,9 +74,7 @@ describe('qwik', () => {
 
   describe('hello_world', () => {
     test('stylesheet', async () => {
-      const component = builderContentToMitosisComponent(
-        require('./qwik.test.hello_world.json'),
-      );
+      const component = builderContentToMitosisComponent(require('./qwik.test.hello_world.json'));
       const fileSet = createFileSet({ output: 'mjs' });
 
       addComponent(fileSet, component);
@@ -94,9 +95,7 @@ describe('qwik', () => {
   });
 
   test('button', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.button.json'),
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.button.json'));
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -105,13 +104,10 @@ describe('qwik', () => {
   });
 
   test('svg', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.svg.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.svg.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -120,13 +116,10 @@ describe('qwik', () => {
   });
 
   test('Image', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.image.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -135,13 +128,10 @@ describe('qwik', () => {
   });
 
   test('Image.slow', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.image.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.image.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     const fileSet = createFileSet({ output: 'mjs', jsx: false });
 
     addComponent(fileSet, component);
@@ -150,13 +140,10 @@ describe('qwik', () => {
   });
 
   test('Accordion', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.accordion.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.accordion.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -166,13 +153,10 @@ describe('qwik', () => {
   });
 
   test('For', async () => {
-    const component = builderContentToMitosisComponent(
-      require('./qwik.test.for-loop.json'),
-      {
-        includeBuilderExtras: true,
-        preserveTextBlocks: true,
-      },
-    );
+    const component = builderContentToMitosisComponent(require('./qwik.test.for-loop.json'), {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
     compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
     const fileSet = createFileSet({ output: 'mjs', jsx: true });
 
@@ -184,7 +168,7 @@ describe('qwik', () => {
   describe('component', () => {
     test('bindings', async () => {
       // https://builder.io/content/0937630137c94676ba24f95d9d12e426/edit
-      // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachbust=true
+      // https://cdn.builder.io/api/v2/content/page/0937630137c94676ba24f95d9d12e426?apiKey=23dfd7cef1104af59f281d58ec525923&noTraverse=false&preserveAllFields=true&single=true&cachebust=true
       const content = require('./qwik.test.component-binding.json');
       const state: Record<string, any> = {};
       const hierarchy = convertBuilderContentToSymbolHierarchy(content, {
@@ -193,10 +177,8 @@ describe('qwik', () => {
       expect(state).toMatchSnapshot();
       const fileSet = createFileSet({ output: 'mjs', jsx: true });
       hierarchy.depthFirstSymbols.forEach((builderComponent) => {
-        const mitosisComponent =
-          convertBuilderElementToMitosisComponent(builderComponent);
-        mitosisComponent &&
-          addComponent(fileSet, mitosisComponent, { isRoot: false });
+        const mitosisComponent = convertBuilderElementToMitosisComponent(builderComponent);
+        mitosisComponent && addComponent(fileSet, mitosisComponent, { isRoot: false });
       });
 
       const component = builderContentToMitosisComponent(content, {
@@ -244,8 +226,29 @@ describe('qwik', () => {
     // https://builder.io/content/5d5a2d612df542978577d83c0aefad1e
     // https://cdn.builder.io/api/v2/content/page/5d5a2d612df542978577d83c0aefad1e?apiKey=23dfd7cef1104af59f281d58ec525923
     const content = require('./qwik.test.bindings.json');
-    const state: Record<string, any> = {};
-    expect(state).toMatchSnapshot();
+    const fileSet = createFileSet({ output: 'cjs', jsx: false });
+    const component = builderContentToMitosisComponent(content, {
+      includeBuilderExtras: true,
+      preserveTextBlocks: true,
+    });
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+
+    addComponent(fileSet, component);
+    await debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('for-loop.bindings', async () => {
+    const component = require('./qwik.test.for-loop.binding.json');
+    const fileSet = createFileSet({ output: 'cjs', jsx: false });
+    compileAwayBuilderComponentsFromTree(component, compileAwayComponents);
+    addComponent(fileSet, component);
+    await debugOutput(fileSet);
+    expect(toObj(fileSet)).toMatchSnapshot();
+  });
+
+  test('mount', async () => {
+    const content = require('./qwik.test.mount.json');
     const fileSet = createFileSet({ output: 'cjs', jsx: false });
     const component = builderContentToMitosisComponent(content, {
       includeBuilderExtras: true,
@@ -269,6 +272,7 @@ describe('qwik', () => {
             isTypeScript: false,
             isJSX: true,
             isModule: true,
+            isBuilder: true,
           },
           '',
           '',
@@ -284,23 +288,6 @@ describe('qwik', () => {
       file.src.jsxBegin('Image', {}, { image: '' });
       file.src.jsxEnd('Image');
       expect(file.toString()).toEqual('<Image></Image>;\n');
-    });
-  });
-
-  describe('helper functions', () => {
-    describe('isStatement', () => {
-      test('is an expression', () => {
-        expect(isStatement('a.b')).toBe(false);
-        expect(isStatement('1?2:"bar"')).toBe(false);
-        expect(isStatement('"var x; return foo + \'\\"\';"')).toBe(false);
-        expect(isStatement('"foo" + `bar\nbaz`')).toBe(false);
-        expect(isStatement('(...)()')).toBe(false);
-      });
-
-      test('is a statement', () => {
-        expect(isStatement('var x; return x;')).toBe(true);
-        expect(isStatement('var x')).toBe(true);
-      });
     });
   });
 });

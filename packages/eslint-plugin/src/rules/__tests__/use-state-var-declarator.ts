@@ -30,7 +30,7 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const state = useState();
+        const state = useStore();
         return (
             <div />
         );
@@ -53,7 +53,7 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const foo = useState();
+        const foo = useStore();
         return (
             <div />
         );
@@ -67,16 +67,14 @@ ruleTester.run('use-state-var-declarator', rule, {
       ...opts,
       code: `
       export default function MyComponent(props) {
-        const a = useState();
+        const a = useStore();
         
         return (
             <div />
         );
       }
     `,
-      errors: [
-        'useState should be exclusively assigned to a variable called state',
-      ],
+      errors: ['useStore should be exclusively assigned to a variable called state'],
     },
   ],
 });

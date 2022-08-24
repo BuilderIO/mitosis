@@ -28,11 +28,7 @@ export function ensureAllSymbolsHaveIds(content: BuilderContent): void {
   let counter = 0;
   const ids = new Set<string>();
   forEach(content, function (this, el: any) {
-    if (
-      this.key === 'jsCode' &&
-      isString(el) &&
-      el.endsWith('return _virtual_index')
-    ) {
+    if (this.key === 'jsCode' && isString(el) && el.endsWith('return _virtual_index')) {
       // Sometimes rollup adds a final `return _virtual_index` but that causes VM evaluation to fail.
       // Instead of a return on the last line, it needs a plain expression on the last line. Luckily
       // because the rollup compile behavior is consistent this works pretty reliably
@@ -106,7 +102,7 @@ export function convertBuilderContentToSymbolHierarchy(
           const props = symbol.data;
           const state = symbol.content?.data?.state;
           if (state) {
-            const id = toHash(state);
+            const id = hashCodeAsString(state);
             props['serverStateId'] = id;
             collectComponentState[id] = state;
           }
@@ -185,22 +181,52 @@ function isString(value: any): value is string {
   return typeof value == 'string';
 }
 
-function toHash(obj: any): string {
-  return hashCode(JSON.stringify(obj));
+export function hashCodeAsString(obj: any): string {
+  return Number(Math.abs(hashCode(obj))).toString(36);
 }
 
-function hashCode(text: string): string {
-  var hash = 0,
-    i,
-    chr;
-  if (text.length === 0) return String(hash);
-  for (i = 0; i < text.length; i++) {
-    chr = text.charCodeAt(i);
-    hash = (hash << 5) - hash + chr;
-    hash |= 0; // Convert to 32bit integer
+export function hashCode(obj: any, hash = 0): number {
+  let value = 0;
+  switch (typeof obj) {
+    case 'number':
+      value = obj;
+      break;
+    case 'undefined':
+      value = Number.MIN_SAFE_INTEGER;
+      break;
+    case 'string':
+      for (let i = 0; i < obj.length; i++) {
+        hash = hashCodeApply(hash, obj.charCodeAt(i));
+      }
+      value = obj.length;
+    case 'boolean':
+      value = obj ? 1 : 0;
+      break;
+    case 'object':
+      if (obj === null) {
+        value = Number.MAX_SAFE_INTEGER;
+      } else if (Array.isArray(obj)) {
+        for (let i = 0; i < obj.length; i++) {
+          hash = hashCode(obj[i], hash);
+        }
+      } else {
+        for (const key of Object.keys(obj).sort()) {
+          if (obj.hasOwnProperty(key)) {
+            hash = hashCode(obj[key], hash);
+          }
+        }
+      }
+      break;
   }
-  return Number(Math.abs(hash)).toString(36);
+  return hashCodeApply(hash, value);
 }
+
+function hashCodeApply(hash: number, value: number): number {
+  hash = (hash << 5) - hash + value;
+  hash |= 0; // Convert to 32bit integer
+  return hash;
+}
+
 function pad(value: number): string {
   const padding = '000000';
   let result = padding + String(value);

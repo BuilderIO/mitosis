@@ -1,9 +1,9 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
@@ -11,7 +11,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
-import { extendedHook, MitosisComponent } from '../types/mitosis-component';
+import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
@@ -29,21 +29,38 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-idenifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import json5 from 'json5';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerArgs } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { OmitObj } from '../helpers/typescript';
+import { pipe } from 'fp-ts/lib/function';
+import { getCustomImports } from '../helpers/get-custom-imports';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { PropsDefinition, DefaultProps } from 'vue/types/options';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
 }
 
-export interface ToVueOptions extends BaseTranspilerOptions {
-  vueVersion?: 2 | 3;
+export type VueVersion = 2 | 3;
+
+interface VueVersionOpt {
+  vueVersion: VueVersion;
+}
+
+export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
   cssNamespace?: () => string;
   namePrefix?: (path: string) => string;
+  asyncComponentImports?: boolean;
 }
+
+const SPECIAL_PROPERTIES = {
+  V_IF: 'v-if',
+  V_FOR: 'v-for',
+  V_ELSE: 'v-else',
+  V_ELSE_IF: 'v-else-if',
+} as const;
 
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
@@ -53,13 +70,31 @@ const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
 
 const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
 
+const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
+
+const addPropertiesToJson =
+  (properties: MitosisNode['properties']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    properties: {
+      ...json.properties,
+      ...properties,
+    },
+  });
+
+const addBindingsToJson =
+  (bindings: MitosisNode['bindings']) =>
+  (json: MitosisNode): MitosisNode => ({
+    ...json,
+    bindings: {
+      ...json.bindings,
+      ...bindings,
+    },
+  });
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-function processBinding(
-  code: string,
-  _options: ToVueOptions,
-  json: MitosisComponent,
-): string {
+function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
   return replaceIdentifiers(
     stripStateAndPropsRefs(code, {
       includeState: true,
@@ -72,73 +107,160 @@ function processBinding(
   );
 }
 
+type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
+
 const NODE_MAPPERS: {
-  [key: string]:
-    | ((json: MitosisNode, options: ToVueOptions) => string)
-    | undefined;
+  [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(json, options) {
     const keyValue = json.bindings.key || { code: 'index' };
-    const forValue = `(${
-      json.properties._forName
-    }, index) in ${stripStateAndPropsRefs(json.bindings.each?.code)}`;
+    const forValue = `(${json.properties._forName}, index) in ${stripStateAndPropsRefs(
+      json.bindings.each?.code,
+    )}`;
 
-    if (options.vueVersion! >= 3) {
+    if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
-      return `<template :key="${encodeQuotes(
-        keyValue?.code || 'index',
-      )}" v-for="${encodeQuotes(forValue)}">
+      return `<template :key="${encodeQuotes(keyValue?.code || 'index')}" v-for="${encodeQuotes(
+        forValue,
+      )}">
         ${json.children.map((item) => blockToVue(item, options)).join('\n')}
       </template>`;
     }
     // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (!firstChild) {
-      return '';
-    }
-    firstChild.bindings.key = keyValue;
-    firstChild.properties['v-for'] = forValue;
-    return blockToVue(firstChild, options);
-  },
-  Show(json, options) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
-    if (options.vueVersion! >= 3) {
-      return `
-      <template v-if="${encodeQuotes(ifValue)}">
-        ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-      </template>
-      ${
-        !json.meta.else
-          ? ''
-          : `
-        <template v-else>
-          ${blockToVue(json.meta.else as any, options)}
-        </template>
-      `
-      }
-      `;
-    }
-    let ifString = '';
-    // Vue 2 can only handle one root element
-    const firstChild = json.children.filter(filterEmptyTextNodes)[0];
-    if (firstChild) {
-      firstChild.properties['v-if'] = ifValue;
-      ifString = blockToVue(firstChild, options);
-    }
-    let elseString = '';
-    const elseBlock = json.meta.else;
-    if (isMitosisNode(elseBlock)) {
-      elseBlock.properties['v-else'] = '';
-      elseString = blockToVue(elseBlock, options);
-    }
+    const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
 
-    return `
-    ${ifString}
-    ${elseString}
-    `;
+    // Edge-case for when the parent is a `Show`, we need to pass down the `v-if` prop.
+    const jsonIf = json.properties[SPECIAL_PROPERTIES.V_IF];
+
+    return firstChild
+      ? pipe(
+          firstChild,
+          addBindingsToJson({ key: keyValue }),
+          addPropertiesToJson({
+            [SPECIAL_PROPERTIES.V_FOR]: forValue,
+            ...(jsonIf ? { [SPECIAL_PROPERTIES.V_IF]: jsonIf } : {}),
+          }),
+          (block) => blockToVue(block, options),
+        )
+      : '';
+  },
+  Show(json, options, scope) {
+    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
+
+    switch (options.vueVersion) {
+      case 3:
+        return `
+        <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
+          ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+        </template>
+        ${
+          isMitosisNode(json.meta.else)
+            ? `
+            <template ${SPECIAL_PROPERTIES.V_ELSE}>
+              ${blockToVue(json.meta.else, options)}
+            </template>`
+            : ''
+        }
+        `;
+      case 2:
+        // Vue 2 can only handle one root element, so we just take the first one.
+        // TO-DO: warn user of multi-children Show.
+        const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
+        const elseBlock = json.meta.else;
+
+        const hasShowChild = firstChild?.name === 'Show';
+        const childElseBlock = firstChild?.meta.else;
+
+        /**
+         * This is special edge logic to handle 2 nested Show elements in Vue 2.
+         * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
+         *
+         * <show when={foo} else={else-1}>
+         *  <show when={bar} else={else-2}>
+         *   <if-code>
+         *  </show>
+         * </show>
+         *
+         *
+         * foo: true && bar: true => if-code
+         * foo: true && bar: false => else-2
+         * foo: false && bar: true?? => else-1
+         *
+         *
+         * map to:
+         *
+         * <else-1 if={!foo} />
+         * <else-2 else-if={!bar} />
+         * <if-code v-else />
+         *
+         */
+        if (
+          firstChild &&
+          isMitosisNode(elseBlock) &&
+          hasShowChild &&
+          isMitosisNode(childElseBlock)
+        ) {
+          const ifString = pipe(
+            elseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
+            (block) => blockToVue(block, options),
+          );
+
+          const childIfValue = pipe(
+            firstChild.bindings.when?.code,
+            stripStateAndPropsRefs,
+            invertBooleanExpression,
+          );
+          const elseIfString = pipe(
+            childElseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
+            (block) => blockToVue(block, options),
+          );
+
+          const firstChildOfFirstChild = firstChild.children.filter(filterEmptyTextNodes)[0] as
+            | MitosisNode
+            | undefined;
+          const elseString = firstChildOfFirstChild
+            ? pipe(
+                firstChildOfFirstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
+
+          return `
+
+            ${ifString}
+
+            ${elseIfString}
+
+            ${elseString}
+
+          `;
+        } else {
+          const ifString = firstChild
+            ? pipe(
+                firstChild,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: ifValue }),
+                (block) => blockToVue(block, options),
+              )
+            : '';
+
+          const elseString = isMitosisNode(elseBlock)
+            ? pipe(elseBlock, addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }), (block) =>
+                blockToVue(block, options),
+              )
+            : '';
+
+          return `
+                    ${ifString}
+                    ${elseString}
+                  `;
+        }
+    }
   },
 };
 
@@ -148,10 +270,7 @@ const BINDING_MAPPERS: { [key: string]: string | undefined } = {
 };
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
-function processDynamicComponents(
-  json: MitosisComponent,
-  _options: ToVueOptions,
-) {
+function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
       if (node.name.includes('.')) {
@@ -178,19 +297,13 @@ function processForKeys(json: MitosisComponent, _options: ToVueOptions) {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [
-    string,
-    { code: string; arguments?: string[] } | undefined,
-  ]) => {
+  ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
     if (key === '_spread') {
       return '';
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(
-        value?.code,
-        {
-          replaceWith: 'this.',
-        },
-      )})" `;
+      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
+        replaceWith: '',
+      })})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
@@ -207,44 +320,37 @@ const stringifyBinding =
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
           return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}\\.`, 'g'), '$event.'),
-            ),
+            removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
           )}" `;
         } else {
           return ` @${event}="${encodeQuotes(
             removeSurroundingBlock(
-              useValue
-                // TODO: proper reference parse and replacing
-                .replace(new RegExp(`${cusArgs[0]}`, 'g'), '$event'),
+              removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
             ),
           )}" `;
         }
       } else if (key === 'ref') {
         return ` ref="${encodeQuotes(useValue)}" `;
       } else if (BINDING_MAPPERS[key]) {
-        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(
-          useValue.replace(/"/g, "\\'"),
-        )}" `;
+        return ` ${BINDING_MAPPERS[key]}="${encodeQuotes(useValue.replace(/"/g, "\\'"))}" `;
       } else {
         return ` :${key}="${encodeQuotes(useValue)}" `;
       }
     }
   };
 
-export const blockToVue = (
-  node: MitosisNode,
-  options: ToVueOptions,
-): string => {
+interface Scope {
+  isRootNode?: boolean;
+}
+
+export const blockToVue: BlockRenderer = (node, options, scope) => {
   const nodeMapper = NODE_MAPPERS[node.name];
   if (nodeMapper) {
-    return nodeMapper(node, options);
+    return nodeMapper(node, options, scope);
   }
 
   if (isChildren(node)) {
-    return `<slot></slot>`;
+    return `<slot/>`;
   }
 
   if (node.name === 'style') {
@@ -258,8 +364,13 @@ export const blockToVue = (
     return `${node.properties._text}`;
   }
 
-  if (node.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(node.bindings._text.code as string)}}}`;
+  const textCode = node.bindings._text?.code;
+  if (textCode) {
+    const strippedTextCode = stripStateAndPropsRefs(textCode);
+    if (isSlotProperty(strippedTextCode)) {
+      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    }
+    return `{{${strippedTextCode}}}`;
   }
 
   let str = '';
@@ -267,9 +378,7 @@ export const blockToVue = (
   str += `<${node.name} `;
 
   if (node.bindings._spread?.code) {
-    str += `v-bind="${encodeQuotes(
-      stripStateAndPropsRefs(node.bindings._spread.code as string),
-    )}"`;
+    str += `v-bind="${encodeQuotes(stripStateAndPropsRefs(node.bindings._spread.code as string))}"`;
   }
 
   for (const key in node.properties) {
@@ -277,9 +386,9 @@ export const blockToVue = (
 
     if (key === 'className') {
       continue;
-    }
-
-    if (typeof value === 'string') {
+    } else if (key === SPECIAL_PROPERTIES.V_ELSE) {
+      str += ` ${key} `;
+    } else if (typeof value === 'string') {
       str += ` ${key}="${encodeQuotes(value)}" `;
     }
   }
@@ -307,10 +416,7 @@ export const blockToVue = (
   return str + `</${node.name}>`;
 };
 
-function getContextInjectString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.get) {
@@ -323,10 +429,7 @@ function getContextInjectString(
   return str;
 }
 
-function getContextProvideString(
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
+function getContextProvideString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
 
   for (const key in component.context.set) {
@@ -334,9 +437,8 @@ function getContextProvideString(
     str += `
       ${name}: ${
       value
-        ? getMemberObjectString(value, {
-            valueMapper: (code) =>
-              stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
+        ? stringifyContextValue(value, {
+            valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
         : null
     },
@@ -360,9 +462,7 @@ const onUpdatePlugin: Plugin = (options) => ({
         component.hooks.onUpdate
           .filter((hook) => hook.deps?.length)
           .forEach((hook, index) => {
-            component.state[
-              getOnUpdateHookName(index)
-            ] = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
+            const code = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
             return {
               ${hook.deps
                 ?.slice(1, -1)
@@ -374,6 +474,11 @@ const onUpdatePlugin: Plugin = (options) => ({
                 .join(',')}
             }
           }`;
+
+            component.state[getOnUpdateHookName(index)] = {
+              code,
+              type: 'getter',
+            };
           });
       }
     },
@@ -382,6 +487,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [onUpdatePlugin],
+  vueVersion: 2,
 };
 
 const mergeOptions = (
@@ -393,11 +499,36 @@ const mergeOptions = (
   plugins: [...pluginsA, ...pluginsB],
 });
 
-export const componentToVue =
-  (userOptions: ToVueOptions = {}) =>
-  // hack while we migrate all other transpilers to receive/handle path
-  // TO-DO: use `Transpiler` once possible
-  ({ component, path }: TranspilerArgs & { path: string }) => {
+const generateComponentImport =
+  (options: ToVueOptions) =>
+  (componentName: string): string => {
+    const key = kebabCase(componentName);
+    if (options.vueVersion >= 3 && options.asyncComponentImports) {
+      return `'${key}': defineAsyncComponent(${componentName})`;
+    } else {
+      return `'${key}': ${componentName}`;
+    }
+  };
+
+const generateComponents = (componentsUsed: string[], options: ToVueOptions): string => {
+  if (componentsUsed.length === 0) {
+    return '';
+  } else {
+    return `components: { ${componentsUsed.map(generateComponentImport(options)).join(',')} },`;
+  }
+};
+
+const appendToDataString = ({
+  dataString,
+  newContent,
+}: {
+  dataString: string;
+  newContent: string;
+}) => dataString.replace(/}$/, `${newContent}}`);
+
+const componentToVue =
+  (userOptions: ToVueOptions): Transpiler =>
+  ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -418,6 +549,21 @@ export const componentToVue =
       prefix: options.cssNamespace?.() ?? undefined,
     });
 
+    const { exports: localExports } = component;
+    const localVarAsData: string[] = [];
+    const localVarAsFunc: string[] = [];
+    if (localExports) {
+      Object.keys(localExports).forEach((key) => {
+        if (localExports[key].usedInLocal) {
+          if (localExports[key].isFunction) {
+            localVarAsFunc.push(key);
+          } else {
+            localVarAsData.push(key);
+          }
+        }
+      });
+    }
+
     let dataString = getStateObjectStringFromComponent(component, {
       data: true,
       functions: false,
@@ -428,8 +574,7 @@ export const componentToVue =
       data: false,
       getters: true,
       functions: false,
-      valueMapper: (code) =>
-        processBinding(code.replace(GETTER, ''), options, component),
+      valueMapper: (code) => processBinding(code.replace(GETTER, ''), options, component),
     });
 
     let functionsString = getStateObjectStringFromComponent(component, {
@@ -439,39 +584,29 @@ export const componentToVue =
       valueMapper: (code) => processBinding(code, options, component),
     });
 
-    const blocksString = JSON.stringify(component.children);
-
     // Component references to include in `component: { YourComponent, ... }
     const componentsUsed = Array.from(getComponentsUsed(component))
-      .filter(
-        (name) =>
-          name.length &&
-          !name.includes('.') &&
-          name[0].toUpperCase() === name[0],
-      )
+      .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
       // Strip out components that compile away
-      .filter(
-        (name) => !['For', 'Show', 'Fragment', component.name].includes(name),
-      );
+      .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
 
     // Append refs to data as { foo, bar, etc }
-    dataString = dataString.replace(
-      /}$/,
-      `${component.imports
-        .map((thisImport) => Object.keys(thisImport.imports).join(','))
-        // Make sure actually used in template
-        .filter((key) => Boolean(key && blocksString.includes(key)))
-        // Don't include component imports
-        .filter((key) => !componentsUsed.includes(key))
-        .join(',')}}`,
-    );
+    dataString = appendToDataString({
+      dataString,
+      newContent: getCustomImports(component).join(','),
+    });
+
+    if (localVarAsData.length) {
+      dataString = appendToDataString({ dataString, newContent: localVarAsData.join(',') });
+    }
 
     const elementProps = getProps(component);
     stripMetaProperties(component);
 
-    const template = component.children
-      .map((item) => blockToVue(item, options))
-      .join('\n');
+    const template = pipe(
+      component.children.map((item) => blockToVue(item, options, { isRootNode: true })).join('\n'),
+      renameMitosisComponentsToKebabCase,
+    );
 
     const includeClassMapHelper = template.includes('_classStringToObject');
 
@@ -481,58 +616,64 @@ export const componentToVue =
         `_classStringToObject(str) {
         const obj = {};
         if (typeof str !== 'string') { return obj }
-        const classNames = str.trim().split(/\\s+/); 
+        const classNames = str.trim().split(/\\s+/);
         for (const name of classNames) {
           obj[name] = true;
-        } 
+        }
         return obj;
       }  }`,
       );
     }
 
-    const onUpdateWithDeps =
-      component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
+    if (localVarAsFunc.length) {
+      functionsString = functionsString.replace(/}\s*$/, `${localVarAsFunc.join(',')}}`);
+    }
+
+    const onUpdateWithDeps = component.hooks.onUpdate?.filter((hook) => hook.deps?.length) || [];
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
+
+    let propsDefinition: PropsDefinition<DefaultProps> = Array.from(elementProps).filter(
+      (prop) => prop !== 'children' && prop !== 'class',
+    );
+
+    if (component.defaultProps) {
+      propsDefinition = propsDefinition.reduce(
+        (propsDefinition: DefaultProps, curr: string) => (
+          (propsDefinition[curr] =
+            component.defaultProps && component.defaultProps.hasOwnProperty(curr)
+              ? { default: component.defaultProps[curr] }
+              : {}),
+          propsDefinition
+        ),
+        {},
+      );
+    }
 
     let str = dedent`
     <template>
       ${template}
     </template>
-    <script>
-      ${renderPreComponent(component)}
+    <script lang="ts">
+    ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
+      ${renderPreComponent({
+        component,
+        target: 'vue',
+        asyncComponentImports: options.asyncComponentImports,
+      })}
+
+      ${component.types?.join('\n') || ''}
 
       export default {
         ${
           !component.name
             ? ''
             : `name: '${
-                options.namePrefix?.(path)
-                  ? options.namePrefix?.(path) + '-'
-                  : ''
+                path && options.namePrefix?.(path) ? options.namePrefix?.(path) + '-' : ''
               }${kebabCase(component.name)}',`
         }
-        ${
-          !componentsUsed.length
-            ? ''
-            : `components: { ${componentsUsed
-                .map(
-                  (componentName) =>
-                    `'${kebabCase(
-                      componentName,
-                    )}': async () => ${componentName}`,
-                )
-                .join(',')} },`
-        }
-        ${
-          elementProps.size
-            ? `props: ${JSON.stringify(
-                Array.from(elementProps).filter(
-                  (prop) => prop !== 'children' && prop !== 'class',
-                ),
-              )},`
-            : ''
-        }
+        ${generateComponents(componentsUsed, options)}
+        ${elementProps.size ? `props: ${JSON.stringify(propsDefinition)},` : ''}
         ${
           dataString.length < 4
             ? ''
@@ -558,11 +699,7 @@ export const componentToVue =
         ${
           component.hooks.onMount?.code
             ? `mounted() {
-                ${processBinding(
-                  component.hooks.onMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onMount.code, options, component)}
               },`
             : ''
         }
@@ -593,11 +730,7 @@ export const componentToVue =
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(
-                  component.hooks.onUnMount.code,
-                  options,
-                  component,
-                )}
+                ${processBinding(component.hooks.onUnMount.code, options, component)}
               },`
             : ''
         }
@@ -653,11 +786,20 @@ export const componentToVue =
       str = str.replace(pattern, '');
     }
 
-    // Transform <FooBar> to <foo-bar> as Vue2 needs
-    return str.replace(/<\/?\w+/g, (match) =>
-      match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(),
-    );
+    return str;
   };
+
+type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
+
+export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 2 });
+
+export const componentToVue3 = (vueOptions?: VueOptsWithoutVersion) =>
+  componentToVue({ ...vueOptions, vueVersion: 3 });
+
+// Transform <FooBar> to <foo-bar> as Vue2 needs
+const renameMitosisComponentsToKebabCase = (str: string) =>
+  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
 
 // Remove unused artifacts like empty script or style tags
 const removePatterns = [

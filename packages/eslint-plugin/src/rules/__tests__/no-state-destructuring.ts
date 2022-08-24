@@ -20,7 +20,7 @@ ruleTester.run('no-state-destructuring', rule, {
       ...opts,
       code: `
       export default function MyComponent() {
-        const state = useState({ foo: '1' });
+        const state = useStore({ foo: '1' });
       
         onMount(() => {
           const foo = state.foo;
@@ -33,7 +33,7 @@ ruleTester.run('no-state-destructuring', rule, {
       ...opts,
       code: `
       export default function MyComponent() {
-        const state = useState({ foo: '1' });
+        const state = useStore({ foo: '1' });
       
         onMount(() => {
           const { foo } = state;
@@ -48,16 +48,14 @@ ruleTester.run('no-state-destructuring', rule, {
       ...opts,
       code: `
       export default function MyComponent() {
-        const state = useState({ foo: '1' });
+        const state = useStore({ foo: '1' });
       
         onMount(() => {
           const { foo } = state;
         });
       }
       `,
-      errors: [
-        "destructuring state isn't allowed: use standard assignment instead",
-      ],
+      errors: ["destructuring state isn't allowed: use standard assignment instead"],
     },
   ],
 });

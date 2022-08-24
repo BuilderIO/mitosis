@@ -71,10 +71,7 @@ const rule: Rule.RuleModule = {
                     node: prop as any,
                     message: "Css properties can't be a variable",
                   });
-                } else if (
-                  prop.value &&
-                  types.isConditionalExpression(prop.value)
-                ) {
+                } else if (prop.value && types.isConditionalExpression(prop.value)) {
                   context.report({
                     node: prop as any,
                     message: "Css properties can't be a ternary expression",

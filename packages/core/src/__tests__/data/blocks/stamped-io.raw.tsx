@@ -1,7 +1,6 @@
-import { useState, onMount, For, Show } from '@builder.io/mitosis';
+import { useStore, onMount, For, Show } from '@builder.io/mitosis';
 import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';
-import { reduce } from 'lodash';
 
 type SmileReviewsProps = {
   productId: string;
@@ -9,7 +8,7 @@ type SmileReviewsProps = {
 };
 
 export default function SmileReviews(props: SmileReviewsProps) {
-  const state = useState({
+  const state = useStore({
     reviews: [] as any[],
     name: 'test',
     showReviewPrompt: false,
@@ -36,21 +35,17 @@ export default function SmileReviews(props: SmileReviewsProps) {
 
   return (
     <div data-user={state.name}>
-      <button onClick={() => (state.showReviewPrompt = true)}>
-        Write a review
-      </button>
+      <button onClick={() => (state.showReviewPrompt = true)}>Write a review</button>
       <Show when={state.showReviewPrompt}>
         <input placeholder="Email" />
 
         <input css={{ display: 'block' }} placeholder="Title" />
 
-        <textarea
-          css={{ display: 'block' }}
-          placeholder="How was your experience?"
-        />
+        <textarea css={{ display: 'block' }} placeholder="How was your experience?" />
         <button
           css={{ display: 'block' }}
-          onClick={() => {
+          onClick={(event) => {
+            event.preventDefault();
             state.showReviewPrompt = false;
           }}
         >
@@ -71,10 +66,7 @@ export default function SmileReviews(props: SmileReviewsProps) {
               boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
             }}
           >
-            <img
-              css={{ height: '30px', width: '30px', marginRight: '10px' }}
-              src={review.avatar}
-            />
+            <img css={{ height: '30px', width: '30px', marginRight: '10px' }} src={review.avatar} />
             <div class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'}>
               <div>N: {index}</div>
               <div>{review.author}</div>

@@ -18,10 +18,7 @@ export const format = (str: string, indentSpaces = DEFAULT_INDENT_SPACES) => {
       return;
     }
 
-    lines[index] = item.replace(
-      preSpaceRegex,
-      ' '.repeat(currentIndent * indentSpaces),
-    );
+    lines[index] = item.replace(preSpaceRegex, ' '.repeat(currentIndent * indentSpaces));
 
     const nextLine = lines[index + 1];
     if (!nextLine) {

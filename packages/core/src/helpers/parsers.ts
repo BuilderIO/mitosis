@@ -19,8 +19,7 @@ export function parseCode(code: string) {
 
 export const isCodeBodyExpression = (body: babel.types.Statement[]) =>
   body.length == 1 &&
-  (babel.types.isExpression(body[0]) ||
-    babel.types.isExpressionStatement(body[0]));
+  (babel.types.isExpression(body[0]) || babel.types.isExpressionStatement(body[0]));
 
 /**
  * Returns `true` if the `code` is a valid expression. (vs a statement)

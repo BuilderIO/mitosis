@@ -1,15 +1,12 @@
 <p align="center"><img width="400" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F928fd46bd9d84a3fbc5b31fd5b93a7df"></p>
 
 <p align="center">
-  Write components once, run everywhere. Compiles to:
+  Write components once, compile to every framework:
 </p>
 
 <p align="center"><img width="500" src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Feceb6573940b4af0a2b6d96719be45fc" /></p>
 
 <p align="center">
-  <a href="https://mitosis.builder.io/">
-    <img width="800" alt="Fiddle" src="https://imgur.com/H1WTtGe.gif" />
-  </a>
   <p align="center">
     Try our  <a href="https://mitosis.builder.io/"><b>interactive fiddle</b></a>
   </p>
@@ -25,29 +22,97 @@
 
 ## Table of contents
 
-- [Getting Started](#getting-started)
-- [Docs](#docs)
+- [Quick Start Guide](#quick-start-guide)
+- [Examples](#examples)
+- [What is Mitosis](#what-is-mitosis)
+- [In-depth Docs](#docs)
 - [Why use Mitosis?](#why-use-mitosis)
-  - [Component libraries](#component-libraries)
-  - [Modern workflows for all platforms](#modern-workflows-for-all-platforms)
-  - [JS framework fatigue](#js-framework-fatigue)
-  - [Design to code](#design-to-code)
-- [Status](#status)
+  - [Design Systems Maintainers](#design-systems-maintainers)
+  - [Teams using multiple web frameworks](#teams-using-multiple-web-frameworks)
+  - [Teams building web SDKs](#teams-building-web-sdks)
 - [Contribute](#contribute)
-- [Coming soon](#coming-soon)
 - [Community](#community)
-- [ESLint Rules](#eslint-rules)
 - [Related Projects](#related-projects)
 
-## Getting Started
+## Quick Start Guide
 
-The best way to learn Mitosis is to clone our [example project](./examples/basic/) and start tinkering. Otherwise, here are some helpful external resources on trying out Mitosis:
+### Install
 
-- https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
+```bash
+npm install @builder.io/mitosis-cli @builder.io/mitosis
+```
 
-## Overview
+### Setup `mitosis.config.js`
 
-[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 "Mitosis Video")
+```js
+module.exports = {
+  files: 'src/**',
+  targets: ['vue3', 'solid', 'svelte', 'react'],
+};
+```
+
+Check [our configuration docs](/docs/configuration.md#typescript-configuration) for how to setup the Mitosis config file.
+
+### Setup TypeScript
+
+```json
+// tsconfig.json
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "jsxImportSource": "@builder.io/mitosis"
+  }
+}
+```
+
+### Install ESLint Rules
+
+Install our [ESLint plugin](./packages/eslint-plugin) to have highly useful rules that guide you as you build your Mitosis components.
+
+⚠️ _NOTE_: We highly recommend you setup all of the ESLint rules, because they will point out some of Mitosis' limitations and avoid confusion.
+
+### Create a Component
+
+```tsx
+// src/components/MyComponent.lite.tsx
+import { useStore } from '@builder.io/mitosis';
+
+type Props = {
+  message: string;
+};
+
+export default function MyBasicComponent(props: Props) {
+  const state = useStore({
+    name: 'Foo',
+  });
+
+  return (
+    <div>
+      {props.message || 'Hello'} {state.name}! I can run in React, Vue, Solid or Svelte!
+    </div>
+  );
+}
+```
+
+### Build
+
+```bash
+npm exec mitosis build
+```
+
+🎉 You should now have an `output` directory with your compiled components in all 4 frameworks!
+
+## Examples
+
+Here are some helpful resources on trying out Mitosis:
+
+- [CKGrafico/papanasi](https://github.com/CKGrafico/papanasi): A framework-agnostic UI library built in Mitosis
+- Our [example project](./examples/basic/) is a good starting point for learning how to use Mitosis.
+- blog post on creating a Mitosis project: https://blog.logrocket.com/creating-reusable-components-mitosis-builder-io/
+
+## What is Mitosis?
+
+[![Mitosis Video](https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffa5c422309ce4fbea9eaa133fa471877)](https://www.youtube.com/watch?v=XQIuv34-K_8 'Mitosis Video')
 
 ## Docs
 
@@ -55,25 +120,25 @@ Curious about how Mitosis code works under the hood, and how to use it? Learn mo
 
 ## Why use Mitosis?
 
-### Component libraries
+Mitosis is an incredibly powerful and flexible tool. So far, we have identified 3 broad categories of engineering teams that stand to benefit greatly from it:
 
-Providing a UI component library across multiple frameworks is a _pain_, especially when webcomponents are not an option (e.g. for server side rendering, best performance, etc). With Mitosis, you can write once and run everywhere while maintaining full compatibilty with the target framework.
+### Design Systems Maintainers
 
-### Modern workflows for all platforms
+If you are the maintainer of a design system library that started off in one web framework, then you have felt the tremendous amount of maintenance pain and duplication when creating new versions for subsequent frameworks. Look no further than the popular React library [Chakra UI](https://chakra-ui.com/), and how the maintainers have decided to create [Zag.js](https://zagjs.com/overview/introduction#motivation) after feeling the pain of maintaining state-logic code across both their React and Vue libraries. While Zag.js focuses on writing framework-agnostic interactions, Mitosis focuses on writing framework-specific components. (PS: We are working on building examples that combine these two together. TBD!)
 
-Mitosis allows you to incrementally adopt modern and familiar workflows for many different platforms. For instance, when working with Shopify, you can server side render to liquid and hydrate with React.
+### Teams using multiple web frameworks
 
-### JS framework fatigue
+If you are part of a team/organization that has multiple frontends built in different frameworks, then you know that coordinating your design system across all of them for a cohesive experience and feel is an absolute nightmare. Mitosis is an excellent tool to eliminate this class of problems, as it allows you to define your designs in your components once and deploy them to all of your separate frontends.
 
-If you have ever had to migrate a huge codebase from one framework to another, it's an absolute nightmare. Writing components at a higher level of abstraction allows you to move from one to another with ease.
+### Teams building web SDKs
 
-### Design to code
+If your team is building SDKs for a product that integrates directly into a web framework and involves providing components to the end user, then Mitosis is a _perfect_ fit for your team. Our team at Builder.io has this exact use-case: our [new generation of SDKs](https://github.com/BuilderIO/builder/tree/main/packages/sdks/) is built with Mitosis! Our engineers have received glowing praise from our sales team for speed of delivery, and all it took was a switch flip 😉
 
-With Mitosis, you can convert designs from [Figma](https://github.com/BuilderIO/html-to-figma) or Sketch and convert them to clean code for the framework of your choice. You can even use [Builder.io](https://github.com/builderio/builder) to visually drag/drop to build UIs and edit the code _side by side_.
-
-<p align="center">
-<img width="80%" src="https://i.imgur.com/UlWMkRx.gif" >
-</p>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <img width="50%" src="imgs/kudos-1.png"/>
+  <br/>
+  <img width="50%" src="imgs/kudos-2.png"/>
+</div>
 
 ## What about XKCD
 
@@ -83,23 +148,19 @@ Yup, we've all seen it. But if this is a concern for you, you may be looking at 
 
 Also similarly to LLVM, multiple syntaxes can compile to Mitotis. Our out-of-the-box syntax uses JSX, but we have explored others, such as a Vue/Svelte-like syntax. [Builder.io](https://github.com/builderio/builder) emits Mitosis IR, allowing you to turn designs to code for any supported framework. JSX and Builder.io are the currently supported frontends of the compiler, and the frameworks listed below are the backends.
 
-## Status
+## E2E test status
 
-| Framework     | Status       |
-| ------------- | ------------ |
-| React         | Beta         |
-| Qwik          | Beta         |
-| Vue           | Beta         |
-| Liquid        | Alpha        |
-| Builder.io    | Beta         |
-| Solid         | Beta         |
-| Figma         | Alpha        |
-| Angular       | Beta         |
-| Svelte        | Beta         |
-| HTML/CSS/JS   | Beta         |
-| Webcomponents | Beta         |
-| React Native  | Beta         |
-| SwiftUI       | Experimental |
+| Target  | 01 one component   | 02 two components  |
+| ------- | ------------------ | ------------------ |
+| angular | :white_check_mark: | :white_check_mark: |
+| qwik    | :white_check_mark: | :white_check_mark: |
+| react   | :white_check_mark: | :white_check_mark: |
+| solid   | :white_check_mark: | :white_check_mark: |
+| svelte  | :white_check_mark: | :white_check_mark: |
+| vue2    | :white_check_mark: | :white_check_mark: |
+| vue3    | :white_check_mark: | :white_check_mark: |
+
+_NOTE: this matrix is programmatically generated and should not be manually edited._
 
 ## Contribute
 
@@ -107,18 +168,10 @@ Interested in contribute? Head over to the [developer](developer/) docs and see 
 
 Once you're ready, checkout our [issues](https://github.com/BuilderIO/mitosis/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) page and grab your first issue!
 
-## Coming soon
-
-[V1 release](https://github.com/orgs/BuilderIO/projects/4) (help wanted!)
-
 ## Community
 
-- [Mitosis Discord](https://discord.gg/CQZt8hzZJR)
+- [Mitosis Discord](https://discord.gg/SNusEyNGsx)
 - [@Builderio](https://twitter.com/builderio)
-
-## ESLint rules
-
-Checkout our [ESLint plugin](./packages/eslint-plugin/) project for useful rules when developing in Mitosis.
 
 ## Related Projects
 

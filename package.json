@@ -2,29 +2,33 @@
   "name": "@builder.io/mitosis-repo",
   "workspaces": [
     "packages/*",
+    "e2e/*",
     "examples/*"
   ],
   "private": true,
   "version": "0.0.0",
   "engines": {
-    "node": ">=14",
+    "node": ">=16",
     "npm": "99999999.9.9"
   },
   "scripts": {
     "lerna": "lerna",
-    "ci:build": "yarn workspaces foreach -pt --exclude @builder.io/mitosis-fiddle --verbose run build",
-    "ci:lint": "yarn lint:prettier",
+    "ci:build": "yarn workspaces foreach -pt --exclude \"*/e2e*\" --exclude @builder.io/mitosis-fiddle --verbose run build",
+    "ci:fiddle-build": "yarn workspaces foreach -pt --include @builder.io/mitosis-fiddle --verbose run build",
+    "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
     "ci:test": "yarn workspaces foreach run test --passWithNoTests",
+    "ci:e2e-prep": "playwright install chromium --with-deps",
+    "ci:e2e": "yarn workspace @builder.io/e2e-app run e2e",
+    "ci": "run-s \"ci:*\"",
     "commit": "git-cz",
     "fix": "run-p -c 'lint:* --fix'",
     "fmt": "yarn fmt:prettier",
     "fmt:prettier": "yarn lint:prettier --write",
     "lint": "run-p -c lint:*",
-    "lint:css": "stylelint 'packages/**/*.ts{,x}'",
     "lint:eslint": "eslint 'packages/**/*.ts{,x}'",
-    "lint:prettier": "yarn prettier --check",
+    "lint:prettier": "yarn run prettier --check",
     "prerelease": "yarn build",
-    "prettier": "prettier '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
+    "prettier": "prettier --loglevel warn '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
     "release": "lerna publish",
     "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev"
   },
@@ -34,19 +38,23 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.6.0",
+    "@playwright/test": "1.24.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
     "commitizen": "^3.0.2",
     "esbuild": "0.14.25",
     "esbuild-register": "3.3.2",
     "eslint": "^7.11.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "execa": "6.1.0",
     "lerna": "^3.4.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
-    "stylelint": "^14.6.0",
     "typescript": "^4.2.3"
   },
   "packageManager": "yarn@3.2.0",
   "dependencies": {
-    "@babel/core": "7.14.5"
+    "@babel/core": "^7.18.2",
+    "@builder.io/e2e-app": "workspace:*"
   }
 }

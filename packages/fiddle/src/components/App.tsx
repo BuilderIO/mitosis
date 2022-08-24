@@ -1,4 +1,3 @@
-import '@emotion/core';
 import { useObserver } from 'mobx-react-lite';
 import React from 'react';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';

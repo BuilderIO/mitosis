@@ -1,10 +1,8 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
-import { getRefs } from '../../helpers/get-refs';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
@@ -14,22 +12,19 @@ import {
 } from '../../modules/plugins';
 import { fastClone } from '../../helpers/fast-clone';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { BaseTranspilerOptions, Transpiler } from '../../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 import { getProps } from '../../helpers/get-props';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { dashCase } from '../../helpers/dash-case';
-import { collectCss } from '../../helpers/collect-styles';
+import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
-const blockToStencil = (
-  json: MitosisNode,
-  options: ToStencilOptions = {},
-): string => {
+const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): string => {
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -54,9 +49,7 @@ const blockToStencil = (
       .filter(filterEmptyTextNodes)
       .map((item) => blockToStencil(item, options))
       .join('\n')}${wrap ? '</>' : ''}
-    ) : ${
-      !json.meta.else ? 'null' : blockToStencil(json.meta.else as any, options)
-    }}`;
+    ) : ${!json.meta.else ? 'null' : blockToStencil(json.meta.else as any, options)}}`;
   }
 
   let str = '';
@@ -85,11 +78,8 @@ const blockToStencil = (
     if (key === 'ref') {
       str += ` ref={(el) => this.${code} = el} `;
     } else if (key.startsWith('on')) {
-      const useKey =
-        key === 'onChange' && json.name === 'input' ? 'onInput' : key;
-      str += ` ${useKey}={${cusArgs.join(',')} => ${processBinding(
-        code as string,
-      )}} `;
+      const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
+      str += ` ${useKey}={${cusArgs.join(',')} => ${processBinding(code as string)}} `;
     } else {
       str += ` ${key}={${processBinding(code as string)}} `;
     }
@@ -99,22 +89,10 @@ const blockToStencil = (
   }
   str += '>';
   if (json.children) {
-    str += json.children
-      .map((item) => blockToStencil(item, options))
-      .join('\n');
+    str += json.children.map((item) => blockToStencil(item, options)).join('\n');
   }
 
   str += `</${json.name}>`;
-
-  return str;
-};
-
-const getRefsString = (json: MitosisComponent, refs = getRefs(json)) => {
-  let str = '';
-
-  for (const ref of Array.from(refs)) {
-    str += `\nconst ${ref} = useRef();`;
-  }
 
   return str;
 };
@@ -171,7 +149,7 @@ export const componentToStencil =
     }
 
     let str = dedent`
-    ${renderPreComponent(json)}
+    ${renderPreComponent({ component: json, target: 'stencil' })}
 
     import { Component, Prop, h, State, Fragment } from '@stencil/core';
 
@@ -207,32 +185,25 @@ export const componentToStencil =
         ${
           !json.hooks.onMount?.code
             ? ''
-            : `componentDidLoad() { ${processBinding(
-                json.hooks.onMount.code,
-              )} }`
+            : `componentDidLoad() { ${processBinding(json.hooks.onMount.code)} }`
         }
         ${
           !json.hooks.onUnMount?.code
             ? ''
-            : `disconnectedCallback() { ${processBinding(
-                json.hooks.onUnMount.code,
-              )} }`
+            : `disconnectedCallback() { ${processBinding(json.hooks.onUnMount.code)} }`
         }
         ${
           !json.hooks.onUpdate?.length
             ? ''
             : json.hooks.onUpdate.map(
-                (hook) =>
-                  `componentDidUpdate() { ${processBinding(hook.code)} }`,
+                (hook) => `componentDidUpdate() { ${processBinding(hook.code)} }`,
               )
         }
     
       render() {
         return (${wrap ? '<>' : ''}
         
-          ${json.children
-            .map((item) => blockToStencil(item, options))
-            .join('\n')}
+          ${json.children.map((item) => blockToStencil(item, options)).join('\n')}
 
         ${wrap ? '</>' : ''})
       }

@@ -1,4 +1,5 @@
-import { JSONObject } from './json';
+import { Dictionary } from '../helpers/typescript';
+import { _JSON, JSONObject } from './json';
 import { MitosisNode } from './mitosis-node';
 
 /**
@@ -49,18 +50,42 @@ export type MitosisComponentInput = {
   defaultValue: any;
 };
 
+export type MitosisExport = {
+  [name: string]: {
+    code: string;
+    usedInLocal?: boolean;
+    isFunction?: boolean;
+  };
+};
+
+export type StateValueType = 'function' | 'getter' | 'method' | 'property';
+
+export type StateCode = _JSON;
+
+export interface StateValue {
+  code: StateCode;
+  type: StateValueType;
+}
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
   imports: MitosisImport[];
+  exports?: MitosisExport;
   meta: JSONObject & {
     useMetadata?: JSONObject;
   };
   inputs: MitosisComponentInput[];
-  state: JSONObject;
+  state: Dictionary<StateValue | undefined>;
   context: {
     get: ContextGet;
     set: ContextSet;
+  };
+  refs: {
+    [useRef: string]: {
+      typeParameter?: string;
+      argument: string;
+    };
   };
   hooks: {
     init?: extendedHook;
@@ -73,4 +98,7 @@ export type MitosisComponent = {
   };
   children: MitosisNode[];
   subComponents: MitosisComponent[];
+  types?: string[];
+  propsTypeRef?: string;
+  defaultProps?: JSONObject;
 };

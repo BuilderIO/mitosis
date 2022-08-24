@@ -1,4 +1,4 @@
-import { useState, useRef, onMount } from '@builder.io/mitosis';
+import { useStore, useRef, onMount } from '@builder.io/mitosis';
 
 export interface CustomCodeProps {
   code: string;
@@ -6,9 +6,9 @@ export interface CustomCodeProps {
 }
 
 export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef();
+  const elem = useRef<HTMLDivElement>(null);
 
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [] as string[],
     scriptsRun: [] as string[],
 
@@ -30,11 +30,9 @@ export default function CustomCode(props: CustomCodeProps) {
             document.head.appendChild(newScript);
           } else if (
             !script.type ||
-            [
-              'text/javascript',
-              'application/javascript',
-              'application/ecmascript',
-            ].includes(script.type)
+            ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(
+              script.type,
+            )
           ) {
             if (state.scriptsRun.includes(script.innerText)) {
               continue;
@@ -58,9 +56,7 @@ export default function CustomCode(props: CustomCodeProps) {
   return (
     <div
       ref={elem}
-      class={
-        'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')
-      }
+      class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}
       innerHTML={props.code}
     ></div>
   );

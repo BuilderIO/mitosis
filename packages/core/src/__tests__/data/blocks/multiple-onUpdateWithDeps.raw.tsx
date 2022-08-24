@@ -1,7 +1,7 @@
-import { onUpdate, useState } from '@builder.io/mitosis';
+import { onUpdate, useStore } from '@builder.io/mitosis';
 
 export default function MultipleOnUpdateWithDeps() {
-  const state = useState({
+  const state = useStore({
     a: 'a',
     b: 'b',
     c: 'c',
@@ -10,10 +10,16 @@ export default function MultipleOnUpdateWithDeps() {
 
   onUpdate(() => {
     console.log('Runs when a or b changes', state.a, state.b);
+    if (state.a === 'a') {
+      state.a = 'b';
+    }
   }, [state.a, state.b]);
 
   onUpdate(() => {
     console.log('Runs when c or d changes', state.c, state.d);
+    if (state.a === 'a') {
+      state.a = 'b';
+    }
   }, [state.c, state.d]);
 
   return <div />;

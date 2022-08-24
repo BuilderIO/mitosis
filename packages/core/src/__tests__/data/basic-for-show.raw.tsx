@@ -1,7 +1,7 @@
-import { useState, For, Show } from '@builder.io/mitosis';
+import { useStore, For, Show } from '@builder.io/mitosis';
 
 export default function MyBasicForShowComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
     names: ['Steve', 'PatrickJS'],
   });
@@ -17,8 +17,7 @@ export default function MyBasicForShowComponent() {
                 state.name = event.target.value + ' and ' + person;
               }}
             />
-            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid,
-            or Liquid!
+            Hello {person}! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
           </Show>
         )}
       </For>

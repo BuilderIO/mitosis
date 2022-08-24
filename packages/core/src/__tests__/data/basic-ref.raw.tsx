@@ -1,13 +1,14 @@
-import { useState, useRef } from '@builder.io/mitosis';
+import { useStore, useRef } from '@builder.io/mitosis';
 
 export interface Props {
   showInput: boolean;
 }
 
-export default function MyMasicRefComponent(props: Props) {
-  const inputRef = useRef();
+export default function MyBasicRefComponent(props: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const inputNoArgRef = useRef<HTMLLabelElement>(null);
 
-  const state = useState({
+  const state = useStore({
     name: 'PatrickJS',
   });
 
@@ -34,7 +35,9 @@ export default function MyMasicRefComponent(props: Props) {
             onChange={(event) => (state.name = event.target.value)}
           />
 
-          <label for="cars">Choose a car:</label>
+          <label ref={inputNoArgRef} for="cars">
+            Choose a car:
+          </label>
 
           <select name="cars" id="cars">
             <option value="supra">GR Supra</option>

@@ -132,10 +132,10 @@ useState({
 `;
 
 exports[`Builder Columns 2`] = `
-"import { useState, For } from \\"@builder.io/mitosis\\";
+"import { useStore, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     getColumns() {
       return props.columns || [];
     },
@@ -199,15 +199,9 @@ Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
         "bindings": Object {
-          "class": Object {
-            "code": "'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')",
-          },
-          "innerHTML": Object {
-            "code": "props.code",
-          },
-          "ref": Object {
-            "code": "elem",
-          },
+          "class": "'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')",
+          "innerHTML": "props.code",
+          "ref": "elem",
         },
         "children": Array [],
         "code": Object {
@@ -325,10 +319,10 @@ onMount(() => {
 `;
 
 exports[`Builder CustomCode 2`] = `
-"import { useState, useRef } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
@@ -401,12 +395,8 @@ Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
         "bindings": Object {
-          "innerHTML": Object {
-            "code": "props.content",
-          },
-          "ref": Object {
-            "code": "elem",
-          },
+          "innerHTML": "props.content",
+          "ref": "elem",
         },
         "children": Array [],
         "code": Object {
@@ -526,10 +516,10 @@ onMount(() => {
 `;
 
 exports[`Builder Embed 2`] = `
-"import { useState, useRef } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [],
     scriptsRun: [],
     findAndRunScripts() {
@@ -599,9 +589,7 @@ Object {
             "@type": "@builder.io/sdk:Element",
             "actions": Object {},
             "bindings": Object {
-              "ref": Object {
-                "code": "pictureRef",
-              },
+              "ref": "pictureRef",
             },
             "children": Array [
               Object {
@@ -616,24 +604,12 @@ Object {
                       "load": "state.setLoaded()",
                     },
                     "bindings": Object {
-                      "alt": Object {
-                        "code": "props.altText",
-                      },
-                      "aria-role": Object {
-                        "code": "props.altText ? 'presentation' : undefined",
-                      },
-                      "class": Object {
-                        "code": "'builder-image' + (props.class ? ' ' + props.class : '')",
-                      },
-                      "sizes": Object {
-                        "code": "props.sizes",
-                      },
-                      "src": Object {
-                        "code": "props.image",
-                      },
-                      "srcset": Object {
-                        "code": "props.srcset",
-                      },
+                      "alt": "props.altText",
+                      "aria-role": "props.altText ? 'presentation' : undefined",
+                      "class": "'builder-image' + (props._class ? ' ' + props._class : '')",
+                      "sizes": "props.sizes",
+                      "src": "props.image",
+                      "srcset": "props.srcset",
                     },
                     "children": Array [],
                     "code": Object {
@@ -662,9 +638,7 @@ Object {
                 "@type": "@builder.io/sdk:Element",
                 "actions": Object {},
                 "bindings": Object {
-                  "srcset": Object {
-                    "code": "props.srcset",
-                  },
+                  "srcset": "props.srcset",
                 },
                 "children": Array [],
                 "code": Object {
@@ -709,19 +683,19 @@ Object {
 Object.assign(state, {
   scrollListener: null,
   imageLoaded: false,
-  load: false,
   setLoaded() {
     state.imageLoaded = true;
   },
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  },
+  isBrowser: function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
   },
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
-  },
+  load: false,
 });
 
 if (state.useLazyLoading()) {
@@ -732,7 +706,7 @@ if (state.useLazyLoading()) {
       const buffer = window.innerHeight / 2;
 
       if (rect.top < window.innerHeight + buffer) {
-        state.load = true;
+        setLoad(true);
         state.scrollListener = null;
         window.removeEventListener(\\"scroll\\", listener);
       }
@@ -752,19 +726,19 @@ if (state.useLazyLoading()) {
 useState({
   scrollListener: null,
   imageLoaded: false,
-  load: false,
   setLoaded() {
     state.imageLoaded = true;
   },
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  },
+  isBrowser: function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
   },
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && state.isBrowser();
-  },
+  load: false,
 });
 
 onMount(() => {
@@ -776,7 +750,7 @@ onMount(() => {
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
-          state.load = true;
+          setLoad(true);
           state.scrollListener = null;
           window.removeEventListener(\\"scroll\\", listener);
         }
@@ -797,27 +771,27 @@ onMount(() => {
 `;
 
 exports[`Builder Image 2`] = `
-"import { useState, useRef, Show } from \\"@builder.io/mitosis\\";
+"import { useStore, useRef, Show } from \\"@builder.io/mitosis\\";
 import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     scrollListener: null,
     imageLoaded: false,
-    load: false,
     setLoaded() {
       state.imageLoaded = true;
     },
-    isBrowser() {
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!props.lazy && isBrowser();
+    },
+    isBrowser: function isBrowser() {
       return (
         typeof window !== \\"undefined\\" &&
         window.navigator.product != \\"ReactNative\\"
       );
     },
-    useLazyLoading() {
-      // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
-    },
+    load: false,
   });
 
   const pictureRef = useRef();
@@ -831,7 +805,7 @@ export default function MyComponent(props) {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
+            setLoad(true);
             state.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -854,7 +828,7 @@ export default function MyComponent(props) {
           <img
             alt={props.altText}
             aria-role={props.altText ? \\"presentation\\" : undefined}
-            class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+            class={\\"builder-image\\" + (props._class ? \\" \\" + props._class : \\"\\")}
             src={props.image}
             srcset={props.srcset}
             sizes={props.sizes}
@@ -877,10 +851,11 @@ export default function MyComponent(props) {
 `;
 
 exports[`Builder Regenerate Image 1`] = `
-"import { useState } from \\"react\\";
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
 import { Image } from \\"@components\\";
 
-export default function MyComponent(props) {
+export default function MyComponent(props: any) {
   const [people, setPeople] = useState(() => [\\"Steve\\", \\"Sewell\\"]);
 
   return (
@@ -952,6 +927,7 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [
     Object {
@@ -964,6 +940,7 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "MyComponent",
+  "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
 }
@@ -976,11 +953,15 @@ Object {
       Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
-        "bindings": Object {},
+        "bindings": Object {
+          "component.options.height": "400",
+        },
         "children": Array [],
         "code": Object {
           "actions": Object {},
-          "bindings": Object {},
+          "bindings": Object {
+            "component.options.height": "400",
+          },
         },
         "component": Object {
           "name": "Hero",
@@ -1042,6 +1023,7 @@ Object {
     "get": Object {},
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [],
   "inputs": undefined,
@@ -1051,6 +1033,7 @@ Object {
     },
   },
   "name": "MyComponent",
+  "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
 }
@@ -1229,7 +1212,7 @@ Object {
     ],
     "jsCode": "Object.assign(state, {});
 ",
-    "tsCode": "useState({});
+    "tsCode": "useStore({});
 ",
   },
 }
@@ -1442,7 +1425,7 @@ Object {
     ],
     "jsCode": "Object.assign(state, {});
 ",
-    "tsCode": "useState({});
+    "tsCode": "useStore({});
 ",
   },
 }
@@ -1499,7 +1482,7 @@ Object {
 
 exports[`Builder Section 1`] = `
 "<div class=\\"div\\"><p>EAGER LOAD</p></div>
-<div class=\\"div-2\\" data-el=\\"div-2\\">
+<div class=\\"div-2\\" data-el=\\"div-1\\">
   <section lazyLoad=\\"true\\" class=\\"section\\"><p>LAZY LOAD</p></section>
 </div>
 <style>
@@ -1567,7 +1550,7 @@ exports[`Builder Section 1`] = `
       }
       pendingUpdate = true;
 
-      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         el.setAttribute(\\"maxWidth\\", 1234);
 
         el.setAttribute(\\"lazyLoad\\", true);
@@ -1593,9 +1576,7 @@ Object {
         "@type": "@builder.io/sdk:Element",
         "actions": Object {},
         "bindings": Object {
-          "data-user": Object {
-            "code": "state.name",
-          },
+          "data-user": "state.name",
         },
         "children": Array [
           Object {
@@ -1611,9 +1592,7 @@ Object {
                 "component": Object {
                   "name": "Text",
                   "options": Object {
-                    "text": "
-        Write a review
-      ",
+                    "text": "Write a review",
                   },
                 },
                 "tagName": "span",
@@ -1690,6 +1669,7 @@ Object {
                 "@type": "@builder.io/sdk:Element",
                 "actions": Object {
                   "click": "
+  event.preventDefault();
   state.showReviewPrompt = false;
 ",
                 },
@@ -1712,6 +1692,7 @@ Object {
                 "code": Object {
                   "actions": Object {
                     "click": "
+  event.preventDefault();
   state.showReviewPrompt = false;
 ",
                   },
@@ -1737,18 +1718,14 @@ Object {
                 "@type": "@builder.io/sdk:Element",
                 "actions": Object {},
                 "bindings": Object {
-                  "key": Object {
-                    "code": "review.id",
-                  },
+                  "key": "review.id",
                 },
                 "children": Array [
                   Object {
                     "@type": "@builder.io/sdk:Element",
                     "actions": Object {},
                     "bindings": Object {
-                      "src": Object {
-                        "code": "review.avatar",
-                      },
+                      "src": "review.avatar",
                     },
                     "children": Array [],
                     "code": Object {
@@ -1769,9 +1746,7 @@ Object {
                     "@type": "@builder.io/sdk:Element",
                     "actions": Object {},
                     "bindings": Object {
-                      "class": Object {
-                        "code": "state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'",
-                      },
+                      "class": "state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'",
                     },
                     "children": Array [
                       Object {
@@ -1957,10 +1932,10 @@ onMount(() => {
 `;
 
 exports[`Builder Stamped 2`] = `
-"import { useState, Show, For } from \\"@builder.io/mitosis\\";
+"import { useStore, Show, For } from \\"@builder.io/mitosis\\";
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     reviews: [],
     name: \\"test\\",
     showReviewPrompt: false,
@@ -2005,6 +1980,7 @@ export default function MyComponent(props) {
         />
         <button
           onClick={(event) => {
+            event.preventDefault();
             state.showReviewPrompt = false;
           }}
           css={{

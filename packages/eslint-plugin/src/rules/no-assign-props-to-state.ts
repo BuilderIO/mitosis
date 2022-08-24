@@ -1,5 +1,6 @@
 import * as types from '@babel/types';
 import { Rule } from 'eslint';
+import { HOOKS } from '../constants/hooks';
 import isMitosisPath from '../helpers/isMitosisPath';
 
 // ------------------------------------------------------------------------------
@@ -38,14 +39,15 @@ const rule: Rule.RuleModule = {
 
         if (!types.isProgram(program)) return;
 
-        const importSpecifiers = program.body.find((n) =>
-          types.isImportDeclaration(n),
-        );
+        const importSpecifiers = program.body.find((n) => types.isImportDeclaration(n));
 
         if (!types.isImportDeclaration(importSpecifiers)) return;
 
         const useState = importSpecifiers.specifiers.find((n) => {
-          if (types.isImportSpecifier(n) && n.imported.name === 'useState') {
+          if (
+            types.isImportSpecifier(n) &&
+            (n.imported.name === HOOKS.STATE || n.imported.name === HOOKS.STORE)
+          ) {
             return true;
           }
         });
@@ -61,9 +63,7 @@ const rule: Rule.RuleModule = {
         )
           return;
 
-        const component = program.body.find((n) =>
-          types.isExportDefaultDeclaration(n),
-        );
+        const component = program.body.find((n) => types.isExportDefaultDeclaration(n));
 
         if (!types.isExportDefaultDeclaration(component)) return;
 
@@ -81,8 +81,7 @@ const rule: Rule.RuleModule = {
         for (const prop of node.arguments[0].properties) {
           if (!types.isProperty(prop)) return;
 
-          const { object } = (prop as types.Property)
-            .value as types.MemberExpression;
+          const { object } = (prop as types.Property).value as types.MemberExpression;
 
           if (!types.isIdentifier(object)) return;
 

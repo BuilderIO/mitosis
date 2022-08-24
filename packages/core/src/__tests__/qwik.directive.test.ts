@@ -8,9 +8,7 @@ describe('qwik directives', () => {
   afterEach(() => ((global as any).h = undefined));
   describe('Image', () => {
     test('altText', () => {
-      expect(
-        Image({ altText: 'foo', image: 'http://some.url' }).children[0][0],
-      ).toEqual(
+      expect(Image({ altText: 'foo', image: 'http://some.url' }).children[0][0]).toEqual(
         partial({
           tag: 'img',
           props: partial({ src: 'http://some.url', alt: 'foo' }),
@@ -123,11 +121,7 @@ function find(tag: string, jsx: MockJSX): MockJSX | undefined {
   }
 }
 
-const mockH = (
-  tag: string,
-  props: Record<string, any>,
-  children: any[],
-): MockJSX => ({
+const mockH = (tag: string, props: Record<string, any>, children: any[]): MockJSX => ({
   tag,
   props,
   children,

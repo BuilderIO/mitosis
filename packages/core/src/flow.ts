@@ -1,3 +1,4 @@
+import { JSX } from '../jsx-runtime';
 /**
  * Flow control based on Solid
  *

@@ -1,12 +1,13 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { collectCss } from '../helpers/collect-styles';
+import { collectCss } from '../helpers/styles/collect-css';
+import { hasStyle } from '../helpers/styles/helpers';
 import { fastClone } from '../helpers/fast-clone';
 import { getProps } from '../helpers/get-props';
 import { getRefs } from '../helpers/get-refs';
 import {
-  getMemberObjectString,
+  stringifyContextValue,
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
@@ -16,6 +17,7 @@ import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
+  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -24,12 +26,18 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/config';
+import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { uniq } from 'lodash';
+import { functionLiteralPrefix } from '../constants/function-literal-prefix';
+import { methodLiteralPrefix } from '../constants/method-literal-prefix';
+import { GETTER } from '../helpers/patterns';
+import { isUpperCase } from '../helpers/is-upper-case';
+import json5 from 'json5';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -50,24 +58,27 @@ const mappers: {
     }
   },
   For: ({ json, options, parentComponent }) => {
+    const firstChild = json.children[0];
+    const keyValue = firstChild.properties.key || firstChild.bindings.key?.code;
+
+    if (keyValue) {
+      // we remove extraneous prop which Svelte does not use
+      delete firstChild.properties.key;
+      delete firstChild.bindings.key;
+    }
+
     return `
-{#each ${stripStateAndPropsRefs(json.bindings.each?.code, {
-      includeState: options.stateType === 'variables',
-    })} as ${json.properties._forName}, index }
-${json.children
-  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-  .join('\n')}
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}${
+      json.scope.For[1] ? `, ${json.scope.For[1]}` : ''
+    } ${keyValue ? `(${keyValue})` : ''}}
+${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
   },
   Show: ({ json, options, parentComponent }) => {
     return `
-{#if ${stripStateAndPropsRefs(json.bindings.when?.code, {
-      includeState: options.stateType === 'variables',
-    })} }
-${json.children
-  .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-  .join('\n')}
+{#if ${stripStateAndProps(json.bindings.when?.code, options)} }
+${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
     json.meta.else
@@ -98,9 +109,7 @@ const setContextCode = (json: MitosisComponent) => {
     .map((key) => {
       const { value, name } = contextSetters[key];
       return `setContext(${name}.key, ${
-        value
-          ? stripStateAndPropsRefs(getMemberObjectString(value))
-          : 'undefined'
+        value ? stripStateAndPropsRefs(stringifyContextValue(value)) : 'undefined'
       });`;
     })
     .join('\n');
@@ -152,11 +161,12 @@ const getTagName = ({
 
 type BlockToSvelte = (props: BlockToSvelteProps) => string;
 
-export const blockToSvelte: BlockToSvelte = ({
-  json,
-  options,
-  parentComponent,
-}) => {
+const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
+  stripStateAndPropsRefs(code, {
+    includeState: options.stateType === 'variables',
+  });
+
+export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
   if (mappers[json.name]) {
     return mappers[json.name]({ json, options, parentComponent });
   }
@@ -172,9 +182,7 @@ export const blockToSvelte: BlockToSvelte = ({
   }
 
   if (json.bindings._text?.code) {
-    return `{${stripStateAndPropsRefs(json.bindings._text.code, {
-      includeState: options.stateType === 'variables',
-    })}}`;
+    return `{${stripStateAndProps(json.bindings._text.code, options)}}`;
   }
 
   let str = '';
@@ -182,9 +190,19 @@ export const blockToSvelte: BlockToSvelte = ({
   str += `<${tagName} `;
 
   if (json.bindings._spread?.code) {
-    str += `{...${stripStateAndPropsRefs(json.bindings._spread.code, {
-      includeState: options.stateType === 'variables',
-    })}}`;
+    str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
+  }
+
+  const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
+  if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
+    const useValue = stripStateAndProps(
+      json.bindings.style?.code || json.properties.style,
+      options,
+    );
+
+    str += `use:mitosis_styling={${useValue}}`;
+    delete json.bindings.style;
+    delete json.properties.style;
   }
 
   for (const key in json.properties) {
@@ -200,16 +218,12 @@ export const blockToSvelte: BlockToSvelte = ({
     }
     const { code: value, arguments: cusArgs = ['event'] } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
-    const useValue = stripStateAndPropsRefs(value, {
-      includeState: options.stateType === 'variables',
-    });
+    const useValue = stripStateAndProps(value, options);
 
     if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
-      str += ` on:${event}="{${cusArgs.join(',')} => ${removeSurroundingBlock(
-        useValue,
-      )}}" `;
+      str += ` on:${event}="{${cusArgs.join(',')} => {${removeSurroundingBlock(useValue)}}}" `;
     } else if (key === 'ref') {
       str += ` bind:this={${useValue}} `;
     } else {
@@ -232,7 +246,7 @@ export const blockToSvelte: BlockToSvelte = ({
   if (json.children) {
     str += json.children
       .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n');
+      .join('');
   }
 
   str += `</${tagName}>`;
@@ -248,13 +262,22 @@ export const blockToSvelte: BlockToSvelte = ({
  * when easily identified, for more idiomatic svelte code
  */
 const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
+  function normalizeStr(str: string) {
+    return str
+      .trim()
+      .replace(/\n|\r/g, '')
+      .replace(/^{/, '')
+      .replace(/}$/, '')
+      .replace(/;$/, '')
+      .replace(/\s+/g, '');
+  }
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       const { value, onChange } = item.bindings;
       if (value && onChange) {
+        const { arguments: cusArgs = ['event'] } = onChange;
         if (
-          onChange.code.replace(/\s+/g, '') ===
-          `${value.code}=event.target.value`
+          normalizeStr(onChange.code) === `${normalizeStr(value.code)}=${cusArgs[0]}.target.value`
         ) {
           delete item.bindings.value;
           delete item.bindings.onChange;
@@ -271,26 +294,48 @@ const stripThisRefs = (str: string) => {
   return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
 };
 
+const FUNCTION_HACK_PLUGIN: Plugin = () => ({
+  json: {
+    pre: (json) => {
+      for (const key in json.state) {
+        const value = json.state[key]?.code;
+        if (typeof value === 'string' && value.startsWith(methodLiteralPrefix)) {
+          const strippedValue = value.replace(methodLiteralPrefix, '');
+          if (!Boolean(strippedValue.match(GETTER))) {
+            const newValue = `${functionLiteralPrefix} function ${strippedValue}`;
+            json.state[key] = {
+              code: newValue,
+              type: 'function',
+            };
+          }
+        }
+      }
+    },
+  },
+});
+
 export const componentToSvelte =
-  (options: ToSvelteOptions = {}): Transpiler =>
+  ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
   ({ component }) => {
-    const useOptions: ToSvelteOptions = {
-      ...options,
+    const options: ToSvelteOptions = {
       stateType: 'variables',
+      prettier: true,
+      plugins: [FUNCTION_HACK_PLUGIN, ...plugins],
+      ...userProvidedOptions,
     };
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
-    if (useOptions.plugins) {
-      json = runPreJsonPlugins(json, useOptions.plugins);
+    if (options.plugins) {
+      json = runPreJsonPlugins(json, options.plugins);
     }
 
     const refs = Array.from(getRefs(json));
-    useBindValue(json, useOptions);
+    useBindValue(json, options);
 
     gettersToFunctions(json);
 
-    if (useOptions.plugins) {
-      json = runPostJsonPlugins(json, useOptions.plugins);
+    if (options.plugins) {
+      json = runPostJsonPlugins(json, options.plugins);
     }
     const css = collectCss(json);
     stripMetaProperties(json);
@@ -300,12 +345,9 @@ export const componentToSvelte =
         data: true,
         functions: false,
         getters: false,
-        format: useOptions.stateType === 'proxies' ? 'object' : 'variables',
-        keyPrefix: useOptions.stateType === 'variables' ? 'let ' : '',
-        valueMapper: (code) =>
-          stripStateAndPropsRefs(code, {
-            includeState: useOptions.stateType === 'variables',
-          }),
+        format: options.stateType === 'proxies' ? 'object' : 'variables',
+        keyPrefix: options.stateType === 'variables' ? 'let ' : '',
+        valueMapper: (code) => stripStateAndProps(code, options),
       }),
       babelTransformCode,
     );
@@ -319,13 +361,9 @@ export const componentToSvelte =
         keyPrefix: '$: ',
         valueMapper: (code) =>
           pipe(
-            stripStateAndPropsRefs(
-              code
-                .replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ')
-                .replace(/\)/, ') => '),
-              {
-                includeState: useOptions.stateType === 'variables',
-              },
+            stripStateAndProps(
+              code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
+              options,
             ),
             stripThisRefs,
           ),
@@ -339,14 +377,8 @@ export const componentToSvelte =
         getters: false,
         functions: true,
         format: 'variables',
-        keyPrefix: 'function ',
-        valueMapper: (code) =>
-          pipe(
-            stripStateAndPropsRefs(code, {
-              includeState: useOptions.stateType === 'variables',
-            }),
-            stripThisRefs,
-          ),
+        keyPrefix: 'const ',
+        valueMapper: (code) => pipe(stripStateAndProps(code, options), stripThisRefs),
       }),
       babelTransformCode,
     );
@@ -356,51 +388,67 @@ export const componentToSvelte =
     const props = Array.from(getProps(json));
 
     const transformHookCode = (hookCode: string) =>
-      pipe(
-        stripStateAndPropsRefs(hookCode, {
-          includeState: useOptions.stateType === 'variables',
-        }),
-        babelTransformCode,
-      );
+      pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
-    let str = dedent`
-    <script>
+    let str = '';
+
+    if (json.types?.length) {
+      str += dedent`
+      <script context='module' lang='ts'>
+        ${json.types ? json.types.join('\n\n') + '\n' : ''}
+      </script>
+      \n
+      \n
+      `;
+    }
+
+    str += dedent`
+      <script lang='ts'>
       ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
-      ${
-        !json.hooks.onUpdate?.length
-          ? ''
-          : `import { afterUpdate } from 'svelte'`
-      }
+      ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
       ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
-      ${renderPreComponent(json, 'svelte')}
-      ${
-        hasContext(component)
-          ? 'import { getContext, setContext } from "svelte";'
-          : ''
-      }
+      ${renderPreComponent({ component: json, target: 'svelte' })}
+      ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
-      ${
-        !hasData || useOptions.stateType === 'variables'
-          ? ''
-          : `import onChange from 'on-change'`
-      }
-      ${refs
-        .concat(props)
+      ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
+      ${uniq(refs.map((ref) => stripStateAndPropsRefs(ref)).concat(props))
         .map((name) => {
           if (name === 'children') {
             return '';
           }
-          return `export let ${name};`;
+
+          let propDeclaration = `export let ${name}`;
+
+          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          }
+
+          if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
+            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
+          }
+
+          propDeclaration += ';';
+
+          return propDeclaration;
         })
         .join('\n')}
-      
+      ${
+        hasStyle(json)
+          ? `
+        function mitosis_styling (node, vars) {
+          Object.entries(vars).forEach(([ p, v ]) => { node.style[p] = v })
+        }
+      `
+          : ''
+      }
+      ${getContextCode(json)}
+      ${setContextCode(json)}
+
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
 
-      ${getContextCode(json)}
-      ${setContextCode(json)}
       ${
-        useOptions.stateType === 'proxies'
+        options.stateType === 'proxies'
           ? dataString.length < 4
             ? ''
             : `let state = onChange(${dataString}, () => state = state)`
@@ -417,19 +465,28 @@ export const componentToSvelte =
         !json.hooks.onUpdate?.length
           ? ''
           : json.hooks.onUpdate
-              .map(
-                (hook) =>
-                  `afterUpdate(() => { ${transformHookCode(hook.code)} })`,
-              )
+              .map(({ code, deps }, index) => {
+                const hookCode = transformHookCode(code);
+
+                if (deps) {
+                  const fnName = `onUpdateFn_${index}`;
+                  return `
+                    function ${fnName}() {
+                      ${hookCode}
+                    }
+                    $: ${fnName}(...${stripStateAndProps(deps, options)})
+                    `;
+                } else {
+                  return `afterUpdate(() => { ${hookCode} })`;
+                }
+              })
               .join(';')
       }
 
       ${
         !json.hooks.onUnMount?.code
           ? ''
-          : `onDestroy(() => { ${transformHookCode(
-              json.hooks.onUnMount.code,
-            )} });`
+          : `onDestroy(() => { ${transformHookCode(json.hooks.onUnMount.code)} });`
       }
     </script>
 
@@ -437,7 +494,7 @@ export const componentToSvelte =
       .map((item) =>
         blockToSvelte({
           json: item,
-          options: useOptions,
+          options: options,
           parentComponent: json,
         }),
       )
@@ -452,10 +509,10 @@ export const componentToSvelte =
     }
   `;
 
-    if (useOptions.plugins) {
-      str = runPreCodePlugins(str, useOptions.plugins);
+    if (options.plugins) {
+      str = runPreCodePlugins(str, options.plugins);
     }
-    if (useOptions.prettier !== false) {
+    if (options.prettier !== false) {
       try {
         str = format(str, {
           parser: 'svelte',
@@ -469,11 +526,12 @@ export const componentToSvelte =
           ],
         });
       } catch (err) {
-        console.warn('Could not prettify', { string: str }, err);
+        console.warn('Could not prettify');
+        console.warn({ string: str }, err);
       }
     }
-    if (useOptions.plugins) {
-      str = runPostCodePlugins(str, useOptions.plugins);
+    if (options.plugins) {
+      str = runPostCodePlugins(str, options.plugins);
     }
     return str;
   };

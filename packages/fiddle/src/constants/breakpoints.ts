@@ -1,5 +1,4 @@
-const getBreakpointMediaQuery = (maxWidth: number) =>
-  `@media (max-width: ${maxWidth}px)`;
+const getBreakpointMediaQuery = (maxWidth: number) => `@media (max-width: ${maxWidth}px)`;
 
 export const breakpoints = {
   sizes: {

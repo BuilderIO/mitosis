@@ -50,7 +50,21 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
       export default function MyComponent(props) {
         const context = useContext(x)
 
-        const state = useState({ name: null })
+        const state = useStore({ name: null })
+
+        return (
+            <div />
+        );
+      }
+    `,
+    },
+    {
+      ...opts,
+      code: `
+      import x from "y";
+
+      export default function MyComponent(props) {
+        const ref = useRef(x)
 
         return (
             <div />
@@ -86,9 +100,7 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
         );
       }
     `,
-      errors: [
-        'Variable declaration inside component is ignored during compilation',
-      ],
+      errors: ['Variable declaration inside component is ignored during compilation'],
     },
     // Doesn't accept variable assignment inside component
     {
@@ -103,9 +115,7 @@ ruleTester.run('no-var-declaration-or-assignment-in-component', rule, {
         );
       }
     `,
-      errors: [
-        'Variable assignment inside component is ignored during compilation',
-      ],
+      errors: ['Variable assignment inside component is ignored during compilation'],
     },
     // Doesn't accept variable declaration and assignment inside component
     {

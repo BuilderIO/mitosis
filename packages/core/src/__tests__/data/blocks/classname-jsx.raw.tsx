@@ -1,4 +1,5 @@
-import { useState } from '@builder.io/mitosis';
+import { useStore } from '@builder.io/mitosis';
+import type { JSX } from '../../../../jsx-runtime';
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -6,7 +7,7 @@ type Props = {
 };
 
 export default function ClassNameCode(props: Props) {
-  const state = useState({
+  const state = useStore({
     bindings: 'a binding',
   });
 

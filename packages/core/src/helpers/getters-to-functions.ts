@@ -3,11 +3,11 @@ import { MitosisComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
 
 /**
- * Map getters like `useState({ get foo() { ... }})` from `state.foo` to `foo()`
+ * Map getters like `useStore({ get foo() { ... }})` from `state.foo` to `foo()`
  */
 export const gettersToFunctions = (json: MitosisComponent) => {
   const getterKeys = Object.keys(json.state).filter((item) => {
-    const value = json.state[item];
+    const value = json.state[item]?.code;
     if (
       typeof value === 'string' &&
       value.startsWith(methodLiteralPrefix) &&

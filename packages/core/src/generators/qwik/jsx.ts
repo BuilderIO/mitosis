@@ -4,6 +4,18 @@ import { DIRECTIVES } from './directives';
 import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
 import { CssStyles } from './styles';
 
+/**
+ * Convert a Mitosis nodes to a JSX nodes.
+ *
+ * @param file File into which the output will be written to.
+ * @param directives Store for directives which we came across so that they can be imported.
+ * @param handlers A set of handlers which we came across so that they can be rendered
+ * @param children A list of children to convert to JSX
+ * @param styles Store for styles which we came across so that they can be rendered.
+ * @param parentSymbolBindings A set of bindings from parent to be written into the child.
+ * @param root True if this is the root JSX, and may need a Fragment wrapper.
+ * @returns
+ */
 export function renderJSXNodes(
   file: File,
   directives: Map<string, string>,
@@ -14,47 +26,43 @@ export function renderJSXNodes(
   root = true,
 ): any {
   return function (this: SrcBuilder) {
+    const srcBuilder = this;
     if (children.length == 0) return;
     if (root) this.emit('(');
     const needsFragment =
-      root && (children.length > 1 || isInlinedDirective(children[0]));
+      root && (children.length > 1 || (children.length && isInlinedDirective(children[0])));
     file.import(file.qwikModule, 'h');
+    const fragmentSymbol = file.import(file.qwikModule, 'Fragment');
     if (needsFragment) {
-      this.jsxBeginFragment(file.import(file.qwikModule, 'Fragment'));
+      this.jsxBeginFragment(fragmentSymbol);
     }
     children.forEach((child) => {
       if (isEmptyTextNode(child)) return;
       if (isTextNode(child)) {
-        if (child.bindings._text?.code !== undefined) {
-          if (child.bindings._text.code == 'props.children') {
-            this.file.import(this.file.qwikModule, 'Slot');
-            this.jsxBegin('Slot', {}, {});
-            this.jsxEnd('Slot');
-          } else {
-            this.jsxTextBinding(child.bindings._text.code);
-          }
-        } else {
-          this.isJSX
-            ? this.emit(child.properties._text)
-            : this.jsxTextBinding(quote(child.properties._text!));
+        const text = child.properties._text;
+        const textExpr = child.bindings._text?.code;
+        if (typeof text == 'string') {
+          this.isJSX ? this.emit(text) : this.jsxTextBinding(quote(text));
+        } else if (typeof textExpr == 'string') {
+          this.isJSX ? this.emit('{', textExpr, '}') : this.jsxTextBinding(textExpr);
         }
+      } else if (isSlotProjection(child)) {
+        this.file.import(this.file.qwikModule, 'Slot');
+        this.jsxBegin('Slot', {}, {});
+        this.jsxEnd('Slot');
       } else {
         let childName = child.name;
         const directive = DIRECTIVES[childName];
         if (typeof directive == 'function') {
-          this.emit(
-            directive(child, () =>
-              renderJSXNodes(
-                file,
-                directives,
-                handlers,
-                child.children,
-                styles,
-                {},
-                false,
-              ).call(this),
-            ),
-          );
+          const blockFn = mitosisNodeToRenderBlock(child.children);
+          const meta = child.meta;
+          Object.keys(meta).forEach((key) => {
+            const value = meta[key];
+            if (isMitosisNode(value)) {
+              (blockFn as any)[key] = mitosisNodeToRenderBlock([value]);
+            }
+          });
+          this.emit(directive(child, blockFn));
           !this.isJSX && this.emit(',');
         } else {
           if (typeof directive == 'string') {
@@ -64,13 +72,13 @@ export function renderJSXNodes(
               const code = DIRECTIVES[name];
               typeof code == 'string' && directives.set(name, code);
             });
-            if (file.module !== 'med') {
+            if (file.module !== 'med' && file.imports.hasImport(childName)) {
               file.import('./med.js', childName);
             }
           }
           if (isSymbol(childName)) {
             // TODO(misko): We are hard coding './med.js' which is not right.
-            file.import('./med.js', childName);
+            !file.imports.hasImport(childName) && file.import('./med.js', childName);
             let exportedChildName = file.exports.get(childName);
             if (exportedChildName) {
               childName = exportedChildName;
@@ -92,12 +100,7 @@ export function renderJSXNodes(
             }
           }
           const symbolBindings: Record<string, string> = {};
-          const bindings = rewriteHandlers(
-            file,
-            handlers,
-            child.bindings,
-            symbolBindings,
-          );
+          const bindings = rewriteHandlers(file, handlers, child.bindings, symbolBindings);
           this.jsxBegin(childName, props, {
             ...bindings,
             ...parentSymbolBindings,
@@ -120,6 +123,17 @@ export function renderJSXNodes(
       this.jsxEndFragment();
     }
     if (root) this.emit(')');
+
+    function mitosisNodeToRenderBlock(children: MitosisNode[]) {
+      return () => {
+        children = children.filter((c) => !isEmptyTextNode(c));
+        const childNeedsFragment =
+          children.length > 1 || (children.length && isTextNode(children[0]));
+        childNeedsFragment && srcBuilder.jsxBeginFragment(fragmentSymbol);
+        renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(srcBuilder);
+        childNeedsFragment && srcBuilder.jsxEndFragment();
+      };
+    }
   };
 }
 
@@ -127,13 +141,8 @@ function isSymbol(name: string): boolean {
   return name.charAt(0) == name.charAt(0).toUpperCase();
 }
 
-function addClass(
-  className: string,
-  existingClass: string | undefined,
-): string {
-  return [className, ...(existingClass ? existingClass.split(' ') : [])].join(
-    ' ',
-  );
+function addClass(className: string, existingClass: string | undefined): string {
+  return [className, ...(existingClass ? existingClass.split(' ') : [])].join(' ');
 }
 
 function isEmptyTextNode(child: MitosisNode) {
@@ -141,10 +150,18 @@ function isEmptyTextNode(child: MitosisNode) {
 }
 
 function isTextNode(child: MitosisNode) {
-  return (
-    child.properties._text !== undefined ||
-    child.bindings._text?.code !== undefined
-  );
+  if (child.properties._text !== undefined) {
+    return true;
+  }
+  const code = child.bindings._text?.code;
+  if (code !== undefined && code !== 'props.children') {
+    return true;
+  }
+  return false;
+}
+
+function isSlotProjection(child: MitosisNode) {
+  return child.bindings._text?.code === 'props.children';
 }
 
 /**
@@ -167,26 +184,27 @@ function rewriteHandlers(
   },
   symbolBindings: Record<string, string>,
 ): { [key: string]: { code: string; arguments?: string[] } } {
-  const outBindings: { [key: string]: { code: string; arguments?: string[] } } =
-    {};
+  const outBindings: { [key: string]: { code: string; arguments?: string[] } } = {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
-      let { code: binding } = bindings[key]!;
+      let bindingExpr: string | undefined = bindings?.[key]?.code;
       let handlerBlock: string | undefined;
-      if (binding != null) {
+      if (bindingExpr != null) {
         if (key == 'css') {
           continue;
-        } else if ((handlerBlock = handlers.get(binding))) {
-          key = `${key}Qrl`;
-          binding = invoke(file.import(file.qwikModule, 'qrl'), [
+        } else if ((handlerBlock = handlers.get(bindingExpr))) {
+          key = `${key}$`;
+          bindingExpr = invoke(file.import(file.qwikModule, 'qrl'), [
             quote(file.qrlPrefix + 'high.js'),
             quote(handlerBlock),
             '[state]',
           ]) as any;
         } else if (symbolBindings && key.startsWith('symbol.data.')) {
-          symbolBindings[lastProperty(key)] = binding;
+          symbolBindings[lastProperty(key)] = bindingExpr;
+        } else if (key.startsWith('component.options.')) {
+          key = lastProperty(key);
         }
-        outBindings[key] = { code: binding as string };
+        outBindings[key] = { code: bindingExpr as string };
       }
     }
   }

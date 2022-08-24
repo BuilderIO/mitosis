@@ -1,7 +1,4 @@
-export function minify(
-  messageParts: TemplateStringsArray,
-  ...expressions: readonly any[]
-): string {
+export function minify(messageParts: TemplateStringsArray, ...expressions: readonly any[]): string {
   let text = '';
   for (let i = 0; i < messageParts.length; i++) {
     const part = messageParts[i];

@@ -2,6 +2,35 @@
 
 A Mitosis plugin containing rules that help you write valid and idiomatic Mitosis code
 
+## Setup
+
+First, make sure you have [ESLint setup correctly](https://eslint.org/docs/user-guide/getting-started#installation-and-usage). Then, install this plugin by running:
+
+```bash
+yarn add -D @builder.io/eslint-plugin-mitosis@dev
+```
+
+Finally, add the plugin to the `plugins` array, and the rules you want to the `rules` array:
+
+```js
+module.exports = {
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  plugins: ['@builder.io/mitosis'],
+  extends: [
+    // Use this approach for our recommended rules configuration
+    'plugin:@builder.io/mitosis/recommended',
+  ],
+  rules: {
+    // Use this to configure rules individually
+    '@builder.io/mitosis/css-no-vars': 'error',
+  },
+};
+```
+
 ## Rules
 
 - [css-no-vars](./docs/rules/css-no-vars.md)
@@ -17,32 +46,3 @@ A Mitosis plugin containing rules that help you write valid and idiomatic Mitosi
 - [only-default-function-and-imports](./docs/rules/only-default-function-and-imports.md)
 - [ref-no-current](./docs/rules/ref-no-current.md)
 - [use-state-var-declarator](./docs/rules/use-state-var-declarator.md)
-
-## Setup
-
-First, make sure you have [ESLint setup correctly](https://eslint.org/docs/user-guide/getting-started#installation-and-usage). Then, install this plugin by running:
-
-```bash
-yarn add -D @builder.io/eslint-plugin-mitosis@dev
-```
-
-Finally, add the plugin to the `plugins` array, and the rules you want to the `rules` array:
-
-```js
-module.exports = {
-  // [...other settings]
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-  plugins: [
-    // [...other plugins]
-    '@builder.io/mitosis',
-  ],
-  rules: {
-    // example of adding one of our rules
-    '@builder.io/mitosis/css-no-vars': 'error',
-  },
-};
-```

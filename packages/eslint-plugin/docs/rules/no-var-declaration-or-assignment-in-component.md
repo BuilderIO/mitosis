@@ -48,7 +48,15 @@ export default function MyComponent(props) {
 export default function MyComponent(props) {
   const context = useContext(x)
 
-  const state = useState({ name: null })
+  const state = useStore({ name: null })
+
+  return (
+      <div />
+  );
+}
+
+export default function MyComponent(props) {
+  const ref = useRef()
 
   return (
       <div />

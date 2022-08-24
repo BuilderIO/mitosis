@@ -13,10 +13,7 @@ export const getRenderOptions = (node: MitosisNode) => {
 
 type CompileAwayComponentsOptions = {
   components: {
-    [key: string]: (
-      node: MitosisNode,
-      context: TraverseContext,
-    ) => MitosisNode | void;
+    [key: string]: (node: MitosisNode, context: TraverseContext) => MitosisNode | void;
   };
 };
 

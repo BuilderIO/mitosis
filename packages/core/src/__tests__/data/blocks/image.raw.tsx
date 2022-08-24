@@ -1,15 +1,9 @@
-import {
-  useState,
-  useRef,
-  onMount,
-  onUnMount,
-  Show,
-} from '@builder.io/mitosis';
+import { useRef, onMount, onUnMount, Show, useStore, useState } from '@builder.io/mitosis';
 
 // TODO: AMP Support?
 
 export interface ImageProps {
-  class?: string;
+  _class?: string;
   image: string;
   sizes?: string;
   lazy?: boolean;
@@ -27,26 +21,25 @@ export interface ImageProps {
 }
 
 export default function Image(props: ImageProps) {
-  const pictureRef = useRef();
+  const pictureRef = useRef<HTMLElement>();
 
-  const state = useState({
+  const state = useStore({
     scrollListener: null as null | (() => void),
     imageLoaded: false,
-    load: false,
     setLoaded() {
       state.imageLoaded = true;
     },
-    isBrowser() {
-      return (
-        typeof window !== 'undefined' &&
-        window.navigator.product != 'ReactNative'
-      );
-    },
     useLazyLoading() {
       // TODO: Add more checks here, like testing for real web browsers
-      return !!props.lazy && state.isBrowser();
+      return !!props.lazy && isBrowser();
     },
   });
+
+  function isBrowser() {
+    return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+  }
+
+  const [load, setLoad] = useState(false);
 
   onMount(() => {
     if (state.useLazyLoading()) {
@@ -56,7 +49,7 @@ export default function Image(props: ImageProps) {
           const rect = pictureRef.getBoundingClientRect();
           const buffer = window.innerHeight / 2;
           if (rect.top < window.innerHeight + buffer) {
-            state.load = true;
+            setLoad(true);
             state.scrollListener = null;
             window.removeEventListener('scroll', listener);
           }
@@ -80,7 +73,7 @@ export default function Image(props: ImageProps) {
   return (
     <>
       <picture ref={pictureRef}>
-        <Show when={!state.useLazyLoading() || state.load}>
+        <Show when={!state.useLazyLoading() || load}>
           <img
             alt={props.altText}
             aria-role={props.altText ? 'presentation' : undefined}
@@ -90,7 +83,7 @@ export default function Image(props: ImageProps) {
               objectFit: 'cover',
               objectPosition: 'center',
             }}
-            class={'builder-image' + (props.class ? ' ' + props.class : '')}
+            class={'builder-image' + (props._class ? ' ' + props._class : '')}
             src={props.image}
             onLoad={() => state.setLoaded()}
             // TODO: memoize on image on client

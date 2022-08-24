@@ -9,18 +9,22 @@ import {
   componentToLiquid,
   componentToReact,
   componentToStencil,
+  componentToMarko,
   componentToReactNative,
   componentToSolid,
   componentToSvelte,
   componentToSwift,
+  componentToPreact,
+  componentToLit,
+  componentToQwik,
   componentToTemplate,
-  componentToVue,
   liquidToBuilder,
   angularToMitosisComponent,
   mapStyles,
   parseJsx,
   parseReactiveScript,
   reactiveScriptRe,
+  componentToVue2,
 } from '@builder.io/mitosis';
 import {
   Button,
@@ -40,10 +44,9 @@ import {
 import { Alert } from '@material-ui/lab';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
 import React, { useRef, useState } from 'react';
-import MonacoEditor from 'react-monaco-editor';
+import Image from 'next/image';
+
 import { adapt } from 'webcomponents-in-react';
-import githubLogo from '../assets/GitHub-Mark-Light-64px.png';
-import logo from '../assets/mitosis-logo-white.png';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
 import { defaultCode, templates } from '../constants/templates';
@@ -55,11 +58,12 @@ import { localStorageSet } from '../functions/local-storage-set';
 import { setQueryParam } from '../functions/set-query-param';
 import { useEventListener } from '../hooks/use-event-listener';
 import { useReaction } from '../hooks/use-reaction';
-import { CodeEditor } from './CodeEditor';
 import { Show } from './Show';
 import { TextLink } from './TextLink';
 import stringify from 'fast-json-stable-stringify';
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
+import { CodeEditor } from './CodeEditor';
 
 type Position = { row: number; column: number };
 
@@ -147,7 +151,6 @@ const AlphaPreviewMessage = () => (
 const builderOptions = {
   useDefaultStyles: false,
   hideAnimateTab: true,
-  previewUrl: 'https://jsx-lite.builder.io/preview.html',
 };
 
 const BuilderEditor = adapt('builder-editor');
@@ -219,14 +222,18 @@ const plugins = [
       ...styles,
       boxSizing: undefined,
       flexShrink: undefined,
-      alignItems:
-        styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
     }),
   }),
 ];
 
+type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
+type Editor = EditorRefArgs[0];
+
 // TODO: Build this Fiddle app with Mitosis :)
 export default function Fiddle() {
+  const monaco = useMonaco();
+
   const [staticState] = useState(() => ({
     ignoreNextBuilderUpdate: false,
   }));
@@ -243,8 +250,8 @@ export default function Fiddle() {
     isDraggingJSXCodeBar: false,
     jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
     builderPaneHeight: Number(localStorageGet('builderPaneHeight')) || 35,
-    setEditorRef(editor: monaco.editor.IStandaloneCodeEditor | void) {
-      monacoEditorRef.current = editor || null;
+    setEditorRef(editor: Editor, monaco: EditorRefArgs[1]) {
+      monacoEditorRef.current = editor;
       if (editor) {
         if (SYNC_SELECTIONS) {
           editor.onDidChangeCursorPosition((event) => {
@@ -260,17 +267,14 @@ export default function Fiddle() {
             });
 
             const elementIndex =
-              Array.from(state.code.substring(0, index).matchAll(openTagRe))
-                .length - 1;
+              Array.from(state.code.substring(0, index).matchAll(openTagRe)).length - 1;
 
             if (elementIndex === -1) {
               return;
             }
 
             (
-              document.querySelector(
-                'builder-editor iframe',
-              ) as HTMLIFrameElement
+              document.querySelector('builder-editor iframe') as HTMLIFrameElement
             )?.contentWindow?.postMessage(
               {
                 type: 'builder.changeSelection',
@@ -286,14 +290,11 @@ export default function Fiddle() {
     },
     options: {
       reactStyleType:
-        localStorageGet('options.reactStyleType') ||
-        ('styled-jsx' as 'emotion' | 'styled-jsx'),
+        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
       reactStateType:
-        localStorageGet('options.reactStateType') ||
-        ('useState' as 'useState' | 'mobx' | 'solid'),
+        localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
-        localStorageGet('options.svelteStateType') ||
-        ('variables' as 'variables' | 'proxies'),
+        localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -309,9 +310,7 @@ export default function Fiddle() {
         format: 'html',
       }).state;
 
-      const builderJson = await liquidToBuilder(
-        state.inputCode.replace(reactiveScriptRe, ''),
-      );
+      const builderJson = await liquidToBuilder(state.inputCode.replace(reactiveScriptRe, ''));
 
       const jsx = builderContentToMitosisComponent({
         data: { blocks: builderJson },
@@ -331,7 +330,6 @@ export default function Fiddle() {
             ? await this.parseLiquidInputCode()
             : parseJsx(state.code);
 
-        console.log('json', json);
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid({ plugins })({ component: json })
@@ -339,6 +337,15 @@ export default function Fiddle() {
             ? componentToHtml({ plugins })({ component: json })
             : state.outputTab === 'webcomponents'
             ? componentToCustomElement({ plugins })({ component: json })
+            : state.outputTab === 'preact'
+            ? componentToPreact({ plugins })({ component: json })
+            : state.outputTab === 'lit'
+            ? componentToLit({ plugins })({ component: json })
+            : state.outputTab === 'qwik'
+            ? componentToQwik({ plugins })({ component: json })
+                // Remove the comment at the
+                .replace('// GENERATED BY MITOSIS', '')
+                .trim()
             : state.outputTab === 'react'
             ? componentToReact({
                 stylesType: state.options.reactStyleType,
@@ -347,6 +354,10 @@ export default function Fiddle() {
               })({ component: json })
             : state.outputTab === 'stencil'
             ? componentToStencil({
+                plugins,
+              })({ component: json })
+            : state.outputTab === 'marko'
+            ? componentToMarko({
                 plugins,
               })({ component: json })
             : state.outputTab === 'swift'
@@ -383,7 +394,7 @@ export default function Fiddle() {
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
             ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : componentToVue({ plugins })({ component: json, path: '' });
+            : componentToVue2({ plugins })({ component: json, path: '' });
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
@@ -431,9 +442,7 @@ export default function Fiddle() {
   useEventListener<MessageEvent>(window, 'message', (e) => {
     if (e.data?.type === 'builder.saveCommand') {
       if (e.data.data || state.pendingBuilderChange) {
-        state.applyPendingBuilderChange(
-          e.data.data || state.pendingBuilderChange,
-        );
+        state.applyPendingBuilderChange(e.data.data || state.pendingBuilderChange);
       }
     } else if (e.data?.type === 'builder.selectionChange') {
       if (SYNC_SELECTIONS) {
@@ -453,17 +462,11 @@ export default function Fiddle() {
               if (i++ === index) {
                 const index = match.index;
                 const length = match[1].length;
-                if (monacoEditorRef) {
+                if (monaco) {
                   const start = indexToRowAndColumn(code, index - 1);
                   const end = indexToRowAndColumn(code, index + length + 1);
-                  const startPosition = new monaco.Position(
-                    start.row + 1,
-                    start.column + 1,
-                  );
-                  const endPosition = new monaco.Position(
-                    end.row + 1,
-                    end.column + 1,
-                  );
+                  const startPosition = new monaco.Position(start.row + 1, start.column + 1);
+                  const endPosition = new monaco.Position(end.row + 1, end.column + 1);
 
                   monacoEditorRef.current?.setSelection(
                     monaco.Selection.fromPositions(startPosition, endPosition),
@@ -478,9 +481,7 @@ export default function Fiddle() {
     }
   });
 
-  const monacoEditorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(
-    null,
-  );
+  const monacoEditorRef = useRef<Editor | null>(null);
 
   useReaction(
     () => state.jsxCodeTabWidth,
@@ -570,6 +571,11 @@ export default function Fiddle() {
             {
               backgroundColor: 'transparent !important',
             },
+
+          'a > span': {
+            color: 'white',
+            textDecoration: 'none',
+          },
         }}
       >
         <div
@@ -584,6 +590,8 @@ export default function Fiddle() {
               flexShrink: 0,
               alignItems: 'center',
               color: 'white',
+              paddingTop: '5px',
+              paddingBottom: '5px',
             }}
           >
             <a
@@ -592,19 +600,10 @@ export default function Fiddle() {
               href="https://github.com/builderio/mitosis"
               css={{
                 marginRight: 'auto',
+                paddingLeft: 20,
               }}
             >
-              <img
-                alt="Mitosis Logo"
-                src={logo}
-                css={{
-                  marginLeft: 20,
-                  objectFit: 'contain',
-                  width: 130,
-                  marginBottom: -5,
-                  height: 60,
-                }}
-              />
+              <Image alt="Mitosis Logo" src={'/mitosis-logo-white.png'} width={130} height={40} />
             </a>
             <div
               css={{
@@ -625,9 +624,7 @@ export default function Fiddle() {
               }}
               href="https://github.com/builderio/figma-html"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                Figma
-              </span>
+              <span css={{ [smallBreakpoint]: { display: 'none' } }}>Figma</span>
               <img
                 width={20}
                 src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ffb77e93c28e044178e4694cc939bf4cf"
@@ -643,34 +640,20 @@ export default function Fiddle() {
                 display: 'flex',
                 alignItems: 'center',
               }}
-              href="https://github.com/builderio/vscode"
-            >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
-                VS Code
-              </span>
-              <img
-                width={30}
-                src="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2Ff83e94a9c504427cbc8a557f682efec3"
-                css={{ marginLeft: 10 }}
-                alt="VS Code Logo"
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              css={{
-                marginRight: 25,
-                display: 'flex',
-                alignItems: 'center',
-              }}
               href="https://github.com/builderio/mitosis"
             >
-              <span css={{ [smallBreakpoint]: { display: 'none' } }}>
+              <span
+                css={{
+                  [smallBreakpoint]: { display: 'none' },
+                  marginRight: '5px',
+                }}
+              >
                 Source
               </span>
-              <img
+              <Image
                 width={30}
-                src={githubLogo}
+                height={30}
+                src={'/github-logo.png'}
                 css={{ marginLeft: 10 }}
                 alt="Github Mark"
               />
@@ -727,9 +710,7 @@ export default function Fiddle() {
                   padding: '0 15px',
                   marginTop: 'auto',
                   marginBottom: 'auto',
-                  color: theme.darkMode
-                    ? 'rgba(255, 255, 255, 0.7)'
-                    : 'rgba(0, 0, 0, 0.7)',
+                  color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                 }}
               >
                 Inputs:
@@ -776,9 +757,7 @@ export default function Fiddle() {
                   }}
                   renderValue={(value) => (
                     <span css={{ textTransform: 'capitalize' }}>
-                      {value === '_none'
-                        ? 'Choose template'
-                        : (value as string)}
+                      {value === '_none' ? 'Choose template' : (value as string)}
                     </span>
                   )}
                   defaultValue="_none"
@@ -813,12 +792,12 @@ export default function Fiddle() {
                     minimap: { enabled: false },
                     scrollbar: { vertical: 'hidden' },
                   }}
-                  editorDidMount={(editor) => state.setEditorRef(editor)}
+                  onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
                   theme={monacoTheme}
                   height="calc(100vh - 105px)"
                   language="typescript"
                   value={state.code}
-                  onChange={(val) => (state.code = val)}
+                  onChange={(val = '') => (state.code = val)}
                 />
               </div>
             </Show>
@@ -838,7 +817,7 @@ export default function Fiddle() {
                   selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
-                onChange={(value) => {
+                onChange={(value = '') => {
                   state.inputCode = value;
                 }}
                 theme={monacoTheme}
@@ -861,7 +840,7 @@ export default function Fiddle() {
                   selectionHighlight: false,
                   scrollbar: { vertical: 'hidden' },
                 }}
-                onChange={(value) => {
+                onChange={(value = '') => {
                   state.inputCode = value;
                 }}
                 theme={monacoTheme}
@@ -961,19 +940,10 @@ export default function Fiddle() {
                   }
                   value="react"
                 />
-
-                <Tab
-                  label={<TabLabelWithIcon label="Angular" />}
-                  value="angular"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Svelte" />}
-                  value="svelte"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="React Native" />}
-                  value="reactNative"
-                />
+                <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
+                <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
+                <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
                 <Tab
                   label={
@@ -984,14 +954,11 @@ export default function Fiddle() {
                   }
                   value="solid"
                 />
-                <Tab
-                  label={<TabLabelWithIcon label="Stencil" />}
-                  value="stencil"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Webcomponents" />}
-                  value="webcomponents"
-                />
+                <Tab label={<TabLabelWithIcon label="Stencil" />} value="stencil" />
+                <Tab label={<TabLabelWithIcon label="Marko" />} value="marko" />
+                <Tab label={<TabLabelWithIcon label="Preact" />} value="preact" />
+                <Tab label={<TabLabelWithIcon label="Lit" />} value="lit" />
+                <Tab label={<TabLabelWithIcon label="Webcomponents" />} value="webcomponents" />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
                   label={
@@ -1002,14 +969,8 @@ export default function Fiddle() {
                   }
                   value="liquid"
                 />
-                <Tab
-                  label={<TabLabelWithIcon label="Template" />}
-                  value="template"
-                />
-                <Tab
-                  label={<TabLabelWithIcon label="Mitosis" />}
-                  value="mitosis"
-                />
+                <Tab label={<TabLabelWithIcon label="Template" />} value="template" />
+                <Tab label={<TabLabelWithIcon label="Mitosis" />} value="mitosis" />
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -1049,10 +1010,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   Style library:
                 </Typography>
                 <RadioGroup
@@ -1093,11 +1051,7 @@ export default function Fiddle() {
               </div>
               <Divider css={{ opacity: 0.6 }} />
             </Show>
-            <Show
-              when={
-                state.outputTab === 'react' || state.outputTab === 'reactNative'
-              }
-            >
+            <Show when={state.outputTab === 'react' || state.outputTab === 'reactNative'}>
               <div
                 css={{
                   display: 'flex',
@@ -1105,10 +1059,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   State library:
                 </Typography>
                 <RadioGroup
@@ -1163,10 +1114,7 @@ export default function Fiddle() {
                   backgroundColor: 'rgba(0, 0, 0, 0.03)',
                 }}
               >
-                <Typography
-                  variant="body2"
-                  css={{ marginRight: 'auto', marginLeft: 10 }}
-                >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
                   State handling:
                 </Typography>
                 <RadioGroup
@@ -1226,10 +1174,12 @@ export default function Fiddle() {
                   language={
                     state.outputTab === 'swift'
                       ? 'swift'
-                      : state.outputTab === 'json' ||
-                        state.outputTab === 'builder'
+                      : state.outputTab === 'json' || state.outputTab === 'builder'
                       ? 'json'
                       : state.outputTab === 'react' ||
+                        state.outputTab === 'preact' ||
+                        state.outputTab === 'qwik' ||
+                        state.outputTab === 'lit' ||
                         state.outputTab === 'reactNative' ||
                         state.outputTab === 'mitosis' ||
                         state.outputTab === 'template' ||
@@ -1277,9 +1227,7 @@ export default function Fiddle() {
                 flexGrow: 1,
                 textAlign: 'left',
                 padding: '10px 15px',
-                color: theme.darkMode
-                  ? 'rgba(255, 255, 255, 0.7)'
-                  : 'rgba(0, 0, 0, 0.7)',
+                color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
               }}
             >
               Builder.io
@@ -1312,9 +1260,7 @@ export default function Fiddle() {
             {`
             builder-editor { 
               flex-grow: 1; 
-              pointer-events: ${
-                state.isDraggingBuilderCodeBar ? 'none' : 'auto'
-              }; 
+              pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
             }`}
           </style>
           <BuilderEditor

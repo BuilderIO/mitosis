@@ -305,6 +305,7 @@ Object {
     },
     "set": Object {},
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [
     Object {
@@ -365,15 +366,21 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "RenderBlock",
+  "propsTypeRef": "RenderBlockProps",
+  "refs": Object {},
   "state": Object {
-    "actions": "@builder.io/mitosis/method:get actions() {
+    "actions": Object {
+      "code": "@builder.io/mitosis/method:get actions() {
   return getBlockActions({
     block: state.useBlock,
     state: builderContext.state,
     context: builderContext.context
   });
 }",
-    "component": "@builder.io/mitosis/method:get component() {
+      "type": "getter",
+    },
+    "component": Object {
+      "code": "@builder.io/mitosis/method:get component() {
   const componentName = state.useBlock.component?.name;
 
   if (!componentName) {
@@ -391,49 +398,84 @@ Object {
 
   return ref;
 }",
-    "componentInfo": "@builder.io/mitosis/method:get componentInfo() {
+      "type": "getter",
+    },
+    "componentInfo": Object {
+      "code": "@builder.io/mitosis/method:get componentInfo() {
   return state.component?.info;
 }",
-    "componentOptions": "@builder.io/mitosis/method:get componentOptions() {
+      "type": "getter",
+    },
+    "componentOptions": Object {
+      "code": "@builder.io/mitosis/method:get componentOptions() {
   return getBlockComponentOptions(state.useBlock);
 }",
-    "componentRef": "@builder.io/mitosis/method:get componentRef() {
+      "type": "getter",
+    },
+    "componentRef": Object {
+      "code": "@builder.io/mitosis/method:get componentRef() {
   return state.component?.component;
 }",
-    "css": "@builder.io/mitosis/method:get css() {
+      "type": "getter",
+    },
+    "css": Object {
+      "code": "@builder.io/mitosis/method:get css() {
   return getBlockStyles(state.useBlock);
 }",
-    "properties": "@builder.io/mitosis/method:get properties() {
+      "type": "getter",
+    },
+    "properties": Object {
+      "code": "@builder.io/mitosis/method:get properties() {
   return getBlockProperties(state.useBlock);
 }",
-    "tagName": "@builder.io/mitosis/method:get tagName() {
+      "type": "getter",
+    },
+    "tagName": Object {
+      "code": "@builder.io/mitosis/method:get tagName() {
   return (getBlockTag(state.useBlock) as any);
 }",
-    "useBlock": "@builder.io/mitosis/method:get useBlock() {
+      "type": "getter",
+    },
+    "useBlock": Object {
+      "code": "@builder.io/mitosis/method:get useBlock() {
   return getProcessedBlock({
     block: props.block,
     state: builderContext.state,
     context: builderContext.context
   });
 }",
+      "type": "getter",
+    },
   },
   "subComponents": Array [],
+  "types": Array [
+    "export type RenderBlockProps = {
+  block: BuilderBlock;
+  index: number;
+};",
+  ],
 }
 `;
 
 exports[`Context Use and set context in complex components 2`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export type RenderBlockProps = {
+  block: BuilderBlock;
+  index: number;
+};
 import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
 import { getBlockProperties } from \\"../functions/get-block-properties\\";
 import { getBlockStyles } from \\"../functions/get-block-styles\\";
 import { getBlockTag } from \\"../functions/get-block-tag\\";
 import { components } from \\"../functions/register-component\\";
-import BuilderContext from \\"../context/builder.context\\";
+import BuilderContext from \\"../context/builder.context.js\\";
 import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props) {
+export default function RenderBlock(props: RenderBlockProps) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -613,6 +655,7 @@ Object {
       },
     },
   },
+  "exports": Object {},
   "hooks": Object {},
   "imports": Array [
     Object {
@@ -631,17 +674,30 @@ Object {
   "inputs": Array [],
   "meta": Object {},
   "name": "ComponentWithContext",
+  "propsTypeRef": "ComponentWithContextProps",
+  "refs": Object {},
   "state": Object {},
   "subComponents": Array [],
+  "types": Array [
+    "export interface ComponentWithContextProps {
+  content: string
+}",
+  ],
 }
 `;
 
 exports[`Context Use and set context in components 2`] = `
-"import { useContext } from \\"react\\";
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+export default function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (
@@ -671,10 +727,15 @@ exports[`Context Use and set context in components 3`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props) {
+export default function ComponentWithContext(props: ComponentWithContextProps) {
   const foo = useContext(Context1);
 
   return (

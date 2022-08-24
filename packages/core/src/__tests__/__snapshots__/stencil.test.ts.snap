@@ -1,24 +1,93 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Solid Basic 1`] = `
+exports[`Stencil AdvancedRef 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-ref-component\\",
+  styles: \`
+       .input {
+         color: red;
+       }
+\`,
+})
+export default class MyBasicRefComponent {
+  @Prop() showInput: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  componentDidUpdate() {
+    console.log(\\"Received an update\\");
+  }
+
+  render() {
+    return (
+      <div>
+        {this.showInput ? (
+          <Fragment>
+            <input
+              ref={(el) => (this.inputRef = el)}
+              value={this.name}
+              onBlur={(event) => this.onBlur()}
+              onInput={(event) => (this.name = event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Basic 1`] = `
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
   tag: \\"my-basic-component\\",
   styles: \`
-    .div {
-      padding: 10px;
-    }
+      .div {
+        padding: 10px;
+      }
 \`,
 })
 export default class MyBasicComponent {
   @State() name = \\"Steve\\";
 
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+
   render() {
     return (
       <div>
         <input
-          value={this.name}
+          value={DEFAULT_VALUES.name || this.name}
           onInput={(myEvent) => (this.name = myEvent.target.value)}
         />
         Hello! I can run in React, Vue, Solid, or Liquid!
@@ -29,7 +98,312 @@ export default class MyBasicComponent {
 "
 `;
 
-exports[`Solid Button 1`] = `
+exports[`Stencil Basic Context 1`] = `
+"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @State() name = \\"PatrickJS\\";
+
+  onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  componentDidLoad() {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }
+
+  render() {
+    return (
+      <div>
+        {myService.method(\\"hello\\") + this.name}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        <input onInput={(event) => this.onChange} />
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Basic OnMount Update 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-on-mount-update-component\\",
+})
+export default class MyBasicOnMountUpdateComponent {
+  @Prop() hi: any;
+  @Prop() bye: any;
+
+  @State() name = \\"PatrickJS\\";
+  @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  componentDidLoad() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  }
+
+  render() {
+    return (
+      <div>
+        Hello
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Basic Outputs 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-outputs-component\\",
+})
+export default class MyBasicOutputsComponent {
+  @Prop() onMessage: any;
+  @Prop() onEvent: any;
+  @Prop() message: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  componentDidLoad() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil Basic Outputs Meta 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-outputs-component\\",
+})
+export default class MyBasicOutputsComponent {
+  @Prop() onMessage: any;
+  @Prop() onEvent: any;
+  @Prop() message: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  componentDidLoad() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil BasicChildComponent 1`] = `
+"import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-child-component\\",
+})
+export default class MyBasicChildComponent {
+  @State() name = \\"Steve\\";
+  @State() dev = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        <MyBasicComponent id={this.dev}></MyBasicComponent>
+
+        <div>
+          <MyBasicOnMountUpdateComponent
+            hi={this.name}
+            bye={this.dev}
+          ></MyBasicOnMountUpdateComponent>
+        </div>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil BasicFor 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-for-component\\",
+})
+export default class MyBasicForComponent {
+  @State() name = \\"PatrickJS\\";
+  @State() names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  componentDidLoad() {
+    console.log(\\"onMount code\\");
+  }
+
+  render() {
+    return (
+      <div>
+        {this.names?.map((person, index) => (
+          <Fragment>
+            <input
+              value={this.name}
+              onInput={(event) => {
+                this.name = event.target.value + \\" and \\" + person;
+              }}
+            />
+            Hello
+            {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+            Liquid!
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil BasicRef 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-ref-component\\",
+  styles: \`
+       .input {
+         color: red;
+       }
+\`,
+})
+export default class MyBasicRefComponent {
+  @Prop() showInput: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  onBlur = function onBlur() {
+    // Maintain focus
+    inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.name.toLowerCase();
+  };
+
+  render() {
+    return (
+      <div>
+        {this.showInput ? (
+          <Fragment>
+            <input
+              ref={(el) => (this.inputRef = el)}
+              value={this.name}
+              onBlur={(event) => this.onBlur()}
+              onInput={(event) => (this.name = event.target.value)}
+            />
+
+            <label for=\\"cars\\" ref={(el) => (this.inputNoArgRef = el)}>
+              Choose a car:
+            </label>
+
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
+
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {this.lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil BasicRefAssignment 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-ref-assignment-component\\",
+})
+export default class MyBasicRefAssignmentComponent {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef);
+    holdValueRef = holdValueRef + \\"JS\\";
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(evt) => this.handlerClick(evt)}>Click</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil BasicRefPrevious 1`] = `
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-previous-component\\",
+})
+export default class MyPreviousComponent {
+  @State() count = 0;
+
+  componentDidUpdate() {
+    prevCount = this.count;
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>
+          Now:
+          {this.count}, before:
+          {prevCount}
+        </h1>
+
+        <button onClick={(event) => (this.count += 1)}>Increment</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Button 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -70,7 +444,7 @@ export default class Button {
 "
 `;
 
-exports[`Solid Columns 1`] = `
+exports[`Stencil Columns 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -135,7 +509,62 @@ export default class Column {
 "
 `;
 
-exports[`Solid CustomCode 1`] = `
+exports[`Stencil ContentSlotHtml 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"content-slot-code\\",
+})
+export default class ContentSlotCode {
+  @Prop() slotTesting: any;
+
+  render() {
+    return (
+      <div>
+        <Slot name={this.slotTesting}></Slot>
+
+        <div>
+          <hr />
+        </div>
+
+        <div>
+          <Slot></Slot>
+        </div>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil ContentSlotJSX 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"content-slot-jsx-code\\",
+})
+export default class ContentSlotJsxCode {
+  @Prop() slotTesting: any;
+  @Prop() children: any;
+
+  render() {
+    return (
+      <div>
+        {this.slotTesting}
+
+        <div>
+          <hr />
+        </div>
+
+        <div>{this.children}</div>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil CustomCode 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -209,7 +638,7 @@ export default class CustomCode {
 "
 `;
 
-exports[`Solid Embed 1`] = `
+exports[`Stencil Embed 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -283,8 +712,8 @@ export default class CustomCode {
 "
 `;
 
-exports[`Solid Form block 1`] = `
-"import { BuilderBlockComponent as BuilderBlock } from \\"@fake\\";
+exports[`Stencil Form 1`] = `
+"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
@@ -322,12 +751,12 @@ export default class FormComponent {
   @Prop() sendingMessage: any;
   @Prop() successMessage: any;
 
-  @State() state = \\"unsubmitted\\";
+  @State() formState = \\"unsubmitted\\";
   @State() responseData = null;
   @State() formErrorMessage = \\"\\";
 
   get submissionState() {
-    return (Builder.isEditing && this.previewState) || this.state;
+    return (Builder.isEditing && this.previewState) || this.formState;
   }
   onSubmit(
     event: Event & {
@@ -445,7 +874,7 @@ export default class FormComponent {
         }
       }
 
-      this.state = \\"sending\\";
+      this.formState = \\"sending\\";
       const formUrl = \`\${
         builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
       }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
@@ -486,7 +915,7 @@ export default class FormComponent {
           }
 
           this.responseData = body;
-          this.state = res.ok ? \\"success\\" : \\"error\\";
+          this.formState = res.ok ? \\"success\\" : \\"error\\";
 
           if (res.ok) {
             const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
@@ -544,7 +973,7 @@ export default class FormComponent {
           }
 
           this.responseData = err;
-          this.state = \\"error\\";
+          this.formState = \\"error\\";
         }
       );
     }
@@ -559,7 +988,7 @@ export default class FormComponent {
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
-        onSubmit={(event) => this.this.onSubmit(event)}
+        onSubmit={(event) => this.onSubmit(event)}
       >
         {this.builderBlock && this.builderBlock.children ? (
           <>
@@ -573,7 +1002,7 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"error\\" ? (
+        {this.submissionState === \\"error\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"errorMessage\\"
@@ -582,7 +1011,7 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"sending\\" ? (
+        {this.submissionState === \\"sending\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"sendingMessage\\"
@@ -591,13 +1020,13 @@ export default class FormComponent {
           </>
         ) : null}
 
-        {this.this.submissionState === \\"error\\" && this.this.responseData ? (
+        {this.submissionState === \\"error\\" && this.responseData ? (
           <>
-            <pre>{JSON.stringify(this.this.responseData, null, 2)}</pre>
+            <pre>{JSON.stringify(this.responseData, null, 2)}</pre>
           </>
         ) : null}
 
-        {this.this.submissionState === \\"success\\" ? (
+        {this.submissionState === \\"success\\" ? (
           <>
             <BuilderBlocks
               dataPath=\\"successMessage\\"
@@ -612,7 +1041,7 @@ export default class FormComponent {
 "
 `;
 
-exports[`Solid Image 1`] = `
+exports[`Stencil Image 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -629,7 +1058,7 @@ exports[`Solid Image 1`] = `
 export default class Image {
   @Prop() lazy: any;
   @Prop() altText: any;
-  @Prop() class: any;
+  @Prop() _class: any;
   @Prop() image: any;
   @Prop() srcset: any;
   @Prop() sizes: any;
@@ -642,15 +1071,15 @@ export default class Image {
   setLoaded() {
     this.imageLoaded = true;
   }
-  isBrowser() {
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
-  }
-  useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!this.lazy && this.isBrowser();
-  }
+  };
 
   componentDidLoad() {
     if (this.useLazyLoading()) {
@@ -661,7 +1090,7 @@ export default class Image {
           const buffer = window.innerHeight / 2;
 
           if (rect.top < window.innerHeight + buffer) {
-            this.load = true;
+            setLoad(true);
             this.scrollListener = null;
             window.removeEventListener(\\"scroll\\", listener);
           }
@@ -689,7 +1118,11 @@ export default class Image {
           {!this.useLazyLoading() || this.load ? (
             <>
               <img
-                class={\\"builder-image\\" + (props.class ? \\" \\" + props.class : \\"\\")}
+                class={
+                  \\"builder-image\\" +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
+                  \\" img\\"
+                }
                 alt={this.altText}
                 aria-role={this.altText ? \\"presentation\\" : undefined}
                 src={this.image}
@@ -711,7 +1144,32 @@ export default class Image {
 "
 `;
 
-exports[`Solid Img 1`] = `
+exports[`Stencil Image State 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"img-state-component\\",
+})
+export default class ImgStateComponent {
+  @State() canShow = true;
+  @State() images = [\\"http://example.com/qwik.png\\"];
+
+  render() {
+    return (
+      <div>
+        {this.images?.map((item, index) => (
+          <Fragment>
+            <img src={item} key={itemIndex} />
+          </Fragment>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -744,7 +1202,7 @@ export default class ImgComponent {
 "
 `;
 
-exports[`Solid Input block 1`] = `
+exports[`Stencil Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -783,7 +1241,7 @@ export default class FormInputComponent {
 "
 `;
 
-exports[`Solid RawText 1`] = `
+exports[`Stencil RawText 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -805,7 +1263,28 @@ export default class RawText {
 "
 `;
 
-exports[`Solid Section 1`] = `
+exports[`Stencil Remove Internal mitosis package 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @State() name = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        Hello
+        {this.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Section 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -836,7 +1315,7 @@ export default class SectionComponent {
 "
 `;
 
-exports[`Solid Select block 1`] = `
+exports[`Stencil Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -876,7 +1355,155 @@ export default class SelectComponent {
 "
 `;
 
-exports[`Solid Submit button block 1`] = `
+exports[`Stencil SlotHtml 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <ContentSlotCode>
+          <Slot testing={<div>Hello</div>}></Slot>
+        </ContentSlotCode>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil SlotJsx 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"slot-code\\",
+})
+export default class SlotCode {
+  render() {
+    return (
+      <div>
+        <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Stamped.io 1`] = `
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"smile-reviews\\",
+  styles: \`
+       .input {
+         display: block;
+       }
+       .textarea {
+         display: block;
+       }
+       .button {
+         display: block;
+       }
+       .review {
+         margin: 10px;
+         padding: 10px;
+         background: white;
+         display: flex;
+         border-radius: 5px;
+         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+       }
+       .img {
+         height: 30px;
+         width: 30px;
+         margin-right: 10px;
+       }
+\`,
+})
+export default class SmileReviews {
+  @Prop() apiKey: any;
+  @Prop() productId: any;
+
+  @State() reviews = [];
+  @State() name = \\"test\\";
+  @State() showReviewPrompt = false;
+
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  componentDidLoad() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  }
+
+  render() {
+    return (
+      <div data-user={this.name}>
+        <button onClick={(event) => (this.showReviewPrompt = true)}>
+          Write a review
+        </button>
+
+        {this.showReviewPrompt ? (
+          <>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" />
+            <textarea placeholder=\\"How was your experience?\\"></textarea>
+            <button
+              onClick={(event) => {
+                event.preventDefault();
+                this.showReviewPrompt = false;
+              }}
+            >
+              Submit
+            </button>
+          </>
+        ) : null}
+
+        {this.reviews?.map((review, index) => (
+          <div key={review.id}>
+            <img src={review.avatar} />
+
+            <div class={state.showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
+
+              <div>{review.author}</div>
+
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Submit 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -897,7 +1524,7 @@ export default class SubmitButton {
 "
 `;
 
-exports[`Solid Text 1`] = `
+exports[`Stencil Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -931,7 +1558,7 @@ export default class Text {
 "
 `;
 
-exports[`Solid Textarea 1`] = `
+exports[`Stencil Textarea 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -959,7 +1586,7 @@ export default class Textarea {
 "
 `;
 
-exports[`Solid Video 1`] = `
+exports[`Stencil Video 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
@@ -999,6 +1626,611 @@ export default class Video {
         loop={this.loop}
       ></video>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil basicForwardRef 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-forward-ref-component\\",
+  styles: \`
+    .input {
+      color: red;
+    }
+\`,
+})
+export default class MyBasicForwardRefComponent {
+  @Prop() inputRef: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          ref={(el) => (this.props.inputRef = el)}
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil basicForwardRefMetadata 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-forward-ref-component\\",
+  styles: \`
+    .input {
+      color: red;
+    }
+\`,
+})
+export default class MyBasicForwardRefComponent {
+  @Prop() inputRef: any;
+
+  @State() name = \\"PatrickJS\\";
+
+  render() {
+    return (
+      <div>
+        <input
+          ref={(el) => (this.props.inputRef = el)}
+          value={this.name}
+          onInput={(event) => (this.name = event.target.value)}
+        />
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil basicOnUpdateReturn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-on-update-return-component\\",
+})
+export default class MyBasicOnUpdateReturnComponent {
+  @State() name = \\"PatrickJS\\";
+
+  componentDidUpdate() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        Hello!
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil class + ClassName + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil class + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil className + css 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  render() {
+    return <div>Hello! I can run in React, Vue, Solid, or Liquid!</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil className 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"class-name-code\\",
+})
+export default class ClassNameCode {
+  @State() bindings = \\"a binding\\";
+
+  render() {
+    return (
+      <div>
+        <div>Without Binding</div>
+
+        <div class={state.bindings}>With binding</div>
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil classState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+  styles: \`
+    .div {
+      padding: 10px;
+    }
+\`,
+})
+export default class MyBasicComponent {
+  @State() classState = \\"testClassName\\";
+  @State() styleState = { color: \\"red\\" };
+
+  render() {
+    return (
+      <div class={state.classState + \\" div\\"} style={this.styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil defaultProps 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() link: any;
+  @Prop() attributes: any;
+  @Prop() openLinkInNewTab: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <Fragment>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
+
+        {!this.link ? (
+          <>
+            <button {...props.attributes} type=\\"button\\">
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </Fragment>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil defaultValsWithTypes 1`] = `
+"const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"component-with-types\\",
+})
+export default class ComponentWithTypes {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        {\\" \\"}
+        Hello
+        {this.name || DEFAULT_VALUES.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil nestedStyles 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"nested-styles\\",
+  styles: \`
+    .div {
+      display: flex;
+      foo: var(--bar);
+    }
+    @media (max-width: env(--mobile)) {
+      .div {
+        display: block;
+      }
+    }
+    .div:hover {
+      display: flex;
+    }
+    .div .nested-selector {
+      display: grid;
+    }
+\`,
+})
+export default class NestedStyles {
+  render() {
+    return <div>Hello world</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil onInit & onMount 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-init\\",
+})
+export default class OnInit {
+  componentDidLoad() {
+    console.log(\\"onMount\\");
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil onInit 1`] = `
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-init\\",
+})
+export default class OnInit {
+  @Prop() name: any;
+
+  @State() name = \\"\\";
+
+  render() {
+    return (
+      <div>
+        Default name defined by parent
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil onMount 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"comp\\",
+})
+export default class Comp {
+  componentDidLoad() {
+    console.log(\\"Runs on mount\\");
+  }
+  disconnectedCallback() {
+    console.log(\\"Runs on unMount\\");
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil onUpdate 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update\\",
+})
+export default class OnUpdate {
+  componentDidUpdate() {
+    console.log(\\"Runs on every update/rerender\\");
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil onUpdateWithDeps 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update-with-deps\\",
+})
+export default class OnUpdateWithDeps {
+  @State() a = \\"a\\";
+  @State() b = \\"b\\";
+
+  componentDidUpdate() {
+    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil preserveExportOrLocalStatement 1`] = `
+"const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
+exports[`Stencil preserveTyping 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil propsDestructure 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @Prop() children: any;
+  @Prop() type: any;
+
+  @State() name = \\"Decadef20\\";
+
+  render() {
+    return (
+      <div>
+        {this.children}
+        {this.type}
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil propsInterface 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil propsType 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+        {this.name}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil self-referencing component 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name=\\"Bruce Wayne\\"></MyComponent>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil self-referencing component with children 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() name: any;
+  @Prop() children: any;
+
+  render() {
+    return (
+      <div>
+        {this.name}
+
+        {this.children}
+
+        {this.name === \\"Batman\\" ? (
+          <>
+            <MyComponent name=\\"Bruce\\">
+              <div>Wayne</div>
+            </MyComponent>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"sub-component\\",
+})
+export default class SubComponent {
+  render() {
+    return <Foo></Foo>;
+  }
+}
+"
+`;
+
+exports[`Stencil typeDependency 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"type-dependency\\",
+})
+export default class TypeDependency {
+  @Prop() foo: any;
+
+  render() {
+    return <div>{this.foo}</div>;
   }
 }
 "

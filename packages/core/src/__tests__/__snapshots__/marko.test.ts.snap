@@ -1,0 +1,1678 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `
+"
+    <div>
+      <if _=\\"input.foo === 'bar'\\">
+        Hello
+      </if>
+      <for |items| of=\\"(some.long ? expression : yo)\\">
+        World
+      </for>
+      <input 
+        placeholder=\\"Hello world...\\"
+        value=\\"(this.state.name)\\" 
+        on-click=\\"(event => {&#10;          console.log('hello', &quot;world&quot;)&#10;        })\\"
+        on-input=\\"(event => this.state.name = event.target.value)\\" /> 
+        
+        Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>"
+`;
+
+exports[` 2`] = `
+"
+    <div>
+      <if(input.foo === 'bar')>
+        Hello
+      </if>
+      <for|items| of=(some.long ? expression : yo)>
+        World
+      </for>
+      <input 
+        placeholder=\\"Hello world...\\"
+        value=(this.state.name) 
+        on-click=(event => {
+          console.log('hello', \\"world\\")
+        })
+        on-input=(event => this.state.name = event.target.value) /> 
+        
+        Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>"
+`;
+
+exports[` 3`] = `
+"<div>
+  <if(input.foo === 'bar')> Hello </if>
+  <for|items| of=(some.long ? expression : yo)> World </for>
+  <input
+    placeholder=\\"Hello world...\\"
+    value=(this.state.name)
+    on-click=(event => {
+          console.log('hello', \\"world\\")
+        })
+    on-input=(event => this.state.name = event.target.value)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+"
+`;
+
+exports[`Marko AdvancedRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.state.name.toLowerCase();
+  };
+
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
+
+  onRender() {
+    console.log(\\"Received an update\\");
+  }
+}
+
+style { 
+  .input-51bfeac6 {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-51bfeac6\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
+
+exports[`Marko Basic 1`] = `
+"export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+class {
+  underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+style { 
+  .div-6ebf7548 {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-6ebf7548\\">
+  <input
+    value=(DEFAULT_VALUES.name || state.name)
+    on-input(myEvent => state.name = myEvent.target.value)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko Basic 2`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <if(person === state.name)>
+      <input
+        value=(state.name)
+        on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+      />
+
+      Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+      Liquid!
+    </if>
+  </for>
+</div>"
+`;
+
+exports[`Marko Basic Context 1`] = `
+"import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+class {
+  onChange = function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  };
+
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onMount() {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }
+}
+
+<div>
+  \${myService.method('hello') + state.name} Hello! I can run in React, Vue,
+  Solid, or Liquid!
+
+  <input on-input(event => component.onChange) />
+</div>"
+`;
+
+exports[`Marko Basic OnMount Update 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    this.state.name = \\"PatrickJS onMount\\" + this.input.bye;
+  }
+}
+
+<div>Hello \${state.name}</div>"
+`;
+
+exports[`Marko Basic Outputs 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onMount() {
+    this.input.onMessage(this.state.name);
+    this.input.onEvent(this.input.message);
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko Basic Outputs Meta 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onMount() {
+    this.input.onMessage(this.state.name);
+    this.input.onEvent(this.input.message);
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko BasicChildComponent 1`] = `
+"import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+class {
+  onCreate() {
+    this.state = { name: \\"Steve\\", dev: \\"PatrickJS\\" };
+  }
+}
+
+<div>
+  <MyBasicComponent id=(state.dev)></MyBasicComponent>
+
+  <div>
+    <MyBasicOnMountUpdateComponent
+      hi=(state.name)
+      bye=(state.dev)
+    ></MyBasicOnMountUpdateComponent>
+  </div>
+</div>"
+`;
+
+exports[`Marko BasicFor 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
+  }
+
+  onMount() {
+    console.log(\\"onMount code\\");
+  }
+}
+
+<div>
+  <for|person| of=(state.names)>
+    <input
+      value=(state.name)
+      on-input(event => {
+  state.name = event.target.value + ' and ' + person;
+})
+    />
+
+    Hello \${person} ! I can run in Qwik, Web Component, React, Vue, Solid, or
+    Liquid!
+  </for>
+</div>"
+`;
+
+exports[`Marko BasicRef 1`] = `
+"class {
+  onBlur = function onBlur() {
+    // Maintain focus
+    this.inputRef.focus();
+  };
+  lowerCaseName = function lowerCaseName() {
+    return this.state.name.toLowerCase();
+  };
+
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get inputRef() {
+    return this.getEl(\\"inputRef\\");
+  }
+  get inputNoArgRef() {
+    return this.getEl(\\"inputNoArgRef\\");
+  }
+}
+
+style { 
+  .input-6da48258 {
+    color: red;
+  }
+}
+<div>
+  <if(input.showInput)>
+    <input
+      class=\\"input-6da48258\\"
+      key=\\"inputRef\\"
+      value=(state.name)
+      on-blur(event => component.onBlur())
+      on-input(event => state.name = event.target.value)
+    />
+
+    <label for=\\"cars\\" key=\\"inputNoArgRef\\"> Choose a car: </label>
+
+    <select name=\\"cars\\" id=\\"cars\\">
+      <option value=\\"supra\\">GR Supra</option>
+
+      <option value=\\"86\\">GR 86</option>
+    </select>
+  </if>
+
+  Hello \${component.lowerCaseName()} ! I can run in React, Qwik, Vue, Solid, or
+  Web Component!
+</div>"
+`;
+
+exports[`Marko BasicRefAssignment 1`] = `
+"class {
+  handlerClick = function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", this.holdValueRef);
+    this.holdValueRef = this.holdValueRef + \\"JS\\";
+  };
+}
+
+<div>
+  <button on-click(evt => component.handlerClick(evt))>Click</button>
+</div>"
+`;
+
+exports[`Marko BasicRefPrevious 1`] = `
+"export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+class {
+  onCreate() {
+    this.state = { count: 0 };
+  }
+
+  onRender() {
+    this.prevCount = this.state.count;
+  }
+}
+
+<div>
+  <h1>Now: \${state.count} , before: \${this.prevCount}</h1>
+
+  <button on-click(event => state.count += 1)>Increment</button>
+</div>"
+`;
+
+exports[`Marko Button 1`] = `
+"class {}
+
+<if(input.link)>
+  <a
+    ...(props.attributes)
+    href=(input.link)
+    target=(input.openLinkInNewTab ? '_blank' : undefined)
+  >
+    \${input.text}
+  </a></if>
+
+<if(!input.link)>
+  <button ...(props.attributes) type=\\"button\\">\${input.text}</button></if>"
+`;
+
+exports[`Marko Columns 1`] = `
+"class {
+  getColumns() {
+    return this.input.columns || [];
+  }
+  getGutterSize() {
+    return typeof this.input.space === \\"number\\" ? this.input.space || 0 : 20;
+  }
+  getWidth(index) {
+    const columns = this.getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+  getColumnCssWidth(index) {
+    const columns = this.getColumns();
+    const gutterSize = this.getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+}
+
+style { 
+  .div-45826968 {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    line-height: normal;
+  }
+  @media (max-width: 999px) {
+    .div-45826968 {
+      flex-direction: row;
+    }
+  }
+  @media (max-width: 639px) {
+    .div-45826968 {
+      flex-direction: row-reverse;
+    }
+  }
+  .div-45826968-2 {
+    flex-grow: 1;
+  }
+}
+<div class=\\"builder-columns div-45826968\\">
+  <for|column,index| of=(input.columns)>
+    <div class=\\"builder-column div-45826968-2\\">\${column.content} \${index}</div>
+  </for>
+</div>"
+`;
+
+exports[`Marko ContentSlotHtml 1`] = `
+"class {}
+
+<div>
+  <slot name=(input.slotTesting)></slot>
+
+  <div>
+    <hr />
+  </div>
+
+  <div>
+    <slot></slot>
+  </div>
+</div>"
+`;
+
+exports[`Marko ContentSlotJSX 1`] = `
+"class {}
+
+<div>
+  \${input.slotTesting}
+
+  <div>
+    <hr />
+  </div>
+
+  <div>\${input.children}</div>
+</div>"
+`;
+
+exports[`Marko CustomCode 1`] = `
+"class {
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (this.elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  onCreate(input) {
+    this.state = { scriptsInserted: [], scriptsRun: [] };
+  }
+
+  get elem() {
+    return this.getEl(\\"elem\\");
+  }
+
+  onMount() {
+    this.findAndRunScripts();
+  }
+}
+
+<div
+  key=\\"elem\\"
+  class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
+>
+  $!{input.code}
+</div>"
+`;
+
+exports[`Marko Embed 1`] = `
+"class {
+  findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (this.elem && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = this.elem.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (this.state.scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          this.state.scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (this.state.scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            this.state.scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  onCreate(input) {
+    this.state = { scriptsInserted: [], scriptsRun: [] };
+  }
+
+  get elem() {
+    return this.getEl(\\"elem\\");
+  }
+
+  onMount() {
+    this.findAndRunScripts();
+  }
+}
+
+<div
+  key=\\"elem\\"
+  class=('builder-custom-code' + (input.replaceNodes ? ' replace-nodes' : ''))
+>
+  $!{input.code}
+</div>"
+`;
+
+exports[`Marko Form 1`] = `
+"import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+class {
+  get submissionState() {
+    return (
+      (Builder.isEditing && this.input.previewState) || this.state.formState
+    );
+  }
+  onSubmit(event) {
+    const sendWithJs =
+      this.input.sendWithJs || this.input.sendSubmissionsTo === \\"email\\";
+
+    if (this.input.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(this.input.action || this.input.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = this.input.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = this.input.contentType;
+
+      if (this.input.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && this.input.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (this.formRef) {
+        this.formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      this.state.formState = \\"sending\\";
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        this.input.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(this.input.name || \\"\\")}\`;
+      fetch(
+        this.input.sendSubmissionsTo === \\"email\\" ? formUrl : this.input.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: this.input.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && this.input.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, this.input.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+            error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              this.state.formErrorMessage = message;
+            }
+          }
+
+          this.state.responseData = body;
+          this.state.formState = res.ok ? \\"success\\" : \\"error\\";
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (this.formRef) {
+              this.formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (this.input.resetFormOnSubmit !== false) {
+                this.formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (this.input.successUrl) {
+              if (this.formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: this.input.successUrl,
+                  },
+                });
+                this.formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = this.input.successUrl;
+                }
+              } else {
+                location.href = this.input.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (this.formRef) {
+            this.formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          this.state.responseData = err;
+          this.state.formState = \\"error\\";
+        }
+      );
+    }
+  }
+
+  onCreate(input) {
+    this.state = {
+      formState: \\"unsubmitted\\",
+      responseData: null,
+      formErrorMessage: \\"\\",
+    };
+  }
+
+  get formRef() {
+    return this.getEl(\\"formRef\\");
+  }
+}
+
+style { 
+  .pre-edd9d6ca {
+    padding: 10px;
+    color: red;
+    text-align: center;
+  }
+}
+<form
+  ...(props.attributes)
+  validate=(input.validate)
+  key=\\"formRef\\"
+  action=(!input.sendWithJs && input.action)
+  method=(input.method)
+  name=(input.name)
+  on-submit(event => component.onSubmit(event))
+>
+  <if(input.builderBlock && input.builderBlock.children)>
+    <for|block,index| of=(input.builderBlock?.children)>
+      <BuilderBlockComponent
+        key=(block.id)
+        block=(block)
+        index=(index)
+      ></BuilderBlockComponent> </for></if>
+
+  <if(component.submissionState === 'error')>
+    <BuilderBlocks
+      dataPath=\\"errorMessage\\"
+      blocks=(input.errorMessage)
+    ></BuilderBlocks></if>
+
+  <if(component.submissionState === 'sending')>
+    <BuilderBlocks
+      dataPath=\\"sendingMessage\\"
+      blocks=(input.sendingMessage)
+    ></BuilderBlocks></if>
+
+  <if(component.submissionState === 'error' && state.responseData)>
+    <pre class=\\"builder-form-error-text pre-edd9d6ca\\">
+          
+\${JSON.stringify(state.responseData, null, 2)}
+
+        </pre>
+  </if>
+
+  <if(component.submissionState === 'success')>
+    <BuilderBlocks
+      dataPath=\\"successMessage\\"
+      blocks=(input.successMessage)
+    ></BuilderBlocks></if>
+</form>"
+`;
+
+exports[`Marko Image 1`] = `
+"class {
+  setLoaded() {
+    this.state.imageLoaded = true;
+  }
+  useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!this.input.lazy && isBrowser();
+  }
+  isBrowser = function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  };
+
+  onCreate(input) {
+    this.state = { scrollListener: null, imageLoaded: false, load: false };
+  }
+
+  get pictureRef() {
+    return this.getEl(\\"pictureRef\\");
+  }
+
+  onMount() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.pictureRef) {
+          const rect = this.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.state.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      this.state.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }
+  onDestroy() {
+    if (this.state.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.state.scrollListener);
+    }
+  }
+}
+
+style { 
+  .img-41e286b6 {
+    opacity: 1;
+    transition: opacity 0.2s ease-in-out;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+<picture key=\\"pictureRef\\">
+  <if(!component.useLazyLoading() || state.load)>
+    <img
+      alt=(input.altText)
+      aria-role=(input.altText ? 'presentation' : undefined)
+      class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-41e286b6')
+      src=(input.image)
+      on-load(event => component.setLoaded())
+      srcset=(input.srcset)
+      sizes=(input.sizes)
+  /></if>
+
+  <source srcset=(input.srcset) />
+</picture>
+
+\${input.children}"
+`;
+
+exports[`Marko Image State 1`] = `
+"class {
+  onCreate() {
+    this.state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
+  }
+}
+
+<div>
+  <for|item,itemIndex| of=(state.images)>
+    <img class=\\"custom-class\\" src=(item) key=(itemIndex) />
+  </for>
+</div>"
+`;
+
+exports[`Marko Img 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {}
+
+<img
+  ...(props.attributes)
+  style=({
+  objectFit: input.backgroundSize || 'cover',
+  objectPosition: input.backgroundPosition || 'center'
+})
+  key=(Builder.isEditing && input.imgSrc || 'default-key')
+  alt=(input.altText)
+  src=(input.imgSrc)
+/>"
+`;
+
+exports[`Marko Input 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {}
+
+<input
+  ...(props.attributes)
+  key=(Builder.isEditing && input.defaultValue ? input.defaultValue : 'default-key')
+  placeholder=(input.placeholder)
+  type=(input.type)
+  name=(input.name)
+  value=(input.value)
+  defaultValue=(input.defaultValue)
+  required=(input.required)
+/>"
+`;
+
+exports[`Marko RawText 1`] = `
+"class {}
+
+<span class=(input.attributes?.class || input.attributes?.className)
+  >$!{input.text || ''}</span>"
+`;
+
+exports[`Marko Remove Internal mitosis package 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+}
+
+<div>
+  Hello \${state.name} ! I can run in React, Qwik, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko Section 1`] = `
+"class {}
+
+<section
+  ...(props.attributes)
+  style=(input.maxWidth && typeof input.maxWidth === 'number' ? {
+  maxWidth: input.maxWidth
+} : undefined)
+>
+  \${input.children}
+</section>"
+`;
+
+exports[`Marko Section 2`] = `
+"class {
+  onCreate(input) {
+    this.state = { max: 42, items: [42] };
+  }
+}
+
+<if(state.max)>
+  <for|item| of=(state.items)>
+    <section
+      ...(props.attributes)
+      style=({
+  maxWidth: item + state.max
+})
+    >
+      \${input.children}
+    </section>
+  </for></if>"
+`;
+
+exports[`Marko Select 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {}
+
+<select
+  ...(props.attributes)
+  value=(input.value)
+  key=(Builder.isEditing && input.defaultValue ? input.defaultValue : 'default-key')
+  defaultValue=(input.defaultValue)
+  name=(input.name)
+>
+  <for|option,index| of=(input.options)>
+    <option value=(option.value) data-index=(index)>
+      \${option.name || option.value}
+    </option>
+  </for>
+</select>"
+`;
+
+exports[`Marko SlotHtml 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+class {}
+
+<div>
+  <ContentSlotCode>
+    <slot testing=(<div>Hello</div>)></slot>
+  </ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko SlotJsx 1`] = `
+"import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+class {}
+
+<div>
+  <ContentSlotCode slotTesting=(<div>Hello</div>)></ContentSlotCode>
+</div>"
+`;
+
+exports[`Marko Stamped.io 1`] = `
+"import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+class {
+  kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+  snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  onCreate(input) {
+    this.state = { reviews: [], name: \\"test\\", showReviewPrompt: false };
+  }
+
+  onMount() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.input.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.input.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.state.reviews = data.data;
+      });
+  }
+}
+
+style { 
+  .input-361877c4 {
+    display: block;
+  }
+  .textarea-361877c4 {
+    display: block;
+  }
+  .button-361877c4 {
+    display: block;
+  }
+  .review-361877c4 {
+    margin: 10px;
+    padding: 10px;
+    background: white;
+    display: flex;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .img-361877c4 {
+    height: 30px;
+    width: 30px;
+    margin-right: 10px;
+  }
+}
+<div data-user=(state.name)>
+  <button on-click(event => state.showReviewPrompt = true)>
+    Write a review
+  </button>
+
+  <if(state.showReviewPrompt)>
+    <input placeholder=\\"Email\\" />
+    <input placeholder=\\"Title\\" class=\\"input-361877c4\\" />
+    <textarea
+      placeholder=\\"How was your experience?\\"
+      class=\\"textarea-361877c4\\"
+    ></textarea>
+    <button
+      class=\\"button-361877c4\\"
+      on-click(event => {
+  event.preventDefault();
+  state.showReviewPrompt = false;
+})
+    >
+      Submit
+    </button></if>
+
+  <for|review,index| of=(state.reviews)>
+    <div class=\\"review-361877c4\\" key=(review.id)>
+      <img class=\\"img-361877c4\\" src=(review.avatar) />
+
+      <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
+        <div>N: \${index}</div>
+
+        <div>\${review.author}</div>
+
+        <div>\${review.reviewMessage}</div>
+      </div>
+    </div>
+  </for>
+</div>"
+`;
+
+exports[`Marko Submit 1`] = `
+"class {}
+
+<button ...(props.attributes) type=\\"submit\\">\${input.text}</button>"
+`;
+
+exports[`Marko Text 1`] = `
+"import { Builder } from \\"@builder.io/sdk\\";
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"Decadef20\\" };
+  }
+}
+
+<div
+  contenteditable=(allowEditingText || undefined)
+  data-name=({
+  test: state.name || 'any name'
+})
+>
+  $!{input.text || input.content || state.name || '
+  <p class=\\"text-lg\\">my name</p>
+  '}
+</div>"
+`;
+
+exports[`Marko Textarea 1`] = `
+"class {}
+
+<textarea
+  ...(props.attributes)
+  placeholder=(input.placeholder)
+  name=(input.name)
+  value=(input.value)
+  defaultValue=(input.defaultValue)
+></textarea>"
+`;
+
+exports[`Marko Video 1`] = `
+"class {}
+
+<video
+  ...(props.attributes)
+  preload=\\"none\\"
+  style=({
+  width: '100%',
+  height: '100%',
+  ...input.attributes?.style,
+  objectFit: input.fit,
+  objectPosition: input.position,
+  // Hack to get object fit to work as expected and
+  // not have the video overflow
+  borderRadius: 1
+})
+  key=(input.video || 'no-src')
+  poster=(input.posterImage)
+  autoplay=(input.autoPlay)
+  muted=(input.muted)
+  controls=(input.controls)
+  loop=(input.loop)
+></video>"
+`;
+
+exports[`Marko basicForwardRef 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-06e83566 {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-06e83566\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko basicForwardRefMetadata 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  get propsInputRef() {
+    return this.getEl(\\"propsInputRef\\");
+  }
+}
+
+style { 
+  .input-6b0e4318 {
+    color: red;
+  }
+}
+<div>
+  <input
+    class=\\"input-6b0e4318\\"
+    key=\\"propsInputRef\\"
+    value=(state.name)
+    on-input(event => state.name = event.target.value)
+  />
+</div>"
+`;
+
+exports[`Marko basicOnUpdateReturn 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"PatrickJS\\" };
+  }
+
+  onRender() {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        this.state.name = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+}
+
+<div>Hello! \${state.name}</div>"
+`;
+
+exports[`Marko class + ClassName + css 1`] = `
+"class {}
+
+style { 
+  .div-45c59d97 {
+    padding: 10px;
+  }
+}
+<div class=\\"test2 test div-45c59d97\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko class + css 1`] = `
+"class {}
+
+style { 
+  .div-74a0302e {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-74a0302e\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko className + css 1`] = `
+"class {}
+
+style { 
+  .div-74a0302e {
+    padding: 10px;
+  }
+}
+<div class=\\"test div-74a0302e\\">
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko className 1`] = `
+"class {
+  onCreate() {
+    this.state = { bindings: \\"a binding\\" };
+  }
+}
+
+<div>
+  <div class=\\"no binding\\">Without Binding</div>
+
+  <div class=(state.bindings)>With binding</div>
+</div>"
+`;
+
+exports[`Marko classState 1`] = `
+"class {
+  onCreate() {
+    this.state = { classState: \\"testClassName\\", styleState: { color: \\"red\\" } };
+  }
+}
+
+style { 
+  .div-61288f44 {
+    padding: 10px;
+  }
+}
+<div class=(state.classState + ' div-61288f44') style=(state.styleState)>
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko defaultProps 1`] = `
+"class {}
+
+<if(input.link)>
+  <a
+    ...(props.attributes)
+    href=(input.link)
+    target=(input.openLinkInNewTab ? '_blank' : undefined)
+  >
+    \${input.text}
+  </a></if>
+
+<if(!input.link)>
+  <button ...(props.attributes) type=\\"button\\">\${input.text}</button></if>"
+`;
+
+exports[`Marko defaultValsWithTypes 1`] = `
+"const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+class {}
+
+<div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
+`;
+
+exports[`Marko multipleOnUpdate 1`] = `
+"class {
+  onRender() {
+    console.log(\\"Runs on every update/rerender\\");
+
+    console.log(\\"Runs on every update/rerender as well\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko multipleOnUpdateWithDeps 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
+  }
+
+  onRender() {
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
+
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
+    }
+
+    console.log(\\"Runs when c or d changes\\", this.state.c, this.state.d);
+
+    if (this.state.a === \\"a\\") {
+      this.state.a = \\"b\\";
+    }
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko nestedShow 1`] = `
+"class {}
+
+<if(input.conditionA)>
+  <if(!input.conditionB)> <div>if condition A and condition B</div></if>
+  <else><div>else-condition-B</div></else></if>
+<else><div>else-condition-A</div></else>"
+`;
+
+exports[`Marko nestedStyles 1`] = `
+"class {}
+
+style { 
+  .div-92502f5c {
+    display: flex;
+    foo: var(--bar);
+  }
+  @media (max-width: env(--mobile)) {
+    .div-92502f5c {
+      display: block;
+    }
+  }
+  .div-92502f5c:hover {
+    display: flex;
+  }
+  .div-92502f5c .nested-selector {
+    display: grid;
+  }
+}
+<div class=\\"div-92502f5c\\">Hello world</div>"
+`;
+
+exports[`Marko onInit & onMount 1`] = `
+"class {
+  onMount() {
+    console.log(\\"onMount\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko onInit 1`] = `
+"export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+class {
+  onCreate(input) {
+    this.state = { name: \\"\\" };
+  }
+}
+
+<div>Default name defined by parent \${state.name}</div>"
+`;
+
+exports[`Marko onMount 1`] = `
+"class {
+  onMount() {
+    console.log(\\"Runs on mount\\");
+  }
+  onDestroy() {
+    console.log(\\"Runs on unMount\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko onUpdate 1`] = `
+"class {
+  onRender() {
+    console.log(\\"Runs on every update/rerender\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko onUpdateWithDeps 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: \\"a\\", b: \\"b\\" };
+  }
+
+  onRender() {
+    console.log(\\"Runs when a or b changes\\", this.state.a, this.state.b);
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko preserveExportOrLocalStatement 1`] = `
+"const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+class {}
+
+<div></div>"
+`;
+
+exports[`Marko preserveTyping 1`] = `
+"class {}
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
+`;
+
+exports[`Marko propsDestructure 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { name: \\"Decadef20\\" };
+  }
+}
+
+<div>
+  \${input.children} \${input.type} Hello! I can run in React, Vue, Solid, or
+  Liquid!
+</div>"
+`;
+
+exports[`Marko propsInterface 1`] = `
+"class {}
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
+`;
+
+exports[`Marko propsType 1`] = `
+"class {}
+
+<div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
+`;
+
+exports[`Marko rootShow 1`] = `
+"class {}
+
+<if(input.foo === 'bar')> <div>Bar</div></if> <else><div>Foo</div></else>"
+`;
+
+exports[`Marko self-referencing component 1`] = `
+"class {}
+
+<div>
+  \${input.name}
+
+  <if(input.name === 'Batman')>
+    <MyComponent name=\\"Bruce Wayne\\"></MyComponent></if>
+</div>"
+`;
+
+exports[`Marko self-referencing component with children 1`] = `
+"class {}
+
+<div>
+  \${input.name} \${input.children}
+
+  <if(input.name === 'Batman')>
+    <MyComponent name=\\"Bruce\\">
+      <div>Wayne</div>
+    </MyComponent></if>
+</div>"
+`;
+
+exports[`Marko showWithFor 1`] = `
+"class {}
+
+<if(input.conditionA)>
+  <for|item,idx| of=(input.items)>
+    <div key=(idx)>\${item}</div>
+  </for></if>
+<else><div>else-condition-A</div></else>"
+`;
+
+exports[`Marko subComponent 1`] = `
+"import Foo from \\"./foo-sub-component.marko\\";
+
+class {}
+
+<Foo></Foo>"
+`;
+
+exports[`Marko typeDependency 1`] = `
+"class {}
+
+<div>\${input.foo}</div>"
+`;

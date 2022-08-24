@@ -1,0 +1,80 @@
+# This workflow runs when new change is pushed to repo OR when a new PR is created
+# It performs all of the tests to make sure everything is good.
+
+---
+name: PR Runner
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Lint
+        run: yarn ci:lint
+
+      - name: Build
+        run: yarn ci:build
+
+      - name: Run tests
+        run: yarn ci:test
+
+  fiddle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Build Fiddle
+        run: yarn ci:fiddle-build
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Build
+        run: yarn ci:build
+
+      - name: Install browsers for Playwright
+        run: yarn ci:e2e-prep
+
+      - name: Run E2E tests
+        run: yarn ci:e2e
+
+      - name: Fail build if E2E output doesn't match computed output
+        run: git diff --exit-code README.MD

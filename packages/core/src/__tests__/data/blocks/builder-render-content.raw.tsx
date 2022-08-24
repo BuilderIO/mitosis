@@ -1,10 +1,4 @@
-import {
-  Show,
-  onMount,
-  useState,
-  For,
-  afterUnmount,
-} from '@builder.io/mitosis';
+import { Show, onMount, useStore, For, afterUnmount } from '@builder.io/mitosis';
 import { Builder, BuilderContent, GetContentOptions } from '@builder.io/sdk';
 import { applyPatchWithMinimalMutationChain } from '@builder.io/utils';
 import { useBuilderData } from '@builder.io/mitosis';
@@ -21,7 +15,7 @@ type RenderContentProps = {
 export function RenderContent(props: RenderContentProps) {
   const content: BuilderContent | undefined =
     props.content || useBuilderData(props.model, props.options);
-  const state = useState({
+  const state = useStore({
     get css() {
       return '';
     },

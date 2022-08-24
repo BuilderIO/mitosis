@@ -18,10 +18,10 @@ Mitosis is inspired by many modern frameworks. You'll see components look like R
 An example Mitosis component showing several features:
 
 ```javascript
-import { For, Show, useState } from '@builder.io/mitosis';
+import { For, Show, useStore } from '@builder.io/mitosis';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     newItemName: 'New item',
     list: ['hello', 'world'],
     addItem() {
@@ -97,17 +97,14 @@ State is provided by the `useState` hook. Currently, the name of this value must
 
 ```jsx
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
   });
 
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => (state.name = event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => (state.name = event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -119,7 +116,7 @@ If the initial state value is a computed value (whether based on `props` or the 
 import { kebabCase } from 'lodash';
 
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
     get transformedName() {
       return kebabCase('Steve');
@@ -132,10 +129,7 @@ export default function MyComponent(props) {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => (state.name = event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => (state.name = event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -149,7 +143,7 @@ The state object can also take methods.
 
 ```jsx
 export default function MyComponent() {
-  const state = useState({
+  const state = useStore({
     name: 'Steve',
     updateName(newName) {
       state.name = newName;
@@ -159,10 +153,7 @@ export default function MyComponent() {
   return (
     <div>
       <h2>Hello, {state.name}</h2>
-      <input
-        onInput={(event) => state.updateName(event.target.value)}
-        value={state.name}
-      />
+      <input onInput={(event) => state.updateName(event.target.value)} value={state.name} />
     </div>
   );
 }
@@ -188,14 +179,10 @@ Use `<For>` for repeating items, for instance mapping over an array. It takes a 
 
 ```jsx
 export default function MyComponent(props) {
-  const state = useState({
+  const state = useStore({
     myArray: [1, 2, 3],
   });
-  return (
-    <For each={state.myArray}>
-      {(theArrayItem, index) => <div>{theArrayItem}</div>}
-    </For>
-  );
+  return <For each={state.myArray}>{(theArrayItem, index) => <div>{theArrayItem}</div>}</For>;
 }
 ```
 
@@ -255,6 +242,18 @@ export default function Layout(props) {
       {props.children}
     </div>
   );
+}
+```
+
+For vue component `slot` prop will be compiled into named slot
+
+```html
+<div class="layout">
+  <div class="top"><slot name="top" /></div>
+  <div class="left"><slot name="left" /></div>
+  <div class="center"><slot name="center" /></div>
+  <slot />
+</div>
 }
 ```
 

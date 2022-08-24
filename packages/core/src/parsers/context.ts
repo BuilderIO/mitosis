@@ -11,10 +11,7 @@ type ParseContextOptions = {
   name: string;
 };
 
-export function parseContext(
-  code: string,
-  options: ParseContextOptions,
-): MitosisContext | null {
+export function parseContext(code: string, options: ParseContextOptions): MitosisContext | null {
   let found = false;
   const context = createMitosisContext({ name: options.name });
 

@@ -1,7 +1,6 @@
 export default function MyBasicComponent() {
   return (
     <div
-      // @ts-ignore
       className="test"
       class="test2"
       css={{

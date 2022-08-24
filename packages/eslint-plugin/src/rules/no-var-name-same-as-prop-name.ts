@@ -10,8 +10,7 @@ const rule: Rule.RuleModule = {
   meta: {
     type: 'problem',
     docs: {
-      description:
-        'disallow defining variables with the same name as a prop name',
+      description: 'disallow defining variables with the same name as a prop name',
       recommended: true,
     },
   },
@@ -40,9 +39,7 @@ const rule: Rule.RuleModule = {
 
         if (!types.isProgram(program)) return;
 
-        const defaultExport = ancestors.find((n) =>
-          types.isExportDefaultDeclaration(n),
-        );
+        const defaultExport = ancestors.find((n) => types.isExportDefaultDeclaration(n));
 
         if (!types.isExportDefaultDeclaration(defaultExport)) return;
         if (!types.isFunctionDeclaration(defaultExport.declaration)) return;
@@ -61,11 +58,7 @@ const rule: Rule.RuleModule = {
         if (types.isLogicalExpression(init)) {
           const { right, left } = init;
 
-          if (
-            !types.isMemberExpression(left) &&
-            !types.isMemberExpression(right)
-          )
-            return;
+          if (!types.isMemberExpression(left) && !types.isMemberExpression(right)) return;
 
           if (
             types.isMemberExpression(left) &&

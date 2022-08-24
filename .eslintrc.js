@@ -4,8 +4,8 @@ module.exports = {
     browser: true,
     jest: true,
   },
-  plugins: ['@builder.io/mitosis'],
   parser: '@typescript-eslint/parser', // Specifies the ESLint parser
+  plugins: ['@typescript-eslint', 'unused-imports'],
   extends: [],
   parserOptions: {
     ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
@@ -14,8 +14,8 @@ module.exports = {
       jsx: true, // Allows for the parsing of JSX
     },
   },
-
   rules: {
-    // '@builder.io/mitosis/no-conditional-render': 'warn',
-  },
+    "no-unused-vars": "off", // or "@typescript-eslint/no-unused-vars": "off",
+		"unused-imports/no-unused-imports": "error"
+  }
 };

@@ -1,13 +1,13 @@
-import { useState, useRef, onMount } from '@builder.io/mitosis';
+import { useStore, useRef, onMount } from '@builder.io/mitosis';
 
 export interface EmbedProps {
   content: string;
 }
 
 export default function Embed(props: EmbedProps) {
-  const elem = useRef();
+  const elem = useRef<HTMLDivElement>(null);
 
-  const state = useState({
+  const state = useStore({
     scriptsInserted: [] as string[],
     scriptsRun: [] as string[],
 
@@ -29,11 +29,9 @@ export default function Embed(props: EmbedProps) {
             document.head.appendChild(newScript);
           } else if (
             !script.type ||
-            [
-              'text/javascript',
-              'application/javascript',
-              'application/ecmascript',
-            ].includes(script.type)
+            ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(
+              script.type,
+            )
           ) {
             if (state.scriptsRun.includes(script.innerText)) {
               continue;

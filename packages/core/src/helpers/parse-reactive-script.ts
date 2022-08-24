@@ -8,8 +8,7 @@ export type ParseReactiveScriptOptions = {
   format: 'html' | 'js';
 };
 
-export const reactiveScriptRe =
-  /<script\s[^>]*reactive[^>]*>([\s\S]*)<\/\s*script>/i;
+export const reactiveScriptRe = /<script\s[^>]*reactive[^>]*>([\s\S]*)<\/\s*script>/i;
 
 export function parseReactiveScript(
   code: string,
@@ -17,16 +16,13 @@ export function parseReactiveScript(
 ): { state: any } {
   let state = {};
   const format = options.format || 'html';
-  const useCode =
-    format === 'html' ? code.match(reactiveScriptRe)?.[1] || '' : code;
+  const useCode = format === 'html' ? code.match(reactiveScriptRe)?.[1] || '' : code;
 
   const output = transform(useCode, {
     plugins: [
       () => ({
         visitor: {
-          ExportDefaultDeclaration(
-            path: babel.NodePath<babel.types.ExportDefaultDeclaration>,
-          ) {
+          ExportDefaultDeclaration(path: babel.NodePath<babel.types.ExportDefaultDeclaration>) {
             if (types.isObjectExpression(path.node.declaration)) {
               const stateProperty = path.node.declaration.properties.find(
                 (item) =>
@@ -45,19 +41,14 @@ export function parseReactiveScript(
                         types.isFunctionExpression(item.value) ||
                         types.isArrowFunctionExpression(item.value)
                       ) {
-                        return createFunctionStringLiteralObjectProperty(
-                          item.key,
-                          item.value,
-                        );
+                        return createFunctionStringLiteralObjectProperty(item.key, item.value);
                       }
                     }
                     if (types.isObjectMethod(item)) {
                       return types.objectProperty(
                         item.key,
                         types.stringLiteral(
-                          `${methodLiteralPrefix}${
-                            generate({ ...item, returnType: null }).code
-                          }`,
+                          `${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`,
                         ),
                       );
                     }
