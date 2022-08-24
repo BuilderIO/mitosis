@@ -280,7 +280,7 @@ function emitStateMethodsAndRewriteBindings(
 }
 
 const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
-  return typeof obj == 'object' && typeof obj.code === 'string';
+  return typeof obj == 'object' && obj?.code && typeof obj.code === 'string';
 };
 
 function rewriteCodeExpr(
