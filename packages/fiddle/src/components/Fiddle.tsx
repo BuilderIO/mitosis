@@ -28,7 +28,7 @@ import {
 } from '@builder.io/mitosis';
 import {
   Button,
-  createMuiTheme,
+  createTheme,
   Divider,
   FormControlLabel,
   MenuItem,
@@ -122,7 +122,7 @@ const debug = getQueryParam('debug') === 'true';
 
 const AlphaPreviewMessage = () => (
   <ThemeProvider
-    theme={createMuiTheme({
+    theme={createTheme({
       palette: {
         type: 'dark',
         primary: { main: colors.primary },
