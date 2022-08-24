@@ -1,7 +1,9 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
+import {
+  __DO_NOT_USE_FUNCTION_LITERAL_PREFIX,
+  __DO_NOT_USE_METHOD_LITERAL_PREFIX,
+} from '../constants/outdated-prefixes';
 import { MitosisComponent } from '../../types/mitosis-component';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
@@ -11,7 +13,7 @@ import { replaceIdentifiers } from '../../helpers/replace-idenifiers';
 import { parseCodeJson, uncapitalize } from './helpers';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { JSONObject } from '../../types/json';
-import { mapJsonObjectToStateValue } from '../../helpers/state';
+import { mapJsonObjectToStateValue } from '../helpers/state';
 
 const { types } = babel;
 
@@ -107,7 +109,10 @@ const createFunctionStringLiteralObjectProperty = (
   key: babel.types.Expression | babel.types.PrivateName,
   node: babel.types.Node,
 ) =>
-  types.objectProperty(key, types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`));
+  types.objectProperty(
+    key,
+    types.stringLiteral(`${__DO_NOT_USE_FUNCTION_LITERAL_PREFIX}${generate(node).code}`),
+  );
 
 type ParsedStateValue = babel.types.ObjectProperty | babel.types.SpreadElement;
 
@@ -122,7 +127,9 @@ const parseStateValue = (
   if (types.isObjectMethod(item)) {
     return types.objectProperty(
       item.key,
-      types.stringLiteral(`${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`),
+      types.stringLiteral(
+        `${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate({ ...item, returnType: null }).code}`,
+      ),
     );
   }
   // Remove typescript types, e.g. from
