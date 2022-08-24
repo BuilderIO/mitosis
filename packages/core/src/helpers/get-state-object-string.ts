@@ -1,7 +1,6 @@
 import { MitosisContext } from '../types/mitosis-context';
 import json5 from 'json5';
 import { MitosisComponent, StateValue } from '../types/mitosis-component';
-import { mapJsonObjectToStateValue } from './state';
 
 interface GetStateObjectStringOptions {
   data?: boolean;
@@ -95,7 +94,7 @@ export const getMemberObjectString = (
 export const stringifyContextValue = (
   object: MitosisContext['value'],
   userOptions: GetStateObjectStringOptions = {},
-) => getMemberObjectString(mapJsonObjectToStateValue(object), userOptions);
+) => getMemberObjectString(object, userOptions);
 
 export const getStateObjectStringFromComponent = (
   component: MitosisComponent,

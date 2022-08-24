@@ -1,7 +1,7 @@
 import * as babel from '@babel/core';
 import { MitosisContext } from '../types/mitosis-context';
 import { createMitosisContext } from '../helpers/create-mitosis-context';
-import { parseStateObject } from './jsx';
+import { parseStateObjectToMitosisState } from './jsx/state';
 
 const { types } = babel;
 
@@ -35,7 +35,7 @@ export function parseContext(code: string, options: ParseContextOptions): Mitosi
                     if (types.isObjectExpression(firstArg)) {
                       // TODO: support non object values by parsing any node type
                       // like the logic within each property value of parseStateObject
-                      context.value = parseStateObject(firstArg);
+                      context.value = parseStateObjectToMitosisState(firstArg);
                       found = true;
                     }
                   }

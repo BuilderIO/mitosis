@@ -5,16 +5,34 @@ Object {
   "@type": "@builder.io/mitosis/context",
   "name": "SimpleExample",
   "value": Object {
-    "content": null,
-    "context": Object {},
-    "foo": "bar",
-    "fooUpperCase": "@builder.io/mitosis/method:get fooUpperCase() {
+    "content": Object {
+      "code": null,
+      "type": "property",
+    },
+    "context": Object {
+      "code": Object {},
+      "type": "property",
+    },
+    "foo": Object {
+      "code": "bar",
+      "type": "property",
+    },
+    "fooUpperCase": Object {
+      "code": "fooUpperCase() {
   return this.foo.toUpperCase();
 }",
-    "someMethod": "@builder.io/mitosis/method:someMethod() {
+      "type": "getter",
+    },
+    "someMethod": Object {
+      "code": "someMethod() {
   return this.fooUpperCase.toLowercase();
 }",
-    "state": Object {},
+      "type": "method",
+    },
+    "state": Object {
+      "code": Object {},
+      "type": "property",
+    },
   },
 }
 `;
@@ -641,16 +659,25 @@ Object {
       "@dummy/1:default": Object {
         "name": "Context1",
         "value": Object {
-          "content": "@builder.io/mitosis/method:content() {
+          "content": Object {
+            "code": "content() {
   return props.content;
 }",
-          "foo": "bar",
+            "type": "method",
+          },
+          "foo": Object {
+            "code": "bar",
+            "type": "property",
+          },
         },
       },
       "@dummy/2:default": Object {
         "name": "Context2",
         "value": Object {
-          "bar": "baz",
+          "bar": Object {
+            "code": "baz",
+            "type": "property",
+          },
         },
       },
     },

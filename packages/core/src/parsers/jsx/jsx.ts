@@ -11,7 +11,7 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { tryParseJson } from '../../helpers/json';
 import { HOOKS } from '../../constants/hooks';
 import { jsonToAst } from './ast';
-import { mapReactIdentifiers, parseStateObject, parseStateObjectToMitosisState } from './state';
+import { mapReactIdentifiers, parseStateObjectToMitosisState } from './state';
 import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
@@ -49,7 +49,7 @@ const componentFunctionToJson = (
               const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
-                  const value = parseStateObject(valueNode);
+                  const value = parseStateObjectToMitosisState(valueNode);
                   setContext[keyPath] = {
                     name: keyNode.name,
                     value,

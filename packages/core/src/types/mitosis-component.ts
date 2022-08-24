@@ -36,7 +36,7 @@ export interface ContextGetInfo {
 }
 export interface ContextSetInfo {
   name: string;
-  value?: JSONObject;
+  value?: MitosisState;
   ref?: string;
 }
 
@@ -67,6 +67,8 @@ export interface StateValue {
   type: StateValueType;
 }
 
+export type MitosisState = Dictionary<StateValue | undefined>;
+
 export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
@@ -76,7 +78,7 @@ export type MitosisComponent = {
     useMetadata?: JSONObject;
   };
   inputs: MitosisComponentInput[];
-  state: Dictionary<StateValue | undefined>;
+  state: MitosisState;
   context: {
     get: ContextGet;
     set: ContextSet;
