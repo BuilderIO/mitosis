@@ -1,5 +1,5 @@
 import { mapValues } from 'lodash';
-import { GETTER } from 'src/helpers/patterns';
+import { GETTER } from '../../helpers/patterns';
 import {
   __DO_NOT_USE_METHOD_LITERAL_PREFIX,
   __DO_NOT_USE_FUNCTION_LITERAL_PREFIX,
