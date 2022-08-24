@@ -1,6 +1,7 @@
 import { parseStateObjectToMitosisState } from '../parsers/jsx/state';
 import { parseJsx } from '../parsers/jsx';
 import { SPEC } from './data/jsx-json.spec';
+import { runTestsForJsx } from './shared';
 
 const buttonWithMetadata = require('./data/blocks/button-with-metadata.raw');
 const image = require('./data/blocks/image.raw');
@@ -44,4 +45,6 @@ describe('Parse JSX', () => {
   test('custom mitosis package', () => {
     expect(parseJsx(basicPropsRaw)).toEqual(parseJsx(basicPropsDestructureRaw));
   });
+
+  runTestsForJsx();
 });
