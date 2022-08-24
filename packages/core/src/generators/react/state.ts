@@ -5,9 +5,10 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisComponent, StateValue } from '../../types/mitosis-component';
-import { pipe } from 'fp-ts/lib/function';
+import { identity, pipe } from 'fp-ts/lib/function';
 import { ToReactOptions } from './types';
 import { processBinding } from './helpers';
+import { replaceGetterWithFunction } from '../../helpers/patterns';
 
 /**
  * Removes all `this.` references.
@@ -34,8 +35,9 @@ const processStateValue = (options: ToReactOptions) => {
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
     const value = stateVal?.code;
     const type = stateVal?.type;
+    console.log({ stateVal });
     if (typeof value === 'string') {
-      return pipe(type === 'getter' ? value.replace(/^(get )?/, 'function ') : value, mapValue);
+      return pipe(value, type === 'getter' ? replaceGetterWithFunction : identity, mapValue);
     }
 
     // Other (data)
