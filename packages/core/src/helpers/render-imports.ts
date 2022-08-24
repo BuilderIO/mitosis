@@ -40,7 +40,7 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'angular':
       return '';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
-    // TO-DO: consolidate file-extension renaming to one place.
+    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`.
     default:
       return '.lite';
   }
@@ -52,7 +52,7 @@ const checkIsComponentImport = (theImport: MitosisImport) =>
 const transformImportPath = (theImport: MitosisImport, target: Target) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
-    return theImport.path.replace('.lite', '');
+    return theImport.path.replace('.lite', '.js');
   }
 
   if (checkIsComponentImport(theImport)) {
