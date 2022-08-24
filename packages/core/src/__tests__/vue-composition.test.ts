@@ -1,6 +1,6 @@
-import { componentToVue2 } from '../generators/vue';
+import { componentToVue3 } from '../generators/vue';
 import { runTestsForTarget } from './shared';
 
 describe('Vue', () => {
-  runTestsForTarget('vue', componentToVue2({ api: 'composition' }));
+  runTestsForTarget('vue', componentToVue3({ api: 'composition' }));
 });

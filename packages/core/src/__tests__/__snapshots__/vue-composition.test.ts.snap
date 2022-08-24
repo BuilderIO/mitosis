@@ -3,20 +3,22 @@
 exports[`Vue AdvancedRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -105,11 +107,18 @@ function underscore_fn_name() {
 exports[`Vue Basic 2`] = `
 "<template>
   <div>
-    <input
-      v-if=\\"person === name\\"
-      :value=\\"name\\"
-      @input=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <template v-if=\\"person === name\\">
+        <input
+          :value=\\"name\\"
+          @input=\\"name = $event.target.value + ' and ' + person\\"
+        />
+
+        Hello
+        {{ person }}
+        ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      </template>
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -243,14 +252,16 @@ const dev = ref(\\"PatrickJS\\");
 exports[`Vue BasicFor 1`] = `
 "<template>
   <div>
-    <input
-      :value=\\"name\\"
-      @input=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template :key=\\"index\\" v-for=\\"(person, index) in names\\">
+      <input
+        :value=\\"name\\"
+        @input=\\"name = $event.target.value + ' and ' + person\\"
+      />
 
-    Hello
-    {{ person }}
-    ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+      Hello
+      {{ person }}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -269,20 +280,22 @@ onMounted(() => {
 exports[`Vue BasicRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -398,18 +411,21 @@ watch([count], ([count]) => {
 
 exports[`Vue Button 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <template v-if=\\"link\\">
+    <a
+      v-bind=\\"attributes\\"
+      :href=\\"link\\"
+      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      {{ text }}
+    </a>
+  </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+  <template v-if=\\"!link\\">
+    <button v-bind=\\"attributes\\" type=\\"button\\">
+      {{ text }}
+    </button>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 export interface ButtonProps {
@@ -426,13 +442,9 @@ const props = defineProps<ButtonProps>();
 exports[`Vue Columns 1`] = `
 "<template>
   <div class=\\"builder-columns div\\">
-    <div
-      class=\\"builder-column div-2\\"
-      v-for=\\"(column, index) in columns\\"
-      :key=\\"index\\"
-    >
-      {{ column.content }} {{ index }}
-    </div>
+    <template :key=\\"index\\" v-for=\\"(column, index) in columns\\">
+      <div class=\\"builder-column div-2\\">{{ column.content }} {{ index }}</div>
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -713,39 +725,44 @@ exports[`Vue Form 1`] = `
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
   >
-    <builder-block-component
-      v-for=\\"(block, index) in builderBlock?.children\\"
-      v-if=\\"builderBlock && builderBlock.children\\"
-      :block=\\"block\\"
-      :index=\\"index\\"
-      :key=\\"block.id\\"
-    ></builder-block-component>
+    <template v-if=\\"builderBlock && builderBlock.children\\">
+      <template
+        :key=\\"block.id\\"
+        v-for=\\"(block, index) in builderBlock?.children\\"
+      >
+        <builder-block-component
+          :block=\\"block\\"
+          :index=\\"index\\"
+        ></builder-block-component>
+      </template>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"errorMessage\\"
-      v-if=\\"submissionState === 'error'\\"
-      :blocks=\\"errorMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'error'\\">
+      <builder-blocks
+        dataPath=\\"errorMessage\\"
+        :blocks=\\"errorMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"sendingMessage\\"
-      v-if=\\"submissionState === 'sending'\\"
-      :blocks=\\"sendingMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'sending'\\">
+      <builder-blocks
+        dataPath=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <pre
-      class=\\"builder-form-error-text pre\\"
-      v-if=\\"submissionState === 'error' && responseData\\"
-    >
+    <template v-if=\\"submissionState === 'error' && responseData\\">
+      <pre class=\\"builder-form-error-text pre\\">
         {{ JSON.stringify(responseData, null, 2) }}
-      </pre
-    >
+      </pre>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"successMessage\\"
-      v-if=\\"submissionState === 'success'\\"
-      :blocks=\\"successMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'success'\\">
+      <builder-blocks
+        dataPath=\\"successMessage\\"
+        :blocks=\\"successMessage\\"
+      ></builder-blocks>
+    </template>
   </form>
 </template>
 <script setup lang=\\"ts\\">
@@ -1014,20 +1031,21 @@ function onSubmit(event) {
 exports[`Vue Image 1`] = `
 "<template>
   <picture ref=\\"pictureRef\\">
-    <img
-      v-if=\\"!useLazyLoading() || load\\"
-      :alt=\\"altText\\"
-      :aria-role=\\"altText ? 'presentation' : undefined\\"
-      :class=\\"
-        _classStringToObject(
-          'builder-image' + (_class ? ' ' + _class : '') + ' img'
-        )
-      \\"
-      :src=\\"image\\"
-      @load=\\"setLoaded()\\"
-      :srcset=\\"srcset\\"
-      :sizes=\\"sizes\\"
-    />
+    <template v-if=\\"!useLazyLoading() || load\\">
+      <img
+        :alt=\\"altText\\"
+        :aria-role=\\"altText ? 'presentation' : undefined\\"
+        :class=\\"
+          _classStringToObject(
+            'builder-image' + (_class ? ' ' + _class : '') + ' img'
+          )
+        \\"
+        :src=\\"image\\"
+        @load=\\"setLoaded()\\"
+        :srcset=\\"srcset\\"
+        :sizes=\\"sizes\\"
+      />
+    </template>
 
     <source :srcset=\\"srcset\\" />
   </picture>
@@ -1131,7 +1149,9 @@ function _classStringToObject(str) {
 exports[`Vue Image State 1`] = `
 "<template>
   <div>
-    <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    <template :key=\\"index\\" v-for=\\"(item, index) in images\\">
+      <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -1279,17 +1299,18 @@ const props = defineProps<SectionProps>();
 
 exports[`Vue Section 2`] = `
 "<template>
-  <section
-    v-bind=\\"attributes\\"
-    v-for=\\"(item, index) in items\\"
-    v-if=\\"max\\"
-    :style=\\"{
-      maxWidth: item + max,
-    }\\"
-    :key=\\"index\\"
-  >
-    <slot />
-  </section>
+  <template v-if=\\"max\\">
+    <template :key=\\"index\\" v-for=\\"(item, index) in items\\">
+      <section
+        v-bind=\\"attributes\\"
+        :style=\\"{
+          maxWidth: item + max,
+        }\\"
+      >
+        <slot />
+      </section>
+    </template>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
@@ -1315,14 +1336,11 @@ exports[`Vue Select 1`] = `
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
   >
-    <option
-      v-for=\\"(option, index) in options\\"
-      :value=\\"option.value\\"
-      :data-index=\\"index\\"
-      :key=\\"index\\"
-    >
-      {{ option.name || option.value }}
-    </option>
+    <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
+      <option :value=\\"option.value\\" :data-index=\\"index\\">
+        {{ option.name || option.value }}
+      </option>
+    </template>
   </select>
 </template>
 <script setup lang=\\"ts\\">
@@ -1382,20 +1400,43 @@ exports[`Vue Stamped.io 1`] = `
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
 
-    <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
+    <template v-if=\\"showReviewPrompt\\">
+      <input placeholder=\\"Email\\" />
 
-    <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
-      <img class=\\"img\\" :src=\\"review.avatar\\" />
-      <div
-        :class=\\"
-          _classStringToObject(showReviewPrompt ? 'bg-primary' : 'bg-secondary')
+      <input placeholder=\\"Title\\" class=\\"input\\" />
+
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea\\"
+      ></textarea>
+
+      <button
+        class=\\"button\\"
+        @click=\\"
+          $event.preventDefault();
+          showReviewPrompt = false;
         \\"
       >
-        <div>N: {{ index }}</div>
-        <div>{{ review.author }}</div>
-        <div>{{ review.reviewMessage }}</div>
+        Submit
+      </button>
+    </template>
+
+    <template :key=\\"review.id\\" v-for=\\"(review, index) in reviews\\">
+      <div class=\\"review\\">
+        <img class=\\"img\\" :src=\\"review.avatar\\" />
+        <div
+          :class=\\"
+            _classStringToObject(
+              showReviewPrompt ? 'bg-primary' : 'bg-secondary'
+            )
+          \\"
+        >
+          <div>N: {{ index }}</div>
+          <div>{{ review.author }}</div>
+          <div>{{ review.reviewMessage }}</div>
+        </div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -1787,18 +1828,21 @@ function _classStringToObject(str) {
 
 exports[`Vue defaultProps 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <template v-if=\\"link\\">
+    <a
+      v-bind=\\"attributes\\"
+      :href=\\"link\\"
+      :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+    >
+      {{ text }}
+    </a>
+  </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+  <template v-if=\\"!link\\">
+    <button v-bind=\\"attributes\\" type=\\"button\\">
+      {{ text }}
+    </button>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 export interface ButtonProps {
@@ -1886,11 +1930,19 @@ watch([a, b], ([a, b]) => {
 
 exports[`Vue nestedShow 1`] = `
 "<template>
-  <div v-if=\\"!Boolean(conditionA)\\">else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template v-if=\\"!conditionB\\">
+      <div>if condition A and condition B</div>
+    </template>
 
-  <div v-else-if=\\"!Boolean(!conditionB)\\">else-condition-B</div>
+    <template v-else>
+      <div>else-condition-B</div>
+    </template>
+  </template>
 
-  <div v-else>if condition A and condition B</div>
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 interface Props {
@@ -2110,8 +2162,13 @@ const props = defineProps<Person>();
 
 exports[`Vue rootShow 1`] = `
 "<template>
-  <div v-if=\\"foo === 'bar'\\">Bar</div>
-  <div v-else>Foo</div>
+  <template v-if=\\"foo === 'bar'\\">
+    <div>Bar</div>
+  </template>
+
+  <template v-else>
+    <div>Foo</div>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 export interface RenderStylesProps {
@@ -2127,7 +2184,9 @@ exports[`Vue self-referencing component 1`] = `
   <div>
     {{ name }}
 
-    <my-component name=\\"Bruce Wayne\\" v-if=\\"name === 'Batman'\\"></my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce Wayne\\"></my-component>
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -2142,9 +2201,11 @@ exports[`Vue self-referencing component with children 1`] = `
     {{ name }}
     <slot />
 
-    <my-component name=\\"Bruce\\" v-if=\\"name === 'Batman'\\">
-      <div>Wayne</div>
-    </my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce\\">
+        <div>Wayne</div>
+      </my-component>
+    </template>
   </div>
 </template>
 <script setup lang=\\"ts\\">
@@ -2155,10 +2216,15 @@ const props = defineProps<any>();
 
 exports[`Vue showWithFor 1`] = `
 "<template>
-  <div v-for=\\"(item, index) in items\\" v-if=\\"conditionA\\" :key=\\"idx\\">
-    {{ item }}
-  </div>
-  <div v-else>else-condition-A</div>
+  <template v-if=\\"conditionA\\">
+    <template :key=\\"idx\\" v-for=\\"(item, index) in items\\">
+      <div>{{ item }}</div>
+    </template>
+  </template>
+
+  <template v-else>
+    <div>else-condition-A</div>
+  </template>
 </template>
 <script setup lang=\\"ts\\">
 interface Props {
