@@ -8,7 +8,7 @@ import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
 import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
-import { replaceGetterWithFunction } from '../../helpers/patterns';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
 
 type State = {
   str: string;
@@ -101,21 +101,32 @@ const processStateValue = ({
   component: MitosisComponent;
 }) => {
   const mapValue = updateStateCode({ options, component });
-  return ([key, state]: [key: string, state: StateValue | undefined]): string => {
-    const code = state?.code;
-    const type = state?.type;
-    if (typeof code === 'string') {
-      return pipe(code, type === 'getter' ? replaceGetterWithFunction : identity, mapValue);
+
+  return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    const getDefaultCase = () =>
+      pipe(
+        value,
+        json5.stringify,
+        mapValue,
+        (x) => `const [${key}, ${getStateSetterName(key)}] = createSignal(() => (${x}))`,
+      );
+
+    const value = stateVal?.code;
+    const type = stateVal?.type;
+    if (typeof value === 'string') {
+      switch (type) {
+        case 'getter':
+          return pipe(value, replaceGetterWithFunction, mapValue);
+        case 'function':
+          return mapValue(value);
+        case 'method':
+          return pipe(value, prefixWithFunction, mapValue);
+        default:
+          return getDefaultCase();
+      }
+    } else {
+      return getDefaultCase();
     }
-
-    // Other (data)
-    const transformedValue = pipe(code, json5.stringify, mapValue);
-
-    const defaultCase = `const [${key}, ${getStateSetterName(
-      key,
-    )}] = createSignal(${transformedValue})`;
-
-    return defaultCase;
   };
 };
 

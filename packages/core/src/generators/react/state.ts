@@ -5,10 +5,10 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisComponent, StateValue } from '../../types/mitosis-component';
-import { identity, pipe } from 'fp-ts/lib/function';
+import { pipe } from 'fp-ts/lib/function';
 import { ToReactOptions } from './types';
 import { processBinding } from './helpers';
-import { replaceGetterWithFunction } from '../../helpers/patterns';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
 
 /**
  * Removes all `this.` references.
@@ -32,21 +32,32 @@ const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
 
 const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
+
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    const getDefaultCase = () =>
+      pipe(
+        value,
+        json5.stringify,
+        mapValue,
+        (x) => `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${x}))`,
+      );
+
     const value = stateVal?.code;
     const type = stateVal?.type;
-    console.log({ stateVal });
     if (typeof value === 'string') {
-      return pipe(value, type === 'getter' ? replaceGetterWithFunction : identity, mapValue);
+      switch (type) {
+        case 'getter':
+          return pipe(value, replaceGetterWithFunction, mapValue);
+        case 'function':
+          return mapValue(value);
+        case 'method':
+          return pipe(value, prefixWithFunction, mapValue);
+        default:
+          return getDefaultCase();
+      }
+    } else {
+      return getDefaultCase();
     }
-
-    // Other (data)
-    const transformedValue = pipe(value, json5.stringify, mapValue);
-    const defaultCase = `const [${key}, ${getSetStateFnName(
-      key,
-    )}] = useState(() => (${transformedValue}))`;
-
-    return defaultCase;
   };
 };
 
