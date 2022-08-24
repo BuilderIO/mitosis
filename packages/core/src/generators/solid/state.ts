@@ -108,7 +108,7 @@ const processStateValue = ({
         value,
         json5.stringify,
         mapValue,
-        (x) => `const [${key}, ${getStateSetterName(key)}] = createSignal(() => (${x}))`,
+        (x) => `const [${key}, ${getStateSetterName(key)}] = createSignal(${x})`,
       );
 
     const value = stateVal?.code;
