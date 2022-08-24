@@ -7,6 +7,8 @@ import {
   componentToLit,
   componentToQwik,
   componentToReact,
+  componentToMbox,
+  componentToMboxModel,
   componentToReactNative,
   componentToSolid,
   componentToSvelte,
@@ -181,6 +183,10 @@ const getGeneratorForTarget = ({
       return componentToVue3(options.options.vue3);
     case 'angular':
       return componentToAngular(options.options.angular);
+    case 'mbox':
+      return componentToMbox(options.options.mbox);
+    case 'mbox':
+      return componentToMboxModel(options.options.mboxModel);
     case 'react':
       return componentToReact(options.options.react);
     case 'swift':

@@ -9,6 +9,8 @@ import { componentToMitosis as mitosis } from './generators/mitosis';
 import { componentToLiquid as liquid } from './generators/liquid';
 import { componentToReact as react } from './generators/react';
 import { componentToPreact as preact } from './generators/react';
+import { componentToMbox as mbox } from './generators/mbox';
+import { componentToMboxModel as mboxModel } from './generators/mbox-model';
 import { componentToReactNative as reactNative } from './generators/react-native';
 import { componentToSolid as solid } from './generators/solid';
 import { componentToSvelte as svelte } from './generators/svelte';
@@ -28,6 +30,8 @@ export const targets = {
   mitosis,
   liquid,
   react,
+  mbox,
+  mboxModel,
   reactNative,
   solid,
   svelte,
