@@ -1,7 +1,7 @@
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { checkIsCodeValue, MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './add-prevent-default';
@@ -9,6 +9,7 @@ import { convertMethodToFunction } from './convert-method-to-function';
 import { renderJSXNodes } from './jsx';
 import { arrowFnBlock, File, invoke, SrcBuilder } from './src-generator';
 import { runPostJsonPlugins, runPreJsonPlugins } from '../../modules/plugins';
+import traverse from 'traverse';
 
 Error.stackTraceLimit = 9999;
 
@@ -213,8 +214,8 @@ function emitUseContextProvider(file: File, component: MitosisComponent) {
       Object.keys(context.value).forEach((prop) => {
         const propValue = context.value![prop];
         file.src.emit(prop, ':');
-        if (isGetter(propValue)) {
-          file.src.emit('(()=>{', extractGetterBody(propValue), '})(),');
+        if (propValue?.type === 'getter') {
+          file.src.emit('(()=>{', extractGetterBody(propValue.code), '})(),');
         } else if (typeof propValue == 'function') {
           throw new Error('Qwik: Functions are not supported in context');
         } else {
@@ -295,30 +296,29 @@ function emitStateMethodsAndRewriteBindings(
   return state;
 }
 
+const checkIsObjectWithCodeBlock = (obj: any): obj is { code: string } => {
+  return typeof obj == 'object' && obj?.code && typeof obj.code === 'string';
+};
+
 function rewriteCodeExpr(
-  obj: any,
+  component: MitosisComponent,
   methodMap: Record<string, 'method' | 'getter'>,
   lexicalArgs: string[],
-  replace: Record<string, string> | undefined,
+  replace: Record<string, string> | undefined = {},
 ) {
-  if (obj && typeof obj == 'object') {
-    if (Array.isArray(obj)) {
-      obj.forEach((item) => rewriteCodeExpr(item, methodMap, lexicalArgs, replace));
-    } else {
-      Object.keys(obj).forEach((key) => {
-        const value = obj[key];
-        if (typeof value == 'string') {
-          if (value.startsWith(CODE_PREFIX) || key == 'code') {
-            let code = convertMethodToFunction(value, methodMap, lexicalArgs);
-            replace &&
-              Object.keys(replace).forEach((key) => (code = code.replace(key, replace[key])));
-            obj[key] = code;
-          }
-        }
-        rewriteCodeExpr(value, methodMap, lexicalArgs, replace);
-      });
+  traverse(component).forEach(function (item) {
+    if (!(checkIsCodeValue(item) || checkIsObjectWithCodeBlock(item))) {
+      return;
     }
-  }
+
+    let code = convertMethodToFunction(item.code, methodMap, lexicalArgs);
+
+    Object.keys(replace).forEach((key) => {
+      code = code.replace(key, replace[key]);
+    });
+
+    item.code = code;
+  });
 }
 
 function getLexicalScopeVars(component: MitosisComponent) {
@@ -336,11 +336,6 @@ function emitImports(file: File, component: MitosisComponent) {
   });
 }
 
-const CODE_PREFIX = '@builder.io/mitosis/';
-const FUNCTION = CODE_PREFIX + 'function:';
-const METHOD = CODE_PREFIX + 'method:';
-const GETTER = CODE_PREFIX + 'method:get ';
-
 function emitStateMethods(
   file: File,
   componentState: MitosisComponent['state'],
@@ -350,13 +345,13 @@ function emitStateMethods(
   const stateInit: StateInit = [stateValues];
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
-    let code = componentState[key]?.code!;
-    if (isCode(code)) {
-      const codeIisGetter = isGetter(code);
-      let prefixIdx = code.indexOf(':') + 1;
-      if (codeIisGetter) {
+    const stateValue = componentState[key];
+    if (checkIsCodeValue(stateValue)) {
+      let code = stateValue.code;
+      let prefixIdx = 0;
+      if (stateValue.type === 'getter') {
         prefixIdx += 'get '.length;
-      } else if (isFunction(code)) {
+      } else if (stateValue.type === 'function') {
         prefixIdx += 'function '.length;
       }
       code = code.substring(prefixIdx);
@@ -365,7 +360,7 @@ function emitStateMethods(
         `(${lexicalArgs.join(',')},`,
       );
       const functionName = code.split(/\(/)[0];
-      if (codeIisGetter) {
+      if (stateValue.type === 'getter') {
         stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
       }
       if (!file.options.isTypeScript) {
@@ -374,7 +369,7 @@ function emitStateMethods(
       }
       file.exportConst(functionName, 'function ' + code, true);
     } else {
-      stateValues[key] = code;
+      stateValues[key] = stateValue?.code;
     }
   });
   return stateInit;
@@ -382,18 +377,6 @@ function emitStateMethods(
 
 function convertTypeScriptToJS(code: string): string {
   return babelTransformExpression(code, {});
-}
-
-function isGetter(code: any): code is string {
-  return typeof code === 'string' && code.startsWith(GETTER);
-}
-
-function isCode(code: any): code is string {
-  return typeof code === 'string' && code.startsWith(CODE_PREFIX);
-}
-
-function isFunction(code: any): code is string {
-  return typeof code === 'string' && code.startsWith(FUNCTION);
 }
 
 function extractGetterBody(code: string): string {
@@ -407,9 +390,9 @@ function stateToMethodOrGetter(
 ): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};
   Object.keys(state).forEach((key) => {
-    let code = state[key]?.code;
-    if (typeof code == 'string' && code.startsWith(METHOD)) {
-      methodMap[key] = code.startsWith(GETTER) ? 'getter' : 'method';
+    const stateVal = state[key];
+    if (stateVal?.type === 'getter' || stateVal?.type === 'method') {
+      methodMap[key] = stateVal.type;
     }
   });
   return methodMap;

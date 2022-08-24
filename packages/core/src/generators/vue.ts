@@ -32,7 +32,6 @@ import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
@@ -462,7 +461,7 @@ const onUpdatePlugin: Plugin = (options) => ({
         component.hooks.onUpdate
           .filter((hook) => hook.deps?.length)
           .forEach((hook, index) => {
-            const code = `${methodLiteralPrefix}get ${getOnUpdateHookName(index)} () {
+            const code = `get ${getOnUpdateHookName(index)} () {
             return {
               ${hook.deps
                 ?.slice(1, -1)

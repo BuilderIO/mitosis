@@ -1,7 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-module-path';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { getBindingsCode } from '../../helpers/get-bindings';
@@ -12,7 +11,7 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { tryParseJson } from '../../helpers/json';
 import { HOOKS } from '../../constants/hooks';
 import { jsonToAst } from './ast';
-import { mapReactIdentifiers, parseStateObject, parseStateObjectToMitosisState } from './state';
+import { mapReactIdentifiers, parseStateObjectToMitosisState } from './state';
 import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
@@ -50,7 +49,7 @@ const componentFunctionToJson = (
               const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
-                  const value = parseStateObject(valueNode);
+                  const value = parseStateObjectToMitosisState(valueNode);
                   setContext[keyPath] = {
                     name: keyNode.name,
                     value,
@@ -153,7 +152,7 @@ const componentFunctionToJson = (
     if (types.isFunctionDeclaration(item)) {
       if (types.isIdentifier(item.id)) {
         state[item.id.name] = {
-          code: `${functionLiteralPrefix}${generate(item).code!}`,
+          code: generate(item).code,
           type: 'function',
         };
       }

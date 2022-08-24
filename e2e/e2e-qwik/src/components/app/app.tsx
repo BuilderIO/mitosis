@@ -6,9 +6,5 @@ import { component$ } from '@builder.io/qwik';
 import { MyComponent } from '@builder.io/e2e-app-qwik-output';
 
 export const App = component$(() => {
-  return (
-    <div>
-      <MyComponent></MyComponent>
-    </div>
-  );
+  return <MyComponent></MyComponent>;
 });

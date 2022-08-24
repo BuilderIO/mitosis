@@ -1,4 +1,3 @@
-import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { MitosisComponent } from '../types/mitosis-component';
 import traverse from 'traverse';
 
@@ -6,17 +5,7 @@ import traverse from 'traverse';
  * Map getters like `useStore({ get foo() { ... }})` from `state.foo` to `foo()`
  */
 export const gettersToFunctions = (json: MitosisComponent) => {
-  const getterKeys = Object.keys(json.state).filter((item) => {
-    const value = json.state[item]?.code;
-    if (
-      typeof value === 'string' &&
-      value.startsWith(methodLiteralPrefix) &&
-      value.replace(methodLiteralPrefix, '').startsWith('get ')
-    ) {
-      return true;
-    }
-    return false;
-  });
+  const getterKeys = Object.keys(json.state).filter((item) => json.state[item]?.type === 'getter');
 
   traverse(json).forEach(function (item) {
     // TODO: not all strings are expressions!
