@@ -161,6 +161,18 @@ const ON_UPDATE_RETURN: Tests = {
   basicOnUpdateReturn: require('./data/basic-onUpdate-return.raw'),
 };
 
+const JSX_TESTS: Tests[] = [
+  BASIC_TESTS,
+  SLOTS_TESTS,
+  SHOW_TESTS,
+  FORWARD_REF_TESTS,
+  MULTI_ON_UPDATE_TESTS,
+  FORM_BLOCK_TESTS,
+  ADVANCED_REF,
+  ON_UPDATE_RETURN,
+  FOR_SHOW_TESTS,
+];
+
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
     BASIC_TESTS,
@@ -301,6 +313,17 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FORM_BLOCK_TESTS,
     FOR_SHOW_TESTS,
   ],
+};
+
+export const runTestsForJsx = () => {
+  JSX_TESTS.forEach((tests) => {
+    Object.keys(tests).forEach((key) => {
+      test(key, () => {
+        const component = parseJsx(tests[key]);
+        expect(component).toMatchSnapshot();
+      });
+    });
+  });
 };
 
 export const runTestsForTarget = (target: Target, generator: Transpiler) => {
