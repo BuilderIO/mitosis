@@ -495,7 +495,7 @@ const onUpdatePlugin: Plugin = (options) => ({
 const BASE_OPTIONS: ToVueOptions = {
   plugins: [],
   vueVersion: 2,
-  api: 'composition',
+  api: 'options',
 };
 
 const mergeOptions = (
