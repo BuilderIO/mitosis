@@ -2,7 +2,7 @@ import { mapValues } from 'lodash';
 import { functionLiteralPrefix } from '../constants/function-literal-prefix';
 import { methodLiteralPrefix } from '../constants/method-literal-prefix';
 import { JSONObject } from '../types/json';
-import { MitosisComponent, StateValue } from '../types/mitosis-component';
+import { MitosisComponent, StateValue, StateValueType } from '../types/mitosis-component';
 import { GETTER } from './patterns';
 
 export const checkHasState = (component: MitosisComponent) =>
@@ -21,10 +21,8 @@ const mapJsonToStateValue = (value: any): StateValue => {
     } else if (value.startsWith(methodLiteralPrefix)) {
       const strippedValue = value.replace(methodLiteralPrefix, '');
       const isGet = Boolean(strippedValue.match(GETTER));
-      if (isGet) {
-        return { type: 'getter', code: strippedValue.replace(GETTER, '') };
-      }
-      return { type: 'method', code: strippedValue };
+      const type: StateValueType = isGet ? 'getter' : 'method';
+      return { type, code: strippedValue };
     }
   }
   return { type: 'property', code: value };

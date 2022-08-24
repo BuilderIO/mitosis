@@ -356,7 +356,7 @@ export const componentToSvelte =
         keyPrefix: '$: ',
         valueMapper: (code) =>
           pipe(
-            code.replace(/^([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
+            code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => '),
             (str) => stripStateAndProps(str, options),
             stripThisRefs,
           ),

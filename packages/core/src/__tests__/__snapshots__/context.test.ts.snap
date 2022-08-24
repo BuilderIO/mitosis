@@ -18,7 +18,7 @@ Object {
       "type": "property",
     },
     "fooUpperCase": Object {
-      "code": "fooUpperCase() {
+      "code": "get fooUpperCase() {
   return this.foo.toUpperCase();
 }",
       "type": "getter",
@@ -42,7 +42,7 @@ exports[`Context Parse context 2`] = `
 
 export default createContext({
   foo: \\"bar\\",
-  fooUpperCase() {
+  get fooUpperCase() {
     return this.foo.toUpperCase();
   },
   someMethod() {
@@ -388,7 +388,7 @@ Object {
   "refs": Object {},
   "state": Object {
     "actions": Object {
-      "code": "actions() {
+      "code": "get actions() {
   return getBlockActions({
     block: state.useBlock,
     state: builderContext.state,
@@ -398,7 +398,7 @@ Object {
       "type": "getter",
     },
     "component": Object {
-      "code": "component() {
+      "code": "get component() {
   const componentName = state.useBlock.component?.name;
 
   if (!componentName) {
@@ -419,43 +419,43 @@ Object {
       "type": "getter",
     },
     "componentInfo": Object {
-      "code": "componentInfo() {
+      "code": "get componentInfo() {
   return state.component?.info;
 }",
       "type": "getter",
     },
     "componentOptions": Object {
-      "code": "componentOptions() {
+      "code": "get componentOptions() {
   return getBlockComponentOptions(state.useBlock);
 }",
       "type": "getter",
     },
     "componentRef": Object {
-      "code": "componentRef() {
+      "code": "get componentRef() {
   return state.component?.component;
 }",
       "type": "getter",
     },
     "css": Object {
-      "code": "css() {
+      "code": "get css() {
   return getBlockStyles(state.useBlock);
 }",
       "type": "getter",
     },
     "properties": Object {
-      "code": "properties() {
+      "code": "get properties() {
   return getBlockProperties(state.useBlock);
 }",
       "type": "getter",
     },
     "tagName": Object {
-      "code": "tagName() {
+      "code": "get tagName() {
   return (getBlockTag(state.useBlock) as any);
 }",
       "type": "getter",
     },
     "useBlock": Object {
-      "code": "useBlock() {
+      "code": "get useBlock() {
   return getProcessedBlock({
     block: props.block,
     state: builderContext.state,
