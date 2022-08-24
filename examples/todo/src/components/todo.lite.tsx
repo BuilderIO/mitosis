@@ -1,6 +1,6 @@
 import todosState from '../shared/todos-state.lite';
 import { Show, useStore } from '@builder.io/mitosis';
-import { Todo as TodoType } from '../shared/todos-state.lite';
+import type { Todo as TodoType } from '../shared/todos-state.lite';
 
 export type TodoProps = {
   todo: TodoType;
