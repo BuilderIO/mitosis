@@ -808,7 +808,6 @@ export default function Fiddle() {
                 options={{
                   automaticLayout: true,
                   overviewRulerBorder: false,
-                  highlightActiveIndentGuide: false,
                   foldingHighlight: false,
                   renderLineHighlightOnlyWhenFocus: true,
                   occurrencesHighlight: false,
@@ -831,7 +830,6 @@ export default function Fiddle() {
                 options={{
                   automaticLayout: true,
                   overviewRulerBorder: false,
-                  highlightActiveIndentGuide: false,
                   foldingHighlight: false,
                   renderLineHighlightOnlyWhenFocus: true,
                   occurrencesHighlight: false,
@@ -1160,7 +1158,6 @@ export default function Fiddle() {
                   options={{
                     automaticLayout: true,
                     overviewRulerBorder: false,
-                    highlightActiveIndentGuide: false,
                     foldingHighlight: false,
                     renderLineHighlightOnlyWhenFocus: true,
                     occurrencesHighlight: false,
