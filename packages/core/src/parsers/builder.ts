@@ -13,7 +13,7 @@ import { MitosisNode } from '../types/mitosis-node';
 import { parseJsx, parseStateObject } from './jsx';
 import { parseCode, isExpression } from '../helpers/parsers';
 import { hashCodeAsString } from '..';
-import { mapJsonObjectToStateValue } from '../helpers/state';
+import { mapJsonObjectToStateValue } from './helpers/state';
 import { JSONObject } from '../types/json';
 
 // Omit some superflous styles that can come from Builder's web importer
@@ -457,33 +457,34 @@ export const builderElementToMitosisNode = (
   // Special builder properties
   // TODO: support hide and repeat
   const blockBindings = getBlockBindings(block, options);
-  const showBinding = blockBindings.show;
-  if (showBinding) {
+  let code: string | undefined = undefined;
+  if (blockBindings.show) {
+    code = wrapBindingIfNeeded(blockBindings.show, options);
+  } else if (blockBindings.hide) {
+    code = `!(${wrapBindingIfNeeded(blockBindings.hide, options)})`;
+  }
+  if (code) {
     const isFragment = block.component?.name === 'Fragment';
     // TODO: handle having other things, like a repeat too
     if (isFragment) {
       return createMitosisNode({
         name: 'Show',
-        bindings: {
-          when: { code: wrapBindingIfNeeded(showBinding, options) },
-        },
+        bindings: { when: { code: code } },
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
     } else {
       return createMitosisNode({
         name: 'Show',
-        bindings: {
-          when: { code: wrapBindingIfNeeded(showBinding, options) },
-        },
+        bindings: { when: { code: code } },
         children: [
           builderElementToMitosisNode(
             {
               ...block,
               code: {
                 ...block.code,
-                bindings: omit(blockBindings, 'show'),
+                bindings: omit(blockBindings, 'show', 'hide'),
               },
-              bindings: omit(blockBindings, 'show'),
+              bindings: omit(blockBindings, 'show', 'hide'),
             },
             options,
           ),
@@ -561,6 +562,7 @@ export const builderElementToMitosisNode = (
       ['builder-id']: block.id!,
       // class: `builder-block ${block.id} ${block.properties?.class || ''}`,
     }),
+    ...(options.includeBuilderExtras && getBuilderPropsForSymbol(block)),
   };
 
   if (block.layerName) {
@@ -603,11 +605,8 @@ export const builderElementToMitosisNode = (
       block.tagName ||
       ((block as any).linkUrl ? 'a' : 'div'),
     properties: {
-      ...(block.component
-        ? {
-            $tagName: block.tagName,
-          }
-        : null),
+      ...(block.component && { $tagName: block.tagName }),
+      ...(block.class && { class: block.class }),
       ...properties,
     },
     bindings: {
@@ -646,6 +645,19 @@ export const builderElementToMitosisNode = (
   node.children = (block.children || []).map((item) => builderElementToMitosisNode(item, options));
 
   return node;
+};
+
+const getBuilderPropsForSymbol = (
+  block: BuilderElement,
+): undefined | { 'builder-content-id': string } => {
+  if (block.children?.length === 1) {
+    const child = block.children[0];
+    const builderContentId = child.properties?.['builder-content-id'];
+    if (builderContentId) {
+      return { 'builder-content-id': builderContentId };
+    }
+  }
+  return undefined;
 };
 
 const getHooks = (content: BuilderContent) => {
@@ -717,22 +729,31 @@ export function extractStateHook(code: string) {
 }
 
 export function convertExportDefaultToReturn(code: string) {
-  const { types } = babel;
-  const body = parseCode(code);
-  const newBody = body.slice();
-  for (let i = 0; i < body.length; i++) {
-    const statement = body[i];
-    if (types.isExportDefaultDeclaration(statement)) {
-      if (
-        types.isCallExpression(statement.declaration) ||
-        types.isExpression(statement.declaration)
-      ) {
-        newBody[i] = types.returnStatement(statement.declaration);
+  try {
+    const { types } = babel;
+    const body = parseCode(code);
+    const newBody = body.slice();
+    for (let i = 0; i < body.length; i++) {
+      const statement = body[i];
+      if (types.isExportDefaultDeclaration(statement)) {
+        if (
+          types.isCallExpression(statement.declaration) ||
+          types.isExpression(statement.declaration)
+        ) {
+          newBody[i] = types.returnStatement(statement.declaration);
+        }
       }
     }
-  }
 
-  return generate(types.program(newBody)).code || '';
+    return generate(types.program(newBody)).code || '';
+  } catch (e) {
+    const error = e as { code?: string; reasonCode?: string };
+    if (error.code === 'BABEL_PARSE_ERROR') {
+      return code;
+    } else {
+      throw e;
+    }
+  }
 }
 
 // TODO: maybe this should be part of the builder -> Mitosis part
@@ -836,6 +857,7 @@ const builderContentPartToMitosisComponent = (
       useMetadata: {
         httpRequests: builderContent.data?.httpRequests,
       },
+      ...(builderContent.data?.cssCode && { cssCode: builderContent.data.cssCode }),
     },
     inputs: builderContent.data?.inputs?.map((input) => ({
       name: input.name,

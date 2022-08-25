@@ -148,6 +148,9 @@ export function convertBuilderElementToMitosisComponent(
         name: componentName,
         options: symbolValue.data,
       },
+      properties: {
+        'builder-content-id': id,
+      },
     }),
   ];
 

@@ -1,8 +1,6 @@
 import { types } from '@babel/core';
 import json5 from 'json5';
 import traverse from 'traverse';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -10,6 +8,7 @@ import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { pipe } from 'fp-ts/lib/function';
 import { ToReactOptions } from './types';
 import { processBinding } from './helpers';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
 
 /**
  * Removes all `this.` references.
@@ -33,30 +32,32 @@ const getSetStateFnName = (stateName: string) => `set${capitalize(stateName)}`;
 
 const processStateValue = (options: ToReactOptions) => {
   const mapValue = valueMapper(options);
+
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    const getDefaultCase = () =>
+      pipe(
+        value,
+        json5.stringify,
+        mapValue,
+        (x) => `const [${key}, ${getSetStateFnName(key)}] = useState(() => (${x}))`,
+      );
+
     const value = stateVal?.code;
+    const type = stateVal?.type;
     if (typeof value === 'string') {
-      if (value.startsWith(functionLiteralPrefix)) {
-        // functions
-        const useValue = value.replace(functionLiteralPrefix, '');
-        const mappedVal = mapValue(useValue);
-
-        return mappedVal;
-      } else if (value.startsWith(methodLiteralPrefix)) {
-        // methods
-        const methodValue = value.replace(methodLiteralPrefix, '');
-        const useValue = methodValue.replace(/^(get )?/, 'function ');
-        return mapValue(useValue);
+      switch (type) {
+        case 'getter':
+          return pipe(value, replaceGetterWithFunction, mapValue);
+        case 'function':
+          return mapValue(value);
+        case 'method':
+          return pipe(value, prefixWithFunction, mapValue);
+        default:
+          return getDefaultCase();
       }
+    } else {
+      return getDefaultCase();
     }
-
-    // Other (data)
-    const transformedValue = pipe(value, json5.stringify, mapValue);
-    const defaultCase = `const [${key}, ${getSetStateFnName(
-      key,
-    )}] = useState(() => (${transformedValue}))`;
-
-    return defaultCase;
   };
 };
 
@@ -101,9 +102,7 @@ export const updateStateSettersInCode = (value: string, options: ToReactOptions)
             // TODO: ultimately support other property access like strings
             const propertyName = (node.left.property as types.Identifier).name;
             path.replaceWith(
-              types.callExpression(types.identifier(`${getSetStateFnName(propertyName)}`), [
-                node.right,
-              ]),
+              types.callExpression(types.identifier(getSetStateFnName(propertyName)), [node.right]),
             );
           }
         }
