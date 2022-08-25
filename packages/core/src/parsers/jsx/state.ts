@@ -22,7 +22,7 @@ function mapReactIdentifiersInExpression(expression: string, stateProperties: st
 
   return babelTransformExpression(
     // foo -> state.foo
-    replaceIdentifiers(expression, stateProperties, (name) => `state.${name}`),
+    replaceIdentifiers({ code: expression, from: stateProperties, to: (name) => `state.${name}` }),
     {
       CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
         if (types.isIdentifier(path.node.callee)) {

@@ -94,16 +94,15 @@ const addBindingsToJson =
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
-  return replaceIdentifiers(
-    stripStateAndPropsRefs(code, {
+  return replaceIdentifiers({
+    code: stripStateAndPropsRefs(code, {
       includeState: true,
       includeProps: true,
-
       replaceWith: 'this.',
     }),
-    getContextNames(json),
-    (name) => `this.${name}`,
-  );
+    from: getContextNames(json),
+    to: (name) => `this.${name}`,
+  });
 }
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
@@ -316,16 +315,18 @@ const stringifyBinding =
           event = 'input';
         }
         const isAssignmentExpression = useValue.includes('=');
+        const valueWRenamedEvent = replaceIdentifiers({
+          code: useValue,
+          from: cusArgs[0],
+          to: '$event',
+        });
+
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
-          return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
-          )}" `;
+          return ` @${event}="${encodeQuotes(removeSurroundingBlock(valueWRenamedEvent))}" `;
         } else {
           return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(
-              removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
-            ),
+            removeSurroundingBlock(removeSurroundingBlock(valueWRenamedEvent)),
           )}" `;
         }
       } else if (key === 'ref') {
