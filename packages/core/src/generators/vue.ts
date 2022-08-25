@@ -27,7 +27,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';

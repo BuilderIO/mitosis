@@ -9,7 +9,7 @@ import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { replaceIdentifiers } from '../../helpers/replace-idenifiers';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCodeJson, uncapitalize } from './helpers';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { JSONObject } from '../../types/json';
