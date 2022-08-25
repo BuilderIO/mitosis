@@ -1,5 +1,4 @@
 import { Linter as ESLinter } from 'eslint';
-// import JsxTypes from '@builder.io/mitosis/jsx-runtime';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
@@ -69,7 +68,7 @@ export function CodeEditor(props: MonacoEditorProps) {
       module: monaco.languages.typescript.ModuleKind.CommonJS,
       noEmit: true,
       esModuleInterop: true,
-      jsx: monaco.languages.typescript.JsxEmit.React,
+      jsx: monaco.languages.typescript.JsxEmit.ReactJSX,
       reactNamespace: 'React',
       allowJs: true,
       typeRoots: ['node_modules/@types'],
@@ -80,10 +79,15 @@ export function CodeEditor(props: MonacoEditorProps) {
       noSyntaxValidation: false,
     });
 
-    // monaco.languages.typescript.typescriptDefaults.addExtraLib(
-    // JsxTypes,
-    // `file:///node_modules/@builder.io/types/index.d.ts`,
-    // );
+    // add types
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      require('!!raw-loader!node_modules/@builder.io/mitosis/dist/src/index.d.ts').default,
+      'file:///node_modules/@builder.io/mitosis/index.d.ts',
+    );
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(
+      require('!!raw-loader!node_modules/@builder.io/mitosis/jsx-runtime.d.ts').default,
+      'file:///node_modules/react/jsx-runtime.d.ts',
+    );
 
     monaco.languages.registerDocumentFormattingEditProvider('typescript', {
       async provideDocumentFormattingEdits(model) {
@@ -144,6 +148,7 @@ export function CodeEditor(props: MonacoEditorProps) {
         ...props.options,
       }}
       language="typescript"
+      path="mitosis.tsx"
       {...props}
     />
   );
