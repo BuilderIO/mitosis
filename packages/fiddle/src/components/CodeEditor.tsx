@@ -4,8 +4,8 @@ import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
 // import { rules } from 'eslint-plugin-mitosis';
 
-const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/lib/index.d.ts').default;
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
+const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
 
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
