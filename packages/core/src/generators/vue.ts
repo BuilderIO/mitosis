@@ -681,15 +681,11 @@ const componentToVue =
       size(
         Object.keys(component.state).filter((key) => component.state[key]?.type === 'property'),
       ) && vueImports.push('ref');
-    } else {
-      vueImports.push('defineComponent');
     }
 
     function generateOptionsApiScript() {
-      // To let TypeScript properly infer types inside component options, we need to define components with defineComponent():
-      // defineComponent() also enables type inference for components defined in plain JavaScript
       return `
-        export default defineComponent({
+        export default {
         ${
           !component.name
             ? ''
@@ -774,7 +770,7 @@ const componentToVue =
           methods: ${functionsString},
         `
         }
-      })`;
+      }`;
     }
 
     const getCompositionPropDefinition = () => {
