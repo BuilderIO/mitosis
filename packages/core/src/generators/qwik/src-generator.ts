@@ -1,4 +1,6 @@
 import { format } from 'prettier/standalone';
+import { convertExportDefaultToReturn } from '../../parsers/builder';
+import { stableJSONserialize } from './stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -320,8 +322,7 @@ export class SrcBuilder {
         if (isEvent(key)) {
           key = key + '$';
           binding = `(event)=>${binding}`;
-        }
-        if (!binding && rawKey in props) {
+        } else if (!binding && rawKey in props) {
           binding = quote(props[rawKey]);
         } else if (binding != null && binding === props[key]) {
           // HACK: workaround for the fact that sometimes the `bindings` have string literals
@@ -470,7 +471,7 @@ function possiblyQuotePropertyName(key: string): any {
 }
 
 export function quote(text: string) {
-  const string = JSON.stringify(text);
+  const string = stableJSONserialize(text);
   // So \u2028 is a line separator character and prettier treats it as such
   // https://www.fileformat.info/info/unicode/char/2028/index.htm
   // That means it can't be inside of a string, so we replace it with `\\u2028`.
@@ -518,6 +519,9 @@ export function iif(code: any) {
   if (code.endsWith(_virtual_index) && !code.endsWith(return_virtual_index)) {
     code = code.substr(0, code.length - _virtual_index.length) + return_virtual_index;
   }
+  if (code.indexOf('export') !== -1) {
+    code = convertExportDefaultToReturn(code);
+  }
   return function (this: SrcBuilder) {
     code && this.emit('(()=>{', code, '})()');
   };
@@ -547,7 +551,10 @@ function literalTagName(symbol: string | Symbol): string | Symbol {
  */
 export function isStatement(code: string) {
   code = code.trim();
-  if (code.startsWith('(') || code.startsWith('{') || code.endsWith('}')) {
+  if (
+    (code.startsWith('(') && code.endsWith(')')) ||
+    (code.startsWith('{') && code.endsWith('}'))
+  ) {
     // Code starting with `(` is most likely and IFF and hence is an expression.
     return false;
   }

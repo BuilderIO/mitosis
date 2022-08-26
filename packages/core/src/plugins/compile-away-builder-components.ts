@@ -167,6 +167,10 @@ export const components: CompileAwayComponentsMap = {
     });
   },
   CustomCode(node: MitosisNode, context, components) {
+    const bindings: MitosisNode['bindings'] = {};
+    if (node?.bindings?.code) {
+      bindings.innerHTML = node.bindings.code;
+    }
     return wrapOutput(
       node,
       createMitosisNode({
@@ -174,6 +178,7 @@ export const components: CompileAwayComponentsMap = {
         properties: {
           innerHTML: node.properties.code || '',
         },
+        bindings: bindings,
       }),
       components,
     );

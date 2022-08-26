@@ -1,11 +1,15 @@
 import { types } from '@babel/core';
 import { babelTransformExpression } from './babel-transform';
 
-export const replaceIdentifiers = (
-  code: string,
-  from: string | string[],
-  to: string | ((identifier: string) => string),
-) => {
+export const replaceIdentifiers = ({
+  code,
+  from,
+  to,
+}: {
+  code: string;
+  from: string | string[];
+  to: string | ((identifier: string) => string);
+}) => {
   return babelTransformExpression(code, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       if (

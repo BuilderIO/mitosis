@@ -721,7 +721,13 @@ export default class ContentSlotJsxCode extends LitElement {
     return html\`
         
         <div>
-        \${this.slotTesting}
+        \${
+          this.slotTesting
+            ? html\`
+        <div>\${this.slotTesting}</div>
+        \`
+            : null
+        }
 
         <div>
           <hr />

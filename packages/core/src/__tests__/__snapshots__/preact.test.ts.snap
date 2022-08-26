@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`React Native AdvancedRef 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
+exports[`Preact AdvancedRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -28,47 +28,48 @@ export default function MyBasicRefComponent(props: Props) {
   }, [inputRef.current, inputNoArgRef.current]);
 
   return (
-    <View>
-      {props.showInput ? (
-        <>
-          <View
-            ref={inputRef}
-            value={name}
-            onBlur={(event) => onBlur()}
-            onChange={(event) => setName(event.target.value)}
-            style={styles.view1}
-          />
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
-            <Text>Choose a car:</Text>
-          </View>
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
 
-          <View name=\\"cars\\" id=\\"cars\\">
-            <View value=\\"supra\\">
-              <Text>GR Supra</Text>
-            </View>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
 
-            <View value=\\"86\\">
-              <Text>GR 86</Text>
-            </View>
-          </View>
-        </>
-      ) : null}
-      <Text>Hello</Text>
-      <Text>{lowerCaseName()}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
-    </View>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native Basic 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact Basic 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 export interface MyBasicComponentProps {
   id: string;
@@ -86,24 +87,29 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
   }
 
   return (
-    <View style={styles.view1}>
-      <View
-        value={DEFAULT_VALUES.name || name}
-        onChange={(myEvent) => setName(myEvent.target.value)}
-      />
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <Fragment>
+      <div className=\\"test div\\">
+        <input
+          value={DEFAULT_VALUES.name || name}
+          onChange={(myEvent) => setName(myEvent.target.value)}
+        />
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native Basic Context 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
+exports[`Preact Basic Context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext, useEffect } from \\"preact/hooks\\";
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 export default function MyBasicComponent(props: any) {
@@ -127,20 +133,20 @@ export default function MyBasicComponent(props: any) {
   }, []);
 
   return (
-    <View>
-      <Text>{myService.method(\\"hello\\") + name}</Text>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-      <View onChange={(event) => onChange} />
-    </View>
+    <div>
+      {myService.method(\\"hello\\") + name}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      <input onChange={(event) => onChange} />
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native Basic OnMount Update 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact Basic OnMount Update 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
   hi: string;
@@ -161,19 +167,19 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
   }, []);
 
   return (
-    <View>
-      <Text>Hello </Text>
-      <Text>{name}</Text>
-    </View>
+    <div>
+      Hello
+      {name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native Basic Outputs 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact Basic Outputs 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -183,15 +189,15 @@ export default function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   }, []);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native Basic Outputs Meta 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact Basic Outputs Meta 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOutputsComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -201,15 +207,15 @@ export default function MyBasicOutputsComponent(props: any) {
     props.onEvent(props.message);
   }, []);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native BasicChildComponent 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact BasicChildComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -219,22 +225,22 @@ export default function MyBasicChildComponent(props: any) {
   const [dev, setDev] = useState(() => \\"PatrickJS\\");
 
   return (
-    <View>
+    <div>
       <MyBasicComponent id={dev} />
 
-      <View>
+      <div>
         <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-      </View>
-    </View>
+      </div>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native BasicFor 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact BasicFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicForComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -246,32 +252,30 @@ export default function MyBasicForComponent(props: any) {
   }, []);
 
   return (
-    <View>
+    <div>
       {names?.map((person) => (
-        <>
-          <View
+        <Fragment>
+          <input
             value={name}
             onChange={(event) => {
               setName(event.target.value + \\" and \\" + person);
             }}
           />
-          <Text>Hello </Text>
-          <Text>{person}</Text>
-          <Text>
-            ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-          </Text>
-        </>
+          Hello
+          {person}! I can run in Qwik, Web Component, React, Vue, Solid, or
+          Liquid!
+        </Fragment>
       ))}
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native BasicRef 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef } from \\"react\\";
+exports[`Preact BasicRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -292,47 +296,48 @@ export default function MyBasicRefComponent(props: Props) {
   }
 
   return (
-    <View>
-      {props.showInput ? (
-        <>
-          <View
-            ref={inputRef}
-            value={name}
-            onBlur={(event) => onBlur()}
-            onChange={(event) => setName(event.target.value)}
-            style={styles.view1}
-          />
+    <Fragment>
+      <div>
+        {props.showInput ? (
+          <Fragment>
+            <input
+              className=\\"input\\"
+              ref={inputRef}
+              value={name}
+              onBlur={(event) => onBlur()}
+              onChange={(event) => setName(event.target.value)}
+            />
 
-          <View for=\\"cars\\" ref={inputNoArgRef}>
-            <Text>Choose a car:</Text>
-          </View>
+            <label for=\\"cars\\" ref={inputNoArgRef}>
+              Choose a car:
+            </label>
 
-          <View name=\\"cars\\" id=\\"cars\\">
-            <View value=\\"supra\\">
-              <Text>GR Supra</Text>
-            </View>
+            <select name=\\"cars\\" id=\\"cars\\">
+              <option value=\\"supra\\">GR Supra</option>
 
-            <View value=\\"86\\">
-              <Text>GR 86</Text>
-            </View>
-          </View>
-        </>
-      ) : null}
-      <Text>Hello</Text>
-      <Text>{lowerCaseName()}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
-    </View>
+              <option value=\\"86\\">GR 86</option>
+            </select>
+          </Fragment>
+        ) : null}
+        Hello
+        {lowerCaseName()}! I can run in React, Qwik, Vue, Solid, or Web
+        Component!
+      </div>
+      <style jsx>{\`
+        .input {
+          color: red;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native BasicRefAssignment 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useRef } from \\"react\\";
+exports[`Preact BasicRefAssignment 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useRef } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -347,20 +352,18 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
   }
 
   return (
-    <View>
-      <View onClick={(evt) => handlerClick(evt)}>
-        <Text>Click</Text>
-      </View>
-    </View>
+    <div>
+      <button onClick={(evt) => handlerClick(evt)}>Click</button>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native BasicRefPrevious 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
+exports[`Preact BasicRefPrevious 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -389,26 +392,23 @@ export default function MyPreviousComponent(props: Props) {
   }, [count]);
 
   return (
-    <View>
-      <View>
-        <Text>Now: </Text>
-        <Text>{count}</Text>
-        <Text>, before: </Text>
-        <Text>{prevCount.current}</Text>
-      </View>
+    <div>
+      <h1>
+        Now:
+        {count}, before:
+        {prevCount.current}
+      </h1>
 
-      <View onClick={(event) => setCount(1)}>
-        <Text>Increment</Text>
-      </View>
-    </View>
+      <button onClick={(event) => setCount(1)}>Increment</button>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native Button 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Button 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -419,35 +419,35 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <>
+    <Fragment>
       {props.link ? (
-        <>
-          <View
+        <Fragment>
+          <a
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+            {props.text}
+          </a>
+        </Fragment>
       ) : null}
 
       {!props.link ? (
-        <>
-          <View {...props.attributes} type=\\"button\\">
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
       ) : null}
-    </>
+    </Fragment>
   );
 }
 "
 `;
 
-exports[`React Native Columns 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Columns 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -486,28 +486,46 @@ export default function Column(props: ColumnProps) {
   }
 
   return (
-    <View style={styles.view1}>
-      {props.columns?.map((column, index) => (
-        <View style={styles.view2}>
-          <Text>{column.content}</Text>
+    <Fragment>
+      <div className=\\"builder-columns div\\">
+        {props.columns?.map((column, index) => (
+          <div className=\\"builder-column div-2\\">
+            {column.content}
 
-          <Text>{index}</Text>
-        </View>
-      ))}
-    </View>
+            {index}
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          line-height: normal;
+        }
+        @media (max-width: 999px) {
+          .div {
+            flex-direction: row;
+          }
+        }
+        @media (max-width: 639px) {
+          .div {
+            flex-direction: row-reverse;
+          }
+        }
+        .div-2 {
+          flex-grow: 1;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
-});
 "
 `;
 
-exports[`React Native ContentSlotHtml 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact ContentSlotHtml 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -516,23 +534,23 @@ type Props = {
 
 export default function ContentSlotCode(props: Props) {
   return (
-    <View>
+    <div>
       {props.slotTesting}
 
-      <View>
-        <View />
-      </View>
+      <div>
+        <hr />
+      </div>
 
-      <View>{props.children}</View>
-    </View>
+      <div>{props.children}</div>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native ContentSlotJSX 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact ContentSlotJSX 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -540,32 +558,28 @@ type Props = {
 
 export default function ContentSlotJsxCode(props: Props) {
   return (
-    <View>
+    <div>
       {props.slotTesting ? (
-        <>
-          <View>
-            <Text>{props.slotTesting}</Text>
-          </View>
-        </>
+        <Fragment>
+          <div>{props.slotTesting}</div>
+        </Fragment>
       ) : null}
 
-      <View>
-        <View />
-      </View>
+      <div>
+        <hr />
+      </div>
 
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
+      <div>{props.children}</div>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native CustomCode 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
+exports[`Preact CustomCode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -624,15 +638,23 @@ export default function CustomCode(props: CustomCodeProps) {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
 }
 "
 `;
 
-exports[`React Native Embed 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
+exports[`Preact Embed 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 export interface CustomCodeProps {
   code: string;
@@ -691,15 +713,23 @@ export default function CustomCode(props: CustomCodeProps) {
     findAndRunScripts();
   }, []);
 
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
+  return (
+    <div
+      ref={elem}
+      className={
+        \\"builder-custom-code\\" + (props.replaceNodes ? \\" replace-nodes\\" : \\"\\")
+      }
+      dangerouslySetInnerHTML={{ __html: props.code }}
+    />
+  );
 }
 "
 `;
 
-exports[`React Native Form 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef } from \\"react\\";
+exports[`Preact Form 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef } from \\"preact/hooks\\";
 
 export interface FormProps {
   attributes?: any;
@@ -926,65 +956,79 @@ export default function FormComponent(props: FormProps) {
     }
   }
   return (
-    <View
-      {...props.attributes}
-      validate={props.validate}
-      ref={formRef}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => onSubmit(event)}
-    >
+    <Fragment>
       {\\" \\"}
-      {props.builderBlock && props.builderBlock.children ? (
-        <>
-          {props.builderBlock?.children?.map((block, index) => (
-            <BuilderBlockComponent key={block.id} block={block} index={index} />
-          ))}
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" ? (
-        <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"sending\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" && responseData ? (
-        <>
-          <View style={styles.view1}>
-            {\\" \\"}
-            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
-          </View>
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"success\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-    </View>
+      <form
+        {...props.attributes}
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+      >
+        {\\" \\"}
+        {props.builderBlock && props.builderBlock.children ? (
+          <Fragment>
+            {props.builderBlock?.children?.map((block, index) => (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              />
+            ))}
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"errorMessage\\"
+              blocks={props.errorMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"sending\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"sendingMessage\\"
+              blocks={props.sendingMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"error\\" && responseData ? (
+          <Fragment>
+            <pre className=\\"builder-form-error-text pre\\">
+              {\\" \\"}
+              {JSON.stringify(responseData, null, 2)}{\\" \\"}
+            </pre>
+          </Fragment>
+        ) : null}{\\" \\"}
+        {submissionState() === \\"success\\" ? (
+          <Fragment>
+            <BuilderBlocks
+              dataPath=\\"successMessage\\"
+              blocks={props.successMessage}
+            />
+          </Fragment>
+        ) : null}{\\" \\"}
+      </form>{\\" \\"}
+      <style jsx>{\`
+        .pre {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>{\\" \\"}
+    </Fragment>
   );
 }
-const styles = StyleSheet.create({
-  view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
-});
 "
 `;
 
-exports[`React Native Image 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
+exports[`Preact Image 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useRef, useEffect } from \\"preact/hooks\\";
 
 // TODO: AMP Support?
 export interface ImageProps {
@@ -1062,45 +1106,50 @@ export default function Image(props: ImageProps) {
   }, []);
 
   return (
-    <>
-      <View ref={pictureRef}>
-        {!useLazyLoading() || load ? (
-          <>
-            <View
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
-              onLoad={(event) => setLoaded()}
-              srcset={props.srcset}
-              sizes={props.sizes}
-              style={styles.view1}
-            />
-          </>
-        ) : null}
+    <Fragment>
+      <Fragment>
+        <picture ref={pictureRef}>
+          {!useLazyLoading() || load ? (
+            <Fragment>
+              <img
+                alt={props.altText}
+                aria-role={props.altText ? \\"presentation\\" : undefined}
+                className={
+                  \\"builder-image\\" +
+                  (props._class ? \\" \\" + props._class : \\"\\") +
+                  \\" img\\"
+                }
+                src={props.image}
+                onLoad={(event) => setLoaded()}
+                srcset={props.srcset}
+                sizes={props.sizes}
+              />
+            </Fragment>
+          ) : null}
 
-        <View srcset={props.srcset} />
-      </View>
+          <source srcset={props.srcset} />
+        </picture>
 
-      <Text>{props.children}</Text>
-    </>
+        {props.children}
+      </Fragment>
+      <style jsx>{\`
+        .img {
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          object-fit: cover;
+          object-position: center;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: {
-    opacity: 1,
-    transition: \\"opacity 0.2s ease-in-out\\",
-    objectFit: \\"cover\\",
-    objectPosition: \\"center\\",
-  },
-});
 "
 `;
 
-exports[`React Native Image State 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact Image State 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 export default function ImgStateComponent(props: any) {
   const [canShow, setCanShow] = useState(() => true);
@@ -1108,21 +1157,21 @@ export default function ImgStateComponent(props: any) {
   const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
 
   return (
-    <View>
+    <div>
       {images?.map((item, itemIndex) => (
-        <>
-          <View src={item} key={itemIndex} />
-        </>
+        <Fragment>
+          <img className=\\"custom-class\\" src={item} key={itemIndex} />
+        </Fragment>
       ))}
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native Img 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Img 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface ImgProps {
   attributes?: any;
@@ -1145,7 +1194,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 export default function ImgComponent(props: ImgProps) {
   return (
-    <View
+    <img
       {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
@@ -1160,9 +1209,9 @@ export default function ImgComponent(props: ImgProps) {
 "
 `;
 
-exports[`React Native Input 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Input 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface FormInputProps {
   type?: string;
@@ -1178,7 +1227,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 export default function FormInputComponent(props: FormInputProps) {
   return (
-    <View
+    <input
       {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
@@ -1197,9 +1246,9 @@ export default function FormInputComponent(props: FormInputProps) {
 "
 `;
 
-exports[`React Native RawText 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact RawText 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface RawTextProps {
   attributes?: any;
@@ -1207,33 +1256,37 @@ export interface RawTextProps {
 }
 
 export default function RawText(props: RawTextProps) {
-  return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
-}
-"
-`;
-
-exports[`React Native Remove Internal mitosis package 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
-
-export default function MyBasicComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
   return (
-    <View>
-      <Text>Hello </Text>
-      <Text>{name}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Liquid!</Text>
-    </View>
+    <span
+      className={props.attributes?.class || props.attributes?.className}
+      dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }}
+    />
   );
 }
 "
 `;
 
-exports[`React Native Section 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Remove Internal mitosis package 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyBasicComponent(props: any) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <div>
+      Hello
+      {name}! I can run in React, Qwik, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact Section 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface SectionProps {
   maxWidth?: number;
@@ -1243,7 +1296,7 @@ export interface SectionProps {
 
 export default function SectionComponent(props: SectionProps) {
   return (
-    <View
+    <section
       {...props.attributes}
       style={
         props.maxWidth && typeof props.maxWidth === \\"number\\"
@@ -1253,16 +1306,16 @@ export default function SectionComponent(props: SectionProps) {
           : undefined
       }
     >
-      <Text>{props.children}</Text>
-    </View>
+      {props.children}
+    </section>
   );
 }
 "
 `;
 
-exports[`React Native Select 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Select 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface FormSelectProps {
   options?: {
@@ -1279,7 +1332,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 export default function SelectComponent(props: FormSelectProps) {
   return (
-    <View
+    <select
       {...props.attributes}
       value={props.value}
       key={
@@ -1291,19 +1344,19 @@ export default function SelectComponent(props: FormSelectProps) {
       name={props.name}
     >
       {props.options?.map((option, index) => (
-        <View value={option.value} data-index={index}>
-          <Text>{option.name || option.value}</Text>
-        </View>
+        <option value={option.value} data-index={index}>
+          {option.name || option.value}
+        </option>
       ))}
-    </View>
+    </select>
   );
 }
 "
 `;
 
-exports[`React Native SlotHtml 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact SlotHtml 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string;
@@ -1312,17 +1365,17 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props: Props) {
   return (
-    <View>
+    <div>
       <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native SlotJsx 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact SlotJsx 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   [key: string]: string;
@@ -1331,18 +1384,18 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default function SlotCode(props: Props) {
   return (
-    <View>
+    <div>
       <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native Stamped.io 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact Stamped.io 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 type SmileReviewsProps = {
   productId: string;
@@ -1379,72 +1432,82 @@ export default function SmileReviews(props: SmileReviewsProps) {
   }, []);
 
   return (
-    <View data-user={name}>
-      <View onClick={(event) => setShowReviewPrompt(true)}>
-        <Text>Write a review</Text>
-      </View>
+    <Fragment>
+      <div data-user={name}>
+        <button onClick={(event) => setShowReviewPrompt(true)}>
+          Write a review
+        </button>
 
-      {showReviewPrompt ? (
-        <>
-          <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
-          <View
-            onClick={(event) => {
-              event.preventDefault();
-              setShowReviewPrompt(false);
-            }}
-            style={styles.view3}
-          >
-            <Text>Submit</Text>
-          </View>
-        </>
-      ) : null}
+        {showReviewPrompt ? (
+          <Fragment>
+            <input placeholder=\\"Email\\" />
+            <input placeholder=\\"Title\\" className=\\"input\\" />
+            <textarea
+              placeholder=\\"How was your experience?\\"
+              className=\\"textarea\\"
+            />
+            <button
+              className=\\"button\\"
+              onClick={(event) => {
+                event.preventDefault();
+                setShowReviewPrompt(false);
+              }}
+            >
+              Submit
+            </button>
+          </Fragment>
+        ) : null}
 
-      {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
+        {reviews?.map((review, index) => (
+          <div className=\\"review\\" key={review.id}>
+            <img className=\\"img\\" src={review.avatar} />
 
-          <View>
-            <View>
-              <Text>N: </Text>
-              <Text>{index}</Text>
-            </View>
+            <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
+              <div>
+                N:
+                {index}
+              </div>
 
-            <View>
-              <Text>{review.author}</Text>
-            </View>
+              <div>{review.author}</div>
 
-            <View>
-              <Text>{review.reviewMessage}</Text>
-            </View>
-          </View>
-        </View>
-      ))}
-    </View>
+              <div>{review.reviewMessage}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <style jsx>{\`
+        .input {
+          display: block;
+        }
+        .textarea {
+          display: block;
+        }
+        .button {
+          display: block;
+        }
+        .review {
+          margin: 10px;
+          padding: 10px;
+          background: white;
+          display: flex;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .img {
+          height: 30px;
+          width: 30px;
+          margin-right: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
-    margin: 10,
-    padding: 10,
-    background: \\"white\\",
-    display: \\"flex\\",
-    borderRadius: 5,
-    boxShadow: 0,
-  },
-  view5: { height: 30, width: 30, marginRight: 10 },
-});
 "
 `;
 
-exports[`React Native Submit 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Submit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -1453,18 +1516,18 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <View {...props.attributes} type=\\"submit\\">
-      <Text>{props.text}</Text>
-    </View>
+    <button {...props.attributes} type=\\"submit\\">
+      {props.text}
+    </button>
   );
 }
 "
 `;
 
-exports[`React Native Text 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact Text 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 export interface TextProps {
   attributes?: any;
@@ -1480,7 +1543,7 @@ export default function Text(props: TextProps) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <View
+    <div
       contentEditable={allowEditingText || undefined}
       data-name={{
         test: name || \\"any name\\",
@@ -1498,9 +1561,9 @@ export default function Text(props: TextProps) {
 "
 `;
 
-exports[`React Native Textarea 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Textarea 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface TextareaProps {
   attributes?: any;
@@ -1512,7 +1575,7 @@ export interface TextareaProps {
 
 export default function Textarea(props: TextareaProps) {
   return (
-    <View
+    <textarea
       {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
@@ -1524,9 +1587,9 @@ export default function Textarea(props: TextareaProps) {
 "
 `;
 
-exports[`React Native Video 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact Video 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface VideoProps {
   attributes?: any;
@@ -1556,7 +1619,7 @@ export interface VideoProps {
 
 export default function Video(props: VideoProps) {
   return (
-    <View
+    <video
       {...props.attributes}
       preload=\\"none\\"
       style={{
@@ -1581,10 +1644,10 @@ export default function Video(props: VideoProps) {
 "
 `;
 
-exports[`React Native basicForwardRef 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, forwardRef } from \\"react\\";
+exports[`Preact basicForwardRef 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, forwardRef } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -1596,26 +1659,31 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <View>
-        <View
-          ref={inputRef}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          style={styles.view1}
-        />
-      </View>
+      <Fragment>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </Fragment>
     );
   }
 );
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native basicForwardRefMetadata 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, forwardRef } from \\"react\\";
+exports[`Preact basicForwardRefMetadata 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, forwardRef } from \\"preact/hooks\\";
 
 export interface Props {
   showInput: boolean;
@@ -1627,26 +1695,31 @@ export default forwardRef<Props[\\"inputRef\\"]>(
     const [name, setName] = useState(() => \\"PatrickJS\\");
 
     return (
-      <View>
-        <View
-          ref={inputRef}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          style={styles.view1}
-        />
-      </View>
+      <Fragment>
+        <div>
+          <input
+            className=\\"input\\"
+            ref={inputRef}
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
+        </div>
+        <style jsx>{\`
+          .input {
+            color: red;
+          }
+        \`}</style>
+      </Fragment>
     );
   }
 );
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native basicOnUpdateReturn 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact basicOnUpdateReturn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MyBasicOnUpdateReturnComponent(props: any) {
   const [name, setName] = useState(() => \\"PatrickJS\\");
@@ -1669,67 +1742,82 @@ export default function MyBasicOnUpdateReturnComponent(props: any) {
   }, [name]);
 
   return (
-    <View>
-      <Text>Hello! </Text>
-      <Text>{name}</Text>
-    </View>
+    <div>
+      Hello!
+      {name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native class + ClassName + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact class + ClassName + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <Fragment>
+      <div className=\\"test2 test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native class + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact class + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <Fragment>
+      <div className=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native className + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact className + css 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function MyBasicComponent(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <Fragment>
+      <div className=\\"test div\\">
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native className 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact className 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 type Props = {
   [key: string]: string | JSX.Element;
@@ -1740,24 +1828,20 @@ export default function ClassNameCode(props: Props) {
   const [bindings, setBindings] = useState(() => \\"a binding\\");
 
   return (
-    <View>
-      <View>
-        <Text>Without Binding</Text>
-      </View>
+    <div>
+      <div className=\\"no binding\\">Without Binding</div>
 
-      <View>
-        <Text>With binding</Text>
-      </View>
-    </View>
+      <div className={bindings}>With binding</div>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native classState 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact classState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 export default function MyBasicComponent(props: any) {
   const [classState, setClassState] = useState(() => \\"testClassName\\");
@@ -1767,19 +1851,24 @@ export default function MyBasicComponent(props: any) {
   }));
 
   return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <Fragment>
+      <div className={classState + \\" div\\"} style={styleState}>
+        Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>
+      <style jsx>{\`
+        .div {
+          padding: 10px;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native defaultProps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface ButtonProps {
   attributes?: any;
@@ -1790,27 +1879,27 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <>
+    <Fragment>
       {props.link ? (
-        <>
-          <View
+        <Fragment>
+          <a
             {...props.attributes}
             href={props.link}
             target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
           >
-            <Text>{props.text}</Text>
-          </View>
-        </>
+            {props.text}
+          </a>
+        </Fragment>
       ) : null}
 
       {!props.link ? (
-        <>
-          <View {...props.attributes} type=\\"button\\">
-            <Text>{props.text}</Text>
-          </View>
-        </>
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
       ) : null}
-    </>
+    </Fragment>
   );
 }
 
@@ -1822,9 +1911,9 @@ Button.defaultProps = {
 "
 `;
 
-exports[`React Native defaultValsWithTypes 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact defaultValsWithTypes 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Props = {
   name: string;
@@ -1836,19 +1925,20 @@ const DEFAULT_VALUES: Props = {
 
 export default function ComponentWithTypes(props: Props) {
   return (
-    <View>
-      <Text> Hello </Text>
-      <Text>{props.name || DEFAULT_VALUES.name}</Text>
-    </View>
+    <div>
+      {\\" \\"}
+      Hello
+      {props.name || DEFAULT_VALUES.name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native multipleOnUpdate 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+exports[`Preact multipleOnUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
 
 export default function MultipleOnUpdate(props: any) {
   useEffect(() => {
@@ -1858,15 +1948,15 @@ export default function MultipleOnUpdate(props: any) {
     console.log(\\"Runs on every update/rerender as well\\");
   });
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native multipleOnUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact multipleOnUpdateWithDeps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function MultipleOnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
@@ -1892,14 +1982,14 @@ export default function MultipleOnUpdateWithDeps(props: any) {
     }
   }, [c, d]);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native nestedShow 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact nestedShow 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 interface Props {
   conditionA: boolean;
@@ -1908,59 +1998,61 @@ interface Props {
 
 export default function NestedShow(props: Props) {
   return (
-    <>
+    <Fragment>
       {props.conditionA ? (
-        <>
+        <Fragment>
           {!props.conditionB ? (
-            <>
-              <View>
-                <Text>if condition A and condition B</Text>
-              </View>
-            </>
+            <Fragment>
+              <div>if condition A and condition B</div>
+            </Fragment>
           ) : (
-            <View>
-              <Text>else-condition-B</Text>
-            </View>
+            <div>else-condition-B</div>
           )}
-        </>
+        </Fragment>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <div>else-condition-A</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "
 `;
 
-exports[`React Native nestedStyles 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact nestedStyles 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function NestedStyles(props: any) {
   return (
-    <View style={styles.view1}>
-      <Text>Hello world</Text>
-    </View>
+    <Fragment>
+      <div className=\\"div\\">Hello world</div>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          foo: var(--bar);
+        }
+        @media (max-width: env(--mobile)) {
+          .div {
+            display: block;
+          }
+        }
+        .div:hover {
+          display: flex;
+        }
+        .div .nested-selector {
+          display: grid;
+        }
+      \`}</style>
+    </Fragment>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: {
-    display: \\"flex\\",
-    foo: \\"var(--bar)\\",
-    \\"&:hover\\": { display: \\"flex\\" },
-    \\".nested-selector\\": { display: \\"grid\\" },
-  },
-});
 "
 `;
 
-exports[`React Native onInit & onMount 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+exports[`Preact onInit & onMount 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
 
 export default function OnInit(props: any) {
   useEffect(() => {
@@ -1971,15 +2063,15 @@ export default function OnInit(props: any) {
     console.log(\\"onMount\\");
   }, []);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native onInit 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact onInit 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 type Props = {
   name: string;
@@ -1998,19 +2090,19 @@ export default function OnInit(props: Props) {
   });
 
   return (
-    <View>
-      <Text>Default name defined by parent </Text>
-      <Text>{name}</Text>
-    </View>
+    <div>
+      Default name defined by parent
+      {name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native onMount 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+exports[`Preact onMount 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
 
 export default function Comp(props: any) {
   useEffect(() => {
@@ -2023,30 +2115,30 @@ export default function Comp(props: any) {
     };
   }, []);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native onUpdate 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
+exports[`Preact onUpdate 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
 
 export default function OnUpdate(props: any) {
   useEffect(() => {
     console.log(\\"Runs on every update/rerender\\");
   });
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native onUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+exports[`Preact onUpdateWithDeps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
 
 export default function OnUpdateWithDeps(props: any) {
   const [a, setA] = useState(() => \\"a\\");
@@ -2057,14 +2149,14 @@ export default function OnUpdateWithDeps(props: any) {
     console.log(\\"Runs when a or b changes\\", a, b);
   }, [a, b]);
 
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native preserveExportOrLocalStatement 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact preserveExportOrLocalStatement 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Types = {
   s: any[];
@@ -2083,14 +2175,14 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 export default function MyBasicComponent(props: MyBasicComponentProps) {
-  return <View />;
+  return <div />;
 }
 "
 `;
 
-exports[`React Native preserveTyping 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact preserveTyping 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export type A = \\"test\\";
 export interface C {
@@ -2107,19 +2199,19 @@ export interface MyBasicComponentProps {
 
 export default function MyBasicComponent(props: MyBasicComponentProps) {
   return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native propsDestructure 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
+exports[`Preact propsDestructure 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
 type Props = {
   children: any;
@@ -2130,20 +2222,19 @@ export default function MyBasicComponent(props: Props) {
   const [name, setName] = useState(() => \\"Decadef20\\");
 
   return (
-    <View>
-      <Text>{props.children}</Text>
-
-      <Text>{props.type}</Text>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
+    <div>
+      {props.children}
+      {props.type}
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native propsInterface 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact propsInterface 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 interface Person {
   name: string;
@@ -2152,18 +2243,18 @@ interface Person {
 
 export default function MyBasicComponent(props: Person | never) {
   return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native propsType 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact propsType 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 type Person = {
   name: string;
@@ -2172,18 +2263,18 @@ type Person = {
 
 export default function MyBasicComponent(props: Person) {
   return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
+    <div>
+      Hello! I can run in React, Vue, Solid, or Liquid!
+      {props.name}
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native rootShow 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact rootShow 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export interface RenderStylesProps {
   foo: string;
@@ -2191,73 +2282,67 @@ export interface RenderStylesProps {
 
 export default function RenderStyles(props: RenderStylesProps) {
   return (
-    <>
+    <Fragment>
       {props.foo === \\"bar\\" ? (
-        <>
-          <View>
-            <Text>Bar</Text>
-          </View>
-        </>
+        <Fragment>
+          <div>Bar</div>
+        </Fragment>
       ) : (
-        <View>
-          <Text>Foo</Text>
-        </View>
+        <div>Foo</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "
 `;
 
-exports[`React Native self-referencing component 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact self-referencing component 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function MyComponent(props: any) {
   return (
-    <View>
-      <Text>{props.name}</Text>
+    <div>
+      {props.name}
 
       {props.name === \\"Batman\\" ? (
-        <>
+        <Fragment>
           <MyComponent name=\\"Bruce Wayne\\" />
-        </>
+        </Fragment>
       ) : null}
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native self-referencing component with children 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact self-referencing component with children 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 export default function MyComponent(props: any) {
   return (
-    <View>
-      <Text>{props.name}</Text>
+    <div>
+      {props.name}
 
-      <Text>{props.children}</Text>
+      {props.children}
 
       {props.name === \\"Batman\\" ? (
-        <>
+        <Fragment>
           <MyComponent name=\\"Bruce\\">
-            <View>
-              <Text>Wayne</Text>
-            </View>
+            <div>Wayne</div>
           </MyComponent>
-        </>
+        </Fragment>
       ) : null}
-    </View>
+    </div>
   );
 }
 "
 `;
 
-exports[`React Native showWithFor 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact showWithFor 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 
 interface Props {
   conditionA: boolean;
@@ -2266,29 +2351,25 @@ interface Props {
 
 export default function NestedShow(props: Props) {
   return (
-    <>
+    <Fragment>
       {props.conditionA ? (
-        <>
+        <Fragment>
           {props.items?.map((item, idx) => (
-            <View key={idx}>
-              <Text>{item}</Text>
-            </View>
+            <div key={idx}>{item}</div>
           ))}
-        </>
+        </Fragment>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
+        <div>else-condition-A</div>
       )}
-    </>
+    </Fragment>
   );
 }
 "
 `;
 
-exports[`React Native subComponent 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact subComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 import Foo from \\"./foo-sub-component.lite\\";
 
 export default function SubComponent(props: any) {
@@ -2297,9 +2378,9 @@ export default function SubComponent(props: any) {
 "
 `;
 
-exports[`React Native typeDependency 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
+exports[`Preact typeDependency 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
 import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
@@ -2308,11 +2389,7 @@ export type TypeDependencyProps = {
 };
 
 export default function TypeDependency(props: TypeDependencyProps) {
-  return (
-    <View>
-      <Text>{props.foo}</Text>
-    </View>
-  );
+  return <div>{props.foo}</div>;
 }
 "
 `;

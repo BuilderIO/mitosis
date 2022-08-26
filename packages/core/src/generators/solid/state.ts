@@ -6,10 +6,9 @@ import { capitalize } from '../../helpers/capitalize';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { ToSolidOptions } from './types';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
 import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
+import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
 
 type State = {
   str: string;
@@ -102,32 +101,32 @@ const processStateValue = ({
   component: MitosisComponent;
 }) => {
   const mapValue = updateStateCode({ options, component });
-  return ([key, state]: [key: string, state: StateValue | undefined]): string => {
-    const code = state?.code;
-    if (typeof code === 'string') {
-      if (code.startsWith(functionLiteralPrefix)) {
-        // functions
-        const useValue = code.replace(functionLiteralPrefix, '');
-        const mappedVal = mapValue(useValue);
 
-        return mappedVal;
-      } else if (code.startsWith(methodLiteralPrefix)) {
-        // methods
-        const methodValue = code.replace(methodLiteralPrefix, '');
-        const strippedMethodvalue = pipe(methodValue.replace('get ', ''), mapValue);
+  return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    const getDefaultCase = () =>
+      pipe(
+        value,
+        json5.stringify,
+        mapValue,
+        (x) => `const [${key}, ${getStateSetterName(key)}] = createSignal(${x})`,
+      );
 
-        return `function ${strippedMethodvalue}`;
+    const value = stateVal?.code;
+    const type = stateVal?.type;
+    if (typeof value === 'string') {
+      switch (type) {
+        case 'getter':
+          return pipe(value, replaceGetterWithFunction, mapValue);
+        case 'function':
+          return mapValue(value);
+        case 'method':
+          return pipe(value, prefixWithFunction, mapValue);
+        default:
+          return getDefaultCase();
       }
+    } else {
+      return getDefaultCase();
     }
-
-    // Other (data)
-    const transformedValue = pipe(code, json5.stringify, mapValue);
-
-    const defaultCase = `const [${key}, ${getStateSetterName(
-      key,
-    )}] = createSignal(${transformedValue})`;
-
-    return defaultCase;
   };
 };
 

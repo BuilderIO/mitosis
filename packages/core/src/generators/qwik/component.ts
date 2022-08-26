@@ -1,4 +1,3 @@
-import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import {
   compileAwayBuilderComponentsFromTree,
   components as compileAwayComponents,
@@ -16,6 +15,7 @@ import {
   SrcBuilder,
   SrcBuilderOptions,
 } from './src-generator';
+import { stableJSONserialize } from './stable-serialize';
 import { collectStyles, CssStyles, renderStyles } from './styles';
 
 export type QwikOptions = {
@@ -54,7 +54,7 @@ export function createFileSet(options: QwikOptions = {}): FileSet {
     med: new File('med.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
     low: new File('low.' + extension, srcOptions, opts.qwikLib, opts.qrlPrefix),
   };
-  Object.defineProperty(fileSet, '_commonStyles', {
+  Object.defineProperty(fileSet, 'CommonStyles', {
     enumerable: false,
     value: { styles: new Map<string, CssStyles>() as any, symbolName: null },
   });
@@ -65,15 +65,15 @@ function getCommonStyles(fileSet: FileSet): {
   styles: Map<string, CssStyles>;
   symbolName: string | null;
 } {
-  return (fileSet as any)['_commonStyles'];
+  return (fileSet as any)['CommonStyles'];
 }
 
 export function addComponent(
   fileSet: FileSet,
   component: MitosisComponent,
-  opts: { isRoot?: boolean; shareStyles?: boolean; hostProps?: Record<string, string> } = {},
+  opts: { isRoot?: boolean; shareStyles?: boolean } = {},
 ) {
-  const _opts = { isRoot: false, shareStyles: false, hostProps: null, ...opts };
+  const _opts = { isRoot: false, shareStyles: false, ...opts };
   compileAwayBuilderComponentsFromTree(component, {
     ...compileAwayComponents,
     // A set of components that should not be compiled away because they are implemented as runtime components.
@@ -98,27 +98,26 @@ export function addComponent(
   if (styles.size) {
     if (_opts.shareStyles) {
       if (_opts.isRoot) {
-        const symbolName = componentName + '_styles';
+        const symbolName = componentName + 'Styles';
         getCommonStyles(fileSet).symbolName = symbolName;
         useStyles = generateStyles(onRenderFile, fileSet.low, symbolName, false);
       }
     } else {
-      const symbolName = componentName + '_styles';
+      const symbolName = componentName + 'Styles';
       onRenderFile.exportConst(symbolName, renderStyles(styles));
       useStyles = generateStyles(onRenderFile, onRenderFile, symbolName, true);
     }
   }
+  if (component.meta.cssCode) {
+    const symbolName = componentName + 'UsrStyles';
+    onRenderFile.exportConst(symbolName, stableJSONserialize(component.meta.cssCode));
+    useStyles = ((fns: EmitFn[]) =>
+      function (this: SrcBuilder) {
+        fns.forEach((fn) => fn.apply(this));
+      })([useStyles, generateStyles(onRenderFile, onRenderFile, symbolName, false)]);
+  }
   const directives: Map<string, string> = new Map();
   let rootChildren = component.children;
-  if (_opts.hostProps) {
-    rootChildren = [
-      createMitosisNode({
-        name: 'Host',
-        properties: _opts.hostProps,
-        children: component.children,
-      }),
-    ];
-  }
   addComponentOnMount(
     onRenderFile,
     function (this: SrcBuilder) {
@@ -136,7 +135,7 @@ export function addComponent(
     componentName,
     invoke(
       componentFile.import(componentFile.qwikModule, 'componentQrl'),
-      [generateQrl(componentFile, onRenderFile, componentName + '_onMount')],
+      [generateQrl(componentFile, onRenderFile, componentName + 'OnMount')],
       ['any', 'any'],
     ),
   );
@@ -150,10 +149,9 @@ export function addComponent(
 function generateStyles(fromFile: File, dstFile: File, symbol: string, scoped: boolean): EmitFn {
   return function (this: SrcBuilder) {
     this.emit(
-      invoke(
-        fromFile.import(fromFile.qwikModule, scoped ? 'withScopedStylesQrl' : 'useStylesQrl'),
-        [generateQrl(fromFile, dstFile, symbol)],
-      ),
+      invoke(fromFile.import(fromFile.qwikModule, scoped ? 'useStylesScopedQrl' : 'useStylesQrl'), [
+        generateQrl(fromFile, dstFile, symbol),
+      ]),
       ';',
     );
   };
@@ -203,12 +201,12 @@ function addComponentOnMount(
           '"))state.',
           input.name,
           '=',
-          JSON.stringify(input.defaultValue),
+          stableJSONserialize(input.defaultValue),
           ';',
         );
     });
   }
-  componentFile.exportConst(componentName + '_onMount', function (this: SrcBuilder) {
+  componentFile.exportConst(componentName + 'OnMount', function (this: SrcBuilder) {
     this.emit(
       arrowFnValue(['props'], () =>
         this.emit(

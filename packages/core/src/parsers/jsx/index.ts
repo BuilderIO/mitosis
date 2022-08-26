@@ -1,4 +1,4 @@
 export * from './jsx';
 export { selfClosingTags } from './helpers';
 export { METADATA_HOOK_NAME } from './metadata';
-export { parseStateObject, createFunctionStringLiteralObjectProperty } from './state';
+export { parseStateObject } from './state';
