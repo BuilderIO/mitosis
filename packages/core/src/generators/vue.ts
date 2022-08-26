@@ -35,7 +35,7 @@ import { GETTER } from '../helpers/patterns';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
-import { isSlotProperty, stripSlotPrefix, propSlotsToTemplateSlots } from '../helpers/slots';
+import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 
 function encodeQuotes(string: string) {
@@ -147,7 +147,10 @@ const NODE_MAPPERS: {
       : '';
   },
   Show(json, options, scope) {
-    const ifValue = propSlotsToTemplateSlots(stripStateAndPropsRefs(json.bindings.when?.code));
+    const ifValue = replaceSlotsInString(
+      stripStateAndPropsRefs(json.bindings.when?.code),
+      (slotName) => `$slots.${slotName}`,
+    );
 
     switch (options.vueVersion) {
       case 3:
