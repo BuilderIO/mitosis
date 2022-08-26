@@ -10,21 +10,34 @@ export function stableJSONserialize(obj: any): string {
 }
 
 function _serialize(output: string[], obj: any) {
-  if (obj && typeof obj === 'object') {
-    const keys = Object.keys(obj).sort();
-    output.push('{');
-    let sep = '';
-    for (const key of keys) {
-      const value = JSON.stringify(key);
-      if (value !== undefined) {
+  if (obj == null) {
+    output.push('null');
+  } else if (typeof obj === 'object') {
+    if (Array.isArray(obj)) {
+      output.push('[');
+      let sep = '';
+      for (let i = 0; i < obj.length; i++) {
         output.push(sep);
-        output.push(value);
-        output.push(':');
-        _serialize(output, obj[key]);
+        _serialize(output, obj[i]);
         sep = ',';
       }
+      output.push(']');
+    } else {
+      const keys = Object.keys(obj).sort();
+      output.push('{');
+      let sep = '';
+      for (const key of keys) {
+        const value = obj[key];
+        if (value !== undefined) {
+          output.push(sep);
+          output.push(JSON.stringify(key));
+          output.push(':');
+          _serialize(output, value);
+          sep = ',';
+        }
+      }
+      output.push('}');
     }
-    output.push('}');
   } else {
     output.push(JSON.stringify(obj));
   }

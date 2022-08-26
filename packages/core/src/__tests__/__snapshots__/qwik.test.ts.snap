@@ -422,7 +422,7 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicChildComponent = component$((props) => {
-  const state = useStore({ name: \\"Steve\\", dev: \\"PatrickJS\\" });
+  const state = useStore({ dev: \\"PatrickJS\\", name: \\"Steve\\" });
   return (
     <div>
       <MyBasicComponent id={state.dev}></MyBasicComponent>
@@ -1174,9 +1174,9 @@ export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
   const formRef = useRef();
   const state = useStore({
+    formErrorMessage: \\"\\",
     formState: \\"unsubmitted\\",
     responseData: null,
-    formErrorMessage: \\"\\",
   });
   return (
     <form
@@ -1270,9 +1270,9 @@ export const Image = component$((props) => {
   useStylesScoped$(STYLES);
   const pictureRef = useRef();
   const state = useStore({
-    scrollListener: null,
     imageLoaded: false,
     load: false,
+    scrollListener: null,
   });
   useClientEffect$(() => {
     if (useLazyLoading(props, state, pictureRef)) {
@@ -1818,7 +1818,7 @@ exports[`qwik Section 2`] = `
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const SectionStateComponent = component$((props) => {
-  const state = useStore({ max: 42, items: [42] });
+  const state = useStore({ items: [42], max: 42 });
   return (
     <>
       {state.max
@@ -1938,8 +1938,8 @@ export const snakeCaseValue = function snakeCaseValue(props, state) {
 export const SmileReviews = component$((props) => {
   useStylesScoped$(STYLES);
   const state = useStore({
-    reviews: [],
     name: \\"test\\",
+    reviews: [],
     showReviewPrompt: false,
   });
   useClientEffect$(() => {
