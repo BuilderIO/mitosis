@@ -1377,7 +1377,11 @@ exports[`Html ContentSlotHtml 1`] = `
 
 exports[`Html ContentSlotJSX 1`] = `
 "<div>
-  <template data-el=\\"div-1\\"><!-- props.slotTesting --></template>
+  <template data-el=\\"show\\">
+    <div>
+      <template data-el=\\"div-1\\"><!-- props.slotTesting --></template>
+    </div>
+  </template>
 
   <div>
     <hr />
@@ -1408,6 +1412,13 @@ exports[`Html ContentSlotJSX 1`] = `
       }
       pendingUpdate = true;
 
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.slotTesting;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.slotTesting);
       });
@@ -1419,6 +1430,26 @@ exports[`Html ContentSlotJSX 1`] = `
 
     // Update with initial state on first load
     update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {

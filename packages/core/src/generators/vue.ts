@@ -27,7 +27,7 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import traverse from 'traverse';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { kebabCase, size } from 'lodash';
-import { replaceIdentifiers } from '../helpers/replace-idenifiers';
+import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
 import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
@@ -35,7 +35,7 @@ import { GETTER } from '../helpers/patterns';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
-import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
+import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 
 function encodeQuotes(string: string) {
@@ -94,16 +94,15 @@ const addBindingsToJson =
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
-  return replaceIdentifiers(
-    stripStateAndPropsRefs(code, {
+  return replaceIdentifiers({
+    code: stripStateAndPropsRefs(code, {
       includeState: true,
       includeProps: true,
-
       replaceWith: 'this.',
     }),
-    getContextNames(json),
-    (name) => `this.${name}`,
-  );
+    from: getContextNames(json),
+    to: (name) => `this.${name}`,
+  });
 }
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
@@ -147,7 +146,10 @@ const NODE_MAPPERS: {
       : '';
   },
   Show(json, options, scope) {
-    const ifValue = stripStateAndPropsRefs(json.bindings.when?.code);
+    const ifValue = replaceSlotsInString(
+      stripStateAndPropsRefs(json.bindings.when?.code),
+      (slotName) => `$slots.${slotName}`,
+    );
 
     switch (options.vueVersion) {
       case 3:
@@ -316,16 +318,18 @@ const stringifyBinding =
           event = 'input';
         }
         const isAssignmentExpression = useValue.includes('=');
+        const valueWRenamedEvent = replaceIdentifiers({
+          code: useValue,
+          from: cusArgs[0],
+          to: '$event',
+        });
+
         // TODO: proper babel transform to replace. Util for this
         if (isAssignmentExpression) {
-          return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
-          )}" `;
+          return ` @${event}="${encodeQuotes(removeSurroundingBlock(valueWRenamedEvent))}" `;
         } else {
           return ` @${event}="${encodeQuotes(
-            removeSurroundingBlock(
-              removeSurroundingBlock(replaceIdentifiers(useValue, cusArgs[0], '$event')),
-            ),
+            removeSurroundingBlock(removeSurroundingBlock(valueWRenamedEvent)),
           )}" `;
         }
       } else if (key === 'ref') {
