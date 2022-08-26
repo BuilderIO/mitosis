@@ -2740,8 +2740,12 @@ class ContentSlotJsxCode extends HTMLElement {
 
     this._root.innerHTML = \`
       <div>
-        <template data-el=\\"div-content-slot-jsx-code-1\\">
-          <!-- props.slotTesting -->
+        <template data-el=\\"show-content-slot-jsx-code\\">
+          <div>
+            <template data-el=\\"div-content-slot-jsx-code-1\\">
+              <!-- props.slotTesting -->
+            </template>
+          </div>
         </template>
       
         <div>
@@ -2756,6 +2760,26 @@ class ContentSlotJsxCode extends HTMLElement {
     this.onMount();
     this.pendingUpdate = false;
     this.update();
+  }
+
+  showContent(el) {
+    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+    // grabs the content of a node that is between <template> tags
+    // iterates through child nodes to register all content including text elements
+    // attaches the content after the template
+
+    const elementFragment = el.content.cloneNode(true);
+    const children = Array.from(elementFragment.childNodes);
+    children.forEach((child) => {
+      if (el?.scope) {
+        child.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      this.nodesToDestroy.push(child);
+    });
+    el.after(elementFragment);
   }
 
   onMount() {}
@@ -2779,6 +2803,15 @@ class ContentSlotJsxCode extends HTMLElement {
   }
 
   updateBindings() {
+    this._root
+      .querySelectorAll(\\"[data-el='show-content-slot-jsx-code']\\")
+      .forEach((el) => {
+        const whenCondition = this.props.slotTesting;
+        if (whenCondition) {
+          this.showContent(el);
+        }
+      });
+
     this._root
       .querySelectorAll(\\"[data-el='div-content-slot-jsx-code-1']\\")
       .forEach((el) => {

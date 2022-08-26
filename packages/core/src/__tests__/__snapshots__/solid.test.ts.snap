@@ -1111,10 +1111,14 @@ export default ContentSlotCode;
 `;
 
 exports[`Solid ContentSlotJSX 1`] = `
-"function ContentSlotJsxCode(props) {
+"import { Show } from \\"solid-js\\";
+
+function ContentSlotJsxCode(props) {
   return (
     <div>
-      {props.slotTesting}
+      <Show when={props.slotTesting}>
+        <div>{props.slotTesting}</div>
+      </Show>
       <div>
         <hr />
       </div>
@@ -1128,13 +1132,17 @@ export default ContentSlotJsxCode;
 `;
 
 exports[`Solid ContentSlotJSX 2`] = `
-"import { css } from \\"solid-styled-components\\";
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
 
 function ContentSlotJsxCode(props) {
   return (
     <>
       <div>
-        {props.slotTesting}
+        <Show when={props.slotTesting}>
+          <div>{props.slotTesting}</div>
+        </Show>
         <div>
           <hr />
         </div>
