@@ -1,5 +1,6 @@
 import { format } from 'prettier/standalone';
 import { convertExportDefaultToReturn } from '../../parsers/builder';
+import { stableJSONserialize } from './stable-serialize';
 export interface SrcBuilderOptions {
   isPretty: boolean;
   isTypeScript: boolean;
@@ -470,7 +471,7 @@ function possiblyQuotePropertyName(key: string): any {
 }
 
 export function quote(text: string) {
-  const string = JSON.stringify(text);
+  const string = stableJSONserialize(text);
   // So \u2028 is a line separator character and prettier treats it as such
   // https://www.fileformat.info/info/unicode/char/2028/index.htm
   // That means it can't be inside of a string, so we replace it with `\\u2028`.
