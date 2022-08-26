@@ -1,17 +1,19 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { functionLiteralPrefix } from '../../constants/function-literal-prefix';
-import { methodLiteralPrefix } from '../../constants/method-literal-prefix';
+import {
+  __DO_NOT_USE_FUNCTION_LITERAL_PREFIX,
+  __DO_NOT_USE_METHOD_LITERAL_PREFIX,
+} from '../constants/outdated-prefixes';
 import { MitosisComponent } from '../../types/mitosis-component';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { replaceIdentifiers } from '../../helpers/replace-idenifiers';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCodeJson, uncapitalize } from './helpers';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { JSONObject } from '../../types/json';
-import { mapJsonObjectToStateValue } from '../../helpers/state';
+import { mapJsonObjectToStateValue } from '../helpers/state';
 
 const { types } = babel;
 
@@ -20,7 +22,7 @@ function mapReactIdentifiersInExpression(expression: string, stateProperties: st
 
   return babelTransformExpression(
     // foo -> state.foo
-    replaceIdentifiers(expression, stateProperties, (name) => `state.${name}`),
+    replaceIdentifiers({ code: expression, from: stateProperties, to: (name) => `state.${name}` }),
     {
       CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
         if (types.isIdentifier(path.node.callee)) {
@@ -53,15 +55,10 @@ export function mapReactIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
   for (const key in json.state) {
-    const value = json.state[key]?.code;
-    if (typeof value === 'string' && value.startsWith(functionLiteralPrefix)) {
+    const stateVal = json.state[key];
+    if (typeof stateVal?.code === 'string' && stateVal.type === 'function') {
       json.state[key] = {
-        code:
-          functionLiteralPrefix +
-          mapReactIdentifiersInExpression(
-            value.replace(functionLiteralPrefix, ''),
-            stateProperties,
-          ),
+        code: mapReactIdentifiersInExpression(stateVal.code, stateProperties),
         type: 'function',
       };
     }
@@ -108,15 +105,14 @@ export function mapReactIdentifiers(json: MitosisComponent) {
   });
 }
 
-const createFunctionStringLiteral = (node: babel.types.Node) => {
-  return types.stringLiteral(`${functionLiteralPrefix}${generate(node).code}`);
-};
-export const createFunctionStringLiteralObjectProperty = (
+const createFunctionStringLiteralObjectProperty = (
   key: babel.types.Expression | babel.types.PrivateName,
   node: babel.types.Node,
-) => {
-  return types.objectProperty(key, createFunctionStringLiteral(node));
-};
+) =>
+  types.objectProperty(
+    key,
+    types.stringLiteral(`${__DO_NOT_USE_FUNCTION_LITERAL_PREFIX}${generate(node).code}`),
+  );
 
 type ParsedStateValue = babel.types.ObjectProperty | babel.types.SpreadElement;
 
@@ -131,7 +127,9 @@ const parseStateValue = (
   if (types.isObjectMethod(item)) {
     return types.objectProperty(
       item.key,
-      types.stringLiteral(`${methodLiteralPrefix}${generate({ ...item, returnType: null }).code}`),
+      types.stringLiteral(
+        `${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate({ ...item, returnType: null }).code}`,
+      ),
     );
   }
   // Remove typescript types, e.g. from

@@ -1,7 +1,7 @@
-import { JSONObject } from './json';
+import { MitosisState } from './mitosis-component';
 
 export type MitosisContext = {
   '@type': '@builder.io/mitosis/context';
   name: string;
-  value: JSONObject; // TODO: support non objects too
+  value: MitosisState;
 };

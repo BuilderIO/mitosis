@@ -1,6 +1,9 @@
 import express from 'express';
 import { join } from 'path';
-import { render } from './entry.ssr';
+import { fileURLToPath } from 'url';
+import render from './entry.ssr';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 /**
  * Create an express server
@@ -32,11 +35,15 @@ app.get('/*', async (req, res, next) => {
   try {
     // Render the Root component to a string
     const result = await render({
-      url: req.url,
+      stream: res,
     });
 
     // respond with SSR'd HTML
-    res.send(result.html);
+    if ('html' in result) {
+      res.send((result as any).html);
+    } else {
+      res.end();
+    }
   } catch (e) {
     // Error while server-side rendering
     next(e);

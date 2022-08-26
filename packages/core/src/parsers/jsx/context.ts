@@ -4,7 +4,7 @@ import traverse from 'traverse';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { parseStateObject } from './state';
+import { parseStateObjectToMitosisState } from './state';
 
 const expressionToNode = (str: string) => {
   const code = `export default ${str}`;
@@ -27,7 +27,9 @@ export function extractContextComponents(json: MitosisComponent) {
         json.context.set[refPath] = {
           name,
           value: value
-            ? parseStateObject(expressionToNode(value) as babel.types.ObjectExpression)
+            ? parseStateObjectToMitosisState(
+                expressionToNode(value) as babel.types.ObjectExpression,
+              )
             : undefined,
         };
 

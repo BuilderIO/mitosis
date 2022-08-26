@@ -23,6 +23,7 @@ export function renderJSXNodes(
   children: MitosisNode[],
   styles: Map<string, CssStyles>,
   parentSymbolBindings: Record<string, string>,
+  mutablePredicate?: (code: string) => boolean,
   root = true,
 ): any {
   return function (this: SrcBuilder) {
@@ -100,7 +101,13 @@ export function renderJSXNodes(
             }
           }
           const symbolBindings: Record<string, string> = {};
-          const bindings = rewriteHandlers(file, handlers, child.bindings, symbolBindings);
+          const bindings = rewriteHandlers(
+            file,
+            handlers,
+            child.bindings,
+            symbolBindings,
+            mutablePredicate,
+          );
           this.jsxBegin(childName, props, {
             ...bindings,
             ...parentSymbolBindings,
@@ -113,6 +120,7 @@ export function renderJSXNodes(
             child.children,
             styles,
             symbolBindings,
+            mutablePredicate,
             false,
           ).call(this);
           this.jsxEnd(childName);
@@ -130,7 +138,16 @@ export function renderJSXNodes(
         const childNeedsFragment =
           children.length > 1 || (children.length && isTextNode(children[0]));
         childNeedsFragment && srcBuilder.jsxBeginFragment(fragmentSymbol);
-        renderJSXNodes(file, directives, handlers, children, styles, {}, false).call(srcBuilder);
+        renderJSXNodes(
+          file,
+          directives,
+          handlers,
+          children,
+          styles,
+          {},
+          mutablePredicate,
+          false,
+        ).call(srcBuilder);
         childNeedsFragment && srcBuilder.jsxEndFragment();
       };
     }
@@ -183,6 +200,7 @@ function rewriteHandlers(
     [key: string]: { code: string; arguments?: string[] } | undefined;
   },
   symbolBindings: Record<string, string>,
+  mutablePredicate?: (code: string) => boolean,
 ): { [key: string]: { code: string; arguments?: string[] } } {
   const outBindings: { [key: string]: { code: string; arguments?: string[] } } = {};
   for (let key in bindings) {
@@ -203,6 +221,10 @@ function rewriteHandlers(
           symbolBindings[lastProperty(key)] = bindingExpr;
         } else if (key.startsWith('component.options.')) {
           key = lastProperty(key);
+        }
+        if (mutablePredicate && bindingExpr && mutablePredicate(bindingExpr)) {
+          file.import(file.qwikModule, 'mutable');
+          bindingExpr = `mutable(${bindingExpr})`;
         }
         outBindings[key] = { code: bindingExpr as string };
       }
