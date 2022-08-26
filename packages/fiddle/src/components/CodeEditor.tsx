@@ -4,6 +4,9 @@ import { useDebounce } from 'react-use';
 // TODO: add back when build fixed
 // import { rules } from 'eslint-plugin-mitosis';
 
+const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/lib/index.d.ts').default;
+const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
+
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
@@ -81,11 +84,11 @@ export function CodeEditor(props: MonacoEditorProps) {
 
     // add types
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      require('!!raw-loader!@builder.io/mitosis/lib/index.d.ts').default,
+      MitosisTypes,
       'file:///node_modules/@builder.io/mitosis/index.d.ts',
     );
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default,
+      JsxRuntimeTypes,
       'file:///node_modules/react/jsx-runtime.d.ts',
     );
 
