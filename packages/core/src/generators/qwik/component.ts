@@ -15,6 +15,7 @@ import {
   SrcBuilder,
   SrcBuilderOptions,
 } from './src-generator';
+import { stableJSONserialize } from './stable-serialize';
 import { collectStyles, CssStyles, renderStyles } from './styles';
 
 export type QwikOptions = {
@@ -109,7 +110,7 @@ export function addComponent(
   }
   if (component.meta.cssCode) {
     const symbolName = componentName + 'UsrStyles';
-    onRenderFile.exportConst(symbolName, JSON.stringify(component.meta.cssCode));
+    onRenderFile.exportConst(symbolName, stableJSONserialize(component.meta.cssCode));
     useStyles = ((fns: EmitFn[]) =>
       function (this: SrcBuilder) {
         fns.forEach((fn) => fn.apply(this));
@@ -200,7 +201,7 @@ function addComponentOnMount(
           '"))state.',
           input.name,
           '=',
-          JSON.stringify(input.defaultValue),
+          stableJSONserialize(input.defaultValue),
           ';',
         );
     });
