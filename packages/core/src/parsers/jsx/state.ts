@@ -9,7 +9,7 @@ import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { replaceIdentifiers } from '../../helpers/replace-idenifiers';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCodeJson, uncapitalize } from './helpers';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { JSONObject } from '../../types/json';
@@ -22,7 +22,7 @@ function mapReactIdentifiersInExpression(expression: string, stateProperties: st
 
   return babelTransformExpression(
     // foo -> state.foo
-    replaceIdentifiers(expression, stateProperties, (name) => `state.${name}`),
+    replaceIdentifiers({ code: expression, from: stateProperties, to: (name) => `state.${name}` }),
     {
       CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
         if (types.isIdentifier(path.node.callee)) {
