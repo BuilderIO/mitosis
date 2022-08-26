@@ -81,11 +81,11 @@ export function CodeEditor(props: MonacoEditorProps) {
 
     // add types
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      require('!!raw-loader!node_modules/@builder.io/mitosis/dist/src/index.d.ts').default,
+      require('!!raw-loader!@builder.io/mitosis/lib/index.d.ts').default,
       'file:///node_modules/@builder.io/mitosis/index.d.ts',
     );
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
-      require('!!raw-loader!node_modules/@builder.io/mitosis/jsx-runtime.d.ts').default,
+      require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default,
       'file:///node_modules/react/jsx-runtime.d.ts',
     );
 
