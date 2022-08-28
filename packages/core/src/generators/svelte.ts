@@ -35,6 +35,8 @@ import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { uniq } from 'lodash';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
+import { propTypesToJson } from '../helpers/prop-types-to-json';
+import { JSONObject } from 'src/types/json';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -385,10 +387,12 @@ export const componentToSvelte =
 
     let str = '';
 
+    const jsonTypes: JSONObject = propTypesToJson(props, json);
+
     if (json.types?.length) {
       str += dedent`
       <script context='module' lang='ts'>
-        ${json.types ? json.types.join('\n\n') + '\n' : ''}
+        ${json.types?.length ? json.types.join('\n\n') + '\n' : ''}
       </script>
       \n
       \n
@@ -412,8 +416,8 @@ export const componentToSvelte =
 
           let propDeclaration = `export let ${name}`;
 
-          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
-            propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
+          if (Object.keys(jsonTypes).length) {
+            propDeclaration += `: ${jsonTypes[name] ?? 'any'}`;
           }
 
           if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
