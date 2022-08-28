@@ -36,7 +36,7 @@ import { uniq } from 'lodash';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 import { propTypesToJson } from '../helpers/prop-types-to-json';
-import { JSONObject } from 'src/types/json';
+import { JSONObject } from '../types/json';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
