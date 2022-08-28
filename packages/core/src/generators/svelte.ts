@@ -32,7 +32,6 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { uniq } from 'lodash';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 import { propTypesToJson } from '../helpers/prop-types-to-json';
@@ -419,7 +418,7 @@ export const componentToSvelte =
       ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
       ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
-      ${uniq(refs.map((ref) => stripStateAndPropsRefs(ref)).concat(props))
+      ${props
         .map((name) => {
           if (name === 'children') {
             return '';
@@ -454,6 +453,8 @@ export const componentToSvelte =
 
       ${functionsString.length < 4 ? '' : functionsString}
       ${getterString.length < 4 ? '' : getterString}
+
+      ${refs.map((ref) => `let ${stripStateAndPropsRefs(ref)}`).join('\n')}
 
       ${
         options.stateType === 'proxies'
