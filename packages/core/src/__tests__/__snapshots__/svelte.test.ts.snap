@@ -14,14 +14,14 @@ exports[`Svelte AdvancedRef 1`] = `
   export let inputNoArgRef: Props[\\"inputNoArgRef\\"];
   export let showInput: Props[\\"showInput\\"];
 
-  const onBlur = function onBlur() {
+  function onBlur() {
     // Maintain focus
     inputRef.focus();
-  };
+  }
 
-  const lowerCaseName = function lowerCaseName() {
+  function lowerCaseName() {
     return name.toLowerCase();
-  };
+  }
 
   let name = \\"PatrickJS\\";
 
@@ -73,9 +73,9 @@ exports[`Svelte Basic 1`] = `
     name: \\"Steve\\",
   };
 
-  const underscore_fn_name = function underscore_fn_name() {
+  function underscore_fn_name() {
     return \\"bar\\";
-  };
+  }
 
   let name = \\"Steve\\";
 </script>
@@ -134,10 +134,10 @@ exports[`Svelte Basic Context 1`] = `
   let myService = getContext(MyService.key);
   setContext(Injector.key, undefined);
 
-  const onChange = function onChange() {
+  function onChange() {
     const change = myService.method(\\"change\\");
     console.log(change);
-  };
+  }
 
   let name = \\"PatrickJS\\";
 
@@ -280,14 +280,14 @@ exports[`Svelte BasicRef 1`] = `
   export let inputNoArgRef: Props[\\"inputNoArgRef\\"];
   export let showInput: Props[\\"showInput\\"];
 
-  const onBlur = function onBlur() {
+  function onBlur() {
     // Maintain focus
     inputRef.focus();
-  };
+  }
 
-  const lowerCaseName = function lowerCaseName() {
+  function lowerCaseName() {
     return name.toLowerCase();
-  };
+  }
 
   let name = \\"PatrickJS\\";
 </script>
@@ -330,11 +330,11 @@ exports[`Svelte BasicRefAssignment 1`] = `
 </script>
 
 <script lang=\\"ts\\">
-  const handlerClick = function handlerClick(event) {
+  function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
     holdValueRef = holdValueRef + \\"JS\\";
-  };
+  }
 </script>
 
 <div>
@@ -449,25 +449,25 @@ exports[`Svelte Columns 1`] = `
   export let columns: ColumnProps[\\"columns\\"];
   export let space: ColumnProps[\\"space\\"];
 
-  const getColumns = function getColumns() {
+  function getColumns() {
     return columns || [];
-  };
+  }
 
-  const getGutterSize = function getGutterSize() {
+  function getGutterSize() {
     return typeof space === \\"number\\" ? space || 0 : 20;
-  };
+  }
 
-  const getWidth = function getWidth(index) {
+  function getWidth(index) {
     const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
-  };
+  }
 
-  const getColumnCssWidth = function getColumnCssWidth(index) {
+  function getColumnCssWidth(index) {
     const columns = getColumns();
     const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
     return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
-  };
+  }
 </script>
 
 <div class=\\"builder-columns div\\">
@@ -518,7 +518,7 @@ exports[`Svelte CustomCode 1`] = `
   export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
   export let code: CustomCodeProps[\\"code\\"];
 
-  const findAndRunScripts = function findAndRunScripts() {
+  function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
@@ -558,7 +558,7 @@ exports[`Svelte CustomCode 1`] = `
         }
       }
     }
-  };
+  }
 
   let scriptsInserted = [];
   let scriptsRun = [];
@@ -592,7 +592,7 @@ exports[`Svelte Embed 1`] = `
   export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
   export let code: CustomCodeProps[\\"code\\"];
 
-  const findAndRunScripts = function findAndRunScripts() {
+  function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
       /** @type {HTMLScriptElement[]} */
@@ -632,7 +632,7 @@ exports[`Svelte Embed 1`] = `
         }
       }
     }
-  };
+  }
 
   let scriptsInserted = [];
   let scriptsRun = [];
@@ -706,7 +706,7 @@ exports[`Svelte Form 1`] = `
   export let sendingMessage: FormProps[\\"sendingMessage\\"];
   export let successMessage: FormProps[\\"successMessage\\"];
 
-  const onSubmit = function onSubmit(event) {
+  function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
 
     if (sendSubmissionsTo === \\"zapier\\") {
@@ -918,7 +918,7 @@ exports[`Svelte Form 1`] = `
         }
       );
     }
-  };
+  }
   $: submissionState = () => {
     return (Builder.isEditing && previewState) || formState;
   };
@@ -1009,20 +1009,20 @@ exports[`Svelte Image 1`] = `
   export let srcset: ImageProps[\\"srcset\\"];
   export let sizes: ImageProps[\\"sizes\\"];
 
-  const setLoaded = function setLoaded() {
+  function setLoaded() {
     imageLoaded = true;
-  };
+  }
 
-  const useLazyLoading = function useLazyLoading() {
+  function useLazyLoading() {
     // TODO: Add more checks here, like testing for real web browsers
     return !!lazy && isBrowser();
-  };
+  }
 
-  const isBrowser = function isBrowser() {
+  function isBrowser() {
     return (
       typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
     );
-  };
+  }
 
   let scrollListener = null;
   let imageLoaded = false;
@@ -1346,13 +1346,13 @@ exports[`Svelte Stamped.io 1`] = `
   export let apiKey: SmileReviewsProps[\\"apiKey\\"];
   export let productId: SmileReviewsProps[\\"productId\\"];
 
-  const kebabCaseValue = function kebabCaseValue() {
+  function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
-  };
+  }
 
-  const snakeCaseValue = function snakeCaseValue() {
+  function snakeCaseValue() {
     return snakeCase(\\"testThis\\");
-  };
+  }
 
   let reviews = [];
   let name = \\"test\\";
