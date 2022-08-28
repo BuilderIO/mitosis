@@ -395,13 +395,26 @@ export const componentToSvelte =
       `;
     }
 
+    // prepare svelte imports
+    let svelteImports: string[] = [];
+
+    if (json.hooks.onMount?.code?.length) {
+      svelteImports.push('onMount');
+    }
+    if (json.hooks.onUpdate?.length) {
+      svelteImports.push('afterUpdate');
+    }
+    if (json.hooks.onUnMount?.code?.length) {
+      svelteImports.push('onDestroy');
+    }
+    if (hasContext(component)) {
+      svelteImports.push('getContext', 'setContext');
+    }
+
     str += dedent`
       <script lang='ts'>
-      ${!json.hooks.onMount?.code ? '' : `import { onMount } from 'svelte'`}
-      ${!json.hooks.onUpdate?.length ? '' : `import { afterUpdate } from 'svelte'`}
-      ${!json.hooks.onUnMount?.code ? '' : `import { onDestroy } from 'svelte'`}
+      ${!svelteImports.length ? '' : `import { ${svelteImports.sort().join(', ')} } from 'svelte'`}
       ${renderPreComponent({ component: json, target: 'svelte' })}
-      ${hasContext(component) ? 'import { getContext, setContext } from "svelte";' : ''}
 
       ${!hasData || options.stateType === 'variables' ? '' : `import onChange from 'on-change'`}
       ${uniq(refs.map((ref) => stripStateAndPropsRefs(ref)).concat(props))
