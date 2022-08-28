@@ -1,4 +1,4 @@
-import { JSONObject } from 'src/types/json';
+import { JSONObject } from '../types/json';
 import { MitosisComponent } from '..';
 
 export const propTypesToJson = (
