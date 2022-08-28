@@ -32,7 +32,6 @@ import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { uniq } from 'lodash';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 
