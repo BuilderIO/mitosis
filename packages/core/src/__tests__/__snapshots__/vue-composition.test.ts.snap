@@ -36,25 +36,25 @@ exports[`Vue AdvancedRef 1`] = `
 showInput: boolean;
 }
     const props = defineProps<Props>()
-    const name= ref('PatrickJS')
+const name= ref('PatrickJS')
 
 
 
 
 
 
-    const inputRef = ref<HTMLInputElement>()
+const inputRef = ref<HTMLInputElement>()
 const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
-    watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
+watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 
 console.log('Received an update');
 
-            })
+        })
 
-    function onBlur = function onBlur() {
+function onBlur = function onBlur() {
 // Maintain focus
 inputRef.focus();
 }
@@ -139,27 +139,27 @@ exports[`Vue Basic Context 1`] = `
   </div>
 </template>
 <script setup lang=\\"ts\\">
-  import { inject, onMounted, provide, ref } from \\"vue\\"
+    import { inject, onMounted, provide, ref } from \\"vue\\"
 
-import { Injector, createInjector, MyService } from '@dummy/injection-js';
-
-
+  import { Injector, createInjector, MyService } from '@dummy/injection-js';
 
 
-  const name= ref('PatrickJS')
 
 
-  const myService = inject(MyService)
-
-  provide(Injector, createInjector())
+    const name= ref('PatrickJS')
 
 
-  onMounted(() => { const bye = myService.method('hi');
+const myService = inject(MyService)
+
+provide(Injector, createInjector())
+
+
+onMounted(() => { const bye = myService.method('hi');
 console.log(bye)})
 
 
 
-  function onChange = function onChange() {
+function onChange = function onChange() {
 const change = myService.method('change');
 console.log(change);
 }
@@ -313,20 +313,20 @@ exports[`Vue BasicRef 1`] = `
 showInput: boolean;
 }
     const props = defineProps<Props>()
-    const name= ref('PatrickJS')
+const name= ref('PatrickJS')
 
 
 
 
 
 
-    const inputRef = ref<HTMLInputElement>()
+const inputRef = ref<HTMLInputElement>()
 const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
 
-    function onBlur = function onBlur() {
+function onBlur = function onBlur() {
 // Maintain focus
 inputRef.focus();
 }
@@ -363,7 +363,7 @@ showInput: boolean;
 
 
 
-    function handlerClick = function handlerClick(event) {
+function handlerClick = function handlerClick(event) {
 event.preventDefault();
 console.log('current value', holdValueRef);
 holdValueRef = holdValueRef + 'JS';
@@ -1081,7 +1081,7 @@ export interface ImageProps {
  children?: any;
 }
      const props = defineProps<ImageProps>()
-      const scrollListener= ref(null)
+  const scrollListener= ref(null)
 const imageLoaded= ref(false)
 const load= ref(false)
 
@@ -1090,8 +1090,8 @@ const load= ref(false)
 
 
 
-      const pictureRef = ref<HTMLElement>()
-      onMounted(() => { if (useLazyLoading()) {
+  const pictureRef = ref<HTMLElement>()
+  onMounted(() => { if (useLazyLoading()) {
 // throttled scroll capture listener
 const listener = () => {
   if (pictureRef) {
@@ -1113,12 +1113,12 @@ window.addEventListener('scroll', listener, {
 });
 listener();
 }})
-      onMounted(() => { if (scrollListener) {
+  onMounted(() => { if (scrollListener) {
 window.removeEventListener('scroll', scrollListener);
 }})
 
 
-      function  setLoaded() {
+  function  setLoaded() {
 imageLoaded.value = true;
 }
 function  useLazyLoading() {
@@ -1129,14 +1129,14 @@ function isBrowser = function isBrowser() {
 return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
 }
 function _classStringToObject(str) {
-      const obj = {};
-      if (typeof str !== 'string') { return obj }
-      const classNames = str.trim().split(/\\\\s+/);
-      for (const name of classNames) {
-        obj[name] = true;
-      }
-      return obj;
-      }
+  const obj = {};
+  if (typeof str !== 'string') { return obj }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+  }
 </script>
 <style scoped>
 .img {
