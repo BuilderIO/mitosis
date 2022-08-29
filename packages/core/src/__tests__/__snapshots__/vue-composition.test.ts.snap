@@ -25,43 +25,32 @@ exports[`Vue AdvancedRef 1`] = `
     Component!
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
-    import { ref, watch } from \\"vue\\"
+import { ref, watch } from \\"vue\\";
 
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
-    const props = defineProps<Props>()
-const name= ref('PatrickJS')
+const props = defineProps<Props>();
+const name = ref(\\"PatrickJS\\");
 
-
-
-
-
-
-const inputRef = ref<HTMLInputElement>()
-const inputNoArgRef = ref<HTMLLabelElement>()
-
-
+const inputRef = ref<HTMLInputElement>();
+const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
+  console.log(\\"Received an update\\");
+});
 
-console.log('Received an update');
-
-        })
-
-function onBlur = function onBlur() {
-// Maintain focus
-inputRef.focus();
+function onBlur() {
+  // Maintain focus
+  inputRef.focus();
 }
-function lowerCaseName = function lowerCaseName() {
-return name.toLowerCase();
+function lowerCaseName() {
+  return name.toLowerCase();
 }
 </script>
+
 <style scoped>
 .input {
   color: red;
@@ -80,6 +69,7 @@ exports[`Vue Basic 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -96,6 +86,7 @@ function underscore_fn_name() {
   return \\"bar\\";
 }
 </script>
+
 <style scoped>
 .div {
   padding: 10px;
@@ -121,6 +112,7 @@ exports[`Vue Basic 2`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -138,30 +130,26 @@ exports[`Vue Basic Context 1`] = `
     <input @input=\\"onChange\\" />
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
-    import { inject, onMounted, provide, ref } from \\"vue\\"
+import { inject, onMounted, provide, ref } from \\"vue\\";
 
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+const name = ref(\\"PatrickJS\\");
 
+const myService = inject(MyService);
 
+provide(Injector, createInjector());
 
-    const name= ref('PatrickJS')
+onMounted(() => {
+  const bye = myService.method(\\"hi\\");
+  console.log(bye);
+});
 
-
-const myService = inject(MyService)
-
-provide(Injector, createInjector())
-
-
-onMounted(() => { const bye = myService.method('hi');
-console.log(bye)})
-
-
-
-function onChange = function onChange() {
-const change = myService.method('change');
-console.log(change);
+function onChange() {
+  const change = myService.method(\\"change\\");
+  console.log(change);
 }
 </script>
 "
@@ -171,6 +159,7 @@ exports[`Vue Basic OnMount Update 1`] = `
 "<template>
   <div>Hello {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -193,6 +182,7 @@ exports[`Vue Basic Outputs 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -211,6 +201,7 @@ exports[`Vue Basic Outputs Meta 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -237,6 +228,7 @@ exports[`Vue BasicChildComponent 1`] = `
     </div>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -264,6 +256,7 @@ exports[`Vue BasicFor 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -302,38 +295,28 @@ exports[`Vue BasicRef 1`] = `
     Component!
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
-    import { ref } from \\"vue\\"
+import { ref } from \\"vue\\";
 
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
-    const props = defineProps<Props>()
-const name= ref('PatrickJS')
+const props = defineProps<Props>();
+const name = ref(\\"PatrickJS\\");
 
+const inputRef = ref<HTMLInputElement>();
+const inputNoArgRef = ref<HTMLLabelElement>();
 
-
-
-
-
-const inputRef = ref<HTMLInputElement>()
-const inputNoArgRef = ref<HTMLLabelElement>()
-
-
-
-
-function onBlur = function onBlur() {
-// Maintain focus
-inputRef.focus();
+function onBlur() {
+  // Maintain focus
+  inputRef.focus();
 }
-function lowerCaseName = function lowerCaseName() {
-return name.toLowerCase();
+function lowerCaseName() {
+  return name.toLowerCase();
 }
 </script>
+
 <style scoped>
 .input {
   color: red;
@@ -348,25 +331,17 @@ exports[`Vue BasicRefAssignment 1`] = `
     <button @click=\\"handlerClick($event)\\">Click</button>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
-    const holdValueRef = ref<undefined>()
+const holdValueRef = ref<undefined>();
 
-
-
-
-function handlerClick = function handlerClick(event) {
-event.preventDefault();
-console.log('current value', holdValueRef);
-holdValueRef = holdValueRef + 'JS';
+function handlerClick(event) {
+  event.preventDefault();
+  console.log(\\"current value\\", holdValueRef);
+  holdValueRef = holdValueRef + \\"JS\\";
 }
 </script>
 "
@@ -379,6 +354,7 @@ exports[`Vue BasicRefPrevious 1`] = `
     <button @click=\\"count += 1\\">Increment</button>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
 
@@ -427,6 +403,7 @@ exports[`Vue Button 1`] = `
     </button>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface ButtonProps {
   attributes?: any;
@@ -447,6 +424,7 @@ exports[`Vue Columns 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 type Column = {
   content: any; // TODO: Implement this when support for dynamic CSS lands
@@ -481,6 +459,7 @@ function getColumnCssWidth(index) {
   return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
 }
 </script>
+
 <style scoped>
 .div {
   display: flex;
@@ -517,6 +496,7 @@ exports[`Vue ContentSlotHtml 1`] = `
     </div>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 type Props = {
   [key: string]: string | JSX.Element;
@@ -540,6 +520,7 @@ exports[`Vue ContentSlotJSX 1`] = `
     <div><slot /></div>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 type Props = {
   [key: string]: string | JSX.Element;
@@ -561,6 +542,7 @@ exports[`Vue CustomCode 1`] = `
     v-html=\\"code\\"
   ></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -645,6 +627,7 @@ exports[`Vue Embed 1`] = `
     v-html=\\"code\\"
   ></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -768,6 +751,7 @@ exports[`Vue Form 1`] = `
     </template>
   </form>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1021,6 +1005,7 @@ function onSubmit(event) {
   }
 }
 </script>
+
 <style scoped>
 .pre {
   padding: 10px;
@@ -1055,89 +1040,89 @@ exports[`Vue Image 1`] = `
 
   <slot />
 </template>
+
 <script setup lang=\\"ts\\">
-     import { onMounted, onUnMounted, ref } from \\"vue\\"
+import { onMounted, onUnMounted, ref } from \\"vue\\";
 
-
-
-
-
-     // TODO: AMP Support?
+// TODO: AMP Support?
 export interface ImageProps {
- _class?: string;
- image: string;
- sizes?: string;
- lazy?: boolean;
- height?: number;
- width?: number;
- altText?: string;
- backgroundSize?: string;
- backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
- srcset?: string; // TODO: Implement support for custom aspect ratios
+  srcset?: string; // TODO: Implement support for custom aspect ratios
 
- aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
- children?: any;
+  children?: any;
 }
-     const props = defineProps<ImageProps>()
-  const scrollListener= ref(null)
-const imageLoaded= ref(false)
-const load= ref(false)
+const props = defineProps<ImageProps>();
+const scrollListener = ref(null);
+const imageLoaded = ref(false);
+const load = ref(false);
 
+const pictureRef = ref<HTMLElement>();
+onMounted(() => {
+  if (useLazyLoading()) {
+    // throttled scroll capture listener
+    const listener = () => {
+      if (pictureRef) {
+        const rect = pictureRef.getBoundingClientRect();
+        const buffer = window.innerHeight / 2;
 
+        if (rect.top < window.innerHeight + buffer) {
+          setLoad(true);
+          scrollListener.value = null;
+          window.removeEventListener(\\"scroll\\", listener);
+        }
+      }
+    };
 
-
-
-
-  const pictureRef = ref<HTMLElement>()
-  onMounted(() => { if (useLazyLoading()) {
-// throttled scroll capture listener
-const listener = () => {
-  if (pictureRef) {
-    const rect = pictureRef.getBoundingClientRect();
-    const buffer = window.innerHeight / 2;
-
-    if (rect.top < window.innerHeight + buffer) {
-      setLoad(true);
-      scrollListener.value = null;
-      window.removeEventListener('scroll', listener);
-    }
+    scrollListener.value = listener;
+    window.addEventListener(\\"scroll\\", listener, {
+      capture: true,
+      passive: true,
+    });
+    listener();
   }
-};
-
-scrollListener.value = listener;
-window.addEventListener('scroll', listener, {
-  capture: true,
-  passive: true
 });
-listener();
-}})
-  onMounted(() => { if (scrollListener) {
-window.removeEventListener('scroll', scrollListener);
-}})
+onMounted(() => {
+  if (scrollListener) {
+    window.removeEventListener(\\"scroll\\", scrollListener);
+  }
+});
 
-
-  function  setLoaded() {
-imageLoaded.value = true;
+function setLoaded() {
+  imageLoaded.value = true;
 }
-function  useLazyLoading() {
-// TODO: Add more checks here, like testing for real web browsers
-return !!props.lazy && isBrowser();
+function useLazyLoading() {
+  // TODO: Add more checks here, like testing for real web browsers
+  return !!props.lazy && isBrowser();
 }
-function isBrowser = function isBrowser() {
-return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+function isBrowser() {
+  return (
+    typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+  );
 }
 function _classStringToObject(str) {
   const obj = {};
-  if (typeof str !== 'string') { return obj }
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
   const classNames = str.trim().split(/\\\\s+/);
   for (const name of classNames) {
     obj[name] = true;
   }
   return obj;
-  }
+}
 </script>
+
 <style scoped>
 .img {
   opacity: 1;
@@ -1157,6 +1142,7 @@ exports[`Vue Image State 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1179,6 +1165,7 @@ exports[`Vue Img 1`] = `
     :src=\\"imgSrc\\"
   />
 </template>
+
 <script setup lang=\\"ts\\">
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1216,6 +1203,7 @@ exports[`Vue Input 1`] = `
     :required=\\"required\\"
   />
 </template>
+
 <script setup lang=\\"ts\\">
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1240,6 +1228,7 @@ exports[`Vue RawText 1`] = `
     v-html=\\"text || ''\\"
   ></span>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface RawTextProps {
   attributes?: any;
@@ -1266,6 +1255,7 @@ exports[`Vue Remove Internal mitosis package 1`] = `
 "<template>
   <div>Hello {{ name }}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1289,6 +1279,7 @@ exports[`Vue Section 1`] = `
     <slot />
   </section>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface SectionProps {
   maxWidth?: number;
@@ -1315,6 +1306,7 @@ exports[`Vue Section 2`] = `
     </template>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1346,6 +1338,7 @@ exports[`Vue Select 1`] = `
     </template>
   </select>
 </template>
+
 <script setup lang=\\"ts\\">
 import { Builder } from \\"@builder.io/sdk\\";
 
@@ -1372,6 +1365,7 @@ exports[`Vue SlotHtml 1`] = `
     </content-slot-code>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1388,6 +1382,7 @@ exports[`Vue SlotJsx 1`] = `
     <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
@@ -1442,6 +1437,7 @@ exports[`Vue Stamped.io 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
 
@@ -1487,6 +1483,7 @@ function _classStringToObject(str) {
   return obj;
 }
 </script>
+
 <style scoped>
 .input {
   display: block;
@@ -1520,6 +1517,7 @@ exports[`Vue Submit 1`] = `
     {{ text }}
   </button>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface ButtonProps {
   attributes?: any;
@@ -1540,6 +1538,7 @@ exports[`Vue Text 1`] = `
     v-html=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"
   ></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1568,6 +1567,7 @@ exports[`Vue Textarea 1`] = `
     :defaultValue=\\"defaultValue\\"
   ></textarea>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface TextareaProps {
   attributes?: any;
@@ -1604,6 +1604,7 @@ exports[`Vue Video 1`] = `
     :loop=\\"loop\\"
   ></video>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface VideoProps {
   attributes?: any;
@@ -1646,6 +1647,7 @@ exports[`Vue basicForwardRef 1`] = `
     />
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1656,6 +1658,7 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 </script>
+
 <style scoped>
 .input {
   color: red;
@@ -1675,6 +1678,7 @@ exports[`Vue basicForwardRefMetadata 1`] = `
     />
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1685,6 +1689,7 @@ export interface Props {
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 </script>
+
 <style scoped>
 .input {
   color: red;
@@ -1697,6 +1702,7 @@ exports[`Vue basicOnUpdateReturn 1`] = `
 "<template>
   <div>Hello! {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
 
@@ -1728,7 +1734,9 @@ exports[`Vue class + ClassName + css 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
+
 <script setup lang=\\"ts\\"></script>
+
 <style scoped>
 .div {
   padding: 10px;
@@ -1741,7 +1749,9 @@ exports[`Vue class + css 1`] = `
 "<template>
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
+
 <script setup lang=\\"ts\\"></script>
+
 <style scoped>
 .div {
   padding: 10px;
@@ -1754,7 +1764,9 @@ exports[`Vue className + css 1`] = `
 "<template>
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
+
 <script setup lang=\\"ts\\"></script>
+
 <style scoped>
 .div {
   padding: 10px;
@@ -1771,6 +1783,7 @@ exports[`Vue className 1`] = `
     <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1801,6 +1814,7 @@ exports[`Vue classState 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -1821,6 +1835,7 @@ function _classStringToObject(str) {
   return obj;
 }
 </script>
+
 <style scoped>
 .div {
   padding: 10px;
@@ -1847,6 +1862,7 @@ exports[`Vue defaultProps 1`] = `
     </button>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface ButtonProps {
   attributes?: any;
@@ -1867,6 +1883,7 @@ exports[`Vue defaultValsWithTypes 1`] = `
 "<template>
   <div>Hello {{ name || DEFAULT_VALUES.name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
@@ -1884,6 +1901,7 @@ exports[`Vue multipleOnUpdate 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
   import { onUpdated } from \\"vue\\"
 
@@ -1905,6 +1923,7 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
 
@@ -1947,6 +1966,7 @@ exports[`Vue nestedShow 1`] = `
     <div>else-condition-A</div>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 interface Props {
   conditionA: boolean;
@@ -1961,7 +1981,9 @@ exports[`Vue nestedStyles 1`] = `
 "<template>
   <div class=\\"div\\">Hello world</div>
 </template>
+
 <script setup lang=\\"ts\\"></script>
+
 <style scoped>
 .div {
   display: flex;
@@ -1986,6 +2008,7 @@ exports[`Vue onInit & onMount 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted } from \\"vue\\";
 
@@ -2000,6 +2023,7 @@ exports[`Vue onInit 1`] = `
 "<template>
   <div>Default name defined by parent {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -2020,6 +2044,7 @@ exports[`Vue onMount 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { onMounted, onUnMounted } from \\"vue\\";
 
@@ -2037,6 +2062,7 @@ exports[`Vue onUpdate 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
   import { onUpdated } from \\"vue\\"
 
@@ -2056,6 +2082,7 @@ exports[`Vue onUpdateWithDeps 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
 
@@ -2073,6 +2100,7 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
 "<template>
   <div></div>
 </template>
+
 <script setup lang=\\"ts\\">
 const b = 3;
 const foo = () => {};
@@ -2097,6 +2125,7 @@ exports[`Vue preserveTyping 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 export type A = \\"test\\";
 export interface C {
@@ -2122,6 +2151,7 @@ exports[`Vue propsDestructure 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
@@ -2139,6 +2169,7 @@ exports[`Vue propsInterface 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 interface Person {
   name: string;
@@ -2153,6 +2184,7 @@ exports[`Vue propsType 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 type Person = {
   name: string;
@@ -2173,6 +2205,7 @@ exports[`Vue rootShow 1`] = `
     <div>Foo</div>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 export interface RenderStylesProps {
   foo: string;
@@ -2192,6 +2225,7 @@ exports[`Vue self-referencing component 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"name\\"]);
 </script>
@@ -2211,6 +2245,7 @@ exports[`Vue self-referencing component with children 1`] = `
     </template>
   </div>
 </template>
+
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"name\\", \\"children\\"]);
 </script>
@@ -2229,6 +2264,7 @@ exports[`Vue showWithFor 1`] = `
     <div>else-condition-A</div>
   </template>
 </template>
+
 <script setup lang=\\"ts\\">
 interface Props {
   conditionA: boolean;
@@ -2243,6 +2279,7 @@ exports[`Vue subComponent 1`] = `
 "<template>
   <foo></foo>
 </template>
+
 <script setup lang=\\"ts\\">
 import Foo from \\"./foo-sub-component.vue\\";
 </script>
@@ -2253,6 +2290,7 @@ exports[`Vue typeDependency 1`] = `
 "<template>
   <div>{{ foo }}</div>
 </template>
+
 <script setup lang=\\"ts\\">
 import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
