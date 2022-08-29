@@ -38,6 +38,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
+import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -742,7 +743,6 @@ const getCompositionPropDefinition = (component: MitosisComponent, props: Set<st
 function generateCompositionApiScript(
   component: MitosisComponent,
   options: ToVueOptions,
-  path: string | undefined,
   template: string,
   props: Set<string>,
   onUpdateWithDeps: extendedHook[],
@@ -767,7 +767,6 @@ function generateCompositionApiScript(
     functions: true,
     valueMapper: (code) => processBinding(code, options, component),
     format: 'variables',
-    keyPrefix: 'function',
   });
 
   if (template.includes('_classStringToObject')) {
@@ -854,6 +853,8 @@ const componentToVue =
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     if (options.api === 'options') {
       options.plugins?.unshift(onUpdatePlugin);
+    } else if (options.api === 'composition') {
+      options.plugins?.unshift(FUNCTION_HACK_PLUGIN);
     }
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -910,6 +911,7 @@ const componentToVue =
     <template>
       ${template}
     </template>
+
     <script ${options.api === 'composition' ? 'setup' : ''} lang="ts">
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
       ${renderPreComponent({
@@ -923,7 +925,6 @@ const componentToVue =
           ? generateCompositionApiScript(
               component,
               options,
-              path,
               template,
               elementProps,
               onUpdateWithDeps,
