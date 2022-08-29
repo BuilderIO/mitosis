@@ -14,7 +14,8 @@
   "scripts": {
     "lerna": "lerna",
     "ci:build": "yarn workspaces foreach -pt --exclude \"*/e2e*\" --exclude @builder.io/mitosis-fiddle --verbose run build",
-    "ci:fiddle-build": "yarn workspaces foreach -pt --include @builder.io/mitosis-fiddle --verbose run build",
+    "ci:build:core": "yarn workspace @builder.io/mitosis run build",
+    "ci:build:fiddle": "yarn workspace @builder.io/mitosis-fiddle run build",
     "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
     "ci:test": "yarn workspaces foreach run test --passWithNoTests",
     "ci:e2e-prep": "playwright install chromium --with-deps",
