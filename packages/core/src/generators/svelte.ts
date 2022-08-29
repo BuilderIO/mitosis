@@ -308,7 +308,12 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
           const newValue = `function ${value}`;
           json.state[key] = {
             code: newValue,
-            type: 'function',
+            type: 'method',
+          };
+        } else if (typeof value === 'string' && type === 'function') {
+          json.state[key] = {
+            code: value,
+            type: 'method',
           };
         }
       }
@@ -377,7 +382,6 @@ export const componentToSvelte =
         getters: false,
         functions: true,
         format: 'variables',
-        keyPrefix: 'const ',
         valueMapper: (code) => pipe(stripStateAndProps(code, options), stripThisRefs),
       }),
       babelTransformCode,
