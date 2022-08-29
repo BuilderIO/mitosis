@@ -3,6 +3,8 @@
 - [At a glance](#at-a-glance)
 - [Components](#components)
 - [Styling](#styling)
+  - [`css`](#css)
+- [`class` vs `className`](#class-vs-classname)
 - [State](#state)
 - [Methods](#methods)
 - [Control flow](#control-flow)
@@ -93,7 +95,7 @@ Mitosis prefers that you use `class` to provide class name strings, but it also 
 
 ## State
 
-State is provided by the `useState` hook. Currently, the name of this value must be `state` like below:
+State is provided by the `useStore` hook. Currently, the name of this value must be `state` like below:
 
 ```jsx
 export default function MyComponent() {
