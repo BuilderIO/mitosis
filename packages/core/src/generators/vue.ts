@@ -941,6 +941,7 @@ const componentToVue =
             )
       }
     </script>
+
     ${
       !css.trim().length
         ? ''
