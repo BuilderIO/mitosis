@@ -24,55 +24,42 @@ exports[`Vue AdvancedRef 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
 
-    export default {
-      name: 'my-basic-ref-component',
+export default {
+  name: \\"my-basic-ref-component\\",
 
-      props: [\\"showInput\\"],
+  props: [\\"showInput\\"],
 
-      data: () => ({ name: 'PatrickJS',}),
+  data: () => ({ name: \\"PatrickJS\\" }),
 
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Received an update\\");
+    },
+  },
 
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.$refs.inputRef,
+        1: this.$refs.inputNoArgRef,
+      };
+    },
+  },
 
-
-
-
-
-      watch: {
-          onUpdateHook0() {
-                console.log('Received an update')
-                }
-
-        },
-
-
-
-        computed: {  onUpdateHook0() {
-return {
-  0: this.$refs.inputRef,
-  1: this.$refs.inputNoArgRef
+  methods: {
+    onBlur: function onBlur() {
+      // Maintain focus
+      this.$refs.inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return this.name.toLowerCase();
+    },
+  },
 };
-},},
-
-
-        methods: { onBlur : function onBlur() {
-// Maintain focus
-this.$refs.inputRef.focus();
-}, lowerCaseName : function lowerCaseName() {
-return this.name.toLowerCase();
-},},
-
-    }
 </script>
 <style scoped>
 .input {
@@ -93,42 +80,25 @@ exports[`Vue Basic 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-  export const DEFAULT_VALUES = {
-name: 'Steve'
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
 };
 
-
-
-    export interface MyBasicComponentProps {
-id: string
+export interface MyBasicComponentProps {
+  id: string;
 }
 
-    export default {
-      name: 'my-basic-component',
+export default {
+  name: \\"my-basic-component\\",
 
+  data: () => ({ name: \\"Steve\\", DEFAULT_VALUES }),
 
-
-      data: () => ({ name: 'Steve',DEFAULT_VALUES}),
-
-
-
-
-
-
-
-
-
-
-
-
-        methods: {  underscore_fn_name() {
-return 'bar';
-},},
-
-    }
+  methods: {
+    underscore_fn_name() {
+      return \\"bar\\";
+    },
+  },
+};
 </script>
 <style scoped>
 .div {
@@ -149,34 +119,11 @@ exports[`Vue Basic 2`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-for-show-component',
+  name: \\"my-basic-for-show-component\\",
 
-
-
-  data: () => ({ name: 'PatrickJS', names: ['Steve','PatrickJS'],}),
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
+};
 </script>
 "
 `;
@@ -190,49 +137,35 @@ exports[`Vue Basic Context 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+export default {
+  name: \\"my-basic-component\\",
 
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-
-
-
-
-    export default {
-      name: 'my-basic-component',
-
-
-
-      data: () => ({ name: 'PatrickJS',}),
-
-
-      provide() {
-              const _this = this;
-              return {
-    Injector: null,
-  }
-            },
-      inject: {
+  provide() {
+    const _this = this;
+    return {
+      Injector: null,
+    };
+  },
+  inject: {
     myService: \\"MyService\\",
   },
 
-      mounted() {
-              const bye = this.myService.method('hi');
-console.log(bye)
-            },
+  mounted() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  },
 
-
-
-
-
-
-        methods: { onChange : function onChange() {
-const change = this.myService.method('change');
-console.log(change);
-},},
-
-    }
+  methods: {
+    onChange: function onChange() {
+      const change = this.myService.method(\\"change\\");
+      console.log(change);
+    },
+  },
+};
 </script>
 "
 `;
@@ -242,39 +175,22 @@ exports[`Vue Basic OnMount Update 1`] = `
   <div>Hello {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-hi: string;
-bye: string;
+export interface Props {
+  hi: string;
+  bye: string;
 }
 
-    export default {
-      name: 'my-basic-on-mount-update-component',
+export default {
+  name: \\"my-basic-on-mount-update-component\\",
 
-      props: [\\"hi\\",\\"bye\\"],
+  props: [\\"hi\\", \\"bye\\"],
 
-      data: () => ({ name: 'PatrickJS', names: ['Steve','PatrickJS'],}),
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
-
-
-
-
-      mounted() {
-              this.name = 'PatrickJS onMount' + this.bye
-            },
-
-
-
-
-
-
-    }
+  mounted() {
+    this.name = \\"PatrickJS onMount\\" + this.bye;
+  },
+};
 </script>
 "
 `;
@@ -284,37 +200,18 @@ exports[`Vue Basic Outputs 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-outputs-component\\",
 
+  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
 
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-
-
-
-
-
-  export default {
-    name: 'my-basic-outputs-component',
-
-    props: [\\"onMessage\\",\\"onEvent\\",\\"message\\"],
-
-    data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-    mounted() {
-            this.onMessage(this.name);
-this.onEvent(this.message)
-          },
-
-
-
-
-
-
-  }
+  mounted() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  },
+};
 </script>
 "
 `;
@@ -324,37 +221,18 @@ exports[`Vue Basic Outputs Meta 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-outputs-component\\",
 
+  props: [\\"onMessage\\", \\"onEvent\\", \\"message\\"],
 
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-
-
-
-
-
-  export default {
-    name: 'my-basic-outputs-component',
-
-    props: [\\"onMessage\\",\\"onEvent\\",\\"message\\"],
-
-    data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-    mounted() {
-            this.onMessage(this.name);
-this.onEvent(this.message)
-          },
-
-
-
-
-
-
-  }
+  mounted() {
+    this.onMessage(this.name);
+    this.onEvent(this.message);
+  },
+};
 </script>
 "
 `;
@@ -372,35 +250,18 @@ exports[`Vue BasicChildComponent 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
+export default {
+  name: \\"my-basic-child-component\\",
+  components: {
+    \\"my-basic-component\\": MyBasicComponent,
+    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
+  },
 
-import MyBasicComponent from './basic.raw';
-import MyBasicOnMountUpdateComponent from './basic-onMount-update.raw';
-
-
-
-
-
-
-  export default {
-    name: 'my-basic-child-component',
-    components: { 'my-basic-component': MyBasicComponent,'my-basic-on-mount-update-component': MyBasicOnMountUpdateComponent },
-
-
-    data: () => ({ name: 'Steve', dev: 'PatrickJS',}),
-
-
-
-
-
-
-
-
-
-
-
-
-  }
+  data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
+};
 </script>
 "
 `;
@@ -419,36 +280,15 @@ exports[`Vue BasicFor 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-for-component',
+  name: \\"my-basic-for-component\\",
 
-
-
-  data: () => ({ name: 'PatrickJS', names: ['Steve','PatrickJS'],}),
-
-
-
-
+  data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
   mounted() {
-          console.log('onMount code')
-        },
-
-
-
-
-
-
-}
+    console.log(\\"onMount code\\");
+  },
+};
 </script>
 "
 `;
@@ -477,43 +317,27 @@ exports[`Vue BasicRef 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
 
-    export default {
-      name: 'my-basic-ref-component',
+export default {
+  name: \\"my-basic-ref-component\\",
 
-      props: [\\"showInput\\"],
+  props: [\\"showInput\\"],
 
-      data: () => ({ name: 'PatrickJS',}),
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-
-
-
-
-
-
-
-
-
-
-        methods: { onBlur : function onBlur() {
-// Maintain focus
-this.$refs.inputRef.focus();
-}, lowerCaseName : function lowerCaseName() {
-return this.name.toLowerCase();
-},},
-
-    }
+  methods: {
+    onBlur: function onBlur() {
+      // Maintain focus
+      this.$refs.inputRef.focus();
+    },
+    lowerCaseName: function lowerCaseName() {
+      return this.name.toLowerCase();
+    },
+  },
+};
 </script>
 <style scoped>
 .input {
@@ -530,40 +354,21 @@ exports[`Vue BasicRefAssignment 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
 
-    export default {
-      name: 'my-basic-ref-assignment-component',
+export default {
+  name: \\"my-basic-ref-assignment-component\\",
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-        methods: { handlerClick : function handlerClick(event) {
-event.preventDefault();
-console.log('current value', this.$refs.holdValueRef);
-this.$refs.holdValueRef = this.$refs.holdValueRef + 'JS';
-},},
-
-    }
+  methods: {
+    handlerClick: function handlerClick(event) {
+      event.preventDefault();
+      console.log(\\"current value\\", this.$refs.holdValueRef);
+      this.$refs.holdValueRef = this.$refs.holdValueRef + \\"JS\\";
+    },
+  },
+};
 </script>
 "
 `;
@@ -576,58 +381,42 @@ exports[`Vue BasicRefPrevious 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
 
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
 
-
-  export function usePrevious<T>(value: T) {
-// The ref object is a generic container whose current property is mutable ...
-// ... and can hold any value, similar to an instance property on a class
-let ref = useRef<T>(null); // Store current value in ref
-
-onUpdate(() => {
-  ref = value;
-}, [value]); // Only re-run if value changes
-// Return previous value (happens before update in useEffect above)
-
-return ref;
+  return ref;
 }
 
-
-
-    export interface Props {
-showInput: boolean;
+export interface Props {
+  showInput: boolean;
 }
 
-    export default {
-      name: 'my-previous-component',
+export default {
+  name: \\"my-previous-component\\",
 
+  data: () => ({ count: 0 }),
 
+  watch: {
+    onUpdateHook0() {
+      this.$refs.prevCount = this.count;
+    },
+  },
 
-      data: () => ({ count: 0,}),
-
-
-
-
-
-
-
-      watch: {
-          onUpdateHook0() {
-                this.$refs.prevCount = this.count
-                }
-
-        },
-
-
-
-        computed: {  onUpdateHook0() {
-return {
-  0: this.count
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.count,
+      };
+    },
+  },
 };
-},},
-
-
-    }
 </script>
 "
 `;
@@ -648,37 +437,18 @@ exports[`Vue Button 1`] = `
   </button>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface ButtonProps {
-attributes?: any;
-text?: string;
-link?: string;
-openLinkInNewTab?: boolean;
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
 }
 
-    export default {
-      name: 'button',
+export default {
+  name: \\"button\\",
 
-      props: [\\"link\\",\\"attributes\\",\\"openLinkInNewTab\\",\\"text\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"],
+};
 </script>
 "
 `;
@@ -696,59 +466,46 @@ exports[`Vue Columns 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+type Column = {
+  content: any; // TODO: Implement this when support for dynamic CSS lands
 
-
-
-
-
-
-
-    type Column = {
-content: any; // TODO: Implement this when support for dynamic CSS lands
-
-width?: number;
+  width?: number;
 };
 export interface ColumnProps {
-columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
+  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
 
-space?: number; // TODO: Implement this when support for dynamic CSS lands
+  space?: number; // TODO: Implement this when support for dynamic CSS lands
 
-stackColumnsAt?: 'tablet' | 'mobile' | 'never'; // TODO: Implement this when support for dynamic CSS lands
+  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
 
-reverseColumnsWhenStacked?: boolean;
+  reverseColumnsWhenStacked?: boolean;
 }
 
-    export default {
-      name: 'column',
+export default {
+  name: \\"column\\",
 
-      props: [\\"columns\\",\\"space\\"],
+  props: [\\"columns\\", \\"space\\"],
 
-
-
-
-
-
-
-
-
-
-
-
-        methods: {  getColumns() {
-return this.columns || [];
-},  getGutterSize() {
-return typeof this.space === 'number' ? this.space || 0 : 20;
-},  getWidth(index) {
-const columns = this.getColumns();
-return columns[index] && columns[index].width || 100 / columns.length;
-},  getColumnCssWidth(index) {
-const columns = this.getColumns();
-const gutterSize = this.getGutterSize();
-const subtractWidth = gutterSize * (columns.length - 1) / columns.length;
-return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
-},},
-
-    }
+  methods: {
+    getColumns() {
+      return this.columns || [];
+    },
+    getGutterSize() {
+      return typeof this.space === \\"number\\" ? this.space || 0 : 20;
+    },
+    getWidth(index) {
+      const columns = this.getColumns();
+      return (columns[index] && columns[index].width) || 100 / columns.length;
+    },
+    getColumnCssWidth(index) {
+      const columns = this.getColumns();
+      const gutterSize = this.getGutterSize();
+      const subtractWidth =
+        (gutterSize * (columns.length - 1)) / columns.length;
+      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    },
+  },
+};
 </script>
 <style scoped>
 .div {
@@ -787,35 +544,16 @@ exports[`Vue ContentSlotHtml 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    type Props = {
-[key: string]: string | JSX.Element;
-slotTesting: JSX.Element;
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
 };
 
-    export default {
-      name: 'content-slot-code',
-      components: { 'slot': Slot },
-      props: [\\"slotTesting\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+export default {
+  name: \\"content-slot-code\\",
+  components: { slot: Slot },
+  props: [\\"slotTesting\\"],
+};
 </script>
 "
 `;
@@ -832,34 +570,15 @@ exports[`Vue ContentSlotJSX 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    type Props = {
-[key: string]: string | JSX.Element;
+type Props = {
+  [key: string]: string | JSX.Element;
 };
 
-    export default {
-      name: 'content-slot-jsx-code',
+export default {
+  name: \\"content-slot-jsx-code\\",
 
-      props: [\\"slotTesting\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"slotTesting\\"],
+};
 </script>
 "
 `;
@@ -877,82 +596,77 @@ exports[`Vue CustomCode 1`] = `
   ></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface CustomCodeProps {
-code: string;
-replaceNodes?: boolean;
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
 }
 
-    export default {
-      name: 'custom-code',
+export default {
+  name: \\"custom-code\\",
 
-      props: [\\"replaceNodes\\",\\"code\\"],
+  props: [\\"replaceNodes\\", \\"code\\"],
 
-      data: () => ({ scriptsInserted: [], scriptsRun: [],}),
+  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
 
+  mounted() {
+    this.findAndRunScripts();
+  },
 
+  methods: {
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
 
+          if (script.src) {
+            if (this.scriptsInserted.includes(script.src)) {
+              continue;
+            }
 
-      mounted() {
-              this.findAndRunScripts()
-            },
+            this.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (this.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
 
-
-
-
-
-
-        methods: {  findAndRunScripts() {
-// TODO: Move this function to standalone one in '@builder.io/utils'
-if (this.$refs.elem && typeof window !== 'undefined') {
-  /** @type {HTMLScriptElement[]} */
-  const scripts = this.$refs.elem.getElementsByTagName('script');
-
-  for (let i = 0; i < scripts.length; i++) {
-    const script = scripts[i];
-
-    if (script.src) {
-      if (this.scriptsInserted.includes(script.src)) {
-        continue;
+            try {
+              this.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
       }
-
-      this.scriptsInserted.push(script.src);
-      const newScript = document.createElement('script');
-      newScript.async = true;
-      newScript.src = script.src;
-      document.head.appendChild(newScript);
-    } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
-      if (this.scriptsRun.includes(script.innerText)) {
-        continue;
-      }
-
-      try {
-        this.scriptsRun.push(script.innerText);
-        new Function(script.innerText)();
-      } catch (error) {
-        console.warn('\`CustomCode\`: Error running script:', error);
-      }
-    }
-  }
-}
-},_classStringToObject(str) {
+    },
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 "
 `;
@@ -970,82 +684,77 @@ exports[`Vue Embed 1`] = `
   ></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface CustomCodeProps {
-code: string;
-replaceNodes?: boolean;
+export interface CustomCodeProps {
+  code: string;
+  replaceNodes?: boolean;
 }
 
-    export default {
-      name: 'custom-code',
+export default {
+  name: \\"custom-code\\",
 
-      props: [\\"replaceNodes\\",\\"code\\"],
+  props: [\\"replaceNodes\\", \\"code\\"],
 
-      data: () => ({ scriptsInserted: [], scriptsRun: [],}),
+  data: () => ({ scriptsInserted: [], scriptsRun: [] }),
 
+  mounted() {
+    this.findAndRunScripts();
+  },
 
+  methods: {
+    findAndRunScripts() {
+      // TODO: Move this function to standalone one in '@builder.io/utils'
+      if (this.$refs.elem && typeof window !== \\"undefined\\") {
+        /** @type {HTMLScriptElement[]} */
+        const scripts = this.$refs.elem.getElementsByTagName(\\"script\\");
 
+        for (let i = 0; i < scripts.length; i++) {
+          const script = scripts[i];
 
+          if (script.src) {
+            if (this.scriptsInserted.includes(script.src)) {
+              continue;
+            }
 
-      mounted() {
-              this.findAndRunScripts()
-            },
+            this.scriptsInserted.push(script.src);
+            const newScript = document.createElement(\\"script\\");
+            newScript.async = true;
+            newScript.src = script.src;
+            document.head.appendChild(newScript);
+          } else if (
+            !script.type ||
+            [
+              \\"text/javascript\\",
+              \\"application/javascript\\",
+              \\"application/ecmascript\\",
+            ].includes(script.type)
+          ) {
+            if (this.scriptsRun.includes(script.innerText)) {
+              continue;
+            }
 
-
-
-
-
-
-        methods: {  findAndRunScripts() {
-// TODO: Move this function to standalone one in '@builder.io/utils'
-if (this.$refs.elem && typeof window !== 'undefined') {
-  /** @type {HTMLScriptElement[]} */
-  const scripts = this.$refs.elem.getElementsByTagName('script');
-
-  for (let i = 0; i < scripts.length; i++) {
-    const script = scripts[i];
-
-    if (script.src) {
-      if (this.scriptsInserted.includes(script.src)) {
-        continue;
+            try {
+              this.scriptsRun.push(script.innerText);
+              new Function(script.innerText)();
+            } catch (error) {
+              console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+            }
+          }
+        }
       }
-
-      this.scriptsInserted.push(script.src);
-      const newScript = document.createElement('script');
-      newScript.async = true;
-      newScript.src = script.src;
-      document.head.appendChild(newScript);
-    } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
-      if (this.scriptsRun.includes(script.innerText)) {
-        continue;
-      }
-
-      try {
-        this.scriptsRun.push(script.innerText);
-        new Function(script.innerText)();
-      } catch (error) {
-        console.warn('\`CustomCode\`: Error running script:', error);
-      }
-    }
-  }
-}
-},_classStringToObject(str) {
+    },
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 "
 `;
@@ -1097,267 +806,292 @@ exports[`Vue Form 1`] = `
   </form>
 </template>
 <script lang=\\"ts\\">
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
-
-  import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { Builder, builder } from '@builder.io/sdk';
-import { BuilderBlocks } from '@fake';
-import { set } from '@fake';
-import { get } from '@fake';
-
-
-
-
-    export interface FormProps {
-attributes?: any;
-name?: string;
-action?: string;
-validate?: boolean;
-method?: string;
-builderBlock?: BuilderElement;
-sendSubmissionsTo?: string;
-sendSubmissionsToEmail?: string;
-sendWithJs?: boolean;
-contentType?: string;
-customHeaders?: {
-  [key: string]: string;
-};
-successUrl?: string;
-previewState?: FormState;
-successMessage?: BuilderElement[];
-errorMessage?: BuilderElement[];
-sendingMessage?: BuilderElement[];
-resetFormOnSubmit?: boolean;
-errorMessagePath?: string;
+export interface FormProps {
+  attributes?: any;
+  name?: string;
+  action?: string;
+  validate?: boolean;
+  method?: string;
+  builderBlock?: BuilderElement;
+  sendSubmissionsTo?: string;
+  sendSubmissionsToEmail?: string;
+  sendWithJs?: boolean;
+  contentType?: string;
+  customHeaders?: {
+    [key: string]: string;
+  };
+  successUrl?: string;
+  previewState?: FormState;
+  successMessage?: BuilderElement[];
+  errorMessage?: BuilderElement[];
+  sendingMessage?: BuilderElement[];
+  resetFormOnSubmit?: boolean;
+  errorMessagePath?: string;
 }
-export type FormState = 'unsubmitted' | 'sending' | 'success' | 'error';
+export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
-    export default {
-      name: 'form-component',
-      components: { 'builder-block-component': BuilderBlockComponent,'builder-blocks': BuilderBlocks },
-      props: [\\"previewState\\",\\"sendWithJs\\",\\"sendSubmissionsTo\\",\\"action\\",\\"customHeaders\\",\\"contentType\\",\\"sendSubmissionsToEmail\\",\\"name\\",\\"method\\",\\"errorMessagePath\\",\\"resetFormOnSubmit\\",\\"successUrl\\",\\"validate\\",\\"attributes\\",\\"builderBlock\\",\\"errorMessage\\",\\"sendingMessage\\",\\"successMessage\\"],
+export default {
+  name: \\"form-component\\",
+  components: {
+    \\"builder-block-component\\": BuilderBlockComponent,
+    \\"builder-blocks\\": BuilderBlocks,
+  },
+  props: [
+    \\"previewState\\",
+    \\"sendWithJs\\",
+    \\"sendSubmissionsTo\\",
+    \\"action\\",
+    \\"customHeaders\\",
+    \\"contentType\\",
+    \\"sendSubmissionsToEmail\\",
+    \\"name\\",
+    \\"method\\",
+    \\"errorMessagePath\\",
+    \\"resetFormOnSubmit\\",
+    \\"successUrl\\",
+    \\"validate\\",
+    \\"attributes\\",
+    \\"builderBlock\\",
+    \\"errorMessage\\",
+    \\"sendingMessage\\",
+    \\"successMessage\\",
+  ],
 
-      data: () => ({ formState: 'unsubmitted', responseData: null, formErrorMessage: '',builder}),
+  data: () => ({
+    formState: \\"unsubmitted\\",
+    responseData: null,
+    formErrorMessage: \\"\\",
+    builder,
+  }),
 
+  computed: {
+    submissionState() {
+      return (Builder.isEditing && this.previewState) || this.formState;
+    },
+  },
 
+  methods: {
+    onSubmit(event) {
+      const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
-
-
-
-
-
-
-
-
-        computed: {  submissionState() {
-return Builder.isEditing && this.previewState || this.formState;
-},},
-
-
-        methods: {  onSubmit(event) {
-const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === 'email';
-
-if (this.sendSubmissionsTo === 'zapier') {
-  event.preventDefault();
-} else if (sendWithJs) {
-  if (!(this.action || this.sendSubmissionsTo === 'email')) {
-    event.preventDefault();
-    return;
-  }
-
-  event.preventDefault();
-  const el = event.currentTarget;
-  const headers = this.customHeaders || {};
-  let body;
-  const formData = new FormData(el); // TODO: maybe support null
-
-  const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
-    let value;
-    const key = el.name;
-
-    if (el instanceof HTMLInputElement) {
-      if (el.type === 'radio') {
-        if (el.checked) {
-          value = el.name;
-          return {
-            key,
-            value
-          };
-        }
-      } else if (el.type === 'checkbox') {
-        value = el.checked;
-      } else if (el.type === 'number' || el.type === 'range') {
-        const num = el.valueAsNumber;
-
-        if (!isNaN(num)) {
-          value = num;
-        }
-      } else if (el.type === 'file') {
-        // TODO: one vs multiple files
-        value = el.files;
-      } else {
-        value = el.value;
-      }
-    } else {
-      value = el.value;
-    }
-
-    return {
-      key,
-      value
-    };
-  });
-  let contentType = this.contentType;
-
-  if (this.sendSubmissionsTo === 'email') {
-    contentType = 'multipart/form-data';
-  }
-
-  Array.from(formPairs).forEach(({
-    value
-  }) => {
-    if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
-      contentType = 'multipart/form-data';
-    }
-  }); // TODO: send as urlEncoded or multipart by default
-  // because of ease of use and reliability in browser API
-  // for encoding the form?
-
-  if (contentType !== 'application/json') {
-    body = formData;
-  } else {
-    // Json
-    const json = {};
-    Array.from(formPairs).forEach(({
-      value,
-      key
-    }) => {
-      set(json, key, value);
-    });
-    body = JSON.stringify(json);
-  }
-
-  if (contentType && contentType !== 'multipart/form-data') {
-    if (
-    /* Zapier doesn't allow content-type header to be sent from browsers */
-    !(sendWithJs && this.action?.includes('zapier.com'))) {
-      headers['content-type'] = contentType;
-    }
-  }
-
-  const presubmitEvent = new CustomEvent('presubmit', {
-    detail: {
-      body
-    }
-  });
-
-  if (this.$refs.formRef) {
-    this.$refs.formRef.dispatchEvent(presubmitEvent);
-
-    if (presubmitEvent.defaultPrevented) {
-      return;
-    }
-  }
-
-  this.formState = 'sending';
-  const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(this.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(this.name || '')}\`;
-  fetch(this.sendSubmissionsTo === 'email' ? formUrl : this.action
-  /* TODO: throw error if no action URL */
-  , {
-    body,
-    headers,
-    method: this.method || 'post'
-  }).then(async res => {
-    let body;
-    const contentType = res.headers.get('content-type');
-
-    if (contentType && contentType.indexOf('application/json') !== -1) {
-      body = await res.json();
-    } else {
-      body = await res.text();
-    }
-
-    if (!res.ok && this.errorMessagePath) {
-      /* TODO: allow supplying an error formatter function */
-      let message = get(body, this.errorMessagePath);
-
-      if (message) {
-        if (typeof message !== 'string') {
-          /* TODO: ideally convert json to yaml so it woul dbe like
-           error: - email has been taken */
-          message = JSON.stringify(message);
-        }
-
-        this.formErrorMessage = message;
-      }
-    }
-
-    this.responseData = body;
-    this.formState = res.ok ? 'success' : 'error';
-
-    if (res.ok) {
-      const submitSuccessEvent = new CustomEvent('submit:success', {
-        detail: {
-          res,
-          body
-        }
-      });
-
-      if (this.$refs.formRef) {
-        this.$refs.formRef.dispatchEvent(submitSuccessEvent);
-
-        if (submitSuccessEvent.defaultPrevented) {
+      if (this.sendSubmissionsTo === \\"zapier\\") {
+        event.preventDefault();
+      } else if (sendWithJs) {
+        if (!(this.action || this.sendSubmissionsTo === \\"email\\")) {
+          event.preventDefault();
           return;
         }
-        /* TODO: option to turn this on/off? */
 
+        event.preventDefault();
+        const el = event.currentTarget;
+        const headers = this.customHeaders || {};
+        let body;
+        const formData = new FormData(el); // TODO: maybe support null
 
-        if (this.resetFormOnSubmit !== false) {
-          this.$refs.formRef.reset();
-        }
-      }
-      /* TODO: client side route event first that can be preventDefaulted */
+        const formPairs = Array.from(
+          event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+        )
+          .filter((el) => !!el.name)
+          .map((el) => {
+            let value;
+            const key = el.name;
 
+            if (el instanceof HTMLInputElement) {
+              if (el.type === \\"radio\\") {
+                if (el.checked) {
+                  value = el.name;
+                  return {
+                    key,
+                    value,
+                  };
+                }
+              } else if (el.type === \\"checkbox\\") {
+                value = el.checked;
+              } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+                const num = el.valueAsNumber;
 
-      if (this.successUrl) {
-        if (this.$refs.formRef) {
-          const event = new CustomEvent('route', {
-            detail: {
-              url: this.successUrl
+                if (!isNaN(num)) {
+                  value = num;
+                }
+              } else if (el.type === \\"file\\") {
+                // TODO: one vs multiple files
+                value = el.files;
+              } else {
+                value = el.value;
+              }
+            } else {
+              value = el.value;
             }
+
+            return {
+              key,
+              value,
+            };
           });
-          this.$refs.formRef.dispatchEvent(event);
+        let contentType = this.contentType;
 
-          if (!event.defaultPrevented) {
-            location.href = this.successUrl;
-          }
-        } else {
-          location.href = this.successUrl;
+        if (this.sendSubmissionsTo === \\"email\\") {
+          contentType = \\"multipart/form-data\\";
         }
+
+        Array.from(formPairs).forEach(({ value }) => {
+          if (
+            value instanceof File ||
+            (Array.isArray(value) && value[0] instanceof File) ||
+            value instanceof FileList
+          ) {
+            contentType = \\"multipart/form-data\\";
+          }
+        }); // TODO: send as urlEncoded or multipart by default
+        // because of ease of use and reliability in browser API
+        // for encoding the form?
+
+        if (contentType !== \\"application/json\\") {
+          body = formData;
+        } else {
+          // Json
+          const json = {};
+          Array.from(formPairs).forEach(({ value, key }) => {
+            set(json, key, value);
+          });
+          body = JSON.stringify(json);
+        }
+
+        if (contentType && contentType !== \\"multipart/form-data\\") {
+          if (
+            /* Zapier doesn't allow content-type header to be sent from browsers */
+            !(sendWithJs && this.action?.includes(\\"zapier.com\\"))
+          ) {
+            headers[\\"content-type\\"] = contentType;
+          }
+        }
+
+        const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+          detail: {
+            body,
+          },
+        });
+
+        if (this.$refs.formRef) {
+          this.$refs.formRef.dispatchEvent(presubmitEvent);
+
+          if (presubmitEvent.defaultPrevented) {
+            return;
+          }
+        }
+
+        this.formState = \\"sending\\";
+        const formUrl = \`\${
+          builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+        }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+          this.sendSubmissionsToEmail || \\"\\"
+        )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
+        fetch(
+          this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
+          /* TODO: throw error if no action URL */
+          {
+            body,
+            headers,
+            method: this.method || \\"post\\",
+          }
+        ).then(
+          async (res) => {
+            let body;
+            const contentType = res.headers.get(\\"content-type\\");
+
+            if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+              body = await res.json();
+            } else {
+              body = await res.text();
+            }
+
+            if (!res.ok && this.errorMessagePath) {
+              /* TODO: allow supplying an error formatter function */
+              let message = get(body, this.errorMessagePath);
+
+              if (message) {
+                if (typeof message !== \\"string\\") {
+                  /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                  message = JSON.stringify(message);
+                }
+
+                this.formErrorMessage = message;
+              }
+            }
+
+            this.responseData = body;
+            this.formState = res.ok ? \\"success\\" : \\"error\\";
+
+            if (res.ok) {
+              const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+                detail: {
+                  res,
+                  body,
+                },
+              });
+
+              if (this.$refs.formRef) {
+                this.$refs.formRef.dispatchEvent(submitSuccessEvent);
+
+                if (submitSuccessEvent.defaultPrevented) {
+                  return;
+                }
+                /* TODO: option to turn this on/off? */
+
+                if (this.resetFormOnSubmit !== false) {
+                  this.$refs.formRef.reset();
+                }
+              }
+              /* TODO: client side route event first that can be preventDefaulted */
+
+              if (this.successUrl) {
+                if (this.$refs.formRef) {
+                  const event = new CustomEvent(\\"route\\", {
+                    detail: {
+                      url: this.successUrl,
+                    },
+                  });
+                  this.$refs.formRef.dispatchEvent(event);
+
+                  if (!event.defaultPrevented) {
+                    location.href = this.successUrl;
+                  }
+                } else {
+                  location.href = this.successUrl;
+                }
+              }
+            }
+          },
+          (err) => {
+            const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+              detail: {
+                error: err,
+              },
+            });
+
+            if (this.$refs.formRef) {
+              this.$refs.formRef.dispatchEvent(submitErrorEvent);
+
+              if (submitErrorEvent.defaultPrevented) {
+                return;
+              }
+            }
+
+            this.responseData = err;
+            this.formState = \\"error\\";
+          }
+        );
       }
-    }
-  }, err => {
-    const submitErrorEvent = new CustomEvent('submit:error', {
-      detail: {
-        error: err
-      }
-    });
-
-    if (this.$refs.formRef) {
-      this.$refs.formRef.dispatchEvent(submitErrorEvent);
-
-      if (submitErrorEvent.defaultPrevented) {
-        return;
-      }
-    }
-
-    this.responseData = err;
-    this.formState = 'error';
-  });
-}
-},},
-
-    }
+    },
+  },
+};
 </script>
 <style scoped>
 .pre {
@@ -1393,95 +1127,90 @@ exports[`Vue Image 1`] = `
   <slot />
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    // TODO: AMP Support?
+// TODO: AMP Support?
 export interface ImageProps {
-_class?: string;
-image: string;
-sizes?: string;
-lazy?: boolean;
-height?: number;
-width?: number;
-altText?: string;
-backgroundSize?: string;
-backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+  _class?: string;
+  image: string;
+  sizes?: string;
+  lazy?: boolean;
+  height?: number;
+  width?: number;
+  altText?: string;
+  backgroundSize?: string;
+  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
 
-srcset?: string; // TODO: Implement support for custom aspect ratios
+  srcset?: string; // TODO: Implement support for custom aspect ratios
 
-aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
+  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
-children?: any;
+  children?: any;
 }
 
-    export default {
-      name: 'image',
+export default {
+  name: \\"image\\",
 
-      props: [\\"lazy\\",\\"altText\\",\\"_class\\",\\"image\\",\\"srcset\\",\\"sizes\\"],
+  props: [\\"lazy\\", \\"altText\\", \\"_class\\", \\"image\\", \\"srcset\\", \\"sizes\\"],
 
-      data: () => ({ scrollListener: null, imageLoaded: false, load: false,}),
+  data: () => ({ scrollListener: null, imageLoaded: false, load: false }),
 
+  mounted() {
+    if (this.useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (this.$refs.pictureRef) {
+          const rect = this.$refs.pictureRef.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
 
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            this.scrollListener = null;
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
 
-
-
-      mounted() {
-              if (this.useLazyLoading()) {
-// throttled scroll capture listener
-const listener = () => {
-  if (this.$refs.pictureRef) {
-    const rect = this.$refs.pictureRef.getBoundingClientRect();
-    const buffer = window.innerHeight / 2;
-
-    if (rect.top < window.innerHeight + buffer) {
-      setLoad(true);
-      this.scrollListener = null;
-      window.removeEventListener('scroll', listener);
+      this.scrollListener = listener;
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
     }
-  }
-};
+  },
 
-this.scrollListener = listener;
-window.addEventListener('scroll', listener, {
-  capture: true,
-  passive: true
-});
-listener();
-}
-            },
+  unmounted() {
+    if (this.scrollListener) {
+      window.removeEventListener(\\"scroll\\", this.scrollListener);
+    }
+  },
 
-
-      unmounted() {
-              if (this.scrollListener) {
-window.removeEventListener('scroll', this.scrollListener);
-}
-            },
-
-
-
-        methods: {  setLoaded() {
-this.imageLoaded = true;
-},  useLazyLoading() {
-// TODO: Add more checks here, like testing for real web browsers
-return !!this.lazy && isBrowser();
-}, isBrowser : function isBrowser() {
-return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
-},_classStringToObject(str) {
+  methods: {
+    setLoaded() {
+      this.imageLoaded = true;
+    },
+    useLazyLoading() {
+      // TODO: Add more checks here, like testing for real web browsers
+      return !!this.lazy && isBrowser();
+    },
+    isBrowser: function isBrowser() {
+      return (
+        typeof window !== \\"undefined\\" &&
+        window.navigator.product != \\"ReactNative\\"
+      );
+    },
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 <style scoped>
 .img {
@@ -1501,34 +1230,11 @@ exports[`Vue Image State 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'img-state-component',
+  name: \\"img-state-component\\",
 
-
-
-  data: () => ({ canShow: true, images: ['http://example.com/qwik.png'],}),
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  data: () => ({ canShow: true, images: [\\"http://example.com/qwik.png\\"] }),
+};
 </script>
 "
 `;
@@ -1547,38 +1253,36 @@ exports[`Vue Img 1`] = `
   />
 </template>
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
 
-
-  import { Builder } from '@builder.io/sdk';
-
-
-
-
-    export interface ImgProps {
-attributes?: any;
-imgSrc?: string;
-altText?: string;
-backgroundSize?: 'cover' | 'contain';
-backgroundPosition?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
+export interface ImgProps {
+  attributes?: any;
+  imgSrc?: string;
+  altText?: string;
+  backgroundSize?: \\"cover\\" | \\"contain\\";
+  backgroundPosition?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
 }
 
-    export default {
-      name: 'img-component',
+export default {
+  name: \\"img-component\\",
 
-      props: [\\"backgroundSize\\",\\"backgroundPosition\\",\\"attributes\\",\\"imgSrc\\",\\"altText\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [
+    \\"backgroundSize\\",
+    \\"backgroundPosition\\",
+    \\"attributes\\",
+    \\"imgSrc\\",
+    \\"altText\\",
+  ],
+};
 </script>
 "
 `;
@@ -1597,40 +1301,31 @@ exports[`Vue Input 1`] = `
   />
 </template>
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
 
-
-  import { Builder } from '@builder.io/sdk';
-
-
-
-
-    export interface FormInputProps {
-type?: string;
-attributes?: any;
-name?: string;
-value?: string;
-placeholder?: string;
-defaultValue?: string;
-required?: boolean;
+export interface FormInputProps {
+  type?: string;
+  attributes?: any;
+  name?: string;
+  value?: string;
+  placeholder?: string;
+  defaultValue?: string;
+  required?: boolean;
 }
 
-    export default {
-      name: 'form-input-component',
+export default {
+  name: \\"form-input-component\\",
 
-      props: [\\"attributes\\",\\"defaultValue\\",\\"placeholder\\",\\"type\\",\\"name\\",\\"value\\",\\"required\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [
+    \\"attributes\\",
+    \\"defaultValue\\",
+    \\"placeholder\\",
+    \\"type\\",
+    \\"name\\",
+    \\"value\\",
+    \\"required\\",
+  ],
+};
 </script>
 "
 `;
@@ -1643,46 +1338,30 @@ exports[`Vue RawText 1`] = `
   ></span>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface RawTextProps {
-attributes?: any;
-text?: string; // builderBlock?: any;
-
+export interface RawTextProps {
+  attributes?: any;
+  text?: string; // builderBlock?: any;
 }
 
-    export default {
-      name: 'raw-text',
+export default {
+  name: \\"raw-text\\",
 
-      props: [\\"attributes\\",\\"text\\"],
+  props: [\\"attributes\\", \\"text\\"],
 
-
-
-
-
-
-
-
-
-
-
-
-        methods: {_classStringToObject(str) {
+  methods: {
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 "
 `;
@@ -1692,34 +1371,11 @@ exports[`Vue Remove Internal mitosis package 1`] = `
   <div>Hello {{ name }}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-component',
+  name: \\"my-basic-component\\",
 
-
-
-  data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
 </script>
 "
 `;
@@ -1740,36 +1396,17 @@ exports[`Vue Section 1`] = `
   </section>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface SectionProps {
-maxWidth?: number;
-attributes?: any;
-children?: any;
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
 }
 
-    export default {
-      name: 'section-component',
+export default {
+  name: \\"section-component\\",
 
-      props: [\\"attributes\\",\\"maxWidth\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"attributes\\", \\"maxWidth\\"],
+};
 </script>
 "
 `;
@@ -1789,38 +1426,19 @@ exports[`Vue Section 2`] = `
   </section>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface SectionProps {
-maxWidth?: number;
-attributes?: any;
-children?: any;
+export interface SectionProps {
+  maxWidth?: number;
+  attributes?: any;
+  children?: any;
 }
 
-    export default {
-      name: 'section-state-component',
+export default {
+  name: \\"section-state-component\\",
 
-      props: [\\"attributes\\"],
+  props: [\\"attributes\\"],
 
-      data: () => ({ max: 42, items: [42],}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ max: 42, items: [42] }),
+};
 </script>
 "
 `;
@@ -1845,41 +1463,24 @@ exports[`Vue Select 1`] = `
   </select>
 </template>
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
 
-
-  import { Builder } from '@builder.io/sdk';
-
-
-
-
-    export interface FormSelectProps {
-options?: {
+export interface FormSelectProps {
+  options?: {
+    name?: string;
+    value: string;
+  }[];
+  attributes?: any;
   name?: string;
-  value: string;
-}[];
-attributes?: any;
-name?: string;
-value?: string;
-defaultValue?: string;
+  value?: string;
+  defaultValue?: string;
 }
 
-    export default {
-      name: 'select-component',
+export default {
+  name: \\"select-component\\",
 
-      props: [\\"attributes\\",\\"value\\",\\"defaultValue\\",\\"name\\",\\"options\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"attributes\\", \\"value\\", \\"defaultValue\\", \\"name\\", \\"options\\"],
+};
 </script>
 "
 `;
@@ -1893,34 +1494,16 @@ exports[`Vue SlotHtml 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-
-  import ContentSlotCode from './content-slot-jsx.raw';
-
-
-
-
-    type Props = {
-[key: string]: string;
+type Props = {
+  [key: string]: string;
 };
 
-    export default {
-      name: 'slot-code',
-      components: { 'content-slot-code': ContentSlotCode,'slot': Slot },
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+export default {
+  name: \\"slot-code\\",
+  components: { \\"content-slot-code\\": ContentSlotCode, slot: Slot },
+};
 </script>
 "
 `;
@@ -1932,34 +1515,16 @@ exports[`Vue SlotJsx 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
-
-  import ContentSlotCode from './content-slot-jsx.raw';
-
-
-
-
-    type Props = {
-[key: string]: string;
+type Props = {
+  [key: string]: string;
 };
 
-    export default {
-      name: 'slot-code',
-      components: { 'content-slot-code': ContentSlotCode },
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+export default {
+  name: \\"slot-code\\",
+  components: { \\"content-slot-code\\": ContentSlotCode },
+};
 </script>
 "
 `;
@@ -1986,56 +1551,53 @@ exports[`Vue Stamped.io 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
-
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
-
-
-
-
-    type SmileReviewsProps = {
-productId: string;
-apiKey: string;
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
 };
 
-    export default {
-      name: 'smile-reviews',
+export default {
+  name: \\"smile-reviews\\",
 
-      props: [\\"apiKey\\",\\"productId\\"],
+  props: [\\"apiKey\\", \\"productId\\"],
 
-      data: () => ({ reviews: [], name: 'test', showReviewPrompt: false,}),
+  data: () => ({ reviews: [], name: \\"test\\", showReviewPrompt: false }),
 
+  mounted() {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        this.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${this.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        this.reviews = data.data;
+      });
+  },
 
-
-
-
-      mounted() {
-              fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${this.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${this.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-this.reviews = data.data;
-})
-            },
-
-
-
-
-
-
-        methods: {  kebabCaseValue() {
-return kebabCase('testThat');
-},  snakeCaseValue() {
-return snakeCase('testThis');
-},_classStringToObject(str) {
+  methods: {
+    kebabCaseValue() {
+      return kebabCase(\\"testThat\\");
+    },
+    snakeCaseValue() {
+      return snakeCase(\\"testThis\\");
+    },
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 <style scoped>
 .input {
@@ -2071,35 +1633,16 @@ exports[`Vue Submit 1`] = `
   </button>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface ButtonProps {
-attributes?: any;
-text?: string;
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
 }
 
-    export default {
-      name: 'submit-button',
+export default {
+  name: \\"submit-button\\",
 
-      props: [\\"attributes\\",\\"text\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"attributes\\", \\"text\\"],
+};
 </script>
 "
 `;
@@ -2115,40 +1658,23 @@ exports[`Vue Text 1`] = `
   ></div>
 </template>
 <script lang=\\"ts\\">
+import { Builder } from \\"@builder.io/sdk\\";
 
-
-  import { Builder } from '@builder.io/sdk';
-
-
-
-
-    export interface TextProps {
-attributes?: any;
-rtlMode: boolean;
-text?: string;
-content?: string;
-builderBlock?: any;
+export interface TextProps {
+  attributes?: any;
+  rtlMode: boolean;
+  text?: string;
+  content?: string;
+  builderBlock?: any;
 }
 
-    export default {
-      name: 'text',
+export default {
+  name: \\"text\\",
 
-      props: [\\"text\\",\\"content\\"],
+  props: [\\"text\\", \\"content\\"],
 
-      data: () => ({ name: 'Decadef20',}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ name: \\"Decadef20\\" }),
+};
 </script>
 "
 `;
@@ -2164,38 +1690,19 @@ exports[`Vue Textarea 1`] = `
   ></textarea>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface TextareaProps {
-attributes?: any;
-name?: string;
-value?: string;
-defaultValue?: string;
-placeholder?: string;
+export interface TextareaProps {
+  attributes?: any;
+  name?: string;
+  value?: string;
+  defaultValue?: string;
+  placeholder?: string;
 }
 
-    export default {
-      name: 'textarea',
+export default {
+  name: \\"textarea\\",
 
-      props: [\\"attributes\\",\\"placeholder\\",\\"name\\",\\"value\\",\\"defaultValue\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"attributes\\", \\"placeholder\\", \\"name\\", \\"value\\", \\"defaultValue\\"],
+};
 </script>
 "
 `;
@@ -2224,47 +1731,47 @@ exports[`Vue Video 1`] = `
   ></video>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface VideoProps {
-attributes?: any;
-video?: string;
-autoPlay?: boolean;
-controls?: boolean;
-muted?: boolean;
-loop?: boolean;
-playsInline?: boolean;
-aspectRatio?: number;
-width?: number;
-height?: number;
-fit?: 'contain' | 'cover' | 'fill';
-position?: 'center' | 'top' | 'left' | 'right' | 'bottom' | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-posterImage?: string;
-lazyLoad?: boolean;
+export interface VideoProps {
+  attributes?: any;
+  video?: string;
+  autoPlay?: boolean;
+  controls?: boolean;
+  muted?: boolean;
+  loop?: boolean;
+  playsInline?: boolean;
+  aspectRatio?: number;
+  width?: number;
+  height?: number;
+  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
+  position?:
+    | \\"center\\"
+    | \\"top\\"
+    | \\"left\\"
+    | \\"right\\"
+    | \\"bottom\\"
+    | \\"top left\\"
+    | \\"top right\\"
+    | \\"bottom left\\"
+    | \\"bottom right\\";
+  posterImage?: string;
+  lazyLoad?: boolean;
 }
 
-    export default {
-      name: 'video',
+export default {
+  name: \\"video\\",
 
-      props: [\\"attributes\\",\\"fit\\",\\"position\\",\\"video\\",\\"posterImage\\",\\"autoPlay\\",\\"muted\\",\\"controls\\",\\"loop\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [
+    \\"attributes\\",
+    \\"fit\\",
+    \\"position\\",
+    \\"video\\",
+    \\"posterImage\\",
+    \\"autoPlay\\",
+    \\"muted\\",
+    \\"controls\\",
+    \\"loop\\",
+  ],
+};
 </script>
 "
 `;
@@ -2281,37 +1788,18 @@ exports[`Vue basicForwardRef 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
-inputRef: HTMLInputElement;
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
 }
 
-    export default {
-      name: 'my-basic-forward-ref-component',
+export default {
+  name: \\"my-basic-forward-ref-component\\",
 
-      props: [\\"inputRef\\"],
+  props: [\\"inputRef\\"],
 
-      data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
 </script>
 <style scoped>
 .input {
@@ -2333,37 +1821,18 @@ exports[`Vue basicForwardRefMetadata 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface Props {
-showInput: boolean;
-inputRef: HTMLInputElement;
+export interface Props {
+  showInput: boolean;
+  inputRef: HTMLInputElement;
 }
 
-    export default {
-      name: 'my-basic-forward-ref-component',
+export default {
+  name: \\"my-basic-forward-ref-component\\",
 
-      props: [\\"inputRef\\"],
+  props: [\\"inputRef\\"],
 
-      data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ name: \\"PatrickJS\\" }),
+};
 </script>
 <style scoped>
 .input {
@@ -2378,56 +1847,38 @@ exports[`Vue basicOnUpdateReturn 1`] = `
   <div>Hello! {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-on-update-return-component\\",
 
+  data: () => ({ name: \\"PatrickJS\\" }),
 
+  watch: {
+    onUpdateHook0() {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
+    },
+  },
 
-
-
-
-
-
-
-    export default {
-      name: 'my-basic-on-update-return-component',
-
-
-
-      data: () => ({ name: 'PatrickJS',}),
-
-
-
-
-
-
-
-      watch: {
-          onUpdateHook0() {
-                const controller = new AbortController();
-const signal = controller.signal;
-fetch('https://patrickjs.com/api/resource.json', {
-signal
-}).then(response => response.json()).then(data => {
-this.name = data.name;
-});
-return () => {
-if (!signal.aborted) {
-  controller.abort();
-}
-}
-                }
-
-        },
-
-
-
-        computed: {  onUpdateHook0() {
-return {
-  0: this.name
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.name,
+      };
+    },
+  },
 };
-},},
-
-
-    }
 </script>
 "
 `;
@@ -2439,32 +1890,9 @@ exports[`Vue class + ClassName + css 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-component',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  name: \\"my-basic-component\\",
+};
 </script>
 <style scoped>
 .div {
@@ -2479,32 +1907,9 @@ exports[`Vue class + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-component',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  name: \\"my-basic-component\\",
+};
 </script>
 <style scoped>
 .div {
@@ -2519,32 +1924,9 @@ exports[`Vue className + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-component',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  name: \\"my-basic-component\\",
+};
 </script>
 <style scoped>
 .div {
@@ -2563,47 +1945,30 @@ exports[`Vue className 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    type Props = {
-[key: string]: string | JSX.Element;
-slotTesting: JSX.Element;
+type Props = {
+  [key: string]: string | JSX.Element;
+  slotTesting: JSX.Element;
 };
 
-    export default {
-      name: 'class-name-code',
+export default {
+  name: \\"class-name-code\\",
 
+  data: () => ({ bindings: \\"a binding\\" }),
 
-
-      data: () => ({ bindings: 'a binding',}),
-
-
-
-
-
-
-
-
-
-
-
-
-        methods: {_classStringToObject(str) {
+  methods: {
+    _classStringToObject(str) {
       const obj = {};
-      if (typeof str !== 'string') { return obj }
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
       const classNames = str.trim().split(/\\\\s+/);
       for (const name of classNames) {
         obj[name] = true;
       }
       return obj;
-    }  },
-
-    }
+    },
+  },
+};
 </script>
 "
 `;
@@ -2615,44 +1980,25 @@ exports[`Vue classState 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-basic-component',
+  name: \\"my-basic-component\\",
 
+  data: () => ({ classState: \\"testClassName\\", styleState: { color: \\"red\\" } }),
 
-
-  data: () => ({ classState: 'testClassName', styleState: {color:'red'},}),
-
-
-
-
-
-
-
-
-
-
-
-
-    methods: {_classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== 'string') { return obj }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
-  }
-  return obj;
-}  },
-
-}
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
 </script>
 <style scoped>
 .div {
@@ -2678,37 +2024,23 @@ exports[`Vue defaultProps 1`] = `
   </button>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface ButtonProps {
-attributes?: any;
-text?: string;
-link?: string;
-openLinkInNewTab?: boolean;
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
 }
 
-    export default {
-      name: 'button',
+export default {
+  name: \\"button\\",
 
-      props: {\\"link\\":{\\"default\\":\\"https://builder.io/\\"},\\"attributes\\":{},\\"openLinkInNewTab\\":{\\"default\\":false},\\"text\\":{\\"default\\":\\"default text\\"}},
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: {
+    link: { default: \\"https://builder.io/\\" },
+    attributes: {},
+    openLinkInNewTab: { default: false },
+    text: { default: \\"default text\\" },
+  },
+};
 </script>
 "
 `;
@@ -2718,38 +2050,21 @@ exports[`Vue defaultValsWithTypes 1`] = `
   <div>Hello {{ name || DEFAULT_VALUES.name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-  const DEFAULT_VALUES: Props = {
-name: 'Sami'
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
 };
 
-
-
-    type Props = {
-name: string;
+type Props = {
+  name: string;
 };
 
-    export default {
-      name: 'component-with-types',
+export default {
+  name: \\"component-with-types\\",
 
-      props: [\\"name\\"],
+  props: [\\"name\\"],
 
-      data: () => ({DEFAULT_VALUES}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ DEFAULT_VALUES }),
+};
 </script>
 "
 `;
@@ -2759,35 +2074,14 @@ exports[`Vue multipleOnUpdate 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"multiple-on-update\\",
 
-
-
-
-
-
-
-
-
-  export default {
-    name: 'multiple-on-update',
-
-
-
-
-
-
-
-
-    updated() {
-        console.log('Runs on every update/rerender')
-console.log('Runs on every update/rerender as well')
-      },
-
-
-
-
-
-  }
+  updated() {
+    console.log(\\"Runs on every update/rerender\\");
+    console.log(\\"Runs on every update/rerender as well\\");
+  },
+};
 </script>
 "
 `;
@@ -2797,62 +2091,43 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"multiple-on-update-with-deps\\",
 
+  data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+    },
+    onUpdateHook1() {
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
+    },
+  },
 
-
-
-
-
-    export default {
-      name: 'multiple-on-update-with-deps',
-
-
-
-      data: () => ({ a: 'a', b: 'b', c: 'c', d: 'd',}),
-
-
-
-
-
-
-
-      watch: {
-          onUpdateHook0() {
-                console.log('Runs when a or b changes', this.a, this.b);
-
-if (this.a === 'a') {
-this.a = 'b';
-}
-                }
-              ,onUpdateHook1() {
-                console.log('Runs when c or d changes', this.c, this.d);
-
-if (this.a === 'a') {
-this.a = 'b';
-}
-                }
-
-        },
-
-
-
-        computed: {  onUpdateHook0() {
-return {
-  0: this.a,
-  1: this.b
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+    onUpdateHook1() {
+      return {
+        0: this.c,
+        1: this.d,
+      };
+    },
+  },
 };
-},  onUpdateHook1() {
-return {
-  0: this.c,
-  1: this.d
-};
-},},
-
-
-    }
 </script>
 "
 `;
@@ -2866,35 +2141,16 @@ exports[`Vue nestedShow 1`] = `
   <div v-else>if condition A and condition B</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    interface Props {
-conditionA: boolean;
-conditionB: boolean;
+interface Props {
+  conditionA: boolean;
+  conditionB: boolean;
 }
 
-    export default {
-      name: 'nested-show',
+export default {
+  name: \\"nested-show\\",
 
-      props: [\\"conditionA\\",\\"conditionB\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"conditionA\\", \\"conditionB\\"],
+};
 </script>
 "
 `;
@@ -2904,32 +2160,9 @@ exports[`Vue nestedStyles 1`] = `
   <div class=\\"div\\">Hello world</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'nested-styles',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
+  name: \\"nested-styles\\",
+};
 </script>
 <style scoped>
 .div {
@@ -2956,34 +2189,13 @@ exports[`Vue onInit & onMount 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'on-init',
-
-
-
-
-
-
+  name: \\"on-init\\",
 
   mounted() {
-          console.log('onMount')
-        },
-
-
-
-
-
-
-}
+    console.log(\\"onMount\\");
+  },
+};
 </script>
 "
 `;
@@ -2993,38 +2205,21 @@ exports[`Vue onInit 1`] = `
   <div>Default name defined by parent {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-  export const defaultValues = {
-name: 'PatrickJS'
+export const defaultValues = {
+  name: \\"PatrickJS\\",
 };
 
-
-
-    type Props = {
-name: string;
+type Props = {
+  name: string;
 };
 
-    export default {
-      name: 'on-init',
+export default {
+  name: \\"on-init\\",
 
-      props: [\\"name\\"],
+  props: [\\"name\\"],
 
-      data: () => ({ name: '',}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ name: \\"\\" }),
+};
 </script>
 "
 `;
@@ -3034,36 +2229,17 @@ exports[`Vue onMount 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'comp',
-
-
-
-
-
-
+  name: \\"comp\\",
 
   mounted() {
-          console.log('Runs on mount')
-        },
-
+    console.log(\\"Runs on mount\\");
+  },
 
   unmounted() {
-          console.log('Runs on unMount')
-        },
-
-
-
-}
+    console.log(\\"Runs on unMount\\");
+  },
+};
 </script>
 "
 `;
@@ -3073,34 +2249,13 @@ exports[`Vue onUpdate 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'on-update',
-
-
-
-
-
-
-
+  name: \\"on-update\\",
 
   updated() {
-      console.log('Runs on every update/rerender')
-    },
-
-
-
-
-
-}
+    console.log(\\"Runs on every update/rerender\\");
+  },
+};
 </script>
 "
 `;
@@ -3110,46 +2265,26 @@ exports[`Vue onUpdateWithDeps 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
+export default {
+  name: \\"on-update-with-deps\\",
 
+  data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
+  watch: {
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    },
+  },
 
-
-
-
-
-
-
-    export default {
-      name: 'on-update-with-deps',
-
-
-
-      data: () => ({ a: 'a', b: 'b',}),
-
-
-
-
-
-
-
-      watch: {
-          onUpdateHook0() {
-                console.log('Runs when a or b changes', this.a, this.b)
-                }
-
-        },
-
-
-
-        computed: {  onUpdateHook0() {
-return {
-  0: this.a,
-  1: this.b
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+  },
 };
-},},
-
-
-    }
 </script>
 "
 `;
@@ -3159,44 +2294,25 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
   <div></div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-  const b = 3;
+const b = 3;
 const foo = () => {};
 export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
 
-
-
-    type Types = {
-s: any[];
+type Types = {
+  s: any[];
 };
 interface IPost {
-len: number;
+  len: number;
 }
 export interface MyBasicComponentProps {
-id: string
+  id: string;
 }
 
-    export default {
-      name: 'my-basic-component',
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+export default {
+  name: \\"my-basic-component\\",
+};
 </script>
 "
 `;
@@ -3206,43 +2322,24 @@ exports[`Vue preserveTyping 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export type A = 'test';
+export type A = \\"test\\";
 export interface C {
-n: 'test';
+  n: \\"test\\";
 }
-type B = 'test2';
+type B = \\"test2\\";
 interface D {
-n: 'test';
+  n: \\"test\\";
 }
 export interface MyBasicComponentProps {
-name: string
-age?: number
+  name: string;
+  age?: number;
 }
 
-    export default {
-      name: 'my-basic-component',
+export default {
+  name: \\"my-basic-component\\",
 
-      props: [\\"name\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"name\\"],
+};
 </script>
 "
 `;
@@ -3255,37 +2352,18 @@ exports[`Vue propsDestructure 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    type Props = {
-children: any;
-type: string;
+type Props = {
+  children: any;
+  type: string;
 };
 
-    export default {
-      name: 'my-basic-component',
+export default {
+  name: \\"my-basic-component\\",
 
-      props: [\\"type\\"],
+  props: [\\"type\\"],
 
-      data: () => ({ name: 'Decadef20',}),
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  data: () => ({ name: \\"Decadef20\\" }),
+};
 </script>
 "
 `;
@@ -3295,35 +2373,16 @@ exports[`Vue propsInterface 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    interface Person {
-name: string;
-age?: number;
+interface Person {
+  name: string;
+  age?: number;
 }
 
-    export default {
-      name: 'my-basic-component',
+export default {
+  name: \\"my-basic-component\\",
 
-      props: [\\"name\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"name\\"],
+};
 </script>
 "
 `;
@@ -3333,35 +2392,16 @@ exports[`Vue propsType 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    type Person = {
-name: string;
-age?: number;
+type Person = {
+  name: string;
+  age?: number;
 };
 
-    export default {
-      name: 'my-basic-component',
+export default {
+  name: \\"my-basic-component\\",
 
-      props: [\\"name\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"name\\"],
+};
 </script>
 "
 `;
@@ -3372,34 +2412,15 @@ exports[`Vue rootShow 1`] = `
   <div v-else>Foo</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    export interface RenderStylesProps {
-foo: string
+export interface RenderStylesProps {
+  foo: string;
 }
 
-    export default {
-      name: 'render-styles',
+export default {
+  name: \\"render-styles\\",
 
-      props: [\\"foo\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"foo\\"],
+};
 </script>
 "
 `;
@@ -3413,32 +2434,11 @@ exports[`Vue self-referencing component 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-component',
+  name: \\"my-component\\",
 
   props: [\\"name\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-}
+};
 </script>
 "
 `;
@@ -3455,32 +2455,11 @@ exports[`Vue self-referencing component with children 1`] = `
   </div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-
-
 export default {
-  name: 'my-component',
+  name: \\"my-component\\",
 
   props: [\\"name\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-}
+};
 </script>
 "
 `;
@@ -3493,35 +2472,16 @@ exports[`Vue showWithFor 1`] = `
   <div v-else>else-condition-A</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    interface Props {
-conditionA: boolean;
-items: string[];
+interface Props {
+  conditionA: boolean;
+  items: string[];
 }
 
-    export default {
-      name: 'nested-show',
+export default {
+  name: \\"nested-show\\",
 
-      props: [\\"conditionA\\",\\"items\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"conditionA\\", \\"items\\"],
+};
 </script>
 "
 `;
@@ -3531,32 +2491,12 @@ exports[`Vue subComponent 1`] = `
   <foo></foo>
 </template>
 <script lang=\\"ts\\">
+import Foo from \\"./foo-sub-component.vue\\";
 
-
-import Foo from './foo-sub-component.vue';
-
-
-
-
-
-
-  export default {
-    name: 'sub-component',
-    components: { 'foo': Foo },
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }
+export default {
+  name: \\"sub-component\\",
+  components: { foo: Foo },
+};
 </script>
 "
 `;
@@ -3566,37 +2506,18 @@ exports[`Vue typeDependency 1`] = `
   <div>{{ foo }}</div>
 </template>
 <script lang=\\"ts\\">
-
-
-
-
-
-
-
-    import type { Foo } from './foo-type';
+import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
-foo: Foo;
-foo2: Foo2;
+  foo: Foo;
+  foo2: Foo2;
 };
 
-    export default {
-      name: 'type-dependency',
+export default {
+  name: \\"type-dependency\\",
 
-      props: [\\"foo\\"],
-
-
-
-
-
-
-
-
-
-
-
-
-    }
+  props: [\\"foo\\"],
+};
 </script>
 "
 `;
