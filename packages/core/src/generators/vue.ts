@@ -109,7 +109,7 @@ function processBinding(code: string, _options: ToVueOptions, json: MitosisCompo
       replaceWith: 'this.',
     }),
     from: getContextNames(json),
-    to: (name) => `this.${name}`,
+    to: (name) => (_options.api === 'options' ? `this.${name}` : `${name}.value`),
   });
 }
 
@@ -740,6 +740,15 @@ const getCompositionPropDefinition = (component: MitosisComponent, props: Set<st
   return str;
 };
 
+function appendValueToRefUses(input: string, refKeys: string[]) {
+  let output = input;
+  refKeys.forEach((ref) => {
+    const regexp = new RegExp(`((this\\.)?${ref})\\b`, 'g');
+    output = output.replaceAll(regexp, `${ref}.value`);
+  });
+  return output;
+}
+
 function generateCompositionApiScript(
   component: MitosisComponent,
   options: ToVueOptions,
@@ -830,7 +839,7 @@ function generateCompositionApiScript(
             })\n`;
           })
     }
-    ${methods?.length ? methods : ''}
+    ${methods?.length ? appendValueToRefUses(methods, refKeys) : ''}
   `;
 
   // replace this.{ref} with {ref}.value, as vue refs are reactive and mutable objects with a .value property pointing to the value
@@ -855,6 +864,7 @@ const componentToVue =
       options.plugins?.unshift(onUpdatePlugin);
     } else if (options.api === 'composition') {
       options.plugins?.unshift(FUNCTION_HACK_PLUGIN);
+      options.asyncComponentImports = false;
     }
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
     component = fastClone(component);
@@ -914,12 +924,14 @@ const componentToVue =
 
     <script ${options.api === 'composition' ? 'setup' : ''} lang="ts">
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
+      ${component.types?.join('\n') || ''}
+
       ${renderPreComponent({
         component,
         target: 'vue',
         asyncComponentImports: options.asyncComponentImports,
       })}
-      ${component.types?.join('\n') || ''}
+
       ${
         options.api === 'composition'
           ? generateCompositionApiScript(
