@@ -83,13 +83,13 @@ exports[`Vue Basic 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
 export interface MyBasicComponentProps {
   id: string;
 }
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
 
 export default {
   name: \\"my-basic-component\\",
@@ -396,6 +396,10 @@ exports[`Vue BasicRefPrevious 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export interface Props {
+  showInput: boolean;
+}
+
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -407,10 +411,6 @@ export function usePrevious<T>(value: T) {
   // Return previous value (happens before update in useEffect above)
 
   return ref;
-}
-
-export interface Props {
-  showInput: boolean;
 }
 
 export default {
@@ -829,12 +829,6 @@ exports[`Vue Form 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
-
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -858,6 +852,12 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
 export default {
   name: \\"form-component\\",
@@ -1281,8 +1281,6 @@ exports[`Vue Img 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface ImgProps {
   attributes?: any;
   imgSrc?: string;
@@ -1299,6 +1297,8 @@ export interface ImgProps {
     | \\"bottom left\\"
     | \\"bottom right\\";
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"img-component\\",
@@ -1330,8 +1330,6 @@ exports[`Vue Input 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface FormInputProps {
   type?: string;
   attributes?: any;
@@ -1341,6 +1339,8 @@ export interface FormInputProps {
   defaultValue?: string;
   required?: boolean;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"form-input-component\\",
@@ -1497,8 +1497,6 @@ exports[`Vue Select 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface FormSelectProps {
   options?: {
     name?: string;
@@ -1509,6 +1507,8 @@ export interface FormSelectProps {
   value?: string;
   defaultValue?: string;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"select-component\\",
@@ -1529,11 +1529,11 @@ exports[`Vue SlotHtml 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
 type Props = {
   [key: string]: string;
 };
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
@@ -1551,11 +1551,11 @@ exports[`Vue SlotJsx 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
 type Props = {
   [key: string]: string;
 };
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
@@ -1588,13 +1588,13 @@ exports[`Vue Stamped.io 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
 type SmileReviewsProps = {
   productId: string;
   apiKey: string;
 };
+
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
 export default {
   name: \\"smile-reviews\\",
@@ -1698,8 +1698,6 @@ exports[`Vue Text 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface TextProps {
   attributes?: any;
   rtlMode: boolean;
@@ -1707,6 +1705,8 @@ export interface TextProps {
   content?: string;
   builderBlock?: any;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
 
 export default {
   name: \\"text\\",
@@ -2108,12 +2108,12 @@ exports[`Vue defaultValsWithTypes 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-const DEFAULT_VALUES: Props = {
-  name: \\"Sami\\",
-};
-
 type Props = {
   name: string;
+};
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
 };
 
 export default {
@@ -2270,12 +2270,12 @@ exports[`Vue onInit 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
 type Props = {
   name: string;
+};
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
 };
 
 export default {
@@ -2363,12 +2363,6 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
 </template>
 
 <script lang=\\"ts\\">
-const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run<T>(value: T) {}
-
 type Types = {
   s: any[];
 };
@@ -2378,6 +2372,12 @@ interface IPost {
 export interface MyBasicComponentProps {
   id: string;
 }
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
 
 export default {
   name: \\"my-basic-component\\",

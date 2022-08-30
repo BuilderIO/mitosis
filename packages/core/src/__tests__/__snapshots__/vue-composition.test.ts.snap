@@ -28,10 +28,10 @@ exports[`Vue AdvancedRef 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
-
 export interface Props {
   showInput: boolean;
 }
+
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
@@ -47,7 +47,7 @@ function onBlur() {
   inputRef.focus();
 }
 function lowerCaseName() {
-  return name.toLowerCase();
+  return name.value.toLowerCase();
 }
 </script>
 
@@ -71,19 +71,33 @@ exports[`Vue Basic 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { ref } from \\"vue\\";
+    import { ref } from \\"vue\\"
+    export interface MyBasicComponentProps {
+id: string
+}
 
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
+
+
+  export const DEFAULT_VALUES = {
+name: 'Steve'
 };
 
-export interface MyBasicComponentProps {
-  id: string;
-}
-const name = ref(\\"Steve\\");
 
-function underscore_fn_name() {
-  return \\"bar\\";
+
+    const name= ref('Steve')
+
+
+
+
+
+
+
+
+
+
+
+ function underscore_fn_name.value() {
+return 'bar';
 }
 </script>
 
@@ -143,12 +157,12 @@ const myService = inject(MyService);
 provide(Injector, createInjector());
 
 onMounted(() => {
-  const bye = myService.method(\\"hi\\");
+  const bye = myService.value.method(\\"hi\\");
   console.log(bye);
 });
 
 function onChange() {
-  const change = myService.method(\\"change\\");
+  const change = myService.value.method(\\"change\\");
   console.log(change);
 }
 </script>
@@ -162,11 +176,11 @@ exports[`Vue Basic OnMount Update 1`] = `
 
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
-
 export interface Props {
   hi: string;
   bye: string;
 }
+
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
@@ -298,10 +312,10 @@ exports[`Vue BasicRef 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 export interface Props {
   showInput: boolean;
 }
+
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 
@@ -313,7 +327,7 @@ function onBlur() {
   inputRef.focus();
 }
 function lowerCaseName() {
-  return name.toLowerCase();
+  return name.value.toLowerCase();
 }
 </script>
 
@@ -336,6 +350,7 @@ exports[`Vue BasicRefAssignment 1`] = `
 export interface Props {
   showInput: boolean;
 }
+
 const holdValueRef = ref<undefined>();
 
 function handlerClick(event) {
@@ -357,6 +372,9 @@ exports[`Vue BasicRefPrevious 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
+export interface Props {
+  showInput: boolean;
+}
 
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
@@ -371,9 +389,6 @@ export function usePrevious<T>(value: T) {
   return ref;
 }
 
-export interface Props {
-  showInput: boolean;
-}
 const count = ref(0);
 
 const prevCount = ref<undefined>();
@@ -411,6 +426,7 @@ export interface ButtonProps {
   link?: string;
   openLinkInNewTab?: boolean;
 }
+
 const props = defineProps<ButtonProps>();
 </script>
 "
@@ -440,6 +456,7 @@ export interface ColumnProps {
 
   reverseColumnsWhenStacked?: boolean;
 }
+
 const props = defineProps<ColumnProps>();
 
 function getColumns() {
@@ -502,6 +519,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+
 const props = defineProps<Props>();
 </script>
 "
@@ -525,6 +543,7 @@ exports[`Vue ContentSlotJSX 1`] = `
 type Props = {
   [key: string]: string | JSX.Element;
 };
+
 const props = defineProps<Props>();
 </script>
 "
@@ -545,11 +564,11 @@ exports[`Vue CustomCode 1`] = `
 
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
-
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
 }
+
 const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
@@ -569,11 +588,11 @@ function findAndRunScripts() {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.includes(script.src)) {
+        if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.push(script.src);
+        scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -586,12 +605,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.includes(script.innerText)) {
+        if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.push(script.innerText);
+          scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -630,11 +649,11 @@ exports[`Vue Embed 1`] = `
 
 <script setup lang=\\"ts\\">
 import { onMounted, ref } from \\"vue\\";
-
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
 }
+
 const props = defineProps<CustomCodeProps>();
 const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
@@ -654,11 +673,11 @@ function findAndRunScripts() {
       const script = scripts[i];
 
       if (script.src) {
-        if (scriptsInserted.includes(script.src)) {
+        if (scriptsInserted.value.includes(script.src)) {
           continue;
         }
 
-        scriptsInserted.push(script.src);
+        scriptsInserted.value.push(script.src);
         const newScript = document.createElement(\\"script\\");
         newScript.async = true;
         newScript.src = script.src;
@@ -671,12 +690,12 @@ function findAndRunScripts() {
           \\"application/ecmascript\\",
         ].includes(script.type)
       ) {
-        if (scriptsRun.includes(script.innerText)) {
+        if (scriptsRun.value.includes(script.innerText)) {
           continue;
         }
 
         try {
-          scriptsRun.push(script.innerText);
+          scriptsRun.value.push(script.innerText);
           new Function(script.innerText)();
         } catch (error) {
           console.warn(\\"\`CustomCode\`: Error running script:\\", error);
@@ -754,13 +773,6 @@ exports[`Vue Form 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
-
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -784,6 +796,13 @@ export interface FormProps {
   errorMessagePath?: string;
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
 const props = defineProps<FormProps>();
 const formState = ref(\\"unsubmitted\\");
 const responseData = ref(null);
@@ -1043,7 +1062,6 @@ exports[`Vue Image 1`] = `
 
 <script setup lang=\\"ts\\">
 import { onMounted, onUnMounted, ref } from \\"vue\\";
-
 // TODO: AMP Support?
 export interface ImageProps {
   _class?: string;
@@ -1062,6 +1080,7 @@ export interface ImageProps {
 
   children?: any;
 }
+
 const props = defineProps<ImageProps>();
 const scrollListener = ref(null);
 const imageLoaded = ref(false);
@@ -1167,8 +1186,6 @@ exports[`Vue Img 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface ImgProps {
   attributes?: any;
   imgSrc?: string;
@@ -1185,6 +1202,9 @@ export interface ImgProps {
     | \\"bottom left\\"
     | \\"bottom right\\";
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
+
 const props = defineProps<ImgProps>();
 </script>
 "
@@ -1205,8 +1225,6 @@ exports[`Vue Input 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface FormInputProps {
   type?: string;
   attributes?: any;
@@ -1216,6 +1234,9 @@ export interface FormInputProps {
   defaultValue?: string;
   required?: boolean;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
+
 const props = defineProps<FormInputProps>();
 </script>
 "
@@ -1234,6 +1255,7 @@ export interface RawTextProps {
   attributes?: any;
   text?: string; // builderBlock?: any;
 }
+
 const props = defineProps<RawTextProps>();
 
 function _classStringToObject(str) {
@@ -1286,6 +1308,7 @@ export interface SectionProps {
   attributes?: any;
   children?: any;
 }
+
 const props = defineProps<SectionProps>();
 </script>
 "
@@ -1309,12 +1332,12 @@ exports[`Vue Section 2`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 export interface SectionProps {
   maxWidth?: number;
   attributes?: any;
   children?: any;
 }
+
 const props = defineProps<SectionProps>();
 const max = ref(42);
 const items = ref([42]);
@@ -1340,8 +1363,6 @@ exports[`Vue Select 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface FormSelectProps {
   options?: {
     name?: string;
@@ -1352,6 +1373,9 @@ export interface FormSelectProps {
   value?: string;
   defaultValue?: string;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
+
 const props = defineProps<FormSelectProps>();
 </script>
 "
@@ -1367,11 +1391,11 @@ exports[`Vue SlotHtml 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
 type Props = {
   [key: string]: string;
 };
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 "
 `;
@@ -1384,11 +1408,11 @@ exports[`Vue SlotJsx 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
 type Props = {
   [key: string]: string;
 };
+
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 "
 `;
@@ -1439,49 +1463,51 @@ exports[`Vue Stamped.io 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { onMounted, ref } from \\"vue\\";
-
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
+     import { onMounted, ref } from \\"vue\\"
+     type SmileReviewsProps = {
+ productId: string;
+ apiKey: string;
 };
-const props = defineProps<SmileReviewsProps>();
-const reviews = ref([]);
-const name = ref(\\"test\\");
-const showReviewPrompt = ref(false);
 
-onMounted(() => {
-  fetch(
-    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-    }&productId=\${props.productId || \\"2410511106127\\"}\`
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      reviews.value = data.data;
-    });
-});
 
-function kebabCaseValue() {
-  return kebabCase(\\"testThat\\");
+   import { kebabCase } from 'lodash';
+import { snakeCase } from 'lodash';
+
+
+
+
+     const props = defineProps<SmileReviewsProps>()
+  const reviews= ref([])
+const name= ref('test')
+const showReviewPrompt= ref(false)
+
+
+
+
+
+
+
+  onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+reviews.value = data.data;
+})})
+
+
+
+   function kebabCaseValue() {
+return kebabCase('testThat');
 }
 function snakeCaseValue() {
-  return snakeCase(\\"testThis\\");
+return snakeCase('testThis');
 }
 function _classStringToObject(str) {
   const obj = {};
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
+  if (typeof str !== 'string') { return obj }
   const classNames = str.trim().split(/\\\\s+/);
-  for (const name of classNames) {
-    obj[name] = true;
+  for (const name.value of classNames) {
+    obj[name.value] = true;
   }
   return obj;
-}
+  }
 </script>
 
 <style scoped>
@@ -1523,6 +1549,7 @@ export interface ButtonProps {
   attributes?: any;
   text?: string;
 }
+
 const props = defineProps<ButtonProps>();
 </script>
 "
@@ -1541,9 +1568,6 @@ exports[`Vue Text 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
-import { Builder } from \\"@builder.io/sdk\\";
-
 export interface TextProps {
   attributes?: any;
   rtlMode: boolean;
@@ -1551,6 +1575,9 @@ export interface TextProps {
   content?: string;
   builderBlock?: any;
 }
+
+import { Builder } from \\"@builder.io/sdk\\";
+
 const props = defineProps<TextProps>();
 const name = ref(\\"Decadef20\\");
 </script>
@@ -1576,6 +1603,7 @@ export interface TextareaProps {
   defaultValue?: string;
   placeholder?: string;
 }
+
 const props = defineProps<TextareaProps>();
 </script>
 "
@@ -1631,6 +1659,7 @@ export interface VideoProps {
   posterImage?: string;
   lazyLoad?: boolean;
 }
+
 const props = defineProps<VideoProps>();
 </script>
 "
@@ -1650,11 +1679,11 @@ exports[`Vue basicForwardRef 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
+
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 </script>
@@ -1681,11 +1710,11 @@ exports[`Vue basicForwardRefMetadata 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
 }
+
 const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 </script>
@@ -1716,7 +1745,7 @@ watch([name], ([name]) => {
   })
     .then((response) => response.json())
     .then((data) => {
-      name = data.name;
+      name.value = data.name;
     });
   return () => {
     if (!signal.aborted) {
@@ -1786,11 +1815,11 @@ exports[`Vue className 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
+
 const bindings = ref(\\"a binding\\");
 
 function _classStringToObject(str) {
@@ -1870,6 +1899,7 @@ export interface ButtonProps {
   link?: string;
   openLinkInNewTab?: boolean;
 }
+
 const props = withDefaults(defineProps<ButtonProps>(), {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
@@ -1885,13 +1915,14 @@ exports[`Vue defaultValsWithTypes 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
+type Props = {
+  name: string;
+};
+
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-type Props = {
-  name: string;
-};
 const props = defineProps<Props>();
 </script>
 "
@@ -1904,6 +1935,8 @@ exports[`Vue multipleOnUpdate 1`] = `
 
 <script setup lang=\\"ts\\">
   import { onUpdated } from \\"vue\\"
+
+
 
 
 
@@ -1935,15 +1968,15 @@ const d = ref(\\"d\\");
 watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a === \\"a\\") {
-    a = \\"b\\";
+  if (a.value === \\"a\\") {
+    a.value = \\"b\\";
   }
 }),
   watch([c, d], ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
-    if (a === \\"a\\") {
-      a = \\"b\\";
+    if (a.value === \\"a\\") {
+      a.value = \\"b\\";
     }
   });
 </script>
@@ -1972,6 +2005,7 @@ interface Props {
   conditionA: boolean;
   conditionB: boolean;
 }
+
 const props = defineProps<Props>();
 </script>
 "
@@ -2026,14 +2060,14 @@ exports[`Vue onInit 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
+type Props = {
+  name: string;
+};
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-type Props = {
-  name: string;
-};
 const props = defineProps<Props>();
 const name = ref(\\"\\");
 </script>
@@ -2071,6 +2105,8 @@ exports[`Vue onUpdate 1`] = `
 
 
 
+
+
   onUpdated(() =>
 console.log('Runs on every update/rerender');
 )
@@ -2102,12 +2138,6 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run<T>(value: T) {}
-
 type Types = {
   s: any[];
 };
@@ -2117,6 +2147,12 @@ interface IPost {
 export interface MyBasicComponentProps {
   id: string;
 }
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
 </script>
 "
 `;
@@ -2139,6 +2175,7 @@ export interface MyBasicComponentProps {
   name: string;
   age?: number;
 }
+
 const props = defineProps<MyBasicComponentProps>();
 </script>
 "
@@ -2154,11 +2191,11 @@ exports[`Vue propsDestructure 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
-
 type Props = {
   children: any;
   type: string;
 };
+
 const props = defineProps<Props>();
 const name = ref(\\"Decadef20\\");
 </script>
@@ -2175,6 +2212,7 @@ interface Person {
   name: string;
   age?: number;
 }
+
 const props = defineProps<Person | never>();
 </script>
 "
@@ -2190,6 +2228,7 @@ type Person = {
   name: string;
   age?: number;
 };
+
 const props = defineProps<Person>();
 </script>
 "
@@ -2210,6 +2249,7 @@ exports[`Vue rootShow 1`] = `
 export interface RenderStylesProps {
   foo: string;
 }
+
 const props = defineProps<RenderStylesProps>();
 </script>
 "
@@ -2270,6 +2310,7 @@ interface Props {
   conditionA: boolean;
   items: string[];
 }
+
 const props = defineProps<Props>();
 </script>
 "
@@ -2298,6 +2339,7 @@ export type TypeDependencyProps = {
   foo: Foo;
   foo2: Foo2;
 };
+
 const props = defineProps<TypeDependencyProps>();
 </script>
 "

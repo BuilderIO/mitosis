@@ -740,11 +740,15 @@ const getCompositionPropDefinition = (component: MitosisComponent, props: Set<st
   return str;
 };
 
-function appendValueToRefUses(input: string, refKeys: string[]) {
+function appendValueToRefUses(input: string, refKeys: string[], assignmentOnly = false) {
   let output = input;
   refKeys.forEach((ref) => {
-    const regexp = new RegExp(`((this\\.)?${ref})\\b`, 'g');
-    output = output.replaceAll(regexp, `${ref}.value`);
+    let regexpStr = `((this\\.)?${ref})\\b`;
+    if (assignmentOnly) {
+      regexpStr += ' =';
+    }
+    const regexp = new RegExp(regexpStr, 'g');
+    output = output.replaceAll(regexp, assignmentOnly ? `${ref}.value =` : `${ref}.value`);
   });
   return output;
 }
@@ -825,18 +829,22 @@ function generateCompositionApiScript(
       !onUpdateWithoutDeps?.length
         ? ''
         : onUpdateWithoutDeps.map((hook) => {
-            return `onUpdated(() => ${hook.code})`;
+            return `onUpdated(() => ${appendValueToRefUses(hook.code, refKeys, true)})`;
           })
     }
     ${
       !onUpdateWithDeps?.length
         ? ''
         : onUpdateWithDeps.map((hook) => {
-            return `watch(${hook.deps?.replaceAll('state.', '')}, (${
-              hook.deps ? hook.deps.replaceAll('state.', '') : ''
-            }) => { 
+            return appendValueToRefUses(
+              `watch(${hook.deps?.replaceAll('state.', '')}, (${
+                hook.deps ? hook.deps.replaceAll('state.', '') : ''
+              }) => { 
               ${hook.code.replaceAll('state.', '')}
-            })\n`;
+            })\n`,
+              refKeys,
+              true,
+            );
           })
     }
     ${methods?.length ? appendValueToRefUses(methods, refKeys) : ''}
