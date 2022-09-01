@@ -2,7 +2,7 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { camelCase } from 'lodash';
 import { format } from 'prettier/standalone';
-import { Transpiler } from '../../types/transpiler';
+import { TranspilerGenerator } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { fastClone } from '../../helpers/fast-clone';
@@ -320,14 +320,14 @@ const DEFAULT_OPTIONS: ToReactOptions = {
   stylesType: 'styled-jsx',
 };
 
-export const componentToPreact = (reactOptions: ToReactOptions = {}): Transpiler =>
+export const componentToPreact: TranspilerGenerator<ToReactOptions> = (reactOptions = {}) =>
   componentToReact({
     ...reactOptions,
     preact: true,
   });
 
-export const componentToReact =
-  (reactOptions: ToReactOptions = {}): Transpiler =>
+export const componentToReact: TranspilerGenerator<ToReactOptions> =
+  (reactOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
     const options: ToReactOptions = {

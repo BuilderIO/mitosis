@@ -207,19 +207,15 @@ const getGeneratorForTarget = ({
 /**
  * Output generated component file, before it is minified and transpiled into JS.
  */
-const shouldOutputOriginalGeneratedFile = ({
+const checkShouldOutputTypeScript = ({
   target,
   options,
 }: {
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  const languages = options.options[target]?.transpiler?.languages;
-  if (languages?.includes('ts')) {
-    return true;
-  } else {
-    return false;
-  }
+  const isTypescript = options.options[target]?.typescript;
+  return isTypescript;
 };
 
 const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
@@ -295,7 +291,7 @@ async function buildAndOutputComponentFiles({
     await Promise.all([
       // this is the default output
       outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-      ...(shouldOutputOriginalGeneratedFile({ target, options })
+      ...(checkShouldOutputTypeScript({ target, options })
         ? [outputFile(`${outputDir}/${path}`, original)]
         : []),
     ]);
@@ -318,38 +314,40 @@ const getTargetPath = ({ target }: { target: Target }): string => {
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
-async function outputNonComponentFiles({
+const outputNonComponentFiles = async ({
   files,
   options,
   outputPath,
+  target,
 }: TargetContext & {
   files: { path: string; output: string }[];
   options: MitosisConfig;
-}) {
+}) => {
+  const extension = checkShouldOutputTypeScript({ target, options }) ? '.ts' : '.js';
   await Promise.all(
     files.map(({ path, output }) =>
-      outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, '.js')}`, output),
+      outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, extension)}`, output),
     ),
   );
-}
+};
 
 /**
  * Transpiles all non-component files, including Context files.
  */
 async function buildNonComponentFiles({ target, options }: TargetContextWithConfig) {
-  const tsFiles = (await glob(options.files, { cwd })).filter(
+  const nonComponentFiles = (await glob(options.files, { cwd })).filter(
     (file) => file.endsWith('.ts') || file.endsWith('.js'),
   );
 
   return await Promise.all(
-    tsFiles.map(async (path) => {
+    nonComponentFiles.map(async (path) => {
       let output: string;
-      if (path.endsWith('.context.lite.ts')) {
+      const isContextFile = path.endsWith('.context.lite.ts');
+      if (isContextFile) {
         output = await buildContextFile({ path, options, target });
-        // we remove the `.lite` extension from the path for Context files.
-        path = path.replace('.lite.ts', '.ts');
       }
-      if (!shouldOutputOriginalGeneratedFile({ target, options })) {
+
+      if (!checkShouldOutputTypeScript({ target, options })) {
         output = await transpile({
           path,
           target,
@@ -358,6 +356,11 @@ async function buildNonComponentFiles({ target, options }: TargetContextWithConf
         });
       } else {
         output = await readFile(path, 'utf8');
+      }
+
+      if (isContextFile) {
+        // we remove the `.lite` extension from the path for Context files.
+        path = path.replace('.lite.ts', '.ts');
       }
 
       return {

@@ -26,28 +26,39 @@ exports[`Vue AdvancedRef 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-import { ref, watch } from \\"vue\\";
-export interface Props {
-  showInput: boolean;
-}
+<script setup>
+    import { ref, watch } from \\"vue\\"
 
-const props = defineProps<Props>();
-const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+
+
+
+
+
+
+    const props = defineProps(['showInput'])
+const name= ref('PatrickJS')
+
+
+
+
+
+
+const inputRef = ref<HTMLInputElement>()
+const inputNoArgRef = ref<HTMLLabelElement>()
+
+
 
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
-  console.log(\\"Received an update\\");
-});
+console.log('Received an update');
+})
 function onBlur() {
-  // Maintain focus
-  inputRef.focus();
+// Maintain focus
+inputRef.focus();
 }
 
 function lowerCaseName() {
-  return name.value.toLowerCase();
+return name.value.toLowerCase();
 }
 </script>
 
@@ -70,11 +81,8 @@ exports[`Vue Basic 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-export interface MyBasicComponentProps {
-  id: string;
-}
 
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
@@ -113,7 +121,7 @@ exports[`Vue Basic 2`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
@@ -131,7 +139,7 @@ exports[`Vue Basic Context 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { inject, onMounted, provide, ref } from \\"vue\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
@@ -160,14 +168,10 @@ exports[`Vue Basic OnMount Update 1`] = `
   <div>Hello {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted, ref } from \\"vue\\";
-export interface Props {
-  hi: string;
-  bye: string;
-}
 
-const props = defineProps<Props>();
+const props = defineProps([\\"hi\\", \\"bye\\"]);
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 
@@ -183,7 +187,7 @@ exports[`Vue Basic Outputs 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted, ref } from \\"vue\\";
 
 const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
@@ -202,7 +206,7 @@ exports[`Vue Basic Outputs Meta 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted, ref } from \\"vue\\";
 
 const props = defineProps([\\"onMessage\\", \\"onEvent\\", \\"message\\"]);
@@ -229,7 +233,7 @@ exports[`Vue BasicChildComponent 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
 
 import MyBasicComponent from \\"./basic.raw\\";
@@ -257,7 +261,7 @@ exports[`Vue BasicFor 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted, ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
@@ -296,25 +300,37 @@ exports[`Vue BasicRef 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-import { ref } from \\"vue\\";
-export interface Props {
-  showInput: boolean;
-}
+<script setup>
+    import { ref } from \\"vue\\"
 
-const props = defineProps<Props>();
-const name = ref(\\"PatrickJS\\");
 
-const inputRef = ref<HTMLInputElement>();
-const inputNoArgRef = ref<HTMLLabelElement>();
+
+
+
+
+
+
+    const props = defineProps(['showInput'])
+const name= ref('PatrickJS')
+
+
+
+
+
+
+const inputRef = ref<HTMLInputElement>()
+const inputNoArgRef = ref<HTMLLabelElement>()
+
+
+
 
 function onBlur() {
-  // Maintain focus
-  inputRef.focus();
+// Maintain focus
+inputRef.focus();
 }
 
 function lowerCaseName() {
-  return name.value.toLowerCase();
+return name.value.toLowerCase();
 }
 </script>
 
@@ -333,17 +349,25 @@ exports[`Vue BasicRefAssignment 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface Props {
-  showInput: boolean;
-}
+<script setup>
 
-const holdValueRef = ref<undefined>();
+
+
+
+
+
+
+
+
+    const holdValueRef = ref<undefined>()
+
+
+
 
 function handlerClick(event) {
-  event.preventDefault();
-  console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+event.preventDefault();
+console.log('current value', holdValueRef);
+holdValueRef = holdValueRef + 'JS';
 }
 </script>
 "
@@ -357,32 +381,41 @@ exports[`Vue BasicRefPrevious 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-import { ref, watch } from \\"vue\\";
-export interface Props {
-  showInput: boolean;
+<script setup>
+    import { ref, watch } from \\"vue\\"
+
+
+
+
+  export function usePrevious<T>(value: T) {
+// The ref object is a generic container whose current property is mutable ...
+// ... and can hold any value, similar to an instance property on a class
+let ref = useRef<T>(null); // Store current value in ref
+
+onUpdate(() => {
+  ref = value;
+}, [value]); // Only re-run if value changes
+// Return previous value (happens before update in useEffect above)
+
+return ref;
 }
 
-export function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
 
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
 
-  return ref;
-}
+    const count= ref(0)
 
-const count = ref(0);
 
-const prevCount = ref<undefined>();
+
+
+
+
+const prevCount = ref<undefined>()
+
+
 
 watch([count.value], ([count]) => {
-  prevCount = count.value;
-});
+prevCount = count.value;
+})
 </script>
 "
 `;
@@ -406,15 +439,8 @@ exports[`Vue Button 1`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-const props = defineProps<ButtonProps>();
+<script setup>
+const props = defineProps([\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"]);
 </script>
 "
 `;
@@ -428,23 +454,8 @@ exports[`Vue Columns 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
-
-const props = defineProps<ColumnProps>();
+<script setup>
+const props = defineProps([\\"columns\\", \\"space\\"]);
 
 function getColumns() {
   return props.columns || [];
@@ -504,13 +515,8 @@ exports[`Vue ContentSlotHtml 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
-
-const props = defineProps<Props>();
+<script setup>
+const props = defineProps([\\"slotTesting\\"]);
 </script>
 "
 `;
@@ -529,12 +535,8 @@ exports[`Vue ContentSlotJSX 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Props = {
-  [key: string]: string | JSX.Element;
-};
-
-const props = defineProps<Props>();
+<script setup>
+const props = defineProps([\\"slotTesting\\", \\"children\\"]);
 </script>
 "
 `;
@@ -552,78 +554,79 @@ exports[`Vue CustomCode 1`] = `
   ></div>
 </template>
 
-<script setup lang=\\"ts\\">
-import { onMounted, ref } from \\"vue\\";
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
+<script setup>
+    import { onMounted, ref } from \\"vue\\"
 
-const props = defineProps<CustomCodeProps>();
-const scriptsInserted = ref([]);
-const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
-onMounted(() => {
-  findAndRunScripts();
-});
+
+
+
+
+
+
+    const props = defineProps(['replaceNodes','code'])
+const scriptsInserted= ref([])
+const scriptsRun= ref([])
+
+
+
+
+
+
+const elem = ref<HTMLDivElement>()
+onMounted(() => { findAndRunScripts()})
+
+
 
 function findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
-    /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+// TODO: Move this function to standalone one in '@builder.io/utils'
+if (elem && typeof window !== 'undefined') {
+/** @type {HTMLScriptElement[]} */
+const scripts = elem.getElementsByTagName('script');
 
-    for (let i = 0; i < scripts.length; i++) {
-      const script = scripts[i];
+for (let i = 0; i < scripts.length; i++) {
+  const script = scripts[i];
 
-      if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
-          continue;
-        }
+  if (script.src) {
+    if (scriptsInserted.value.includes(script.src)) {
+      continue;
+    }
 
-        scriptsInserted.value.push(script.src);
-        const newScript = document.createElement(\\"script\\");
-        newScript.async = true;
-        newScript.src = script.src;
-        document.head.appendChild(newScript);
-      } else if (
-        !script.type ||
-        [
-          \\"text/javascript\\",
-          \\"application/javascript\\",
-          \\"application/ecmascript\\",
-        ].includes(script.type)
-      ) {
-        if (scriptsRun.value.includes(script.innerText)) {
-          continue;
-        }
+    scriptsInserted.value.push(script.src);
+    const newScript = document.createElement('script');
+    newScript.async = true;
+    newScript.src = script.src;
+    document.head.appendChild(newScript);
+  } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
+    if (scriptsRun.value.includes(script.innerText)) {
+      continue;
+    }
 
-        try {
-          scriptsRun.value.push(script.innerText);
-          new Function(script.innerText)();
-        } catch (error) {
-          console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-        }
-      }
+    try {
+      scriptsRun.value.push(script.innerText);
+      new Function(script.innerText)();
+    } catch (error) {
+      console.warn('\`CustomCode\`: Error running script:', error);
     }
   }
 }
+}
+}
 
 function _classStringToObject(str) {
-  const obj = {};
+const obj = {};
 
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
+if (typeof str !== 'string') {
+return obj;
+}
 
-  const classNames = str.trim().split(/\\\\s+/);
+const classNames = str.trim().split(/\\\\s+/);
 
-  for (const name of classNames) {
-    obj[name] = true;
-  }
+for (const name of classNames) {
+obj[name] = true;
+}
 
-  return obj;
+return obj;
 }
 </script>
 "
@@ -642,78 +645,79 @@ exports[`Vue Embed 1`] = `
   ></div>
 </template>
 
-<script setup lang=\\"ts\\">
-import { onMounted, ref } from \\"vue\\";
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
+<script setup>
+    import { onMounted, ref } from \\"vue\\"
 
-const props = defineProps<CustomCodeProps>();
-const scriptsInserted = ref([]);
-const scriptsRun = ref([]);
 
-const elem = ref<HTMLDivElement>();
-onMounted(() => {
-  findAndRunScripts();
-});
+
+
+
+
+
+
+    const props = defineProps(['replaceNodes','code'])
+const scriptsInserted= ref([])
+const scriptsRun= ref([])
+
+
+
+
+
+
+const elem = ref<HTMLDivElement>()
+onMounted(() => { findAndRunScripts()})
+
+
 
 function findAndRunScripts() {
-  // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
-    /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+// TODO: Move this function to standalone one in '@builder.io/utils'
+if (elem && typeof window !== 'undefined') {
+/** @type {HTMLScriptElement[]} */
+const scripts = elem.getElementsByTagName('script');
 
-    for (let i = 0; i < scripts.length; i++) {
-      const script = scripts[i];
+for (let i = 0; i < scripts.length; i++) {
+  const script = scripts[i];
 
-      if (script.src) {
-        if (scriptsInserted.value.includes(script.src)) {
-          continue;
-        }
+  if (script.src) {
+    if (scriptsInserted.value.includes(script.src)) {
+      continue;
+    }
 
-        scriptsInserted.value.push(script.src);
-        const newScript = document.createElement(\\"script\\");
-        newScript.async = true;
-        newScript.src = script.src;
-        document.head.appendChild(newScript);
-      } else if (
-        !script.type ||
-        [
-          \\"text/javascript\\",
-          \\"application/javascript\\",
-          \\"application/ecmascript\\",
-        ].includes(script.type)
-      ) {
-        if (scriptsRun.value.includes(script.innerText)) {
-          continue;
-        }
+    scriptsInserted.value.push(script.src);
+    const newScript = document.createElement('script');
+    newScript.async = true;
+    newScript.src = script.src;
+    document.head.appendChild(newScript);
+  } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
+    if (scriptsRun.value.includes(script.innerText)) {
+      continue;
+    }
 
-        try {
-          scriptsRun.value.push(script.innerText);
-          new Function(script.innerText)();
-        } catch (error) {
-          console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-        }
-      }
+    try {
+      scriptsRun.value.push(script.innerText);
+      new Function(script.innerText)();
+    } catch (error) {
+      console.warn('\`CustomCode\`: Error running script:', error);
     }
   }
 }
+}
+}
 
 function _classStringToObject(str) {
-  const obj = {};
+const obj = {};
 
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
+if (typeof str !== 'string') {
+return obj;
+}
 
-  const classNames = str.trim().split(/\\\\s+/);
+const classNames = str.trim().split(/\\\\s+/);
 
-  for (const name of classNames) {
-    obj[name] = true;
-  }
+for (const name of classNames) {
+obj[name] = true;
+}
 
-  return obj;
+return obj;
 }
 </script>
 "
@@ -771,257 +775,236 @@ exports[`Vue Form 1`] = `
   </form>
 </template>
 
-<script setup lang=\\"ts\\">
-import { ref } from \\"vue\\";
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
+<script setup>
+    import { ref } from \\"vue\\"
 
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
 
-const props = defineProps<FormProps>();
-const formState = ref(\\"unsubmitted\\");
-const responseData = ref(null);
-const formErrorMessage = ref(\\"\\");
 
-const formRef = ref<HTMLFormElement>();
+  import { BuilderBlock as BuilderBlockComponent } from '@fake';
+import { Builder, builder } from '@builder.io/sdk';
+import { BuilderBlocks } from '@fake';
+import { set } from '@fake';
+import { get } from '@fake';
+
+
+
+
+    const props = defineProps(['previewState','sendWithJs','sendSubmissionsTo','action','customHeaders','contentType','sendSubmissionsToEmail','name','method','errorMessagePath','resetFormOnSubmit','successUrl','validate','attributes','builderBlock','errorMessage','sendingMessage','successMessage'])
+const formState= ref('unsubmitted')
+const responseData= ref(null)
+const formErrorMessage= ref('')
+
+
+
+
+
+
+const formRef = ref<HTMLFormElement>()
+
+
+
 
 function onSubmit(event) {
-  const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
 
-  if (props.sendSubmissionsTo === \\"zapier\\") {
-    event.preventDefault();
-  } else if (sendWithJs) {
-    if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
-      event.preventDefault();
-      return;
-    }
+if (props.sendSubmissionsTo === 'zapier') {
+event.preventDefault();
+} else if (sendWithJs) {
+if (!(props.action || props.sendSubmissionsTo === 'email')) {
+  event.preventDefault();
+  return;
+}
 
-    event.preventDefault();
-    const el = event.currentTarget;
-    const headers = props.customHeaders || {};
-    let body;
-    const formData = new FormData(el); // TODO: maybe support null
+event.preventDefault();
+const el = event.currentTarget;
+const headers = props.customHeaders || {};
+let body;
+const formData = new FormData(el); // TODO: maybe support null
 
-    const formPairs = Array.from(
-      event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-    )
-      .filter((el) => !!el.name)
-      .map((el) => {
-        let value;
-        const key = el.name;
+const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
+  let value;
+  const key = el.name;
 
-        if (el instanceof HTMLInputElement) {
-          if (el.type === \\"radio\\") {
-            if (el.checked) {
-              value = el.name;
-              return {
-                key,
-                value,
-              };
-            }
-          } else if (el.type === \\"checkbox\\") {
-            value = el.checked;
-          } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-            const num = el.valueAsNumber;
-
-            if (!isNaN(num)) {
-              value = num;
-            }
-          } else if (el.type === \\"file\\") {
-            // TODO: one vs multiple files
-            value = el.files;
-          } else {
-            value = el.value;
-          }
-        } else {
-          value = el.value;
-        }
-
+  if (el instanceof HTMLInputElement) {
+    if (el.type === 'radio') {
+      if (el.checked) {
+        value = el.name;
         return {
           key,
-          value,
+          value
         };
-      });
-    let contentType = props.contentType;
-
-    if (props.sendSubmissionsTo === \\"email\\") {
-      contentType = \\"multipart/form-data\\";
-    }
-
-    Array.from(formPairs).forEach(({ value }) => {
-      if (
-        value instanceof File ||
-        (Array.isArray(value) && value[0] instanceof File) ||
-        value instanceof FileList
-      ) {
-        contentType = \\"multipart/form-data\\";
       }
-    }); // TODO: send as urlEncoded or multipart by default
-    // because of ease of use and reliability in browser API
-    // for encoding the form?
+    } else if (el.type === 'checkbox') {
+      value = el.checked;
+    } else if (el.type === 'number' || el.type === 'range') {
+      const num = el.valueAsNumber;
 
-    if (contentType !== \\"application/json\\") {
-      body = formData;
+      if (!isNaN(num)) {
+        value = num;
+      }
+    } else if (el.type === 'file') {
+      // TODO: one vs multiple files
+      value = el.files;
     } else {
-      // Json
-      const json = {};
-      Array.from(formPairs).forEach(({ value, key }) => {
-        set(json, key, value);
-      });
-      body = JSON.stringify(json);
+      value = el.value;
     }
+  } else {
+    value = el.value;
+  }
 
-    if (contentType && contentType !== \\"multipart/form-data\\") {
-      if (
-        /* Zapier doesn't allow content-type header to be sent from browsers */
-        !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
-      ) {
-        headers[\\"content-type\\"] = contentType;
+  return {
+    key,
+    value
+  };
+});
+let contentType = props.contentType;
+
+if (props.sendSubmissionsTo === 'email') {
+  contentType = 'multipart/form-data';
+}
+
+Array.from(formPairs).forEach(({
+  value
+}) => {
+  if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
+    contentType = 'multipart/form-data';
+  }
+}); // TODO: send as urlEncoded or multipart by default
+// because of ease of use and reliability in browser API
+// for encoding the form?
+
+if (contentType !== 'application/json') {
+  body = formData;
+} else {
+  // Json
+  const json = {};
+  Array.from(formPairs).forEach(({
+    value,
+    key
+  }) => {
+    set(json, key, value);
+  });
+  body = JSON.stringify(json);
+}
+
+if (contentType && contentType !== 'multipart/form-data') {
+  if (
+  /* Zapier doesn't allow content-type header to be sent from browsers */
+  !(sendWithJs && props.action?.includes('zapier.com'))) {
+    headers['content-type'] = contentType;
+  }
+}
+
+const presubmitEvent = new CustomEvent('presubmit', {
+  detail: {
+    body
+  }
+});
+
+if (formRef) {
+  formRef.dispatchEvent(presubmitEvent);
+
+  if (presubmitEvent.defaultPrevented) {
+    return;
+  }
+}
+
+formState.value = 'sending';
+const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
+fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
+/* TODO: throw error if no action URL */
+, {
+  body,
+  headers,
+  method: props.method || 'post'
+}).then(async res => {
+  let body;
+  const contentType = res.headers.get('content-type');
+
+  if (contentType && contentType.indexOf('application/json') !== -1) {
+    body = await res.json();
+  } else {
+    body = await res.text();
+  }
+
+  if (!res.ok && props.errorMessagePath) {
+    /* TODO: allow supplying an error formatter function */
+    let message = get(body, props.errorMessagePath);
+
+    if (message) {
+      if (typeof message !== 'string') {
+        /* TODO: ideally convert json to yaml so it woul dbe like
+         error: - email has been taken */
+        message = JSON.stringify(message);
       }
-    }
 
-    const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+      formErrorMessage.value = message;
+    }
+  }
+
+  responseData.value = body;
+  formState.value = res.ok ? 'success' : 'error';
+
+  if (res.ok) {
+    const submitSuccessEvent = new CustomEvent('submit:success', {
       detail: {
-        body,
-      },
+        res,
+        body
+      }
     });
 
     if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+      formRef.dispatchEvent(submitSuccessEvent);
 
-      if (presubmitEvent.defaultPrevented) {
+      if (submitSuccessEvent.defaultPrevented) {
         return;
       }
+      /* TODO: option to turn this on/off? */
+
+
+      if (props.resetFormOnSubmit !== false) {
+        formRef.reset();
+      }
     }
+    /* TODO: client side route event first that can be preventDefaulted */
 
-    formState.value = \\"sending\\";
-    const formUrl = \`\${
-      builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-    }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-      props.sendSubmissionsToEmail || \\"\\"
-    )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-    fetch(
-      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
-      /* TODO: throw error if no action URL */
-      {
-        body,
-        headers,
-        method: props.method || \\"post\\",
-      }
-    ).then(
-      async (res) => {
-        let body;
-        const contentType = res.headers.get(\\"content-type\\");
 
-        if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-          body = await res.json();
-        } else {
-          body = await res.text();
-        }
-
-        if (!res.ok && props.errorMessagePath) {
-          /* TODO: allow supplying an error formatter function */
-          let message = get(body, props.errorMessagePath);
-
-          if (message) {
-            if (typeof message !== \\"string\\") {
-              /* TODO: ideally convert json to yaml so it woul dbe like
-         error: - email has been taken */
-              message = JSON.stringify(message);
-            }
-
-            formErrorMessage.value = message;
-          }
-        }
-
-        responseData.value = body;
-        formState.value = res.ok ? \\"success\\" : \\"error\\";
-
-        if (res.ok) {
-          const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-            detail: {
-              res,
-              body,
-            },
-          });
-
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
-
-            if (submitSuccessEvent.defaultPrevented) {
-              return;
-            }
-            /* TODO: option to turn this on/off? */
-
-            if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
-            }
-          }
-          /* TODO: client side route event first that can be preventDefaulted */
-
-          if (props.successUrl) {
-            if (formRef) {
-              const event = new CustomEvent(\\"route\\", {
-                detail: {
-                  url: props.successUrl,
-                },
-              });
-              formRef.dispatchEvent(event);
-
-              if (!event.defaultPrevented) {
-                location.href = props.successUrl;
-              }
-            } else {
-              location.href = props.successUrl;
-            }
-          }
-        }
-      },
-      (err) => {
-        const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+    if (props.successUrl) {
+      if (formRef) {
+        const event = new CustomEvent('route', {
           detail: {
-            error: err,
-          },
-        });
-
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
-
-          if (submitErrorEvent.defaultPrevented) {
-            return;
+            url: props.successUrl
           }
-        }
+        });
+        formRef.dispatchEvent(event);
 
-        responseData.value = err;
-        formState.value = \\"error\\";
+        if (!event.defaultPrevented) {
+          location.href = props.successUrl;
+        }
+      } else {
+        location.href = props.successUrl;
       }
-    );
+    }
   }
+}, err => {
+  const submitErrorEvent = new CustomEvent('submit:error', {
+    detail: {
+      error: err
+    }
+  });
+
+  if (formRef) {
+    formRef.dispatchEvent(submitErrorEvent);
+
+    if (submitErrorEvent.defaultPrevented) {
+      return;
+    }
+  }
+
+  responseData.value = err;
+  formState.value = 'error';
+});
+}
 }
 </script>
 
@@ -1060,92 +1043,81 @@ exports[`Vue Image 1`] = `
   <slot />
 </template>
 
-<script setup lang=\\"ts\\">
-import { onMounted, onUnMounted, ref } from \\"vue\\";
-// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
+<script setup>
+    import { onMounted, onUnMounted, ref } from \\"vue\\"
 
-  srcset?: string; // TODO: Implement support for custom aspect ratios
 
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
 
-  children?: any;
+
+
+
+
+
+    const props = defineProps(['lazy','altText','_class','image','srcset','sizes','children'])
+const scrollListener= ref(null)
+const imageLoaded= ref(false)
+const load= ref(false)
+
+
+
+
+
+
+const pictureRef = ref<HTMLElement>()
+onMounted(() => { if (useLazyLoading()) {
+// throttled scroll capture listener
+const listener = () => {
+if (pictureRef) {
+  const rect = pictureRef.getBoundingClientRect();
+  const buffer = window.innerHeight / 2;
+
+  if (rect.top < window.innerHeight + buffer) {
+    setLoad(true);
+    scrollListener.value = null;
+    window.removeEventListener('scroll', listener);
+  }
 }
+};
 
-const props = defineProps<ImageProps>();
-const scrollListener = ref(null);
-const imageLoaded = ref(false);
-const load = ref(false);
-
-const pictureRef = ref<HTMLElement>();
-onMounted(() => {
-  if (useLazyLoading()) {
-    // throttled scroll capture listener
-    const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
-        const buffer = window.innerHeight / 2;
-
-        if (rect.top < window.innerHeight + buffer) {
-          setLoad(true);
-          scrollListener.value = null;
-          window.removeEventListener(\\"scroll\\", listener);
-        }
-      }
-    };
-
-    scrollListener.value = listener;
-    window.addEventListener(\\"scroll\\", listener, {
-      capture: true,
-      passive: true,
-    });
-    listener();
-  }
+scrollListener.value = listener;
+window.addEventListener('scroll', listener, {
+capture: true,
+passive: true
 });
-onMounted(() => {
-  if (scrollListener.value) {
-    window.removeEventListener(\\"scroll\\", scrollListener);
-  }
-});
+listener();
+}})
+onMounted(() => { if (scrollListener.value) {
+window.removeEventListener('scroll', scrollListener);
+}})
+
 
 function setLoaded() {
-  imageLoaded.value = true;
+imageLoaded.value = true;
 }
 
 function useLazyLoading() {
-  // TODO: Add more checks here, like testing for real web browsers
-  return !!props.lazy && isBrowser();
+// TODO: Add more checks here, like testing for real web browsers
+return !!props.lazy && isBrowser();
 }
 
 function isBrowser() {
-  return (
-    typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-  );
+return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
 }
 
 function _classStringToObject(str) {
-  const obj = {};
+const obj = {};
 
-  if (typeof str !== \\"string\\") {
-    return obj;
-  }
+if (typeof str !== 'string') {
+return obj;
+}
 
-  const classNames = str.trim().split(/\\\\s+/);
+const classNames = str.trim().split(/\\\\s+/);
 
-  for (const name of classNames) {
-    obj[name] = true;
-  }
+for (const name of classNames) {
+obj[name] = true;
+}
 
-  return obj;
+return obj;
 }
 </script>
 
@@ -1169,7 +1141,7 @@ exports[`Vue Image State 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
 
 const canShow = ref(true);
@@ -1192,27 +1164,16 @@ exports[`Vue Img 1`] = `
   />
 </template>
 
-<script setup lang=\\"ts\\">
-export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: \\"cover\\" | \\"contain\\";
-  backgroundPosition?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-}
-
+<script setup>
 import { Builder } from \\"@builder.io/sdk\\";
 
-const props = defineProps<ImgProps>();
+const props = defineProps([
+  \\"backgroundSize\\",
+  \\"backgroundPosition\\",
+  \\"attributes\\",
+  \\"imgSrc\\",
+  \\"altText\\",
+]);
 </script>
 "
 `;
@@ -1231,20 +1192,18 @@ exports[`Vue Input 1`] = `
   />
 </template>
 
-<script setup lang=\\"ts\\">
-export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}
-
+<script setup>
 import { Builder } from \\"@builder.io/sdk\\";
 
-const props = defineProps<FormInputProps>();
+const props = defineProps([
+  \\"attributes\\",
+  \\"defaultValue\\",
+  \\"placeholder\\",
+  \\"type\\",
+  \\"name\\",
+  \\"value\\",
+  \\"required\\",
+]);
 </script>
 "
 `;
@@ -1257,13 +1216,8 @@ exports[`Vue RawText 1`] = `
   ></span>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-}
-
-const props = defineProps<RawTextProps>();
+<script setup>
+const props = defineProps([\\"attributes\\", \\"text\\"]);
 
 function _classStringToObject(str) {
   const obj = {};
@@ -1289,7 +1243,7 @@ exports[`Vue Remove Internal mitosis package 1`] = `
   <div>Hello {{ name }}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
@@ -1313,14 +1267,8 @@ exports[`Vue Section 1`] = `
   </section>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
-
-const props = defineProps<SectionProps>();
+<script setup>
+const props = defineProps([\\"attributes\\", \\"maxWidth\\", \\"children\\"]);
 </script>
 "
 `;
@@ -1341,15 +1289,10 @@ exports[`Vue Section 2`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
 
-const props = defineProps<SectionProps>();
+const props = defineProps([\\"attributes\\", \\"children\\"]);
 const max = ref(42);
 const items = ref([42]);
 </script>
@@ -1373,21 +1316,16 @@ exports[`Vue Select 1`] = `
   </select>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}
-
+<script setup>
 import { Builder } from \\"@builder.io/sdk\\";
 
-const props = defineProps<FormSelectProps>();
+const props = defineProps([
+  \\"attributes\\",
+  \\"value\\",
+  \\"defaultValue\\",
+  \\"name\\",
+  \\"options\\",
+]);
 </script>
 "
 `;
@@ -1401,11 +1339,7 @@ exports[`Vue SlotHtml 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Props = {
-  [key: string]: string;
-};
-
+<script setup>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 "
@@ -1418,11 +1352,7 @@ exports[`Vue SlotJsx 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Props = {
-  [key: string]: string;
-};
-
+<script setup>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 </script>
 "
@@ -1473,12 +1403,9 @@ exports[`Vue Stamped.io 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
     import { onMounted, ref } from \\"vue\\"
-    type SmileReviewsProps = {
-productId: string;
-apiKey: string;
-};
+
 
 
   import { kebabCase } from 'lodash';
@@ -1487,7 +1414,7 @@ import { snakeCase } from 'lodash';
 
 
 
-    const props = defineProps<SmileReviewsProps>()
+    const props = defineProps(['apiKey','productId'])
 const reviews= ref([])
 const name= ref('test')
 const showReviewPrompt= ref(false)
@@ -1563,13 +1490,8 @@ exports[`Vue Submit 1`] = `
   </button>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}
-
-const props = defineProps<ButtonProps>();
+<script setup>
+const props = defineProps([\\"attributes\\", \\"text\\"]);
 </script>
 "
 `;
@@ -1585,19 +1507,12 @@ exports[`Vue Text 1`] = `
   ></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}
 
 import { Builder } from \\"@builder.io/sdk\\";
 
-const props = defineProps<TextProps>();
+const props = defineProps([\\"text\\", \\"content\\"]);
 const name = ref(\\"Decadef20\\");
 </script>
 "
@@ -1614,16 +1529,14 @@ exports[`Vue Textarea 1`] = `
   ></textarea>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}
-
-const props = defineProps<TextareaProps>();
+<script setup>
+const props = defineProps([
+  \\"attributes\\",
+  \\"placeholder\\",
+  \\"name\\",
+  \\"value\\",
+  \\"defaultValue\\",
+]);
 </script>
 "
 `;
@@ -1652,34 +1565,18 @@ exports[`Vue Video 1`] = `
   ></video>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-  position?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-  posterImage?: string;
-  lazyLoad?: boolean;
-}
-
-const props = defineProps<VideoProps>();
+<script setup>
+const props = defineProps([
+  \\"attributes\\",
+  \\"fit\\",
+  \\"position\\",
+  \\"video\\",
+  \\"posterImage\\",
+  \\"autoPlay\\",
+  \\"muted\\",
+  \\"controls\\",
+  \\"loop\\",
+]);
 </script>
 "
 `;
@@ -1696,14 +1593,10 @@ exports[`Vue basicForwardRef 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
 
-const props = defineProps<Props>();
+const props = defineProps([\\"inputRef\\"]);
 const name = ref(\\"PatrickJS\\");
 </script>
 
@@ -1727,14 +1620,10 @@ exports[`Vue basicForwardRefMetadata 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
 
-const props = defineProps<Props>();
+const props = defineProps([\\"inputRef\\"]);
 const name = ref(\\"PatrickJS\\");
 </script>
 
@@ -1751,7 +1640,7 @@ exports[`Vue basicOnUpdateReturn 1`] = `
   <div>Hello! {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
@@ -1783,7 +1672,7 @@ exports[`Vue class + ClassName + css 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+<script setup></script>
 
 <style scoped>
 .div {
@@ -1798,7 +1687,7 @@ exports[`Vue class + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+<script setup></script>
 
 <style scoped>
 .div {
@@ -1813,7 +1702,7 @@ exports[`Vue className + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+<script setup></script>
 
 <style scoped>
 .div {
@@ -1832,12 +1721,8 @@ exports[`Vue className 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
 
 const bindings = ref(\\"a binding\\");
 
@@ -1867,7 +1752,7 @@ exports[`Vue classState 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
 
 const classState = ref(\\"testClassName\\");
@@ -1919,15 +1804,8 @@ exports[`Vue defaultProps 1`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-const props = withDefaults(defineProps<ButtonProps>(), {
+<script setup>
+const props = withDefaults(defineProps(), {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
@@ -1941,16 +1819,12 @@ exports[`Vue defaultValsWithTypes 1`] = `
   <div>Hello {{ name || DEFAULT_VALUES.name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Props = {
-  name: string;
-};
-
+<script setup>
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
-const props = defineProps<Props>();
+const props = defineProps([\\"name\\"]);
 </script>
 "
 `;
@@ -1960,7 +1834,7 @@ exports[`Vue multipleOnUpdate 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\")),
@@ -1974,7 +1848,7 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref, watch } from \\"vue\\";
 
 const a = ref(\\"a\\");
@@ -2017,13 +1891,8 @@ exports[`Vue nestedShow 1`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
-interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
-}
-
-const props = defineProps<Props>();
+<script setup>
+const props = defineProps([\\"conditionA\\", \\"conditionB\\"]);
 </script>
 "
 `;
@@ -2033,7 +1902,7 @@ exports[`Vue nestedStyles 1`] = `
   <div class=\\"div\\">Hello world</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+<script setup></script>
 
 <style scoped>
 .div {
@@ -2060,7 +1929,7 @@ exports[`Vue onInit & onMount 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted } from \\"vue\\";
 
 onMounted(() => {
@@ -2075,17 +1944,14 @@ exports[`Vue onInit 1`] = `
   <div>Default name defined by parent {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-type Props = {
-  name: string;
-};
 
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
-const props = defineProps<Props>();
+const props = defineProps([\\"name\\"]);
 const name = ref(\\"\\");
 </script>
 "
@@ -2096,7 +1962,7 @@ exports[`Vue onMount 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onMounted, onUnMounted } from \\"vue\\";
 
 onMounted(() => {
@@ -2114,7 +1980,7 @@ exports[`Vue onUpdate 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
@@ -2127,7 +1993,7 @@ exports[`Vue onUpdateWithDeps 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref, watch } from \\"vue\\";
 
 const a = ref(\\"a\\");
@@ -2145,17 +2011,7 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
   <div></div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Types = {
-  s: any[];
-};
-interface IPost {
-  len: number;
-}
-export interface MyBasicComponentProps {
-  id: string;
-}
-
+<script setup>
 const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -2170,21 +2026,8 @@ exports[`Vue preserveTyping 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
-export type A = \\"test\\";
-export interface C {
-  n: \\"test\\";
-}
-type B = \\"test2\\";
-interface D {
-  n: \\"test\\";
-}
-export interface MyBasicComponentProps {
-  name: string;
-  age?: number;
-}
-
-const props = defineProps<MyBasicComponentProps>();
+<script setup>
+const props = defineProps([\\"name\\"]);
 </script>
 "
 `;
@@ -2197,14 +2040,10 @@ exports[`Vue propsDestructure 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import { ref } from \\"vue\\";
-type Props = {
-  children: any;
-  type: string;
-};
 
-const props = defineProps<Props>();
+const props = defineProps([\\"children\\", \\"type\\"]);
 const name = ref(\\"Decadef20\\");
 </script>
 "
@@ -2215,13 +2054,8 @@ exports[`Vue propsInterface 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
-interface Person {
-  name: string;
-  age?: number;
-}
-
-const props = defineProps<Person | never>();
+<script setup>
+const props = defineProps([\\"name\\"]);
 </script>
 "
 `;
@@ -2231,13 +2065,8 @@ exports[`Vue propsType 1`] = `
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
-type Person = {
-  name: string;
-  age?: number;
-};
-
-const props = defineProps<Person>();
+<script setup>
+const props = defineProps([\\"name\\"]);
 </script>
 "
 `;
@@ -2253,12 +2082,8 @@ exports[`Vue rootShow 1`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
-export interface RenderStylesProps {
-  foo: string;
-}
-
-const props = defineProps<RenderStylesProps>();
+<script setup>
+const props = defineProps([\\"foo\\"]);
 </script>
 "
 `;
@@ -2274,7 +2099,7 @@ exports[`Vue self-referencing component 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 const props = defineProps([\\"name\\"]);
 </script>
 "
@@ -2294,7 +2119,7 @@ exports[`Vue self-referencing component with children 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 const props = defineProps([\\"name\\", \\"children\\"]);
 </script>
 "
@@ -2313,13 +2138,8 @@ exports[`Vue showWithFor 1`] = `
   </template>
 </template>
 
-<script setup lang=\\"ts\\">
-interface Props {
-  conditionA: boolean;
-  items: string[];
-}
-
-const props = defineProps<Props>();
+<script setup>
+const props = defineProps([\\"conditionA\\", \\"items\\"]);
 </script>
 "
 `;
@@ -2329,7 +2149,7 @@ exports[`Vue subComponent 1`] = `
   <foo></foo>
 </template>
 
-<script setup lang=\\"ts\\">
+<script setup>
 import Foo from \\"./foo-sub-component.vue\\";
 </script>
 "
@@ -2340,15 +2160,8 @@ exports[`Vue typeDependency 1`] = `
   <div>{{ foo }}</div>
 </template>
 
-<script setup lang=\\"ts\\">
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
-export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};
-
-const props = defineProps<TypeDependencyProps>();
+<script setup>
+const props = defineProps([\\"foo\\"]);
 </script>
 "
 `;

@@ -1,16 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Svelte AdvancedRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
-  export let showInput: Props[\\"showInput\\"];
+  export let showInput;
 
   function onBlur() {
     // Maintain focus
@@ -63,13 +57,7 @@ exports[`Svelte AdvancedRef 1`] = `
 `;
 
 exports[`Svelte Basic 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface MyBasicComponentProps {
-    id: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   export const DEFAULT_VALUES = {
     name: \\"Steve\\",
   };
@@ -100,7 +88,7 @@ exports[`Svelte Basic 1`] = `
 `;
 
 exports[`Svelte Basic 2`] = `
-"<script lang=\\"ts\\">
+"<script>
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
 </script>
@@ -125,7 +113,7 @@ exports[`Svelte Basic 2`] = `
 `;
 
 exports[`Svelte Basic Context 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { getContext, onMount, setContext } from \\"svelte\\";
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
@@ -155,18 +143,11 @@ exports[`Svelte Basic Context 1`] = `
 `;
 
 exports[`Svelte Basic OnMount Update 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    hi: string;
-    bye: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
-  export let hi: Props[\\"hi\\"];
-  export let bye: Props[\\"bye\\"];
+  export let hi;
+  export let bye;
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
@@ -181,7 +162,7 @@ exports[`Svelte Basic OnMount Update 1`] = `
 `;
 
 exports[`Svelte Basic Outputs 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
   export let onMessage;
@@ -201,7 +182,7 @@ exports[`Svelte Basic Outputs 1`] = `
 `;
 
 exports[`Svelte Basic Outputs Meta 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
   export let onMessage;
@@ -221,7 +202,7 @@ exports[`Svelte Basic Outputs Meta 1`] = `
 `;
 
 exports[`Svelte BasicChildComponent 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import MyBasicComponent from \\"./basic.raw\\";
   import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -239,7 +220,7 @@ exports[`Svelte BasicChildComponent 1`] = `
 `;
 
 exports[`Svelte BasicFor 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
   let name = \\"PatrickJS\\";
@@ -268,14 +249,8 @@ exports[`Svelte BasicFor 1`] = `
 `;
 
 exports[`Svelte BasicRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let showInput: Props[\\"showInput\\"];
+"<script>
+  export let showInput;
 
   function onBlur() {
     // Maintain focus
@@ -323,13 +298,7 @@ exports[`Svelte BasicRef 1`] = `
 `;
 
 exports[`Svelte BasicRefAssignment 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   function handlerClick(event) {
     event.preventDefault();
     console.log(\\"current value\\", holdValueRef);
@@ -348,13 +317,7 @@ exports[`Svelte BasicRefAssignment 1`] = `
 `;
 
 exports[`Svelte BasicRefPrevious 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   export function usePrevious<T>(value: T) {
@@ -392,20 +355,11 @@ exports[`Svelte BasicRefPrevious 1`] = `
 `;
 
 exports[`Svelte Button 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    link?: string;
-    openLinkInNewTab?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"];
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
-  export let text: ButtonProps[\\"text\\"];
+"<script>
+  export let link;
+  export let attributes;
+  export let openLinkInNewTab;
+  export let text;
 </script>
 
 {#if link}
@@ -427,27 +381,9 @@ exports[`Svelte Button 1`] = `
 `;
 
 exports[`Svelte Columns 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Column = {
-    content: any; // TODO: Implement this when support for dynamic CSS lands
-
-    width?: number;
-  };
-
-  export interface ColumnProps {
-    columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-    space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-    stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-    reverseColumnsWhenStacked?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let columns: ColumnProps[\\"columns\\"];
-  export let space: ColumnProps[\\"space\\"];
+"<script>
+  export let columns;
+  export let space;
 
   function getColumns() {
     return columns || [];
@@ -504,18 +440,11 @@ exports[`Svelte Columns 1`] = `
 `;
 
 exports[`Svelte CustomCode 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface CustomCodeProps {
-    code: string;
-    replaceNodes?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  export let code: CustomCodeProps[\\"code\\"];
+  export let replaceNodes;
+  export let code;
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -579,18 +508,11 @@ exports[`Svelte CustomCode 1`] = `
 `;
 
 exports[`Svelte Embed 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface CustomCodeProps {
-    code: string;
-    replaceNodes?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
-  export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
-  export let code: CustomCodeProps[\\"code\\"];
+  export let replaceNodes;
+  export let code;
 
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -654,58 +576,31 @@ exports[`Svelte Embed 1`] = `
 `;
 
 exports[`Svelte Form 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormProps {
-    attributes?: any;
-    name?: string;
-    action?: string;
-    validate?: boolean;
-    method?: string;
-    builderBlock?: BuilderElement;
-    sendSubmissionsTo?: string;
-    sendSubmissionsToEmail?: string;
-    sendWithJs?: boolean;
-    contentType?: string;
-    customHeaders?: {
-      [key: string]: string;
-    };
-    successUrl?: string;
-    previewState?: FormState;
-    successMessage?: BuilderElement[];
-    errorMessage?: BuilderElement[];
-    sendingMessage?: BuilderElement[];
-    resetFormOnSubmit?: boolean;
-    errorMessagePath?: string;
-  }
-
-  export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
   import { Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
   import { set } from \\"@fake\\";
   import { get } from \\"@fake\\";
 
-  export let previewState: FormProps[\\"previewState\\"];
-  export let sendWithJs: FormProps[\\"sendWithJs\\"];
-  export let sendSubmissionsTo: FormProps[\\"sendSubmissionsTo\\"];
-  export let action: FormProps[\\"action\\"];
-  export let customHeaders: FormProps[\\"customHeaders\\"];
-  export let contentType: FormProps[\\"contentType\\"];
-  export let sendSubmissionsToEmail: FormProps[\\"sendSubmissionsToEmail\\"];
-  export let name: FormProps[\\"name\\"];
-  export let method: FormProps[\\"method\\"];
-  export let errorMessagePath: FormProps[\\"errorMessagePath\\"];
-  export let resetFormOnSubmit: FormProps[\\"resetFormOnSubmit\\"];
-  export let successUrl: FormProps[\\"successUrl\\"];
-  export let validate: FormProps[\\"validate\\"];
-  export let attributes: FormProps[\\"attributes\\"];
-  export let builderBlock: FormProps[\\"builderBlock\\"];
-  export let errorMessage: FormProps[\\"errorMessage\\"];
-  export let sendingMessage: FormProps[\\"sendingMessage\\"];
-  export let successMessage: FormProps[\\"successMessage\\"];
+  export let previewState;
+  export let sendWithJs;
+  export let sendSubmissionsTo;
+  export let action;
+  export let customHeaders;
+  export let contentType;
+  export let sendSubmissionsToEmail;
+  export let name;
+  export let method;
+  export let errorMessagePath;
+  export let resetFormOnSubmit;
+  export let successUrl;
+  export let validate;
+  export let attributes;
+  export let builderBlock;
+  export let errorMessage;
+  export let sendingMessage;
+  export let successMessage;
 
   function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
@@ -978,36 +873,15 @@ exports[`Svelte Form 1`] = `
 `;
 
 exports[`Svelte Image 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  // TODO: AMP Support?
-  export interface ImageProps {
-    _class?: string;
-    image: string;
-    sizes?: string;
-    lazy?: boolean;
-    height?: number;
-    width?: number;
-    altText?: string;
-    backgroundSize?: string;
-    backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-    srcset?: string; // TODO: Implement support for custom aspect ratios
-
-    aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { onDestroy, onMount } from \\"svelte\\";
 
-  export let lazy: ImageProps[\\"lazy\\"];
-  export let altText: ImageProps[\\"altText\\"];
-  export let _class: ImageProps[\\"_class\\"];
-  export let image: ImageProps[\\"image\\"];
-  export let srcset: ImageProps[\\"srcset\\"];
-  export let sizes: ImageProps[\\"sizes\\"];
+  export let lazy;
+  export let altText;
+  export let _class;
+  export let image;
+  export let srcset;
+  export let sizes;
 
   function setLoaded() {
     imageLoaded = true;
@@ -1093,7 +967,7 @@ exports[`Svelte Image 1`] = `
 `;
 
 exports[`Svelte Image State 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   let canShow = true;
   let images = [\\"http://example.com/qwik.png\\"];
 </script>
@@ -1107,33 +981,14 @@ exports[`Svelte Image State 1`] = `
 `;
 
 exports[`Svelte Img 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ImgProps {
-    attributes?: any;
-    imgSrc?: string;
-    altText?: string;
-    backgroundSize?: \\"cover\\" | \\"contain\\";
-    backgroundPosition?:
-      | \\"center\\"
-      | \\"top\\"
-      | \\"left\\"
-      | \\"right\\"
-      | \\"bottom\\"
-      | \\"top left\\"
-      | \\"top right\\"
-      | \\"bottom left\\"
-      | \\"bottom right\\";
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let backgroundSize: ImgProps[\\"backgroundSize\\"];
-  export let backgroundPosition: ImgProps[\\"backgroundPosition\\"];
-  export let attributes: ImgProps[\\"attributes\\"];
-  export let imgSrc: ImgProps[\\"imgSrc\\"];
-  export let altText: ImgProps[\\"altText\\"];
+  export let backgroundSize;
+  export let backgroundPosition;
+  export let attributes;
+  export let imgSrc;
+  export let altText;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars).forEach(([p, v]) => {
@@ -1156,28 +1011,16 @@ exports[`Svelte Img 1`] = `
 `;
 
 exports[`Svelte Input 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormInputProps {
-    type?: string;
-    attributes?: any;
-    name?: string;
-    value?: string;
-    placeholder?: string;
-    defaultValue?: string;
-    required?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormInputProps[\\"attributes\\"];
-  export let defaultValue: FormInputProps[\\"defaultValue\\"];
-  export let placeholder: FormInputProps[\\"placeholder\\"];
-  export let type: FormInputProps[\\"type\\"];
-  export let name: FormInputProps[\\"name\\"];
-  export let value: FormInputProps[\\"value\\"];
-  export let required: FormInputProps[\\"required\\"];
+  export let attributes;
+  export let defaultValue;
+  export let placeholder;
+  export let type;
+  export let name;
+  export let value;
+  export let required;
 </script>
 
 <input
@@ -1194,16 +1037,9 @@ exports[`Svelte Input 1`] = `
 `;
 
 exports[`Svelte RawText 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface RawTextProps {
-    attributes?: any;
-    text?: string; // builderBlock?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: RawTextProps[\\"attributes\\"];
-  export let text: RawTextProps[\\"text\\"];
+"<script>
+  export let attributes;
+  export let text;
 </script>
 
 <span class={attributes?.class || attributes?.className}
@@ -1213,7 +1049,7 @@ exports[`Svelte RawText 1`] = `
 `;
 
 exports[`Svelte Remove Internal mitosis package 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   let name = \\"PatrickJS\\";
 </script>
 
@@ -1222,17 +1058,9 @@ exports[`Svelte Remove Internal mitosis package 1`] = `
 `;
 
 exports[`Svelte Section 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface SectionProps {
-    maxWidth?: number;
-    attributes?: any;
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
-  export let maxWidth: SectionProps[\\"maxWidth\\"];
+"<script>
+  export let attributes;
+  export let maxWidth;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars).forEach(([p, v]) => {
@@ -1255,16 +1083,8 @@ exports[`Svelte Section 1`] = `
 `;
 
 exports[`Svelte Section 2`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface SectionProps {
-    maxWidth?: number;
-    attributes?: any;
-    children?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: SectionProps[\\"attributes\\"];
+"<script>
+  export let attributes;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars).forEach(([p, v]) => {
@@ -1292,27 +1112,14 @@ exports[`Svelte Section 2`] = `
 `;
 
 exports[`Svelte Select 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface FormSelectProps {
-    options?: {
-      name?: string;
-      value: string;
-    }[];
-    attributes?: any;
-    name?: string;
-    value?: string;
-    defaultValue?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let attributes: FormSelectProps[\\"attributes\\"];
-  export let value: FormSelectProps[\\"value\\"];
-  export let defaultValue: FormSelectProps[\\"defaultValue\\"];
-  export let name: FormSelectProps[\\"name\\"];
-  export let options: FormSelectProps[\\"options\\"];
+  export let attributes;
+  export let value;
+  export let defaultValue;
+  export let name;
+  export let options;
 </script>
 
 <select
@@ -1332,21 +1139,14 @@ exports[`Svelte Select 1`] = `
 `;
 
 exports[`Svelte Stamped.io 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type SmileReviewsProps = {
-    productId: string;
-    apiKey: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
   import { kebabCase } from \\"lodash\\";
   import { snakeCase } from \\"lodash\\";
 
-  export let apiKey: SmileReviewsProps[\\"apiKey\\"];
-  export let productId: SmileReviewsProps[\\"productId\\"];
+  export let apiKey;
+  export let productId;
 
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
@@ -1438,16 +1238,9 @@ exports[`Svelte Stamped.io 1`] = `
 `;
 
 exports[`Svelte Submit 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let text: ButtonProps[\\"text\\"];
+"<script>
+  export let attributes;
+  export let text;
 </script>
 
 <button {...attributes} type=\\"submit\\">
@@ -1457,21 +1250,11 @@ exports[`Svelte Submit 1`] = `
 `;
 
 exports[`Svelte Text 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface TextProps {
-    attributes?: any;
-    rtlMode: boolean;
-    text?: string;
-    content?: string;
-    builderBlock?: any;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   import { Builder } from \\"@builder.io/sdk\\";
 
-  export let text: TextProps[\\"text\\"];
-  export let content: TextProps[\\"content\\"];
+  export let text;
+  export let content;
 
   let name = \\"Decadef20\\";
 </script>
@@ -1488,22 +1271,12 @@ exports[`Svelte Text 1`] = `
 `;
 
 exports[`Svelte Textarea 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface TextareaProps {
-    attributes?: any;
-    name?: string;
-    value?: string;
-    defaultValue?: string;
-    placeholder?: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: TextareaProps[\\"attributes\\"];
-  export let placeholder: TextareaProps[\\"placeholder\\"];
-  export let name: TextareaProps[\\"name\\"];
-  export let value: TextareaProps[\\"value\\"];
-  export let defaultValue: TextareaProps[\\"defaultValue\\"];
+"<script>
+  export let attributes;
+  export let placeholder;
+  export let name;
+  export let value;
+  export let defaultValue;
 </script>
 
 <textarea {...attributes} {placeholder} {name} {value} {defaultValue} />
@@ -1511,44 +1284,16 @@ exports[`Svelte Textarea 1`] = `
 `;
 
 exports[`Svelte Video 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface VideoProps {
-    attributes?: any;
-    video?: string;
-    autoPlay?: boolean;
-    controls?: boolean;
-    muted?: boolean;
-    loop?: boolean;
-    playsInline?: boolean;
-    aspectRatio?: number;
-    width?: number;
-    height?: number;
-    fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-    position?:
-      | \\"center\\"
-      | \\"top\\"
-      | \\"left\\"
-      | \\"right\\"
-      | \\"bottom\\"
-      | \\"top left\\"
-      | \\"top right\\"
-      | \\"bottom left\\"
-      | \\"bottom right\\";
-    posterImage?: string;
-    lazyLoad?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let attributes: VideoProps[\\"attributes\\"];
-  export let fit: VideoProps[\\"fit\\"];
-  export let position: VideoProps[\\"position\\"];
-  export let video: VideoProps[\\"video\\"];
-  export let posterImage: VideoProps[\\"posterImage\\"];
-  export let autoPlay: VideoProps[\\"autoPlay\\"];
-  export let muted: VideoProps[\\"muted\\"];
-  export let controls: VideoProps[\\"controls\\"];
-  export let loop: VideoProps[\\"loop\\"];
+"<script>
+  export let attributes;
+  export let fit;
+  export let position;
+  export let video;
+  export let posterImage;
+  export let autoPlay;
+  export let muted;
+  export let controls;
+  export let loop;
 
   function mitosis_styling(node, vars) {
     Object.entries(vars).forEach(([p, v]) => {
@@ -1581,15 +1326,8 @@ exports[`Svelte Video 1`] = `
 `;
 
 exports[`Svelte basicForwardRef 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-    inputRef: HTMLInputElement;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let inputRef: Props[\\"inputRef\\"];
+"<script>
+  export let inputRef;
 
   let inputRef;
 
@@ -1609,15 +1347,8 @@ exports[`Svelte basicForwardRef 1`] = `
 `;
 
 exports[`Svelte basicForwardRefMetadata 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface Props {
-    showInput: boolean;
-    inputRef: HTMLInputElement;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let inputRef: Props[\\"inputRef\\"];
+"<script>
+  export let inputRef;
 
   let inputRef;
 
@@ -1637,7 +1368,7 @@ exports[`Svelte basicForwardRefMetadata 1`] = `
 `;
 
 exports[`Svelte basicOnUpdateReturn 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   let name = \\"PatrickJS\\";
@@ -1666,7 +1397,7 @@ exports[`Svelte basicOnUpdateReturn 1`] = `
 `;
 
 exports[`Svelte class + ClassName + css 1`] = `
-"<script lang=\\"ts\\">
+"<script>
 </script>
 
 <div class=\\"test2 test div\\">
@@ -1682,7 +1413,7 @@ exports[`Svelte class + ClassName + css 1`] = `
 `;
 
 exports[`Svelte class + css 1`] = `
-"<script lang=\\"ts\\">
+"<script>
 </script>
 
 <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
@@ -1696,7 +1427,7 @@ exports[`Svelte class + css 1`] = `
 `;
 
 exports[`Svelte className + css 1`] = `
-"<script lang=\\"ts\\">
+"<script>
 </script>
 
 <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
@@ -1710,14 +1441,7 @@ exports[`Svelte className + css 1`] = `
 `;
 
 exports[`Svelte className 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    [key: string]: string | JSX.Element;
-    slotTesting: JSX.Element;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   let bindings = \\"a binding\\";
 </script>
 
@@ -1730,20 +1454,11 @@ exports[`Svelte className 1`] = `
 `;
 
 exports[`Svelte defaultProps 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface ButtonProps {
-    attributes?: any;
-    text?: string;
-    link?: string;
-    openLinkInNewTab?: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
-  export let attributes: ButtonProps[\\"attributes\\"];
-  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
-  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+"<script>
+  export let link = \\"https://builder.io/\\";
+  export let attributes;
+  export let openLinkInNewTab = false;
+  export let text = \\"default text\\";
 </script>
 
 {#if link}
@@ -1765,18 +1480,12 @@ exports[`Svelte defaultProps 1`] = `
 `;
 
 exports[`Svelte defaultValsWithTypes 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    name: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   const DEFAULT_VALUES: Props = {
     name: \\"Sami\\",
   };
 
-  export let name: Props[\\"name\\"];
+  export let name;
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
@@ -1784,7 +1493,7 @@ exports[`Svelte defaultValsWithTypes 1`] = `
 `;
 
 exports[`Svelte multipleOnUpdate 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   afterUpdate(() => {
@@ -1800,7 +1509,7 @@ exports[`Svelte multipleOnUpdate 1`] = `
 `;
 
 exports[`Svelte multipleOnUpdateWithDeps 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   let a = \\"a\\";
@@ -1831,16 +1540,9 @@ exports[`Svelte multipleOnUpdateWithDeps 1`] = `
 `;
 
 exports[`Svelte nestedShow 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Props {
-    conditionA: boolean;
-    conditionB: boolean;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let conditionA: Props[\\"conditionA\\"];
-  export let conditionB: Props[\\"conditionB\\"];
+"<script>
+  export let conditionA;
+  export let conditionB;
 </script>
 
 {#if conditionA}
@@ -1856,7 +1558,7 @@ exports[`Svelte nestedShow 1`] = `
 `;
 
 exports[`Svelte nestedStyles 1`] = `
-"<script lang=\\"ts\\">
+"<script>
 </script>
 
 <div class=\\"div\\">Hello world</div>
@@ -1882,7 +1584,7 @@ exports[`Svelte nestedStyles 1`] = `
 `;
 
 exports[`Svelte onInit & onMount 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { onMount } from \\"svelte\\";
 
   onMount(() => {
@@ -1895,18 +1597,12 @@ exports[`Svelte onInit & onMount 1`] = `
 `;
 
 exports[`Svelte onInit 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    name: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   export const defaultValues = {
     name: \\"PatrickJS\\",
   };
 
-  export let name: Props[\\"name\\"];
+  export let name;
 
   let name = \\"\\";
 </script>
@@ -1916,7 +1612,7 @@ exports[`Svelte onInit 1`] = `
 `;
 
 exports[`Svelte onMount 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { onDestroy, onMount } from \\"svelte\\";
 
   onMount(() => {
@@ -1933,7 +1629,7 @@ exports[`Svelte onMount 1`] = `
 `;
 
 exports[`Svelte onUpdate 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   afterUpdate(() => {
@@ -1946,7 +1642,7 @@ exports[`Svelte onUpdate 1`] = `
 `;
 
 exports[`Svelte onUpdateWithDeps 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import { afterUpdate } from \\"svelte\\";
 
   let a = \\"a\\";
@@ -1963,21 +1659,7 @@ exports[`Svelte onUpdateWithDeps 1`] = `
 `;
 
 exports[`Svelte preserveExportOrLocalStatement 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Types = {
-    s: any[];
-  };
-
-  interface IPost {
-    len: number;
-  }
-
-  export interface MyBasicComponentProps {
-    id: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
+"<script>
   const b = 3;
   const foo = () => {};
   export const a = 3;
@@ -1990,27 +1672,8 @@ exports[`Svelte preserveExportOrLocalStatement 1`] = `
 `;
 
 exports[`Svelte preserveTyping 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export type A = \\"test\\";
-
-  export interface C {
-    n: \\"test\\";
-  }
-
-  type B = \\"test2\\";
-
-  interface D {
-    n: \\"test\\";
-  }
-
-  export interface MyBasicComponentProps {
-    name: string;
-    age?: number;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let name: MyBasicComponentProps[\\"name\\"];
+"<script>
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
@@ -2018,15 +1681,8 @@ exports[`Svelte preserveTyping 1`] = `
 `;
 
 exports[`Svelte propsDestructure 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    children: any;
-    type: string;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let type: Props[\\"type\\"];
+"<script>
+  export let type;
 
   let name = \\"Decadef20\\";
 </script>
@@ -2040,15 +1696,8 @@ exports[`Svelte propsDestructure 1`] = `
 `;
 
 exports[`Svelte propsInterface 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Person {
-    name: string;
-    age?: number;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let name: Person[\\"name\\"];
+"<script>
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
@@ -2056,15 +1705,8 @@ exports[`Svelte propsInterface 1`] = `
 `;
 
 exports[`Svelte propsType 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Person = {
-    name: string;
-    age?: number;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let name: Person[\\"name\\"];
+"<script>
+  export let name;
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
@@ -2072,14 +1714,8 @@ exports[`Svelte propsType 1`] = `
 `;
 
 exports[`Svelte rootShow 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  export interface RenderStylesProps {
-    foo: string;
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let foo: RenderStylesProps[\\"foo\\"];
+"<script>
+  export let foo;
 </script>
 
 {#if foo === \\"bar\\"}
@@ -2091,7 +1727,7 @@ exports[`Svelte rootShow 1`] = `
 `;
 
 exports[`Svelte self-referencing component 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   export let name;
 </script>
 
@@ -2106,7 +1742,7 @@ exports[`Svelte self-referencing component 1`] = `
 `;
 
 exports[`Svelte self-referencing component with children 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   export let name;
 </script>
 
@@ -2124,16 +1760,9 @@ exports[`Svelte self-referencing component with children 1`] = `
 `;
 
 exports[`Svelte showWithFor 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  interface Props {
-    conditionA: boolean;
-    items: string[];
-  }
-</script>
-
-<script lang=\\"ts\\">
-  export let conditionA: Props[\\"conditionA\\"];
-  export let items: Props[\\"items\\"];
+"<script>
+  export let conditionA;
+  export let items;
 </script>
 
 {#if conditionA}
@@ -2147,7 +1776,7 @@ exports[`Svelte showWithFor 1`] = `
 `;
 
 exports[`Svelte subComponent 1`] = `
-"<script lang=\\"ts\\">
+"<script>
   import Foo from \\"./foo-sub-component.svelte\\";
 </script>
 
@@ -2156,19 +1785,8 @@ exports[`Svelte subComponent 1`] = `
 `;
 
 exports[`Svelte typeDependency 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  import type { Foo } from \\"./foo-type\\";
-
-  import type { Foo as Foo2 } from \\"./type-export\\";
-
-  export type TypeDependencyProps = {
-    foo: Foo;
-    foo2: Foo2;
-  };
-</script>
-
-<script lang=\\"ts\\">
-  export let foo: TypeDependencyProps[\\"foo\\"];
+"<script>
+  export let foo;
 </script>
 
 <div>{foo}</div>

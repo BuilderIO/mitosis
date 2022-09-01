@@ -1,7 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { format } from 'prettier/standalone';
-import { Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { fastClone } from '../helpers/fast-clone';
 import { getComponents } from '../helpers/get-components';
 import { getRefs } from '../helpers/get-refs';
@@ -14,8 +14,7 @@ import { MitosisNode } from '../types/mitosis-node';
 import { blockToReact, componentToReact } from './react';
 import { checkHasState } from '../helpers/state';
 
-export interface ToMitosisOptions {
-  prettier?: boolean;
+export interface ToMitosisOptions extends BaseTranspilerOptions {
   format: 'react' | 'legacy';
 }
 
@@ -127,8 +126,8 @@ const getRefsString = (json: MitosisComponent, refs = Array.from(getRefs(json)))
 
 const mitosisCoreComponents = ['Show', 'For'];
 
-export const componentToMitosis =
-  (toMitosisOptions: Partial<ToMitosisOptions> = {}): Transpiler =>
+export const componentToMitosis: TranspilerGenerator<Partial<ToMitosisOptions>> =
+  (toMitosisOptions = {}) =>
   ({ component }) => {
     const options: ToMitosisOptions = {
       format: DEFAULT_FORMAT,

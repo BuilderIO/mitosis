@@ -32,7 +32,7 @@ import { kebabCase, pickBy, size, uniq } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
@@ -732,14 +732,21 @@ function generateOptionsApiScript(
       }`;
 }
 
-const getCompositionPropDefinition = (component: MitosisComponent, props: Set<string>) => {
+const getCompositionPropDefinition = ({
+  options,
+  component,
+  props,
+}: {
+  options: ToVueOptions;
+  component: MitosisComponent;
+  props: Set<string>;
+}) => {
   let str = 'const props = ';
 
   if (component.defaultProps) {
-    str += `withDefaults(defineProps<${component.propsTypeRef}>(), ${json5.stringify(
-      component.defaultProps,
-    )})`;
-  } else if (component.propsTypeRef && component.propsTypeRef !== 'any') {
+    const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
+    str += `withDefaults(defineProps${generic}(), ${json5.stringify(component.defaultProps)})`;
+  } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
     str += `defineProps(${json5.stringify(Array.from(props))})`;
@@ -808,7 +815,7 @@ function generateCompositionApiScript(
   }
 
   let str = dedent`
-    ${props.size ? getCompositionPropDefinition(component, props) : ''}
+    ${props.size ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
 
     ${Object.keys(component.context.get)
@@ -867,8 +874,8 @@ function generateCompositionApiScript(
   return str;
 }
 
-const componentToVue =
-  (userOptions: ToVueOptions): Transpiler =>
+const componentToVue: TranspilerGenerator<ToVueOptions> =
+  (userOptions = BASE_OPTIONS) =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     if (options.api === 'options') {
@@ -928,14 +935,17 @@ const componentToVue =
       ) && vueImports.push('ref');
     }
 
+    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
     let str: string = dedent`
     <template>
       ${template}
     </template>
 
-    <script ${options.api === 'composition' ? 'setup' : ''} lang="ts">
+
+    <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
       ${vueImports.length ? `import { ${uniq(vueImports).sort().join(', ')} } from "vue"` : ''}
-      ${component.types?.join('\n') || ''}
+      ${(options.typescript && component.types?.join('\n')) || ''}
 
       ${renderPreComponent({
         component,
