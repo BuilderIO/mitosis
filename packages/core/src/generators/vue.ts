@@ -1,7 +1,6 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { types } from '@babel/core';
-import { Identifier, MemberExpression } from '@babel/types';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
