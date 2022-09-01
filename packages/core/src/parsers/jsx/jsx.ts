@@ -53,7 +53,19 @@ export function parseJsx(
     configFile: false,
     babelrc: false,
     comments: false,
-    presets: [[tsPreset, { isTSX: true, allExtensions: true }]],
+    presets: [
+      [
+        tsPreset,
+        {
+          isTSX: true,
+          allExtensions: true,
+          // If left to its default `false`, then this will strip away:
+          // - unused JS imports
+          // - types imports within regular JS import syntax
+          onlyRemoveTypeImports: true,
+        },
+      ],
+    ],
     plugins: [
       jsxPlugin,
       (): babel.PluginObj<Context> => ({
