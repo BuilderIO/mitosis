@@ -530,7 +530,7 @@ const appendToDataString = ({
 }) => dataString.replace(/}$/, `${newContent}}`);
 
 const componentToVue: TranspilerGenerator<ToVueOptions> =
-  (userOptions) =>
+  (userOptions = BASE_OPTIONS) =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used

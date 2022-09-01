@@ -12,7 +12,7 @@ export type Transpiler<R = string> = (args: TranspilerArgs) => R;
  * This type guarantees that all code generators receive the same base options
  */
 export type TranspilerGenerator<X extends BaseTranspilerOptions, Y = string> = (
-  args: X,
+  args?: X,
 ) => Transpiler<Y>;
 
 export interface BaseTranspilerOptions {
