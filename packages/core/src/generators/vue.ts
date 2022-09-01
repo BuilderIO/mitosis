@@ -750,9 +750,9 @@ const getCompositionPropDefinition = (component: MitosisComponent, props: Set<st
 
 function appendValueToRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
   const refKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
-  
+
   let output = processBinding(input, options, component, false);
-  
+
   return babelTransformExpression(output, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
       console.log({ path });
@@ -764,9 +764,7 @@ function appendValueToRefs(input: string, component: MitosisComponent, options: 
         path.parentPath.listKey !== 'params' &&
         refKeys.includes(path.node.name)
       ) {
-        path.replaceWith(
-          types.identifier(`${path.node.name}.value`),
-        );
+        path.replaceWith(types.identifier(`${path.node.name}.value`));
       }
     },
   });
@@ -790,7 +788,6 @@ function generateCompositionApiScript(
     },
     keyPrefix: 'const',
   });
-
 
   let methods = getStateObjectStringFromComponent(component, {
     data: false,
@@ -835,7 +832,7 @@ function generateCompositionApiScript(
         : `onMounted(() => { ${appendValueToRefs(
             component.hooks.onMount.code,
             component,
-            options
+            options,
           )}})`
     }
     ${
@@ -851,11 +848,7 @@ function generateCompositionApiScript(
       !onUpdateWithoutDeps?.length
         ? ''
         : onUpdateWithoutDeps.map((hook) => {
-            return `onUpdated(() => ${appendValueToRefs(
-              hook.code,
-              component,
-              options
-            )})`;
+            return `onUpdated(() => ${appendValueToRefs(hook.code, component, options)})`;
           })
     }
     ${
@@ -863,9 +856,9 @@ function generateCompositionApiScript(
         ? ''
         : onUpdateWithDeps.map((hook) => {
             return appendValueToRefs(
-                `watch(${hook.deps}, (${hook.deps}) => { ${hook.code}})\n`,
-                component,
-                options,
+              `watch(${hook.deps}, (${hook.deps}) => { ${hook.code}})\n`,
+              component,
+              options,
             );
           })
     }
