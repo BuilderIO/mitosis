@@ -1886,6 +1886,36 @@ export default class ComponentWithTypes {
 "
 `;
 
+exports[`Stencil Javascript Test import types 1`] = `
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+})
+export default class RenderContent {
+  @Prop() renderContentProps: any;
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  render() {
+    return (
+      <RenderBlock
+        {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil Javascript Test nestedStyles 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -4120,6 +4150,36 @@ export default class ComponentWithTypes {
         Hello
         {this.name || DEFAULT_VALUES.name}
       </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Typescript Test import types 1`] = `
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+})
+export default class RenderContent {
+  @Prop() renderContentProps: any;
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  render() {
+    return (
+      <RenderBlock
+        {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
     );
   }
 }

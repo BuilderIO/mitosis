@@ -1917,6 +1917,35 @@ export default function ComponentWithTypes(props: Props) {
 "
 `;
 
+exports[`Preact Javascript Test import types 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+"
+`;
+
 exports[`Preact Javascript Test multipleOnUpdate 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4306,6 +4335,35 @@ export default function ComponentWithTypes(props: Props) {
       Hello
       {props.name || DEFAULT_VALUES.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`Preact Typescript Test import types 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
   );
 }
 "

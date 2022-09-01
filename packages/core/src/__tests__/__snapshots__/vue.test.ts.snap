@@ -1862,6 +1862,35 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script>
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { \\"render-block\\": RenderBlock },
+  props: [\\"renderContentProps\\"],
+
+  methods: {
+    getRenderContentProps(block, index) {
+      return {
+        block: block,
+        index: index,
+      };
+    },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue Javascript Test multipleOnUpdate 1`] = `
 "<template>
   <div></div>
@@ -4395,6 +4424,41 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ DEFAULT_VALUES }),
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script lang=\\"ts\\">
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { \\"render-block\\": RenderBlock },
+  props: [\\"renderContentProps\\"],
+
+  methods: {
+    getRenderContentProps(block, index) {
+      return {
+        block: block,
+        index: index,
+      };
+    },
+  },
 };
 </script>
 "

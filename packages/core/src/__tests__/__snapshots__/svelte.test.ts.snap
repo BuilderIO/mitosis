@@ -1483,6 +1483,25 @@ exports[`Svelte Javascript Test defaultValsWithTypes 1`] = `
 "
 `;
 
+exports[`Svelte Javascript Test import types 1`] = `
+"<script>
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+  export let renderContentProps;
+
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+</script>
+
+<RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />
+"
+`;
+
 exports[`Svelte Javascript Test multipleOnUpdate 1`] = `
 "<script>
   import { afterUpdate } from \\"svelte\\";
@@ -3564,6 +3583,33 @@ exports[`Svelte Typescript Test defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
+"
+`;
+
+exports[`Svelte Typescript Test import types 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type RenderContentProps = {
+    options?: GetContentOptions;
+    content: BuilderContent;
+    renderContentProps: RenderBlockProps;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+  export let renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+</script>
+
+<RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />
 "
 `;
 

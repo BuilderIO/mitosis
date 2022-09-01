@@ -1875,6 +1875,34 @@ export default function ComponentWithTypes(props: Props) {
 "
 `;
 
+exports[`React Javascript Test import types 1`] = `
+"import * as React from \\"react\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+"
+`;
+
 exports[`React Javascript Test multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { useEffect } from \\"react\\";
@@ -4201,6 +4229,34 @@ export default function ComponentWithTypes(props: Props) {
       Hello
       {props.name || DEFAULT_VALUES.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`React Typescript Test import types 1`] = `
+"import * as React from \\"react\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
   );
 }
 "

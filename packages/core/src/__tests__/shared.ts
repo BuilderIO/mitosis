@@ -66,6 +66,8 @@ const text = require('./data/blocks/text.raw');
 const textarea = require('./data/blocks/textarea.raw');
 const video = require('./data/blocks/video.raw');
 
+const builderRenderContent = require('./data/blocks/builder-render-content.raw');
+
 const path = 'test-path';
 
 type Tests = { [index: string]: any };
@@ -102,6 +104,7 @@ const BASIC_TESTS = {
   preserveTyping: preserveTyping,
   typeDependency,
   defaultValsWithTypes: require('./data/types/component-with-default-values-types.raw'),
+  'import types': builderRenderContent,
   subComponent,
   nestedStyles,
   propsDestructure: propsDestructure,

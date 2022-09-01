@@ -2455,6 +2455,57 @@ export default class ComponentWithTypes extends LitElement {
 "
 `;
 
+exports[`Lit Javascript Test import types 1`] = `
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"render-content\\")
+export default class RenderContent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() renderContentProps: any;
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  render() {
+    return html\`
+        
+        <render-block
+        \${spread(
+          state.getRenderContentProps(props.renderContentProps.block, 0)
+        )}
+      ></render-block>
+
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit Javascript Test multipleOnUpdate 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -5567,6 +5618,57 @@ export default class ComponentWithTypes extends LitElement {
     return html\`
         
         <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test import types 1`] = `
+"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"render-content\\")
+export default class RenderContent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() renderContentProps: any;
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  render() {
+    return html\`
+        
+        <render-block
+        \${spread(
+          state.getRenderContentProps(props.renderContentProps.block, 0)
+        )}
+      ></render-block>
 
       \`;
   }
