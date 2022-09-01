@@ -754,7 +754,6 @@ function appendValueToRefs(input: string, component: MitosisComponent, options: 
 
   return babelTransformExpression(output, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
-      console.log({ path });
       if (
         !(types.isFunctionDeclaration(path.parent) && path.parent.id === path.node) &&
         !types.isCallExpression(path.parent) &&
