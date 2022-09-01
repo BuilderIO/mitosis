@@ -23,7 +23,7 @@ import { getPropFunctions } from '../helpers/get-prop-functions';
 import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { indent } from '../helpers/indent';
 import { isSlotProperty } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
@@ -218,8 +218,8 @@ export const blockToAngular = (
   return str;
 };
 
-export const componentToAngular =
-  (options: ToAngularOptions = {}): Transpiler =>
+export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
+  (options = {}) =>
   ({ component: _component }) => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);

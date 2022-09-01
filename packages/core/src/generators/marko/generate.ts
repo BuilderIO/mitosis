@@ -12,7 +12,7 @@ import {
 } from '../../modules/plugins';
 import { fastClone } from '../../helpers/fast-clone';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { collectCss } from '../../helpers/styles/collect-css';
@@ -146,8 +146,8 @@ function processBinding(
   );
 }
 
-export const componentToMarko =
-  (userOptions: ToMarkoOptions = {}): Transpiler =>
+export const componentToMarko: TranspilerGenerator<ToMarkoOptions> =
+  (userOptions = {}) =>
   ({ component }) => {
     let json = fastClone(component);
     const options: InternalToMarkoOptions = {

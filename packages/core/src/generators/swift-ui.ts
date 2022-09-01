@@ -11,12 +11,10 @@ import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
-import { Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { checkHasState } from '../helpers/state';
 
-export type ToSwiftOptions = {
-  prettier?: boolean;
-};
+export type ToSwiftOptions = BaseTranspilerOptions;
 
 const scrolls = (json: MitosisNode) => {
   return getStyles(json)?.overflow === 'auto';
@@ -290,8 +288,8 @@ function getInputBindings(json: MitosisComponent, options: ToSwiftOptions) {
   }
   return str;
 }
-export const componentToSwift =
-  (options: ToSwiftOptions = {}): Transpiler =>
+export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
+  (options = {}) =>
   ({ component }) => {
     const json = fastClone(component);
     mapDataForSwiftCompatability(json);

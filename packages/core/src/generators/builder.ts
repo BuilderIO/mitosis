@@ -14,11 +14,11 @@ import { attempt, mapValues, omit, omitBy, set } from 'lodash';
 import { isBuilderElement, symbolBlocksAsChildren } from '../parsers/builder';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import traverse from 'traverse';
-import { TranspilerArgs } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerArgs } from '../types/transpiler';
 import { hashCodeAsString } from '../symbols/symbol-processor';
 import { checkHasState } from '../helpers/state';
 
-export interface ToBuilderOptions {
+export interface ToBuilderOptions extends BaseTranspilerOptions {
   includeIds?: boolean;
 }
 
@@ -296,10 +296,10 @@ export const blockToBuilder = (
 
 export const componentToBuilder =
   (options: ToBuilderOptions = {}) =>
-  ({ component }: TranspilerArgs) => {
+  ({ component }: TranspilerArgs): BuilderContent => {
     const hasState = checkHasState(component);
 
-    const result = fastClone({
+    const result: BuilderContent = fastClone({
       data: {
         httpRequests: component?.meta?.useMetadata?.httpRequests,
         jsCode: tryFormat(dedent`

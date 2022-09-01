@@ -17,7 +17,7 @@ import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import traverse from 'traverse';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { Transpiler } from '../../types/transpiler';
+import { TranspilerGenerator } from '../../types/transpiler';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { hasContext } from '../helpers/context';
@@ -294,8 +294,8 @@ const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions
   }
 };
 
-export const componentToSolid =
-  (passedOptions: Partial<ToSolidOptions> = DEFAULT_OPTIONS): Transpiler =>
+export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
+  (passedOptions = DEFAULT_OPTIONS) =>
   ({ component }) => {
     const options = {
       ...DEFAULT_OPTIONS,

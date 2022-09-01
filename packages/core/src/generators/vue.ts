@@ -30,7 +30,7 @@ import { kebabCase, size } from 'lodash';
 import { replaceIdentifiers } from '../helpers/replace-identifiers';
 import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { GETTER } from '../helpers/patterns';
 import { OmitObj } from '../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
@@ -529,8 +529,8 @@ const appendToDataString = ({
   newContent: string;
 }) => dataString.replace(/}$/, `${newContent}}`);
 
-const componentToVue =
-  (userOptions: ToVueOptions): Transpiler =>
+const componentToVue: TranspilerGenerator<ToVueOptions> =
+  (userOptions = BASE_OPTIONS) =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
@@ -653,11 +653,13 @@ const componentToVue =
       );
     }
 
+    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
     let str = dedent`
     <template>
       ${template}
     </template>
-    <script lang="ts">
+    <script ${tsLangAttribute}>
     ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
@@ -665,7 +667,7 @@ const componentToVue =
         asyncComponentImports: options.asyncComponentImports,
       })}
 
-      ${component.types?.join('\n') || ''}
+      ${(options.typescript && component.types?.join('\n')) || ''}
 
       export default {
         ${

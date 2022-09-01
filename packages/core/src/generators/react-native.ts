@@ -6,7 +6,7 @@ import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
 import { componentToReact } from './react';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';
@@ -102,8 +102,8 @@ function processReactNative() {
   });
 }
 
-export const componentToReactNative =
-  (options: ToReactNativeOptions = {}): Transpiler =>
+export const componentToReactNative: TranspilerGenerator<ToReactNativeOptions> =
+  (options = {}) =>
   ({ component, path }) => {
     const json = fastClone(component);
 

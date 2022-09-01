@@ -12,7 +12,7 @@ import {
 } from '../../modules/plugins';
 import { fastClone } from '../../helpers/fast-clone';
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { collectClassString } from './collect-class-string';
 import { getProps } from '../../helpers/get-props';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
@@ -131,8 +131,8 @@ function processBinding(code: string) {
   return stripStateAndPropsRefs(code, { replaceWith: 'this.' });
 }
 
-export const componentToLit =
-  (options: ToLitOptions = {}): Transpiler =>
+export const componentToLit: TranspilerGenerator<ToLitOptions> =
+  (options = {}) =>
   ({ component }) => {
     let json = fastClone(component);
     if (options.plugins) {

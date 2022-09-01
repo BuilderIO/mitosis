@@ -35,7 +35,7 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
 
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
@@ -558,8 +558,8 @@ function addUpdateAfterSetInCode(
 const htmlDecode = (html: string) => html.replace(/&quot;/gi, '"');
 
 // TODO: props support via custom elements
-export const componentToHtml =
-  (options: ToHtmlOptions = {}): Transpiler =>
+export const componentToHtml: TranspilerGenerator<ToHtmlOptions> =
+  (options = {}) =>
   ({ component }) => {
     const useOptions: InternalToHtmlOptions = {
       ...options,
@@ -828,8 +828,8 @@ export const componentToHtml =
   };
 
 // TODO: props support via custom elements
-export const componentToCustomElement =
-  (options: ToHtmlOptions = {}): Transpiler =>
+export const componentToCustomElement: TranspilerGenerator<ToHtmlOptions> =
+  (options = {}) =>
   ({ component }) => {
     const ComponentName = component.name;
     const kebabName = kebabCase(ComponentName);

@@ -26,7 +26,7 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
@@ -320,8 +320,8 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   },
 });
 
-export const componentToSvelte =
-  ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
+export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
+  ({ plugins = [], ...userProvidedOptions } = {}) =>
   ({ component }) => {
     const options: ToSvelteOptions = {
       stateType: 'variables',
@@ -395,9 +395,11 @@ export const componentToSvelte =
 
     let str = '';
 
-    if (json.types?.length) {
+    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
+    if (options.typescript && json.types?.length) {
       str += dedent`
-      <script context='module' lang='ts'>
+      <script context='module' ${tsLangAttribute}>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
       </script>
       \n
@@ -422,7 +424,7 @@ export const componentToSvelte =
     }
 
     str += dedent`
-      <script lang='ts'>
+      <script ${tsLangAttribute}>
       ${!svelteImports.length ? '' : `import { ${svelteImports.sort().join(', ')} } from 'svelte'`}
       ${renderPreComponent({ component: json, target: 'svelte' })}
 
@@ -435,7 +437,7 @@ export const componentToSvelte =
 
           let propDeclaration = `export let ${name}`;
 
-          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+          if (options.typescript && json.propsTypeRef && json.propsTypeRef !== 'any') {
             propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
           }
 

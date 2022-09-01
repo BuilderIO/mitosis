@@ -1,5 +1,8 @@
+import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { tryParseJson } from '../../helpers/json';
+
+const { types } = babel;
 
 export const selfClosingTags = new Set([
   'area',
@@ -30,3 +33,6 @@ export const parseCodeJson = (node: babel.types.Node) => {
   const code = generate(node).code;
   return tryParseJson(code);
 };
+
+export const isImportOrDefaultExport = (node: babel.Node) =>
+  types.isExportDefaultDeclaration(node) || types.isImportDeclaration(node);
