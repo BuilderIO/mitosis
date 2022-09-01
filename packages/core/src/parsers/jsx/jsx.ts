@@ -19,6 +19,7 @@ import { isImportOrDefaultExport, parseCodeJson } from './helpers';
 import { collectTypes, getPropsTypeRef, isTypeImport, isTypeOrInterface } from './component-types';
 import { undoPropsDestructure } from './props';
 import { generateExports } from './exports';
+import { pipe } from 'fp-ts/lib/function';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -560,10 +561,6 @@ export function parseJsx(
 
             context.builder.component.exports = generateExports(path);
 
-            let cutStatements = path.node.body.filter(
-              (statement) => !isImportOrDefaultExport(statement),
-            );
-
             subComponentFunctions = path.node.body
               .filter(
                 (node) =>
@@ -571,12 +568,16 @@ export function parseJsx(
               )
               .map((node) => `export default ${generate(node).code!}`);
 
-            cutStatements = collectMetadata(cutStatements, context.builder.component, useOptions);
+            const preComponentCode = pipe(
+              path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
+              (statements) => collectMetadata(statements, context.builder.component, useOptions),
+              types.program,
+              generate,
+              (generatorResult) => generatorResult.code,
+            );
 
             // TODO: support multiple? e.g. for others to add imports?
-            context.builder.component.hooks.preComponent = {
-              code: generate(types.program(cutStatements)).code,
-            };
+            context.builder.component.hooks.preComponent = { code: preComponentCode };
 
             path.replaceWith(types.program(keepStatements));
           },
