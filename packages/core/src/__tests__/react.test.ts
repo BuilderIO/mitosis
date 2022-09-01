@@ -4,7 +4,7 @@ import { runTestsForTarget } from './shared';
 
 const stamped = require('./data/blocks/stamped-io.raw');
 describe('React', () => {
-  runTestsForTarget('react', componentToReact());
+  runTestsForTarget({ options: {}, target: 'react', generator: componentToReact });
   test('stamped', () => {
     const component = parseJsx(stamped);
     const output = componentToReact({

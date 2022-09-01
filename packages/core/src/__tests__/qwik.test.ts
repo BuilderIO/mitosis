@@ -31,7 +31,7 @@ const debugOutput = async (fileSet: FileSet) => {
 };
 
 describe('qwik', () => {
-  runTestsForTarget('qwik', componentToQwik());
+  runTestsForTarget({ options: {}, target: 'qwik', generator: componentToQwik });
 
   describe('todo', () => {
     test('Todo.tsx', async () => {

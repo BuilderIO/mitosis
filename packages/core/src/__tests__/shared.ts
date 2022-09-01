@@ -1,4 +1,4 @@
-import { Transpiler } from '../types/transpiler';
+import { TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
@@ -326,29 +326,46 @@ export const runTestsForJsx = () => {
   });
 };
 
-export const runTestsForTarget = (target: Target, generator: Transpiler) => {
+export const runTestsForTarget = <X>({
+  target,
+  generator,
+  options,
+}: {
+  target: Target;
+  generator: TranspilerGenerator<X>;
+  options: X;
+}) => {
   const testsArray = TESTS_FOR_TARGET[target];
 
   test('Remove Internal mitosis package', () => {
     const component = parseJsx(basicMitosis, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
     });
-    const output = generator({ component, path });
+    const output = generator(options)({ component, path });
     expect(output).toMatchSnapshot();
   });
 
+  const configurations: { options: X; testName: string }[] = [
+    { options: { ...options, typescript: false }, testName: 'Javascript Test' },
+    { options: { ...options, typescript: true }, testName: 'Typescript Test' },
+  ];
+
   if (testsArray) {
-    testsArray.forEach((tests) => {
-      Object.keys(tests).forEach((key) => {
-        test(key, () => {
-          try {
-            const component = parseJsx(tests[key]);
-            const output = generator({ component, path });
-            expect(output).toMatchSnapshot();
-          } catch (error) {
-            console.log('failed to parse', error);
-            throw error;
-          }
+    configurations.forEach(({ options, testName }) => {
+      describe(testName, () => {
+        testsArray.forEach((tests) => {
+          Object.keys(tests).forEach((key) => {
+            test(key, () => {
+              try {
+                const component = parseJsx(tests[key]);
+                const output = generator(options)({ component, path });
+                expect(output).toMatchSnapshot();
+              } catch (error) {
+                console.log('failed to parse', error);
+                throw error;
+              }
+            });
+          });
         });
       });
     });
