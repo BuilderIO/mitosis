@@ -316,6 +316,13 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
 };
 
 export const runTestsForJsx = () => {
+  test('Remove Internal mitosis package', () => {
+    const component = parseJsx(basicMitosis, {
+      compileAwayPackages: ['@dummy/custom-mitosis'],
+    });
+    expect(component).toMatchSnapshot();
+  });
+
   JSX_TESTS.forEach((tests) => {
     Object.keys(tests).forEach((key) => {
       test(key, () => {
