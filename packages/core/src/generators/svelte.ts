@@ -395,9 +395,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     let str = '';
 
+    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
     if (json.types?.length) {
       str += dedent`
-      <script context='module' ${options.typescript ? `lang='ts'` : ''}>
+      <script context='module' ${tsLangAttribute}>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
       </script>
       \n
@@ -422,7 +424,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     }
 
     str += dedent`
-      <script lang='ts'>
+      <script ${tsLangAttribute}>
       ${!svelteImports.length ? '' : `import { ${svelteImports.sort().join(', ')} } from 'svelte'`}
       ${renderPreComponent({ component: json, target: 'svelte' })}
 

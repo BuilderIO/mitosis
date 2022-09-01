@@ -653,11 +653,13 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
       );
     }
 
+    const tsLangAttribute = options.typescript ? `lang='ts'` : '';
+
     let str = dedent`
     <template>
       ${template}
     </template>
-    <script lang="ts">
+    <script ${tsLangAttribute}>
     ${options.vueVersion >= 3 ? 'import { defineAsyncComponent } from "vue"' : ''}
       ${renderPreComponent({
         component,
