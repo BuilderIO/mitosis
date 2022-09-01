@@ -854,7 +854,7 @@ function generateCompositionApiScript(
         ? ''
         : onUpdateWithDeps.map((hook) => {
             return appendValueToRefs(
-              `watch(${hook.deps}, (${hook.deps}) => { ${hook.code}})\n`,
+              `watch(${hook.deps}, (${hook.deps?.replaceAll('state.', '')}) => { ${hook.code}})\n`,
               component,
               options,
             );
