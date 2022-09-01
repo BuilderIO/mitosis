@@ -2,7 +2,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { checkIsCodeValue, MitosisComponent } from '../../types/mitosis-component';
-import { BaseTranspilerOptions, Transpiler } from '../../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './add-prevent-default';
 import { convertMethodToFunction } from './convert-method-to-function';
@@ -41,8 +41,8 @@ type StateValues = Record<
   any
 >;
 
-export const componentToQwik =
-  (userOptions: ToQwikOptions = {}): Transpiler =>
+export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
+  (userOptions = {}) =>
   ({ component: _component, path }): string => {
     // Make a copy we can safely mutate, similar to babel's toolchain
     let component = fastClone(_component);

@@ -26,7 +26,7 @@ import {
 import isChildren from '../helpers/is-children';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
@@ -320,8 +320,8 @@ const FUNCTION_HACK_PLUGIN: Plugin = () => ({
   },
 });
 
-export const componentToSvelte =
-  ({ plugins = [], ...userProvidedOptions }: ToSvelteOptions = {}): Transpiler =>
+export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
+  ({ plugins = [], ...userProvidedOptions } = {}) =>
   ({ component }) => {
     const options: ToSvelteOptions = {
       stateType: 'variables',
@@ -397,7 +397,7 @@ export const componentToSvelte =
 
     if (json.types?.length) {
       str += dedent`
-      <script context='module' lang='ts'>
+      <script context='module' ${options.typescript ? `lang='ts'` : ''}>
         ${json.types ? json.types.join('\n\n') + '\n' : ''}
       </script>
       \n

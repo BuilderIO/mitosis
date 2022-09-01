@@ -1,5 +1,5 @@
 import { componentToAngular as angular } from './generators/angular';
-import { componentToBuilder as builder } from './generators/builder';
+import { componentToBuilder } from './generators/builder';
 import {
   componentToCustomElement as customElement,
   componentToCustomElement as webcomponent,
@@ -20,9 +20,10 @@ import { componentToQwik as qwik } from './generators/qwik';
 import { componentToMarko as marko } from './generators/marko';
 import { componentToLit as lit } from './generators/lit';
 
+export const builder = componentToBuilder;
+
 export const targets = {
   angular,
-  builder,
   customElement,
   html,
   mitosis,
@@ -42,4 +43,4 @@ export const targets = {
   marko,
   preact,
   lit,
-};
+} as const;

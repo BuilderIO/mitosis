@@ -207,19 +207,15 @@ const getGeneratorForTarget = ({
 /**
  * Output generated component file, before it is minified and transpiled into JS.
  */
-const doesLanguagesHaveTypeScript = ({
+const checkShouldOutputTypeScript = ({
   target,
   options,
 }: {
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  const languages = options.options[target]?.transpiler?.languages;
-  if (languages?.includes('ts')) {
-    return true;
-  } else {
-    return false;
-  }
+  const isTypescript = options.options[target].typescript;
+  return isTypescript;
 };
 
 const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
@@ -295,7 +291,7 @@ async function buildAndOutputComponentFiles({
     await Promise.all([
       // this is the default output
       outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-      ...(doesLanguagesHaveTypeScript({ target, options })
+      ...(checkShouldOutputTypeScript({ target, options })
         ? [outputFile(`${outputDir}/${path}`, original)]
         : []),
     ]);
@@ -327,7 +323,7 @@ const outputNonComponentFiles = async ({
   files: { path: string; output: string }[];
   options: MitosisConfig;
 }) => {
-  const extension = doesLanguagesHaveTypeScript({ target, options }) ? '.ts' : '.js';
+  const extension = checkShouldOutputTypeScript({ target, options }) ? '.ts' : '.js';
   await Promise.all(
     files.map(({ path, output }) =>
       outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, extension)}`, output),
@@ -351,7 +347,7 @@ async function buildNonComponentFiles({ target, options }: TargetContextWithConf
         output = await buildContextFile({ path, options, target });
       }
 
-      if (!doesLanguagesHaveTypeScript({ target, options })) {
+      if (!checkShouldOutputTypeScript({ target, options })) {
         output = await transpile({
           path,
           target,

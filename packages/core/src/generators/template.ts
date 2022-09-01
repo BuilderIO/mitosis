@@ -11,7 +11,7 @@ import {
 } from '../modules/plugins';
 import dedent from 'dedent';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToTemplateOptions extends BaseTranspilerOptions {}
 
@@ -97,8 +97,8 @@ const blockToTemplate = (json: MitosisNode, options: ToTemplateOptions = {}) => 
 };
 
 // TODO: add JS support similar to componentToHtml()
-export const componentToTemplate =
-  (options: ToTemplateOptions = {}): Transpiler =>
+export const componentToTemplate: TranspilerGenerator<ToTemplateOptions> =
+  (options = {}) =>
   ({ component }) => {
     let json = fastClone(component);
     if (options.plugins) {

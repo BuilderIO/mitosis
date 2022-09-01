@@ -2,7 +2,6 @@ export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
 interface TranspilerOptions {
   format?: Format;
-  languages?: Language[];
 }
 
 type Targets = typeof import('../targets').targets;

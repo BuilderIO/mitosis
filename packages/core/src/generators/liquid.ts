@@ -12,7 +12,7 @@ import {
 } from '../modules/plugins';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
-import { BaseTranspilerOptions, Transpiler } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 
 export interface ToLiquidOptions extends BaseTranspilerOptions {
   reactive?: boolean;
@@ -141,8 +141,8 @@ const blockToLiquid = (json: MitosisNode, options: ToLiquidOptions = {}): string
 };
 
 // TODO: add JS support similar to componentToHtml()
-export const componentToLiquid =
-  (options: ToLiquidOptions = {}): Transpiler =>
+export const componentToLiquid: TranspilerGenerator<ToLiquidOptions> =
+  (options = {}) =>
   ({ component }) => {
     let json = fastClone(component);
     if (options.plugins) {
