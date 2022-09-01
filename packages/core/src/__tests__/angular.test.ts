@@ -2,11 +2,12 @@ import { componentToAngular } from '../generators/angular';
 import { runTestsForTarget } from './shared';
 
 describe('Angular', () => {
-  runTestsForTarget('angular', componentToAngular());
-  runTestsForTarget(
-    'angular',
-    componentToAngular({
+  runTestsForTarget({ options: {}, target: 'angular', generator: componentToAngular });
+  runTestsForTarget({
+    options: {
       standalone: true,
-    }),
-  );
+    },
+    target: 'angular',
+    generator: componentToAngular,
+  });
 });

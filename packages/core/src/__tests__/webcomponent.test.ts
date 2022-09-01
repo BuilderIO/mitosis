@@ -5,13 +5,13 @@ import { runTestsForTarget } from './shared';
 const shadowDom = require('./data/blocks/shadow-dom.raw');
 
 describe('webcomponent', () => {
-  const generator = componentToCustomElement();
+  const generator = componentToCustomElement;
 
-  runTestsForTarget('webcomponent', generator);
+  runTestsForTarget({ options: {}, target: 'webcomponent', generator });
 
   test('Shadow DOM', () => {
     const component = parseJsx(shadowDom);
-    const html = generator({ component });
+    const html = generator()({ component });
     expect(html).toMatchSnapshot();
   });
 });
