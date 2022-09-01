@@ -38,7 +38,7 @@ export const getPropsTypeRef = (
   return undefined;
 };
 
-export const isTypeImport = (node: babel.Node) =>
+const isTypeImport = (node: babel.Node): node is babel.types.ImportDeclaration =>
   types.isImportDeclaration(node) &&
   node.importKind === 'type' &&
   // Babel adds an implicit JSX type import that we don't want
@@ -56,3 +56,16 @@ export const collectTypes = (node: babel.Node, context: Context) => {
   types.push(typeStr);
   context.builder.component.types = types.filter(Boolean);
 };
+
+export function handleTypeImports(path: babel.NodePath<babel.types.Program>, context: Context) {
+  for (const statement of path.node.body) {
+    if (isTypeImport(statement)) {
+      const importDeclaration = statement;
+      // Remove .lite from path if exists, as that will be stripped
+      if (importDeclaration.source.value.endsWith('.lite')) {
+        importDeclaration.source.value = importDeclaration.source.value.replace(/\.lite$/, '');
+      }
+      collectTypes(statement, context);
+    }
+  }
+}

@@ -6,7 +6,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strings';
 import { JSONOrNode } from '../../types/json';
-import { MitosisComponent, MitosisImport } from '../../types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { tryParseJson } from '../../helpers/json';
 import { HOOKS } from '../../constants/hooks';
@@ -16,10 +16,16 @@ import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
 import { isImportOrDefaultExport, parseCodeJson } from './helpers';
-import { collectTypes, getPropsTypeRef, isTypeImport, isTypeOrInterface } from './component-types';
+import {
+  collectTypes,
+  getPropsTypeRef,
+  handleTypeImports,
+  isTypeOrInterface,
+} from './component-types';
 import { undoPropsDestructure } from './props';
 import { generateExports } from './exports';
 import { pipe } from 'fp-ts/lib/function';
+import { handleImportDeclaration } from './imports';
 
 const jsxPlugin = require('@babel/plugin-syntax-jsx');
 const tsPreset = require('@babel/preset-typescript');
@@ -545,19 +551,7 @@ export function parseJsx(
               (statement) => isImportOrDefaultExport(statement) || isTypeOrInterface(statement),
             );
 
-            for (const statement of path.node.body) {
-              if (isTypeImport(statement)) {
-                const importDeclaration = statement as babel.types.ImportDeclaration;
-                // Remove .lite from path if exists, as that will be stripped
-                if (importDeclaration.source.value.endsWith('.lite')) {
-                  importDeclaration.source.value = importDeclaration.source.value.replace(
-                    /\.lite$/,
-                    '',
-                  );
-                }
-                collectTypes(statement, context);
-              }
-            }
+            handleTypeImports(path, context);
 
             context.builder.component.exports = generateExports(path);
 
@@ -591,34 +585,7 @@ export function parseJsx(
             }
           },
           ImportDeclaration(path, context) {
-            // @builder.io/mitosis or React imports compile away
-            const customPackages = options?.compileAwayPackages || [];
-            if (
-              ['react', '@builder.io/mitosis', '@emotion/react', ...customPackages].includes(
-                path.node.source.value,
-              )
-            ) {
-              path.remove();
-              return;
-            }
-            const importObject: MitosisImport = {
-              imports: {},
-              path: path.node.source.value,
-            };
-            for (const specifier of path.node.specifiers) {
-              if (types.isImportSpecifier(specifier)) {
-                importObject.imports[specifier.local.name] = (
-                  specifier.imported as babel.types.Identifier
-                ).name;
-              } else if (types.isImportDefaultSpecifier(specifier)) {
-                importObject.imports[specifier.local.name] = 'default';
-              } else if (types.isImportNamespaceSpecifier(specifier)) {
-                importObject.imports[specifier.local.name] = '*';
-              }
-            }
-            context.builder.component.imports.push(importObject);
-
-            path.remove();
+            handleImportDeclaration({ options, path, context });
           },
           ExportDefaultDeclaration(path) {
             path.replaceWith(path.node.declaration);
