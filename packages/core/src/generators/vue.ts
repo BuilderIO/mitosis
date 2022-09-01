@@ -667,7 +667,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
         asyncComponentImports: options.asyncComponentImports,
       })}
 
-      ${component.types?.join('\n') || ''}
+      ${(options.typescript && component.types?.join('\n')) || ''}
 
       export default {
         ${
