@@ -499,6 +499,56 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
   });
 };
 
+const generateExports = (path: babel.NodePath<babel.types.Program>): MitosisExport => {
+  const exportsOrLocalVariables = path.node.body.filter(
+    (statement) =>
+      !isImportOrDefaultExport(statement) &&
+      !isTypeOrInterface(statement) &&
+      !types.isExpressionStatement(statement),
+  );
+
+  return exportsOrLocalVariables.reduce<MitosisExport>((pre, node) => {
+    let name, isFunction;
+    if (babel.types.isExportNamedDeclaration(node)) {
+      if (
+        babel.types.isVariableDeclaration(node.declaration) &&
+        babel.types.isIdentifier(node.declaration.declarations[0].id)
+      ) {
+        name = node.declaration.declarations[0].id.name;
+        isFunction = babel.types.isFunction(node.declaration.declarations[0].init);
+      }
+
+      if (babel.types.isFunctionDeclaration(node.declaration)) {
+        name = node.declaration.id?.name;
+        isFunction = true;
+      }
+    } else {
+      if (
+        babel.types.isVariableDeclaration(node) &&
+        babel.types.isIdentifier(node.declarations[0].id)
+      ) {
+        name = node.declarations[0].id.name;
+        isFunction = babel.types.isFunction(node.declarations[0].init);
+      }
+
+      if (babel.types.isFunctionDeclaration(node)) {
+        name = node.id?.name;
+        isFunction = true;
+      }
+    }
+
+    if (name) {
+      pre[name] = {
+        code: generate(node).code,
+        isFunction,
+      };
+    } else {
+      console.warn('Could not parse export or variable: ignoring node', node);
+    }
+    return pre;
+  }, {});
+};
+
 /**
  * This function takes the raw string from a Mitosis component, and converts it into a JSON that can be processed by
  * each generator function.
@@ -560,53 +610,7 @@ export function parseJsx(
               }
             }
 
-            const exportsOrLocalVariables = path.node.body.filter(
-              (statement) =>
-                !isImportOrDefaultExport(statement) &&
-                !isTypeOrInterface(statement) &&
-                !types.isExpressionStatement(statement),
-            );
-
-            context.builder.component.exports = exportsOrLocalVariables.reduce((pre, node) => {
-              let name, isFunction;
-              if (babel.types.isExportNamedDeclaration(node)) {
-                if (
-                  babel.types.isVariableDeclaration(node.declaration) &&
-                  babel.types.isIdentifier(node.declaration.declarations[0].id)
-                ) {
-                  name = node.declaration.declarations[0].id.name;
-                  isFunction = babel.types.isFunction(node.declaration.declarations[0].init);
-                }
-
-                if (babel.types.isFunctionDeclaration(node.declaration)) {
-                  name = node.declaration.id?.name;
-                  isFunction = true;
-                }
-              } else {
-                if (
-                  babel.types.isVariableDeclaration(node) &&
-                  babel.types.isIdentifier(node.declarations[0].id)
-                ) {
-                  name = node.declarations[0].id.name;
-                  isFunction = babel.types.isFunction(node.declarations[0].init);
-                }
-
-                if (babel.types.isFunctionDeclaration(node)) {
-                  name = node.id?.name;
-                  isFunction = true;
-                }
-              }
-
-              if (name) {
-                pre[name] = {
-                  code: generate(node).code,
-                  isFunction,
-                };
-              } else {
-                console.warn('Could not parse export or variable: ignoring node', node);
-              }
-              return pre;
-            }, {} as MitosisExport);
+            context.builder.component.exports = generateExports(path);
 
             let cutStatements = path.node.body.filter(
               (statement) => !isImportOrDefaultExport(statement),
