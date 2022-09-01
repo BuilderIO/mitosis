@@ -23,7 +23,7 @@ exports[`Vue AdvancedRef 1`] = `
     Component!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   showInput: boolean;
 }
@@ -79,7 +79,7 @@ exports[`Vue Basic 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -118,7 +118,7 @@ exports[`Vue Basic 2`] = `
     />
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-for-show-component\\",
 
@@ -136,7 +136,7 @@ exports[`Vue Basic Context 1`] = `
     <input @input=\\"onChange\\" />
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 export default {
@@ -174,7 +174,7 @@ exports[`Vue Basic OnMount Update 1`] = `
 "<template>
   <div>Hello {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   hi: string;
   bye: string;
@@ -199,7 +199,7 @@ exports[`Vue Basic Outputs 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-outputs-component\\",
 
@@ -220,7 +220,7 @@ exports[`Vue Basic Outputs Meta 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-outputs-component\\",
 
@@ -249,7 +249,7 @@ exports[`Vue BasicChildComponent 1`] = `
     </div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -279,7 +279,7 @@ exports[`Vue BasicFor 1`] = `
     ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-for-component\\",
 
@@ -316,7 +316,7 @@ exports[`Vue BasicRef 1`] = `
     Component!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   showInput: boolean;
 }
@@ -353,7 +353,7 @@ exports[`Vue BasicRefAssignment 1`] = `
     <button @click=\\"handlerClick($event)\\">Click</button>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   showInput: boolean;
 }
@@ -380,11 +380,11 @@ exports[`Vue BasicRefPrevious 1`] = `
     <button @click=\\"count += 1\\">Increment</button>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
+  let ref = useRef < T > null; // Store current value in ref
 
   onUpdate(() => {
     ref = value;
@@ -436,7 +436,7 @@ exports[`Vue Button 1`] = `
     {{ text }}
   </button>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface ButtonProps {
   attributes?: any;
   text?: string;
@@ -465,11 +465,11 @@ exports[`Vue Columns 1`] = `
     </div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
+  content: any, // TODO: Implement this when support for dynamic CSS lands
 
-  width?: number;
+  width?: number,
 };
 export interface ColumnProps {
   columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
@@ -543,10 +543,10 @@ exports[`Vue ContentSlotHtml 1`] = `
     </div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  [key: string]: string | JSX.Element,
+  slotTesting: JSX.Element,
 };
 
 export default {
@@ -569,9 +569,9 @@ exports[`Vue ContentSlotJSX 1`] = `
     <div><slot /></div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Props = {
-  [key: string]: string | JSX.Element;
+  [key: string]: string | JSX.Element,
 };
 
 export default {
@@ -595,7 +595,7 @@ exports[`Vue CustomCode 1`] = `
     v-html=\\"code\\"
   ></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
@@ -683,7 +683,7 @@ exports[`Vue Embed 1`] = `
     v-html=\\"code\\"
   ></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface CustomCodeProps {
   code: string;
   replaceNodes?: boolean;
@@ -805,7 +805,7 @@ exports[`Vue Form 1`] = `
     ></builder-blocks>
   </form>
 </template>
-<script lang=\\"ts\\">
+<script>
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -824,7 +824,7 @@ export interface FormProps {
   sendWithJs?: boolean;
   contentType?: string;
   customHeaders?: {
-    [key: string]: string;
+    [key: string]: string,
   };
   successUrl?: string;
   previewState?: FormState;
@@ -1126,7 +1126,7 @@ exports[`Vue Image 1`] = `
 
   <slot />
 </template>
-<script lang=\\"ts\\">
+<script>
 // TODO: AMP Support?
 export interface ImageProps {
   _class?: string;
@@ -1229,7 +1229,7 @@ exports[`Vue Image State 1`] = `
     <img class=\\"custom-class\\" :src=\\"item\\" :key=\\"itemIndex\\" />
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"img-state-component\\",
 
@@ -1252,7 +1252,7 @@ exports[`Vue Img 1`] = `
     :src=\\"imgSrc\\"
   />
 </template>
-<script lang=\\"ts\\">
+<script>
 import { Builder } from \\"@builder.io/sdk\\";
 
 export interface ImgProps {
@@ -1300,7 +1300,7 @@ exports[`Vue Input 1`] = `
     :required=\\"required\\"
   />
 </template>
-<script lang=\\"ts\\">
+<script>
 import { Builder } from \\"@builder.io/sdk\\";
 
 export interface FormInputProps {
@@ -1337,7 +1337,7 @@ exports[`Vue RawText 1`] = `
     v-html=\\"text || ''\\"
   ></span>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface RawTextProps {
   attributes?: any;
   text?: string; // builderBlock?: any;
@@ -1370,7 +1370,7 @@ exports[`Vue Remove Internal mitosis package 1`] = `
 "<template>
   <div>Hello {{ name }}! I can run in React, Qwik, Vue, Solid, or Liquid!</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-component\\",
 
@@ -1395,7 +1395,7 @@ exports[`Vue Section 1`] = `
     <slot />
   </section>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface SectionProps {
   maxWidth?: number;
   attributes?: any;
@@ -1425,7 +1425,7 @@ exports[`Vue Section 2`] = `
     <slot />
   </section>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface SectionProps {
   maxWidth?: number;
   attributes?: any;
@@ -1462,13 +1462,13 @@ exports[`Vue Select 1`] = `
     </option>
   </select>
 </template>
-<script lang=\\"ts\\">
+<script>
 import { Builder } from \\"@builder.io/sdk\\";
 
 export interface FormSelectProps {
   options?: {
-    name?: string;
-    value: string;
+    name?: string,
+    value: string,
   }[];
   attributes?: any;
   name?: string;
@@ -1493,11 +1493,11 @@ exports[`Vue SlotHtml 1`] = `
     </content-slot-code>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 type Props = {
-  [key: string]: string;
+  [key: string]: string,
 };
 
 export default {
@@ -1514,11 +1514,11 @@ exports[`Vue SlotJsx 1`] = `
     <content-slot-code :slotTesting=\\"<div>Hello</div>\\"></content-slot-code>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 type Props = {
-  [key: string]: string;
+  [key: string]: string,
 };
 
 export default {
@@ -1550,13 +1550,13 @@ exports[`Vue Stamped.io 1`] = `
     </div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
 type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
+  productId: string,
+  apiKey: string,
 };
 
 export default {
@@ -1632,7 +1632,7 @@ exports[`Vue Submit 1`] = `
     {{ text }}
   </button>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface ButtonProps {
   attributes?: any;
   text?: string;
@@ -1657,7 +1657,7 @@ exports[`Vue Text 1`] = `
     v-html=\\"text || content || name || '<p class=\\\\'text-lg\\\\'>my name</p>'\\"
   ></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import { Builder } from \\"@builder.io/sdk\\";
 
 export interface TextProps {
@@ -1689,7 +1689,7 @@ exports[`Vue Textarea 1`] = `
     :defaultValue=\\"defaultValue\\"
   ></textarea>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface TextareaProps {
   attributes?: any;
   name?: string;
@@ -1730,7 +1730,7 @@ exports[`Vue Video 1`] = `
     :loop=\\"loop\\"
   ></video>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface VideoProps {
   attributes?: any;
   video?: string;
@@ -1787,7 +1787,7 @@ exports[`Vue basicForwardRef 1`] = `
     />
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
@@ -1820,7 +1820,7 @@ exports[`Vue basicForwardRefMetadata 1`] = `
     />
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface Props {
   showInput: boolean;
   inputRef: HTMLInputElement;
@@ -1846,7 +1846,7 @@ exports[`Vue basicOnUpdateReturn 1`] = `
 "<template>
   <div>Hello! {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-on-update-return-component\\",
 
@@ -1889,7 +1889,7 @@ exports[`Vue class + ClassName + css 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-component\\",
 };
@@ -1906,7 +1906,7 @@ exports[`Vue class + css 1`] = `
 "<template>
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-component\\",
 };
@@ -1923,7 +1923,7 @@ exports[`Vue className + css 1`] = `
 "<template>
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-component\\",
 };
@@ -1944,10 +1944,10 @@ exports[`Vue className 1`] = `
     <div :class=\\"_classStringToObject(bindings)\\">With binding</div>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
+  [key: string]: string | JSX.Element,
+  slotTesting: JSX.Element,
 };
 
 export default {
@@ -1979,7 +1979,7 @@ exports[`Vue classState 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-basic-component\\",
 
@@ -2023,7 +2023,7 @@ exports[`Vue defaultProps 1`] = `
     {{ text }}
   </button>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface ButtonProps {
   attributes?: any;
   text?: string;
@@ -2049,13 +2049,13 @@ exports[`Vue defaultValsWithTypes 1`] = `
 "<template>
   <div>Hello {{ name || DEFAULT_VALUES.name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
 
 type Props = {
-  name: string;
+  name: string,
 };
 
 export default {
@@ -2073,7 +2073,7 @@ exports[`Vue multipleOnUpdate 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"multiple-on-update\\",
 
@@ -2090,7 +2090,7 @@ exports[`Vue multipleOnUpdateWithDeps 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"multiple-on-update-with-deps\\",
 
@@ -2140,7 +2140,7 @@ exports[`Vue nestedShow 1`] = `
 
   <div v-else>if condition A and condition B</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 interface Props {
   conditionA: boolean;
   conditionB: boolean;
@@ -2159,7 +2159,7 @@ exports[`Vue nestedStyles 1`] = `
 "<template>
   <div class=\\"div\\">Hello world</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"nested-styles\\",
 };
@@ -2188,7 +2188,7 @@ exports[`Vue onInit & onMount 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"on-init\\",
 
@@ -2204,13 +2204,13 @@ exports[`Vue onInit 1`] = `
 "<template>
   <div>Default name defined by parent {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 
 type Props = {
-  name: string;
+  name: string,
 };
 
 export default {
@@ -2228,7 +2228,7 @@ exports[`Vue onMount 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"comp\\",
 
@@ -2248,7 +2248,7 @@ exports[`Vue onUpdate 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"on-update\\",
 
@@ -2264,7 +2264,7 @@ exports[`Vue onUpdateWithDeps 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"on-update-with-deps\\",
 
@@ -2293,7 +2293,7 @@ exports[`Vue preserveExportOrLocalStatement 1`] = `
 "<template>
   <div></div>
 </template>
-<script lang=\\"ts\\">
+<script>
 const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -2301,7 +2301,7 @@ export const bar = () => {};
 export function run<T>(value: T) {}
 
 type Types = {
-  s: any[];
+  s: any[],
 };
 interface IPost {
   len: number;
@@ -2321,25 +2321,44 @@ exports[`Vue preserveTyping 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
-export type A = \\"test\\";
+<script>
+
+
+
+
+
+
+
+    export type A = 'test';
 export interface C {
-  n: \\"test\\";
+n: 'test';
 }
-type B = \\"test2\\";
+type B = 'test2';
 interface D {
-  n: \\"test\\";
+n: 'test';
 }
 export interface MyBasicComponentProps {
-  name: string;
-  age?: number;
+name: string
+age?: number
 }
 
-export default {
-  name: \\"my-basic-component\\",
+    export default {
+      name: 'my-basic-component',
 
-  props: [\\"name\\"],
-};
+      props: [\\"name\\"],
+
+
+
+
+
+
+
+
+
+
+
+
+    }
 </script>
 "
 `;
@@ -2351,10 +2370,10 @@ exports[`Vue propsDestructure 1`] = `
     Hello! I can run in React, Vue, Solid, or Liquid!
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Props = {
-  children: any;
-  type: string;
+  children: any,
+  type: string,
 };
 
 export default {
@@ -2372,7 +2391,7 @@ exports[`Vue propsInterface 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 interface Person {
   name: string;
   age?: number;
@@ -2391,10 +2410,10 @@ exports[`Vue propsType 1`] = `
 "<template>
   <div>Hello! I can run in React, Vue, Solid, or Liquid! {{ name }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 type Person = {
-  name: string;
-  age?: number;
+  name: string,
+  age?: number,
 };
 
 export default {
@@ -2411,7 +2430,7 @@ exports[`Vue rootShow 1`] = `
   <div v-if=\\"foo === 'bar'\\">Bar</div>
   <div v-else>Foo</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export interface RenderStylesProps {
   foo: string;
 }
@@ -2433,7 +2452,7 @@ exports[`Vue self-referencing component 1`] = `
     <my-component name=\\"Bruce Wayne\\" v-if=\\"name === 'Batman'\\"></my-component>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-component\\",
 
@@ -2454,7 +2473,7 @@ exports[`Vue self-referencing component with children 1`] = `
     </my-component>
   </div>
 </template>
-<script lang=\\"ts\\">
+<script>
 export default {
   name: \\"my-component\\",
 
@@ -2471,7 +2490,7 @@ exports[`Vue showWithFor 1`] = `
   </div>
   <div v-else>else-condition-A</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 interface Props {
   conditionA: boolean;
   items: string[];
@@ -2490,7 +2509,7 @@ exports[`Vue subComponent 1`] = `
 "<template>
   <foo></foo>
 </template>
-<script lang=\\"ts\\">
+<script>
 import Foo from \\"./foo-sub-component.vue\\";
 
 export default {
@@ -2505,12 +2524,12 @@ exports[`Vue typeDependency 1`] = `
 "<template>
   <div>{{ foo }}</div>
 </template>
-<script lang=\\"ts\\">
+<script>
 import type { Foo } from \\"./foo-type\\";
 import type { Foo as Foo2 } from \\"./type-export\\";
 export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
+  foo: Foo,
+  foo2: Foo2,
 };
 
 export default {
