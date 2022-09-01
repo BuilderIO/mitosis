@@ -1,5 +1,7 @@
 import dedent from 'dedent';
 import json5 from 'json5';
+import { types } from '@babel/core';
+import { Identifier, MemberExpression } from '@babel/types';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
@@ -39,6 +41,7 @@ import { getCustomImports } from '../helpers/get-custom-imports';
 import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
+import { babelTransformExpression } from '../helpers/babel-transform';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -101,11 +104,16 @@ const addBindingsToJson =
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-function processBinding(code: string, _options: ToVueOptions, json: MitosisComponent): string {
+function processBinding(
+  code: string,
+  _options: ToVueOptions,
+  json: MitosisComponent,
+  includeProps: boolean = true,
+): string {
   return replaceIdentifiers({
     code: stripStateAndPropsRefs(code, {
       includeState: true,
-      includeProps: true,
+      includeProps,
       replaceWith: 'this.',
     }),
     from: getContextNames(json),
@@ -740,17 +748,28 @@ const getCompositionPropDefinition = (component: MitosisComponent, props: Set<st
   return str;
 };
 
-function appendValueToRefUses(input: string, refKeys: string[], assignmentOnly = false) {
-  let output = input;
-  refKeys.forEach((ref) => {
-    let regexpStr = `((this\\.)?${ref})\\b`;
-    if (assignmentOnly) {
-      regexpStr += ' =';
-    }
-    const regexp = new RegExp(regexpStr, 'g');
-    output = output.replaceAll(regexp, assignmentOnly ? `${ref}.value =` : `${ref}.value`);
+function appendValueToRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
+  const refKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
+  
+  let output = processBinding(input, options, component, false);
+  
+  return babelTransformExpression(output, {
+    Identifier(path: babel.NodePath<babel.types.Identifier>) {
+      console.log({ path });
+      if (
+        !(types.isFunctionDeclaration(path.parent) && path.parent.id === path.node) &&
+        !types.isCallExpression(path.parent) &&
+        (!types.isMemberExpression(path.parent) || types.isThisExpression(path.parent.object)) &&
+        path.parentPath.listKey !== 'arguments' &&
+        path.parentPath.listKey !== 'params' &&
+        refKeys.includes(path.node.name)
+      ) {
+        path.replaceWith(
+          types.identifier(`${path.node.name}.value`),
+        );
+      }
+    },
   });
-  return output;
 }
 
 function generateCompositionApiScript(
@@ -772,13 +791,12 @@ function generateCompositionApiScript(
     keyPrefix: 'const',
   });
 
-  let refKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
 
   let methods = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding(code, options, component),
+    valueMapper: (code) => processBinding(code, options, component, false),
     format: 'variables',
   });
 
@@ -814,51 +832,45 @@ function generateCompositionApiScript(
     ${
       !component.hooks.onMount?.code
         ? ''
-        : `onMounted(() => { ${processBinding(component.hooks.onMount.code, options, component)}})`
+        : `onMounted(() => { ${appendValueToRefs(
+            component.hooks.onMount.code,
+            component,
+            options
+          )}})`
     }
     ${
       !component.hooks.onUnMount?.code
         ? ''
-        : `onMounted(() => { ${processBinding(
+        : `onMounted(() => { ${appendValueToRefs(
             component.hooks.onUnMount.code,
-            options,
             component,
+            options,
           )}})`
     }
     ${
       !onUpdateWithoutDeps?.length
         ? ''
         : onUpdateWithoutDeps.map((hook) => {
-            return `onUpdated(() => ${appendValueToRefUses(hook.code, refKeys, true)})`;
+            return `onUpdated(() => ${appendValueToRefs(
+              hook.code,
+              component,
+              options
+            )})`;
           })
     }
     ${
       !onUpdateWithDeps?.length
         ? ''
         : onUpdateWithDeps.map((hook) => {
-            return appendValueToRefUses(
-              `watch(${hook.deps?.replaceAll('state.', '')}, (${
-                hook.deps ? hook.deps.replaceAll('state.', '') : ''
-              }) => { 
-              ${hook.code.replaceAll('state.', '')}
-            })\n`,
-              refKeys,
-              true,
+            return appendValueToRefs(
+                `watch(${hook.deps}, (${hook.deps}) => { ${hook.code}})\n`,
+                component,
+                options,
             );
           })
     }
-    ${methods?.length ? appendValueToRefUses(methods, refKeys) : ''}
+    ${methods?.length ? appendValueToRefs(methods, component, options) : ''}
   `;
-
-  // replace this.{ref} with {ref}.value, as vue refs are reactive and mutable objects with a .value property pointing to the value
-  // you also need to assign new values to .value
-  refKeys.forEach((ref) => {
-    str = str.replaceAll(`this.${ref} =`, `${ref}.value =`);
-  });
-
-  props.forEach((prop) => {
-    str = str.replaceAll(`this.${prop}`, `props.${prop}`);
-  });
 
   str = str.replace(/this\./g, ''); // strip this elsewhere (e.g. functions)
   return str;

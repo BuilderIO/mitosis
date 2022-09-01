@@ -41,11 +41,11 @@ const inputNoArgRef = ref<HTMLLabelElement>();
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
   console.log(\\"Received an update\\");
 });
-
 function onBlur() {
   // Maintain focus
   inputRef.focus();
 }
+
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -71,33 +71,19 @@ exports[`Vue Basic 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { ref } from \\"vue\\"
-    export interface MyBasicComponentProps {
-id: string
+import { ref } from \\"vue\\";
+export interface MyBasicComponentProps {
+  id: string;
 }
 
-
-
-  export const DEFAULT_VALUES = {
-name: 'Steve'
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
 };
 
+const name = ref(\\"Steve\\");
 
-
-    const name= ref('Steve')
-
-
-
-
-
-
-
-
-
-
-
- function underscore_fn_name.value() {
-return 'bar';
+function underscore_fn_name() {
+  return \\"bar\\";
 }
 </script>
 
@@ -162,7 +148,7 @@ onMounted(() => {
 });
 
 function onChange() {
-  const change = myService.value.method(\\"change\\");
+  const change = myService.value.value.method(\\"change\\");
   console.log(change);
 }
 </script>
@@ -326,6 +312,7 @@ function onBlur() {
   // Maintain focus
   inputRef.focus();
 }
+
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -394,7 +381,7 @@ const count = ref(0);
 const prevCount = ref<undefined>();
 
 watch([count], ([count]) => {
-  prevCount = count;
+  prevCount = count.value;
 });
 </script>
 "
@@ -462,13 +449,16 @@ const props = defineProps<ColumnProps>();
 function getColumns() {
   return props.columns || [];
 }
+
 function getGutterSize() {
   return typeof props.space === \\"number\\" ? props.space || 0 : 20;
 }
+
 function getWidth(index) {
   const columns = getColumns();
   return (columns[index] && columns[index].width) || 100 / columns.length;
 }
+
 function getColumnCssWidth(index) {
   const columns = getColumns();
   const gutterSize = getGutterSize();
@@ -619,15 +609,20 @@ function findAndRunScripts() {
     }
   }
 }
+
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -704,15 +699,20 @@ function findAndRunScripts() {
     }
   }
 }
+
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -1112,7 +1112,7 @@ onMounted(() => {
   }
 });
 onMounted(() => {
-  if (scrollListener) {
+  if (scrollListener.value) {
     window.removeEventListener(\\"scroll\\", scrollListener);
   }
 });
@@ -1120,24 +1120,31 @@ onMounted(() => {
 function setLoaded() {
   imageLoaded.value = true;
 }
+
 function useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && isBrowser();
 }
+
 function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
 }
+
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -1260,13 +1267,17 @@ const props = defineProps<RawTextProps>();
 
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -1463,21 +1474,21 @@ exports[`Vue Stamped.io 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-     import { onMounted, ref } from \\"vue\\"
-     type SmileReviewsProps = {
- productId: string;
- apiKey: string;
+    import { onMounted, ref } from \\"vue\\"
+    type SmileReviewsProps = {
+productId: string;
+apiKey: string;
 };
 
 
-   import { kebabCase } from 'lodash';
+  import { kebabCase } from 'lodash';
 import { snakeCase } from 'lodash';
 
 
 
 
-     const props = defineProps<SmileReviewsProps>()
-  const reviews= ref([])
+    const props = defineProps<SmileReviewsProps>()
+const reviews= ref([])
 const name= ref('test')
 const showReviewPrompt= ref(false)
 
@@ -1487,27 +1498,35 @@ const showReviewPrompt= ref(false)
 
 
 
-  onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
+onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
 reviews.value = data.data;
 })})
 
 
 
-   function kebabCaseValue() {
+function kebabCaseValue() {
 return kebabCase('testThat');
 }
+
 function snakeCaseValue() {
 return snakeCase('testThis');
 }
+
 function _classStringToObject(str) {
-  const obj = {};
-  if (typeof str !== 'string') { return obj }
-  const classNames = str.trim().split(/\\\\s+/);
-  for (const name.value of classNames) {
-    obj[name.value] = true;
-  }
-  return obj;
-  }
+const obj = {};
+
+if (typeof str !== 'string') {
+return obj;
+}
+
+const classNames = str.trim().split(/\\\\s+/);
+
+for (const name.value of classNames) {
+obj[name] = true;
+}
+
+return obj;
+}
 </script>
 
 <style scoped>
@@ -1824,13 +1843,17 @@ const bindings = ref(\\"a binding\\");
 
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -1854,13 +1877,17 @@ const styleState = ref({
 
 function _classStringToObject(str) {
   const obj = {};
+
   if (typeof str !== \\"string\\") {
     return obj;
   }
+
   const classNames = str.trim().split(/\\\\s+/);
+
   for (const name of classNames) {
     obj[name] = true;
   }
+
   return obj;
 }
 </script>
@@ -1934,20 +1961,10 @@ exports[`Vue multipleOnUpdate 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-  import { onUpdated } from \\"vue\\"
+import { onUpdated } from \\"vue\\";
 
-
-
-
-
-
-
-
-  onUpdated(() =>
-console.log('Runs on every update/rerender');
-),onUpdated(() =>
-console.log('Runs on every update/rerender as well');
-)
+onUpdated(() => console.log(\\"Runs on every update/rerender\\")),
+  onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
 </script>
 "
 `;
@@ -2098,18 +2115,9 @@ exports[`Vue onUpdate 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-  import { onUpdated } from \\"vue\\"
+import { onUpdated } from \\"vue\\";
 
-
-
-
-
-
-
-
-  onUpdated(() =>
-console.log('Runs on every update/rerender');
-)
+onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
 </script>
 "
 `;
