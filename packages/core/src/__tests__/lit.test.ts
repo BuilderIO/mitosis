@@ -2,5 +2,5 @@ import { componentToLit } from '../generators/lit';
 import { runTestsForTarget } from './shared';
 
 describe('Lit', () => {
-  runTestsForTarget('lit', componentToLit());
+  runTestsForTarget({ options: {}, target: 'lit', generator: componentToLit });
 });

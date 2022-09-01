@@ -32,5 +32,5 @@ describe('Marko format', () => {
 });
 
 describe('Marko', () => {
-  runTestsForTarget('marko', componentToMarko());
+  runTestsForTarget({ options: {}, target: 'marko', generator: componentToMarko });
 });
