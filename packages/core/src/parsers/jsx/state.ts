@@ -17,7 +17,7 @@ import { mapJsonObjectToStateValue } from '../helpers/state';
 
 const { types } = babel;
 
-function mapReactIdentifiersInExpression(expression: string, stateProperties: string[]) {
+function mapStateIdentifiersInExpression(expression: string, stateProperties: string[]) {
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
   return babelTransformExpression(
@@ -51,14 +51,14 @@ function mapReactIdentifiersInExpression(expression: string, stateProperties: st
  *   text -> state.text
  *   setText(...) -> state.text = ...
  */
-export function mapReactIdentifiers(json: MitosisComponent) {
+export function mapStateIdentifiers(json: MitosisComponent) {
   const stateProperties = Object.keys(json.state);
 
   for (const key in json.state) {
     const stateVal = json.state[key];
     if (typeof stateVal?.code === 'string' && stateVal.type === 'function') {
       json.state[key] = {
-        code: mapReactIdentifiersInExpression(stateVal.code, stateProperties),
+        code: mapStateIdentifiersInExpression(stateVal.code, stateProperties),
         type: 'function',
       };
     }
@@ -71,7 +71,7 @@ export function mapReactIdentifiers(json: MitosisComponent) {
 
         if (value) {
           item.bindings[key] = {
-            code: mapReactIdentifiersInExpression(value.code as string, stateProperties),
+            code: mapStateIdentifiersInExpression(value.code as string, stateProperties),
           };
           if (value.arguments?.length) {
             item.bindings[key]!.arguments = value.arguments;

@@ -5,7 +5,7 @@ import { stripNewlinesInStrings } from '../../helpers/replace-new-lines-in-strin
 import { MitosisComponent } from '../../types/mitosis-component';
 import { tryParseJson } from '../../helpers/json';
 import { jsonToAst } from './ast';
-import { mapReactIdentifiers } from './state';
+import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
 import { collectMetadata } from './metadata';
 import { extractContextComponents } from './context';
@@ -154,7 +154,7 @@ export function parseJsx(
   );
   const parsed = tryParseJson(toParse);
 
-  mapReactIdentifiers(parsed);
+  mapStateIdentifiers(parsed);
   extractContextComponents(parsed);
 
   parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, useOptions));
