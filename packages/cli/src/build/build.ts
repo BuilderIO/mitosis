@@ -214,7 +214,7 @@ const checkShouldOutputTypeScript = ({
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  const isTypescript = options.options[target].typescript;
+  const isTypescript = options.options[target]?.typescript;
   return isTypescript;
 };
 
