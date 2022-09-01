@@ -46,6 +46,6 @@ module.exports = {
     react: { transpiler: { format: 'esm', languages: ['ts'] } },
     solid: { transpiler: { languages: ['ts'] } },
     vue2: vueConfig,
-    vue3: vueConfig,
+    vue3: {...vueConfig, api: 'composition'},
   },
 };

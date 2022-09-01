@@ -17,7 +17,6 @@ import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
 import { MitosisNode } from '../types/mitosis-node';
 import {
-  Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
@@ -34,6 +33,7 @@ import { hasContext } from './helpers/context';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
+import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -296,29 +296,6 @@ const useBindValue = (json: MitosisComponent, options: ToSvelteOptions) => {
 const stripThisRefs = (str: string) => {
   return str.replace(/this\.([a-zA-Z_\$0-9]+)/g, '$1');
 };
-
-const FUNCTION_HACK_PLUGIN: Plugin = () => ({
-  json: {
-    pre: (json) => {
-      for (const key in json.state) {
-        const value = json.state[key]?.code;
-        const type = json.state[key]?.type;
-        if (typeof value === 'string' && type === 'method') {
-          const newValue = `function ${value}`;
-          json.state[key] = {
-            code: newValue,
-            type: 'method',
-          };
-        } else if (typeof value === 'string' && type === 'function') {
-          json.state[key] = {
-            code: value,
-            type: 'method',
-          };
-        }
-      }
-    },
-  },
-});
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   ({ plugins = [], ...userProvidedOptions } = {}) =>

@@ -25,6 +25,7 @@ import {
   parseReactiveScript,
   reactiveScriptRe,
   componentToVue2,
+  componentToVue3,
 } from '@builder.io/mitosis';
 import {
   Button,
@@ -295,6 +296,8 @@ export default function Fiddle() {
         localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
       svelteStateType:
         localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
+      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
+      vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -394,7 +397,12 @@ export default function Fiddle() {
             ? JSON.stringify(json, null, 2)
             : state.outputTab === 'builder'
             ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : componentToVue2({ plugins })({ component: json, path: '' });
+            : state.options.vueVersion === '2'
+            ? componentToVue2({ plugins, api: state.options.vueApi })({ component: json, path: '' })
+            : componentToVue3({ plugins, api: state.options.vueApi })({
+                component: json,
+                path: '',
+              });
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
@@ -506,6 +514,10 @@ export default function Fiddle() {
   useReaction(
     () => state.options.svelteStateType,
     (type) => localStorageSet('options.svelteStateType', type),
+  );
+  useReaction(
+    () => state.options.vueApi,
+    (type) => localStorageSet('options.vueApi', type),
   );
   useReaction(
     () => state.code,
@@ -999,6 +1011,90 @@ export default function Fiddle() {
               >
                 SwiftUI support is <b>experimental</b>
               </Alert>
+            </Show>
+            <Show when={state.outputTab === 'vue'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  Version:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Vue Version"
+                  name="vueApi"
+                  value={state.options.vueVersion}
+                  onChange={(e) => {
+                    state.options.vueVersion = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Vue 2"
+                  />
+                  <FormControlLabel
+                    value="3"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Vue 3"
+                  />
+                </RadioGroup>
+              </div>
+              <Divider css={{ opacity: 0.6 }} />
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  API:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Vue API"
+                  name="vueApi"
+                  value={state.options.vueApi}
+                  onChange={(e) => {
+                    state.options.vueApi = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="options"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Options API"
+                  />
+                  <FormControlLabel
+                    value="composition"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Composition API"
+                  />
+                </RadioGroup>
+              </div>
+              <Divider css={{ opacity: 0.6 }} />
             </Show>
             <Show when={state.outputTab === 'react'}>
               <div
