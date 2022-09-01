@@ -437,7 +437,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
           let propDeclaration = `export let ${name}`;
 
-          if (json.propsTypeRef && json.propsTypeRef !== 'any') {
+          if (options.typescript && json.propsTypeRef && json.propsTypeRef !== 'any') {
             propDeclaration += `: ${json.propsTypeRef.split(' |')[0]}['${name}']`;
           }
 
