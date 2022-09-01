@@ -1624,7 +1624,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -1969,7 +1969,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -4272,6 +4272,72 @@ export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
   @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular Javascript Test import types 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+@Component({
+  selector: \\"render-content\\",
+  template: \`
+    <render-block></render-block>
+  \`,
+})
+export default class RenderContent {
+  @Input() renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+}
+"
+`;
+
+exports[`Angular Javascript Test import types 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, RenderBlock],
+
+  selector: \\"render-content\\",
+  template: \`
+    <render-block></render-block>
+  \`,
+})
+export default class RenderContent {
+  @Input() renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
 }
 "
 `;
@@ -6946,7 +7012,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -7291,7 +7357,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -9594,6 +9660,72 @@ export default class ComponentWithTypes {
   DEFAULT_VALUES = DEFAULT_VALUES;
 
   @Input() name: Props[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular Typescript Test import types 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+@Component({
+  selector: \\"render-content\\",
+  template: \`
+    <render-block></render-block>
+  \`,
+})
+export default class RenderContent {
+  @Input() renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+}
+"
+`;
+
+exports[`Angular Typescript Test import types 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+@Component({
+  standalone: true,
+  imports: [CommonModule, RenderBlock],
+
+  selector: \\"render-content\\",
+  template: \`
+    <render-block></render-block>
+  \`,
+})
+export default class RenderContent {
+  @Input() renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
 }
 "
 `;

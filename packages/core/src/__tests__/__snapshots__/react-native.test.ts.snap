@@ -725,7 +725,7 @@ export interface FormProps {
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -1821,6 +1821,35 @@ export default function ComponentWithTypes(props: Props) {
       <Text> Hello </Text>
       <Text>{props.name || DEFAULT_VALUES.name}</Text>
     </View>
+  );
+}
+"
+`;
+
+exports[`React Native Javascript Test import types 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
   );
 }
 "
@@ -3042,7 +3071,7 @@ export interface FormProps {
 }
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -4138,6 +4167,35 @@ export default function ComponentWithTypes(props: Props) {
       <Text> Hello </Text>
       <Text>{props.name || DEFAULT_VALUES.name}</Text>
     </View>
+  );
+}
+"
+`;
+
+exports[`React Native Typescript Test import types 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props: RenderContentProps) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    />
   );
 }
 "

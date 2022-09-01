@@ -764,7 +764,7 @@ exports[`Vue Javascript Test Form 1`] = `
 
 <script>
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -1857,6 +1857,35 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ DEFAULT_VALUES }),
+};
+</script>
+"
+`;
+
+exports[`Vue Javascript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script>
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { \\"render-block\\": RenderBlock },
+  props: [\\"renderContentProps\\"],
+
+  methods: {
+    getRenderContentProps(block, index) {
+      return {
+        block: block,
+        index: index,
+      };
+    },
+  },
 };
 </script>
 "
@@ -3142,7 +3171,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -4395,6 +4424,41 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ DEFAULT_VALUES }),
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script lang=\\"ts\\">
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { \\"render-block\\": RenderBlock },
+  props: [\\"renderContentProps\\"],
+
+  methods: {
+    getRenderContentProps(block, index) {
+      return {
+        block: block,
+        index: index,
+      };
+    },
+  },
 };
 </script>
 "

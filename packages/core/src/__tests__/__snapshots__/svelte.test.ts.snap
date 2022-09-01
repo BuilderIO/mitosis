@@ -578,7 +578,7 @@ exports[`Svelte Javascript Test Embed 1`] = `
 exports[`Svelte Javascript Test Form 1`] = `
 "<script>
   import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-  import { Builder, builder } from \\"@builder.io/sdk\\";
+  import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
   import { set } from \\"@fake\\";
   import { get } from \\"@fake\\";
@@ -1480,6 +1480,25 @@ exports[`Svelte Javascript Test defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
+"
+`;
+
+exports[`Svelte Javascript Test import types 1`] = `
+"<script>
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+  export let renderContentProps;
+
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+</script>
+
+<RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />
 "
 `;
 
@@ -2476,7 +2495,7 @@ exports[`Svelte Typescript Test Form 1`] = `
 
 <script lang=\\"ts\\">
   import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-  import { Builder, builder } from \\"@builder.io/sdk\\";
+  import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
   import { BuilderBlocks } from \\"@fake\\";
   import { set } from \\"@fake\\";
   import { get } from \\"@fake\\";
@@ -3564,6 +3583,33 @@ exports[`Svelte Typescript Test defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
+"
+`;
+
+exports[`Svelte Typescript Test import types 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type RenderContentProps = {
+    options?: GetContentOptions;
+    content: BuilderContent;
+    renderContentProps: RenderBlockProps;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+  import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+  export let renderContentProps: RenderContentProps[\\"renderContentProps\\"];
+
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+</script>
+
+<RenderBlock {...getRenderContentProps(renderContentProps.block, 0)} />
 "
 `;
 

@@ -781,7 +781,7 @@ exports[`Vue Javascript Test Form 1`] = `
 
 
   import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { Builder, builder } from '@builder.io/sdk';
+import { BuilderElement, Builder, builder } from '@builder.io/sdk';
 import { BuilderBlocks } from '@fake';
 import { set } from '@fake';
 import { get } from '@fake';
@@ -1812,6 +1812,29 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps([\\"name\\"]);
+</script>
+"
+`;
+
+exports[`Vue Javascript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script setup>
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+const props = defineProps([\\"renderContentProps\\"]);
+
+function getRenderContentProps(block, index) {
+  return {
+    block: block,
+    index: index,
+  };
+}
 </script>
 "
 `;
@@ -2964,7 +2987,7 @@ export interface FormProps {
 export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
 
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -4104,6 +4127,35 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps<Props>();
+</script>
+"
+`;
+
+exports[`Vue Typescript Test import types 1`] = `
+"<template>
+  <render-block
+    v-bind=\\"getRenderContentProps(renderContentProps.block, 0)\\"
+  ></render-block>
+</template>
+
+<script setup lang=\\"ts\\">
+type RenderContentProps = {
+  options?: GetContentOptions;
+  content: BuilderContent;
+  renderContentProps: RenderBlockProps;
+};
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+const props = defineProps<RenderContentProps>();
+
+function getRenderContentProps(block, index) {
+  return {
+    block: block,
+    index: index,
+  };
+}
 </script>
 "
 `;
