@@ -3,6 +3,7 @@ import generate from '@babel/generator';
 import { checkIsDefined } from '../../helpers/nullable';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
+import { pipe } from 'fp-ts/lib/function';
 
 const { types } = babel;
 
@@ -151,23 +152,29 @@ export const jsxElementToJson = (
 
   // <For ...> control flow component
   if (nodeName === 'For') {
-    const child = node.children.find((item) => types.isJSXExpressionContainer(item));
-    if (types.isJSXExpressionContainer(child)) {
+    const child = node.children.find((item): item is babel.types.JSXExpressionContainer =>
+      types.isJSXExpressionContainer(item),
+    );
+    if (checkIsDefined(child)) {
       const childExpression = child.expression;
 
       if (types.isArrowFunctionExpression(childExpression)) {
         const forArguments = getForArguments(childExpression?.params);
 
+        const forCode = pipe(node.openingElement.attributes[0], (attr) => {
+          if (types.isJSXAttribute(attr) && types.isJSXExpressionContainer(attr.value)) {
+            return generate(attr.value.expression).code;
+          } else {
+            // TO-DO: is an empty string valid here?
+            return '';
+          }
+        });
+
         return createMitosisNode({
           name: 'For',
           bindings: {
             each: {
-              code: generate(
-                (
-                  (node.openingElement.attributes[0] as babel.types.JSXAttribute)
-                    .value as babel.types.JSXExpressionContainer
-                ).expression,
-              ).code,
+              code: forCode,
             },
           },
           scope: {
@@ -191,7 +198,7 @@ export const jsxElementToJson = (
         const key = item.name.name as string;
         const value = item.value;
         if (types.isStringLiteral(value)) {
-          memo[key] = value;
+          memo[key] = value.value;
           return memo;
         }
         if (types.isJSXExpressionContainer(value) && types.isStringLiteral(value.expression)) {
@@ -228,7 +235,7 @@ export const jsxElementToJson = (
         // too so can do this accurately when order matters. Also tempting to not support spread,
         // as some frameworks do not support it (e.g. Angular) tho Angular may be the only one
         memo._spread = {
-          code: types.stringLiteral(generate(item.argument).code),
+          code: types.stringLiteral(generate(item.argument).code).value,
         };
       }
       return memo;
