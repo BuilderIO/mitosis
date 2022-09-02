@@ -1,10 +1,16 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
+import { checkIsDefined } from '../../helpers/nullable';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { JSONOrNode } from '../../types/json';
 import { MitosisNode } from '../../types/mitosis-node';
 
 const { types } = babel;
+
+const getForArguments = (params: any[]) =>
+  params
+    .filter((param): param is babel.types.Identifier => types.isIdentifier(param))
+    .map((param) => param.name)
+    .filter(checkIsDefined);
 
 /**
  * Parses a JSX element into a MitosisNode.
@@ -14,7 +20,8 @@ export const jsxElementToJson = (
     | babel.types.JSXElement
     | babel.types.JSXText
     | babel.types.JSXFragment
-    | babel.types.JSXExpressionContainer,
+    | babel.types.JSXExpressionContainer
+    | babel.types.JSXSpreadChild,
 ): MitosisNode | null => {
   if (types.isJSXText(node)) {
     return createMitosisNode({
@@ -35,9 +42,7 @@ export const jsxElementToJson = (
       const callback = node.expression.arguments[0];
       if (types.isArrowFunctionExpression(callback)) {
         if (types.isIdentifier(callback.params[0])) {
-          const forArguments = callback.params
-            .map((param) => (param as babel.types.Identifier)?.name)
-            .filter(Boolean);
+          const forArguments = getForArguments(callback.params);
           return createMitosisNode({
             name: 'For',
             bindings: {
@@ -102,8 +107,13 @@ export const jsxElementToJson = (
   if (types.isJSXFragment(node)) {
     return createMitosisNode({
       name: 'Fragment',
-      children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
+      children: node.children.map(jsxElementToJson).filter(checkIsDefined),
     });
+  }
+
+  // TODO: support spread attributes
+  if (types.isJSXSpreadChild(node)) {
+    return null;
   }
 
   const nodeName = generate(node.openingElement.name).code;
@@ -135,7 +145,7 @@ export const jsxElementToJson = (
       bindings: {
         ...(whenValue ? { when: { code: whenValue } } : {}),
       },
-      children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
+      children: node.children.map(jsxElementToJson).filter(checkIsDefined),
     });
   }
 
@@ -146,9 +156,7 @@ export const jsxElementToJson = (
       const childExpression = child.expression;
 
       if (types.isArrowFunctionExpression(childExpression)) {
-        const forArguments = childExpression?.params
-          .map((param) => (param as babel.types.Identifier)?.name)
-          .filter(Boolean);
+        const forArguments = getForArguments(childExpression?.params);
 
         return createMitosisNode({
           name: 'For',
@@ -178,7 +186,7 @@ export const jsxElementToJson = (
 
   return createMitosisNode({
     name: nodeName,
-    properties: node.openingElement.attributes.reduce((memo, item) => {
+    properties: node.openingElement.attributes.reduce<MitosisNode['properties']>((memo, item) => {
       if (types.isJSXAttribute(item)) {
         const key = item.name.name as string;
         const value = item.value;
@@ -192,8 +200,8 @@ export const jsxElementToJson = (
         }
       }
       return memo;
-    }, {} as { [key: string]: JSONOrNode }) as any,
-    bindings: node.openingElement.attributes.reduce((memo, item) => {
+    }, {}),
+    bindings: node.openingElement.attributes.reduce<MitosisNode['bindings']>((memo, item) => {
       if (types.isJSXAttribute(item)) {
         const key = item.name.name as string;
         const value = item.value;
@@ -224,7 +232,7 @@ export const jsxElementToJson = (
         };
       }
       return memo;
-    }, {} as { [key: string]: JSONOrNode }) as any,
-    children: node.children.map((item) => jsxElementToJson(item as any)).filter(Boolean) as any,
+    }, {}),
+    children: node.children.map(jsxElementToJson).filter(checkIsDefined),
   });
 };
