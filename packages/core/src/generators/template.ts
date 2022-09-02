@@ -2,7 +2,7 @@ import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisNode } from '../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -38,8 +38,8 @@ const blockToTemplate = (json: MitosisNode, options: ToTemplateOptions = {}) => 
 
   let str = '';
 
-  if (json.name === 'For') {
-    str += `\${${json.bindings.each?.code}?.map(${json.properties._forName} => \``;
+  if (checkIsForNode(json)) {
+    str += `\${${json.bindings.each?.code}?.map(${json.scope.forName} => \``;
     if (json.children) {
       str += json.children.map((item) => blockToTemplate(item, options)).join('\n');
     }

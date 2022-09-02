@@ -9,7 +9,7 @@ import { mapRefs } from '../helpers/map-refs';
 import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisNode } from '../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -114,9 +114,9 @@ export const blockToAngular = (
 
   const needsToRenderSlots = [];
 
-  if (json.name === 'For') {
-    const indexName = json.scope.For[1];
-    str += `<ng-container *ngFor="let ${json.properties._forName} of ${stripStateAndPropsRefs(
+  if (checkIsForNode(json)) {
+    const indexName = json.scope.indexName;
+    str += `<ng-container *ngFor="let ${json.scope.forName} of ${stripStateAndPropsRefs(
       json.bindings.each?.code,
       {
         contextVars,

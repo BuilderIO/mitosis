@@ -3,7 +3,7 @@ import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
-import { MitosisNode } from '../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -67,18 +67,13 @@ const blockToLiquid = (json: MitosisNode, options: ToLiquidOptions = {}): string
 
   let str = '';
 
-  if (json.name === 'For') {
+  if (checkIsForNode(json)) {
     if (
-      !(
-        isValidLiquidBinding(json.bindings.each?.code) &&
-        isValidLiquidBinding(json.properties._forName as string)
-      )
+      !(isValidLiquidBinding(json.bindings.each?.code) && isValidLiquidBinding(json.scope.forName))
     ) {
       return str;
     }
-    str += `{% for ${json.properties._forName} in ${stripStateAndPropsRefs(
-      json.bindings.each?.code,
-    )} %}`;
+    str += `{% for ${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)} %}`;
     if (json.children) {
       str += json.children.map((item) => blockToLiquid(item, options)).join('\n');
     }

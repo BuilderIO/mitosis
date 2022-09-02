@@ -75,8 +75,8 @@ const angularTemplateNodeToMitosisNode = (
         bindings: {
           each: { code: transformBinding(expression, options) },
         },
-        properties: {
-          _forName: itemName,
+        scope: {
+          forName: itemName,
         },
         children: [angularTemplateNodeToMitosisNode(omit(node, 'templateAttrs'), options)],
       });
