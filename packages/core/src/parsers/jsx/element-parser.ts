@@ -2,16 +2,23 @@ import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import { checkIsDefined } from '../../helpers/nullable';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { pipe } from 'fp-ts/lib/function';
 
 const { types } = babel;
 
-const getForArguments = (params: any[]) =>
-  params
+const getForArguments = (params: any[]): ForNode['scope'] => {
+  const [forName, indexName, collectionName] = params
     .filter((param): param is babel.types.Identifier => types.isIdentifier(param))
     .map((param) => param.name)
     .filter(checkIsDefined);
+
+  return {
+    forName,
+    collectionName,
+    indexName,
+  };
+};
 
 /**
  * Parses a JSX element into a MitosisNode.
@@ -53,14 +60,7 @@ export const jsxElementToJson = (
                   .replace(/\??\.map$/, ''),
               },
             },
-            scope: {
-              For: forArguments,
-            },
-            properties: {
-              _forName: forArguments[0],
-              _indexName: forArguments[1],
-              _collectionName: forArguments[2],
-            },
+            scope: forArguments,
             children: [jsxElementToJson(callback.body as any)!],
           });
         }
@@ -177,14 +177,7 @@ export const jsxElementToJson = (
               code: forCode,
             },
           },
-          scope: {
-            For: forArguments,
-          },
-          properties: {
-            _forName: forArguments[0],
-            _indexName: forArguments[1],
-            _collectionName: forArguments[2],
-          },
+          scope: forArguments,
           children: [jsxElementToJson(childExpression.body as any)!],
         });
       }
