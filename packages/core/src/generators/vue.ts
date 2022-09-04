@@ -278,6 +278,23 @@ const NODE_MAPPERS: {
         }
     }
   },
+  Slot(json, options) {
+    if (!json.bindings.name) {
+      const key = Object.keys(json.bindings).find(Boolean);
+      if (!key) return '<slot />';
+
+      return `
+        <template #${key}>
+        ${json.bindings[key]?.code}
+        </template>
+      `;
+    }
+    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
+
+    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
+      ?.map((item) => blockToVue(item, options))
+      .join('\n')}</slot>`;
+  },
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
@@ -624,7 +641,7 @@ function generateOptionsApiScript(
   const componentsUsed = Array.from(getComponentsUsed(component))
     .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
     // Strip out components that compile away
-    .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
+    .filter((name) => !['For', 'Show', 'Fragment', 'Slot', component.name].includes(name));
 
   let propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
     (prop) => prop !== 'children' && prop !== 'class',
