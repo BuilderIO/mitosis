@@ -1,3 +1,5 @@
+import { MitosisComponent } from './mitosis-component';
+
 export type Format = 'esm' | 'cjs';
 export type Language = 'js' | 'ts';
 interface TranspilerOptions {
@@ -51,4 +53,14 @@ export type MitosisConfig = {
    * ```
    */
   options: Partial<GeneratorOptions>;
+  /**
+   * Configure the extension of the files you want to compile
+   * Default value: 'lite.tsx'
+   */
+  extension: string;
+  /**
+   * Configure a custom parser function which takes a string and returns MitosisJSON
+   * Defaults to the JSXParser of this project (src/parsers/jsx)
+   */
+  parser: (code: string) => MitosisComponent;
 };
