@@ -2093,11 +2093,13 @@ exports[`Vue Javascript Test onUpdateWithDeps 1`] = `
 export default {
   name: \\"on-update-with-deps\\",
 
+  props: [\\"size\\"],
+
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
     onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -2106,6 +2108,7 @@ export default {
       return {
         0: this.a,
         1: this.b,
+        2: this.size,
       };
     },
   },
@@ -4674,14 +4677,20 @@ exports[`Vue Typescript Test onUpdateWithDeps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  size: string;
+};
+
 export default {
   name: \\"on-update-with-deps\\",
+
+  props: [\\"size\\"],
 
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
     onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -4690,6 +4699,7 @@ export default {
       return {
         0: this.a,
         1: this.b,
+        2: this.size,
       };
     },
   },

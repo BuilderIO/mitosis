@@ -3,7 +3,7 @@ import { format } from 'prettier/standalone';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode } from '../../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -21,6 +21,7 @@ import { dashCase } from '../../helpers/dash-case';
 import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
+import { getForArguments } from '../../helpers/nodes/for';
 
 export interface ToStencilOptions extends BaseTranspilerOptions {}
 
@@ -32,11 +33,10 @@ const blockToStencil = (json: MitosisNode, options: ToStencilOptions = {}): stri
     return `{${processBinding(json.bindings?._text.code as string)}}`;
   }
 
-  if (json.name === 'For') {
+  if (checkIsForNode(json)) {
     const wrap = json.children.length !== 1;
-    return `{${processBinding(json.bindings.each?.code as string)}?.map((${
-      json.properties._forName
-    }, index) => (
+    const forArgs = getForArguments(json).join(', ');
+    return `{${processBinding(json.bindings.each?.code as string)}?.map((${forArgs}) => (
       ${wrap ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((item) => blockToStencil(item, options))
