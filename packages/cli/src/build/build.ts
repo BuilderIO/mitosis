@@ -21,11 +21,12 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
+import { flow } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
 import { fastClone } from '../helpers/fast-clone';
-import { buildContextFile } from './helpers/context';
+import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
 import { transpile } from './helpers/transpile';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
@@ -125,41 +126,10 @@ export async function build(config?: MitosisConfig) {
         buildAndOutputNonComponentFiles(targetContextWithConfig),
         buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
       ]);
-      await outputOverrides(targetContextWithConfig);
     }),
   );
 
   console.info('Done!');
-}
-
-async function outputOverrides({ target, options, outputPath }: TargetContextWithConfig) {
-  const targetOverrides = `${options.overridesDir}/${outputPath}`;
-
-  // get all overrides files
-  const overrideFileNames = await glob([
-    `${targetOverrides}/**/*`,
-    `!${targetOverrides}/node_modules/**/*`,
-  ]);
-  await Promise.all(
-    overrideFileNames.map(async (overrideFileName) => {
-      let contents = await readFile(overrideFileName, 'utf8');
-
-      // transpile `.tsx` files to `.js`
-      const esbuildTranspile = overrideFileName.match(/\.tsx?$/);
-      if (esbuildTranspile) {
-        contents = await transpile({ path: overrideFileName, target, options });
-      }
-
-      const newFile = overrideFileName
-        // replace any reference to the overrides directory with the target directory
-        // e.g. `overrides/react/components/Button.tsx` -> `output/react/components/Button.tsx`
-        .replace(`${targetOverrides}`, `${options.dest}/${outputPath}`)
-        // replace `.tsx` references with `.js`
-        .replace(/\.tsx?$/, '.js');
-
-      await outputFile(newFile, contents);
-    }),
-  );
 }
 
 const getGeneratorForTarget = ({
@@ -314,6 +284,10 @@ const getTargetPath = ({ target }: { target: Target }): string => {
   }
 };
 
+const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOutputTypeScript) =>
+  shouldOutputTypeScript ? '.ts' : '.js',
+);
+
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
@@ -326,7 +300,7 @@ const outputNonComponentFiles = async ({
   files: { path: string; output: string }[];
   options: MitosisConfig;
 }) => {
-  const extension = checkShouldOutputTypeScript({ target, options }) ? '.ts' : '.js';
+  const extension = getNonComponentFileExtension({ target, options });
   await Promise.all(
     files.map(({ path, output }) =>
       outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, extension)}`, output),
@@ -334,42 +308,67 @@ const outputNonComponentFiles = async ({
   );
 };
 
+async function buildContextFile({
+  target,
+  options,
+  path,
+}: TargetContextWithConfig & { path: string }) {
+  let output = await generateContextFile({ path, options, target });
+
+  // transpile to JS if necessary
+  if (!checkShouldOutputTypeScript({ target, options })) {
+    output = await transpile({
+      path,
+      target,
+      content: output,
+      options,
+    });
+  }
+
+  // we remove the `.lite` extension from the path for Context files.
+  path = path.replace('.lite.ts', '.ts');
+
+  return {
+    path,
+    output,
+  };
+}
+
 /**
  * Transpiles all non-component files, including Context files.
  */
-async function buildNonComponentFiles({ target, options }: TargetContextWithConfig) {
+async function buildNonComponentFiles(args: TargetContextWithConfig) {
+  const { target, options, outputPath } = args;
   const nonComponentFiles = (await glob(options.files, { cwd })).filter(
     (file) => file.endsWith('.ts') || file.endsWith('.js'),
   );
 
   return await Promise.all(
-    nonComponentFiles.map(async (path) => {
-      let output: string;
+    nonComponentFiles.map(async (path): Promise<{ path: string; output: string }> => {
+      // try to find override file
+      const overrideFilePath = `${options.overridesDir}/${outputPath}/${path}`;
+      const overrideFile = (await pathExists(overrideFilePath))
+        ? await readFile(overrideFilePath, 'utf8')
+        : null;
+
+      if (overrideFile) {
+        const output = checkShouldOutputTypeScript({ target, options })
+          ? overrideFile
+          : await transpile({ path, target, content: overrideFile, options });
+
+        return { output, path };
+      }
+
       const isContextFile = path.endsWith('.context.lite.ts');
       if (isContextFile) {
-        output = await buildContextFile({ path, options, target });
+        return buildContextFile({ ...args, path });
       }
 
-      if (!checkShouldOutputTypeScript({ target, options })) {
-        output = await transpile({
-          path,
-          target,
-          content: output,
-          options,
-        });
-      } else {
-        output = await readFile(path, 'utf8');
-      }
+      const output = checkShouldOutputTypeScript({ target, options })
+        ? await readFile(path, 'utf8')
+        : await transpile({ path, target, options });
 
-      if (isContextFile) {
-        // we remove the `.lite` extension from the path for Context files.
-        path = path.replace('.lite.ts', '.ts');
-      }
-
-      return {
-        path,
-        output,
-      };
+      return { output, path };
     }),
   );
 }
