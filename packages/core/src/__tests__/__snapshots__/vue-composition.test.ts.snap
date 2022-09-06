@@ -2006,11 +2006,12 @@ exports[`Vue Javascript Test onUpdateWithDeps 1`] = `
 <script setup>
 import { ref, watch } from \\"vue\\";
 
+const props = defineProps([\\"size\\"]);
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value], ([a, b]) => {
-  console.log(\\"Runs when a or b changes\\", a, b);
+watch([a.value, b.value, props.size], ([a, b, size]) => {
+  console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
 "
@@ -4334,12 +4335,16 @@ exports[`Vue Typescript Test onUpdateWithDeps 1`] = `
 
 <script setup lang=\\"ts\\">
 import { ref, watch } from \\"vue\\";
+type Props = {
+  size: string;
+};
 
+const props = defineProps<Props>();
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value], ([a, b]) => {
-  console.log(\\"Runs when a or b changes\\", a, b);
+watch([a.value, b.value, props.size], ([a, b, size]) => {
+  console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
 "

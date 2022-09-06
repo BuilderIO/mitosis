@@ -2099,14 +2099,18 @@ exports[`React Javascript Test onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props: any) {
+type Props = {
+  size: string;
+};
+
+export default function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
 
   useEffect(() => {
-    console.log(\\"Runs when a or b changes\\", a, b);
-  }, [a, b]);
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }, [a, b, props.size]);
 
   return <div />;
 }
@@ -4458,14 +4462,18 @@ exports[`React Typescript Test onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props: any) {
+type Props = {
+  size: string;
+};
+
+export default function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
 
   useEffect(() => {
-    console.log(\\"Runs when a or b changes\\", a, b);
-  }, [a, b]);
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }, [a, b, props.size]);
 
   return <div />;
 }

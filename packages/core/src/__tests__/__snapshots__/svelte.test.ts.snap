@@ -1655,13 +1655,15 @@ exports[`Svelte Javascript Test onUpdateWithDeps 1`] = `
 "<script>
   import { afterUpdate } from \\"svelte\\";
 
+  export let size;
+
   let a = \\"a\\";
   let b = \\"b\\";
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
-  $: onUpdateFn_0(...[a, b]);
+  $: onUpdateFn_0(...[a, b, size]);
 </script>
 
 <div />
@@ -3776,16 +3778,24 @@ exports[`Svelte Typescript Test onUpdate 1`] = `
 `;
 
 exports[`Svelte Typescript Test onUpdateWithDeps 1`] = `
-"<script lang=\\"ts\\">
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    size: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
   import { afterUpdate } from \\"svelte\\";
+
+  export let size: Props[\\"size\\"];
 
   let a = \\"a\\";
   let b = \\"b\\";
 
   function onUpdateFn_0() {
-    console.log(\\"Runs when a or b changes\\", a, b);
+    console.log(\\"Runs when a, b or size changes\\", a, b, size);
   }
-  $: onUpdateFn_0(...[a, b]);
+  $: onUpdateFn_0(...[a, b, size]);
 </script>
 
 <div />
