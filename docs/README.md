@@ -8,6 +8,7 @@ Mitosis is a subset of [JSX](https://github.com/facebook/jsx). It supports gener
 - [Formatting options](#formatting-options)
 - [Project Structure](./project-structure.md)
 - [Components](./components.md)
+- [Context](./context.md)
 - [Hooks](./hooks.md)
 - [Gotchas](./gotchas.md)
 - [Customizability](./customizability.md)
