@@ -2484,7 +2484,8 @@ export const OnUpdateWithDeps = component$((props) => {
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    props && track(props, \\"size\\");
+    console.log(\\"Runs when a, b or size changes\\", state.a, state.b, props.size);
   });
   return <div></div>;
 });
@@ -4490,7 +4491,8 @@ export const OnUpdateWithDeps = component$((props) => {
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
-    console.log(\\"Runs when a or b changes\\", state.a, state.b);
+    props && track(props, \\"size\\");
+    console.log(\\"Runs when a, b or size changes\\", state.a, state.b, props.size);
   });
   return <div></div>;
 });
