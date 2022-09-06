@@ -59,18 +59,21 @@ async function clean(options: MitosisConfig) {
 
 const getMitosisComponentJSONs = async (options: MitosisConfig) => {
   return Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*.lite.tsx`).map(async (path) => {
-      try {
-        const parsed = parseJsx(await readFile(path, 'utf8'));
-        return {
-          path,
-          mitosisJson: parsed,
-        };
-      } catch (err) {
-        console.error('Could not parse file:', path);
-        throw err;
-      }
-    }),
+    micromatch(await glob(options.files, { cwd }), `**/*.${options.extension ?? 'lite.tsx'}`).map(
+      async (path) => {
+        try {
+          const file = await readFile(path, 'utf8');
+          const parsed = await (options.parser ? options.parser(file) : parseJsx(file));
+          return {
+            path,
+            mitosisJson: parsed,
+          };
+        } catch (err) {
+          console.error('Could not parse file:', path);
+          throw err;
+        }
+      },
+    ),
   );
 };
 

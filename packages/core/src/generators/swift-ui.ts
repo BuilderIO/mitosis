@@ -9,7 +9,7 @@ import { getStyles } from '../helpers/get-styles';
 import isChildren from '../helpers/is-children';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { MitosisStyles } from '../types/mitosis-styles';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { checkHasState } from '../helpers/state';
@@ -115,11 +115,11 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
     json.properties._ = placeholder || '';
   }
 
-  if (json.name === 'For') {
+  if (checkIsForNode(json)) {
     str += `ForEach(${processBinding(
       json.bindings.each?.code as string,
       options,
-    )}, id: \\.self) { ${json.properties._forName} in ${children
+    )}, id: \\.self) { ${json.scope.forName} in ${children
       .map((item) => blockToSwift(item, options))
       .join('\n')} }`;
   } else if (json.name === 'Show') {
