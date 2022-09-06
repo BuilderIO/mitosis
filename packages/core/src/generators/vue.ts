@@ -815,6 +815,8 @@ function generateCompositionApiScript(
     } `;
   }
 
+  const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
+
   let str = dedent`
     ${props.size ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
@@ -851,12 +853,29 @@ function generateCompositionApiScript(
           )}})`
     }
     ${
+      !getterKeys
+        ? ''
+        : getterKeys
+            .map((key) => {
+              const code = component.state[key]?.code?.toString();
+              return !code
+                ? ''
+                : `const ${key} = computed(${appendValueToRefs(
+                    code.replace(key, '').replace('get ()', '() =>'),
+                    component,
+                    options,
+                  )})`;
+            })
+            .join('\n')
+    }
+    ${
       !onUpdateWithoutDeps?.length
         ? ''
         : onUpdateWithoutDeps.map((hook) => {
             return `onUpdated(() => ${appendValueToRefs(hook.code, component, options)})`;
           })
     }
+
     ${
       !onUpdateWithDeps?.length
         ? ''
@@ -917,6 +936,8 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
+    const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
+
     const elementProps = getProps(component);
 
     // import from vue
@@ -929,6 +950,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
       component.hooks.onMount?.code && vueImports.push('onMounted');
       component.hooks.onUnMount?.code && vueImports.push('onUnMounted');
       onUpdateWithoutDeps.length && vueImports.push('onUpdated');
+      size(getterKeys) && vueImports.push('computed');
       size(component.context.set) && vueImports.push('provide');
       size(component.context.get) && vueImports.push('inject');
       size(

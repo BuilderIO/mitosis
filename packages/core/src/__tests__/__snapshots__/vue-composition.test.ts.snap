@@ -49,6 +49,8 @@ const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
+
+
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 console.log('Received an update');
 })
@@ -324,6 +326,8 @@ const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
+
+
 function onBlur() {
 // Maintain focus
 inputRef.focus();
@@ -360,6 +364,8 @@ exports[`Vue Javascript Test BasicRefAssignment 1`] = `
 
 
     const holdValueRef = ref<undefined>()
+
+
 
 
 
@@ -410,6 +416,8 @@ return ref;
 
 
 const prevCount = ref<undefined>()
+
+
 
 
 
@@ -578,6 +586,8 @@ onMounted(() => { findAndRunScripts()})
 
 
 
+
+
 function findAndRunScripts() {
 // TODO: Move this function to standalone one in '@builder.io/utils'
 if (elem && typeof window !== 'undefined') {
@@ -666,6 +676,8 @@ const scriptsRun= ref([])
 
 const elem = ref<HTMLDivElement>()
 onMounted(() => { findAndRunScripts()})
+
+
 
 
 
@@ -776,7 +788,7 @@ exports[`Vue Javascript Test Form 1`] = `
 </template>
 
 <script setup>
-    import { ref } from \\"vue\\"
+    import { computed, ref } from \\"vue\\"
 
 
 
@@ -801,6 +813,10 @@ const formErrorMessage= ref('')
 
 const formRef = ref<HTMLFormElement>()
 
+
+const submissionState = computed(() => {
+return Builder.isEditing && props.previewState || formState.value;
+})
 
 
 
@@ -1089,6 +1105,8 @@ listener();
 onMounted(() => { if (scrollListener.value) {
 window.removeEventListener('scroll', scrollListener);
 }})
+
+
 
 
 function setLoaded() {
@@ -1415,6 +1433,8 @@ const showReviewPrompt= ref(false)
 onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
 reviews.value = data.data;
 })})
+
+
 
 
 
@@ -2962,7 +2982,7 @@ exports[`Vue Typescript Test Form 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { ref } from \\"vue\\";
+import { computed, ref } from \\"vue\\";
 export interface FormProps {
   attributes?: any;
   name?: string;
@@ -2999,6 +3019,10 @@ const responseData = ref(null);
 const formErrorMessage = ref(\\"\\");
 
 const formRef = ref<HTMLFormElement>();
+
+const submissionState = computed(() => {
+  return (Builder.isEditing && props.previewState) || formState.value;
+});
 
 function onSubmit(event) {
   const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
@@ -3678,6 +3702,8 @@ const showReviewPrompt= ref(false)
 onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
 reviews.value = data.data;
 })})
+
+
 
 
 
