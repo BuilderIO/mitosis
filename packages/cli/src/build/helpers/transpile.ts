@@ -4,6 +4,25 @@ import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
 
 /**
+ * Remove `.lite` extensions from imports without having to load a slow parser like babel
+ * E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+ */
+export const transformImports = (target: Target) => (code: string) =>
+  code
+    .replace(
+      // we start by replacing all `context.lite` imports with `context`
+      // This Context replace is only needed for non-mitosis components, i.e. plain `.js`/`.ts` files.
+      // Mitosis components have logic that transform context import paths correctly.
+      /\.context\.lite(['"][;\)])/g,
+      `$1`,
+    )
+    .replace(
+      // afterwards, we replace all `.lite` imports with the correct file extension
+      /\.lite(['"][;\)])/g,
+      `${getFileExtensionForTarget(target)}$1`,
+    );
+
+/**
  * Runs `esbuild` on a file, and performs some additional transformations.
  */
 export const transpile = async ({
@@ -37,21 +56,8 @@ export const transpile = async ({
       console.warn(`Warnings found in file: ${path}`, output.warnings);
     }
 
-    // Remove .lite extensions from imports without having to load a slow parser like babel
-    // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
-    const contents = output.code
-      // This Context replace is only needed for non-mitosis components, i.e. plain `.js`/`.ts` files.
-      // Mitosis components have logic that transform context import paths correctly.
-      .replace(
-        // we start by replacing all `context.lite` imports with `context`
-        /\.context\.lite(['"][;\)])/g,
-        `$1`,
-      )
-      .replace(
-        // afterwards, we replace all `.lite` imports with the correct file extension
-        /\.lite(['"][;\)])/g,
-        `${getFileExtensionForTarget(target)}$1`,
-      );
+    const contents = transformImports(target)(output.code);
+
     return contents;
   } catch (e) {
     console.error(`Error found in file: ${path}`);

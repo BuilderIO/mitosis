@@ -21,14 +21,14 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
-import { flow } from 'fp-ts/lib/function';
+import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import micromatch from 'micromatch';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
-import { transpile } from './helpers/transpile';
+import { transformImports, transpile } from './helpers/transpile';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
@@ -353,7 +353,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
 
       if (overrideFile) {
         const output = checkShouldOutputTypeScript({ target, options })
-          ? overrideFile
+          ? transformImports(target)(overrideFile)
           : await transpile({ path, target, content: overrideFile, options });
 
         return { output, path };
@@ -365,7 +365,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
       }
 
       const output = checkShouldOutputTypeScript({ target, options })
-        ? await readFile(path, 'utf8')
+        ? pipe(await readFile(path, 'utf8'), transformImports(target))
         : await transpile({ path, target, options });
 
       return { output, path };
