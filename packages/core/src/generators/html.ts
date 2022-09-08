@@ -22,7 +22,7 @@ import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../types/mitosis-node';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import {
   runPostCodePlugins,
@@ -36,6 +36,7 @@ import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { renderPreComponent } from '../helpers/render-imports';
 
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { getForArguments } from '../helpers/nodes/for';
 
 export interface ToHtmlOptions extends BaseTranspilerOptions {
   format?: 'class' | 'script';
@@ -296,8 +297,8 @@ const blockToHtml = (
 
   let str = '';
 
-  if (json.name === 'For') {
-    const forArguments = json?.scope?.For || [];
+  if (checkIsForNode(json)) {
+    const forArguments = getForArguments(json);
     const localScopeVars: ScopeVars = [...scopeVars, ...forArguments];
     const argsStr = forArguments.map((arg) => `"${arg}"`).join(',');
     addOnChangeJs(

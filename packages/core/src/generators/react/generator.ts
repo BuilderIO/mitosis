@@ -30,7 +30,7 @@ import {
 } from '../../modules/plugins';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import { hasContext } from '../helpers/context';
 import { collectReactNativeStyles } from '../react-native';
 import { collectStyledComponents } from '../../helpers/styles/collect-styled-components';
@@ -45,6 +45,7 @@ import {
 } from './state';
 import { processBinding } from './helpers';
 import hash from 'hash-sum';
+import { getForArguments } from '../../helpers/nodes/for';
 
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
@@ -90,9 +91,10 @@ const NODE_MAPPERS: {
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
   },
-  For(json, options) {
+  For(_json, options) {
+    const json = _json as ForNode;
     const wrap = wrapInFragment(json);
-    const forArguments = (json?.scope?.For || []).join(',');
+    const forArguments = getForArguments(json).join(', ');
     return `{${processBinding(
       json.bindings.each?.code as string,
       options,

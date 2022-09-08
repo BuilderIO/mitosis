@@ -505,12 +505,12 @@ export default {
 exports[`Vue Javascript Test ContentSlotHtml 1`] = `
 "<template>
   <div>
-    <slot :name=\\"slotTesting\\"></slot>
+    <slot name=\\"testing\\"></slot>
     <div>
       <hr />
     </div>
     <div>
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
@@ -518,7 +518,7 @@ exports[`Vue Javascript Test ContentSlotHtml 1`] = `
 <script>
 export default {
   name: \\"content-slot-code\\",
-  components: { slot: Slot },
+
   props: [\\"slotTesting\\"],
 };
 </script>
@@ -1344,7 +1344,9 @@ exports[`Vue Javascript Test SlotHtml 1`] = `
 "<template>
   <div>
     <content-slot-code>
-      <slot :testing=\\"<div>Hello</div>\\"></slot>
+      <template #testing>
+        <div>Hello</div>
+      </template>
     </content-slot-code>
   </div>
 </template>
@@ -1354,7 +1356,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode, slot: Slot },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 };
 </script>
 "
@@ -2091,11 +2093,13 @@ exports[`Vue Javascript Test onUpdateWithDeps 1`] = `
 export default {
   name: \\"on-update-with-deps\\",
 
+  props: [\\"size\\"],
+
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
     onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -2104,6 +2108,7 @@ export default {
       return {
         0: this.a,
         1: this.b,
+        2: this.size,
       };
     },
   },
@@ -2869,12 +2874,12 @@ export default {
 exports[`Vue Typescript Test ContentSlotHtml 1`] = `
 "<template>
   <div>
-    <slot :name=\\"slotTesting\\"></slot>
+    <slot name=\\"testing\\"></slot>
     <div>
       <hr />
     </div>
     <div>
-      <slot></slot>
+      <slot />
     </div>
   </div>
 </template>
@@ -2887,7 +2892,7 @@ type Props = {
 
 export default {
   name: \\"content-slot-code\\",
-  components: { slot: Slot },
+
   props: [\\"slotTesting\\"],
 };
 </script>
@@ -3825,7 +3830,9 @@ exports[`Vue Typescript Test SlotHtml 1`] = `
 "<template>
   <div>
     <content-slot-code>
-      <slot :testing=\\"<div>Hello</div>\\"></slot>
+      <template #testing>
+        <div>Hello</div>
+      </template>
     </content-slot-code>
   </div>
 </template>
@@ -3839,7 +3846,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode, slot: Slot },
+  components: { \\"content-slot-code\\": ContentSlotCode },
 };
 </script>
 "
@@ -4670,14 +4677,20 @@ exports[`Vue Typescript Test onUpdateWithDeps 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+type Props = {
+  size: string;
+};
+
 export default {
   name: \\"on-update-with-deps\\",
+
+  props: [\\"size\\"],
 
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
     onUpdateHook0() {
-      console.log(\\"Runs when a or b changes\\", this.a, this.b);
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -4686,6 +4699,7 @@ export default {
       return {
         0: this.a,
         1: this.b,
+        2: this.size,
       };
     },
   },

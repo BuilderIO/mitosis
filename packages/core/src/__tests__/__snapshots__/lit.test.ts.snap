@@ -2767,17 +2767,23 @@ exports[`Lit Javascript Test onUpdateWithDeps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
+type Props = {
+  size: string;
+};
+
 @customElement(\\"on-update-with-deps\\")
 export default class OnUpdateWithDeps extends LitElement {
   createRenderRoot() {
     return this;
   }
 
+  @property() size: any;
+
   @state() a = \\"a\\";
   @state() b = \\"b\\";
 
   updated() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
   }
 
   render() {
@@ -5937,17 +5943,23 @@ exports[`Lit Typescript Test onUpdateWithDeps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
+type Props = {
+  size: string;
+};
+
 @customElement(\\"on-update-with-deps\\")
 export default class OnUpdateWithDeps extends LitElement {
   createRenderRoot() {
     return this;
   }
 
+  @property() size: any;
+
   @state() a = \\"a\\";
   @state() b = \\"b\\";
 
   updated() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
   }
 
   render() {

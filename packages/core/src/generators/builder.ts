@@ -1,4 +1,4 @@
-import { MitosisNode } from '../types/mitosis-node';
+import { ForNode, MitosisNode } from '../types/mitosis-node';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import { getStateObjectStringFromComponent } from '../helpers/get-state-object-string';
 import { fastClone } from '../helpers/fast-clone';
@@ -88,7 +88,8 @@ const componentMappers: {
 
     return block;
   },
-  For(node, options) {
+  For(_node, options) {
+    const node = _node as any as ForNode;
     return el(
       {
         component: {
@@ -96,7 +97,7 @@ const componentMappers: {
         },
         repeat: {
           collection: node.bindings.each?.code as string,
-          itemName: node.properties._forName,
+          itemName: node.scope.forName,
         },
         children: node.children
           .filter(filterEmptyTextNodes)

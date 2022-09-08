@@ -14,7 +14,7 @@ import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
 import { extendedHook, MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { ForNode, MitosisNode } from '../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
@@ -128,9 +128,10 @@ const NODE_MAPPERS: {
   Fragment(json, options) {
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
-  For(json, options) {
+  For(_json, options) {
+    const json = _json as ForNode;
     const keyValue = json.bindings.key || { code: 'index' };
-    const forValue = `(${json.properties._forName}, index) in ${stripStateAndPropsRefs(
+    const forValue = `(${json.scope.forName}, index) in ${stripStateAndPropsRefs(
       json.bindings.each?.code,
     )}`;
 
@@ -277,6 +278,23 @@ const NODE_MAPPERS: {
                   `;
         }
     }
+  },
+  Slot(json, options) {
+    if (!json.bindings.name) {
+      const key = Object.keys(json.bindings).find(Boolean);
+      if (!key) return '<slot />';
+
+      return `
+        <template #${key}>
+        ${json.bindings[key]?.code}
+        </template>
+      `;
+    }
+    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
+
+    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
+      ?.map((item) => blockToVue(item, options))
+      .join('\n')}</slot>`;
   },
 };
 
@@ -624,7 +642,7 @@ function generateOptionsApiScript(
   const componentsUsed = Array.from(getComponentsUsed(component))
     .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
     // Strip out components that compile away
-    .filter((name) => !['For', 'Show', 'Fragment', component.name].includes(name));
+    .filter((name) => !['For', 'Show', 'Fragment', 'Slot', component.name].includes(name));
 
   let propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
     (prop) => prop !== 'children' && prop !== 'class',
@@ -814,6 +832,8 @@ function generateCompositionApiScript(
     } `;
   }
 
+  const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
+
   let str = dedent`
     ${props.size ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
@@ -850,18 +870,35 @@ function generateCompositionApiScript(
           )}})`
     }
     ${
+      !getterKeys
+        ? ''
+        : getterKeys
+            .map((key) => {
+              const code = component.state[key]?.code?.toString();
+              return !code
+                ? ''
+                : `const ${key} = computed(${appendValueToRefs(
+                    code.replace(key, '').replace('get ()', '() =>'),
+                    component,
+                    options,
+                  )})`;
+            })
+            .join('\n')
+    }
+    ${
       !onUpdateWithoutDeps?.length
         ? ''
         : onUpdateWithoutDeps.map((hook) => {
             return `onUpdated(() => ${appendValueToRefs(hook.code, component, options)})`;
           })
     }
+
     ${
       !onUpdateWithDeps?.length
         ? ''
         : onUpdateWithDeps.map((hook) => {
             return appendValueToRefs(
-              `watch(${hook.deps}, (${hook.deps?.replaceAll('state.', '')}) => { ${hook.code}})\n`,
+              `watch(${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code}})\n`,
               component,
               options,
             );
@@ -916,6 +953,8 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
     const onUpdateWithoutDeps =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
+    const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
+
     const elementProps = getProps(component);
 
     // import from vue
@@ -928,6 +967,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
       component.hooks.onMount?.code && vueImports.push('onMounted');
       component.hooks.onUnMount?.code && vueImports.push('onUnMounted');
       onUpdateWithoutDeps.length && vueImports.push('onUpdated');
+      size(getterKeys) && vueImports.push('computed');
       size(component.context.set) && vueImports.push('provide');
       size(component.context.get) && vueImports.push('inject');
       size(

@@ -5,7 +5,7 @@ import { getRefs } from '../../helpers/get-refs';
 import { renderPreComponent } from '../../helpers/render-imports';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { MitosisNode } from '../../types/mitosis-node';
+import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -159,13 +159,13 @@ const blockToSolid = ({
     return `{${json.bindings._text.code}}`;
   }
 
-  if (json.name === 'For') {
+  if (checkIsForNode(json)) {
     const needsWrapper = json.children.length !== 1;
     // The SolidJS `<For>` component has a special index() signal function.
     // https://www.solidjs.com/docs/latest#%3Cfor%3E
     return `<For each={${json.bindings.each?.code}}>
-    {(${json.properties._forName}, _index) => {
-      const index = _index();
+    {(${json.scope.forName}, _index) => {
+      const ${json.scope.indexName || 'index'} = _index();
       return ${needsWrapper ? '<>' : ''}${json.children
       .filter(filterEmptyTextNodes)
       .map((child) => blockToSolid({ component, json: child, options }))}}}

@@ -339,8 +339,8 @@ const componentMappers: {
       bindings: {
         each: { code: `state.${block.component!.options!.repeat!.collection}` },
       },
-      properties: {
-        _forName: block.component!.options!.repeat!.itemName,
+      scope: {
+        forName: block.component!.options!.repeat!.itemName,
       },
       children: (block.children || []).map((child) => builderElementToMitosisNode(child, options)),
     });
@@ -504,8 +504,8 @@ export const builderElementToMitosisNode = (
             code: wrapBindingIfNeeded(block.repeat?.collection!, options),
           },
         },
-        properties: {
-          _forName: block.repeat?.itemName || 'item',
+        scope: {
+          forName: block.repeat?.itemName || 'item',
         },
         children: block.children?.map((child) => builderElementToMitosisNode(child, options)) || [],
       });
@@ -521,8 +521,8 @@ export const builderElementToMitosisNode = (
             code: wrapBindingIfNeeded(block.repeat?.collection!, options),
           },
         },
-        properties: {
-          _forName: block.repeat?.itemName || 'item',
+        scope: {
+          forName: block.repeat?.itemName || 'item',
         },
         children: [builderElementToMitosisNode(omit(useBlock, 'repeat'), options)],
       });

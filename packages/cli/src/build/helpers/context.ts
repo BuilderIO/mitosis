@@ -11,7 +11,7 @@ import {
 import { readFile } from 'fs-extra';
 import { upperFirst, camelCase, last } from 'lodash';
 
-export const buildContextFile = async ({
+export const generateContextFile = async ({
   path,
   options,
   target,

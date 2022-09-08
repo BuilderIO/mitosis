@@ -8095,7 +8095,11 @@ customElements.define(\\"on-update\\", OnUpdate);
 `;
 
 exports[`webcomponent Javascript Test onUpdateWithDeps 1`] = `
-"/**
+"type Props = {
+  size: string;
+};
+
+/**
  * Usage:
  *
  *  <on-update-with-deps></on-update-with-deps>
@@ -8115,7 +8119,9 @@ class OnUpdateWithDeps extends HTMLElement {
       this.props = {};
     }
 
-    this.updateDeps = [[this.state.a, this.state.b]];
+    this.componentProps = [\\"size\\"];
+
+    this.updateDeps = [[this.state.a, this.state.b, this.props.size]];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -8134,6 +8140,19 @@ class OnUpdateWithDeps extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div></div>\`;
     this.pendingUpdate = true;
@@ -8152,10 +8171,15 @@ class OnUpdateWithDeps extends HTMLElement {
     (function (__prev, __next) {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
-        console.log(\\"Runs when a or b changes\\", self.state.a, self.state.b);
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          self.state.a,
+          self.state.b,
+          self.props.size
+        );
         self.updateDeps[0] = __next;
       }
-    })(self.updateDeps[0], [self.state.a, self.state.b]);
+    })(self.updateDeps[0], [self.state.a, self.state.b, self.props.size]);
   }
 
   update() {
@@ -18219,7 +18243,11 @@ customElements.define(\\"on-update\\", OnUpdate);
 `;
 
 exports[`webcomponent Typescript Test onUpdateWithDeps 1`] = `
-"/**
+"type Props = {
+  size: string;
+};
+
+/**
  * Usage:
  *
  *  <on-update-with-deps></on-update-with-deps>
@@ -18239,7 +18267,9 @@ class OnUpdateWithDeps extends HTMLElement {
       this.props = {};
     }
 
-    this.updateDeps = [[this.state.a, this.state.b]];
+    this.componentProps = [\\"size\\"];
+
+    this.updateDeps = [[this.state.a, this.state.b, this.props.size]];
 
     // used to keep track of all nodes created by show/for
     this.nodesToDestroy = [];
@@ -18258,6 +18288,19 @@ class OnUpdateWithDeps extends HTMLElement {
   }
 
   connectedCallback() {
+    this.getAttributeNames().forEach((attr) => {
+      const jsVar = attr.replace(/-/g, \\"\\");
+      const regexp = new RegExp(jsVar, \\"i\\");
+      this.componentProps.forEach((prop) => {
+        if (regexp.test(prop)) {
+          const attrValue = this.getAttribute(attr);
+          if (this.props[prop] !== attrValue) {
+            this.props[prop] = attrValue;
+          }
+        }
+      });
+    });
+
     this._root.innerHTML = \`
       <div></div>\`;
     this.pendingUpdate = true;
@@ -18276,10 +18319,15 @@ class OnUpdateWithDeps extends HTMLElement {
     (function (__prev, __next) {
       const __hasChange = __prev.find((val, index) => val !== __next[index]);
       if (__hasChange !== undefined) {
-        console.log(\\"Runs when a or b changes\\", self.state.a, self.state.b);
+        console.log(
+          \\"Runs when a, b or size changes\\",
+          self.state.a,
+          self.state.b,
+          self.props.size
+        );
         self.updateDeps[0] = __next;
       }
-    })(self.updateDeps[0], [self.state.a, self.state.b]);
+    })(self.updateDeps[0], [self.state.a, self.state.b, self.props.size]);
   }
 
   update() {

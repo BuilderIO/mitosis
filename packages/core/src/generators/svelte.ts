@@ -15,7 +15,7 @@ import { renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../parsers/jsx';
 import { MitosisComponent } from '../types/mitosis-component';
-import { MitosisNode } from '../types/mitosis-node';
+import { BaseNode, ForNode, MitosisNode } from '../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -34,13 +34,16 @@ import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
+import { getForArguments } from '../helpers/nodes/for';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
 }
 
 const mappers: {
-  [key: string]: BlockToSvelte;
+  For: BlockToSvelte<ForNode>;
+  Fragment: BlockToSvelte;
+  Show: BlockToSvelte;
 } = {
   Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML?.code) {
@@ -63,10 +66,12 @@ const mappers: {
       delete firstChild.bindings.key;
     }
 
+    const args = getForArguments(json, { excludeCollectionName: true }).join(', ');
+
     return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${json.scope.For[0]}${
-      json.scope.For[1] ? `, ${json.scope.For[1]}` : ''
-    } ${keyValue ? `(${keyValue})` : ''}}
+{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${args} ${
+      keyValue ? `(${keyValue})` : ''
+    }}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
@@ -116,12 +121,6 @@ const BINDINGS_MAPPER = {
     `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML?.code)}}`,
 };
 
-interface BlockToSvelteProps {
-  json: MitosisNode;
-  options: ToSvelteOptions;
-  parentComponent: MitosisComponent;
-}
-
 const SVELTE_SPECIAL_TAGS = {
   COMPONENT: 'svelte:component',
   ELEMENT: 'svelte:element',
@@ -155,7 +154,11 @@ const getTagName = ({
   return json.name;
 };
 
-type BlockToSvelte = (props: BlockToSvelteProps) => string;
+type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
+  json: T;
+  options: ToSvelteOptions;
+  parentComponent: MitosisComponent;
+}) => string;
 
 const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
   stripStateAndPropsRefs(code, {
@@ -163,8 +166,12 @@ const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) 
   });
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
-  if (mappers[json.name]) {
-    return mappers[json.name]({ json, options, parentComponent });
+  if (mappers[json.name as keyof typeof mappers]) {
+    return mappers[json.name as keyof typeof mappers]({
+      json: json as any,
+      options,
+      parentComponent,
+    });
   }
 
   const tagName = getTagName({ json, parentComponent });

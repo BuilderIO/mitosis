@@ -259,7 +259,7 @@ export default class MyBasicForComponent {
   render() {
     return (
       <div>
-        {this.names?.map((person, index) => (
+        {this.names?.map((person) => (
           <Fragment>
             <input
               value={this.name}
@@ -1161,7 +1161,7 @@ export default class ImgStateComponent {
   render() {
     return (
       <div>
-        {this.images?.map((item, index) => (
+        {this.images?.map((item, itemIndex) => (
           <Fragment>
             <img src={item} key={itemIndex} />
           </Fragment>
@@ -2038,11 +2038,13 @@ exports[`Stencil Javascript Test onUpdateWithDeps 1`] = `
   tag: \\"on-update-with-deps\\",
 })
 export default class OnUpdateWithDeps {
+  @Prop() size: any;
+
   @State() a = \\"a\\";
   @State() b = \\"b\\";
 
   componentDidUpdate() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
   }
 
   render() {
@@ -2529,7 +2531,7 @@ export default class MyBasicForComponent {
   render() {
     return (
       <div>
-        {this.names?.map((person, index) => (
+        {this.names?.map((person) => (
           <Fragment>
             <input
               value={this.name}
@@ -3431,7 +3433,7 @@ export default class ImgStateComponent {
   render() {
     return (
       <div>
-        {this.images?.map((item, index) => (
+        {this.images?.map((item, itemIndex) => (
           <Fragment>
             <img src={item} key={itemIndex} />
           </Fragment>
@@ -4308,11 +4310,13 @@ exports[`Stencil Typescript Test onUpdateWithDeps 1`] = `
   tag: \\"on-update-with-deps\\",
 })
 export default class OnUpdateWithDeps {
+  @Prop() size: any;
+
   @State() a = \\"a\\";
   @State() b = \\"b\\";
 
   componentDidUpdate() {
-    console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
   }
 
   render() {

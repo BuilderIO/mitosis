@@ -5,6 +5,9 @@ import { BaseTranspilerOptions } from '../../types/transpiler';
 
 interface ContextToSvelteOptions extends Pick<BaseTranspilerOptions, 'prettier'> {}
 
+/**
+ * TO-DO: support types
+ */
 export const contextToSvelte =
   (options: ContextToSvelteOptions = {}) =>
   ({ context }: { context: MitosisContext }): string => {

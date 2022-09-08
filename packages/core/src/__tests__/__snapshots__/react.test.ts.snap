@@ -2099,14 +2099,18 @@ exports[`React Javascript Test onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props: any) {
+type Props = {
+  size: string;
+};
+
+export default function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
 
   useEffect(() => {
-    console.log(\\"Runs when a or b changes\\", a, b);
-  }, [a, b]);
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }, [a, b, props.size]);
 
   return <div />;
 }
@@ -4458,14 +4462,18 @@ exports[`React Typescript Test onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { useState, useEffect } from \\"react\\";
 
-export default function OnUpdateWithDeps(props: any) {
+type Props = {
+  size: string;
+};
+
+export default function OnUpdateWithDeps(props: Props) {
   const [a, setA] = useState(() => \\"a\\");
 
   const [b, setB] = useState(() => \\"b\\");
 
   useEffect(() => {
-    console.log(\\"Runs when a or b changes\\", a, b);
-  }, [a, b]);
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }, [a, b, props.size]);
 
   return <div />;
 }
@@ -4749,13 +4757,13 @@ export default function SmileReviews(props: SmileReviewsProps) {
         {showReviewPrompt ? (
           <>
             <input placeholder=\\"Email\\" />
-            <input placeholder=\\"Title\\" className=\\"input-474d0df8\\" />
+            <input placeholder=\\"Title\\" className=\\"input-4a6675f0\\" />
             <textarea
               placeholder=\\"How was your experience?\\"
-              className=\\"textarea-474d0df8\\"
+              className=\\"textarea-4a6675f0\\"
             />
             <button
-              className=\\"button-474d0df8\\"
+              className=\\"button-4a6675f0\\"
               onClick={(event) => {
                 event.preventDefault();
                 setShowReviewPrompt(false);
@@ -4767,8 +4775,8 @@ export default function SmileReviews(props: SmileReviewsProps) {
         ) : null}
 
         {reviews?.map((review, index) => (
-          <div className=\\"review-474d0df8\\" key={review.id}>
-            <img className=\\"img-474d0df8\\" src={review.avatar} />
+          <div className=\\"review-4a6675f0\\" key={review.id}>
+            <img className=\\"img-4a6675f0\\" src={review.avatar} />
 
             <div className={showReviewPrompt ? \\"bg-primary\\" : \\"bg-secondary\\"}>
               <div>
@@ -4783,16 +4791,16 @@ export default function SmileReviews(props: SmileReviewsProps) {
           </div>
         ))}
       </div>
-      <style>{\`.input-474d0df8 { 
-display: block; }.textarea-474d0df8 { 
-display: block; }.button-474d0df8 { 
-display: block; }.review-474d0df8 { 
+      <style>{\`.input-4a6675f0 { 
+display: block; }.textarea-4a6675f0 { 
+display: block; }.button-4a6675f0 { 
+display: block; }.review-4a6675f0 { 
 margin: 10px;
 padding: 10px;
 background: white;
 display: flex;
 border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-474d0df8 { 
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-4a6675f0 { 
 height: 30px;
 width: 30px;
 margin-right: 10px; }\`}</style>
