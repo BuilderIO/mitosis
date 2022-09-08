@@ -31,7 +31,8 @@
     "lint:prettier": "yarn run prettier --check",
     "prerelease": "yarn build",
     "prettier": "prettier --loglevel warn '{packages,docs}/**/*.{js,jsx,ts,tsx,json,md,html}'",
-    "release:dev": "cd packages/core && yarn run release:dev && cd ../cli && yarn run release:dev"
+    "release:dev": "yarn workspaces foreach run release:dev",
+    "release:patch": "yarn workspaces foreach run release:patch"
   },
   "repository": {
     "type": "git",
