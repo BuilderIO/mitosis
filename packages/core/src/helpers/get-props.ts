@@ -4,6 +4,7 @@ import { MitosisComponent } from '../types/mitosis-component';
 const propsRegex = /props\s*\.\s*([a-zA-Z0-9_\$]+)/;
 const allPropsMatchesRegex = new RegExp(propsRegex, 'g');
 
+// copied from https://github.com/vuejs/core/blob/fa6556a0d56eeff1fec4f948460351ccf8f99f35/packages/compiler-core/src/validateExpression.ts
 // typeof, instanceof and in are allowed
 const prohibitedKeywordRE = new RegExp(
   '\\b' +
