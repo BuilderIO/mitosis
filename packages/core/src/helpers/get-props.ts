@@ -15,8 +15,8 @@ const prohibitedKeywordRE = new RegExp(
     )
       .split(',')
       .join('\\b|\\b') +
-    '\\b'
-)
+    '\\b',
+);
 
 /**
  * Get props used in the components by reference
@@ -29,9 +29,9 @@ export const getProps = (json: MitosisComponent) => {
       const matches = item.match(allPropsMatchesRegex);
       if (matches) {
         for (const match of matches) {
-          const prop = match.match(propsRegex)![1]
-          if(prop.match(prohibitedKeywordRE)) {
-            throw new Error(`avoid using JavaScript keyword as property name: "${prop}"`)
+          const prop = match.match(propsRegex)![1];
+          if (prop.match(prohibitedKeywordRE)) {
+            throw new Error(`avoid using JavaScript keyword as property name: "${prop}"`);
           }
           props.add(prop);
         }
