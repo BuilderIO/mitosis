@@ -1,7 +1,7 @@
 import { Show } from '@builder.io/mitosis';
 
 export interface ImageProps {
-  class?: string;
+  classProp?: string;
   image: string;
   sizes?: string;
   lazy?: boolean;
@@ -37,7 +37,7 @@ export default function Image(props: ImageProps) {
             objectPosition: props.backgroundSize || 'center',
             objectFit: (props.backgroundSize as any) || 'cover',
           }}
-          class={'class-image' + (props.class ? ' ' + props.class : '')}
+          class={'class-image' + (props.classProp ? ' ' + props.classProp : '')}
           src={props.image}
           // TODO: memoize on image on client
           srcset={props.srcset}
