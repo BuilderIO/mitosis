@@ -38,7 +38,6 @@ export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null
 export * from './parsers/jsx';
 export * from './parsers/builder';
 export * from './parsers/angular';
-export * from './parsers/liquid';
 export * from './parsers/context';
 export * from './generators/vue';
 export * from './generators/angular';
