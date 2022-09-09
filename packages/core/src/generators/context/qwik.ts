@@ -11,7 +11,7 @@ export const contextToQwik =
     let str = `
   import { createContext } from '@builder.io/qwik';
 
-  export default createContext("${context.name}")
+  export default createContext<any>("${context.name}")
   `;
 
     if (options.format !== false) {
