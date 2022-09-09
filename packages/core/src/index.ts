@@ -38,7 +38,6 @@ export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null
 export * from './parsers/jsx';
 export * from './parsers/builder';
 export * from './parsers/angular';
-export * from './parsers/liquid';
 export * from './parsers/context';
 export * from './generators/vue';
 export * from './generators/angular';
@@ -62,7 +61,6 @@ export * from './generators/template';
 export * from './generators/swift-ui';
 export * from './generators/lit';
 export * from './generators/react-native';
-export * from './helpers/parse-reactive-script';
 export * from './helpers/is-mitosis-node';
 
 export * from './types/mitosis-node';
