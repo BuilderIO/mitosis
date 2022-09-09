@@ -18,12 +18,9 @@ import {
   componentToLit,
   componentToQwik,
   componentToTemplate,
-  liquidToBuilder,
   angularToMitosisComponent,
   mapStyles,
   parseJsx,
-  parseReactiveScript,
-  reactiveScriptRe,
   componentToVue2,
   componentToVue3,
 } from '@builder.io/mitosis';
@@ -308,19 +305,6 @@ export default function Fiddle() {
       state.code = componentToMitosis()({ component: jsxJson });
       state.pendingBuilderChange = null;
     },
-    async parseLiquidInputCode() {
-      const jsxState = parseReactiveScript(state.inputCode, {
-        format: 'html',
-      }).state;
-
-      const builderJson = await liquidToBuilder(state.inputCode.replace(reactiveScriptRe, ''));
-
-      const jsx = builderContentToMitosisComponent({
-        data: { blocks: builderJson },
-      });
-      jsx.state = jsxState;
-      return jsx;
-    },
 
     async updateOutput() {
       try {
@@ -329,8 +313,6 @@ export default function Fiddle() {
         const json =
           state.inputTab === 'angular'
             ? angularToMitosisComponent(state.inputCode)
-            : state.inputTab === 'liquid'
-            ? await this.parseLiquidInputCode()
             : parseJsx(state.code);
 
         state.output =
@@ -539,11 +521,7 @@ export default function Fiddle() {
     () => state.inputTab,
     (tab) => {
       const json = parseJsx(state.code);
-      state.inputCode =
-        state.inputTab === 'liquid'
-          ? // TODO: generate reactive script
-            componentToLiquid({ plugins, reactive: true })({ component: json })
-          : componentToAngular({ plugins })({ component: json });
+      state.inputCode = componentToAngular({ plugins })({ component: json });
       setQueryParam('inputTab', tab);
     },
     { fireImmediately: false },
@@ -814,28 +792,6 @@ export default function Fiddle() {
               </div>
             </Show>
 
-            <Show when={state.inputTab === 'liquid'}>
-              <MonacoEditor
-                height="100%"
-                options={{
-                  automaticLayout: true,
-                  overviewRulerBorder: false,
-                  foldingHighlight: false,
-                  renderLineHighlightOnlyWhenFocus: true,
-                  occurrencesHighlight: false,
-                  minimap: { enabled: false },
-                  renderLineHighlight: 'none',
-                  selectionHighlight: false,
-                  scrollbar: { vertical: 'hidden' },
-                }}
-                onChange={(value = '') => {
-                  state.inputCode = value;
-                }}
-                theme={monacoTheme}
-                language="html"
-                value={state.inputCode}
-              />
-            </Show>
             <Show when={state.inputTab === 'angular'}>
               <MonacoEditor
                 height="100%"
