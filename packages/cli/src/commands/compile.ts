@@ -30,6 +30,8 @@ const command: GluegunCommand = {
       return listTargets();
     }
 
+    // config file
+    const configRelPath = opts.config ?? opts.c;
     // Flags and aliases
     const from_ = strings.camelCase(opts.f ?? opts.from ?? 'mitosis');
     const to = strings.camelCase(opts.t ?? opts.to);
@@ -46,7 +48,7 @@ const command: GluegunCommand = {
       plugins.push(compileAwayBuilderComponents());
     }
 
-    const mitosisConfig = getMitosisConfig();
+    const mitosisConfig = getMitosisConfig(configRelPath);
     const generatorOptions = mitosisConfig?.options?.[to];
 
     const generatorOpts: Partial<{ [K in AllGeneratorOptionKeys]: any }> = {
