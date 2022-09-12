@@ -6,7 +6,7 @@ We currently have two CLI commands: `mitosis build` and `mitosis compile`.
 
 `mitosis compile` is a relatively straightforward command. It:
 
-- Reads the config in `mitosis.config.js`
+- Reads the config in `mitosis.config.js` (also could specify config file by option: `--config=<file>`)
 - Receives 1 Mitosis component file as input
 - Outputs it to 1 designated target.
 
@@ -14,7 +14,7 @@ We currently have two CLI commands: `mitosis build` and `mitosis compile`.
 
 `mitosis build` is meant for entire project/folders, and is therefore more involved. It:
 
-- Reads the config in `mitosis.config.js`
+- Reads the config in `mitosis.config.js` (also could specify config file by option: `--config=<file>`)
 - Identifies a source folder
 - Reads _all_ Mitosis files in the source folder, and
   - Outputs a component for each target in the config

@@ -45,7 +45,8 @@ OPTIONS
 		- liquid
 	--list, -l
 		List available output formats.
-
+	--config=<file>, -c=<file>
+		Specify config file. Defaults to 'mitosis.config.js'.
 OUTPUT OPTIONS
 	--out=<file>, -o=<file>
 		Emit output to a single file
