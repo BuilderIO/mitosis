@@ -64,7 +64,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig) => {
       async (path) => {
         try {
           const file = await readFile(path, 'utf8');
-          const parsed = await (options.parser ? options.parser(file) : parseJsx(file));
+          const parsed = await (options.parser ? options.parser(file, path) : parseJsx(file));
           return {
             path,
             mitosisJson: parsed,
@@ -187,12 +187,19 @@ const checkShouldOutputTypeScript = ({
   target: Target;
   options: MitosisConfig;
 }): boolean => {
-  const isTypescript = options.options[target]?.typescript;
-  return isTypescript;
+  return !!options.options[target]?.typescript;
 };
 
-const replaceFileExtensionForTarget = ({ target, path }: { target: Target; path: string }) =>
-  path.replace(/\.lite\.tsx$/, getFileExtensionForTarget(target));
+const replaceFileExtensionForTarget = ({
+  target,
+  path,
+  options,
+}: {
+  target: Target;
+  path: string;
+  options: MitosisConfig;
+}) =>
+  path.replace(/\.lite\.tsx$/, getFileExtensionForTarget({ type: 'filename', target, options }));
 
 /**
  * Transpiles and outputs Mitosis component files.
@@ -208,7 +215,7 @@ async function buildAndOutputComponentFiles({
 }) {
   const debugTarget = debug(`mitosis:${target}`);
   const output = files.map(async ({ path, mitosisJson }) => {
-    const outputFilePath = replaceFileExtensionForTarget({ target, path });
+    const outputFilePath = replaceFileExtensionForTarget({ target, path, options });
 
     // try to find override component file
     const overrideFilePath = `${options.overridesDir}/${outputPath}/${outputFilePath}`;
@@ -353,7 +360,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
 
       if (overrideFile) {
         const output = checkShouldOutputTypeScript({ target, options })
-          ? transformImports(target)(overrideFile)
+          ? transformImports(target, options)(overrideFile)
           : await transpile({ path, target, content: overrideFile, options });
 
         return { output, path };
@@ -365,7 +372,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
       }
 
       const output = checkShouldOutputTypeScript({ target, options })
-        ? pipe(await readFile(path, 'utf8'), transformImports(target))
+        ? pipe(await readFile(path, 'utf8'), transformImports(target, options))
         : await transpile({ path, target, options });
 
       return { output, path };
