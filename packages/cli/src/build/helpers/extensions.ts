@@ -1,6 +1,15 @@
-import { Target } from '@builder.io/mitosis';
+import { MitosisConfig, Target } from '@builder.io/mitosis';
 
-export const getFileExtensionForTarget = (target: Target) => {
+export const getFileExtensionForTarget = ({
+  type,
+  target,
+  options,
+}: {
+  type: 'import' | 'filename';
+  target: Target;
+  options: MitosisConfig;
+}) => {
+  const isTs = !!options.options[target]?.typescript;
   switch (target) {
     case 'angular':
       return '.ts';
@@ -21,7 +30,7 @@ export const getFileExtensionForTarget = (target: Target) => {
     case 'lit':
       return '.ts';
     case 'qwik':
-      return '.jsx';
+      return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'marko':
       return '.marko';
     default:
