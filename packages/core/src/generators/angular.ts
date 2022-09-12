@@ -62,10 +62,14 @@ const mappers: {
           const selector = kebabCase(json.bindings.name?.code?.replace('props.slot', ''));
           return `select="[${selector}]"`;
         }
-
-        return `${json.bindings[binding]?.code}`;
       })
-      .join('\n')}></ng-content>`;
+      .join('\n')}>${Object.keys(json.bindings)
+      .map((binding) => {
+        if (binding !== 'name') {
+          return `${json.bindings[binding]?.code}`;
+        }
+      })
+      .join('\n')}</ng-content>`;
   },
 };
 
