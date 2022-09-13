@@ -672,10 +672,8 @@ Object {
           "actions": Object {},
           "bindings": Object {},
         },
-        "component": Object {
-          "name": "Fragment",
-          "options": Object {},
-        },
+        "properties": Object {},
+        "tagName": "div",
       },
     ],
     "jsCode": "var props = state;
@@ -772,7 +770,6 @@ onMount(() => {
 
 exports[`Builder Image 2`] = `
 "import { useStore, useRef, Show } from \\"@builder.io/mitosis\\";
-import { Fragment } from \\"@components\\";
 
 export default function MyComponent(props) {
   const state = useStore({
@@ -822,7 +819,7 @@ export default function MyComponent(props) {
   });
 
   return (
-    <Fragment>
+    <div>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || state.load}>
           <img
@@ -844,7 +841,7 @@ export default function MyComponent(props) {
         <source srcset={props.srcset} />
       </picture>
       <span>{props.children}</span>
-    </Fragment>
+    </div>
   );
 }
 "

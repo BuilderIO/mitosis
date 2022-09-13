@@ -419,7 +419,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <Fragment>
+    <div>
       {props.link ? (
         <Fragment>
           <a
@@ -439,7 +439,7 @@ export default function Button(props: ButtonProps) {
           </button>
         </Fragment>
       ) : null}
-    </Fragment>
+    </div>
   );
 }
 "
@@ -1107,7 +1107,7 @@ export default function Image(props: ImageProps) {
 
   return (
     <Fragment>
-      <Fragment>
+      <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
             <Fragment>
@@ -1131,7 +1131,7 @@ export default function Image(props: ImageProps) {
         </picture>
 
         {props.children}
-      </Fragment>
+      </div>
       <style jsx>{\`
         .img {
           opacity: 1;
@@ -1861,7 +1861,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <Fragment>
+    <div>
       {props.link ? (
         <Fragment>
           <a
@@ -1881,7 +1881,7 @@ export default function Button(props: ButtonProps) {
           </button>
         </Fragment>
       ) : null}
-    </Fragment>
+    </div>
   );
 }
 
@@ -2282,6 +2282,45 @@ export default function MyBasicComponent(props: Person) {
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`Preact Javascript Test rootFragmentMultiNode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </Fragment>
   );
 }
 "
@@ -2846,7 +2885,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <Fragment>
+    <div>
       {props.link ? (
         <Fragment>
           <a
@@ -2866,7 +2905,7 @@ export default function Button(props: ButtonProps) {
           </button>
         </Fragment>
       ) : null}
-    </Fragment>
+    </div>
   );
 }
 "
@@ -3534,7 +3573,7 @@ export default function Image(props: ImageProps) {
 
   return (
     <Fragment>
-      <Fragment>
+      <div>
         <picture ref={pictureRef}>
           {!useLazyLoading() || load ? (
             <Fragment>
@@ -3558,7 +3597,7 @@ export default function Image(props: ImageProps) {
         </picture>
 
         {props.children}
-      </Fragment>
+      </div>
       <style jsx>{\`
         .img {
           opacity: 1;
@@ -4288,7 +4327,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <Fragment>
+    <div>
       {props.link ? (
         <Fragment>
           <a
@@ -4308,7 +4347,7 @@ export default function Button(props: ButtonProps) {
           </button>
         </Fragment>
       ) : null}
-    </Fragment>
+    </div>
   );
 }
 
@@ -4709,6 +4748,45 @@ export default function MyBasicComponent(props: Person) {
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`Preact Typescript Test rootFragmentMultiNode 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <Fragment>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button {...props.attributes} type=\\"button\\">
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </Fragment>
   );
 }
 "

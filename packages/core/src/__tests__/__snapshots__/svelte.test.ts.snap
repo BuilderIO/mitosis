@@ -362,21 +362,23 @@ exports[`Svelte Javascript Test Button 1`] = `
   export let text;
 </script>
 
-{#if link}
-  <a
-    {...attributes}
-    href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
-  >
-    {text}
-  </a>
-{/if}
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
 
-{#if !link}
-  <button {...attributes} type=\\"button\\">
-    {text}
-  </button>
-{/if}
+  {#if !link}
+    <button {...attributes} type=\\"button\\">
+      {text}
+    </button>
+  {/if}
+</div>
 "
 `;
 
@@ -936,24 +938,25 @@ exports[`Svelte Javascript Test Image 1`] = `
   });
 </script>
 
-<picture bind:this={pictureRef}>
-  {#if !useLazyLoading() || load}
-    <img
-      alt={altText}
-      aria-role={altText ? \\"presentation\\" : undefined}
-      class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
-      src={image}
-      on:load={(event) => {
-        setLoaded();
-      }}
-      {srcset}
-      {sizes}
-    />
-  {/if}
-  <source {srcset} />
-</picture>
-
-<slot />
+<div>
+  <picture bind:this={pictureRef}>
+    {#if !useLazyLoading() || load}
+      <img
+        alt={altText}
+        aria-role={altText ? \\"presentation\\" : undefined}
+        class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
+        src={image}
+        on:load={(event) => {
+          setLoaded();
+        }}
+        {srcset}
+        {sizes}
+      />
+    {/if}
+    <source {srcset} />
+  </picture>
+  <slot />
+</div>
 
 <style>
   .img {
@@ -1452,21 +1455,23 @@ exports[`Svelte Javascript Test defaultProps 1`] = `
   export let text = \\"default text\\";
 </script>
 
-{#if link}
-  <a
-    {...attributes}
-    href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
-  >
-    {text}
-  </a>
-{/if}
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
 
-{#if !link}
-  <button {...attributes} type=\\"button\\">
-    {text}
-  </button>
-{/if}
+  {#if !link}
+    <button {...attributes} type=\\"button\\">
+      {text}
+    </button>
+  {/if}
+</div>
 "
 `;
 
@@ -1722,6 +1727,32 @@ exports[`Svelte Javascript Test propsType 1`] = `
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
+"
+`;
+
+exports[`Svelte Javascript Test rootFragmentMultiNode 1`] = `
+"<script>
+  export let link;
+  export let attributes;
+  export let openLinkInNewTab;
+  export let text;
+</script>
+
+{#if link}
+  <a
+    {...attributes}
+    href={link}
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+  >
+    {text}
+  </a>
+{/if}
+
+{#if !link}
+  <button {...attributes} type=\\"button\\">
+    {text}
+  </button>
+{/if}
 "
 `;
 
@@ -2222,21 +2253,23 @@ exports[`Svelte Typescript Test Button 1`] = `
   export let text: ButtonProps[\\"text\\"];
 </script>
 
-{#if link}
-  <a
-    {...attributes}
-    href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
-  >
-    {text}
-  </a>
-{/if}
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
 
-{#if !link}
-  <button {...attributes} type=\\"button\\">
-    {text}
-  </button>
-{/if}
+  {#if !link}
+    <button {...attributes} type=\\"button\\">
+      {text}
+    </button>
+  {/if}
+</div>
 "
 `;
 
@@ -2876,24 +2909,25 @@ exports[`Svelte Typescript Test Image 1`] = `
   });
 </script>
 
-<picture bind:this={pictureRef}>
-  {#if !useLazyLoading() || load}
-    <img
-      alt={altText}
-      aria-role={altText ? \\"presentation\\" : undefined}
-      class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
-      src={image}
-      on:load={(event) => {
-        setLoaded();
-      }}
-      {srcset}
-      {sizes}
-    />
-  {/if}
-  <source {srcset} />
-</picture>
-
-<slot />
+<div>
+  <picture bind:this={pictureRef}>
+    {#if !useLazyLoading() || load}
+      <img
+        alt={altText}
+        aria-role={altText ? \\"presentation\\" : undefined}
+        class={\\"builder-image\\" + (_class ? \\" \\" + _class : \\"\\") + \\" img\\"}
+        src={image}
+        on:load={(event) => {
+          setLoaded();
+        }}
+        {srcset}
+        {sizes}
+      />
+    {/if}
+    <source {srcset} />
+  </picture>
+  <slot />
+</div>
 
 <style>
   .img {
@@ -3551,21 +3585,23 @@ exports[`Svelte Typescript Test defaultProps 1`] = `
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
 </script>
 
-{#if link}
-  <a
-    {...attributes}
-    href={link}
-    target={openLinkInNewTab ? \\"_blank\\" : undefined}
-  >
-    {text}
-  </a>
-{/if}
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
 
-{#if !link}
-  <button {...attributes} type=\\"button\\">
-    {text}
-  </button>
-{/if}
+  {#if !link}
+    <button {...attributes} type=\\"button\\">
+      {text}
+    </button>
+  {/if}
+</div>
 "
 `;
 
@@ -3908,6 +3944,41 @@ exports[`Svelte Typescript Test propsType 1`] = `
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
+"
+`;
+
+exports[`Svelte Typescript Test rootFragmentMultiNode 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"];
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  export let text: ButtonProps[\\"text\\"];
+</script>
+
+{#if link}
+  <a
+    {...attributes}
+    href={link}
+    target={openLinkInNewTab ? \\"_blank\\" : undefined}
+  >
+    {text}
+  </a>
+{/if}
+
+{#if !link}
+  <button {...attributes} type=\\"button\\">
+    {text}
+  </button>
+{/if}
 "
 `;
 

@@ -71,7 +71,7 @@ export default function Image(props: ImageProps) {
   });
 
   return (
-    <>
+    <div>
       <picture ref={pictureRef}>
         <Show when={!state.useLazyLoading() || load}>
           <img
@@ -94,6 +94,6 @@ export default function Image(props: ImageProps) {
         <source srcset={props.srcset} />
       </picture>
       {props.children}
-    </>
+    </div>
   );
 }

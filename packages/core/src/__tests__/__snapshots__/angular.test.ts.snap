@@ -5088,6 +5088,80 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular Javascript Test rootFragmentMultiNode 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular Javascript Test rootFragmentMultiNode 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular Javascript Test rootShow 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -10486,6 +10560,80 @@ type Person = {
 })
 export default class MyBasicComponent {
   @Input() name: Person[\\"name\\"];
+}
+"
+`;
+
+exports[`Angular Typescript Test rootFragmentMultiNode 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular Typescript Test rootFragmentMultiNode 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+
+  selector: \\"button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"];
 }
 "
 `;

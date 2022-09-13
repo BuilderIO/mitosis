@@ -1049,18 +1049,19 @@ exports[`Html Javascript Test BasicRefPrevious 1`] = `
 `;
 
 exports[`Html Javascript Test Button 1`] = `
-"<template data-el=\\"show\\">
-  <a data-el=\\"a-1\\">
-    <template data-el=\\"div-1\\"><!-- props.text --></template>
-  </a>
-</template>
+"<div>
+  <template data-el=\\"show\\">
+    <a data-el=\\"a-1\\">
+      <template data-el=\\"div-1\\"><!-- props.text --></template>
+    </a>
+  </template>
 
-<template data-el=\\"show-2\\">
-  <button type=\\"button\\" data-el=\\"button-1\\">
-    <template data-el=\\"div-2\\"><!-- props.text --></template>
-  </button>
-</template>
-
+  <template data-el=\\"show-2\\">
+    <button type=\\"button\\" data-el=\\"button-1\\">
+      <template data-el=\\"div-2\\"><!-- props.text --></template>
+    </button>
+  </template>
+</div>
 <script>
   (() => {
     const state = {};
@@ -1651,16 +1652,17 @@ exports[`Html Javascript Test Embed 1`] = `
 `;
 
 exports[`Html Javascript Test Image 1`] = `
-"<picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
-  <template data-el=\\"show\\">
-    <img data-el=\\"img-1\\" />
-  </template>
+"<div>
+  <picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
+    <template data-el=\\"show\\">
+      <img data-el=\\"img-1\\" />
+    </template>
 
-  <source data-el=\\"source-1\\" />
-</picture>
+    <source data-el=\\"source-1\\" />
+  </picture>
 
-<slot></slot>
-
+  <slot></slot>
+</div>
 <style>
   .img {
     opacity: 1;
@@ -3294,18 +3296,19 @@ exports[`Html Javascript Test classState 1`] = `
 `;
 
 exports[`Html Javascript Test defaultProps 1`] = `
-"<template data-el=\\"show\\">
-  <a data-el=\\"a-1\\">
-    <template data-el=\\"div-1\\"><!-- props.text --></template>
-  </a>
-</template>
+"<div>
+  <template data-el=\\"show\\">
+    <a data-el=\\"a-1\\">
+      <template data-el=\\"div-1\\"><!-- props.text --></template>
+    </a>
+  </template>
 
-<template data-el=\\"show-2\\">
-  <button type=\\"button\\" data-el=\\"button-1\\">
-    <template data-el=\\"div-2\\"><!-- props.text --></template>
-  </button>
-</template>
-
+  <template data-el=\\"show-2\\">
+    <button type=\\"button\\" data-el=\\"button-1\\">
+      <template data-el=\\"div-2\\"><!-- props.text --></template>
+    </button>
+  </template>
+</div>
 <script>
   (() => {
     const state = {};
@@ -3921,6 +3924,118 @@ exports[`Html Javascript Test propsType 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Javascript Test rootFragmentMultiNode 1`] = `
+"<template data-el=\\"show\\">
+  <a data-el=\\"a-1\\">
+    <template data-el=\\"div-1\\"><!-- props.text --></template>
+  </a>
+</template>
+
+<template data-el=\\"show-2\\">
+  <button type=\\"button\\" data-el=\\"button-1\\">
+    <template data-el=\\"div-2\\"><!-- props.text --></template>
+  </button>
+</template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='a-1']\\").forEach((el) => {
+        el.setAttribute(\\"href\\", props.link);
+
+        el.setAttribute(
+          \\"target\\",
+          props.openLinkInNewTab ? \\"_blank\\" : undefined
+        );
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.text);
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = !props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.text);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {
@@ -5502,18 +5617,19 @@ exports[`Html Typescript Test BasicRefPrevious 1`] = `
 `;
 
 exports[`Html Typescript Test Button 1`] = `
-"<template data-el=\\"show\\">
-  <a data-el=\\"a-1\\">
-    <template data-el=\\"div-1\\"><!-- props.text --></template>
-  </a>
-</template>
+"<div>
+  <template data-el=\\"show\\">
+    <a data-el=\\"a-1\\">
+      <template data-el=\\"div-1\\"><!-- props.text --></template>
+    </a>
+  </template>
 
-<template data-el=\\"show-2\\">
-  <button type=\\"button\\" data-el=\\"button-1\\">
-    <template data-el=\\"div-2\\"><!-- props.text --></template>
-  </button>
-</template>
-
+  <template data-el=\\"show-2\\">
+    <button type=\\"button\\" data-el=\\"button-1\\">
+      <template data-el=\\"div-2\\"><!-- props.text --></template>
+    </button>
+  </template>
+</div>
 <script>
   (() => {
     const state = {};
@@ -6104,16 +6220,17 @@ exports[`Html Typescript Test Embed 1`] = `
 `;
 
 exports[`Html Typescript Test Image 1`] = `
-"<picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
-  <template data-el=\\"show\\">
-    <img data-el=\\"img-1\\" />
-  </template>
+"<div>
+  <picture data-el=\\"picture-1\\" data-ref=\\"undefined-pictureRef\\">
+    <template data-el=\\"show\\">
+      <img data-el=\\"img-1\\" />
+    </template>
 
-  <source data-el=\\"source-1\\" />
-</picture>
+    <source data-el=\\"source-1\\" />
+  </picture>
 
-<slot></slot>
-
+  <slot></slot>
+</div>
 <style>
   .img {
     opacity: 1;
@@ -7747,18 +7864,19 @@ exports[`Html Typescript Test classState 1`] = `
 `;
 
 exports[`Html Typescript Test defaultProps 1`] = `
-"<template data-el=\\"show\\">
-  <a data-el=\\"a-1\\">
-    <template data-el=\\"div-1\\"><!-- props.text --></template>
-  </a>
-</template>
+"<div>
+  <template data-el=\\"show\\">
+    <a data-el=\\"a-1\\">
+      <template data-el=\\"div-1\\"><!-- props.text --></template>
+    </a>
+  </template>
 
-<template data-el=\\"show-2\\">
-  <button type=\\"button\\" data-el=\\"button-1\\">
-    <template data-el=\\"div-2\\"><!-- props.text --></template>
-  </button>
-</template>
-
+  <template data-el=\\"show-2\\">
+    <button type=\\"button\\" data-el=\\"button-1\\">
+      <template data-el=\\"div-2\\"><!-- props.text --></template>
+    </button>
+  </template>
+</div>
 <script>
   (() => {
     const state = {};
@@ -8374,6 +8492,118 @@ exports[`Html Typescript Test propsType 1`] = `
 
     // Update with initial state on first load
     update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html Typescript Test rootFragmentMultiNode 1`] = `
+"<template data-el=\\"show\\">
+  <a data-el=\\"a-1\\">
+    <template data-el=\\"div-1\\"><!-- props.text --></template>
+  </a>
+</template>
+
+<template data-el=\\"show-2\\">
+  <button type=\\"button\\" data-el=\\"button-1\\">
+    <template data-el=\\"div-2\\"><!-- props.text --></template>
+  </button>
+</template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='a-1']\\").forEach((el) => {
+        el.setAttribute(\\"href\\", props.link);
+
+        el.setAttribute(
+          \\"target\\",
+          props.openLinkInNewTab ? \\"_blank\\" : undefined
+        );
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, props.text);
+      });
+
+      document.querySelectorAll(\\"[data-el='show-2']\\").forEach((el) => {
+        const whenCondition = !props.link;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.text);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
+
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
 
     // Helper text DOM nodes
     function renderTextNode(el, text) {

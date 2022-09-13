@@ -9,7 +9,7 @@ export interface ButtonProps {
 
 export default function Button(props: ButtonProps) {
   return (
-    <>
+    <div>
       <Show when={props.link}>
         <a
           {...props.attributes}
@@ -24,6 +24,6 @@ export default function Button(props: ButtonProps) {
           {props.text}
         </button>
       </Show>
-    </>
+    </div>
   );
 }

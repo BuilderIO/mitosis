@@ -3,20 +3,22 @@
 exports[`Vue Javascript Test AdvancedRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -107,11 +109,16 @@ export default {
 exports[`Vue Javascript Test Basic 2`] = `
 "<template>
   <div>
-    <input
-      v-if=\\"person === name\\"
-      :value=\\"name\\"
-      @input=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template v-if=\\"person === name\\">
+      <input
+        :value=\\"name\\"
+        @input=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      {{ person }}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
   </div>
 </template>
 
@@ -294,20 +301,22 @@ export default {
 exports[`Vue Javascript Test BasicRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -413,18 +422,23 @@ export default {
 
 exports[`Vue Javascript Test Button 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -528,7 +542,9 @@ export default {
 exports[`Vue Javascript Test ContentSlotJSX 1`] = `
 "<template>
   <div>
-    <div v-if=\\"$slots.testing\\"><slot name=\\"testing\\" /></div>
+    <template v-if=\\"$slots.testing\\">
+      <div><slot name=\\"testing\\" /></div>
+    </template>
 
     <div>
       <hr />
@@ -726,39 +742,41 @@ exports[`Vue Javascript Test Form 1`] = `
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
   >
-    <builder-block-component
-      v-for=\\"(block, index) in builderBlock?.children\\"
-      v-if=\\"builderBlock && builderBlock.children\\"
-      :block=\\"block\\"
-      :index=\\"index\\"
-      :key=\\"block.id\\"
-    ></builder-block-component>
+    <template v-if=\\"builderBlock && builderBlock.children\\">
+      <builder-block-component
+        v-for=\\"(block, index) in builderBlock?.children\\"
+        :block=\\"block\\"
+        :index=\\"index\\"
+        :key=\\"block.id\\"
+      ></builder-block-component>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"errorMessage\\"
-      v-if=\\"submissionState === 'error'\\"
-      :blocks=\\"errorMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'error'\\">
+      <builder-blocks
+        dataPath=\\"errorMessage\\"
+        :blocks=\\"errorMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"sendingMessage\\"
-      v-if=\\"submissionState === 'sending'\\"
-      :blocks=\\"sendingMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'sending'\\">
+      <builder-blocks
+        dataPath=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <pre
-      class=\\"builder-form-error-text pre\\"
-      v-if=\\"submissionState === 'error' && responseData\\"
-    >
+    <template v-if=\\"submissionState === 'error' && responseData\\">
+      <pre class=\\"builder-form-error-text pre\\">
         {{ JSON.stringify(responseData, null, 2) }}
-      </pre
-    >
+      </pre>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"successMessage\\"
-      v-if=\\"submissionState === 'success'\\"
-      :blocks=\\"successMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'success'\\">
+      <builder-blocks
+        dataPath=\\"successMessage\\"
+        :blocks=\\"successMessage\\"
+      ></builder-blocks>
+    </template>
   </form>
 </template>
 
@@ -1039,26 +1057,28 @@ export default {
 
 exports[`Vue Javascript Test Image 1`] = `
 "<template>
-  <picture ref=\\"pictureRef\\">
-    <img
-      v-if=\\"!useLazyLoading() || load\\"
-      :alt=\\"altText\\"
-      :aria-role=\\"altText ? 'presentation' : undefined\\"
-      :class=\\"
-        _classStringToObject(
-          'builder-image' + (_class ? ' ' + _class : '') + ' img'
-        )
-      \\"
-      :src=\\"image\\"
-      @load=\\"setLoaded()\\"
-      :srcset=\\"srcset\\"
-      :sizes=\\"sizes\\"
-    />
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"
+            _classStringToObject(
+              'builder-image' + (_class ? ' ' + _class : '') + ' img'
+            )
+          \\"
+          :src=\\"image\\"
+          @load=\\"setLoaded()\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
 
-    <source :srcset=\\"srcset\\" />
-  </picture>
-
-  <slot />
+      <source :srcset=\\"srcset\\" />
+    </picture>
+    <slot />
+  </div>
 </template>
 
 <script>
@@ -1385,7 +1405,26 @@ exports[`Vue Javascript Test Stamped.io 1`] = `
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
 
-    <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
+    <template v-if=\\"showReviewPrompt\\">
+      <input placeholder=\\"Email\\" />
+
+      <input placeholder=\\"Title\\" class=\\"input\\" />
+
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea\\"
+      ></textarea>
+
+      <button
+        class=\\"button\\"
+        @click=\\"
+          $event.preventDefault();
+          showReviewPrompt = false;
+        \\"
+      >
+        Submit
+      </button>
+    </template>
 
     <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
       <img class=\\"img\\" :src=\\"review.avatar\\" />
@@ -1814,18 +1853,23 @@ export default {
 
 exports[`Vue Javascript Test defaultProps 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
 </template>
 
 <script>
@@ -2201,6 +2245,8 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+
 exports[`Vue Javascript Test rootShow 1`] = `
 "<template>
   <div v-if=\\"foo === 'bar'\\">Bar</div>
@@ -2222,7 +2268,9 @@ exports[`Vue Javascript Test self-referencing component 1`] = `
   <div>
     {{ name }}
 
-    <my-component name=\\"Bruce Wayne\\" v-if=\\"name === 'Batman'\\"></my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce Wayne\\"></my-component>
+    </template>
   </div>
 </template>
 
@@ -2242,9 +2290,11 @@ exports[`Vue Javascript Test self-referencing component with children 1`] = `
     {{ name }}
     <slot />
 
-    <my-component name=\\"Bruce\\" v-if=\\"name === 'Batman'\\">
-      <div>Wayne</div>
-    </my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce\\">
+        <div>Wayne</div>
+      </my-component>
+    </template>
   </div>
 </template>
 
@@ -2325,20 +2375,22 @@ export default {
 exports[`Vue Typescript Test AdvancedRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -2437,11 +2489,16 @@ export default {
 exports[`Vue Typescript Test Basic 2`] = `
 "<template>
   <div>
-    <input
-      v-if=\\"person === name\\"
-      :value=\\"name\\"
-      @input=\\"name = $event.target.value + ' and ' + person\\"
-    />
+    <template v-if=\\"person === name\\">
+      <input
+        :value=\\"name\\"
+        @input=\\"name = $event.target.value + ' and ' + person\\"
+      />
+
+      Hello
+      {{ person }}
+      ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+    </template>
   </div>
 </template>
 
@@ -2629,20 +2686,22 @@ export default {
 exports[`Vue Typescript Test BasicRef 1`] = `
 "<template>
   <div>
-    <input
-      class=\\"input\\"
-      ref=\\"inputRef\\"
-      :value=\\"name\\"
-      @blur=\\"onBlur()\\"
-      @input=\\"name = $event.target.value\\"
-    />
+    <template v-if=\\"showInput\\">
+      <input
+        class=\\"input\\"
+        ref=\\"inputRef\\"
+        :value=\\"name\\"
+        @blur=\\"onBlur()\\"
+        @input=\\"name = $event.target.value\\"
+      />
 
-    <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
+      <label for=\\"cars\\" ref=\\"inputNoArgRef\\"> Choose a car: </label>
 
-    <select name=\\"cars\\" id=\\"cars\\">
-      <option value=\\"supra\\">GR Supra</option>
-      <option value=\\"86\\">GR 86</option>
-    </select>
+      <select name=\\"cars\\" id=\\"cars\\">
+        <option value=\\"supra\\">GR Supra</option>
+        <option value=\\"86\\">GR 86</option>
+      </select>
+    </template>
 
     Hello
     {{ lowerCaseName() }}! I can run in React, Qwik, Vue, Solid, or Web
@@ -2760,18 +2819,23 @@ export default {
 
 exports[`Vue Typescript Test Button 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
 </template>
 
 <script lang=\\"ts\\">
@@ -2902,7 +2966,9 @@ export default {
 exports[`Vue Typescript Test ContentSlotJSX 1`] = `
 "<template>
   <div>
-    <div v-if=\\"$slots.testing\\"><slot name=\\"testing\\" /></div>
+    <template v-if=\\"$slots.testing\\">
+      <div><slot name=\\"testing\\" /></div>
+    </template>
 
     <div>
       <hr />
@@ -3114,39 +3180,41 @@ exports[`Vue Typescript Test Form 1`] = `
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
   >
-    <builder-block-component
-      v-for=\\"(block, index) in builderBlock?.children\\"
-      v-if=\\"builderBlock && builderBlock.children\\"
-      :block=\\"block\\"
-      :index=\\"index\\"
-      :key=\\"block.id\\"
-    ></builder-block-component>
+    <template v-if=\\"builderBlock && builderBlock.children\\">
+      <builder-block-component
+        v-for=\\"(block, index) in builderBlock?.children\\"
+        :block=\\"block\\"
+        :index=\\"index\\"
+        :key=\\"block.id\\"
+      ></builder-block-component>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"errorMessage\\"
-      v-if=\\"submissionState === 'error'\\"
-      :blocks=\\"errorMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'error'\\">
+      <builder-blocks
+        dataPath=\\"errorMessage\\"
+        :blocks=\\"errorMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"sendingMessage\\"
-      v-if=\\"submissionState === 'sending'\\"
-      :blocks=\\"sendingMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'sending'\\">
+      <builder-blocks
+        dataPath=\\"sendingMessage\\"
+        :blocks=\\"sendingMessage\\"
+      ></builder-blocks>
+    </template>
 
-    <pre
-      class=\\"builder-form-error-text pre\\"
-      v-if=\\"submissionState === 'error' && responseData\\"
-    >
+    <template v-if=\\"submissionState === 'error' && responseData\\">
+      <pre class=\\"builder-form-error-text pre\\">
         {{ JSON.stringify(responseData, null, 2) }}
-      </pre
-    >
+      </pre>
+    </template>
 
-    <builder-blocks
-      dataPath=\\"successMessage\\"
-      v-if=\\"submissionState === 'success'\\"
-      :blocks=\\"successMessage\\"
-    ></builder-blocks>
+    <template v-if=\\"submissionState === 'success'\\">
+      <builder-blocks
+        dataPath=\\"successMessage\\"
+        :blocks=\\"successMessage\\"
+      ></builder-blocks>
+    </template>
   </form>
 </template>
 
@@ -3451,26 +3519,28 @@ export default {
 
 exports[`Vue Typescript Test Image 1`] = `
 "<template>
-  <picture ref=\\"pictureRef\\">
-    <img
-      v-if=\\"!useLazyLoading() || load\\"
-      :alt=\\"altText\\"
-      :aria-role=\\"altText ? 'presentation' : undefined\\"
-      :class=\\"
-        _classStringToObject(
-          'builder-image' + (_class ? ' ' + _class : '') + ' img'
-        )
-      \\"
-      :src=\\"image\\"
-      @load=\\"setLoaded()\\"
-      :srcset=\\"srcset\\"
-      :sizes=\\"sizes\\"
-    />
+  <div>
+    <picture ref=\\"pictureRef\\">
+      <template v-if=\\"!useLazyLoading() || load\\">
+        <img
+          :alt=\\"altText\\"
+          :aria-role=\\"altText ? 'presentation' : undefined\\"
+          :class=\\"
+            _classStringToObject(
+              'builder-image' + (_class ? ' ' + _class : '') + ' img'
+            )
+          \\"
+          :src=\\"image\\"
+          @load=\\"setLoaded()\\"
+          :srcset=\\"srcset\\"
+          :sizes=\\"sizes\\"
+        />
+      </template>
 
-    <source :srcset=\\"srcset\\" />
-  </picture>
-
-  <slot />
+      <source :srcset=\\"srcset\\" />
+    </picture>
+    <slot />
+  </div>
 </template>
 
 <script lang=\\"ts\\">
@@ -3879,7 +3949,26 @@ exports[`Vue Typescript Test Stamped.io 1`] = `
   <div :data-user=\\"name\\">
     <button @click=\\"showReviewPrompt = true\\">Write a review</button>
 
-    <input placeholder=\\"Email\\" v-if=\\"showReviewPrompt\\" />
+    <template v-if=\\"showReviewPrompt\\">
+      <input placeholder=\\"Email\\" />
+
+      <input placeholder=\\"Title\\" class=\\"input\\" />
+
+      <textarea
+        placeholder=\\"How was your experience?\\"
+        class=\\"textarea\\"
+      ></textarea>
+
+      <button
+        class=\\"button\\"
+        @click=\\"
+          $event.preventDefault();
+          showReviewPrompt = false;
+        \\"
+      >
+        Submit
+      </button>
+    </template>
 
     <div class=\\"review\\" v-for=\\"(review, index) in reviews\\" :key=\\"review.id\\">
       <img class=\\"img\\" :src=\\"review.avatar\\" />
@@ -4375,18 +4464,23 @@ export default {
 
 exports[`Vue Typescript Test defaultProps 1`] = `
 "<template>
-  <a
-    v-bind=\\"attributes\\"
-    v-if=\\"link\\"
-    :href=\\"link\\"
-    :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
-  >
-    {{ text }}
-  </a>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        v-bind=\\"attributes\\"
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      >
+        {{ text }}
+      </a>
+    </template>
 
-  <button v-bind=\\"attributes\\" type=\\"button\\" v-if=\\"!link\\">
-    {{ text }}
-  </button>
+    <template v-if=\\"!link\\">
+      <button v-bind=\\"attributes\\" type=\\"button\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
 </template>
 
 <script lang=\\"ts\\">
@@ -4830,6 +4924,8 @@ export default {
 "
 `;
 
+exports[`Vue Typescript Test rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
+
 exports[`Vue Typescript Test rootShow 1`] = `
 "<template>
   <div v-if=\\"foo === 'bar'\\">Bar</div>
@@ -4855,7 +4951,9 @@ exports[`Vue Typescript Test self-referencing component 1`] = `
   <div>
     {{ name }}
 
-    <my-component name=\\"Bruce Wayne\\" v-if=\\"name === 'Batman'\\"></my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce Wayne\\"></my-component>
+    </template>
   </div>
 </template>
 
@@ -4875,9 +4973,11 @@ exports[`Vue Typescript Test self-referencing component with children 1`] = `
     {{ name }}
     <slot />
 
-    <my-component name=\\"Bruce\\" v-if=\\"name === 'Batman'\\">
-      <div>Wayne</div>
-    </my-component>
+    <template v-if=\\"name === 'Batman'\\">
+      <my-component name=\\"Bruce\\">
+        <div>Wayne</div>
+      </my-component>
+    </template>
   </div>
 </template>
 

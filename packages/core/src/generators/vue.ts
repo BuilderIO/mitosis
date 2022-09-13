@@ -125,7 +125,10 @@ type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) =
 const NODE_MAPPERS: {
   [key: string]: BlockRenderer | undefined;
 } = {
-  Fragment(json, options) {
+  Fragment(json, options, scope) {
+    if (options.vueVersion === 2 && scope?.isRootNode) {
+      throw new Error('Vue 2 template should have a single root element');
+    }
     return json.children.map((item) => blockToVue(item, options)).join('\n');
   },
   For(_json, options) {
@@ -167,22 +170,30 @@ const NODE_MAPPERS: {
       (slotName) => `$slots.${slotName}`,
     );
 
+    const defaultShowTemplate = `
+    <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
+      ${json.children.map((item) => blockToVue(item, options)).join('\n')}
+    </template>
+    ${
+      isMitosisNode(json.meta.else)
+        ? `
+        <template ${SPECIAL_PROPERTIES.V_ELSE}>
+          ${blockToVue(json.meta.else, options)}
+        </template>`
+        : ''
+    }
+    `;
+
     switch (options.vueVersion) {
       case 3:
-        return `
-        <template ${SPECIAL_PROPERTIES.V_IF}="${encodeQuotes(ifValue)}">
-          ${json.children.map((item) => blockToVue(item, options)).join('\n')}
-        </template>
-        ${
-          isMitosisNode(json.meta.else)
-            ? `
-            <template ${SPECIAL_PROPERTIES.V_ELSE}>
-              ${blockToVue(json.meta.else, options)}
-            </template>`
-            : ''
-        }
-        `;
+        return defaultShowTemplate;
       case 2:
+        // if it is not the root node, the default show template can be used
+        // as Vue 2 only has this limitation at root level
+        if (!scope?.isRootNode) {
+          return defaultShowTemplate;
+        }
+
         // Vue 2 can only handle one root element, so we just take the first one.
         // TO-DO: warn user of multi-children Show.
         const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
