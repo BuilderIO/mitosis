@@ -2,77 +2,85 @@ import { TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
-const basicForShow = require('./data/basic-for-show.raw');
-const basicOnMountUpdate = require('./data/basic-onMount-update.raw');
-const basicContext = require('./data/basic-context.raw');
-const basicOutputsMeta = require('./data/basic-outputs-meta.raw');
-const basicOutputs = require('./data/basic-outputs.raw');
-const subComponent = require('./data/sub-component.lite.jsx');
+const getRawFile = (path: string): string => require(path);
 
-const basic = require('./data/basic.raw');
-const basicMitosis = require('./data/basic-custom-mitosis-package.raw');
-const basicChildComponent = require('./data/basic-child-component.raw');
-const basicFor = require('./data/basic-for.raw');
-const basicRef = require('./data/basic-ref.raw');
-const basicForwardRef = require('./data/basic-forwardRef.raw');
-const basicForwardRefMetadata = require('./data/basic-forwardRef-metadata.raw');
-const basicRefPrevious = require('./data/basic-ref-usePrevious.raw');
-const basicRefAssignment = require('./data/basic-ref-assignment.raw');
-const propsDestructure = require('./data/basic-props-destructure.raw');
-const nestedStyles = require('./data/nested-styles.lite');
-const preserveExportOrLocalStatement = require('./data/basic-preserve-export-or-local-statement.raw');
+const basicForShow = getRawFile('./data/basic-for-show.raw');
+const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw');
+const basicContext = getRawFile('./data/basic-context.raw');
+const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw');
+const basicOutputs = getRawFile('./data/basic-outputs.raw');
+const subComponent = getRawFile('./data/sub-component.lite.jsx');
 
-const propsType = require('./data/types/component-props-type.raw');
-const propsInterface = require('./data/types/component-props-interface.raw');
-const preserveTyping = require('./data/types/preserve-typing.raw');
-const typeDependency = require('./data/types/type-dependency.raw');
+const basic = getRawFile('./data/basic.raw');
+const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw');
+const basicChildComponent = getRawFile('./data/basic-child-component.raw');
+const basicFor = getRawFile('./data/basic-for.raw');
+const basicRef = getRawFile('./data/basic-ref.raw');
+const basicForwardRef = getRawFile('./data/basic-forwardRef.raw');
+const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw');
+const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw');
+const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw');
+const propsDestructure = getRawFile('./data/basic-props-destructure.raw');
+const nestedStyles = getRawFile('./data/nested-styles.lite');
+const preserveExportOrLocalStatement = getRawFile(
+  './data/basic-preserve-export-or-local-statement.raw',
+);
 
-const defaultProps = require('./data/default-props/default-props.raw');
+const propsType = getRawFile('./data/types/component-props-type.raw');
+const propsInterface = getRawFile('./data/types/component-props-interface.raw');
+const preserveTyping = getRawFile('./data/types/preserve-typing.raw');
+const typeDependency = getRawFile('./data/types/type-dependency.raw');
 
-const classRaw = require('./data/styles/class.raw');
-const className = require('./data/styles/className.raw');
-const classAndClassName = require('./data/styles/class-and-className.raw');
-const classState = require('./data/styles/classState.raw');
+const defaultProps = getRawFile('./data/default-props/default-props.raw');
 
-const button = require('./data/blocks/button.raw');
-const classNameJsx = require('./data/blocks/classname-jsx.raw');
-const columns = require('./data/blocks/columns.raw');
-const contentSlotHtml = require('./data/blocks/content-slot-html.raw');
-const contentSlotJsx = require('./data/blocks/content-slot-jsx.raw');
-const customCode = require('./data/blocks/custom-code.raw');
-const formBlock = require('./data/blocks/form.raw');
-const image = require('./data/blocks/image.raw');
-const imageState = require('./data/blocks/img-state.raw');
-const img = require('./data/blocks/img.raw');
-const inputBlock = require('./data/blocks/input.raw');
-const multipleOnUpdate = require('./data/blocks/multiple-onUpdate.raw');
-const multipleOnUpdateWithDeps = require('./data/blocks/multiple-onUpdateWithDeps.raw');
-const onInit = require('./data/blocks/onInit.raw');
-const onInitonMount = require('./data/blocks/onInit-onMount.raw');
-const onMount = require('./data/blocks/onMount.raw');
-const onUpdate = require('./data/blocks/onUpdate.raw');
-const onUpdateWithDeps = require('./data/blocks/onUpdateWithDeps.raw');
-const rawText = require('./data/blocks/raw-text.raw');
-const section = require('./data/blocks/section.raw');
-const sectionState = require('./data/blocks/section-state.raw');
-const selectBlock = require('./data/blocks/select.raw');
-const selfRefCompWChildren = require('./data/blocks/self-referencing-component-with-children.raw');
-const selfRefComp = require('./data/blocks/self-referencing-component.raw');
-const slotHtml = require('./data/blocks/slot-html.raw');
-const slotJsx = require('./data/blocks/slot-jsx.raw');
-const stamped = require('./data/blocks/stamped-io.raw');
-const submitButtonBlock = require('./data/blocks/submit-button.raw');
-const text = require('./data/blocks/text.raw');
-const textarea = require('./data/blocks/textarea.raw');
-const video = require('./data/blocks/video.raw');
+const classRaw = getRawFile('./data/styles/class.raw');
+const className = getRawFile('./data/styles/className.raw');
+const classAndClassName = getRawFile('./data/styles/class-and-className.raw');
+const classState = getRawFile('./data/styles/classState.raw');
 
-const builderRenderContent = require('./data/blocks/builder-render-content.raw');
+const button = getRawFile('./data/blocks/button.raw');
+const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw');
+const columns = getRawFile('./data/blocks/columns.raw');
+const contentSlotHtml = getRawFile('./data/blocks/content-slot-html.raw');
+const contentSlotJsx = getRawFile('./data/blocks/content-slot-jsx.raw');
+const customCode = getRawFile('./data/blocks/custom-code.raw');
+const formBlock = getRawFile('./data/blocks/form.raw');
+const image = getRawFile('./data/blocks/image.raw');
+const imageState = getRawFile('./data/blocks/img-state.raw');
+const img = getRawFile('./data/blocks/img.raw');
+const inputBlock = getRawFile('./data/blocks/input.raw');
+const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw');
+const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw');
+const onInit = getRawFile('./data/blocks/onInit.raw');
+const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw');
+const onMount = getRawFile('./data/blocks/onMount.raw');
+const onUpdate = getRawFile('./data/blocks/onUpdate.raw');
+const onUpdateWithDeps = getRawFile('./data/blocks/onUpdateWithDeps.raw');
+const rawText = getRawFile('./data/blocks/raw-text.raw');
+const section = getRawFile('./data/blocks/section.raw');
+const sectionState = getRawFile('./data/blocks/section-state.raw');
+const selectBlock = getRawFile('./data/blocks/select.raw');
+const selfRefCompWChildren = getRawFile(
+  './data/blocks/self-referencing-component-with-children.raw',
+);
+const selfRefComp = getRawFile('./data/blocks/self-referencing-component.raw');
+const slotHtml = getRawFile('./data/blocks/slot-html.raw');
+const slotJsx = getRawFile('./data/blocks/slot-jsx.raw');
+const stamped = getRawFile('./data/blocks/stamped-io.raw');
+const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw');
+const text = getRawFile('./data/blocks/text.raw');
+const textarea = getRawFile('./data/blocks/textarea.raw');
+const video = getRawFile('./data/blocks/video.raw');
+
+const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
+
+const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw');
 
 const path = 'test-path';
 
-type Tests = { [index: string]: any };
+type Tests = { [index: string]: string };
 
-const BASIC_TESTS = {
+const BASIC_TESTS: Tests = {
   Basic: basic,
   BasicRef: basicRef,
   BasicRefPrevious: basicRefPrevious,
@@ -103,7 +111,7 @@ const BASIC_TESTS = {
   defaultProps: defaultProps,
   preserveTyping: preserveTyping,
   typeDependency,
-  defaultValsWithTypes: require('./data/types/component-with-default-values-types.raw'),
+  defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw'),
   'import types': builderRenderContent,
   subComponent,
   nestedStyles,
@@ -121,9 +129,10 @@ const BASIC_TESTS = {
   'class + ClassName + css': classAndClassName,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
+  rootFragmentMultiNode,
 };
 
-const SLOTS_TESTS = {
+const SLOTS_TESTS: Tests = {
   ContentSlotJSX: contentSlotJsx,
   ContentSlotHtml: contentSlotHtml,
   SlotJsx: slotJsx,
@@ -151,17 +160,17 @@ const FORWARD_REF_TESTS: Tests = {
 };
 
 const SHOW_TESTS: Tests = {
-  rootShow: require('./data/blocks/rootShow.raw'),
-  nestedShow: require('./data/show/nested-show.raw'),
-  showWithFor: require('./data/show/show-with-for.raw'),
+  rootShow: getRawFile('./data/blocks/rootShow.raw'),
+  nestedShow: getRawFile('./data/show/nested-show.raw'),
+  showWithFor: getRawFile('./data/show/show-with-for.raw'),
 };
 
 const ADVANCED_REF: Tests = {
-  AdvancedRef: require('./data/advanced-ref.raw'),
+  AdvancedRef: getRawFile('./data/advanced-ref.raw'),
 };
 
 const ON_UPDATE_RETURN: Tests = {
-  basicOnUpdateReturn: require('./data/basic-onUpdate-return.raw'),
+  basicOnUpdateReturn: getRawFile('./data/basic-onUpdate-return.raw'),
 };
 
 const JSX_TESTS: Tests[] = [
@@ -366,13 +375,12 @@ export const runTestsForTarget = <X>({
         testsArray.forEach((tests) => {
           Object.keys(tests).forEach((key) => {
             test(key, () => {
+              const component = parseJsx(tests[key]);
+              const getOutput = () => generator(options)({ component, path });
               try {
-                const component = parseJsx(tests[key]);
-                const output = generator(options)({ component, path });
-                expect(output).toMatchSnapshot();
+                expect(getOutput()).toMatchSnapshot();
               } catch (error) {
-                console.log('failed to parse', error);
-                throw error;
+                expect(getOutput).toThrowErrorMatchingSnapshot();
               }
             });
           });

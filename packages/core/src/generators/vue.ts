@@ -126,7 +126,7 @@ const NODE_MAPPERS: {
   [key: string]: BlockRenderer | undefined;
 } = {
   Fragment(json, options, scope) {
-    if (options.vueVersion === 2 && scope?.isRootNode && process?.env?.NODE_ENV !== 'test') {
+    if (options.vueVersion === 2 && scope?.isRootNode) {
       throw new Error('Vue 2 template should have a single root element');
     }
     return json.children.map((item) => blockToVue(item, options)).join('\n');

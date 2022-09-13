@@ -1,4 +1,4 @@
-import { Show, useDefaultProps } from '@builder.io/mitosis';
+import { Show } from '@builder.io/mitosis';
 
 export interface ButtonProps {
   attributes?: any;
@@ -8,14 +8,8 @@ export interface ButtonProps {
 }
 
 export default function Button(props: ButtonProps) {
-  useDefaultProps<ButtonProps>({
-    text: 'default text',
-    link: 'https://builder.io/',
-    openLinkInNewTab: false,
-  });
-
   return (
-    <div>
+    <>
       <Show when={props.link}>
         <a
           {...props.attributes}
@@ -30,6 +24,6 @@ export default function Button(props: ButtonProps) {
           {props.text}
         </button>
       </Show>
-    </div>
+    </>
   );
 }

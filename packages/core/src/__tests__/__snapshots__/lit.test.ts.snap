@@ -549,7 +549,7 @@ export default class Button extends LitElement {
   render() {
     return html\`
         
-        <my-fragment >
+        <div >
             
       \${
         this.link
@@ -574,7 +574,7 @@ export default class Button extends LitElement {
           : null
       }
 
-          </my-fragment>
+          </div>
       \`;
   }
 }
@@ -1358,7 +1358,7 @@ export default class Image extends LitElement {
  object-position: center;
 }
 </style>
-         <my-fragment>
+         <div>
          <picture ref=\\"pictureRef\\">
            \${
              !this.useLazyLoading() || this.load
@@ -1378,7 +1378,7 @@ export default class Image extends LitElement {
          </picture>
 
          \${this.children}
-       </my-fragment>
+       </div>
 
        \`;
   }
@@ -2392,7 +2392,7 @@ export default class Button extends LitElement {
   render() {
     return html\`
         
-        <my-fragment >
+        <div >
             
       \${
         this.link
@@ -2417,7 +2417,7 @@ export default class Button extends LitElement {
           : null
       }
 
-          </my-fragment>
+          </div>
       \`;
   }
 }
@@ -2954,6 +2954,71 @@ export default class MyBasicComponent extends LitElement {
         
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit Javascript Test rootFragmentMultiNode 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() link: any;
+  @property() attributes: any;
+  @property() openLinkInNewTab: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment >
+            
+      \${
+        this.link
+          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
+              this.openLinkInNewTab ? \\"_blank\\" : undefined
+            } >
+                
+      \${this.text}
+
+              </a>\`
+          : null
+      }
+
+            
+      \${
+        !this.link
+          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+                
+      \${this.text}
+
+              </button>\`
+          : null
+      }
+
+          </my-fragment>
       \`;
   }
 }
@@ -3725,7 +3790,7 @@ export default class Button extends LitElement {
   render() {
     return html\`
         
-        <my-fragment >
+        <div >
             
       \${
         this.link
@@ -3750,7 +3815,7 @@ export default class Button extends LitElement {
           : null
       }
 
-          </my-fragment>
+          </div>
       \`;
   }
 }
@@ -4534,7 +4599,7 @@ export default class Image extends LitElement {
  object-position: center;
 }
 </style>
-         <my-fragment>
+         <div>
          <picture ref=\\"pictureRef\\">
            \${
              !this.useLazyLoading() || this.load
@@ -4554,7 +4619,7 @@ export default class Image extends LitElement {
          </picture>
 
          \${this.children}
-       </my-fragment>
+       </div>
 
        \`;
   }
@@ -5568,7 +5633,7 @@ export default class Button extends LitElement {
   render() {
     return html\`
         
-        <my-fragment >
+        <div >
             
       \${
         this.link
@@ -5593,7 +5658,7 @@ export default class Button extends LitElement {
           : null
       }
 
-          </my-fragment>
+          </div>
       \`;
   }
 }
@@ -6130,6 +6195,71 @@ export default class MyBasicComponent extends LitElement {
         
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test rootFragmentMultiNode 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-button\\")
+export default class Button extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() link: any;
+  @property() attributes: any;
+  @property() openLinkInNewTab: any;
+  @property() text: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment >
+            
+      \${
+        this.link
+          ? html\`<a  \${spread(props.attributes)}  .href=\${this.link}  .target=\${
+              this.openLinkInNewTab ? \\"_blank\\" : undefined
+            } >
+                
+      \${this.text}
+
+              </a>\`
+          : null
+      }
+
+            
+      \${
+        !this.link
+          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+                
+      \${this.text}
+
+              </button>\`
+          : null
+      }
+
+          </my-fragment>
       \`;
   }
 }
