@@ -5,7 +5,7 @@ export type Context<T> = {};
 // These compile away
 export const useStore = <T>(obj: T): T => {
   throw new Error('useStore: Mitosis hook should have been compiled away');
-  return T;
+  return obj as T;
 };
 export const useState = <T>(obj: T): [T, (value: T) => void] => {
   throw new Error('useState: Mitosis hook should have been compiled away');
