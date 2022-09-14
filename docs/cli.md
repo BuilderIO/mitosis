@@ -10,6 +10,8 @@ We currently have two CLI commands: `mitosis build` and `mitosis compile`.
 - Receives 1 Mitosis component file as input
 - Outputs it to 1 designated target.
 
+You can get more information by `mitosis --help`
+
 ## `mitosis build`
 
 `mitosis build` is meant for entire project/folders, and is therefore more involved. It:
@@ -22,3 +24,11 @@ We currently have two CLI commands: `mitosis build` and `mitosis compile`.
 - Reads _all_ non-Mitosis JS/TS files in the project, and
   - transpiles them as-is to JS
 - Performs necessary transformations to both Mitosis & non-Mitosis files so that the output folder is coherent and valid (like renaming all component imports in a Svelte target such that they match the output name, ending in `.svelte`)
+
+### options
+
+|                             Option                              | Description                                           | Example                                                                                          |
+| :-------------------------------------------------------------: | :---------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
+|       <p style="white-space:nowrap">--config=\<file\></p>       | To specify config file, defaults to mitosis.config.js | none                                                                                             |
+|     <p style="white-space:nowrap">--targets=[format...]</p>     | To specify extra build targets                        | `mitosis build --targets react,vue,svelte` will add 'react','vue' and 'svelte' to build targets. |
+| <p style="white-space:nowrap">--targets-ignored=[format...]</p> | To exclude targets from the targets of config file    | `mitosis build --targets-ignored react,vue` will remove 'react' and 'vue' from build targets     |
