@@ -292,8 +292,6 @@ async function buildAndOutputComponentFiles({
       throw error;
     }
 
-    const original = transpiled;
-
     // perform additional transpilation steps per-target
     // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
     switch (target) {
@@ -321,13 +319,7 @@ async function buildAndOutputComponentFiles({
 
     const outputDir = `${options.dest}/${outputPath}`;
 
-    await Promise.all([
-      // this is the default output
-      outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-      ...(checkShouldOutputTypeScript({ target, options })
-        ? [outputFile(`${outputDir}/${path}`, original)]
-        : []),
-    ]);
+    await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
   });
   await Promise.all(output);
 }
