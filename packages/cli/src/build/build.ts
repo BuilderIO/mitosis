@@ -58,16 +58,68 @@ async function clean(options: MitosisConfig) {
   );
 }
 
-const getMitosisComponentJSONs = async (options: MitosisConfig) => {
+type ParsedMitosisJson = {
+  path: string;
+  typescriptMitosisJson: MitosisComponent;
+  javascriptMitosisJson: MitosisComponent;
+};
+
+const getRequiredParsers = (
+  options: MitosisConfig,
+): { javascript: boolean; typescript: boolean } => {
+  const targetsOptions = Object.values(options.options);
+
+  const targetsRequiringTypeScript = targetsOptions.filter((option) => option.typescript).length;
+  const needsTypeScript = targetsRequiringTypeScript > 0;
+
+  /**
+   * We use 2 ways to check if the user requires a JS output:
+   * - either there are fewer `options[target].typescript === true` than there are items in `targets`
+   * - either there are fewer `options[target].typescript === true` than there are items in `options.options`
+   *
+   * The reason for checking in multiple ways is if there is a mismatch between the number of targets in the `targets`
+   * array compared to the configurations in `options.options`.
+   */
+  const needsJavaScript =
+    options.targets.length > targetsRequiringTypeScript ||
+    targetsOptions.length > targetsRequiringTypeScript;
+
+  return {
+    typescript: needsTypeScript,
+    javascript: needsJavaScript,
+  };
+};
+
+const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
+  const requiredParses = getRequiredParsers(options);
   return Promise.all(
     micromatch(await glob(options.files, { cwd }), `**/*.${options.extension ?? 'lite.tsx'}`).map(
-      async (path) => {
+      async (path): Promise<ParsedMitosisJson> => {
         try {
           const file = await readFile(path, 'utf8');
-          const parsed = await (options.parser ? options.parser(file, path) : parseJsx(file));
+          let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
+          let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
+          if (requiredParses.typescript && requiredParses.javascript) {
+            typescriptMitosisJson = options.parser
+              ? options.parser(file, path)
+              : parseJsx(file, { typescript: true });
+            javascriptMitosisJson = options.parser
+              ? options.parser(file, path)
+              : parseJsx(file, { typescript: false });
+          } else {
+            const singleParse = options.parser
+              ? options.parser(file, path)
+              : parseJsx(file, { typescript: requiredParses.typescript });
+
+            // technically only one of these will be used, but we set both to simplify things.
+            typescriptMitosisJson = singleParse;
+            javascriptMitosisJson = singleParse;
+          }
+
           return {
             path,
-            mitosisJson: parsed,
+            typescriptMitosisJson,
+            javascriptMitosisJson,
           };
         } catch (err) {
           console.error('Could not parse file:', path);
@@ -210,11 +262,9 @@ async function buildAndOutputComponentFiles({
   options,
   generator,
   outputPath,
-}: TargetContextWithConfig & {
-  files: { path: string; mitosisJson: MitosisComponent }[];
-}) {
+}: TargetContextWithConfig & { files: ParsedMitosisJson[] }) {
   const debugTarget = debug(`mitosis:${target}`);
-  const output = files.map(async ({ path, mitosisJson }) => {
+  const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
     const outputFilePath = replaceFileExtensionForTarget({ target, path, options });
 
     // try to find override component file
@@ -230,7 +280,11 @@ async function buildAndOutputComponentFiles({
       debugTarget(`override exists for ${path}: ${!!overrideFile}`);
     }
     try {
-      transpiled = overrideFile ?? generator({ path, component: mitosisJson });
+      const component = checkShouldOutputTypeScript({ options, target })
+        ? typescriptMitosisJson
+        : javascriptMitosisJson;
+
+      transpiled = overrideFile ?? generator({ path, component });
       debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
@@ -247,7 +301,6 @@ async function buildAndOutputComponentFiles({
         transpiled = await transpileSolidFile({
           contents: transpiled,
           path,
-          mitosisComponent: mitosisJson,
         });
         break;
       case 'reactNative':
@@ -308,9 +361,10 @@ const outputNonComponentFiles = async ({
   options: MitosisConfig;
 }) => {
   const extension = getNonComponentFileExtension({ target, options });
+  const folderPath = `${options.dest}/${outputPath}`;
   await Promise.all(
     files.map(({ path, output }) =>
-      outputFile(`${options.dest}/${outputPath}/${path.replace(/\.tsx?$/, extension)}`, output),
+      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
     ),
   );
 };

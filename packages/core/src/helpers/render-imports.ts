@@ -127,7 +127,12 @@ export const renderImport = ({
         'Vue: Async Component imports cannot include named imports. Dropping async import. This might break your code.',
       );
     } else {
-      return `const ${importValue} = () => import('${path}').then(x => x.default)`;
+      return `const ${importValue} = () => import('${path}')
+      .then(x => x.default)
+      .catch(err => { 
+        console.error('Error while attempting to dynamically import component ${importValue} at ${path}', err);
+        throw err;
+      });`;
     }
   }
 

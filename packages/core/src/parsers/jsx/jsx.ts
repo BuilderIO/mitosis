@@ -40,9 +40,14 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
  */
 export function parseJsx(
   jsx: string,
-  options: Partial<ParseMitosisOptions> = {},
+  _options: Partial<ParseMitosisOptions> = {},
 ): MitosisComponent {
   let subComponentFunctions: string[] = [];
+
+  const options: ParseMitosisOptions = {
+    typescript: false,
+    ..._options,
+  };
 
   const output = babel.transform(jsx, {
     configFile: false,
@@ -57,7 +62,8 @@ export function parseJsx(
           // If left to its default `false`, then this will strip away:
           // - unused JS imports
           // - types imports within regular JS import syntax
-          onlyRemoveTypeImports: true,
+          // When outputting to TS, we must set it to `true` to preserve these imports.
+          onlyRemoveTypeImports: options.typescript,
         },
       ],
     ],
