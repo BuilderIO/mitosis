@@ -1,9 +1,9 @@
 import { MitosisComponent } from '../../types/mitosis-component';
 
 export type ParseMitosisOptions = {
-  format: 'react' | 'simple';
   jsonHookNames?: string[];
   compileAwayPackages?: string[];
+  typescript: boolean;
 };
 
 export type Context = {

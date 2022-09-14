@@ -1,4 +1,4 @@
-import { TranspilerGenerator } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
@@ -345,7 +345,7 @@ export const runTestsForJsx = () => {
   });
 };
 
-export const runTestsForTarget = <X>({
+export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
   generator,
   options,
@@ -375,7 +375,7 @@ export const runTestsForTarget = <X>({
         testsArray.forEach((tests) => {
           Object.keys(tests).forEach((key) => {
             test(key, () => {
-              const component = parseJsx(tests[key]);
+              const component = parseJsx(tests[key], { typescript: options.typescript });
               const getOutput = () => generator(options)({ component, path });
               try {
                 expect(getOutput()).toMatchSnapshot();

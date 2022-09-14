@@ -1,12 +1,10 @@
 import * as babel from '@babel/core';
-import { MitosisComponent } from '@builder.io/mitosis';
 
 const tsPreset = require('@babel/preset-typescript');
 
 export type TranspileSolidFileOptions = {
   path: string;
   contents: string;
-  mitosisComponent: MitosisComponent;
 };
 
 // TO-DO: can this be replaced with esbuild `transpile` helper
