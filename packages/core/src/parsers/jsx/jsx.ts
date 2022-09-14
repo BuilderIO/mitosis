@@ -42,11 +42,6 @@ export function parseJsx(
   jsx: string,
   options: Partial<ParseMitosisOptions> = {},
 ): MitosisComponent {
-  const useOptions: ParseMitosisOptions = {
-    format: 'react',
-    ...options,
-  };
-
   let subComponentFunctions: string[] = [];
 
   const output = babel.transform(jsx, {
@@ -103,7 +98,7 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) => collectMetadata(statements, context.builder.component, useOptions),
+              (statements) => collectMetadata(statements, context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,
@@ -169,7 +164,7 @@ export function parseJsx(
   mapStateIdentifiers(parsed);
   extractContextComponents(parsed);
 
-  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, useOptions));
+  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
 
   return parsed;
 }

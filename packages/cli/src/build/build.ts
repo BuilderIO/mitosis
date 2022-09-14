@@ -93,7 +93,7 @@ const getTargetContexts = (options: MitosisConfig) =>
     (target): TargetContext => ({
       target,
       generator: getGeneratorForTarget({ target, options }),
-      outputPath: getTargetPath({ target }),
+      outputPath: options.getTargetPath?.(target) ?? getTargetPath({ target }),
     }),
   );
 
