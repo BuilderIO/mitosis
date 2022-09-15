@@ -190,6 +190,10 @@ export const jsxElementToJson = (
       if (types.isJSXAttribute(item)) {
         const key = item.name.name as string;
         const value = item.value;
+        if (!'value' in item) {
+          memo[key] = true;
+          return memo;
+        }
         if (types.isStringLiteral(value)) {
           memo[key] = value.value;
           return memo;
