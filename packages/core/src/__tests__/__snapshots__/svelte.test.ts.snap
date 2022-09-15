@@ -201,6 +201,23 @@ exports[`Svelte Javascript Test Basic Outputs Meta 1`] = `
 "
 `;
 
+exports[`Svelte Javascript Test BasicBooleanAttribute 1`] = `
+"<script>
+  import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+  export let type;
+</script>
+
+<div>
+  <slot />
+  {type}
+  <MyBooleanAttributeComponent toggle={true} />
+  <MyBooleanAttributeComponent toggle={true} />
+  <MyBooleanAttributeComponent list={null} />
+</div>
+"
+`;
+
 exports[`Svelte Javascript Test BasicChildComponent 1`] = `
 "<script>
   import MyBasicComponent from \\"./basic.raw\\";
@@ -2061,6 +2078,30 @@ exports[`Svelte Typescript Test Basic Outputs Meta 1`] = `
 </script>
 
 <div />
+"
+`;
+
+exports[`Svelte Typescript Test BasicBooleanAttribute 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  type Props = {
+    children: any;
+    type: string;
+  };
+</script>
+
+<script lang=\\"ts\\">
+  import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+  export let type: Props[\\"type\\"];
+</script>
+
+<div>
+  <slot />
+  {type}
+  <MyBooleanAttributeComponent toggle={true} />
+  <MyBooleanAttributeComponent toggle={true} />
+  <MyBooleanAttributeComponent list={null} />
+</div>
 "
 `;
 

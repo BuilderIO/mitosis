@@ -190,12 +190,6 @@ export const jsxElementToJson = (
       if (types.isJSXAttribute(item)) {
         const key = item.name.name as string;
         const value = item.value;
-
-        // boolean attribute
-        if (!item.hasOwnProperty('value')) {
-          memo[key] = 'true';
-          return memo;
-        }
         if (types.isStringLiteral(value)) {
           memo[key] = value.value;
           return memo;
@@ -212,6 +206,13 @@ export const jsxElementToJson = (
         const key = item.name.name as string;
         const value = item.value;
 
+        // boolean attribute
+        if (value === null) {
+          memo[key] = {
+            code: 'true'
+          };
+          return memo;
+        }
         if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {
