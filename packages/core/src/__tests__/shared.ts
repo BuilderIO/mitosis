@@ -5,6 +5,7 @@ import { parseJsx } from '../parsers/jsx';
 const getRawFile = (path: string): string => require(path);
 
 const basicForShow = getRawFile('./data/basic-for-show.raw');
+const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw');
 const basicContext = getRawFile('./data/basic-context.raw');
 const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw');
@@ -82,6 +83,7 @@ type Tests = { [index: string]: string };
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
+  BasicBooleanAttribute: basicBooleanAttribute,
   BasicRef: basicRef,
   BasicRefPrevious: basicRefPrevious,
   BasicRefAssignment: basicRefAssignment,
