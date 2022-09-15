@@ -4,5 +4,9 @@ type Props = {
 };
 
 export default function MyBooleanAttributeComponent(props: Props) {
-  return <div>{props.toggle} {props.list}</div>;
+  return (
+    <div>
+      {props.toggle} {props.list}
+    </div>
+  );
 }

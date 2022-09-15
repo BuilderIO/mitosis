@@ -209,7 +209,7 @@ export const jsxElementToJson = (
         // boolean attribute
         if (value === null) {
           memo[key] = {
-            code: 'true'
+            code: 'true',
           };
           return memo;
         }
