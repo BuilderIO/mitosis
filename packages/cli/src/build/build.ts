@@ -250,8 +250,10 @@ const replaceFileExtensionForTarget = ({
   target: Target;
   path: string;
   options: MitosisConfig;
-}) =>
-  path.replace(/\.lite\.tsx$/, getFileExtensionForTarget({ type: 'filename', target, options }));
+}) => {
+  let regex = new RegExp(`.${options.extension}$`);
+  return path.replace(regex, getFileExtensionForTarget({ type: 'filename', target, options }));
+};
 
 /**
  * Transpiles and outputs Mitosis component files.
