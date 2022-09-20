@@ -40,14 +40,14 @@ const beforeParse = (path: babel.NodePath<babel.types.Program>) => {
  */
 export function parseJsx(
   jsx: string,
-  options: Partial<ParseMitosisOptions> = {},
+  _options: Partial<ParseMitosisOptions> = {},
 ): MitosisComponent {
-  const useOptions: ParseMitosisOptions = {
-    format: 'react',
-    ...options,
-  };
-
   let subComponentFunctions: string[] = [];
+
+  const options: ParseMitosisOptions = {
+    typescript: false,
+    ..._options,
+  };
 
   const output = babel.transform(jsx, {
     configFile: false,
@@ -62,7 +62,8 @@ export function parseJsx(
           // If left to its default `false`, then this will strip away:
           // - unused JS imports
           // - types imports within regular JS import syntax
-          onlyRemoveTypeImports: true,
+          // When outputting to TS, we must set it to `true` to preserve these imports.
+          onlyRemoveTypeImports: options.typescript,
         },
       ],
     ],
@@ -103,7 +104,7 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) => collectMetadata(statements, context.builder.component, useOptions),
+              (statements) => collectMetadata(statements, context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,
@@ -169,7 +170,7 @@ export function parseJsx(
   mapStateIdentifiers(parsed);
   extractContextComponents(parsed);
 
-  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, useOptions));
+  parsed.subComponents = subComponentFunctions.map((item) => parseJsx(item, options));
 
   return parsed;
 }

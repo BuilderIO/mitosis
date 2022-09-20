@@ -576,6 +576,94 @@ exports[`Html Javascript Test Basic Outputs Meta 1`] = `
 "
 `;
 
+exports[`Html Javascript Test BasicBooleanAttribute 1`] = `
+"<div>
+  <slot></slot>
+
+  <template data-el=\\"div-2\\"><!-- props.type --></template>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component-2\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component-3\\"
+  ></MyBooleanAttributeComponent>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.type);
+      });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"toggle\\", true);
+        });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component-2']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"toggle\\", true);
+        });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component-3']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"list\\", null);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Javascript Test BasicChildComponent 1`] = `
 "<div>
   <MyBasicComponent data-el=\\"my-basic-component\\"></MyBasicComponent>
@@ -5139,6 +5227,94 @@ exports[`Html Typescript Test Basic Outputs Meta 1`] = `
     // onMount
     props.onMessage(state.name);
     props.onEvent(props.message);
+  })();
+</script>
+"
+`;
+
+exports[`Html Typescript Test BasicBooleanAttribute 1`] = `
+"<div>
+  <slot></slot>
+
+  <template data-el=\\"div-2\\"><!-- props.type --></template>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component-2\\"
+  ></MyBooleanAttributeComponent>
+
+  <MyBooleanAttributeComponent
+    data-el=\\"my-boolean-attribute-component-3\\"
+  ></MyBooleanAttributeComponent>
+</div>
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, props.type);
+      });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"toggle\\", true);
+        });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component-2']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"toggle\\", true);
+        });
+
+      document
+        .querySelectorAll(\\"[data-el='my-boolean-attribute-component-3']\\")
+        .forEach((el) => {
+          el.setAttribute(\\"list\\", null);
+        });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "

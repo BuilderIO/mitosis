@@ -1,10 +1,11 @@
-import { TranspilerGenerator } from '../types/transpiler';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
 const getRawFile = (path: string): string => require(path);
 
 const basicForShow = getRawFile('./data/basic-for-show.raw');
+const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw');
 const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw');
 const basicContext = getRawFile('./data/basic-context.raw');
 const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw');
@@ -82,6 +83,7 @@ type Tests = { [index: string]: string };
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
+  BasicBooleanAttribute: basicBooleanAttribute,
   BasicRef: basicRef,
   BasicRefPrevious: basicRefPrevious,
   BasicRefAssignment: basicRefAssignment,
@@ -345,7 +347,7 @@ export const runTestsForJsx = () => {
   });
 };
 
-export const runTestsForTarget = <X>({
+export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   target,
   generator,
   options,
@@ -375,7 +377,7 @@ export const runTestsForTarget = <X>({
         testsArray.forEach((tests) => {
           Object.keys(tests).forEach((key) => {
             test(key, () => {
-              const component = parseJsx(tests[key]);
+              const component = parseJsx(tests[key], { typescript: options.typescript });
               const getOutput = () => generator(options)({ component, path });
               try {
                 expect(getOutput()).toMatchSnapshot();
