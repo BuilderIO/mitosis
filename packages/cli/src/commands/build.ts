@@ -5,7 +5,7 @@ import { getMitosisConfig } from '../helpers/get-mitosis-config';
 
 const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['options']) => {
   const targetsFromCli: Target[] = (cliOpts.targets || '').split(',');
-  const targetsIgnoredMap: Record<Target, true> = (cliOpts.targetsIgnored || '')
+  const excludeTargetsMap: Record<Target, true> = (cliOpts.excludeTargets || '')
     .split(',')
     .reduce((accu, t) => {
       accu[t] = true;
@@ -13,7 +13,7 @@ const getTargets = (mitosisConfig: MitosisConfig, cliOpts: GluegunParameters['op
     }, {});
 
   const targets = Array.from(new Set([...mitosisConfig.targets, ...targetsFromCli])).filter(
-    (t) => t && !targetsIgnoredMap[t],
+    (t) => t && !excludeTargetsMap[t],
   );
   return targets;
 };

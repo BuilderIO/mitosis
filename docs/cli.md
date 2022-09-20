@@ -31,4 +31,4 @@ You can get more information by `mitosis --help`
 | :-------------------------------------------------------------: | :---------------------------------------------------- | :----------------------------------------------------------------------------------------------- |
 |       <p style="white-space:nowrap">--config=\<file\></p>       | To specify config file, defaults to mitosis.config.js | none                                                                                             |
 |     <p style="white-space:nowrap">--targets=[format...]</p>     | To specify extra build targets                        | `mitosis build --targets react,vue,svelte` will add 'react','vue' and 'svelte' to build targets. |
-| <p style="white-space:nowrap">--targets-ignored=[format...]</p> | To exclude targets from the targets of config file    | `mitosis build --targets-ignored react,vue` will remove 'react' and 'vue' from build targets     |
+| <p style="white-space:nowrap">--exclude-targets=[format...]</p> | To exclude targets from the targets of config file    | `mitosis build --exclude-targets react,vue` will remove 'react' and 'vue' from build targets     |
