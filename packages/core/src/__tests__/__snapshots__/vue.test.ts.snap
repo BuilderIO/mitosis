@@ -240,6 +240,34 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test BasicBooleanAttribute 1`] = `
+"<template>
+  <div>
+    <slot /> {{ type }}
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :list=\\"null\\"
+    ></my-boolean-attribute-component>
+  </div>
+</template>
+
+<script>
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+export default {
+  name: \\"my-boolean-attribute\\",
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  props: [\\"type\\"],
+};
+</script>
+"
+`;
+
 exports[`Vue Javascript Test BasicChildComponent 1`] = `
 "<template>
   <div>
@@ -782,7 +810,7 @@ exports[`Vue Javascript Test Form 1`] = `
 
 <script>
 import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -1916,8 +1944,7 @@ exports[`Vue Javascript Test import types 1`] = `
 </template>
 
 <script>
-import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+import RenderBlock from \\"./builder-render-block.raw\\";
 
 export default {
   name: \\"render-content\\",
@@ -2620,6 +2647,39 @@ export default {
     this.onMessage(this.name);
     this.onEvent(this.message);
   },
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test BasicBooleanAttribute 1`] = `
+"<template>
+  <div>
+    <slot /> {{ type }}
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :list=\\"null\\"
+    ></my-boolean-attribute-component>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+type Props = {
+  children: any;
+  type: string;
+};
+
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+export default {
+  name: \\"my-boolean-attribute\\",
+  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  props: [\\"type\\"],
 };
 </script>
 "

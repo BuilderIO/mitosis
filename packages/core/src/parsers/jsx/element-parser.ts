@@ -206,6 +206,13 @@ export const jsxElementToJson = (
         const key = item.name.name as string;
         const value = item.value;
 
+        // boolean attribute
+        if (value === null) {
+          memo[key] = {
+            code: 'true',
+          };
+          return memo;
+        }
         if (types.isJSXExpressionContainer(value) && !types.isStringLiteral(value.expression)) {
           const { expression } = value;
           if (types.isArrowFunctionExpression(expression)) {

@@ -222,6 +222,30 @@ onMounted(() => {
 "
 `;
 
+exports[`Vue Javascript Test BasicBooleanAttribute 1`] = `
+"<template>
+  <div>
+    <slot /> {{ type }}
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :list=\\"null\\"
+    ></my-boolean-attribute-component>
+  </div>
+</template>
+
+<script setup>
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+const props = defineProps([\\"children\\", \\"type\\"]);
+</script>
+"
+`;
+
 exports[`Vue Javascript Test BasicChildComponent 1`] = `
 "<template>
   <div>
@@ -795,7 +819,7 @@ exports[`Vue Javascript Test Form 1`] = `
 
 
   import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { BuilderElement, Builder, builder } from '@builder.io/sdk';
+import { Builder, builder } from '@builder.io/sdk';
 import { BuilderBlocks } from '@fake';
 import { set } from '@fake';
 import { get } from '@fake';
@@ -1851,8 +1875,7 @@ exports[`Vue Javascript Test import types 1`] = `
 </template>
 
 <script setup>
-import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+import RenderBlock from \\"./builder-render-block.raw\\";
 
 const props = defineProps([\\"renderContentProps\\"]);
 
@@ -2454,6 +2477,35 @@ onMounted(() => {
   props.onMessage(name);
   props.onEvent(props.message);
 });
+</script>
+"
+`;
+
+exports[`Vue Typescript Test BasicBooleanAttribute 1`] = `
+"<template>
+  <div>
+    <slot /> {{ type }}
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :toggle=\\"true\\"
+    ></my-boolean-attribute-component>
+    <my-boolean-attribute-component
+      :list=\\"null\\"
+    ></my-boolean-attribute-component>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+type Props = {
+  children: any;
+  type: string;
+};
+
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+const props = defineProps<Props>();
 </script>
 "
 `;
