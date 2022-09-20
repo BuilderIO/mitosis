@@ -267,6 +267,8 @@ async function buildAndOutputComponentFiles({
   outputPath,
 }: TargetContextWithConfig & { files: ParsedMitosisJson[] }) {
   const debugTarget = debug(`mitosis:${target}`);
+  const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
+
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
     const outputFilePath = replaceFileExtensionForTarget({ target, path, options });
 
@@ -283,9 +285,7 @@ async function buildAndOutputComponentFiles({
       debugTarget(`override exists for ${path}: ${!!overrideFile}`);
     }
     try {
-      const component = checkShouldOutputTypeScript({ options, target })
-        ? typescriptMitosisJson
-        : javascriptMitosisJson;
+      const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
 
       transpiled = overrideFile ?? generator({ path, component });
       debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
@@ -295,42 +295,32 @@ async function buildAndOutputComponentFiles({
       throw error;
     }
 
-    const original = transpiled;
-
-    // perform additional transpilation steps per-target
-    // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
-    switch (target) {
-      case 'solid':
-        transpiled = await transpileSolidFile({
-          contents: transpiled,
-          path,
-        });
-        break;
-      case 'reactNative':
-      case 'preact':
-      case 'react':
-        transpiled = await transpile({
-          path,
-          content: transpiled,
-          target,
-          options,
-        });
-        break;
-      case 'vue':
-      case 'vue2':
-      case 'vue3':
-        break;
+    // perform additional transpilation steps per-target when outputting JS
+    if (!shouldOutputTypescript) {
+      // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
+      switch (target) {
+        case 'solid':
+          transpiled = await transpileSolidFile({
+            contents: transpiled,
+            path,
+          });
+          break;
+        case 'reactNative':
+        case 'preact':
+        case 'react':
+          transpiled = await transpile({
+            path,
+            content: transpiled,
+            target,
+            options,
+          });
+          break;
+      }
     }
 
     const outputDir = `${options.dest}/${outputPath}`;
 
-    await Promise.all([
-      // this is the default output
-      outputFile(`${outputDir}/${outputFilePath}`, transpiled),
-      ...(checkShouldOutputTypeScript({ target, options })
-        ? [outputFile(`${outputDir}/${path}`, original)]
-        : []),
-    ]);
+    await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
   });
   await Promise.all(output);
 }
