@@ -38,6 +38,7 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
+  extension: 'lite.tsx',
 };
 
 const getOptions = (config?: MitosisConfig): MitosisConfig => ({
@@ -93,7 +94,7 @@ const getRequiredParsers = (
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   const requiredParses = getRequiredParsers(options);
   return Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*.${options.extension ?? 'lite.tsx'}`).map(
+    micromatch(await glob(options.files, { cwd }), `**/*.${options.extension}`).map(
       async (path): Promise<ParsedMitosisJson> => {
         try {
           const file = await readFile(path, 'utf8');
