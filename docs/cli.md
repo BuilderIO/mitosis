@@ -10,7 +10,7 @@ We currently have two CLI commands: `mitosis build` and `mitosis compile`.
 - Receives 1 Mitosis component file as input
 - Outputs it to 1 designated target.
 
-You can get more information by `mitosis --help`
+You can get more information by running `mitosis --help`
 
 ## `mitosis build`
 
