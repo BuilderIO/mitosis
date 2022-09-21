@@ -966,7 +966,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
 
     const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
 
-    const elementProps = Array.from(getProps(component)).filter((prop) => !prop.startsWith('slot'));
+    const elementProps = Array.from(getProps(component)).filter(isSlotProperty);
 
     // import from vue
     let vueImports: string[] = [];
