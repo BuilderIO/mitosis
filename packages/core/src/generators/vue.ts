@@ -194,43 +194,102 @@ const NODE_MAPPERS: {
           return defaultShowTemplate;
         }
 
+        const children = json.children.filter(filterEmptyTextNodes);
         // Vue 2 can only handle one root element, so we just take the first one.
         // TO-DO: warn user of multi-children Show.
-        const firstChild = json.children.filter(filterEmptyTextNodes)[0] as MitosisNode | undefined;
+        const firstChild = children[0] as MitosisNode | undefined;
         const elseBlock = json.meta.else;
 
         const hasShowChild = firstChild?.name === 'Show';
         const childElseBlock = firstChild?.meta.else;
 
-        /**
-         * This is special edge logic to handle 2 nested Show elements in Vue 2.
-         * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
-         *
-         * <show when={foo} else={else-1}>
-         *  <show when={bar} else={else-2}>
-         *   <if-code>
-         *  </show>
-         * </show>
-         *
-         *
-         * foo: true && bar: true => if-code
-         * foo: true && bar: false => else-2
-         * foo: false && bar: true?? => else-1
-         *
-         *
-         * map to:
-         *
-         * <else-1 if={!foo} />
-         * <else-2 else-if={!bar} />
-         * <if-code v-else />
-         *
-         */
-        if (
+        const allShowChildrenWithoutElse = children.every((x) => x.name === 'Show' && !x.meta.else);
+
+        if (allShowChildrenWithoutElse && isMitosisNode(elseBlock)) {
+          /**
+           * This is when we mimic an if-else chain by only providing `Show` elements as children, none of which have an `else` block
+           *
+           * <show when={foo} else={else-1}>
+           *  <show when={bar}> <bar-code> </show>
+           *  <show when={x}> <x-code> </show>
+           *  <show when={y}> <y-code> </show>
+           * </show>
+           *
+           * What we want in this case is:
+           *
+           * <else-1 if={!foo} />
+           * <bar-code v-else-if={bar} />
+           * <x-code v-else-if={x} />
+           * <y-code v-else />
+           */
+          const ifString = pipe(
+            elseBlock,
+            addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
+            (block) => blockToVue(block, options),
+          );
+
+          const childrenStrings = children.map((child, idx) => {
+            const isLast = idx === children.length - 1;
+
+            const innerBlock = child.children.filter(filterEmptyTextNodes)[0];
+
+            if (!isLast) {
+              const childIfValue = pipe(child.bindings.when?.code, stripStateAndPropsRefs);
+              const elseIfString = pipe(
+                innerBlock,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
+                (block) => blockToVue(block, options),
+              );
+
+              return elseIfString;
+            } else {
+              const elseString = pipe(
+                innerBlock,
+                addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE]: '' }),
+                (block) => blockToVue(block, options),
+              );
+
+              return elseString;
+            }
+          });
+
+          return `
+            ${ifString}
+            ${childrenStrings.join('\n')}
+          `;
+        } else if (
           firstChild &&
           isMitosisNode(elseBlock) &&
           hasShowChild &&
           isMitosisNode(childElseBlock)
         ) {
+          /**
+           * This is special edge logic to handle 2 nested Show elements in Vue 2.
+           * We need to invert the logic to make it work, due to no-template-root-element limitations in Vue 2.
+           *
+           * <show when={foo} else={else-1}>
+           *  <show when={bar}> <bar-code> </show>
+           *
+           *  <show when={x}> <x-code> </show>
+           *
+           *  <show when={y}> <y-code> </show>
+           * </show>
+           *
+           *
+           *
+           *
+           * foo: true && bar: true => if-code
+           * foo: true && bar: false => else-2
+           * foo: false && bar: true?? => else-1
+           *
+           *
+           * map to:
+           *
+           * <else-1 if={!foo} />
+           * <else-2 v-else-if={!bar} />
+           * <if-code v-else />
+           *
+           */
           const ifString = pipe(
             elseBlock,
             addPropertiesToJson({ [SPECIAL_PROPERTIES.V_IF]: invertBooleanExpression(ifValue) }),
