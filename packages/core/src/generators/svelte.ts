@@ -104,7 +104,7 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 
       return `
         <span #${key}>
-        ${json.bindings[key]?.code}
+        ${stripStateAndPropsRefs(json.bindings[key]?.code)}
         </span>
       `;
     }
