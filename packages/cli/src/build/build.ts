@@ -111,7 +111,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
               ? options.parser(file, path)
               : parseJsx(file, { typescript: requiredParses.typescript });
 
-            // technically only one of these will be used, but we set both to simplify things.
+            // technically only one of these will be used, but we set both to simplify things types-wise.
             typescriptMitosisJson = singleParse;
             javascriptMitosisJson = singleParse;
           }
@@ -150,8 +150,8 @@ const getTargetContexts = (options: MitosisConfig) =>
   );
 
 const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
-  const jsFiles = await buildNonComponentFiles(targetContext);
-  await outputNonComponentFiles({ ...targetContext, files: jsFiles });
+  const files = await buildNonComponentFiles(targetContext);
+  await outputNonComponentFiles({ ...targetContext, files });
 };
 
 export async function build(config?: MitosisConfig) {
