@@ -397,7 +397,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     const hasData = dataString.length > 4;
 
-    const props = Array.from(getProps(json)).filter((prop) => !prop.startsWith('slot'));
+    const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
 
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
