@@ -291,7 +291,7 @@ export default function Fiddle() {
       }
     },
     options: {
-      typescript: localStorageGet('options.typescript') || ('true' as 'true' | 'false'),
+      typescript: localStorageGet('options.typescript') || ('false' as 'true' | 'false'),
       reactStyleType:
         localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
       reactStateType:
