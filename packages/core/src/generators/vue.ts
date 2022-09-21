@@ -536,7 +536,6 @@ const BASE_OPTIONS: ToVueOptions = {
   plugins: [],
   vueVersion: 2,
   api: 'options',
-  typescript: true,
 };
 
 const mergeOptions = (

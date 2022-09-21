@@ -311,7 +311,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       stateType: 'variables',
       prettier: true,
       plugins: [FUNCTION_HACK_PLUGIN, ...plugins],
-      typescript: true,
       ...userProvidedOptions,
     };
     // Make a copy we can safely mutate, similar to babel's toolchain
