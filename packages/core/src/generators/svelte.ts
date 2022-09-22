@@ -30,6 +30,7 @@ import { gettersToFunctions } from '../helpers/getters-to-functions';
 import { babelTransformCode } from '../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
 import { hasContext } from './helpers/context';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
@@ -44,6 +45,7 @@ const mappers: {
   For: BlockToSvelte<ForNode>;
   Fragment: BlockToSvelte;
   Show: BlockToSvelte;
+  Slot: BlockToSvelte;
 } = {
   Fragment: ({ json, options, parentComponent }) => {
     if (json.bindings.innerHTML?.code) {
@@ -94,6 +96,23 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
       : ''
   }
 {/if}`;
+  },
+  Slot({ json, options, parentComponent }) {
+    if (!json.bindings.name) {
+      const key = Object.keys(json.bindings).find(Boolean);
+      if (!key) return '<slot />';
+
+      return `
+        <span #${key}>
+        ${stripStateAndPropsRefs(json.bindings[key]?.code)}
+        </span>
+      `;
+    }
+    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
+
+    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
+      ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
+      .join('\n')}</slot>`;
   },
 };
 
@@ -184,8 +203,14 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     return json.properties._text;
   }
 
-  if (json.bindings._text?.code) {
-    return `{${stripStateAndProps(json.bindings._text.code, options)}}`;
+  const textCode = json.bindings._text?.code;
+
+  if (textCode) {
+    const strippedTextCode = stripStateAndProps(textCode, options);
+    if (isSlotProperty(strippedTextCode)) {
+      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    }
+    return `{${strippedTextCode}}`;
   }
 
   let str = '';
@@ -372,7 +397,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     const hasData = dataString.length > 4;
 
-    const props = Array.from(getProps(json));
+    const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
 
     const transformHookCode = (hookCode: string) =>
       pipe(stripStateAndProps(hookCode, options), babelTransformCode);
