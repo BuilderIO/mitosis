@@ -24,30 +24,34 @@
   },
   "version": "0.0.62",
   "homepage": "https://github.com/BuilderIO/mitosis",
-  "main": "./dist/src/index.js",
+  "main": "./dist/index.js",
   "exports": {
-    ".": "./dist/src/index.js",
-    "./lib/*": "./dist/src/*",
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
     "./jsx-runtime": "./jsx-runtime.d.ts",
-    "./types": "./dist/src/index.d.ts"
+    "./types": "./dist/index.d.ts"
   },
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
+  "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/BuilderIO/mitosis"
   },
   "scripts": {
+    "tsup": "tsup",
     "test": "jest",
     "snapupdate": "jest --updateSnapshot",
-    "tsc": "tsc --build tsconfig.build.json",
+    "tsc": "tsc",
     "rmrf": "rm -rf ./dist",
-    "build": "yarn rmrf && yarn tsc",
+    "build": "yarn rmrf && yarn tsup",
     "remove-stableVersion": "./scripts/remove-stableVersion.sh",
     "release:dev": "yarn build && yarn run remove-stableVersion && yarn version prerelease && yarn npm publish --tag dev",
     "release:patch": "yarn build && yarn run remove-stableVersion && yarn version patch && yarn npm publish",
     "mitosis-save-artifacts": "node -r esbuild-register ../../scripts/mitosis-save-artifacts.ts",
-    "start": "yarn rmrf && yarn tsc --watch",
+    "start": "yarn rmrf && yarn tsup --watch",
     "script": "ts-node -O '{\"module\": \"commonjs\"}'"
   },
   "files": [
@@ -83,7 +87,6 @@
     "prettier-plugin-svelte": "^2.7.0",
     "svelte": "^3.30.0",
     "traverse": "^0.6.6",
-    "typescript": "^4.7.3",
     "vue": "~2.6"
   },
   "devDependencies": {
@@ -112,7 +115,8 @@
     "rollup": "^2.70.1",
     "ts-jest": "^26.4.4",
     "ts-node": "^9.1.1",
-    "typescript": "^4",
+    "tsup": "^6.2.3",
+    "typescript": "^4.7.3",
     "universalify": "^2.0.0"
   }
 }
