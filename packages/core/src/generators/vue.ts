@@ -817,6 +817,9 @@ function generateOptionsApiScript(
           methods: ${functionsString},
         `
         }
+        ${Object.entries(component.meta.vueConfig || {})
+          .map(([k, v]) => `${k}: ${v}`)
+          .join(',')}
       }`;
 }
 

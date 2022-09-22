@@ -173,11 +173,9 @@ export async function build(config?: MitosisConfig) {
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
       const files = fastClone(mitosisComponents);
 
-      const targetContextWithConfig: TargetContextWithConfig = { ...targetContext, options };
-
       await Promise.all([
-        buildAndOutputNonComponentFiles(targetContextWithConfig),
-        buildAndOutputComponentFiles({ ...targetContextWithConfig, files }),
+        buildAndOutputNonComponentFiles({ ...targetContext, options }),
+        buildAndOutputComponentFiles({ ...targetContext, options, files }),
       ]);
     }),
   );
@@ -325,6 +323,9 @@ async function buildAndOutputComponentFiles({
   await Promise.all(output);
 }
 
+/**
+ * This provides the default path for a target's contents, both in the input and output directories.
+ */
 const getTargetPath = ({ target }: { target: Target }): string => {
   switch (target) {
     case 'vue2':
@@ -392,15 +393,20 @@ async function buildContextFile({
  * Transpiles all non-component files, including Context files.
  */
 async function buildNonComponentFiles(args: TargetContextWithConfig) {
-  const { target, options, outputPath } = args;
+  const { target, options } = args;
   const nonComponentFiles = (await glob(options.files, { cwd })).filter(
     (file) => file.endsWith('.ts') || file.endsWith('.js'),
   );
 
   return await Promise.all(
     nonComponentFiles.map(async (path): Promise<{ path: string; output: string }> => {
-      // try to find override file
-      const overrideFilePath = `${options.overridesDir}/${outputPath}/${path}`;
+      /**
+       * Try to find override file.
+       * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
+       * user-provided alternative is only for the output path, not the override input path.
+       */
+      const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}/${path}`;
+
       const overrideFile = (await pathExists(overrideFilePath))
         ? await readFile(overrideFilePath, 'utf8')
         : null;
