@@ -373,6 +373,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       ],`
           : ''
       }
+      ${Object.entries(json.meta.angularConfig || {})
+        .map(([k, v]) => `${k}: ${v}`)
+        .join(',')}
     })
     export default class ${json.name} {
       ${localExportVars.join('\n')}
