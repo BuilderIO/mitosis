@@ -638,7 +638,7 @@ function generateOptionsApiScript(
   options: ToVueOptions,
   path: string | undefined,
   template: string,
-  props: Set<string>,
+  props: string[],
   onUpdateWithDeps: extendedHook[],
   onUpdateWithoutDeps: extendedHook[],
 ) {
@@ -741,7 +741,7 @@ function generateOptionsApiScript(
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${props.size ? `props: ${json5.stringify(propsDefinition)},` : ''}
+        ${props.length ? `props: ${json5.stringify(propsDefinition)},` : ''}
         ${
           dataString.length < 4
             ? ''
@@ -830,7 +830,7 @@ const getCompositionPropDefinition = ({
 }: {
   options: ToVueOptions;
   component: MitosisComponent;
-  props: Set<string>;
+  props: string[];
 }) => {
   let str = 'const props = ';
 
@@ -840,7 +840,7 @@ const getCompositionPropDefinition = ({
   } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {
-    str += `defineProps(${json5.stringify(Array.from(props))})`;
+    str += `defineProps(${json5.stringify(props)})`;
   }
   return str;
 };
@@ -870,7 +870,7 @@ function generateCompositionApiScript(
   component: MitosisComponent,
   options: ToVueOptions,
   template: string,
-  props: Set<string>,
+  props: Array<string>,
   onUpdateWithDeps: extendedHook[],
   onUpdateWithoutDeps: extendedHook[],
 ) {
@@ -908,7 +908,7 @@ function generateCompositionApiScript(
   const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
 
   let str = dedent`
-    ${props.size ? getCompositionPropDefinition({ component, props, options }) : ''}
+    ${props.length ? getCompositionPropDefinition({ component, props, options }) : ''}
     ${refs}
 
     ${Object.keys(component.context.get)
@@ -1028,7 +1028,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
 
     const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
 
-    const elementProps = getProps(component);
+    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
 
     // import from vue
     let vueImports: string[] = [];
