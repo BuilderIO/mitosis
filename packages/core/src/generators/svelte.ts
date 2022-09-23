@@ -530,10 +530,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       .join('\n')}
 
     ${
-      !css.trim().length
+      !css.trim().length && !json.style?.length
         ? ''
         : `<style>
       ${css}
+      ${json.style?.length ? json.style : ''}
     </style>`
     }
   `;

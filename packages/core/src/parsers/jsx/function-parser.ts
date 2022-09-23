@@ -138,6 +138,11 @@ export const componentFunctionToJson = (
                 }
               });
             }
+          } else if (expression.callee.name === HOOKS.STYLE) {
+            context.builder.component.style = generate(expression.arguments[0]).code.replace(
+              /(^("|'|`)|("|'|`)$)/g,
+              '',
+            );
           }
         }
       }

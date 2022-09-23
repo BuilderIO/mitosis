@@ -348,7 +348,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       template: `\`
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
-      ...(css.length ? { styles: `[\`${indent(css, 8)}\`]` } : {}),
+      ...(css.length || json.style?.length
+        ? {
+            styles: `[\`${indent(css, 8)}\`, ${
+              json.style?.length ? '`' + indent(json.style, 8) + '`' : null
+            }]`,
+          }
+        : {}),
       ...(options.standalone
         ? // TODO: also add child component imports here as well
           {

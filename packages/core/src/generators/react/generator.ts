@@ -380,7 +380,7 @@ const _componentToReact = (
   handleMissingState(json);
   processTagReferences(json);
   addProviderComponents(json, options);
-  const componentHasStyles = hasCss(json);
+  const componentHasStyles = hasCss(json) || json.style?.length;
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
     updateStateSetters(json, options);
@@ -578,9 +578,9 @@ const _componentToReact = (
         ${json.children.map((item) => blockToReact(item, options)).join('\n')}
         ${
           componentHasStyles && stylesType === 'styled-jsx'
-            ? `<style jsx>{\`${css}\`}</style>`
+            ? `<style jsx>{\`${css}${json.style ?? ''}\`}</style>`
             : componentHasStyles && stylesType === 'style-tag'
-            ? `<style>{\`${css}\`}</style>`
+            ? `<style>{\`${css}${json.style ?? ''}\`}</style>`
             : ''
         }
         ${wrap ? closeFrag(options) : ''}
