@@ -34,6 +34,7 @@ const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
+  preserveImports?: boolean;
 }
 
 interface AngularBlockOptions {
@@ -223,8 +224,14 @@ export const blockToAngular = (
 };
 
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
-  (options = {}) =>
+  (userOptions = {}) =>
   ({ component: _component }) => {
+    const DEFAULT_OPTIONS = {
+      preserveImports: false,
+    };
+
+    const options = { ...DEFAULT_OPTIONS, ...userOptions };
+
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
     if (options.plugins) {
@@ -367,7 +374,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${renderPreComponent({
       component: json,
       target: 'angular',
-      excludeMitosisComponents: !options.standalone,
+      excludeMitosisComponents: !options.standalone && !options.preserveImports,
     })}
 
     @Component({
