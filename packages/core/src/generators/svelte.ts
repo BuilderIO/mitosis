@@ -464,7 +464,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         hasStyle(json)
           ? `
         function mitosis_styling (node, vars) {
-          Object.entries(vars).forEach(([ p, v ]) => {
+          Object.entries(vars || {}).forEach(([ p, v ]) => {
             if (p.startsWith('--')) {
               node.style.setProperty(p, v);
             } else {
