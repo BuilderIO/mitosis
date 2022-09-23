@@ -254,10 +254,10 @@ const populatedWithAngularImports = (params: {
       return imports;
     }, {});
   if (Object.keys(coreImports).length > 0) {
-    addImportToMitosisComponent(json, { imports: commonImports, path: '@angular/common' });
+    addImportToMitosisComponent(json, { imports: coreImports, path: '@angular/core' });
   }
   if (Object.keys(commonImports).length > 0) {
-    addImportToMitosisComponent(json, { imports: coreImports, path: '@angular/core' });
+    addImportToMitosisComponent(json, { imports: commonImports, path: '@angular/common' });
   }
   return json;
 };
