@@ -337,22 +337,22 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
-        selector: `'${kebabCase(json.name || 'my-component')}'`,
-        template: `\`
+      selector: `'${kebabCase(json.name || 'my-component')}'`,
+      template: `\`
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
-        ...(css.length ? {styles: `\`${indent(css, 8)}\``} : {}),
-        ...(options.standalone
-            ? // TODO: also add child component imports here as well
-            {
-                standalone: 'true',
-                imports: `[${['CommonModule', ...componentsUsed].join(', ')}]`
-            }
-            : {})
-    }
+      ...(css.length ? { styles: `\`${indent(css, 8)}\`` } : {}),
+      ...(options.standalone
+        ? // TODO: also add child component imports here as well
+          {
+            standalone: 'true',
+            imports: `[${['CommonModule', ...componentsUsed].join(', ')}]`,
+          }
+        : {}),
+    };
     // Taking into consideration what user has passed in options and allowing them to override the default generated metadata
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
-        componentMetadata[key] = value;
+      componentMetadata[key] = value;
     });
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
