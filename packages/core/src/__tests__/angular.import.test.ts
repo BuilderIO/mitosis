@@ -1,11 +1,11 @@
 import { componentToAngular } from '../generators/angular';
 import { runTestsForTarget } from './shared';
 
-describe('Angular', () => {
+describe('Angular with Preserve Imports', () => {
   runTestsForTarget({ options: {}, target: 'angular', generator: componentToAngular });
   runTestsForTarget({
     options: {
-      standalone: true,
+      preserveImports: true,
     },
     target: 'angular',
     generator: componentToAngular,
