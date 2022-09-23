@@ -463,7 +463,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         hasStyle(json)
           ? `
         function mitosis_styling (node, vars) {
-          Object.entries(vars).forEach(([ p, v ]) => { node.style[p] = v })
+          Object.entries(vars || {}).forEach(([ p, v ]) => { node.style[p] = v })
         }
       `
           : ''
