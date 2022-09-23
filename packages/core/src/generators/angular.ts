@@ -344,7 +344,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
     // Preparing built in component metadata parameters
     const componentMetadata: Record<string, any> = {
-      selector: `'${kebabCase(json.name || 'my-component')}'`,
+      selector: `'${kebabCase(json.name || 'my-component')}, ${json.name}'`,
       template: `\`
         ${indent(template, 8).replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}
         \``,
