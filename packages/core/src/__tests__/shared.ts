@@ -175,6 +175,10 @@ const ON_UPDATE_RETURN: Tests = {
   basicOnUpdateReturn: getRawFile('./data/basic-onUpdate-return.raw'),
 };
 
+const IMPORT_TEST: Tests = {
+  importRaw: getRawFile('./data/import.raw'),
+};
+
 const JSX_TESTS: Tests[] = [
   BASIC_TESTS,
   SLOTS_TESTS,
@@ -209,6 +213,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     FOR_SHOW_TESTS,
     ADVANCED_REF,
     ON_UPDATE_RETURN,
+    IMPORT_TEST,
   ],
   lit: [
     BASIC_TESTS,
