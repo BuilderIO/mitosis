@@ -36,6 +36,7 @@ import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { getForArguments } from '../helpers/nodes/for';
+import { clone } from 'lodash';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -127,9 +128,14 @@ const setContextCode = (json: MitosisComponent) => {
   const contextSetters = json.context.set;
   return Object.keys(contextSetters)
     .map((key) => {
-      const { value, name } = contextSetters[key];
-      return `setContext(${name}.key, ${
-        value ? stripStateAndPropsRefs(stringifyContextValue(value)) : 'undefined'
+      const { ref, value, name } = contextSetters[key];
+
+      return `setContext(${value ? `${name}.key` : name}, ${
+        value
+          ? stripStateAndPropsRefs(stringifyContextValue(value))
+          : ref
+          ? stripStateAndPropsRefs(ref)
+          : 'undefined'
       });`;
     })
     .join('\n');

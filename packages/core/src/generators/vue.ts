@@ -539,13 +539,15 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
   let str = '{';
 
   for (const key in component.context.set) {
-    const { value, name } = component.context.set[key];
+    const { ref, value, name } = component.context.set[key];
     str += `
       ${name}: ${
       value
         ? stringifyContextValue(value, {
             valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
+        : ref
+        ? stripStateAndPropsRefs(ref, { replaceWith: '_this.' })
         : null
     },
     `;
