@@ -36,7 +36,6 @@ import { isUpperCase } from '../helpers/is-upper-case';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { getForArguments } from '../helpers/nodes/for';
-import { clone } from 'lodash';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
