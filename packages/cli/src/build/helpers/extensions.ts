@@ -30,6 +30,7 @@ export const getFileExtensionForTarget = ({
     case 'lit':
       return '.ts';
     case 'qwik':
+    case 'react':
       return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'marko':
       return '.marko';
