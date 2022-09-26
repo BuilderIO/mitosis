@@ -113,6 +113,8 @@ export const VALID_HTML_TAGS = [
   'summary',
   'slot',
   'template',
+  // tags below are SVG tags. See the below article for list of SVG tags
+  // https://developer.mozilla.org/en-US/docs/Web/SVG/Element
   'animate',
   'animateMotion',
   'animateTransform',
