@@ -182,6 +182,7 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
   stripStateAndPropsRefs(code, {
     includeState: options.stateType === 'variables',
+    replaceWith: (name) => (name === 'children' ? '$$slots.default' : name),
   });
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
