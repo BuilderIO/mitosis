@@ -61,6 +61,24 @@ ruleTester.run('only-default-function-and-imports', rule, {
     {
       ...opts,
       code: `
+      useMetadata({
+        qwik: {
+          component: {
+            isLight: true,
+          },
+        },
+      });
+      
+      export default function RenderComponent(props) {
+        return (
+      <div>Text</div>
+        );
+      }
+    `,
+    },
+    {
+      ...opts,
+      code: `
       export const x = y;
   
       export default function MyComponent(props) {
@@ -83,6 +101,27 @@ ruleTester.run('only-default-function-and-imports', rule, {
         );
       }
       export const x = y;
+    `,
+      errors: [
+        'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
+      ],
+    },
+    {
+      ...opts,
+      code: `
+      useMeta({
+        qwik: {
+          component: {
+            isLight: true,
+          },
+        },
+      });
+      
+      export default function RenderComponent(props) {
+        return (
+      <div>Text</div>
+        );
+      }
     `,
       errors: [
         'Mitosis component files should only contain import declarations, the component itself (in a default export), and type declarations',
