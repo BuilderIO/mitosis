@@ -41,7 +41,7 @@ import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helper
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { babelTransformExpression } from '../helpers/babel-transform';
-import { checkIsDefined } from 'src/helpers/nullable';
+import { checkIsDefined } from '../helpers/nullable';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
