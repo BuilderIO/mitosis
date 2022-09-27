@@ -51,7 +51,11 @@ const rule: Rule.RuleModule = {
             !(
               types.isExportNamedDeclaration(child) &&
               types.isTSTypeAliasDeclaration(child.declaration)
-            )
+            ) &&
+            (!types.isExpressionStatement(child) ||
+              !types.isCallExpression(child.expression) ||
+              !types.isIdentifier(child.expression.callee) ||
+              child.expression.callee.name !== 'useMetadata')
           ) {
             context.report({
               node: child as any,

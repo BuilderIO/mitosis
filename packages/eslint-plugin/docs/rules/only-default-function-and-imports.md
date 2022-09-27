@@ -39,3 +39,17 @@ export default function MyComponent(props) {
   );
 }
 ```
+
+```js
+useMetadata({
+  qwik: {
+    component: {
+      isLight: true,
+    },
+  },
+});
+
+export default function RenderComponent(props) {
+  return <div>Text</div>;
+}
+```
