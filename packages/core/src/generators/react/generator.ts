@@ -86,7 +86,6 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
-    const tagName = options.preact ? 'Fragment' : '';
     return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
