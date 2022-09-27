@@ -70,6 +70,7 @@ export * from './types/mitosis-node';
 export * from './types/mitosis-component';
 export * from './types/config';
 export * from './types/transpiler';
+export * from './types/plugins';
 
 export * from './plugins/compile-away-builder-components';
 export * from './plugins/compile-away-components';

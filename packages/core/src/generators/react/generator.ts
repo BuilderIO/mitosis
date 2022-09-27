@@ -86,7 +86,6 @@ const NODE_MAPPERS: {
   },
   Fragment(json, options) {
     const wrap = wrapInFragment(json);
-    const tagName = options.preact ? 'Fragment' : '';
     return `${wrap ? getFragment('open', options) : ''}${json.children
       .map((item) => blockToReact(item, options))
       .join('\n')}${wrap ? getFragment('close', options) : ''}`;
@@ -500,7 +499,10 @@ const _componentToReact = (
         : ''
     }
     ${json.types ? json.types.join('\n') : ''}
-    ${renderPreComponent({ component: json, target: 'react' })}
+    ${renderPreComponent({
+      component: json,
+      target: options.type === 'native' ? 'reactNative' : 'react',
+    })}
     ${isSubComponent ? '' : 'export default '}${
     isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''
   }function ${json.name || 'MyComponent'}(${propsArgs}${
