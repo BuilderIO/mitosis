@@ -274,7 +274,7 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
 
 function addProviderComponents(json: MitosisComponent, options: ToReactOptions) {
   for (const key in json.context.set) {
-    const { name, value } = json.context.set[key];
+    const { name, ref, value } = json.context.set[key];
     if (value) {
       json.children = [
         createMitosisNode({
@@ -284,6 +284,20 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
             bindings: {
               value: {
                 code: stringifyContextValue(value),
+              },
+            },
+          }),
+        }),
+      ];
+    } else if (ref) {
+      json.children = [
+        createMitosisNode({
+          name: 'Context.Provider',
+          children: json.children,
+          ...(ref && {
+            bindings: {
+              value: {
+                code: ref,
               },
             },
           }),

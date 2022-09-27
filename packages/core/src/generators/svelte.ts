@@ -127,9 +127,14 @@ const setContextCode = (json: MitosisComponent) => {
   const contextSetters = json.context.set;
   return Object.keys(contextSetters)
     .map((key) => {
-      const { value, name } = contextSetters[key];
-      return `setContext(${name}.key, ${
-        value ? stripStateAndPropsRefs(stringifyContextValue(value)) : 'undefined'
+      const { ref, value, name } = contextSetters[key];
+
+      return `setContext(${value ? `${name}.key` : name}, ${
+        value
+          ? stripStateAndPropsRefs(stringifyContextValue(value))
+          : ref
+          ? stripStateAndPropsRefs(ref)
+          : 'undefined'
       });`;
     })
     .join('\n');
