@@ -496,7 +496,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             : `let state = onChange(${dataString}, () => state = state)`
           : dataString
       }
-
+      ${stripStateAndPropsRefs(json.hooks.onInit?.code ?? '')}
       ${
         !json.hooks.onMount?.code
           ? ''

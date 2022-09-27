@@ -51,6 +51,7 @@ const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
+
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 console.log('Received an update');
 })
@@ -152,6 +153,8 @@ const myService = inject(MyService);
 
 provide(Injector, createInjector());
 
+const hi = myService.value.method(\\"hi\\");
+console.log(hi);
 onMounted(() => {
   const bye = myService.value.method(\\"hi\\");
   console.log(bye);
@@ -177,6 +180,7 @@ const props = defineProps([\\"hi\\", \\"bye\\"]);
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 
+name.value = \\"PatrickJS onInit\\" + props.hi;
 onMounted(() => {
   name.value = \\"PatrickJS onMount\\" + props.bye;
 });
@@ -352,6 +356,7 @@ const inputNoArgRef = ref<HTMLLabelElement>()
 
 
 
+
 function onBlur() {
 // Maintain focus
 inputRef.focus();
@@ -388,6 +393,7 @@ exports[`Vue Javascript Test BasicRefAssignment 1`] = `
 
 
     const holdValueRef = ref<undefined>()
+
 
 
 
@@ -440,6 +446,7 @@ return ref;
 
 
 const prevCount = ref<undefined>()
+
 
 
 
@@ -606,6 +613,7 @@ const scriptsRun= ref([])
 
 
 const elem = ref<HTMLDivElement>()
+
 onMounted(() => { findAndRunScripts()})
 
 
@@ -699,6 +707,7 @@ const scriptsRun= ref([])
 
 
 const elem = ref<HTMLDivElement>()
+
 onMounted(() => { findAndRunScripts()})
 
 
@@ -836,6 +845,7 @@ const formErrorMessage= ref('')
 
 
 const formRef = ref<HTMLFormElement>()
+
 
 
 const submissionState = computed(() => {
@@ -1105,6 +1115,7 @@ const load= ref(false)
 
 
 const pictureRef = ref<HTMLElement>()
+
 onMounted(() => { if (useLazyLoading()) {
 // throttled scroll capture listener
 const listener = () => {
@@ -1450,6 +1461,7 @@ import { snakeCase } from 'lodash';
 const reviews= ref([])
 const name= ref('test')
 const showReviewPrompt= ref(false)
+
 
 
 
@@ -1990,6 +2002,7 @@ exports[`Vue Javascript Test onInit & onMount 1`] = `
 <script setup>
 import { onMounted } from \\"vue\\";
 
+console.log(\\"onInit\\");
 onMounted(() => {
   console.log(\\"onMount\\");
 });
@@ -2011,6 +2024,9 @@ export const defaultValues = {
 
 const props = defineProps([\\"name\\"]);
 const name = ref(\\"\\");
+
+name.value = defaultValues.name || props.name;
+console.log(\\"set defaults with props\\");
 </script>
 "
 `;
@@ -2405,6 +2421,8 @@ const myService = inject(MyService);
 
 provide(Injector, createInjector());
 
+const hi = myService.value.method(\\"hi\\");
+console.log(hi);
 onMounted(() => {
   const bye = myService.value.method(\\"hi\\");
   console.log(bye);
@@ -2434,6 +2452,7 @@ const props = defineProps<Props>();
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 
+name.value = \\"PatrickJS onInit\\" + props.hi;
 onMounted(() => {
   name.value = \\"PatrickJS onMount\\" + props.bye;
 });
@@ -2856,6 +2875,7 @@ const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
 const elem = ref<HTMLDivElement>();
+
 onMounted(() => {
   findAndRunScripts();
 });
@@ -2946,6 +2966,7 @@ const scriptsInserted = ref([]);
 const scriptsRun = ref([]);
 
 const elem = ref<HTMLDivElement>();
+
 onMounted(() => {
   findAndRunScripts();
 });
@@ -3384,6 +3405,7 @@ const imageLoaded = ref(false);
 const load = ref(false);
 
 const pictureRef = ref<HTMLElement>();
+
 onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
@@ -3777,6 +3799,7 @@ import { snakeCase } from 'lodash';
 const reviews= ref([])
 const name= ref('test')
 const showReviewPrompt= ref(false)
+
 
 
 
@@ -4382,6 +4405,7 @@ exports[`Vue Typescript Test onInit & onMount 1`] = `
 <script setup lang=\\"ts\\">
 import { onMounted } from \\"vue\\";
 
+console.log(\\"onInit\\");
 onMounted(() => {
   console.log(\\"onMount\\");
 });
@@ -4406,6 +4430,9 @@ export const defaultValues = {
 
 const props = defineProps<Props>();
 const name = ref(\\"\\");
+
+name.value = defaultValues.name || props.name;
+console.log(\\"set defaults with props\\");
 </script>
 "
 `;
