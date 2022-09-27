@@ -27,40 +27,24 @@ exports[`Vue Javascript Test AdvancedRef 1`] = `
 </template>
 
 <script setup>
-    import { ref, watch } from \\"vue\\"
+import { ref, watch } from \\"vue\\";
 
+const props = defineProps([\\"showInput\\"]);
+const name = ref(\\"PatrickJS\\");
 
-
-
-
-
-
-
-    const props = defineProps(['showInput'])
-const name= ref('PatrickJS')
-
-
-
-
-
-
-const inputRef = ref<HTMLInputElement>()
-const inputNoArgRef = ref<HTMLLabelElement>()
-
-
-
-
+const inputRef = ref(null);
+const inputNoArgRef = ref(null);
 
 watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
-console.log('Received an update');
-})
+  console.log(\\"Received an update\\");
+});
 function onBlur() {
-// Maintain focus
-inputRef.focus();
+  // Maintain focus
+  inputRef.focus();
 }
 
 function lowerCaseName() {
-return name.value.toLowerCase();
+  return name.value.toLowerCase();
 }
 </script>
 
@@ -327,38 +311,21 @@ exports[`Vue Javascript Test BasicRef 1`] = `
 </template>
 
 <script setup>
-    import { ref } from \\"vue\\"
+import { ref } from \\"vue\\";
 
+const props = defineProps([\\"showInput\\"]);
+const name = ref(\\"PatrickJS\\");
 
-
-
-
-
-
-
-    const props = defineProps(['showInput'])
-const name= ref('PatrickJS')
-
-
-
-
-
-
-const inputRef = ref<HTMLInputElement>()
-const inputNoArgRef = ref<HTMLLabelElement>()
-
-
-
-
-
+const inputRef = ref(null);
+const inputNoArgRef = ref(null);
 
 function onBlur() {
-// Maintain focus
-inputRef.focus();
+  // Maintain focus
+  inputRef.focus();
 }
 
 function lowerCaseName() {
-return name.value.toLowerCase();
+  return name.value.toLowerCase();
 }
 </script>
 
@@ -378,26 +345,12 @@ exports[`Vue Javascript Test BasicRefAssignment 1`] = `
 </template>
 
 <script setup>
-
-
-
-
-
-
-
-
-
-    const holdValueRef = ref<undefined>()
-
-
-
-
-
+const holdValueRef = ref(null);
 
 function handlerClick(event) {
-event.preventDefault();
-console.log('current value', holdValueRef);
-holdValueRef = holdValueRef + 'JS';
+  event.preventDefault();
+  console.log(\\"current value\\", holdValueRef);
+  holdValueRef = holdValueRef + \\"JS\\";
 }
 </script>
 "
@@ -412,42 +365,28 @@ exports[`Vue Javascript Test BasicRefPrevious 1`] = `
 </template>
 
 <script setup>
-    import { ref, watch } from \\"vue\\"
+import { ref, watch } from \\"vue\\";
 
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef < T > null; // Store current value in ref
 
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
 
-
-  export function usePrevious<T>(value: T) {
-// The ref object is a generic container whose current property is mutable ...
-// ... and can hold any value, similar to an instance property on a class
-let ref = useRef<T>(null); // Store current value in ref
-
-onUpdate(() => {
-  ref = value;
-}, [value]); // Only re-run if value changes
-// Return previous value (happens before update in useEffect above)
-
-return ref;
+  return ref;
 }
 
+const count = ref(0);
 
-
-    const count= ref(0)
-
-
-
-
-
-
-const prevCount = ref<undefined>()
-
-
-
-
+const prevCount = ref(null);
 
 watch([count.value], ([count]) => {
-prevCount = count.value;
-})
+  prevCount = count.value;
+});
 </script>
 "
 `;
@@ -587,80 +526,73 @@ exports[`Vue Javascript Test CustomCode 1`] = `
 </template>
 
 <script setup>
-    import { onMounted, ref } from \\"vue\\"
+import { onMounted, ref } from \\"vue\\";
 
+const props = defineProps([\\"replaceNodes\\", \\"code\\"]);
+const scriptsInserted = ref([]);
+const scriptsRun = ref([]);
 
-
-
-
-
-
-
-    const props = defineProps(['replaceNodes','code'])
-const scriptsInserted= ref([])
-const scriptsRun= ref([])
-
-
-
-
-
-
-const elem = ref<HTMLDivElement>()
-onMounted(() => { findAndRunScripts()})
-
-
-
-
+const elem = ref(null);
+onMounted(() => {
+  findAndRunScripts();
+});
 
 function findAndRunScripts() {
-// TODO: Move this function to standalone one in '@builder.io/utils'
-if (elem && typeof window !== 'undefined') {
-/** @type {HTMLScriptElement[]} */
-const scripts = elem.getElementsByTagName('script');
+  // TODO: Move this function to standalone one in '@builder.io/utils'
+  if (elem && typeof window !== \\"undefined\\") {
+    /** @type {HTMLScriptElement[]} */
+    const scripts = elem.getElementsByTagName(\\"script\\");
 
-for (let i = 0; i < scripts.length; i++) {
-  const script = scripts[i];
+    for (let i = 0; i < scripts.length; i++) {
+      const script = scripts[i];
 
-  if (script.src) {
-    if (scriptsInserted.value.includes(script.src)) {
-      continue;
-    }
+      if (script.src) {
+        if (scriptsInserted.value.includes(script.src)) {
+          continue;
+        }
 
-    scriptsInserted.value.push(script.src);
-    const newScript = document.createElement('script');
-    newScript.async = true;
-    newScript.src = script.src;
-    document.head.appendChild(newScript);
-  } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
-    if (scriptsRun.value.includes(script.innerText)) {
-      continue;
-    }
+        scriptsInserted.value.push(script.src);
+        const newScript = document.createElement(\\"script\\");
+        newScript.async = true;
+        newScript.src = script.src;
+        document.head.appendChild(newScript);
+      } else if (
+        !script.type ||
+        [
+          \\"text/javascript\\",
+          \\"application/javascript\\",
+          \\"application/ecmascript\\",
+        ].includes(script.type)
+      ) {
+        if (scriptsRun.value.includes(script.innerText)) {
+          continue;
+        }
 
-    try {
-      scriptsRun.value.push(script.innerText);
-      new Function(script.innerText)();
-    } catch (error) {
-      console.warn('\`CustomCode\`: Error running script:', error);
+        try {
+          scriptsRun.value.push(script.innerText);
+          new Function(script.innerText)();
+        } catch (error) {
+          console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+        }
+      }
     }
   }
 }
-}
-}
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 "
@@ -680,80 +612,73 @@ exports[`Vue Javascript Test Embed 1`] = `
 </template>
 
 <script setup>
-    import { onMounted, ref } from \\"vue\\"
+import { onMounted, ref } from \\"vue\\";
 
+const props = defineProps([\\"replaceNodes\\", \\"code\\"]);
+const scriptsInserted = ref([]);
+const scriptsRun = ref([]);
 
-
-
-
-
-
-
-    const props = defineProps(['replaceNodes','code'])
-const scriptsInserted= ref([])
-const scriptsRun= ref([])
-
-
-
-
-
-
-const elem = ref<HTMLDivElement>()
-onMounted(() => { findAndRunScripts()})
-
-
-
-
+const elem = ref(null);
+onMounted(() => {
+  findAndRunScripts();
+});
 
 function findAndRunScripts() {
-// TODO: Move this function to standalone one in '@builder.io/utils'
-if (elem && typeof window !== 'undefined') {
-/** @type {HTMLScriptElement[]} */
-const scripts = elem.getElementsByTagName('script');
+  // TODO: Move this function to standalone one in '@builder.io/utils'
+  if (elem && typeof window !== \\"undefined\\") {
+    /** @type {HTMLScriptElement[]} */
+    const scripts = elem.getElementsByTagName(\\"script\\");
 
-for (let i = 0; i < scripts.length; i++) {
-  const script = scripts[i];
+    for (let i = 0; i < scripts.length; i++) {
+      const script = scripts[i];
 
-  if (script.src) {
-    if (scriptsInserted.value.includes(script.src)) {
-      continue;
-    }
+      if (script.src) {
+        if (scriptsInserted.value.includes(script.src)) {
+          continue;
+        }
 
-    scriptsInserted.value.push(script.src);
-    const newScript = document.createElement('script');
-    newScript.async = true;
-    newScript.src = script.src;
-    document.head.appendChild(newScript);
-  } else if (!script.type || ['text/javascript', 'application/javascript', 'application/ecmascript'].includes(script.type)) {
-    if (scriptsRun.value.includes(script.innerText)) {
-      continue;
-    }
+        scriptsInserted.value.push(script.src);
+        const newScript = document.createElement(\\"script\\");
+        newScript.async = true;
+        newScript.src = script.src;
+        document.head.appendChild(newScript);
+      } else if (
+        !script.type ||
+        [
+          \\"text/javascript\\",
+          \\"application/javascript\\",
+          \\"application/ecmascript\\",
+        ].includes(script.type)
+      ) {
+        if (scriptsRun.value.includes(script.innerText)) {
+          continue;
+        }
 
-    try {
-      scriptsRun.value.push(script.innerText);
-      new Function(script.innerText)();
-    } catch (error) {
-      console.warn('\`CustomCode\`: Error running script:', error);
+        try {
+          scriptsRun.value.push(script.innerText);
+          new Function(script.innerText)();
+        } catch (error) {
+          console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+        }
+      }
     }
   }
 }
-}
-}
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 "
@@ -812,239 +737,256 @@ exports[`Vue Javascript Test Form 1`] = `
 </template>
 
 <script setup>
-    import { computed, ref } from \\"vue\\"
+import { computed, ref } from \\"vue\\";
 
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
 
+const props = defineProps([
+  \\"previewState\\",
+  \\"sendWithJs\\",
+  \\"sendSubmissionsTo\\",
+  \\"action\\",
+  \\"customHeaders\\",
+  \\"contentType\\",
+  \\"sendSubmissionsToEmail\\",
+  \\"name\\",
+  \\"method\\",
+  \\"errorMessagePath\\",
+  \\"resetFormOnSubmit\\",
+  \\"successUrl\\",
+  \\"validate\\",
+  \\"attributes\\",
+  \\"builderBlock\\",
+  \\"errorMessage\\",
+  \\"sendingMessage\\",
+  \\"successMessage\\",
+]);
+const formState = ref(\\"unsubmitted\\");
+const responseData = ref(null);
+const formErrorMessage = ref(\\"\\");
 
-  import { BuilderBlock as BuilderBlockComponent } from '@fake';
-import { Builder, builder } from '@builder.io/sdk';
-import { BuilderBlocks } from '@fake';
-import { set } from '@fake';
-import { get } from '@fake';
-
-
-
-
-    const props = defineProps(['previewState','sendWithJs','sendSubmissionsTo','action','customHeaders','contentType','sendSubmissionsToEmail','name','method','errorMessagePath','resetFormOnSubmit','successUrl','validate','attributes','builderBlock','errorMessage','sendingMessage','successMessage'])
-const formState= ref('unsubmitted')
-const responseData= ref(null)
-const formErrorMessage= ref('')
-
-
-
-
-
-
-const formRef = ref<HTMLFormElement>()
-
+const formRef = ref(null);
 
 const submissionState = computed(() => {
-return Builder.isEditing && props.previewState || formState.value;
-})
-
-
+  return (Builder.isEditing && props.previewState) || formState.value;
+});
 
 function onSubmit(event) {
-const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === 'email';
+  const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
 
-if (props.sendSubmissionsTo === 'zapier') {
-event.preventDefault();
-} else if (sendWithJs) {
-if (!(props.action || props.sendSubmissionsTo === 'email')) {
-  event.preventDefault();
-  return;
-}
+  if (props.sendSubmissionsTo === \\"zapier\\") {
+    event.preventDefault();
+  } else if (sendWithJs) {
+    if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+      event.preventDefault();
+      return;
+    }
 
-event.preventDefault();
-const el = event.currentTarget;
-const headers = props.customHeaders || {};
-let body;
-const formData = new FormData(el); // TODO: maybe support null
+    event.preventDefault();
+    const el = event.currentTarget;
+    const headers = props.customHeaders || {};
+    let body;
+    const formData = new FormData(el); // TODO: maybe support null
 
-const formPairs = Array.from(event.currentTarget.querySelectorAll('input,select,textarea')).filter(el => !!el.name).map(el => {
-  let value;
-  const key = el.name;
+    const formPairs = Array.from(
+      event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+    )
+      .filter((el) => !!el.name)
+      .map((el) => {
+        let value;
+        const key = el.name;
 
-  if (el instanceof HTMLInputElement) {
-    if (el.type === 'radio') {
-      if (el.checked) {
-        value = el.name;
+        if (el instanceof HTMLInputElement) {
+          if (el.type === \\"radio\\") {
+            if (el.checked) {
+              value = el.name;
+              return {
+                key,
+                value,
+              };
+            }
+          } else if (el.type === \\"checkbox\\") {
+            value = el.checked;
+          } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+            const num = el.valueAsNumber;
+
+            if (!isNaN(num)) {
+              value = num;
+            }
+          } else if (el.type === \\"file\\") {
+            // TODO: one vs multiple files
+            value = el.files;
+          } else {
+            value = el.value;
+          }
+        } else {
+          value = el.value;
+        }
+
         return {
           key,
-          value
+          value,
         };
-      }
-    } else if (el.type === 'checkbox') {
-      value = el.checked;
-    } else if (el.type === 'number' || el.type === 'range') {
-      const num = el.valueAsNumber;
+      });
+    let contentType = props.contentType;
 
-      if (!isNaN(num)) {
-        value = num;
+    if (props.sendSubmissionsTo === \\"email\\") {
+      contentType = \\"multipart/form-data\\";
+    }
+
+    Array.from(formPairs).forEach(({ value }) => {
+      if (
+        value instanceof File ||
+        (Array.isArray(value) && value[0] instanceof File) ||
+        value instanceof FileList
+      ) {
+        contentType = \\"multipart/form-data\\";
       }
-    } else if (el.type === 'file') {
-      // TODO: one vs multiple files
-      value = el.files;
+    }); // TODO: send as urlEncoded or multipart by default
+    // because of ease of use and reliability in browser API
+    // for encoding the form?
+
+    if (contentType !== \\"application/json\\") {
+      body = formData;
     } else {
-      value = el.value;
+      // Json
+      const json = {};
+      Array.from(formPairs).forEach(({ value, key }) => {
+        set(json, key, value);
+      });
+      body = JSON.stringify(json);
     }
-  } else {
-    value = el.value;
-  }
 
-  return {
-    key,
-    value
-  };
-});
-let contentType = props.contentType;
-
-if (props.sendSubmissionsTo === 'email') {
-  contentType = 'multipart/form-data';
-}
-
-Array.from(formPairs).forEach(({
-  value
-}) => {
-  if (value instanceof File || Array.isArray(value) && value[0] instanceof File || value instanceof FileList) {
-    contentType = 'multipart/form-data';
-  }
-}); // TODO: send as urlEncoded or multipart by default
-// because of ease of use and reliability in browser API
-// for encoding the form?
-
-if (contentType !== 'application/json') {
-  body = formData;
-} else {
-  // Json
-  const json = {};
-  Array.from(formPairs).forEach(({
-    value,
-    key
-  }) => {
-    set(json, key, value);
-  });
-  body = JSON.stringify(json);
-}
-
-if (contentType && contentType !== 'multipart/form-data') {
-  if (
-  /* Zapier doesn't allow content-type header to be sent from browsers */
-  !(sendWithJs && props.action?.includes('zapier.com'))) {
-    headers['content-type'] = contentType;
-  }
-}
-
-const presubmitEvent = new CustomEvent('presubmit', {
-  detail: {
-    body
-  }
-});
-
-if (formRef) {
-  formRef.dispatchEvent(presubmitEvent);
-
-  if (presubmitEvent.defaultPrevented) {
-    return;
-  }
-}
-
-formState.value = 'sending';
-const formUrl = \`\${builder.env === 'dev' ? 'http://localhost:5000' : 'https://builder.io'}/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(props.sendSubmissionsToEmail || '')}&name=\${encodeURIComponent(props.name || '')}\`;
-fetch(props.sendSubmissionsTo === 'email' ? formUrl : props.action
-/* TODO: throw error if no action URL */
-, {
-  body,
-  headers,
-  method: props.method || 'post'
-}).then(async res => {
-  let body;
-  const contentType = res.headers.get('content-type');
-
-  if (contentType && contentType.indexOf('application/json') !== -1) {
-    body = await res.json();
-  } else {
-    body = await res.text();
-  }
-
-  if (!res.ok && props.errorMessagePath) {
-    /* TODO: allow supplying an error formatter function */
-    let message = get(body, props.errorMessagePath);
-
-    if (message) {
-      if (typeof message !== 'string') {
-        /* TODO: ideally convert json to yaml so it woul dbe like
-         error: - email has been taken */
-        message = JSON.stringify(message);
+    if (contentType && contentType !== \\"multipart/form-data\\") {
+      if (
+        /* Zapier doesn't allow content-type header to be sent from browsers */
+        !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+      ) {
+        headers[\\"content-type\\"] = contentType;
       }
-
-      formErrorMessage.value = message;
     }
-  }
 
-  responseData.value = body;
-  formState.value = res.ok ? 'success' : 'error';
-
-  if (res.ok) {
-    const submitSuccessEvent = new CustomEvent('submit:success', {
+    const presubmitEvent = new CustomEvent(\\"presubmit\\", {
       detail: {
-        res,
-        body
-      }
+        body,
+      },
     });
 
     if (formRef) {
-      formRef.dispatchEvent(submitSuccessEvent);
+      formRef.dispatchEvent(presubmitEvent);
 
-      if (submitSuccessEvent.defaultPrevented) {
+      if (presubmitEvent.defaultPrevented) {
         return;
       }
-      /* TODO: option to turn this on/off? */
-
-
-      if (props.resetFormOnSubmit !== false) {
-        formRef.reset();
-      }
     }
-    /* TODO: client side route event first that can be preventDefaulted */
 
+    formState.value = \\"sending\\";
+    const formUrl = \`\${
+      builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+    }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+      props.sendSubmissionsToEmail || \\"\\"
+    )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+    fetch(
+      props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+      /* TODO: throw error if no action URL */
+      {
+        body,
+        headers,
+        method: props.method || \\"post\\",
+      }
+    ).then(
+      async (res) => {
+        let body;
+        const contentType = res.headers.get(\\"content-type\\");
 
-    if (props.successUrl) {
-      if (formRef) {
-        const event = new CustomEvent('route', {
-          detail: {
-            url: props.successUrl
-          }
-        });
-        formRef.dispatchEvent(event);
-
-        if (!event.defaultPrevented) {
-          location.href = props.successUrl;
+        if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+          body = await res.json();
+        } else {
+          body = await res.text();
         }
-      } else {
-        location.href = props.successUrl;
+
+        if (!res.ok && props.errorMessagePath) {
+          /* TODO: allow supplying an error formatter function */
+          let message = get(body, props.errorMessagePath);
+
+          if (message) {
+            if (typeof message !== \\"string\\") {
+              /* TODO: ideally convert json to yaml so it woul dbe like
+         error: - email has been taken */
+              message = JSON.stringify(message);
+            }
+
+            formErrorMessage.value = message;
+          }
+        }
+
+        responseData.value = body;
+        formState.value = res.ok ? \\"success\\" : \\"error\\";
+
+        if (res.ok) {
+          const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+            detail: {
+              res,
+              body,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitSuccessEvent);
+
+            if (submitSuccessEvent.defaultPrevented) {
+              return;
+            }
+            /* TODO: option to turn this on/off? */
+
+            if (props.resetFormOnSubmit !== false) {
+              formRef.reset();
+            }
+          }
+          /* TODO: client side route event first that can be preventDefaulted */
+
+          if (props.successUrl) {
+            if (formRef) {
+              const event = new CustomEvent(\\"route\\", {
+                detail: {
+                  url: props.successUrl,
+                },
+              });
+              formRef.dispatchEvent(event);
+
+              if (!event.defaultPrevented) {
+                location.href = props.successUrl;
+              }
+            } else {
+              location.href = props.successUrl;
+            }
+          }
+        }
+      },
+      (err) => {
+        const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+          detail: {
+            error: err,
+          },
+        });
+
+        if (formRef) {
+          formRef.dispatchEvent(submitErrorEvent);
+
+          if (submitErrorEvent.defaultPrevented) {
+            return;
+          }
+        }
+
+        responseData.value = err;
+        formState.value = \\"error\\";
       }
-    }
+    );
   }
-}, err => {
-  const submitErrorEvent = new CustomEvent('submit:error', {
-    detail: {
-      error: err
-    }
-  });
-
-  if (formRef) {
-    formRef.dispatchEvent(submitErrorEvent);
-
-    if (submitErrorEvent.defaultPrevented) {
-      return;
-    }
-  }
-
-  responseData.value = err;
-  formState.value = 'error';
-});
-}
 }
 </script>
 
@@ -1085,82 +1027,81 @@ exports[`Vue Javascript Test Image 1`] = `
 </template>
 
 <script setup>
-    import { onMounted, onUnMounted, ref } from \\"vue\\"
+import { onMounted, onUnMounted, ref } from \\"vue\\";
 
+const props = defineProps([
+  \\"lazy\\",
+  \\"altText\\",
+  \\"_class\\",
+  \\"image\\",
+  \\"srcset\\",
+  \\"sizes\\",
+  \\"children\\",
+]);
+const scrollListener = ref(null);
+const imageLoaded = ref(false);
+const load = ref(false);
 
+const pictureRef = ref(null);
+onMounted(() => {
+  if (useLazyLoading()) {
+    // throttled scroll capture listener
+    const listener = () => {
+      if (pictureRef) {
+        const rect = pictureRef.getBoundingClientRect();
+        const buffer = window.innerHeight / 2;
 
+        if (rect.top < window.innerHeight + buffer) {
+          setLoad(true);
+          scrollListener.value = null;
+          window.removeEventListener(\\"scroll\\", listener);
+        }
+      }
+    };
 
-
-
-
-
-    const props = defineProps(['lazy','altText','_class','image','srcset','sizes','children'])
-const scrollListener= ref(null)
-const imageLoaded= ref(false)
-const load= ref(false)
-
-
-
-
-
-
-const pictureRef = ref<HTMLElement>()
-onMounted(() => { if (useLazyLoading()) {
-// throttled scroll capture listener
-const listener = () => {
-if (pictureRef) {
-  const rect = pictureRef.getBoundingClientRect();
-  const buffer = window.innerHeight / 2;
-
-  if (rect.top < window.innerHeight + buffer) {
-    setLoad(true);
-    scrollListener.value = null;
-    window.removeEventListener('scroll', listener);
+    scrollListener.value = listener;
+    window.addEventListener(\\"scroll\\", listener, {
+      capture: true,
+      passive: true,
+    });
+    listener();
   }
-}
-};
-
-scrollListener.value = listener;
-window.addEventListener('scroll', listener, {
-capture: true,
-passive: true
 });
-listener();
-}})
-onMounted(() => { if (scrollListener.value) {
-window.removeEventListener('scroll', scrollListener);
-}})
-
-
-
+onMounted(() => {
+  if (scrollListener.value) {
+    window.removeEventListener(\\"scroll\\", scrollListener);
+  }
+});
 
 function setLoaded() {
-imageLoaded.value = true;
+  imageLoaded.value = true;
 }
 
 function useLazyLoading() {
-// TODO: Add more checks here, like testing for real web browsers
-return !!props.lazy && isBrowser();
+  // TODO: Add more checks here, like testing for real web browsers
+  return !!props.lazy && isBrowser();
 }
 
 function isBrowser() {
-return typeof window !== 'undefined' && window.navigator.product != 'ReactNative';
+  return (
+    typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+  );
 }
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 
