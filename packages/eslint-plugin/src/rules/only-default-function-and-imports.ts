@@ -1,6 +1,7 @@
 import { Rule } from 'eslint';
 import * as types from '@babel/types';
 import isMitosisPath from '../helpers/isMitosisPath';
+import { HOOKS } from '../constants/hooks';
 
 // ------------------------------------------------------------------------------
 // Rule Definition
@@ -55,7 +56,7 @@ const rule: Rule.RuleModule = {
             (!types.isExpressionStatement(child) ||
               !types.isCallExpression(child.expression) ||
               !types.isIdentifier(child.expression.callee) ||
-              child.expression.callee.name !== 'useMetadata')
+              child.expression.callee.name !== HOOKS.META_DATA)
           ) {
             context.report({
               node: child as any,
