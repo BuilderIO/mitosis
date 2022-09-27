@@ -99,7 +99,7 @@ export function convertBuilderContentToSymbolHierarchy(
       if (el?.component?.name === 'Symbol') {
         if (collectComponentState) {
           const symbol: BuilderSymbol = el.component.options.symbol;
-          const props = symbol.data;
+          const props = symbol.data || (symbol.data = {});
           const state = symbol.content?.data?.state;
           if (state) {
             const id = hashCodeAsString(state);
