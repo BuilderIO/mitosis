@@ -94,7 +94,9 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitUseMount(file, component);
             emitUseWatch(file, component);
             emitUseCleanup(file, component);
-            emitTagNameHack(file, component);
+
+            emitTagNameHack(file, component, component.meta.useMetadata?.elementTag);
+            emitTagNameHack(file, component, component.meta.useMetadata?.componentElementTag);
             emitJSX(file, component, mutable);
           },
         ],
@@ -123,14 +125,13 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     }
   };
 
-function emitTagNameHack(file: File, component: MitosisComponent) {
-  const elementTag = component.meta.useMetadata?.elementTag as string | undefined;
-  if (elementTag) {
+function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {
+  if (typeof metadataValue === 'string' && metadataValue) {
     file.src.emit(
-      elementTag,
+      metadataValue,
       '=',
       convertMethodToFunction(
-        elementTag,
+        metadataValue,
         stateToMethodOrGetter(component.state),
         getLexicalScopeVars(component),
       ),
@@ -289,7 +290,7 @@ function emitUseStore(file: File, stateInit: StateInit) {
     file.src.emit(');');
   } else {
     // TODO hack for now so that `state` variable is defined, even though it is never read.
-    file.src.emit('const state={tagName:""' + (file.options.isTypeScript ? 'as any' : '') + '};');
+    file.src.emit('const state' + (file.options.isTypeScript ? ': any' : '') + ' = {};');
   }
 }
 
