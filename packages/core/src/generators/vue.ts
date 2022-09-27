@@ -763,7 +763,13 @@ function generateOptionsApiScript(
             ? `inject: ${getContextInjectString(component, options)},`
             : ''
         }
-
+        ${
+          component.hooks.onInit?.code
+            ? `created() {
+                ${processBinding(component.hooks.onInit.code, options, component)}
+              },`
+            : ''
+        }
         ${
           component.hooks.onMount?.code
             ? `mounted() {
@@ -924,6 +930,7 @@ function generateCompositionApiScript(
     ${Object.keys(component.refs)
       ?.map((key) => `const ${key} = ref<${component.refs[key].typeParameter}>()`)
       .join('\n')}
+    ${appendValueToRefs(component.hooks.onInit?.code ?? '', component, options)}
     ${
       !component.hooks.onMount?.code
         ? ''

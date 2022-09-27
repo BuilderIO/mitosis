@@ -158,7 +158,10 @@ export default {
   inject: {
     myService: \\"MyService\\",
   },
-
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
   mounted() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
@@ -188,6 +191,9 @@ export default {
 
   data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
+  created() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  },
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
@@ -2086,6 +2092,9 @@ exports[`Vue Javascript Test onInit & onMount 1`] = `
 export default {
   name: \\"on-init\\",
 
+  created() {
+    console.log(\\"onInit\\");
+  },
   mounted() {
     console.log(\\"onMount\\");
   },
@@ -2110,6 +2119,11 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ name: \\"\\" }),
+
+  created() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  },
 };
 </script>
 "
@@ -2563,7 +2577,10 @@ export default {
   inject: {
     myService: \\"MyService\\",
   },
-
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
   mounted() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
@@ -2598,6 +2615,9 @@ export default {
 
   data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
+  created() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  },
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
@@ -4750,6 +4770,9 @@ exports[`Vue Typescript Test onInit & onMount 1`] = `
 export default {
   name: \\"on-init\\",
 
+  created() {
+    console.log(\\"onInit\\");
+  },
   mounted() {
     console.log(\\"onMount\\");
   },
@@ -4778,6 +4801,11 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ name: \\"\\" }),
+
+  created() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  },
 };
 </script>
 "
