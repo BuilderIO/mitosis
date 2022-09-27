@@ -46,7 +46,7 @@ const getFileExtensionForTarget = (target: Target) => {
   }
 };
 
-const checkIsComponentImport = (theImport: MitosisImport) =>
+export const checkIsComponentImport = (theImport: MitosisImport) =>
   theImport.path.endsWith('.lite') && !theImport.path.endsWith('.context.lite');
 
 const transformImportPath = (theImport: MitosisImport, target: Target) => {
