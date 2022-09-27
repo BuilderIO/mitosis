@@ -500,7 +500,10 @@ const _componentToReact = (
         : ''
     }
     ${json.types ? json.types.join('\n') : ''}
-    ${renderPreComponent({ component: json, target: 'react' })}
+    ${renderPreComponent({
+      component: json,
+      target: options.type === 'native' ? 'reactNative' : 'react',
+    })}
     ${isSubComponent ? '' : 'export default '}${
     isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''
   }function ${json.name || 'MyComponent'}(${propsArgs}${
