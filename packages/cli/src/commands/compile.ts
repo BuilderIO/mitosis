@@ -118,7 +118,7 @@ const command: GluegunCommand = {
 
         switch (from_) {
           case 'mitosis':
-            json = parseJsx(data);
+            json = parseJsx(data, { typescript: !!path.match(/\.tsx?$/) });
             break;
 
           case 'builder':
