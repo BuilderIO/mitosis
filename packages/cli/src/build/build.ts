@@ -118,14 +118,14 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
           let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
           if (requiredParses.typescript && requiredParses.javascript) {
             typescriptMitosisJson = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: true });
             javascriptMitosisJson = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: false });
           } else {
             const singleParse = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: requiredParses.typescript });
 
             // technically only one of these will be used, but we set both to simplify things types-wise.
