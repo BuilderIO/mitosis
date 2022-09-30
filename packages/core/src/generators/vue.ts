@@ -1089,11 +1089,10 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
     </script>
 
     ${
-      !css.trim().length && !component.style?.length
+      !css.trim().length
         ? ''
         : `<style scoped>
       ${css}
-      ${component.style?.length ? component.style : ''}
     </style>`
     }
   `;

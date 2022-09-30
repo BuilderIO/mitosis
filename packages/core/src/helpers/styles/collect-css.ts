@@ -80,7 +80,9 @@ const collectStyles = (
 export const collectCss = (json: MitosisComponent, options: CollectStyleOptions = {}): string => {
   const styles = collectStyles(json, options);
   // TODO create and use a root selector
-  return classStyleMapToCss(styles);
+  let css = classStyleMapToCss(styles);
+  css += json.style?.length ? `\n${json.style}` : '';
+  return css;
 };
 
 const classStyleMapToCss = (map: ClassStyleMap): string => {
