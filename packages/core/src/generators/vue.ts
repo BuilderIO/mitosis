@@ -9,7 +9,7 @@ import {
   getStateObjectStringFromComponent,
 } from '../helpers/get-state-object-string';
 import { mapRefs } from '../helpers/map-refs';
-import { renderPreComponent } from '../helpers/render-imports';
+import { checkIsComponentImport, renderPreComponent } from '../helpers/render-imports';
 import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
 import { getProps } from '../helpers/get-props';
 import { selfClosingTags } from '../parsers/jsx';
@@ -41,6 +41,7 @@ import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helper
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { babelTransformExpression } from '../helpers/babel-transform';
+import { checkIsDefined } from '../helpers/nullable';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -539,13 +540,15 @@ function getContextProvideString(component: MitosisComponent, options: ToVueOpti
   let str = '{';
 
   for (const key in component.context.set) {
-    const { value, name } = component.context.set[key];
+    const { ref, value, name } = component.context.set[key];
     str += `
       ${name}: ${
       value
         ? stringifyContextValue(value, {
             valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
           })
+        : ref
+        ? stripStateAndPropsRefs(ref, { replaceWith: '_this.' })
         : null
     },
     `;
@@ -609,11 +612,10 @@ const mergeOptions = (
 const generateComponentImport =
   (options: ToVueOptions) =>
   (componentName: string): string => {
-    const key = kebabCase(componentName);
     if (options.vueVersion >= 3 && options.asyncComponentImports) {
-      return `'${key}': defineAsyncComponent(${componentName})`;
+      return `'${componentName}': defineAsyncComponent(${componentName})`;
     } else {
-      return `'${key}': ${componentName}`;
+      return `'${componentName}': ${componentName}`;
     }
   };
 
@@ -709,10 +711,18 @@ function generateOptionsApiScript(
   }
 
   // Component references to include in `component: { YourComponent, ... }
-  const componentsUsed = Array.from(getComponentsUsed(component))
+  const componentsUsedInTemplate = Array.from(getComponentsUsed(component))
     .filter((name) => name.length && !name.includes('.') && name[0].toUpperCase() === name[0])
     // Strip out components that compile away
     .filter((name) => !['For', 'Show', 'Fragment', 'Slot', component.name].includes(name));
+
+  // get default imports from component files
+  const importedComponents = component.imports
+    .filter(checkIsComponentImport)
+    .map((imp) => Object.entries(imp.imports).find(([_, value]) => value === 'default')?.[0])
+    .filter(checkIsDefined);
+
+  const componentsUsed = uniq([...componentsUsedInTemplate, ...importedComponents]);
 
   let propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
     (prop) => prop !== 'children' && prop !== 'class',
@@ -763,7 +773,13 @@ function generateOptionsApiScript(
             ? `inject: ${getContextInjectString(component, options)},`
             : ''
         }
-
+        ${
+          component.hooks.onInit?.code
+            ? `created() {
+                ${processBinding(component.hooks.onInit.code, options, component)}
+              },`
+            : ''
+        }
         ${
           component.hooks.onMount?.code
             ? `mounted() {
@@ -930,6 +946,7 @@ function generateCompositionApiScript(
         }
       })
       .join('\n')}
+    ${appendValueToRefs(component.hooks.onInit?.code ?? '', component, options)}
     ${
       !component.hooks.onMount?.code
         ? ''

@@ -3,4 +3,5 @@ export const HOOKS = {
   STATE: 'useState',
   CONTEXT: 'useContext',
   REF: 'useRef',
+  META_DATA: 'useMetadata',
 } as const;

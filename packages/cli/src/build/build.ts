@@ -17,7 +17,7 @@ import {
   MitosisConfig,
   parseJsx,
   Target,
-  Transpiler,
+  TranspilerGenerator,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
@@ -33,12 +33,28 @@ import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
 
+/**
+ * This provides the default path for a target's contents, both in the input and output directories.
+ */
+const getTargetPath = ({ target }: { target: Target }): string => {
+  switch (target) {
+    case 'vue2':
+      return 'vue/vue2';
+    case 'vue':
+    case 'vue3':
+      return 'vue/vue3';
+    default:
+      return kebabCase(target);
+  }
+};
+
 const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   targets: [],
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
   extension: 'lite.tsx',
+  getTargetPath,
 };
 
 const getOptions = (config?: MitosisConfig): MitosisConfig => ({
@@ -102,14 +118,14 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
           let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
           if (requiredParses.typescript && requiredParses.javascript) {
             typescriptMitosisJson = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: true });
             javascriptMitosisJson = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: false });
           } else {
             const singleParse = options.parser
-              ? options.parser(file, path)
+              ? await options.parser(file, path)
               : parseJsx(file, { typescript: requiredParses.typescript });
 
             // technically only one of these will be used, but we set both to simplify things types-wise.
@@ -133,7 +149,7 @@ const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedM
 
 interface TargetContext {
   target: Target;
-  generator: Transpiler;
+  generator: TranspilerGenerator<MitosisConfig['options'][Target]>;
   outputPath: string;
 }
 
@@ -145,8 +161,8 @@ const getTargetContexts = (options: MitosisConfig) =>
   options.targets.map(
     (target): TargetContext => ({
       target,
-      generator: getGeneratorForTarget({ target, options }),
-      outputPath: options.getTargetPath?.(target) ?? getTargetPath({ target }),
+      generator: getGeneratorForTarget({ target }),
+      outputPath: options.getTargetPath({ target }),
     }),
   );
 
@@ -183,46 +199,40 @@ export async function build(config?: MitosisConfig) {
   console.info('Done!');
 }
 
-const getGeneratorForTarget = ({
-  target,
-  options,
-}: {
-  target: Target;
-  options: MitosisConfig;
-}): TargetContext['generator'] => {
+const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['generator'] => {
   switch (target) {
     case 'customElement':
-      return componentToCustomElement(options.options.customElement);
+      return componentToCustomElement;
     case 'html':
-      return componentToHtml(options.options.html);
+      return componentToHtml;
     case 'reactNative':
-      return componentToReactNative({ stateType: 'useState' });
+      return componentToReactNative;
     case 'vue2':
-      return componentToVue2(options.options.vue2);
+      return componentToVue2;
     case 'vue':
       console.log('Targeting Vue: defaulting to vue v3');
     case 'vue3':
-      return componentToVue3(options.options.vue3);
+      return componentToVue3;
     case 'angular':
-      return componentToAngular(options.options.angular);
+      return componentToAngular;
     case 'react':
-      return componentToReact(options.options.react);
+      return componentToReact;
     case 'swift':
-      return componentToSwift(options.options.swift);
+      return componentToSwift;
     case 'solid':
-      return componentToSolid(options.options.solid);
+      return componentToSolid;
     case 'webcomponent':
-      return componentToCustomElement(options.options.webcomponent);
+      return componentToCustomElement;
     case 'svelte':
-      return componentToSvelte(options.options.svelte);
+      return componentToSvelte;
     case 'qwik':
-      return componentToQwik(options.options.qwik);
+      return componentToQwik;
     case 'marko':
-      return componentToMarko(options.options.marko);
+      return componentToMarko;
     case 'preact':
-      return componentToPreact(options.options.preact);
+      return componentToPreact;
     case 'lit':
-      return componentToLit(options.options.lit);
+      return componentToLit;
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
@@ -285,7 +295,7 @@ async function buildAndOutputComponentFiles({
     try {
       const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
 
-      transpiled = overrideFile ?? generator({ path, component });
+      transpiled = overrideFile ?? generator(options.options[target])({ path, component });
       debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);
@@ -322,21 +332,6 @@ async function buildAndOutputComponentFiles({
   });
   await Promise.all(output);
 }
-
-/**
- * This provides the default path for a target's contents, both in the input and output directories.
- */
-const getTargetPath = ({ target }: { target: Target }): string => {
-  switch (target) {
-    case 'vue2':
-      return 'vue/vue2';
-    case 'vue':
-    case 'vue3':
-      return 'vue/vue3';
-    default:
-      return kebabCase(target);
-  }
-};
 
 const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOutputTypeScript) =>
   shouldOutputTypeScript ? '.ts' : '.js',

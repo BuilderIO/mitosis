@@ -152,13 +152,16 @@ export default {
   provide() {
     const _this = this;
     return {
-      Injector: null,
+      Injector: createInjector(),
     };
   },
   inject: {
     myService: \\"MyService\\",
   },
-
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
   mounted() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
@@ -188,6 +191,9 @@ export default {
 
   data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
+  created() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  },
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
@@ -261,7 +267,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 export default {
   name: \\"my-boolean-attribute\\",
-  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
 };
 </script>
@@ -288,8 +294,8 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default {
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": MyBasicComponent,
-    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
+    MyBasicComponent: MyBasicComponent,
+    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
   },
 
   data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
@@ -816,8 +822,8 @@ import { get } from \\"@fake\\";
 export default {
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": BuilderBlockComponent,
-    \\"builder-blocks\\": BuilderBlocks,
+    BuilderBlockComponent: BuilderBlockComponent,
+    BuilderBlocks: BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -1402,7 +1408,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 };
 </script>
 "
@@ -1420,7 +1426,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 };
 </script>
 "
@@ -1946,7 +1952,7 @@ import RenderBlock from \\"./builder-render-block.raw\\";
 
 export default {
   name: \\"render-content\\",
-  components: { \\"render-block\\": RenderBlock },
+  components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -2086,6 +2092,9 @@ exports[`Vue Javascript Test onInit & onMount 1`] = `
 export default {
   name: \\"on-init\\",
 
+  created() {
+    console.log(\\"onInit\\");
+  },
   mounted() {
     console.log(\\"onMount\\");
   },
@@ -2110,6 +2119,11 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ name: \\"\\" }),
+
+  created() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  },
 };
 </script>
 "
@@ -2361,7 +2375,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default {
   name: \\"sub-component\\",
-  components: { foo: Foo },
+  components: { Foo: Foo },
 };
 </script>
 "
@@ -2557,13 +2571,16 @@ export default {
   provide() {
     const _this = this;
     return {
-      Injector: null,
+      Injector: createInjector(),
     };
   },
   inject: {
     myService: \\"MyService\\",
   },
-
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
   mounted() {
     const bye = this.myService.method(\\"hi\\");
     console.log(bye);
@@ -2598,6 +2615,9 @@ export default {
 
   data: () => ({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] }),
 
+  created() {
+    this.name = \\"PatrickJS onInit\\" + this.hi;
+  },
   mounted() {
     this.name = \\"PatrickJS onMount\\" + this.bye;
   },
@@ -2676,7 +2696,7 @@ import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.r
 
 export default {
   name: \\"my-boolean-attribute\\",
-  components: { \\"my-boolean-attribute-component\\": MyBooleanAttributeComponent },
+  components: { MyBooleanAttributeComponent: MyBooleanAttributeComponent },
   props: [\\"type\\"],
 };
 </script>
@@ -2703,8 +2723,8 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 export default {
   name: \\"my-basic-child-component\\",
   components: {
-    \\"my-basic-component\\": MyBasicComponent,
-    \\"my-basic-on-mount-update-component\\": MyBasicOnMountUpdateComponent,
+    MyBasicComponent: MyBasicComponent,
+    MyBasicOnMountUpdateComponent: MyBasicOnMountUpdateComponent,
   },
 
   data: () => ({ name: \\"Steve\\", dev: \\"PatrickJS\\" }),
@@ -3308,8 +3328,8 @@ import { get } from \\"@fake\\";
 export default {
   name: \\"form-component\\",
   components: {
-    \\"builder-block-component\\": BuilderBlockComponent,
-    \\"builder-blocks\\": BuilderBlocks,
+    BuilderBlockComponent: BuilderBlockComponent,
+    BuilderBlocks: BuilderBlocks,
   },
   props: [
     \\"previewState\\",
@@ -3972,7 +3992,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 };
 </script>
 "
@@ -3994,7 +4014,7 @@ import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 export default {
   name: \\"slot-code\\",
-  components: { \\"content-slot-code\\": ContentSlotCode },
+  components: { ContentSlotCode: ContentSlotCode },
 };
 </script>
 "
@@ -4605,7 +4625,7 @@ import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
 
 export default {
   name: \\"render-content\\",
-  components: { \\"render-block\\": RenderBlock },
+  components: { RenderBlock: RenderBlock },
   props: [\\"renderContentProps\\"],
 
   methods: {
@@ -4750,6 +4770,9 @@ exports[`Vue Typescript Test onInit & onMount 1`] = `
 export default {
   name: \\"on-init\\",
 
+  created() {
+    console.log(\\"onInit\\");
+  },
   mounted() {
     console.log(\\"onMount\\");
   },
@@ -4778,6 +4801,11 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ name: \\"\\" }),
+
+  created() {
+    this.name = defaultValues.name || this.name;
+    console.log(\\"set defaults with props\\");
+  },
 };
 </script>
 "
@@ -5080,7 +5108,7 @@ import Foo from \\"./foo-sub-component.vue\\";
 
 export default {
   name: \\"sub-component\\",
-  components: { foo: Foo },
+  components: { Foo: Foo },
 };
 </script>
 "

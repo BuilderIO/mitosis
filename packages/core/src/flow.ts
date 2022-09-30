@@ -32,3 +32,7 @@ export function Show<T>(props: {
 }): any {
   return null;
 }
+
+export function Fragment(props: { children: JSX.Element | JSX.Element[] }): any {
+  return null;
+}
