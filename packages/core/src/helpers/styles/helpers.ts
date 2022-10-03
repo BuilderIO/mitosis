@@ -22,9 +22,9 @@ export const nodeHasStyle = (node: MitosisNode) => {
 
 export const hasCss = (component: MitosisComponent) => {
   let hasStyles = !!component.style?.length;
-  
+
   if (hasStyles) {
-    return true
+    return true;
   }
 
   traverse(component).forEach(function (item) {
