@@ -938,7 +938,13 @@ function generateCompositionApiScript(
       .join('\n')}
 
     ${Object.keys(component.refs)
-      ?.map((key) => `const ${key} = ref<${component.refs[key].typeParameter}>()`)
+      ?.map((key) => {
+        if (options.typescript) {
+          return `const ${key} = ref<${component.refs[key].typeParameter}>()`;
+        } else {
+          return `const ${key} = ref(null)`;
+        }
+      })
       .join('\n')}
     ${appendValueToRefs(component.hooks.onInit?.code ?? '', component, options)}
     ${
