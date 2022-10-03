@@ -127,9 +127,14 @@ const setContextCode = (json: MitosisComponent) => {
   const contextSetters = json.context.set;
   return Object.keys(contextSetters)
     .map((key) => {
-      const { value, name } = contextSetters[key];
-      return `setContext(${name}.key, ${
-        value ? stripStateAndPropsRefs(stringifyContextValue(value)) : 'undefined'
+      const { ref, value, name } = contextSetters[key];
+
+      return `setContext(${value ? `${name}.key` : name}, ${
+        value
+          ? stripStateAndPropsRefs(stringifyContextValue(value))
+          : ref
+          ? stripStateAndPropsRefs(ref)
+          : 'undefined'
       });`;
     })
     .join('\n');
@@ -182,6 +187,7 @@ type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
 const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
   stripStateAndPropsRefs(code, {
     includeState: options.stateType === 'variables',
+    replaceWith: (name) => (name === 'children' ? '$$slots.default' : name),
   });
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
@@ -460,10 +466,17 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         })
         .join('\n')}
       ${
+        // https://svelte.dev/repl/bd9b56891f04414982517bbd10c52c82?version=3.31.0
         hasStyle(json)
           ? `
         function mitosis_styling (node, vars) {
-          Object.entries(vars || {}).forEach(([ p, v ]) => { node.style[p] = v })
+          Object.entries(vars || {}).forEach(([ p, v ]) => {
+            if (p.startsWith('--')) {
+              node.style.setProperty(p, v);
+            } else {
+              node.style[p] = v;
+            }
+          })
         }
       `
           : ''
@@ -483,7 +496,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             : `let state = onChange(${dataString}, () => state = state)`
           : dataString
       }
-
+      ${stripStateAndPropsRefs(json.hooks.onInit?.code ?? '')}
       ${
         !json.hooks.onMount?.code
           ? ''

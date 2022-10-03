@@ -119,7 +119,7 @@ exports[`Svelte Javascript Test Basic Context 1`] = `
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector.key, undefined);
+  setContext(Injector, createInjector());
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -127,6 +127,9 @@ exports[`Svelte Javascript Test Basic Context 1`] = `
   }
 
   let name = \\"PatrickJS\\";
+
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
 
   onMount(() => {
     const bye = myService.method(\\"hi\\");
@@ -151,6 +154,8 @@ exports[`Svelte Javascript Test Basic OnMount Update 1`] = `
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  name = \\"PatrickJS onInit\\" + hi;
 
   onMount(() => {
     name = \\"PatrickJS onMount\\" + bye;
@@ -1012,7 +1017,11 @@ exports[`Svelte Javascript Test Img 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -1075,7 +1084,11 @@ exports[`Svelte Javascript Test Section 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -1099,7 +1112,11 @@ exports[`Svelte Javascript Test Section 2`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 
@@ -1308,7 +1325,11 @@ exports[`Svelte Javascript Test Video 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -1618,6 +1639,8 @@ exports[`Svelte Javascript Test onInit & onMount 1`] = `
 "<script>
   import { onMount } from \\"svelte\\";
 
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -1636,6 +1659,9 @@ exports[`Svelte Javascript Test onInit 1`] = `
   export let name;
 
   let name = \\"\\";
+
+  name = defaultValues.name || name;
+  console.log(\\"set defaults with props\\");
 </script>
 
 <div>Default name defined by parent {name}</div>
@@ -2029,7 +2055,7 @@ exports[`Svelte Typescript Test Basic Context 1`] = `
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector.key, undefined);
+  setContext(Injector, createInjector());
 
   function onChange() {
     const change = myService.method(\\"change\\");
@@ -2037,6 +2063,9 @@ exports[`Svelte Typescript Test Basic Context 1`] = `
   }
 
   let name = \\"PatrickJS\\";
+
+  const hi = myService.method(\\"hi\\");
+  console.log(hi);
 
   onMount(() => {
     const bye = myService.method(\\"hi\\");
@@ -2068,6 +2097,8 @@ exports[`Svelte Typescript Test Basic OnMount Update 1`] = `
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
+
+  name = \\"PatrickJS onInit\\" + hi;
 
   onMount(() => {
     name = \\"PatrickJS onMount\\" + bye;
@@ -3062,7 +3093,11 @@ exports[`Svelte Typescript Test Img 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -3152,7 +3187,11 @@ exports[`Svelte Typescript Test Section 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -3184,7 +3223,11 @@ exports[`Svelte Typescript Test Section 2`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 
@@ -3468,7 +3511,11 @@ exports[`Svelte Typescript Test Video 1`] = `
 
   function mitosis_styling(node, vars) {
     Object.entries(vars || {}).forEach(([p, v]) => {
-      node.style[p] = v;
+      if (p.startsWith(\\"--\\")) {
+        node.style.setProperty(p, v);
+      } else {
+        node.style[p] = v;
+      }
     });
   }
 </script>
@@ -3830,6 +3877,8 @@ exports[`Svelte Typescript Test onInit & onMount 1`] = `
 "<script lang=\\"ts\\">
   import { onMount } from \\"svelte\\";
 
+  console.log(\\"onInit\\");
+
   onMount(() => {
     console.log(\\"onMount\\");
   });
@@ -3854,6 +3903,9 @@ exports[`Svelte Typescript Test onInit 1`] = `
   export let name: Props[\\"name\\"];
 
   let name = \\"\\";
+
+  name = defaultValues.name || name;
+  console.log(\\"set defaults with props\\");
 </script>
 
 <div>Default name defined by parent {name}</div>

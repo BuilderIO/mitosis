@@ -37,10 +37,10 @@ export const componentFunctionToJson = (
             expression.callee.name === 'provideContext'
           ) {
             const keyNode = expression.arguments[0];
+            const valueNode = expression.arguments[1];
             if (types.isIdentifier(keyNode)) {
               const key = keyNode.name;
               const keyPath = traceReferenceToModulePath(context.builder.component.imports, key)!;
-              const valueNode = expression.arguments[1];
               if (valueNode) {
                 if (types.isObjectExpression(valueNode)) {
                   const value = parseStateObjectToMitosisState(valueNode);
@@ -55,6 +55,13 @@ export const componentFunctionToJson = (
                     ref,
                   };
                 }
+              }
+            } else if (types.isStringLiteral(keyNode)) {
+              if (types.isExpression(valueNode)) {
+                setContext[keyNode.value] = {
+                  name: `"${keyNode.value}"`,
+                  ref: generate(valueNode).code,
+                };
               }
             }
           } else if (

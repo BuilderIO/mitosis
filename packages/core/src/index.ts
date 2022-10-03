@@ -1,6 +1,14 @@
+import { JSX } from '@builder.io/mitosis/jsx-runtime';
+
 export * from './flow';
 
-export type Context<T> = {};
+function Provider<T>(props: { value: T; children: JSX.Element }): any {
+  return null;
+}
+
+export type Context<T> = {
+  Provider: typeof Provider<T>;
+};
 
 // These compile away
 export const useStore = <T>(obj: T): T => {
@@ -71,6 +79,7 @@ export * from './types/mitosis-node';
 export * from './types/mitosis-component';
 export * from './types/config';
 export * from './types/transpiler';
+export * from './types/plugins';
 
 export * from './plugins/compile-away-builder-components';
 export * from './plugins/compile-away-components';

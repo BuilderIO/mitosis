@@ -5,8 +5,9 @@ import traverse from 'traverse';
 import { ClassStyleMap } from '../helpers/styles/helpers';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
 import { MitosisComponent } from '../types/mitosis-component';
-import { componentToReact } from './react';
+import { componentToReact, ToReactOptions } from './react';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
+import { Plugin } from '..';
 
 export interface ToReactNativeOptions extends BaseTranspilerOptions {
   stylesType?: 'emotion' | 'react-native';
@@ -67,50 +68,60 @@ export const collectReactNativeStyles = (json: MitosisComponent): ClassStyleMap 
   return styleMap;
 };
 
-// Plugin to convert DOM tags to <View /> and <Text />
-function processReactNative() {
-  return () => ({
-    json: {
-      pre: (json: MitosisComponent) => {
-        traverse(json).forEach((node) => {
-          if (isMitosisNode(node)) {
-            // TODO: handle TextInput, Image, etc
-            if (node.name.toLowerCase() === node.name) {
-              node.name = 'View';
-            }
-
-            if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
-              node.name = 'Text';
-            }
-
-            if (node.properties.class) {
-              delete node.properties.class;
-            }
-            if (node.properties.className) {
-              delete node.properties.className;
-            }
-            if (node.bindings.class) {
-              delete node.bindings.class;
-            }
-            if (node.bindings.className) {
-              delete node.bindings.className;
-            }
+/**
+ * Plugin that handles necessary transformations from React to React Native:
+ * - Converts DOM tags to <View /> and <Text />
+ * - Removes redundant `class`/`className` attributes
+ */
+const PROCESS_REACT_NATIVE_PLUGIN: Plugin = () => ({
+  json: {
+    pre: (json: MitosisComponent) => {
+      traverse(json).forEach((node) => {
+        if (isMitosisNode(node)) {
+          // TODO: handle TextInput, Image, etc
+          if (node.name.toLowerCase() === node.name) {
+            node.name = 'View';
           }
-        });
-      },
+
+          if (node.properties._text?.trim().length || node.bindings._text?.code?.trim()?.length) {
+            node.name = 'Text';
+          }
+
+          if (node.properties.class) {
+            delete node.properties.class;
+          }
+          if (node.properties.className) {
+            delete node.properties.className;
+          }
+          if (node.bindings.class) {
+            delete node.bindings.class;
+          }
+          if (node.bindings.className) {
+            delete node.bindings.className;
+          }
+        }
+      });
     },
-  });
-}
+  },
+});
+
+const DEFAULT_OPTIONS: ToReactNativeOptions = {
+  stateType: 'useState',
+  stylesType: 'react-native',
+  plugins: [PROCESS_REACT_NATIVE_PLUGIN],
+};
 
 export const componentToReactNative: TranspilerGenerator<ToReactNativeOptions> =
-  (options = {}) =>
+  (_options = {}) =>
   ({ component, path }) => {
     const json = fastClone(component);
 
-    return componentToReact({
-      ...options,
-      plugins: (options.plugins || []).concat([processReactNative()]),
-      stylesType: options.stylesType || 'react-native',
+    const options: ToReactOptions = {
+      ...DEFAULT_OPTIONS,
+      ..._options,
+      plugins: [...(DEFAULT_OPTIONS.plugins || []), ...(_options.plugins || [])],
       type: 'native',
-    })({ component: json, path });
+    };
+
+    return componentToReact(options)({ component: json, path });
   };
