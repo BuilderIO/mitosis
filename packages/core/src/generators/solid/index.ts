@@ -25,13 +25,14 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
-import { getState, updateStateCode } from './state';
+import { getState } from './state';
 import { checkIsDefined } from '../../helpers/nullable';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { collectCss } from '../../helpers/styles/collect-css';
 import hash from 'hash-sum';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
+import { updateStateCode } from './state/helpers';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
