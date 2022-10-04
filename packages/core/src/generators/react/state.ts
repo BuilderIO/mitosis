@@ -1,7 +1,6 @@
 import { types } from '@babel/core';
 import json5 from 'json5';
 import traverse from 'traverse';
-import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { MitosisComponent, StateValue } from '../../types/mitosis-component';
@@ -9,6 +8,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { ToReactOptions } from './types';
 import { processBinding } from './helpers';
 import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
+import { transformStateSetters } from '../../helpers/transform-state-setters';
 
 /**
  * Removes all `this.` references.
@@ -92,21 +92,15 @@ export const updateStateSettersInCode = (value: string, options: ToReactOptions)
   if (options.stateType !== 'useState') {
     return value;
   }
-  return babelTransformExpression(value, {
-    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
+  return transformStateSetters({
+    value,
+    transformer: ({ path, propertyName }) => {
       const { node } = path;
-      if (types.isMemberExpression(node.left)) {
-        if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
-          if (node.left.object.name === 'state') {
-            // TODO: ultimately support other property access like strings
-            const propertyName = (node.left.property as types.Identifier).name;
-            path.replaceWith(
-              types.callExpression(types.identifier(getSetStateFnName(propertyName)), [node.right]),
-            );
-          }
-        }
-      }
+      const newExpression = types.callExpression(
+        types.identifier(getSetStateFnName(propertyName)),
+        [node.right],
+      );
+      return newExpression;
     },
   });
 };

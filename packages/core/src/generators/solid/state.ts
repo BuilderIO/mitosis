@@ -9,6 +9,7 @@ import { ToSolidOptions } from './types';
 import { flow, identity, pipe } from 'fp-ts/lib/function';
 import { checkHasState } from '../../helpers/state';
 import { prefixWithFunction, replaceGetterWithFunction } from '../../helpers/patterns';
+import { transformStateSetters } from '../../helpers/transform-state-setters';
 
 type State = {
   str: string;
@@ -59,38 +60,6 @@ const getNewStateSetterExpression =
         );
     }
   };
-
-type StateSetterTransformer = ({
-  path,
-  propertyName,
-}: {
-  path: babel.NodePath<types.AssignmentExpression>;
-  propertyName: string;
-}) => types.CallExpression;
-
-const transformStateSetter = ({
-  value,
-  transformer,
-}: {
-  value: string;
-  transformer: StateSetterTransformer;
-}) =>
-  babelTransformExpression(value, {
-    AssignmentExpression(path) {
-      const { node } = path;
-      if (types.isMemberExpression(node.left)) {
-        if (types.isIdentifier(node.left.object)) {
-          // TODO: utillity to properly trace this reference to the beginning
-          if (node.left.object.name === 'state') {
-            // TODO: ultimately support other property access like strings
-            const propertyName = (node.left.property as types.Identifier).name;
-            const newExpression = transformer({ path, propertyName });
-            path.replaceWith(newExpression);
-          }
-        }
-      }
-    },
-  });
 
 const collectUsedStateAndPropsInFunction = (fnValue: string) => {
   const stateUsed = new Set<string>();
@@ -143,7 +112,7 @@ const updateStateSettersInCode =
       case 'store':
       case 'signals':
         try {
-          return transformStateSetter({
+          return transformStateSetters({
             value,
             transformer: getNewStateSetterExpression(stateType),
           });
