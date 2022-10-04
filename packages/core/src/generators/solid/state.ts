@@ -45,7 +45,6 @@ const getNewStateSetterExpression =
       case 'signals':
         return callValueSetter(path.node.right);
       case 'store':
-        console.log('stateSetter: ', path.node.right);
         /**
          * Wrap value in a reconcile() call for Stores updates
          * ```ts
@@ -77,7 +76,7 @@ const transformStateSetter = ({
   transformer: StateSetterTransformer;
 }) =>
   babelTransformExpression(value, {
-    AssignmentExpression(path: babel.NodePath<babel.types.AssignmentExpression>) {
+    AssignmentExpression(path) {
       const { node } = path;
       if (types.isMemberExpression(node.left)) {
         if (types.isIdentifier(node.left.object)) {
@@ -93,6 +92,26 @@ const transformStateSetter = ({
     },
   });
 
+const collectUsedStateAndPropsInFunction = (fnValue: string) => {
+  const stateUsed = new Set<string>();
+  const propsUsed = new Set<string>();
+  babelTransformExpression(fnValue, {
+    MemberExpression(path) {
+      const { node } = path;
+      if (types.isIdentifier(node.object)) {
+        if (types.isIdentifier(node.property)) {
+          if (node.object.name === 'state') {
+            stateUsed.add(`state.${node.property.name}`);
+          } else if (node.object.name === 'props') {
+            propsUsed.add(`props.${node.property.name}`);
+          }
+        }
+      }
+    },
+  });
+  return { stateUsed, propsUsed };
+};
+
 const getStateTypeForValue = ({
   value,
   component,
@@ -102,8 +121,11 @@ const getStateTypeForValue = ({
   component: MitosisComponent;
   options: ToSolidOptions;
 }) => {
+  // e.g. state.useContent?.blocks[0].id => useContent
+  const extractStateSliceName = stripStateAndPropsRefs(value).split('.')[0].split('?')[0];
+
   const stateOverrideForValue: ToSolidOptions['state'] = (component.meta?.useMetadata?.solid as any)
-    ?.state?.[stripStateAndPropsRefs(value)];
+    ?.state?.[extractStateSliceName];
 
   const stateType = stateOverrideForValue || options.state;
 
@@ -119,7 +141,6 @@ const updateStateSettersInCode =
       case 'mutable':
         return value;
       case 'store':
-        console.log('stateSetter: ', value);
       case 'signals':
         try {
           return transformStateSetter({
@@ -127,7 +148,7 @@ const updateStateSettersInCode =
             transformer: getNewStateSetterExpression(stateType),
           });
         } catch (error) {
-          console.log(`[Solid.js]: could not update state setters in ${stateType} code`, value);
+          console.error(`[Solid.js]: could not update state setters in ${stateType} code`, value);
           throw error;
         }
     }
@@ -135,33 +156,32 @@ const updateStateSettersInCode =
 
 const updateStateGettersInCode =
   (options: ToSolidOptions, component: MitosisComponent) =>
-  (value: string): string => {
-    switch (getStateTypeForValue({ value, component, options })) {
-      case 'mutable':
-        return value;
-      case 'store':
-        console.log('stateGetter: ', value);
-        return value;
-      case 'signals':
-        return stripStateAndPropsRefs(value, {
-          includeState: true,
-          includeProps: false,
-          replaceWith: (name) => {
-            const state = component.state[name];
+  (value: string): string =>
+    stripStateAndPropsRefs(value, {
+      includeState: true,
+      includeProps: false,
+      replaceWith: (name): string => {
+        const stateType = getStateTypeForValue({ value: name, component, options });
+        const state = component.state[name];
+        switch (stateType) {
+          case 'signals':
             if (
-              options.state === 'signals' &&
               // signal accessors are lazy, so we need to add a function call to property calls
-              (state?.type === 'property' ||
-                // getters become plain functions, requiring a function call to access their value
-                state?.type === 'getter')
+              state?.type === 'property' ||
+              // getters become plain functions, requiring a function call to access their value
+              state?.type === 'getter'
             ) {
               return `${name}()`;
+            } else {
+              return name;
             }
+
+          case 'store':
+          case 'mutable':
             return name;
-          },
-        });
-    }
-  };
+        }
+      },
+    });
 
 export const updateStateCode = ({
   options,
@@ -178,7 +198,7 @@ export const updateStateCode = ({
     (x) => x.trim(),
   );
 
-const processStateValue = ({
+const processSignalStateValue = ({
   options,
   component,
 }: {
@@ -216,7 +236,7 @@ const processStateValue = ({
 };
 
 const getStoreCode = ({
-  json,
+  json: component,
   options,
   state,
 }: {
@@ -224,8 +244,57 @@ const getStoreCode = ({
   options: ToSolidOptions;
   state: MitosisState;
 }) => {
-  // TO-DO: stub for now
-  return getSignalsCode({ json, options, state });
+  const mapValue = updateStateCode({ options, component });
+
+  const stateUpdater = ([key, stateVal]: [
+    key: string,
+    stateVal: StateValue | undefined,
+  ]): string => {
+    const getDefaultCase = () =>
+      pipe(
+        value,
+        json5.stringify,
+        mapValue,
+        (x) => `const [${key}, ${getStateSetterName(key)}] = createStore(${x})`,
+      );
+
+    const value = stateVal?.code;
+    const type = stateVal?.type;
+    if (typeof value === 'string') {
+      switch (type) {
+        case 'getter':
+          const getterValueAsFunction = replaceGetterWithFunction(value);
+          const { stateUsed, propsUsed } =
+            collectUsedStateAndPropsInFunction(getterValueAsFunction);
+
+          const fnValueWithMappedRefs = mapValue(getterValueAsFunction);
+
+          const FUNCTION_NAME = `update${capitalize(key)}`;
+          console.log({ stateUsed });
+          const deps = [
+            ...Array.from(stateUsed).map(updateStateGettersInCode(options, component)),
+            ...Array.from(propsUsed),
+          ].join(', ');
+          return `
+          const ${FUNCTION_NAME} = ${fnValueWithMappedRefs}
+          const [${key}, ${getStateSetterName(key)}] = createStore(${FUNCTION_NAME}())
+          createEffect(on(() => [${deps}], () => ${getStateSetterName(
+            key,
+          )}(reconcile(${FUNCTION_NAME}()))))
+          `;
+        case 'function':
+          return mapValue(value);
+        case 'method':
+          return pipe(value, prefixWithFunction, mapValue);
+        default:
+          return getDefaultCase();
+      }
+    } else {
+      return getDefaultCase();
+    }
+  };
+
+  return Object.entries(state).map(stateUpdater).join(LINE_ITEM_DELIMITER);
 };
 
 const LINE_ITEM_DELIMITER = '\n\n\n';
@@ -239,7 +308,7 @@ const getSignalsCode = ({
   state: MitosisState;
 }) =>
   Object.entries(state)
-    .map(processStateValue({ options, component: json }))
+    .map(processSignalStateValue({ options, component: json }))
     /**
      * We need to sort state so that signals are at the top.
      */
@@ -290,23 +359,21 @@ export const getState = ({
     },
   );
 
-  const mutableStateStr = pipe(
-    mutable,
-    getMemberObjectString,
-    (str) => `const state = createMutable(${str});`,
-  );
-  const signalStateStr = getSignalsCode({ json, options, state: signal });
-  const storeStateStr = getStoreCode({ json, options, state: store });
-
-  const stateStr = `
-  const state = createMutable(${mutableStateStr});
-  ${signalStateStr}
-  ${storeStateStr}
-  `;
-
   const hasMutableState = Object.keys(mutable).length > 0;
   const hasSignalState = Object.keys(signal).length > 0;
   const hasStoreState = Object.keys(store).length > 0;
+
+  const mutableStateStr = hasMutableState
+    ? pipe(mutable, getMemberObjectString, (str) => `const state = createMutable(${str});`)
+    : '';
+  const signalStateStr = hasSignalState ? getSignalsCode({ json, options, state: signal }) : '';
+  const storeStateStr = hasStoreState ? getStoreCode({ json, options, state: store }) : '';
+
+  const stateStr = `
+  ${mutableStateStr}
+  ${signalStateStr}
+  ${storeStateStr}
+  `;
 
   const importObj: State['import'] = {
     store: [
