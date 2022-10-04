@@ -219,13 +219,10 @@ const getStoreCode = ({
     key: string,
     stateVal: StateValue | undefined,
   ]): string => {
-    const getDefaultCase = () =>
-      pipe(
-        value,
-        json5.stringify,
-        mapValue,
-        (x) => `const [${key}, ${getStateSetterName(key)}] = createStore(${x})`,
-      );
+    const getCreateStoreStr = (initialValue: string) =>
+      `const [${key}, ${getStateSetterName(key)}] = createStore(${initialValue})`;
+
+    const getDefaultCase = () => pipe(value, json5.stringify, mapValue, getCreateStoreStr);
 
     const value = stateVal?.code;
     const type = stateVal?.type;
@@ -246,7 +243,7 @@ const getStoreCode = ({
           ].join(', ');
           return `
           const ${FUNCTION_NAME} = ${fnValueWithMappedRefs}
-          const [${key}, ${getStateSetterName(key)}] = createStore(${FUNCTION_NAME}())
+          ${getCreateStoreStr(`${FUNCTION_NAME}()`)}
           createEffect(on(() => [${deps}], () => ${getStateSetterName(
             key,
           )}(reconcile(${FUNCTION_NAME}()))))
