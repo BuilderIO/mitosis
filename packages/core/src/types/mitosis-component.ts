@@ -120,4 +120,5 @@ export type MitosisComponent = {
   types?: string[];
   propsTypeRef?: string;
   defaultProps?: JSONObject;
+  style?: string;
 };

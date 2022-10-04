@@ -45,6 +45,7 @@ export const useMetadata = (obj: object) => {
   return null as any;
 };
 export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null as unknown as T;
+export const useStyle = (value: string) => null as any;
 
 export * from './parsers/jsx';
 export * from './parsers/builder';
