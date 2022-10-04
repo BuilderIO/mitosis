@@ -1,0 +1,1 @@
+export { getState } from './state';

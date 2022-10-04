@@ -25,11 +25,14 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
 import { ToSolidOptions } from './types';
-import { getState, updateStateCode } from './state';
+import { getState } from './state';
 import { checkIsDefined } from '../../helpers/nullable';
 import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { collectCss } from '../../helpers/styles/collect-css';
 import hash from 'hash-sum';
+import { uniq } from 'fp-ts/lib/Array';
+import * as S from 'fp-ts/string';
+import { updateStateCode } from './state/helpers';
 
 const DEFAULT_OPTIONS: ToSolidOptions = {
   state: 'signals',
@@ -328,14 +331,16 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
 
-    const solidJSImports = [
-      componentHasContext ? 'useContext' : undefined,
-      hasShowComponent ? 'Show' : undefined,
-      hasForComponent ? 'For' : undefined,
-      json.hooks.onMount?.code ? 'onMount' : undefined,
-      ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
-      ...(state?.import.solidjs ?? []),
-    ].filter(checkIsDefined);
+    const solidJSImports = uniq(S.Eq)(
+      [
+        componentHasContext ? 'useContext' : undefined,
+        hasShowComponent ? 'Show' : undefined,
+        hasForComponent ? 'For' : undefined,
+        json.hooks.onMount?.code ? 'onMount' : undefined,
+        ...(json.hooks.onUpdate?.length ? ['on', 'createEffect'] : []),
+        ...(state?.import.solidjs ?? []),
+      ].filter(checkIsDefined),
+    );
 
     const storeImports = state?.import.store ?? [];
 
