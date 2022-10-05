@@ -40,7 +40,8 @@ const getFileExtensionForTarget = (target: Target) => {
     case 'angular':
       return '';
     // these `.lite` extensions are handled in the `transpile` step of the CLI.
-    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`.
+    // TO-DO: consolidate file-extension renaming to this file, and remove `.lite` replaces from the CLI `transpile`. (outdated) ?
+    // Bit team wanted to make sure React and Angular behaved the same in regards to imports - ALU 10/05/22
     default:
       return '.lite';
   }
@@ -49,13 +50,17 @@ const getFileExtensionForTarget = (target: Target) => {
 export const checkIsComponentImport = (theImport: MitosisImport) =>
   theImport.path.endsWith('.lite') && !theImport.path.endsWith('.context.lite');
 
-const transformImportPath = (theImport: MitosisImport, target: Target) => {
+const transformImportPath = (
+  theImport: MitosisImport,
+  target: Target,
+  preserveFileExtensions: boolean,
+) => {
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '.js');
   }
 
-  if (checkIsComponentImport(theImport)) {
+  if (checkIsComponentImport(theImport) && !preserveFileExtensions) {
     return theImport.path.replace('.lite', getFileExtensionForTarget(target));
   }
 
@@ -102,13 +107,15 @@ export const renderImport = ({
   theImport,
   target,
   asyncComponentImports,
+  preserveFileExtensions,
 }: {
   theImport: MitosisImport;
   target: Target;
   asyncComponentImports: boolean;
+  preserveFileExtensions: boolean;
 }): string => {
   const importedValues = getImportedValues({ theImport });
-  const path = transformImportPath(theImport, target);
+  const path = transformImportPath(theImport, target, preserveFileExtensions);
   const importValue = getImportValue(importedValues);
 
   const isComponentImport = checkIsComponentImport(theImport);
@@ -144,11 +151,13 @@ export const renderImports = ({
   target,
   asyncComponentImports,
   excludeMitosisComponents,
+  preserveFileExtensions = false,
 }: {
   imports: MitosisImport[];
   target: Target;
   asyncComponentImports: boolean;
   excludeMitosisComponents?: boolean;
+  preserveFileExtensions?: boolean;
 }): string =>
   imports
     .filter((theImport) => {
@@ -165,7 +174,9 @@ export const renderImports = ({
         return true;
       }
     })
-    .map((theImport) => renderImport({ theImport, target, asyncComponentImports }))
+    .map((theImport) =>
+      renderImport({ theImport, target, asyncComponentImports, preserveFileExtensions }),
+    )
     .join('\n');
 
 export const renderPreComponent = ({
@@ -173,17 +184,20 @@ export const renderPreComponent = ({
   target,
   excludeMitosisComponents,
   asyncComponentImports = false,
+  preserveFileExtensions = false,
 }: {
   component: MitosisComponent;
   target: Target;
   asyncComponentImports?: boolean;
   excludeMitosisComponents?: boolean;
+  preserveFileExtensions?: boolean;
 }): string => `
     ${renderImports({
       imports: component.imports,
       target,
       asyncComponentImports,
       excludeMitosisComponents,
+      preserveFileExtensions,
     })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent?.code || ''}
