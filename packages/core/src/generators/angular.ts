@@ -35,6 +35,7 @@ const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
   preserveImports?: boolean;
+  preserveFileExtensions?: boolean;
 }
 
 interface AngularBlockOptions {
@@ -228,6 +229,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   ({ component: _component }) => {
     const DEFAULT_OPTIONS = {
       preserveImports: false,
+      preserveFileExtensions: false,
     };
 
     const options = { ...DEFAULT_OPTIONS, ...userOptions };
@@ -379,6 +381,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       component: json,
       target: 'angular',
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
+      preserveFileExtensions: options.preserveFileExtensions,
     })}
 
     @Component({
