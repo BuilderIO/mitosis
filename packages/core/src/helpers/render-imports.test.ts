@@ -12,7 +12,6 @@ describe('renderImport', () => {
       theImport: data[0],
       target: 'vue',
       asyncComponentImports: false,
-      preserveFileExtensions: false,
     });
     expect(output).toMatchSnapshot();
   });
@@ -28,7 +27,6 @@ describe('renderImport', () => {
       theImport: data[0],
       target: 'react',
       asyncComponentImports: false,
-      preserveFileExtensions: false,
     });
     expect(output).toEqual("import '../render-blocks.scss';");
   });

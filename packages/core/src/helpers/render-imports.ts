@@ -107,12 +107,12 @@ export const renderImport = ({
   theImport,
   target,
   asyncComponentImports,
-  preserveFileExtensions,
+  preserveFileExtensions = false,
 }: {
   theImport: MitosisImport;
   target: Target;
   asyncComponentImports: boolean;
-  preserveFileExtensions: boolean;
+  preserveFileExtensions?: boolean;
 }): string => {
   const importedValues = getImportedValues({ theImport });
   const path = transformImportPath(theImport, target, preserveFileExtensions);
