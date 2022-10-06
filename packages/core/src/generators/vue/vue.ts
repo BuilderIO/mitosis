@@ -32,7 +32,7 @@ import { kebabCase, pickBy, size, uniq } from 'lodash';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { processHttpRequests } from '../../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { TranspilerGenerator } from '../../types/transpiler';
 import { GETTER } from '../../helpers/patterns';
 import { OmitObj } from '../../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
@@ -45,27 +45,13 @@ import { checkIsDefined } from '../../helpers/nullable';
 import {
   addBindingsToJson,
   addPropertiesToJson,
+  encodeQuotes,
   getOnUpdateHookName,
   invertBooleanExpression,
+  renameMitosisComponentsToKebabCase,
 } from './helpers';
-
-function encodeQuotes(string: string) {
-  return string.replace(/"/g, '&quot;');
-}
-
-export type VueVersion = 2 | 3;
-export type Api = 'options' | 'composition';
-
-interface VueVersionOpt {
-  vueVersion: VueVersion;
-}
-
-export interface ToVueOptions extends BaseTranspilerOptions, VueVersionOpt {
-  cssNamespace?: () => string;
-  namePrefix?: (path: string) => string;
-  asyncComponentImports?: boolean;
-  api?: Api;
-}
+import { ToVueOptions, VueVersionOpt } from './types';
+import { processBinding } from './helpers';
 
 const SPECIAL_PROPERTIES = {
   V_IF: 'v-if',
@@ -73,44 +59,6 @@ const SPECIAL_PROPERTIES = {
   V_ELSE: 'v-else',
   V_ELSE_IF: 'v-else-if',
 } as const;
-
-// Transform <FooBar> to <foo-bar> as Vue2 needs
-const renameMitosisComponentsToKebabCase = (str: string) =>
-  str.replace(/<\/?\w+/g, (match) => match.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase());
-
-function getContextNames(json: MitosisComponent) {
-  return Object.keys(json.context.get);
-}
-
-// TODO: migrate all stripStateAndPropsRefs to use this here
-// to properly replace context refs
-function processBinding({
-  code,
-  options,
-  json,
-  includeProps = true,
-}: {
-  code: string;
-  options: ToVueOptions;
-  json: MitosisComponent;
-  includeProps?: boolean;
-}): string {
-  return replaceIdentifiers({
-    code: stripStateAndPropsRefs(code, {
-      includeState: true,
-      includeProps,
-      replaceWith: (name) => {
-        if (name === 'children' || name.startsWith('children.')) {
-          return 'this.$slots.default';
-        }
-
-        return 'this.' + name;
-      },
-    }),
-    from: getContextNames(json),
-    to: (name) => (options.api === 'options' ? `this.${name}` : `${name}.value`),
-  });
-}
 
 type BlockRenderer = (json: MitosisNode, options: ToVueOptions, scope?: Scope) => string;
 
