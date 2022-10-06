@@ -224,7 +224,12 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   str += `<${tagName} `;
 
   if (json.bindings._spread?.code) {
-    str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
+    str += '{...';
+    if (json.bindings._spread.code === 'props') {
+      // svelte expects $$props so we prepend $$ here
+      str += '$$';
+    }
+    str += `${stripStateAndProps(json.bindings._spread.code, options)}}`;
   }
 
   const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
