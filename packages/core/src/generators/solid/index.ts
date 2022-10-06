@@ -33,11 +33,8 @@ import hash from 'hash-sum';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import { updateStateCode } from './state/helpers';
-
-const DEFAULT_OPTIONS: ToSolidOptions = {
-  state: 'signals',
-  stylesType: 'styled-components',
-};
+import { mergeOptions } from 'src/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -118,32 +115,6 @@ const collectClassString = (json: MitosisNode, options: ToSolidOptions): string 
   return null;
 };
 
-const preProcessBlockCode = ({
-  json,
-  options,
-  component,
-}: {
-  json: MitosisNode;
-  options: ToSolidOptions;
-  component: MitosisComponent;
-}) => {
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    if (value) {
-      json.properties[key] = updateStateCode({ options, component, updateSetters: false })(value);
-    }
-  }
-  for (const key in json.bindings) {
-    const value = json.bindings[key];
-    if (value?.code) {
-      json.bindings[key] = {
-        arguments: value.arguments,
-        code: updateStateCode({ options, component, updateSetters: true })(value.code),
-      };
-    }
-  }
-};
-
 const blockToSolid = ({
   json,
   options,
@@ -153,8 +124,6 @@ const blockToSolid = ({
   options: ToSolidOptions;
   component: MitosisComponent;
 }): string => {
-  preProcessBlockCode({ json, options, component });
-
   if (json.properties._text) {
     return json.properties._text;
   }
@@ -280,31 +249,29 @@ function addProviderComponents(json: MitosisComponent, options: ToSolidOptions) 
   }
 }
 
-const preProcessComponentCode = (json: MitosisComponent, options: ToSolidOptions) => {
-  const processCode = updateStateCode({ options, component: json });
-
-  if (json.hooks.onMount?.code) {
-    json.hooks.onMount.code = processCode(json.hooks.onMount.code);
-  }
-
-  if (json.hooks.onUpdate) {
-    for (const hook of json.hooks.onUpdate) {
-      hook.code = processCode(hook.code);
-      if (hook.deps) {
-        hook.deps = processCode(hook.deps);
-      }
-    }
-  }
+const DEFAULT_OPTIONS: ToSolidOptions = {
+  state: 'signals',
+  stylesType: 'styled-components',
+  plugins: [],
 };
 
 export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
-  (passedOptions = DEFAULT_OPTIONS) =>
+  (passedOptions) =>
   ({ component }) => {
-    const options = {
-      ...DEFAULT_OPTIONS,
-      ...passedOptions,
-    };
     let json = fastClone(component);
+
+    const options = mergeOptions(DEFAULT_OPTIONS, passedOptions);
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) =>
+        updateStateCode({
+          component: json,
+          options,
+          updateSetters: codeType === 'propteries' ? false : true,
+        }),
+      ),
+    ];
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -315,7 +282,6 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
-    preProcessComponentCode(json, options);
     stripMetaProperties(json);
     const foundDynamicComponents = processDynamicComponents(json, options);
     const css =
