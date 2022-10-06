@@ -42,6 +42,12 @@ import { PropsDefinition, DefaultProps } from 'vue/types/options';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { checkIsDefined } from '../../helpers/nullable';
+import {
+  addBindingsToJson,
+  addPropertiesToJson,
+  getOnUpdateHookName,
+  invertBooleanExpression,
+} from './helpers';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -75,32 +81,6 @@ const renameMitosisComponentsToKebabCase = (str: string) =>
 function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
-
-const ON_UPDATE_HOOK_NAME = 'onUpdateHook';
-
-const getOnUpdateHookName = (index: number) => ON_UPDATE_HOOK_NAME + `${index}`;
-
-const invertBooleanExpression = (expression: string) => `!Boolean(${expression})`;
-
-const addPropertiesToJson =
-  (properties: MitosisNode['properties']) =>
-  (json: MitosisNode): MitosisNode => ({
-    ...json,
-    properties: {
-      ...json.properties,
-      ...properties,
-    },
-  });
-
-const addBindingsToJson =
-  (bindings: MitosisNode['bindings']) =>
-  (json: MitosisNode): MitosisNode => ({
-    ...json,
-    bindings: {
-      ...json.bindings,
-      ...bindings,
-    },
-  });
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
