@@ -2,46 +2,46 @@ import dedent from 'dedent';
 import json5 from 'json5';
 import { types } from '@babel/core';
 import { format } from 'prettier/standalone';
-import { collectCss } from '../helpers/styles/collect-css';
-import { fastClone } from '../helpers/fast-clone';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { fastClone } from '../../helpers/fast-clone';
 import {
   stringifyContextValue,
   getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { mapRefs } from '../helpers/map-refs';
-import { checkIsComponentImport, renderPreComponent } from '../helpers/render-imports';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { getProps } from '../helpers/get-props';
-import { selfClosingTags } from '../parsers/jsx';
-import { extendedHook, MitosisComponent } from '../types/mitosis-component';
-import { ForNode, MitosisNode } from '../types/mitosis-node';
+} from '../../helpers/get-state-object-string';
+import { mapRefs } from '../../helpers/map-refs';
+import { checkIsComponentImport, renderPreComponent } from '../../helpers/render-imports';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { getProps } from '../../helpers/get-props';
+import { selfClosingTags } from '../../parsers/jsx';
+import { extendedHook, MitosisComponent } from '../../types/mitosis-component';
+import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   Plugin,
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
+} from '../../modules/plugins';
+import isChildren from '../../helpers/is-children';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import traverse from 'traverse';
-import { getComponentsUsed } from '../helpers/get-components-used';
+import { getComponentsUsed } from '../../helpers/get-components-used';
 import { kebabCase, pickBy, size, uniq } from 'lodash';
-import { replaceIdentifiers } from '../helpers/replace-identifiers';
-import { filterEmptyTextNodes } from '../helpers/filter-empty-text-nodes';
-import { processHttpRequests } from '../helpers/process-http-requests';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { GETTER } from '../helpers/patterns';
-import { OmitObj } from '../helpers/typescript';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
+import { processHttpRequests } from '../../helpers/process-http-requests';
+import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { GETTER } from '../../helpers/patterns';
+import { OmitObj } from '../../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
-import { getCustomImports } from '../helpers/get-custom-imports';
-import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../helpers/slots';
+import { getCustomImports } from '../../helpers/get-custom-imports';
+import { isSlotProperty, stripSlotPrefix, replaceSlotsInString } from '../../helpers/slots';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
-import { babelTransformExpression } from '../helpers/babel-transform';
-import { checkIsDefined } from '../helpers/nullable';
+import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { checkIsDefined } from '../../helpers/nullable';
 
 function encodeQuotes(string: string) {
   return string.replace(/"/g, '&quot;');
@@ -104,20 +104,31 @@ const addBindingsToJson =
 
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-function processBinding(
-  code: string,
-  _options: ToVueOptions,
-  json: MitosisComponent,
-  includeProps: boolean = true,
-): string {
+function processBinding({
+  code,
+  options,
+  json,
+  includeProps = true,
+}: {
+  code: string;
+  options: ToVueOptions;
+  json: MitosisComponent;
+  includeProps?: boolean;
+}): string {
   return replaceIdentifiers({
     code: stripStateAndPropsRefs(code, {
       includeState: true,
       includeProps,
-      replaceWith: 'this.',
+      replaceWith: (name) => {
+        if (name === 'children' || name.startsWith('children.')) {
+          return 'this.$slots.default';
+        }
+
+        return 'this.' + name;
+      },
     }),
     from: getContextNames(json),
-    to: (name) => (_options.api === 'options' ? `this.${name}` : `${name}.value`),
+    to: (name) => (options.api === 'options' ? `this.${name}` : `${name}.value`),
   });
 }
 
@@ -679,14 +690,15 @@ function generateOptionsApiScript(
     data: false,
     getters: true,
     functions: false,
-    valueMapper: (code) => processBinding(code.replace(GETTER, ''), options, component),
+    valueMapper: (code) =>
+      processBinding({ code: code.replace(GETTER, ''), options, json: component }),
   });
 
   let functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding(code, options, component),
+    valueMapper: (code) => processBinding({ code, options, json: component }),
   });
 
   const includeClassMapHelper = template.includes('_classStringToObject');
@@ -776,14 +788,14 @@ function generateOptionsApiScript(
         ${
           component.hooks.onInit?.code
             ? `created() {
-                ${processBinding(component.hooks.onInit.code, options, component)}
+                ${processBinding({ code: component.hooks.onInit.code, options, json: component })}
               },`
             : ''
         }
         ${
           component.hooks.onMount?.code
             ? `mounted() {
-                ${processBinding(component.hooks.onMount.code, options, component)}
+                ${processBinding({ code: component.hooks.onMount.code, options, json: component })}
               },`
             : ''
         }
@@ -791,7 +803,7 @@ function generateOptionsApiScript(
           onUpdateWithoutDeps.length
             ? `updated() {
             ${onUpdateWithoutDeps
-              .map((hook) => processBinding(hook.code, options, component))
+              .map((hook) => processBinding({ code: hook.code, options, json: component }))
               .join('\n')}
           },`
             : ''
@@ -803,7 +815,7 @@ function generateOptionsApiScript(
               .map(
                 (hook, index) =>
                   `${getOnUpdateHookName(index)}() {
-                  ${processBinding(hook.code, options, component)}
+                  ${processBinding({ code: hook.code, options, json: component })}
                   }
                 `,
               )
@@ -814,7 +826,11 @@ function generateOptionsApiScript(
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding(component.hooks.onUnMount.code, options, component)}
+                ${processBinding({
+                  code: component.hooks.onUnMount.code,
+                  options,
+                  json: component,
+                })}
               },`
             : ''
         }
@@ -864,7 +880,7 @@ const getCompositionPropDefinition = ({
 function appendValueToRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
   const refKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
 
-  let output = processBinding(input, options, component, false);
+  let output = processBinding({ code: input, options, json: component, includeProps: false });
 
   return babelTransformExpression(output, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
@@ -896,7 +912,7 @@ function generateCompositionApiScript(
     getters: false,
     format: 'variables',
     valueMapper: (code) => {
-      return processBinding(`ref(${code})`, options, component);
+      return processBinding({ code: `ref(${code})`, options, json: component });
     },
     keyPrefix: 'const',
   });
@@ -905,7 +921,7 @@ function generateCompositionApiScript(
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding(code, options, component, false),
+    valueMapper: (code) => processBinding({ code, options, json: component, includeProps: false }),
     format: 'variables',
   });
 
