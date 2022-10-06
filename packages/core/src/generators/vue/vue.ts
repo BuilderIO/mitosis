@@ -28,6 +28,7 @@ import { ToVueOptions, VueVersionOpt } from './types';
 import { generateOptionsApiScript } from './optionsApi';
 import { generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
+import { mergeOptions } from '../../helpers/merge-options';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -96,15 +97,6 @@ const BASE_OPTIONS: ToVueOptions = {
   vueVersion: 2,
   api: 'options',
 };
-
-const mergeOptions = (
-  { plugins: pluginsA = [], ...a }: ToVueOptions,
-  { plugins: pluginsB = [], ...b }: ToVueOptions,
-): ToVueOptions => ({
-  ...a,
-  ...b,
-  plugins: [...pluginsA, ...pluginsB],
-});
 
 const componentToVue: TranspilerGenerator<ToVueOptions> =
   (userOptions = BASE_OPTIONS) =>
