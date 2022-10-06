@@ -1,6 +1,6 @@
-import { replaceIdentifiers } from 'src/helpers/replace-identifiers';
-import { stripStateAndPropsRefs } from 'src/helpers/strip-state-and-props-refs';
-import { MitosisComponent } from 'src/types/mitosis-component';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
 
