@@ -349,9 +349,6 @@ export class SrcBuilder {
 
     function emitJsxProp(key: string, value: any) {
       if (value) {
-        if (key.startsWith('on') && key.endsWith('$')) {
-          value = '(event)=>{return ' + value + '}';
-        }
         if (key === 'innerHTML') key = 'dangerouslySetInnerHTML';
         if (key === 'dataSet') return; // ignore
         if (self.isJSX) {
