@@ -28,7 +28,7 @@ export type BaseNode = {
    * ```
    */
   bindings: {
-    [key: string]: { code: string; arguments?: string[] } | undefined;
+    [key: string]: { code: string; arguments?: string[]; type?: string } | undefined;
   };
   children: MitosisNode[];
 };

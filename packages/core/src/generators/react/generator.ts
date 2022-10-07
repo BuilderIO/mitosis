@@ -161,10 +161,6 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread?.code) {
-    str += ` {...(${processBinding(json.bindings._spread.code as string, options)})} `;
-  }
-
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
@@ -187,15 +183,16 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
 
   for (const key in json.bindings) {
     const value = String(json.bindings[key]?.code);
-    if (key === '_spread') {
-      continue;
-    }
+
     if (key === 'css' && value.trim() === '{}') {
       continue;
     }
 
     const useBindingValue = processBinding(value, options);
-    if (key.startsWith('on')) {
+
+    if (json.bindings[key]?.type === 'spread') {
+      str += ` {...(${value})} `;
+    } else if (key.startsWith('on')) {
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
       str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,

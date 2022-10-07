@@ -22,7 +22,7 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { indent } from '../../helpers/indent';
 import { mapRefs } from '../../helpers/map-refs';
 import { getRefs } from '../../helpers/get-refs';
-import { camelCase } from 'lodash';
+import { camelCase, some } from 'lodash';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { has } from '../../helpers/has';
 
@@ -80,21 +80,19 @@ const blockToLit = (json: MitosisNode, options: ToLitOptions = {}): string => {
     str += ` class=${classString} `;
   }
 
-  if (json.bindings._spread?.code) {
-    str += ` \${spread(${json.bindings._spread.code})} `;
-  }
-
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
-    if (key === '_spread' || key === '_forName') {
+    const { code, arguments: cusArgs = ['event'], type } = json.bindings[key]!;
+    if (key === '_forName') {
       continue;
     }
 
-    if (key === 'ref') {
+    if (type === 'spread') {
+      str += ` \${spread(${code})} `;
+    } else if (key === 'ref') {
       // TODO: maybe use ref directive instead
       // https://lit.dev/docs/templates/directives/#ref
       str += ` ref="${code}" `;
@@ -179,7 +177,7 @@ export const componentToLit: TranspilerGenerator<ToLitOptions> =
 
     let html = json.children.map((item) => blockToLit(item, options)).join('\n');
 
-    const hasSpread = has(json, (node) => Boolean(node.bindings._spread));
+    const hasSpread = has(json, (node) => some(node.bindings, { type: 'spread' }));
 
     if (options.prettier !== false) {
       try {

@@ -223,10 +223,6 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
 
   str += `<${tagName} `;
 
-  if (json.bindings._spread?.code) {
-    str += `{...${stripStateAndProps(json.bindings._spread.code, options)}}`;
-  }
-
   const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
   if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
     const useValue = stripStateAndProps(
@@ -247,14 +243,14 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     if (key === 'innerHTML') {
       continue;
     }
-    if (key === '_spread') {
-      continue;
-    }
-    const { code: value, arguments: cusArgs = ['event'] } = json.bindings[key]!;
+
+    const { code: value, arguments: cusArgs = ['event'], type } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndProps(value, options);
 
-    if (key.startsWith('on')) {
+    if (type === 'spread') {
+      str += ` {...${useValue}}`;
+    } else if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
