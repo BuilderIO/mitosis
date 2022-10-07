@@ -534,7 +534,9 @@ const _componentToReact = (
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
             : stateType === 'builder'
-            ? `var state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            : stateType === 'variables'
+            ? `const state = ${getStateObjectStringFromComponent(json)};`
             : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
           : ''
       }
