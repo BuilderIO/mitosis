@@ -128,8 +128,10 @@ export function generateOptionsApiScript(
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding({ code, options, json: component }),
-  });
+    valueMapper: (code) => {
+      return processBinding({ code, options, json: component });
+    },
+  }).replace(/: (.*?)\(\)/g, '()');
 
   const includeClassMapHelper = template.includes('_classStringToObject');
 
