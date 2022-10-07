@@ -19,16 +19,17 @@ import traverse from 'traverse';
 import { pickBy, size, uniq } from 'lodash';
 import { processHttpRequests } from '../../helpers/process-http-requests';
 import { TranspilerGenerator } from '../../types/transpiler';
-import { OmitObj } from '../../helpers/typescript';
 import { pipe } from 'fp-ts/lib/function';
 import { isSlotProperty } from '../../helpers/slots';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
-import { getOnUpdateHookName, renameMitosisComponentsToKebabCase } from './helpers';
-import { ToVueOptions, VueVersionOpt } from './types';
+import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
+import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
-import { generateCompositionApiScript } from './compositionApi';
+import { appendValueToRefs, generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -98,14 +99,41 @@ const BASE_OPTIONS: ToVueOptions = {
   api: 'options',
 };
 
-const componentToVue: TranspilerGenerator<ToVueOptions> =
-  (userOptions = BASE_OPTIONS) =>
+const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
+  (userOptions) =>
   ({ component, path }) => {
     const options = mergeOptions(BASE_OPTIONS, userOptions);
+    options.plugins.unshift(
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        if (options.api === 'composition') {
+          switch (codeType) {
+            case 'hooks':
+              return (code) => appendValueToRefs(code, component, options);
+            case 'bindings':
+              return (c) => stripStateAndPropsRefs(c);
+            // return (c) => c;
+            case 'properties':
+            case 'hooks-deps':
+              return (c) => c;
+          }
+        } else {
+          switch (codeType) {
+            case 'hooks':
+              return (code) => processBinding({ code, options, json: component });
+            case 'bindings':
+              return (c) => stripStateAndPropsRefs(c);
+            case 'properties':
+            case 'hooks-deps':
+              return (c) => c;
+          }
+        }
+      }),
+    );
+
     if (options.api === 'options') {
-      options.plugins?.unshift(onUpdatePlugin);
+      options.plugins.unshift(onUpdatePlugin);
     } else if (options.api === 'composition') {
-      options.plugins?.unshift(FUNCTION_HACK_PLUGIN);
+      options.plugins.unshift(FUNCTION_HACK_PLUGIN);
       options.asyncComponentImports = false;
     }
     // Make a copy we can safely mutate, similar to babel's toolchain can be used
@@ -114,17 +142,17 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
     processDynamicComponents(component, options);
     processForKeys(component, options);
 
-    if (options.plugins) {
-      component = runPreJsonPlugins(component, options.plugins);
-    }
+    // need to run this before we process the component's code
+    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
+
+    component = runPreJsonPlugins(component, options.plugins);
 
     if (options.api === 'options') {
       mapRefs(component, (refName) => `this.$refs.${refName}`);
     }
 
-    if (options.plugins) {
-      component = runPostJsonPlugins(component, options.plugins);
-    }
+    component = runPostJsonPlugins(component, options.plugins);
+
     const css = collectCss(component, {
       prefix: options.cssNamespace?.() ?? undefined,
     });
@@ -141,8 +169,6 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
       component.hooks.onUpdate?.filter((hook) => !hook.deps?.length) || [];
 
     const getterKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'getter'));
-
-    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
 
     // import from vue
     let vueImports: string[] = [];
@@ -211,9 +237,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
     }
   `;
 
-    if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
-    }
+    str = runPreCodePlugins(str, options.plugins);
     if (true || options.prettier !== false) {
       try {
         str = format(str, {
@@ -230,9 +254,7 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
         console.warn('Could not prettify', { string: str }, err);
       }
     }
-    if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
-    }
+    str = runPostCodePlugins(str, options.plugins);
 
     for (const pattern of removePatterns) {
       str = str.replace(pattern, '');
@@ -240,8 +262,6 @@ const componentToVue: TranspilerGenerator<ToVueOptions> =
 
     return str;
   };
-
-type VueOptsWithoutVersion = OmitObj<ToVueOptions, VueVersionOpt>;
 
 export const componentToVue2 = (vueOptions?: VueOptsWithoutVersion) =>
   componentToVue({ ...vueOptions, vueVersion: 2 });

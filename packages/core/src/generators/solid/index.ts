@@ -33,8 +33,8 @@ import hash from 'hash-sum';
 import { uniq } from 'fp-ts/lib/Array';
 import * as S from 'fp-ts/string';
 import { updateStateCode } from './state/helpers';
-import { mergeOptions } from 'src/helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
+import { mergeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
@@ -267,7 +267,7 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
         updateStateCode({
           component: json,
           options,
-          updateSetters: codeType === 'propteries' ? false : true,
+          updateSetters: codeType === 'properties' ? false : true,
         }),
       ),
     ];

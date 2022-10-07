@@ -1,10 +1,12 @@
 import { Plugin } from '../../types/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
-import { tarverseNodes } from '../traverse-nodes';
 import { checkIsDefined } from '../nullable';
+import { tarverseNodes } from '../traverse-nodes';
 
-type CodeProcessor = (codeType: 'hooks' | 'bindings' | 'propteries') => (code: string) => string;
+type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties';
+
+type CodeProcessor = (codeType: CodeType) => (code: string) => string;
 
 /**
  * Process code in bindings and properties of a node
@@ -16,18 +18,21 @@ const preProcessBlockCode = ({
   json: MitosisNode;
   codeProcessor: CodeProcessor;
 }) => {
+  const propertiesProcessor = codeProcessor('properties');
   for (const key in json.properties) {
     const value = json.properties[key];
     if (value) {
-      json.properties[key] = codeProcessor('propteries')(value);
+      json.properties[key] = propertiesProcessor(value);
     }
   }
+
+  const bindingsProcessor = codeProcessor('bindings');
   for (const key in json.bindings) {
     const value = json.bindings[key];
     if (value?.code) {
       json.bindings[key] = {
         arguments: value.arguments,
-        code: codeProcessor('bindings')(value.code),
+        code: bindingsProcessor(value.code),
       };
     }
   }
@@ -54,7 +59,7 @@ export const CODE_PROCESSOR_PLUGIN =
             for (const hook of hooks) {
               hook.code = processCode(hook.code);
               if (hook.deps) {
-                hook.deps = processCode(hook.deps);
+                hook.deps = codeProcessor('hooks-deps')(hook.deps);
               }
             }
           } else if (checkIsDefined(hooks)) {
