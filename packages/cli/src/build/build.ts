@@ -7,6 +7,7 @@ import {
   componentToLit,
   componentToQwik,
   componentToReact,
+  componentToRsc,
   componentToReactNative,
   componentToSolid,
   componentToSvelte,
@@ -231,6 +232,8 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
       return componentToMarko;
     case 'preact':
       return componentToPreact;
+    case 'rsc':
+      return componentToRsc;
     case 'lit':
       return componentToLit;
     default:
@@ -315,6 +318,7 @@ async function buildAndOutputComponentFiles({
           break;
         case 'reactNative':
         case 'preact':
+        case 'rsc':
         case 'react':
           transpiled = await transpile({
             path,

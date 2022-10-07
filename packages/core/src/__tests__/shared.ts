@@ -207,6 +207,17 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
     // FOR_SHOW_TESTS,
   ],
+  rsc: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+    // FOR_SHOW_TESTS,
+  ],
   angular: [
     BASIC_TESTS,
     SLOTS_TESTS,

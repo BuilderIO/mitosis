@@ -37,6 +37,7 @@ export const generateContextFile = async ({
         return contextToSolid()({ context });
       case 'react':
       case 'preact':
+      case 'rsc':
       case 'reactNative':
         return contextToReact()({ context });
       case 'qwik':
