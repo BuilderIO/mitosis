@@ -283,8 +283,10 @@ const NODE_MAPPERS: {
 const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
-    if (key === '_spread') {
-      return '';
+    if (node.bindings[key]?.type === 'spread') {
+      return ` v-bind="${encodeQuotes(
+        stripStateAndPropsRefs(node.bindings[key]?.code as string),
+      )}"`;
     } else if (key === 'class') {
       return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
         replaceWith: '',
@@ -358,10 +360,6 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   let str = '';
 
   str += `<${node.name} `;
-
-  if (node.bindings._spread?.code) {
-    str += `v-bind="${encodeQuotes(stripStateAndPropsRefs(node.bindings._spread.code as string))}"`;
-  }
 
   for (const key in node.properties) {
     const value = node.properties[key];
