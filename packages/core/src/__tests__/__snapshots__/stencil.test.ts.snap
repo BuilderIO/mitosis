@@ -467,7 +467,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>
@@ -1021,13 +1021,13 @@ export default class FormComponent {
   render() {
     return (
       <form
-        {...props.attributes}
         validate={this.validate}
         ref={(el) => (this.formRef = el)}
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
         onSubmit={(event) => this.onSubmit(event)}
+        {...props.attributes}
       >
         {this.builderBlock && this.builderBlock.children ? (
           <>
@@ -1226,11 +1226,11 @@ export default class ImgComponent {
   render() {
     return (
       <img
-        {...props.attributes}
         style={{
           objectFit: this.backgroundSize || \\"cover\\",
           objectPosition: this.backgroundPosition || \\"center\\",
         }}
+        {...props.attributes}
         key={(Builder.isEditing && this.imgSrc) || \\"default-key\\"}
         alt={this.altText}
         src={this.imgSrc}
@@ -1533,7 +1533,7 @@ export default class SubmitButton {
 
   render() {
     return (
-      <button {...props.attributes} type=\\"submit\\">
+      <button type=\\"submit\\" {...props.attributes}>
         {this.text}
       </button>
     );
@@ -1624,8 +1624,8 @@ export default class Video {
   render() {
     return (
       <video
-        {...props.attributes}
         preload=\\"none\\"
+        {...props.attributes}
         style={{
           width: \\"100%\\",
           height: \\"100%\\",
@@ -1883,7 +1883,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>
@@ -1945,6 +1945,22 @@ export default class RenderContent {
         {...state.getRenderContentProps(props.renderContentProps.block, 0)}
       ></RenderBlock>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil Javascript Test multipleSpreads 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @State() attrs = { hello: \\"world\\" };
+
+  render() {
+    return <input {...state.attrs} {...props} />;
   }
 }
 "
@@ -2225,7 +2241,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>
@@ -2861,7 +2877,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>
@@ -3415,13 +3431,13 @@ export default class FormComponent {
   render() {
     return (
       <form
-        {...props.attributes}
         validate={this.validate}
         ref={(el) => (this.formRef = el)}
         action={!this.sendWithJs && this.action}
         method={this.method}
         name={this.name}
         onSubmit={(event) => this.onSubmit(event)}
+        {...props.attributes}
       >
         {this.builderBlock && this.builderBlock.children ? (
           <>
@@ -3620,11 +3636,11 @@ export default class ImgComponent {
   render() {
     return (
       <img
-        {...props.attributes}
         style={{
           objectFit: this.backgroundSize || \\"cover\\",
           objectPosition: this.backgroundPosition || \\"center\\",
         }}
+        {...props.attributes}
         key={(Builder.isEditing && this.imgSrc) || \\"default-key\\"}
         alt={this.altText}
         src={this.imgSrc}
@@ -3927,7 +3943,7 @@ export default class SubmitButton {
 
   render() {
     return (
-      <button {...props.attributes} type=\\"submit\\">
+      <button type=\\"submit\\" {...props.attributes}>
         {this.text}
       </button>
     );
@@ -4018,8 +4034,8 @@ export default class Video {
   render() {
     return (
       <video
-        {...props.attributes}
         preload=\\"none\\"
+        {...props.attributes}
         style={{
           width: \\"100%\\",
           height: \\"100%\\",
@@ -4277,7 +4293,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>
@@ -4340,6 +4356,22 @@ export default class RenderContent {
         {...state.getRenderContentProps(props.renderContentProps.block, 0)}
       ></RenderBlock>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil Typescript Test multipleSpreads 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-basic-component\\",
+})
+export default class MyBasicComponent {
+  @State() attrs = { hello: \\"world\\" };
+
+  render() {
+    return <input {...state.attrs} {...props} />;
   }
 }
 "
@@ -4620,7 +4652,7 @@ export default class Button {
 
         {!this.link ? (
           <>
-            <button {...props.attributes} type=\\"button\\">
+            <button type=\\"button\\" {...props.attributes}>
               {this.text}
             </button>
           </>

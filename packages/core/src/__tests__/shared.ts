@@ -75,6 +75,8 @@ const text = getRawFile('./data/blocks/text.raw');
 const textarea = getRawFile('./data/blocks/textarea.raw');
 const video = getRawFile('./data/blocks/video.raw');
 
+const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw');
+
 const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
 
 const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw');
@@ -136,6 +138,7 @@ const BASIC_TESTS: Tests = {
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
   rootFragmentMultiNode,
+  multipleSpreads,
 };
 
 const SLOTS_TESTS: Tests = {

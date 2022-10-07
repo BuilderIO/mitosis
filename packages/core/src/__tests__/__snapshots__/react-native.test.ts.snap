@@ -464,7 +464,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -957,13 +957,13 @@ export default function FormComponent(props: FormProps) {
   }
   return (
     <View
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
@@ -1176,11 +1176,11 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function ImgComponent(props: ImgProps) {
   return (
     <View
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -1464,7 +1464,7 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <View {...props.attributes} type=\\"submit\\">
+    <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
@@ -1568,8 +1568,8 @@ export interface VideoProps {
 export default function Video(props: VideoProps) {
   return (
     <View
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -1816,7 +1816,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -1877,7 +1877,7 @@ export default function RenderContent(props: RenderContentProps) {
 
   return (
     <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -1932,6 +1932,21 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   }, [c, d]);
 
   return <View />;
+}
+"
+`;
+
+exports[`React Native Javascript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <View {...state.attrs} {...props} />;
 }
 "
 `;
@@ -2252,7 +2267,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -2916,7 +2931,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -3409,13 +3424,13 @@ export default function FormComponent(props: FormProps) {
   }
   return (
     <View
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
@@ -3628,11 +3643,11 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function ImgComponent(props: ImgProps) {
   return (
     <View
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -3916,7 +3931,7 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <View {...props.attributes} type=\\"submit\\">
+    <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
@@ -4020,8 +4035,8 @@ export interface VideoProps {
 export default function Video(props: VideoProps) {
   return (
     <View
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -4268,7 +4283,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -4330,7 +4345,7 @@ export default function RenderContent(props: RenderContentProps) {
 
   return (
     <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -4385,6 +4400,21 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   }, [c, d]);
 
   return <View />;
+}
+"
+`;
+
+exports[`React Native Typescript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <View {...state.attrs} {...props} />;
 }
 "
 `;
@@ -4705,7 +4735,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>

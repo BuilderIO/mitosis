@@ -147,7 +147,23 @@ exports[`Liquid Javascript Test Button 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>
@@ -227,7 +243,23 @@ exports[`Liquid Javascript Test Embed 1`] = `
 `;
 
 exports[`Liquid Javascript Test Form 1`] = `
-"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
+"<form
+  validate=\\"{{validate}}\\"
+  method=\\"{{method}}\\"
+  name=\\"{{name}}\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+></form>
 <style>
   .pre {
     padding: 10px;
@@ -269,12 +301,39 @@ exports[`Liquid Javascript Test Image State 1`] = `
 `;
 
 exports[`Liquid Javascript Test Img 1`] = `
-"<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
+"<img
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  alt=\\"{{altText}}\\"
+  src=\\"{{imgSrc}}\\"
+/>
 "
 `;
 
 exports[`Liquid Javascript Test Input 1`] = `
 "<input
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   placeholder=\\"{{placeholder}}\\"
   type=\\"{{type}}\\"
   name=\\"{{name}}\\"
@@ -291,12 +350,43 @@ exports[`Liquid Javascript Test RawText 1`] = `
 `;
 
 exports[`Liquid Javascript Test Section 1`] = `
-"<section>{{children}}</section>
+"<section
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+>
+  {{children}}
+</section>
 "
 `;
 
 exports[`Liquid Javascript Test Select 1`] = `
-"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+"<select
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+  name=\\"{{name}}\\"
+>
   {% for option in options %}
   <option value=\\"{{option.value}}\\" data-index=\\"{{index}}\\"></option>
   {% endfor %}
@@ -376,7 +466,23 @@ exports[`Liquid Javascript Test Stamped.io 1`] = `
 `;
 
 exports[`Liquid Javascript Test Submit 1`] = `
-"<button type=\\"submit\\">{{text}}</button>
+"<button
+  type=\\"submit\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+>
+  {{text}}
+</button>
 "
 `;
 
@@ -387,6 +493,18 @@ exports[`Liquid Javascript Test Text 1`] = `
 
 exports[`Liquid Javascript Test Textarea 1`] = `
 "<textarea
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   placeholder=\\"{{placeholder}}\\"
   name=\\"{{name}}\\"
   value=\\"{{value}}\\"
@@ -398,6 +516,18 @@ exports[`Liquid Javascript Test Textarea 1`] = `
 exports[`Liquid Javascript Test Video 1`] = `
 "<video
   preload=\\"none\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   poster=\\"{{posterImage}}\\"
   autoplay=\\"{{autoPlay}}\\"
   muted=\\"{{muted}}\\"
@@ -493,7 +623,23 @@ exports[`Liquid Javascript Test defaultProps 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>
@@ -517,6 +663,36 @@ exports[`Liquid Javascript Test multipleOnUpdate 1`] = `
 
 exports[`Liquid Javascript Test multipleOnUpdateWithDeps 1`] = `
 "<div></div>
+"
+`;
+
+exports[`Liquid Javascript Test multipleSpreads 1`] = `
+"<input
+  {%
+  for
+  _attr
+  in
+  attrs
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  {%
+  for
+  _attr
+  in
+  props
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+/>
 "
 `;
 
@@ -603,7 +779,23 @@ exports[`Liquid Javascript Test rootFragmentMultiNode 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>
@@ -820,7 +1012,23 @@ exports[`Liquid Typescript Test Button 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>
@@ -900,7 +1108,23 @@ exports[`Liquid Typescript Test Embed 1`] = `
 `;
 
 exports[`Liquid Typescript Test Form 1`] = `
-"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
+"<form
+  validate=\\"{{validate}}\\"
+  method=\\"{{method}}\\"
+  name=\\"{{name}}\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+></form>
 <style>
   .pre {
     padding: 10px;
@@ -942,12 +1166,39 @@ exports[`Liquid Typescript Test Image State 1`] = `
 `;
 
 exports[`Liquid Typescript Test Img 1`] = `
-"<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
+"<img
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  alt=\\"{{altText}}\\"
+  src=\\"{{imgSrc}}\\"
+/>
 "
 `;
 
 exports[`Liquid Typescript Test Input 1`] = `
 "<input
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   placeholder=\\"{{placeholder}}\\"
   type=\\"{{type}}\\"
   name=\\"{{name}}\\"
@@ -964,12 +1215,43 @@ exports[`Liquid Typescript Test RawText 1`] = `
 `;
 
 exports[`Liquid Typescript Test Section 1`] = `
-"<section>{{children}}</section>
+"<section
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+>
+  {{children}}
+</section>
 "
 `;
 
 exports[`Liquid Typescript Test Select 1`] = `
-"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+"<select
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+  name=\\"{{name}}\\"
+>
   {% for option in options %}
   <option value=\\"{{option.value}}\\" data-index=\\"{{index}}\\"></option>
   {% endfor %}
@@ -1049,7 +1331,23 @@ exports[`Liquid Typescript Test Stamped.io 1`] = `
 `;
 
 exports[`Liquid Typescript Test Submit 1`] = `
-"<button type=\\"submit\\">{{text}}</button>
+"<button
+  type=\\"submit\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+>
+  {{text}}
+</button>
 "
 `;
 
@@ -1060,6 +1358,18 @@ exports[`Liquid Typescript Test Text 1`] = `
 
 exports[`Liquid Typescript Test Textarea 1`] = `
 "<textarea
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   placeholder=\\"{{placeholder}}\\"
   name=\\"{{name}}\\"
   value=\\"{{value}}\\"
@@ -1071,6 +1381,18 @@ exports[`Liquid Typescript Test Textarea 1`] = `
 exports[`Liquid Typescript Test Video 1`] = `
 "<video
   preload=\\"none\\"
+  {%
+  for
+  _attr
+  in
+  attributes
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
   poster=\\"{{posterImage}}\\"
   autoplay=\\"{{autoPlay}}\\"
   muted=\\"{{muted}}\\"
@@ -1166,7 +1488,23 @@ exports[`Liquid Typescript Test defaultProps 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>
@@ -1190,6 +1528,36 @@ exports[`Liquid Typescript Test multipleOnUpdate 1`] = `
 
 exports[`Liquid Typescript Test multipleOnUpdateWithDeps 1`] = `
 "<div></div>
+"
+`;
+
+exports[`Liquid Typescript Test multipleSpreads 1`] = `
+"<input
+  {%
+  for
+  _attr
+  in
+  attrs
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+  {%
+  for
+  _attr
+  in
+  props
+  %}
+  {{
+  _attr[0]
+  }}=\\"{{ _attr[1] }}\\"
+  {%
+  endfor
+  %}
+/>
 "
 `;
 
@@ -1276,7 +1644,23 @@ exports[`Liquid Typescript Test rootFragmentMultiNode 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a
+    {%
+    for
+    _attr
+    in
+    attributes
+    %}
+    {{
+    _attr[0]
+    }}=\\"{{ _attr[1] }}\\"
+    {%
+    endfor
+    %}
+    href=\\"{{link}}\\"
+  >
+    {{text}}
+  </a>
 
   {% endif %}
 </div>

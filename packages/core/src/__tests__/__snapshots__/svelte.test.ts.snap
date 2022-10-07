@@ -396,7 +396,7 @@ exports[`Svelte Javascript Test Button 1`] = `
   {/if}
 
   {#if !link}
-    <button {...attributes} type=\\"button\\">
+    <button type=\\"button\\" {...attributes}>
       {text}
     </button>
   {/if}
@@ -851,7 +851,6 @@ exports[`Svelte Javascript Test Form 1`] = `
 </script>
 
 <form
-  {...attributes}
   {validate}
   bind:this={formRef}
   action={!sendWithJs && action}
@@ -860,6 +859,7 @@ exports[`Svelte Javascript Test Form 1`] = `
   on:submit={(event) => {
     onSubmit(event);
   }}
+  {...attributes}
 >
   {#if builderBlock && builderBlock.children}
     {#each builderBlock?.children as block, index (block.id)}
@@ -1027,11 +1027,11 @@ exports[`Svelte Javascript Test Img 1`] = `
 </script>
 
 <img
-  {...attributes}
   use:mitosis_styling={{
     objectFit: backgroundSize || \\"cover\\",
     objectPosition: backgroundPosition || \\"center\\",
   }}
+  {...attributes}
   key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
   alt={altText}
   src={imgSrc}
@@ -1094,12 +1094,12 @@ exports[`Svelte Javascript Test Section 1`] = `
 </script>
 
 <section
-  {...attributes}
   use:mitosis_styling={maxWidth && typeof maxWidth === \\"number\\"
     ? {
         maxWidth: maxWidth,
       }
     : undefined}
+  {...attributes}
 >
   <slot />
 </section>
@@ -1127,10 +1127,10 @@ exports[`Svelte Javascript Test Section 2`] = `
 {#if max}
   {#each items as item}
     <section
-      {...attributes}
       use:mitosis_styling={{
         maxWidth: item + max,
       }}
+      {...attributes}
     >
       <slot />
     </section>
@@ -1271,7 +1271,7 @@ exports[`Svelte Javascript Test Submit 1`] = `
   export let text;
 </script>
 
-<button {...attributes} type=\\"submit\\">
+<button type=\\"submit\\" {...attributes}>
   {text}
 </button>
 "
@@ -1335,7 +1335,6 @@ exports[`Svelte Javascript Test Video 1`] = `
 </script>
 
 <video
-  {...attributes}
   use:mitosis_styling={{
     width: \\"100%\\",
     height: \\"100%\\",
@@ -1347,6 +1346,7 @@ exports[`Svelte Javascript Test Video 1`] = `
     borderRadius: 1,
   }}
   preload=\\"none\\"
+  {...attributes}
   key={video || \\"no-src\\"}
   poster={posterImage}
   autoplay={autoPlay}
@@ -1505,7 +1505,7 @@ exports[`Svelte Javascript Test defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button {...attributes} type=\\"button\\">
+    <button type=\\"button\\" {...attributes}>
       {text}
     </button>
   {/if}
@@ -1588,6 +1588,17 @@ exports[`Svelte Javascript Test multipleOnUpdateWithDeps 1`] = `
 </script>
 
 <div />
+"
+`;
+
+exports[`Svelte Javascript Test multipleSpreads 1`] = `
+"<script>
+  let attrs = {
+    hello: \\"world\\",
+  };
+</script>
+
+<input {...attrs} {...props} />
 "
 `;
 
@@ -1791,7 +1802,7 @@ exports[`Svelte Javascript Test rootFragmentMultiNode 1`] = `
 {/if}
 
 {#if !link}
-  <button {...attributes} type=\\"button\\">
+  <button type=\\"button\\" {...attributes}>
     {text}
   </button>
 {/if}
@@ -2373,7 +2384,7 @@ exports[`Svelte Typescript Test Button 1`] = `
   {/if}
 
   {#if !link}
-    <button {...attributes} type=\\"button\\">
+    <button type=\\"button\\" {...attributes}>
       {text}
     </button>
   {/if}
@@ -2887,7 +2898,6 @@ exports[`Svelte Typescript Test Form 1`] = `
 </script>
 
 <form
-  {...attributes}
   {validate}
   bind:this={formRef}
   action={!sendWithJs && action}
@@ -2896,6 +2906,7 @@ exports[`Svelte Typescript Test Form 1`] = `
   on:submit={(event) => {
     onSubmit(event);
   }}
+  {...attributes}
 >
   {#if builderBlock && builderBlock.children}
     {#each builderBlock?.children as block, index (block.id)}
@@ -3103,11 +3114,11 @@ exports[`Svelte Typescript Test Img 1`] = `
 </script>
 
 <img
-  {...attributes}
   use:mitosis_styling={{
     objectFit: backgroundSize || \\"cover\\",
     objectPosition: backgroundPosition || \\"center\\",
   }}
+  {...attributes}
   key={(Builder.isEditing && imgSrc) || \\"default-key\\"}
   alt={altText}
   src={imgSrc}
@@ -3197,12 +3208,12 @@ exports[`Svelte Typescript Test Section 1`] = `
 </script>
 
 <section
-  {...attributes}
   use:mitosis_styling={maxWidth && typeof maxWidth === \\"number\\"
     ? {
         maxWidth: maxWidth,
       }
     : undefined}
+  {...attributes}
 >
   <slot />
 </section>
@@ -3238,10 +3249,10 @@ exports[`Svelte Typescript Test Section 2`] = `
 {#if max}
   {#each items as item}
     <section
-      {...attributes}
       use:mitosis_styling={{
         maxWidth: item + max,
       }}
+      {...attributes}
     >
       <slot />
     </section>
@@ -3409,7 +3420,7 @@ exports[`Svelte Typescript Test Submit 1`] = `
   export let text: ButtonProps[\\"text\\"];
 </script>
 
-<button {...attributes} type=\\"submit\\">
+<button type=\\"submit\\" {...attributes}>
   {text}
 </button>
 "
@@ -3521,7 +3532,6 @@ exports[`Svelte Typescript Test Video 1`] = `
 </script>
 
 <video
-  {...attributes}
   use:mitosis_styling={{
     width: \\"100%\\",
     height: \\"100%\\",
@@ -3533,6 +3543,7 @@ exports[`Svelte Typescript Test Video 1`] = `
     borderRadius: 1,
   }}
   preload=\\"none\\"
+  {...attributes}
   key={video || \\"no-src\\"}
   poster={posterImage}
   autoplay={autoPlay}
@@ -3721,7 +3732,7 @@ exports[`Svelte Typescript Test defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button {...attributes} type=\\"button\\">
+    <button type=\\"button\\" {...attributes}>
       {text}
     </button>
   {/if}
@@ -3819,6 +3830,17 @@ exports[`Svelte Typescript Test multipleOnUpdateWithDeps 1`] = `
 </script>
 
 <div />
+"
+`;
+
+exports[`Svelte Typescript Test multipleSpreads 1`] = `
+"<script lang=\\"ts\\">
+  let attrs = {
+    hello: \\"world\\",
+  };
+</script>
+
+<input {...attrs} {...props} />
 "
 `;
 
@@ -4104,7 +4126,7 @@ exports[`Svelte Typescript Test rootFragmentMultiNode 1`] = `
 {/if}
 
 {#if !link}
-  <button {...attributes} type=\\"button\\">
+  <button type=\\"button\\" {...attributes}>
     {text}
   </button>
 {/if}
