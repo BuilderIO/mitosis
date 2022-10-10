@@ -2,9 +2,10 @@ import traverse from 'traverse';
 import { Plugin } from '..';
 import { fastClone } from '../helpers/fast-clone';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
+import { isUpperCase } from '../helpers/is-upper-case';
 import { MitosisComponent } from '../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { componentToReact, ToReactOptions } from './react';
+import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
 
 export interface ToRscOptions extends BaseTranspilerOptions {}
 
@@ -13,6 +14,7 @@ export interface ToRscOptions extends BaseTranspilerOptions {}
  * - remove event listeners
  * - remove lifecycle hooks
  * - remove refs
+ * - transform context to prop drilling
  */
 const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
   json: {
@@ -33,6 +35,15 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
 
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
+          if (isUpperCase(node.name[0])) {
+            // Drill context down, aka
+            // function (props) { return <Component _context{props._context} /> }
+            if (!node.bindings[contextPropDrillingKey]) {
+              node.bindings[contextPropDrillingKey] = {
+                code: contextPropDrillingKey,
+              };
+            }
+          }
           if (node.bindings.ref) {
             delete node.bindings.ref;
           }
@@ -62,6 +73,7 @@ export const componentToRsc: TranspilerGenerator<ToRscOptions> =
       plugins: [...(DEFAULT_OPTIONS.plugins || []), ...(_options.plugins || [])],
       stylesType: 'style-tag',
       stateType: 'variables',
+      contextType: 'prop-drill',
     };
 
     return componentToReact(options)({ component: json, path });

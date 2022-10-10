@@ -283,8 +283,12 @@ async function buildAndOutputComponentFiles({
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
     const outputFilePath = replaceFileExtensionForTarget({ target, path, options });
 
-    // try to find override component file
-    const overrideFilePath = `${options.overridesDir}/${outputPath}/${outputFilePath}`;
+    /**
+     * Try to find override file.
+     * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
+     * user-provided alternative is only for the output path, not the override input path.
+     */
+    const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}/${path}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;

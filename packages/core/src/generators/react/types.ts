@@ -8,4 +8,9 @@ export interface ToReactOptions extends BaseTranspilerOptions {
   preact?: boolean;
   forwardRef?: string;
   experimental?: any;
+  /**
+   * For RSC, normal React context is currently not supported, so provide a prop drilling
+   * option
+   */
+  contextType?: 'context' | 'prop-drill';
 }

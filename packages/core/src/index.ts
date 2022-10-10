@@ -55,6 +55,7 @@ export * from './generators/vue';
 export * from './generators/angular';
 export * from './generators/context/react';
 export * from './generators/context/qwik';
+export * from './generators/context/rsc';
 export * from './generators/context/solid';
 export * from './generators/context/vue';
 export * from './generators/context/svelte';
