@@ -35,11 +35,8 @@ const RSC_TRANSFORM_PLUGIN: Plugin = () => ({
 
       traverse(json).forEach((node) => {
         if (isMitosisNode(node)) {
-          // Test if a tag is a "basic" tag, like <div> or <h1>,
-          // but not something dynamic like <Foo> or <state.foo>
-          // also doesn't include custom elements like <foo-bar>
-          const isBasicTag = node.name.match(/^[a-z0-9]+$/);
-          if (!isBasicTag) {
+          const isComponent = node.name.match(/[A-Z]/);
+          if (isComponent) {
             // Drill context down, aka
             // function (props) { return <Component _context{props._context} /> }
             if (!node.bindings[contextPropDrillingKey]) {
