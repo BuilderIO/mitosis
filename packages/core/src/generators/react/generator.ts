@@ -285,7 +285,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
             ...${contextPropDrillingKey}.${name},
             ...${stringifyContextValue(value)}
           }
-        `
+        `;
       }
       // TODO: support refs. I'm not sure what those are so unclear how to support them
     }
