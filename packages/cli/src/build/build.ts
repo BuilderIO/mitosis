@@ -288,7 +288,9 @@ async function buildAndOutputComponentFiles({
      * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
      * user-provided alternative is only for the output path, not the override input path.
      */
-    const overrideFilePath = `${options.overridesDir}/${getTargetPath({ target })}/${path}`;
+    const overrideFilePath = `${options.overridesDir}/${getTargetPath({
+      target,
+    })}/${outputFilePath}`;
     const overrideFile = (await pathExists(overrideFilePath))
       ? await readFile(overrideFilePath, 'utf8')
       : null;
