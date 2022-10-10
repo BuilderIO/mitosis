@@ -281,10 +281,7 @@ function provideContext(json: MitosisComponent, options: ToReactOptions): string
       const { name, ref, value } = json.context.set[key];
       if (value) {
         str += `
-          ${contextPropDrillingKey}.${name} = {
-            ...${contextPropDrillingKey}.${name},
-            ...${stringifyContextValue(value)}
-          }
+          ${contextPropDrillingKey}.${name} = ${stringifyContextValue(value)};
         `;
       }
       // TODO: support refs. I'm not sure what those are so unclear how to support them
