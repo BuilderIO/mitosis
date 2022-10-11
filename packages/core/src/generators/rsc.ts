@@ -2,7 +2,6 @@ import traverse from 'traverse';
 import { Plugin } from '..';
 import { fastClone } from '../helpers/fast-clone';
 import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { isUpperCase } from '../helpers/is-upper-case';
 import { MitosisComponent } from '../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { componentToReact, contextPropDrillingKey, ToReactOptions } from './react';
