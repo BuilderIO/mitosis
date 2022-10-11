@@ -3209,6 +3209,95 @@ export default class NestedShow extends LitElement {
 "
 `;
 
+exports[`Lit Javascript Test spreadAttrs 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+      
+      <input \${spread(attrs)} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Javascript Test spreadNestedProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() nested: any;
+
+  render() {
+    return html\`
+      
+      <input \${spread(props.nested)} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Javascript Test spreadProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+      
+      <input \${spread(props)} />
+
+    \`;
+  }
+}
+"
+`;
+
 exports[`Lit Javascript Test subComponent 1`] = `
 "import \\"./foo-sub-component.js\\";
 
@@ -6547,6 +6636,95 @@ export default class NestedShow extends LitElement {
         }
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test spreadAttrs 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+      
+      <input \${spread(attrs)} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test spreadNestedProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() nested: any;
+
+  render() {
+    return html\`
+      
+      <input \${spread(props.nested)} />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test spreadProps 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+      
+      <input \${spread(props)} />
+
+    \`;
   }
 }
 "
