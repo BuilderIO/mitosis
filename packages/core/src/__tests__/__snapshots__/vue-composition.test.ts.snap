@@ -40,7 +40,7 @@ watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 });
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -324,7 +324,7 @@ const inputNoArgRef = ref(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -353,7 +353,7 @@ const holdValueRef = ref(null);
 function handlerClick(event) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>
 "
@@ -387,8 +387,8 @@ const count = ref(0);
 
 const prevCount = ref(null);
 
-watch([count.value], ([count]) => {
-  prevCount = count.value;
+watch([count], ([count]) => {
+  prevCount.value = count;
 });
 </script>
 "
@@ -543,9 +543,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -630,9 +630,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -881,8 +881,8 @@ function onSubmit(event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -940,8 +940,8 @@ function onSubmit(event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -949,19 +949,19 @@ function onSubmit(event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -979,8 +979,8 @@ function onSubmit(event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -1053,8 +1053,8 @@ onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
+      if (pictureRef.value) {
+        const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -1383,58 +1383,50 @@ exports[`Vue Javascript Test Stamped.io 1`] = `
 </template>
 
 <script setup>
-    import { onMounted, ref } from \\"vue\\"
+import { onMounted, ref } from \\"vue\\";
 
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
+const props = defineProps([\\"apiKey\\", \\"productId\\"]);
+const reviews = ref([]);
+const name = ref(\\"test\\");
+const showReviewPrompt = ref(false);
 
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
-
-
-
-
-    const props = defineProps(['apiKey','productId'])
-const reviews= ref([])
-const name= ref('test')
-const showReviewPrompt= ref(false)
-
-
-
-
-
-
-
-
-onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews.value = data.data;
-})})
-
-
-
-
+onMounted(() => {
+  fetch(
+    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+    }&productId=\${props.productId || \\"2410511106127\\"}\`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      reviews.value = data.data;
+    });
+});
 
 function kebabCaseValue() {
-return kebabCase('testThat');
+  return kebabCase(\\"testThat\\");
 }
 
 function snakeCaseValue() {
-return snakeCase('testThis');
+  return snakeCase(\\"testThis\\");
 }
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name.value of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 
@@ -1627,7 +1619,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1862,14 +1854,14 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
+  if (a === \\"a\\") {
     a.value = \\"b\\";
   }
 }),
-  watch([c.value, d.value], ([c, d]) => {
+  watch([c, d], ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -2010,7 +2002,7 @@ const props = defineProps([\\"size\\"]);
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, props.size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
@@ -2326,7 +2318,7 @@ watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 });
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -2625,7 +2617,7 @@ const inputNoArgRef = ref<HTMLLabelElement>();
 
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -2658,7 +2650,7 @@ const holdValueRef = ref<undefined>();
 function handlerClick(event) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>
 "
@@ -2695,8 +2687,8 @@ const count = ref(0);
 
 const prevCount = ref<undefined>();
 
-watch([count.value], ([count]) => {
-  prevCount = count.value;
+watch([count], ([count]) => {
+  prevCount.value = count;
 });
 </script>
 "
@@ -2886,9 +2878,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -2977,9 +2969,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -3232,8 +3224,8 @@ function onSubmit(event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -3291,8 +3283,8 @@ function onSubmit(event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -3300,19 +3292,19 @@ function onSubmit(event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -3330,8 +3322,8 @@ function onSubmit(event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -3414,8 +3406,8 @@ onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
+      if (pictureRef.value) {
+        const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -3786,61 +3778,54 @@ exports[`Vue Typescript Test Stamped.io 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { onMounted, ref } from \\"vue\\"
-    type SmileReviewsProps = {
-productId: string;
-apiKey: string;
+import { onMounted, ref } from \\"vue\\";
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
 };
 
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
+const props = defineProps<SmileReviewsProps>();
+const reviews = ref([]);
+const name = ref(\\"test\\");
+const showReviewPrompt = ref(false);
 
-
-
-
-    const props = defineProps<SmileReviewsProps>()
-const reviews= ref([])
-const name= ref('test')
-const showReviewPrompt= ref(false)
-
-
-
-
-
-
-
-
-onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews.value = data.data;
-})})
-
-
-
-
+onMounted(() => {
+  fetch(
+    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+    }&productId=\${props.productId || \\"2410511106127\\"}\`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      reviews.value = data.data;
+    });
+});
 
 function kebabCaseValue() {
-return kebabCase('testThat');
+  return kebabCase(\\"testThat\\");
 }
 
 function snakeCaseValue() {
-return snakeCase('testThis');
+  return snakeCase(\\"testThis\\");
 }
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name.value of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 
@@ -4071,7 +4056,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -4328,14 +4313,14 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
+  if (a === \\"a\\") {
     a.value = \\"b\\";
   }
 }),
-  watch([c.value, d.value], ([c, d]) => {
+  watch([c, d], ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
@@ -4487,7 +4472,7 @@ const props = defineProps<Props>();
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, props.size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
