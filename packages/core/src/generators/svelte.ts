@@ -249,7 +249,11 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     const useValue = stripStateAndProps(value, options);
 
     if (type === 'spread') {
-      str += ` {...${useValue}}`;
+        str += '{...';
+        if (key === 'props') {
+            str += `$$`;
+        }
+        str += `${useValue}}`;
     } else if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
