@@ -915,25 +915,63 @@ export default MyPreviousComponent;
 `;
 
 exports[`Solid Javascript Test Button 1`] = `
-"'>' expected. (21:18)
-  19 |
-  20 |   return (
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                  ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <div>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test Button 2`] = `
-"Identifier expected. (21:46)
-  19 |
-  20 |   return (<>
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                              ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test Columns 1`] = `
@@ -1457,25 +1495,607 @@ export default CustomCode;
 `;
 
 exports[`Solid Javascript Test Form 1`] = `
-"Identifier expected. (244:186)
-  242 |
-  243 |     return (
-> 244 |       <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event)}  props.attributes={props.attributes} ><Show  when={props.builderBlock && props.builderBlock.children} ><For each={props.builderBlock?.children}>
-      |                                                                                                                                                                                          ^
-  245 |   {(block, _index) => {
-  246 |     const index = _index();
-  247 |     return <BuilderBlockComponent  key={block.id}  block={block}  index={index} ></BuilderBlockComponent>}}"
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+function FormComponent(props) {
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
+
+  const [responseData, setResponseData] = createSignal(null);
+
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: props.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, props.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              setFormErrorMessage(message);
+            }
+          }
+
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (props.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (props.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: props.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+
+  let formRef;
+
+  return (
+    <form
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
+    >
+      <Show when={props.builderBlock && props.builderBlock.children}>
+        <For each={props.builderBlock?.children}>
+          {(block, _index) => {
+            const index = _index();
+            return (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            );
+          }}
+        </For>
+      </Show>
+      <Show when={submissionState() === \\"error\\"}>
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          blocks={props.errorMessage}
+        ></BuilderBlocks>
+      </Show>
+      <Show when={submissionState() === \\"sending\\"}>
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage}
+        ></BuilderBlocks>
+      </Show>
+      <Show when={submissionState() === \\"error\\" && responseData()}>
+        <pre
+          class={
+            \\"builder-form-error-text \\" +
+            css({
+              padding: \\"10px\\",
+              color: \\"red\\",
+              textAlign: \\"center\\",
+            })
+          }
+        >
+          {JSON.stringify(responseData(), null, 2)}
+        </pre>
+      </Show>
+      <Show when={submissionState() === \\"success\\"}>
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage}
+        ></BuilderBlocks>
+      </Show>
+    </form>
+  );
+}
+
+export default FormComponent;
+"
 `;
 
 exports[`Solid Javascript Test Form 2`] = `
-"Identifier expected. (244:186)
-  242 |
-  243 |     return (<>
-> 244 |       <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event)}  props.attributes={props.attributes} ><Show  when={props.builderBlock && props.builderBlock.children} ><For each={props.builderBlock?.children}>
-      |                                                                                                                                                                                          ^
-  245 |   {(block, _index) => {
-  246 |     const index = _index();
-  247 |     return <BuilderBlockComponent  key={block.id}  block={block}  index={index} ></BuilderBlockComponent>}}"
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+function FormComponent(props) {
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
+
+  const [responseData, setResponseData] = createSignal(null);
+
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: props.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, props.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              setFormErrorMessage(message);
+            }
+          }
+
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (props.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (props.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: props.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+
+  let formRef;
+
+  return (
+    <>
+      <form
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        <Show when={props.builderBlock && props.builderBlock.children}>
+          <For each={props.builderBlock?.children}>
+            {(block, _index) => {
+              const index = _index();
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }}
+          </For>
+        </Show>
+        <Show when={submissionState() === \\"error\\"}>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"sending\\"}>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"error\\" && responseData()}>
+          <pre class=\\"builder-form-error-text pre-15416702\\">
+            {JSON.stringify(responseData(), null, 2)}
+          </pre>
+        </Show>
+        <Show when={submissionState() === \\"success\\"}>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+        </Show>
+      </form>
+      <style jsx>{\`
+        .pre-15416702 {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default FormComponent;
+"
 `;
 
 exports[`Solid Javascript Test Image 1`] = `
@@ -1721,47 +2341,107 @@ export default ImgStateComponent;
 `;
 
 exports[`Solid Javascript Test Img 1`] = `
-"Identifier expected. (19:10)
-  17 | \\"object-fit\\": props.backgroundSize || 'cover',
-  18 | \\"object-position\\": props.backgroundPosition || 'center'
-> 19 | }}  props.attributes={props.attributes}  key={Builder.isEditing && props.imgSrc || 'default-key'}  alt={props.altText}  src={props.imgSrc}  />
-     |          ^
-  20 |       
-  21 |       )
-  22 |   }"
+"import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <img
+      style={{
+        \\"object-fit\\": props.backgroundSize || \\"cover\\",
+        \\"object-position\\": props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+
+export default ImgComponent;
+"
 `;
 
 exports[`Solid Javascript Test Img 2`] = `
-"Identifier expected. (21:10)
-  19 | \\"object-fit\\": props.backgroundSize || 'cover',
-  20 | \\"object-position\\": props.backgroundPosition || 'center'
-> 21 | }}  props.attributes={props.attributes}  key={Builder.isEditing && props.imgSrc || 'default-key'}  alt={props.altText}  src={props.imgSrc}  />
-     |          ^
-  22 |       
-  23 |       </>)
-  24 |   }"
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <>
+      <img
+        style={{
+          \\"object-fit\\": props.backgroundSize || \\"cover\\",
+          \\"object-position\\": props.backgroundPosition || \\"center\\",
+        }}
+        {...props.attributes}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
+  );
+}
+
+export default ImgComponent;
+"
 `;
 
 exports[`Solid Javascript Test Input 1`] = `
-"Identifier expected. (16:18)
-  14 |
-  15 |   return (
-> 16 |     <input  props.attributes={props.attributes}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  placeholder={props.placeholder}  type={props.type}  name={props.name}  value={props.value}  defaultValue={props.defaultValue}  required={props.required}  />
-     |                  ^
-  17 |     
-  18 |     )
-  19 | }"
+"import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+
+export default FormInputComponent;
+"
 `;
 
 exports[`Solid Javascript Test Input 2`] = `
-"Identifier expected. (18:18)
-  16 |
-  17 |   return (<>
-> 18 |     <input  props.attributes={props.attributes}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  placeholder={props.placeholder}  type={props.type}  name={props.name}  value={props.value}  defaultValue={props.defaultValue}  required={props.required}  />
-     |                  ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+      />
+    </>
+  );
+}
+
+export default FormInputComponent;
+"
 `;
 
 exports[`Solid Javascript Test RawText 1`] = `
@@ -1797,69 +2477,197 @@ export default RawText;
 `;
 
 exports[`Solid Javascript Test Section 1`] = `
-"Identifier expected. (11:22)
-   9 |
-  10 |     return (
-> 11 |       <section  props.attributes={props.attributes}  style={props.maxWidth && typeof props.maxWidth === 'number' ? {
-     |                      ^
-  12 | \\"max-width\\": props.maxWidth
-  13 | } : undefined} >{props.children}</section>
-  14 |       "
+"function SectionComponent(props) {
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              \\"max-width\\": props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+
+export default SectionComponent;
+"
 `;
 
 exports[`Solid Javascript Test Section 2`] = `
-"Identifier expected. (31:27)
-  29 |   {(item, _index) => {
-  30 |     const index = _index();
-> 31 |     return <section  props.attributes={props.attributes}  style={{
-     |                           ^
-  32 | \\"max-width\\": item + max()
-  33 | }} >{props.children}</section>}}
-  34 |     "
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+function SectionStateComponent(props) {
+  const [max, setMax] = createSignal(42);
+
+  const [items, setItems] = createSignal([42]);
+
+  return (
+    <Show when={max()}>
+      <For each={items()}>
+        {(item, _index) => {
+          const index = _index();
+          return (
+            <section
+              {...props.attributes}
+              style={{
+                \\"max-width\\": item + max(),
+              }}
+            >
+              {props.children}
+            </section>
+          );
+        }}
+      </For>
+    </Show>
+  );
+}
+
+export default SectionStateComponent;
+"
 `;
 
 exports[`Solid Javascript Test Section 3`] = `
-"Identifier expected. (18:22)
-  16 |
-  17 |     return (<>
-> 18 |       <section  props.attributes={props.attributes}  style={props.maxWidth && typeof props.maxWidth === 'number' ? {
-     |                      ^
-  19 | \\"max-width\\": props.maxWidth
-  20 | } : undefined} >{props.children}</section>
-  21 |       "
+"import { css } from \\"solid-styled-components\\";
+
+function SectionComponent(props) {
+  return (
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                \\"max-width\\": props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
+  );
+}
+
+export default SectionComponent;
+"
 `;
 
 exports[`Solid Javascript Test Section 4`] = `
-"Identifier expected. (31:27)
-  29 |   {(item, _index) => {
-  30 |     const index = _index();
-> 31 |     return <section  props.attributes={props.attributes}  style={{
-     |                           ^
-  32 | \\"max-width\\": item + max()
-  33 | }} >{props.children}</section>}}
-  34 |     "
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function SectionStateComponent(props) {
+  const [max, setMax] = createSignal(42);
+
+  const [items, setItems] = createSignal([42]);
+
+  return (
+    <>
+      <Show when={max()}>
+        <For each={items()}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  \\"max-width\\": item + max(),
+                }}
+              >
+                {props.children}
+              </section>
+            );
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default SectionStateComponent;
+"
 `;
 
 exports[`Solid Javascript Test Select 1`] = `
-"Identifier expected. (21:19)
-  19 |
-  20 |   return (
-> 21 |     <select  props.attributes={props.attributes}  value={props.value}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  defaultValue={props.defaultValue}  name={props.name} ><For each={props.options}>
-     |                   ^
-  22 | {(option, _index) => {
-  23 |   const index = _index();
-  24 |   return <option  value={option.value}  data-index={index} >{option.name || option.value}</option>}}"
+"import { For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      <For each={props.options}>
+        {(option, _index) => {
+          const index = _index();
+          return (
+            <option value={option.value} data-index={index}>
+              {option.name || option.value}
+            </option>
+          );
+        }}
+      </For>
+    </select>
+  );
+}
+
+export default SelectComponent;
+"
 `;
 
 exports[`Solid Javascript Test Select 2`] = `
-"Identifier expected. (21:19)
-  19 |
-  20 |   return (<>
-> 21 |     <select  props.attributes={props.attributes}  value={props.value}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  defaultValue={props.defaultValue}  name={props.name} ><For each={props.options}>
-     |                   ^
-  22 | {(option, _index) => {
-  23 |   const index = _index();
-  24 |   return <option  value={option.value}  data-index={index} >{option.name || option.value}</option>}}"
+"import { For } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        <For each={props.options}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <option value={option.value} data-index={index}>
+                {option.name || option.value}
+              </option>
+            );
+          }}
+        </For>
+      </select>
+    </>
+  );
+}
+
+export default SelectComponent;
+"
 `;
 
 exports[`Solid Javascript Test SlotHtml 1`] = `
@@ -2153,25 +2961,33 @@ export default SmileReviews;
 `;
 
 exports[`Solid Javascript Test Submit 1`] = `
-"'>' expected. (11:14)
-   9 |
-  10 |   return (
-> 11 |     <button  type=\\"submit\\"  props.attributes={props.attributes} >{props.text}</button>
-     |              ^
-  12 |     
-  13 |     )
-  14 | }"
+"function SubmitButton(props) {
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
+}
+
+export default SubmitButton;
+"
 `;
 
 exports[`Solid Javascript Test Submit 2`] = `
-"Identifier expected. (18:34)
-  16 |
-  17 |   return (<>
-> 18 |     <button  type=\\"submit\\"  props.attributes={props.attributes} >{props.text}</button>
-     |                                  ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+function SubmitButton(props) {
+  return (
+    <>
+      <button type=\\"submit\\" {...props.attributes}>
+        {props.text}
+      </button>
+    </>
+  );
+}
+
+export default SubmitButton;
+"
 `;
 
 exports[`Solid Javascript Test Text 1`] = `
@@ -2235,47 +3051,105 @@ export default Text;
 `;
 
 exports[`Solid Javascript Test Textarea 1`] = `
-"Identifier expected. (11:21)
-   9 |
-  10 |   return (
-> 11 |     <textarea  props.attributes={props.attributes}  placeholder={props.placeholder}  name={props.name}  value={props.value}  defaultValue={props.defaultValue} ></textarea>
-     |                     ^
-  12 |     
-  13 |     )
-  14 | }"
+"function Textarea(props) {
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    ></textarea>
+  );
+}
+
+export default Textarea;
+"
 `;
 
 exports[`Solid Javascript Test Textarea 2`] = `
-"Identifier expected. (18:21)
-  16 |
-  17 |   return (<>
-> 18 |     <textarea  props.attributes={props.attributes}  placeholder={props.placeholder}  name={props.name}  value={props.value}  defaultValue={props.defaultValue} ></textarea>
-     |                     ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+function Textarea(props) {
+  return (
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
+  );
+}
+
+export default Textarea;
+"
 `;
 
 exports[`Solid Javascript Test Video 1`] = `
-"'>' expected. (11:15)
-   9 |
-  10 |     return (
-> 11 |       <video  preload=\\"none\\"  props.attributes={props.attributes}  style={{
-     |               ^
-  12 | \\"width\\": '100%',
-  13 | \\"height\\": '100%',
-  14 | ...props.attributes?.style,"
+"function Video(props) {
+  return (
+    <video
+      preload=\\"none\\"
+      {...props.attributes}
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        \\"object-fit\\": props.fit,
+        \\"object-position\\": props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        \\"border-radius\\": 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    ></video>
+  );
+}
+
+export default Video;
+"
 `;
 
 exports[`Solid Javascript Test Video 2`] = `
-"Identifier expected. (18:36)
-  16 |
-  17 |     return (<>
-> 18 |       <video  preload=\\"none\\"  props.attributes={props.attributes}  style={{
-     |                                    ^
-  19 | \\"width\\": '100%',
-  20 | \\"height\\": '100%',
-  21 | ...props.attributes?.style,"
+"import { css } from \\"solid-styled-components\\";
+
+function Video(props) {
+  return (
+    <>
+      <video
+        preload=\\"none\\"
+        {...props.attributes}
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          \\"object-fit\\": props.fit,
+          \\"object-position\\": props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          \\"border-radius\\": 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoplay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
+  );
+}
+
+export default Video;
+"
 `;
 
 exports[`Solid Javascript Test basicOnUpdateReturn 1`] = `
@@ -2589,25 +3463,63 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Javascript Test defaultProps 1`] = `
-"'>' expected. (21:18)
-  19 |
-  20 |   return (
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                  ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <div>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test defaultProps 2`] = `
-"Identifier expected. (21:46)
-  19 |
-  20 |   return (<>
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                              ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test defaultValsWithTypes 1`] = `
@@ -2651,25 +3563,55 @@ export default ComponentWithTypes;
 `;
 
 exports[`Solid Javascript Test import types 1`] = `
-"Identifier expected. (30:26)
-  28 |
-  29 |     return (
-> 30 |       <RenderBlock  state.getRenderContentProps(props.renderContentProps.block, 0)={getRenderContentProps(props.renderContentProps.block, 0)} ></RenderBlock>
-     |                          ^
-  31 |       
-  32 |       )
-  33 |   }"
+"import { createSignal } from \\"solid-js\\";
+
+import RenderBlock from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    ></RenderBlock>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid Javascript Test import types 2`] = `
-"Identifier expected. (30:26)
-  28 |
-  29 |     return (<>
-> 30 |       <RenderBlock  state.getRenderContentProps(props.renderContentProps.block, 0)={getRenderContentProps(props.renderContentProps.block, 0)} ></RenderBlock>
-     |                          ^
-  31 |       
-  32 |       </>)
-  33 |   }"
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import RenderBlock from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <>
+      <RenderBlock
+        {...getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
+    </>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid Javascript Test multipleOnUpdate 1`] = `
@@ -2788,7 +3730,7 @@ function MyBasicComponent(props) {
     hello: \\"world\\",
   });
 
-  return <input attrs={attrs()} props={props} />;
+  return <input {...attrs()} {...props} />;
 }
 
 export default MyBasicComponent;
@@ -2807,7 +3749,7 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <input attrs={attrs()} props={props} />
+      <input {...attrs()} {...props} />
     </>
   );
 }
@@ -3284,25 +4226,63 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Javascript Test rootFragmentMultiNode 1`] = `
-"Identifier expected. (21:42)
-  19 |
-  20 |   return (
-> 21 |     <><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                          ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test rootFragmentMultiNode 2`] = `
-"Identifier expected. (21:42)
-  19 |
-  20 |   return (<>
-> 21 |     <><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                          ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Javascript Test rootShow 1`] = `
@@ -4631,25 +5611,63 @@ export default MyPreviousComponent;
 `;
 
 exports[`Solid Typescript Test Button 1`] = `
-"'>' expected. (21:18)
-  19 |
-  20 |   return (
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                  ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <div>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test Button 2`] = `
-"Identifier expected. (21:46)
-  19 |
-  20 |   return (<>
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                              ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test Columns 1`] = `
@@ -5173,25 +6191,607 @@ export default CustomCode;
 `;
 
 exports[`Solid Typescript Test Form 1`] = `
-"Identifier expected. (244:186)
-  242 |
-  243 |     return (
-> 244 |       <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event)}  props.attributes={props.attributes} ><Show  when={props.builderBlock && props.builderBlock.children} ><For each={props.builderBlock?.children}>
-      |                                                                                                                                                                                          ^
-  245 |   {(block, _index) => {
-  246 |     const index = _index();
-  247 |     return <BuilderBlockComponent  key={block.id}  block={block}  index={index} ></BuilderBlockComponent>}}"
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+function FormComponent(props) {
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
+
+  const [responseData, setResponseData] = createSignal(null);
+
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: props.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, props.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              setFormErrorMessage(message);
+            }
+          }
+
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (props.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (props.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: props.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+
+  let formRef;
+
+  return (
+    <form
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
+    >
+      <Show when={props.builderBlock && props.builderBlock.children}>
+        <For each={props.builderBlock?.children}>
+          {(block, _index) => {
+            const index = _index();
+            return (
+              <BuilderBlockComponent
+                key={block.id}
+                block={block}
+                index={index}
+              ></BuilderBlockComponent>
+            );
+          }}
+        </For>
+      </Show>
+      <Show when={submissionState() === \\"error\\"}>
+        <BuilderBlocks
+          dataPath=\\"errorMessage\\"
+          blocks={props.errorMessage}
+        ></BuilderBlocks>
+      </Show>
+      <Show when={submissionState() === \\"sending\\"}>
+        <BuilderBlocks
+          dataPath=\\"sendingMessage\\"
+          blocks={props.sendingMessage}
+        ></BuilderBlocks>
+      </Show>
+      <Show when={submissionState() === \\"error\\" && responseData()}>
+        <pre
+          class={
+            \\"builder-form-error-text \\" +
+            css({
+              padding: \\"10px\\",
+              color: \\"red\\",
+              textAlign: \\"center\\",
+            })
+          }
+        >
+          {JSON.stringify(responseData(), null, 2)}
+        </pre>
+      </Show>
+      <Show when={submissionState() === \\"success\\"}>
+        <BuilderBlocks
+          dataPath=\\"successMessage\\"
+          blocks={props.successMessage}
+        ></BuilderBlocks>
+      </Show>
+    </form>
+  );
+}
+
+export default FormComponent;
+"
 `;
 
 exports[`Solid Typescript Test Form 2`] = `
-"Identifier expected. (244:186)
-  242 |
-  243 |     return (<>
-> 244 |       <form  validate={props.validate}  ref={formRef}  action={!props.sendWithJs && props.action}  method={props.method}  name={props.name}  onSubmit={(event) => onSubmit(event)}  props.attributes={props.attributes} ><Show  when={props.builderBlock && props.builderBlock.children} ><For each={props.builderBlock?.children}>
-      |                                                                                                                                                                                          ^
-  245 |   {(block, _index) => {
-  246 |     const index = _index();
-  247 |     return <BuilderBlockComponent  key={block.id}  block={block}  index={index} ></BuilderBlockComponent>}}"
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+function FormComponent(props) {
+  const [formState, setFormState] = createSignal(\\"unsubmitted\\");
+
+  const [responseData, setResponseData] = createSignal(null);
+
+  const [formErrorMessage, setFormErrorMessage] = createSignal(\\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState();
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */
+          !(sendWithJs && props.action?.includes(\\"zapier.com\\"))
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", {
+        detail: {
+          body,
+        },
+      });
+
+      if (formRef) {
+        formRef.dispatchEvent(presubmitEvent);
+
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\" ? formUrl : props.action,
+        /* TODO: throw error if no action URL */
+        {
+          body,
+          headers,
+          method: props.method || \\"post\\",
+        }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */
+            let message = get(body, props.errorMessagePath);
+
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like
+           error: - email has been taken */
+                message = JSON.stringify(message);
+              }
+
+              setFormErrorMessage(message);
+            }
+          }
+
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: {
+                res,
+                body,
+              },
+            });
+
+            if (formRef) {
+              formRef.dispatchEvent(submitSuccessEvent);
+
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */
+
+              if (props.resetFormOnSubmit !== false) {
+                formRef.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */
+
+            if (props.successUrl) {
+              if (formRef) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: {
+                    url: props.successUrl,
+                  },
+                });
+                formRef.dispatchEvent(event);
+
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: {
+              error: err,
+            },
+          });
+
+          if (formRef) {
+            formRef.dispatchEvent(submitErrorEvent);
+
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+
+  let formRef;
+
+  return (
+    <>
+      <form
+        validate={props.validate}
+        ref={formRef}
+        action={!props.sendWithJs && props.action}
+        method={props.method}
+        name={props.name}
+        onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
+      >
+        <Show when={props.builderBlock && props.builderBlock.children}>
+          <For each={props.builderBlock?.children}>
+            {(block, _index) => {
+              const index = _index();
+              return (
+                <BuilderBlockComponent
+                  key={block.id}
+                  block={block}
+                  index={index}
+                ></BuilderBlockComponent>
+              );
+            }}
+          </For>
+        </Show>
+        <Show when={submissionState() === \\"error\\"}>
+          <BuilderBlocks
+            dataPath=\\"errorMessage\\"
+            blocks={props.errorMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"sending\\"}>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          ></BuilderBlocks>
+        </Show>
+        <Show when={submissionState() === \\"error\\" && responseData()}>
+          <pre class=\\"builder-form-error-text pre-78552c52\\">
+            {JSON.stringify(responseData(), null, 2)}
+          </pre>
+        </Show>
+        <Show when={submissionState() === \\"success\\"}>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          ></BuilderBlocks>
+        </Show>
+      </form>
+      <style jsx>{\`
+        .pre-78552c52 {
+          padding: 10px;
+          color: red;
+          text-align: center;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default FormComponent;
+"
 `;
 
 exports[`Solid Typescript Test Image 1`] = `
@@ -5437,47 +7037,107 @@ export default ImgStateComponent;
 `;
 
 exports[`Solid Typescript Test Img 1`] = `
-"Identifier expected. (19:10)
-  17 | \\"object-fit\\": props.backgroundSize || 'cover',
-  18 | \\"object-position\\": props.backgroundPosition || 'center'
-> 19 | }}  props.attributes={props.attributes}  key={Builder.isEditing && props.imgSrc || 'default-key'}  alt={props.altText}  src={props.imgSrc}  />
-     |          ^
-  20 |       
-  21 |       )
-  22 |   }"
+"import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <img
+      style={{
+        \\"object-fit\\": props.backgroundSize || \\"cover\\",
+        \\"object-position\\": props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+
+export default ImgComponent;
+"
 `;
 
 exports[`Solid Typescript Test Img 2`] = `
-"Identifier expected. (21:10)
-  19 | \\"object-fit\\": props.backgroundSize || 'cover',
-  20 | \\"object-position\\": props.backgroundPosition || 'center'
-> 21 | }}  props.attributes={props.attributes}  key={Builder.isEditing && props.imgSrc || 'default-key'}  alt={props.altText}  src={props.imgSrc}  />
-     |          ^
-  22 |       
-  23 |       </>)
-  24 |   }"
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function ImgComponent(props) {
+  return (
+    <>
+      <img
+        style={{
+          \\"object-fit\\": props.backgroundSize || \\"cover\\",
+          \\"object-position\\": props.backgroundPosition || \\"center\\",
+        }}
+        {...props.attributes}
+        key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+        alt={props.altText}
+        src={props.imgSrc}
+      />
+    </>
+  );
+}
+
+export default ImgComponent;
+"
 `;
 
 exports[`Solid Typescript Test Input 1`] = `
-"Identifier expected. (16:18)
-  14 |
-  15 |   return (
-> 16 |     <input  props.attributes={props.attributes}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  placeholder={props.placeholder}  type={props.type}  name={props.name}  value={props.value}  defaultValue={props.defaultValue}  required={props.required}  />
-     |                  ^
-  17 |     
-  18 |     )
-  19 | }"
+"import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <input
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+
+export default FormInputComponent;
+"
 `;
 
 exports[`Solid Typescript Test Input 2`] = `
-"Identifier expected. (18:18)
-  16 |
-  17 |   return (<>
-> 18 |     <input  props.attributes={props.attributes}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  placeholder={props.placeholder}  type={props.type}  name={props.name}  value={props.value}  defaultValue={props.defaultValue}  required={props.required}  />
-     |                  ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function FormInputComponent(props) {
+  return (
+    <>
+      <input
+        {...props.attributes}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        placeholder={props.placeholder}
+        type={props.type}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+        required={props.required}
+      />
+    </>
+  );
+}
+
+export default FormInputComponent;
+"
 `;
 
 exports[`Solid Typescript Test RawText 1`] = `
@@ -5513,69 +7173,197 @@ export default RawText;
 `;
 
 exports[`Solid Typescript Test Section 1`] = `
-"Identifier expected. (11:22)
-   9 |
-  10 |     return (
-> 11 |       <section  props.attributes={props.attributes}  style={props.maxWidth && typeof props.maxWidth === 'number' ? {
-     |                      ^
-  12 | \\"max-width\\": props.maxWidth
-  13 | } : undefined} >{props.children}</section>
-  14 |       "
+"function SectionComponent(props) {
+  return (
+    <section
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              \\"max-width\\": props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      {props.children}
+    </section>
+  );
+}
+
+export default SectionComponent;
+"
 `;
 
 exports[`Solid Typescript Test Section 2`] = `
-"Identifier expected. (31:27)
-  29 |   {(item, _index) => {
-  30 |     const index = _index();
-> 31 |     return <section  props.attributes={props.attributes}  style={{
-     |                           ^
-  32 | \\"max-width\\": item + max()
-  33 | }} >{props.children}</section>}}
-  34 |     "
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+function SectionStateComponent(props) {
+  const [max, setMax] = createSignal(42);
+
+  const [items, setItems] = createSignal([42]);
+
+  return (
+    <Show when={max()}>
+      <For each={items()}>
+        {(item, _index) => {
+          const index = _index();
+          return (
+            <section
+              {...props.attributes}
+              style={{
+                \\"max-width\\": item + max(),
+              }}
+            >
+              {props.children}
+            </section>
+          );
+        }}
+      </For>
+    </Show>
+  );
+}
+
+export default SectionStateComponent;
+"
 `;
 
 exports[`Solid Typescript Test Section 3`] = `
-"Identifier expected. (18:22)
-  16 |
-  17 |     return (<>
-> 18 |       <section  props.attributes={props.attributes}  style={props.maxWidth && typeof props.maxWidth === 'number' ? {
-     |                      ^
-  19 | \\"max-width\\": props.maxWidth
-  20 | } : undefined} >{props.children}</section>
-  21 |       "
+"import { css } from \\"solid-styled-components\\";
+
+function SectionComponent(props) {
+  return (
+    <>
+      <section
+        {...props.attributes}
+        style={
+          props.maxWidth && typeof props.maxWidth === \\"number\\"
+            ? {
+                \\"max-width\\": props.maxWidth,
+              }
+            : undefined
+        }
+      >
+        {props.children}
+      </section>
+    </>
+  );
+}
+
+export default SectionComponent;
+"
 `;
 
 exports[`Solid Typescript Test Section 4`] = `
-"Identifier expected. (31:27)
-  29 |   {(item, _index) => {
-  30 |     const index = _index();
-> 31 |     return <section  props.attributes={props.attributes}  style={{
-     |                           ^
-  32 | \\"max-width\\": item + max()
-  33 | }} >{props.children}</section>}}
-  34 |     "
+"import { Show, For, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function SectionStateComponent(props) {
+  const [max, setMax] = createSignal(42);
+
+  const [items, setItems] = createSignal([42]);
+
+  return (
+    <>
+      <Show when={max()}>
+        <For each={items()}>
+          {(item, _index) => {
+            const index = _index();
+            return (
+              <section
+                {...props.attributes}
+                style={{
+                  \\"max-width\\": item + max(),
+                }}
+              >
+                {props.children}
+              </section>
+            );
+          }}
+        </For>
+      </Show>
+    </>
+  );
+}
+
+export default SectionStateComponent;
+"
 `;
 
 exports[`Solid Typescript Test Select 1`] = `
-"Identifier expected. (21:19)
-  19 |
-  20 |   return (
-> 21 |     <select  props.attributes={props.attributes}  value={props.value}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  defaultValue={props.defaultValue}  name={props.name} ><For each={props.options}>
-     |                   ^
-  22 | {(option, _index) => {
-  23 |   const index = _index();
-  24 |   return <option  value={option.value}  data-index={index} >{option.name || option.value}</option>}}"
+"import { For } from \\"solid-js\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <select
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      <For each={props.options}>
+        {(option, _index) => {
+          const index = _index();
+          return (
+            <option value={option.value} data-index={index}>
+              {option.name || option.value}
+            </option>
+          );
+        }}
+      </For>
+    </select>
+  );
+}
+
+export default SelectComponent;
+"
 `;
 
 exports[`Solid Typescript Test Select 2`] = `
-"Identifier expected. (21:19)
-  19 |
-  20 |   return (<>
-> 21 |     <select  props.attributes={props.attributes}  value={props.value}  key={Builder.isEditing && props.defaultValue ? props.defaultValue : 'default-key'}  defaultValue={props.defaultValue}  name={props.name} ><For each={props.options}>
-     |                   ^
-  22 | {(option, _index) => {
-  23 |   const index = _index();
-  24 |   return <option  value={option.value}  data-index={index} >{option.name || option.value}</option>}}"
+"import { For } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { Builder } from \\"@builder.io/sdk\\";
+
+function SelectComponent(props) {
+  return (
+    <>
+      <select
+        {...props.attributes}
+        value={props.value}
+        key={
+          Builder.isEditing && props.defaultValue
+            ? props.defaultValue
+            : \\"default-key\\"
+        }
+        defaultValue={props.defaultValue}
+        name={props.name}
+      >
+        <For each={props.options}>
+          {(option, _index) => {
+            const index = _index();
+            return (
+              <option value={option.value} data-index={index}>
+                {option.name || option.value}
+              </option>
+            );
+          }}
+        </For>
+      </select>
+    </>
+  );
+}
+
+export default SelectComponent;
+"
 `;
 
 exports[`Solid Typescript Test SlotHtml 1`] = `
@@ -5869,25 +7657,33 @@ export default SmileReviews;
 `;
 
 exports[`Solid Typescript Test Submit 1`] = `
-"'>' expected. (11:14)
-   9 |
-  10 |   return (
-> 11 |     <button  type=\\"submit\\"  props.attributes={props.attributes} >{props.text}</button>
-     |              ^
-  12 |     
-  13 |     )
-  14 | }"
+"function SubmitButton(props) {
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
+}
+
+export default SubmitButton;
+"
 `;
 
 exports[`Solid Typescript Test Submit 2`] = `
-"Identifier expected. (18:34)
-  16 |
-  17 |   return (<>
-> 18 |     <button  type=\\"submit\\"  props.attributes={props.attributes} >{props.text}</button>
-     |                                  ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+function SubmitButton(props) {
+  return (
+    <>
+      <button type=\\"submit\\" {...props.attributes}>
+        {props.text}
+      </button>
+    </>
+  );
+}
+
+export default SubmitButton;
+"
 `;
 
 exports[`Solid Typescript Test Text 1`] = `
@@ -5951,47 +7747,105 @@ export default Text;
 `;
 
 exports[`Solid Typescript Test Textarea 1`] = `
-"Identifier expected. (11:21)
-   9 |
-  10 |   return (
-> 11 |     <textarea  props.attributes={props.attributes}  placeholder={props.placeholder}  name={props.name}  value={props.value}  defaultValue={props.defaultValue} ></textarea>
-     |                     ^
-  12 |     
-  13 |     )
-  14 | }"
+"function Textarea(props) {
+  return (
+    <textarea
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    ></textarea>
+  );
+}
+
+export default Textarea;
+"
 `;
 
 exports[`Solid Typescript Test Textarea 2`] = `
-"Identifier expected. (18:21)
-  16 |
-  17 |   return (<>
-> 18 |     <textarea  props.attributes={props.attributes}  placeholder={props.placeholder}  name={props.name}  value={props.value}  defaultValue={props.defaultValue} ></textarea>
-     |                     ^
-  19 |     
-  20 |     </>)
-  21 | }"
+"import { css } from \\"solid-styled-components\\";
+
+function Textarea(props) {
+  return (
+    <>
+      <textarea
+        {...props.attributes}
+        placeholder={props.placeholder}
+        name={props.name}
+        value={props.value}
+        defaultValue={props.defaultValue}
+      ></textarea>
+    </>
+  );
+}
+
+export default Textarea;
+"
 `;
 
 exports[`Solid Typescript Test Video 1`] = `
-"'>' expected. (11:15)
-   9 |
-  10 |     return (
-> 11 |       <video  preload=\\"none\\"  props.attributes={props.attributes}  style={{
-     |               ^
-  12 | \\"width\\": '100%',
-  13 | \\"height\\": '100%',
-  14 | ...props.attributes?.style,"
+"function Video(props) {
+  return (
+    <video
+      preload=\\"none\\"
+      {...props.attributes}
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        \\"object-fit\\": props.fit,
+        \\"object-position\\": props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        \\"border-radius\\": 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    ></video>
+  );
+}
+
+export default Video;
+"
 `;
 
 exports[`Solid Typescript Test Video 2`] = `
-"Identifier expected. (18:36)
-  16 |
-  17 |     return (<>
-> 18 |       <video  preload=\\"none\\"  props.attributes={props.attributes}  style={{
-     |                                    ^
-  19 | \\"width\\": '100%',
-  20 | \\"height\\": '100%',
-  21 | ...props.attributes?.style,"
+"import { css } from \\"solid-styled-components\\";
+
+function Video(props) {
+  return (
+    <>
+      <video
+        preload=\\"none\\"
+        {...props.attributes}
+        style={{
+          width: \\"100%\\",
+          height: \\"100%\\",
+          ...props.attributes?.style,
+          \\"object-fit\\": props.fit,
+          \\"object-position\\": props.position,
+          // Hack to get object fit to work as expected and
+          // not have the video overflow
+          \\"border-radius\\": 1,
+        }}
+        key={props.video || \\"no-src\\"}
+        poster={props.posterImage}
+        autoplay={props.autoPlay}
+        muted={props.muted}
+        controls={props.controls}
+        loop={props.loop}
+      ></video>
+    </>
+  );
+}
+
+export default Video;
+"
 `;
 
 exports[`Solid Typescript Test basicOnUpdateReturn 1`] = `
@@ -6305,25 +8159,63 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Typescript Test defaultProps 1`] = `
-"'>' expected. (21:18)
-  19 |
-  20 |   return (
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                  ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <div>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </div>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test defaultProps 2`] = `
-"Identifier expected. (21:46)
-  19 |
-  20 |   return (<>
-> 21 |     <div ><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                              ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></div>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <div>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </div>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test defaultValsWithTypes 1`] = `
@@ -6367,25 +8259,57 @@ export default ComponentWithTypes;
 `;
 
 exports[`Solid Typescript Test import types 1`] = `
-"Identifier expected. (31:26)
-  29 |
-  30 |     return (
-> 31 |       <RenderBlock  state.getRenderContentProps(props.renderContentProps.block, 0)={getRenderContentProps(props.renderContentProps.block, 0)} ></RenderBlock>
-     |                          ^
-  32 |       
-  33 |       )
-  34 |   }"
+"import { createSignal } from \\"solid-js\\";
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...getRenderContentProps(props.renderContentProps.block, 0)}
+    ></RenderBlock>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid Typescript Test import types 2`] = `
-"Identifier expected. (31:26)
-  29 |
-  30 |     return (<>
-> 31 |       <RenderBlock  state.getRenderContentProps(props.renderContentProps.block, 0)={getRenderContentProps(props.renderContentProps.block, 0)} ></RenderBlock>
-     |                          ^
-  32 |       
-  33 |       </>)
-  34 |   }"
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
+import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+
+function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <>
+      <RenderBlock
+        {...getRenderContentProps(props.renderContentProps.block, 0)}
+      ></RenderBlock>
+    </>
+  );
+}
+
+export default RenderContent;
+"
 `;
 
 exports[`Solid Typescript Test multipleOnUpdate 1`] = `
@@ -6504,7 +8428,7 @@ function MyBasicComponent(props) {
     hello: \\"world\\",
   });
 
-  return <input attrs={attrs()} props={props} />;
+  return <input {...attrs()} {...props} />;
 }
 
 export default MyBasicComponent;
@@ -6523,7 +8447,7 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <input attrs={attrs()} props={props} />
+      <input {...attrs()} {...props} />
     </>
   );
 }
@@ -7000,25 +8924,63 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid Typescript Test rootFragmentMultiNode 1`] = `
-"Identifier expected. (21:42)
-  19 |
-  20 |   return (
-> 21 |     <><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                          ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></>
-  23 |     
-  24 |     )"
+"import { Show } from \\"solid-js\\";
+
+function Button(props) {
+  return (
+    <>
+      <Show when={props.link}>
+        <a
+          {...props.attributes}
+          href={props.link}
+          target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+        >
+          {props.text}
+        </a>
+      </Show>
+      <Show when={!props.link}>
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      </Show>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test rootFragmentMultiNode 2`] = `
-"Identifier expected. (21:42)
-  19 |
-  20 |   return (<>
-> 21 |     <><Show  when={props.link} ><a  props.attributes={props.attributes}  href={props.link}  target={props.openLinkInNewTab ? '_blank' : undefined} >{props.text}</a></Show>
-     |                                          ^
-  22 | <Show  when={!props.link} ><button  type=\\"button\\"  props.attributes={props.attributes} >{props.text}</button></Show></>
-  23 |     
-  24 |     </>)"
+"import { Show } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function Button(props) {
+  return (
+    <>
+      <>
+        <Show when={props.link}>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Show>
+        <Show when={!props.link}>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Show>
+      </>
+    </>
+  );
+}
+
+export default Button;
+"
 `;
 
 exports[`Solid Typescript Test rootShow 1`] = `

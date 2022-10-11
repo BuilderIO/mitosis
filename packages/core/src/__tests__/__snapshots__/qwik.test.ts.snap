@@ -1036,13 +1036,18 @@ export const Button = component$((props) => {
     <div>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </div>
   );
 });
@@ -1549,6 +1554,7 @@ export const FormComponent = component$((props) => {
       method={props.method}
       name={props.name}
       onSubmit$={(event) => onSubmit(props, state, formRef, event)}
+      {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
         ? (props.builderBlock?.children || []).map(function (block, index) {
@@ -1733,6 +1739,7 @@ export const ImgComponent = component$((props) => {
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -1751,6 +1758,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 export const FormInputComponent = component$((props) => {
   return (
     <input
+      {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
           ? props.defaultValue
@@ -1792,6 +1800,7 @@ import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
 export const SectionComponent = component$((props) => {
   return (
     <section
+      {...props.attributes}
       style={(() => {
         props.maxWidth && typeof props.maxWidth === \\"number\\"
           ? {
@@ -1820,6 +1829,7 @@ export const SectionStateComponent = component$((props) => {
         ? (state.items || []).map(function (item) {
             return (
               <section
+                {...props.attributes}
                 style={{
                   maxWidth: item + state.max,
                 }}
@@ -1844,6 +1854,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 export const SelectComponent = component$((props) => {
   return (
     <select
+      {...props.attributes}
       value={props.value}
       key={
         Builder.isEditing && props.defaultValue
@@ -2008,7 +2019,11 @@ exports[`qwik Javascript Test Submit 1`] = `
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const SubmitButton = component$((props) => {
-  return <button type=\\"submit\\">{props.text}</button>;
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
 });
 export default SubmitButton;
 "
@@ -2047,6 +2062,7 @@ import { Fragment, component$, h } from \\"@builder.io/qwik\\";
 export const Textarea = component$((props) => {
   return (
     <textarea
+      {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
       value={props.value}
@@ -2066,6 +2082,7 @@ export const Video = component$((props) => {
   return (
     <video
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -2260,13 +2277,18 @@ export const Button = component$((props) => {
     <div>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </div>
   );
 });
@@ -2303,7 +2325,16 @@ export const getRenderContentProps = function getRenderContentProps(
 };
 export const RenderContent = component$((props) => {
   const state = {};
-  return <RenderBlock></RenderBlock>;
+  return (
+    <RenderBlock
+      {...getRenderContentProps(
+        props,
+        state,
+        props.renderContentProps.block,
+        0
+      )}
+    ></RenderBlock>
+  );
 });
 export default RenderContent;
 "
@@ -2362,7 +2393,7 @@ exports[`qwik Javascript Test multipleSpreads 1`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props) => {
   const state = useStore({ attrs: { hello: \\"world\\" } });
-  return <input attrs={state.attrs} props={props}></input>;
+  return <input {...state.attrs} {...props}></input>;
 });
 export default MyBasicComponent;
 "
@@ -2567,13 +2598,18 @@ export const Button = component$((props) => {
     <Fragment>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </Fragment>
   );
 });
@@ -3177,13 +3213,18 @@ export const Button = component$((props: ButtonProps) => {
     <div>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </div>
   );
 });
@@ -3752,6 +3793,7 @@ export const FormComponent = component$((props: FormProps) => {
       method={props.method}
       name={props.name}
       onSubmit$={(event) => onSubmit(props, state, formRef, event)}
+      {...props.attributes}
     >
       {props.builderBlock && props.builderBlock.children
         ? (props.builderBlock?.children || []).map(function (block, index) {
@@ -3969,6 +4011,7 @@ export const ImgComponent = component$((props: ImgProps) => {
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -3996,6 +4039,7 @@ export interface FormInputProps {
 export const FormInputComponent = component$((props: FormInputProps) => {
   return (
     <input
+      {...props.attributes}
       key={
         Builder.isEditing && props.defaultValue
           ? props.defaultValue
@@ -4046,6 +4090,7 @@ export interface SectionProps {
 export const SectionComponent = component$((props: SectionProps) => {
   return (
     <section
+      {...props.attributes}
       style={(() => {
         props.maxWidth && typeof props.maxWidth === \\"number\\"
           ? {
@@ -4079,6 +4124,7 @@ export const SectionStateComponent = component$((props: SectionProps) => {
         ? (state.items || []).map(function (item) {
             return (
               <section
+                {...props.attributes}
                 style={{
                   maxWidth: item + state.max,
                 }}
@@ -4113,6 +4159,7 @@ export interface FormSelectProps {
 export const SelectComponent = component$((props: FormSelectProps) => {
   return (
     <select
+      {...props.attributes}
       value={props.value}
       key={
         Builder.isEditing && props.defaultValue
@@ -4291,7 +4338,11 @@ export interface ButtonProps {
   text?: string;
 }
 export const SubmitButton = component$((props: ButtonProps) => {
-  return <button type=\\"submit\\">{props.text}</button>;
+  return (
+    <button type=\\"submit\\" {...props.attributes}>
+      {props.text}
+    </button>
+  );
 });
 export default SubmitButton;
 "
@@ -4344,6 +4395,7 @@ export interface TextareaProps {
 export const Textarea = component$((props: TextareaProps) => {
   return (
     <textarea
+      {...props.attributes}
       placeholder={props.placeholder}
       name={props.name}
       value={props.value}
@@ -4388,6 +4440,7 @@ export const Video = component$((props: VideoProps) => {
   return (
     <video
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -4600,13 +4653,18 @@ export const Button = component$((props: ButtonProps) => {
     <div>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </div>
   );
 });
@@ -4655,7 +4713,16 @@ export const getRenderContentProps = function getRenderContentProps(
 };
 export const RenderContent = component$((props: RenderContentProps) => {
   const state: any = {};
-  return <RenderBlock></RenderBlock>;
+  return (
+    <RenderBlock
+      {...getRenderContentProps(
+        props,
+        state,
+        props.renderContentProps.block,
+        0
+      )}
+    ></RenderBlock>
+  );
 });
 export default RenderContent;
 "
@@ -4714,7 +4781,7 @@ exports[`qwik Typescript Test multipleSpreads 1`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props: any) => {
   const state = useStore<any>({ attrs: { hello: \\"world\\" } });
-  return <input attrs={state.attrs} props={props}></input>;
+  return <input {...state.attrs} {...props}></input>;
 });
 export default MyBasicComponent;
 "
@@ -4968,13 +5035,18 @@ export const Button = component$((props: ButtonProps) => {
     <Fragment>
       {props.link ? (
         <a
+          {...props.attributes}
           href={props.link}
           target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
         >
           {props.text}
         </a>
       ) : null}
-      {!props.link ? <button type=\\"button\\">{props.text}</button> : null}
+      {!props.link ? (
+        <button type=\\"button\\" {...props.attributes}>
+          {props.text}
+        </button>
+      ) : null}
     </Fragment>
   );
 });

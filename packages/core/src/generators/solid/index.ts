@@ -139,6 +139,7 @@ const preProcessBlockCode = ({
       json.bindings[key] = {
         arguments: value.arguments,
         code: updateStateCode({ options, component, updateSetters: true })(value.code),
+        type: value?.type,
       };
     }
   }

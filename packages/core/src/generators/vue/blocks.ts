@@ -7,7 +7,7 @@ import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
 import {
   encodeQuotes,
   addBindingsToJson,
@@ -282,7 +282,7 @@ const NODE_MAPPERS: {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
+  ([key, value]: [string, Binding | undefined]) => {
     if (node.bindings[key]?.type === 'spread') {
       return ` v-bind="${encodeQuotes(
         stripStateAndPropsRefs(node.bindings[key]?.code as string),
