@@ -1,5 +1,5 @@
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
-import { MitosisNode } from '../../types/mitosis-node';
+import { Binding, MitosisNode } from '../../types/mitosis-node';
 import { DIRECTIVES } from './directives';
 import { File, invoke, SrcBuilder, quote, lastProperty } from './src-generator';
 import { CssStyles } from './styles';
@@ -197,12 +197,12 @@ function rewriteHandlers(
   file: File,
   handlers: Map<string, string>,
   bindings: {
-    [key: string]: { code: string; arguments?: string[] } | undefined;
+    [key: string]: Binding | undefined;
   },
   symbolBindings: Record<string, string>,
   mutablePredicate?: (code: string) => boolean,
-): { [key: string]: { code: string; arguments?: string[] } } {
-  const outBindings: { [key: string]: { code: string; arguments?: string[] } } = {};
+): { [key: string]: Binding } {
+  const outBindings: { [key: string]: Binding } = {};
   for (let key in bindings) {
     if (Object.prototype.hasOwnProperty.call(bindings, key)) {
       let bindingExpr: string | undefined = bindings?.[key]?.code;
@@ -226,7 +226,7 @@ function rewriteHandlers(
           file.import(file.qwikModule, 'mutable');
           bindingExpr = `mutable(${bindingExpr})`;
         }
-        outBindings[key] = { code: bindingExpr as string };
+        outBindings[key] = { code: bindingExpr as string, type: bindings?.[key]?.type };
       }
     }
   }

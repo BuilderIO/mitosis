@@ -76,6 +76,7 @@ const text = getRawFile('./data/blocks/text.raw');
 const textarea = getRawFile('./data/blocks/textarea.raw');
 const video = getRawFile('./data/blocks/video.raw');
 
+const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw');
 const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw');
 const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw');
 const spreadProps = getRawFile('./data/spread/spread-props.raw');
@@ -142,6 +143,7 @@ const BASIC_TESTS: Tests = {
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
   rootFragmentMultiNode,
+  multipleSpreads,
   spreadAttrs,
   spreadNestedProps,
   spreadProps,

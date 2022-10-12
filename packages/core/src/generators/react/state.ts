@@ -81,6 +81,7 @@ export const updateStateSetters = (json: MitosisComponent, options: ToReactOptio
           item.bindings[key] = {
             code: newValue,
             arguments: values?.arguments,
+            type: values?.type,
           };
         }
       }

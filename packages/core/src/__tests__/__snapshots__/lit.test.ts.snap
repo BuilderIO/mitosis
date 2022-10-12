@@ -611,7 +611,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
@@ -1253,11 +1253,10 @@ export default class FormComponent extends LitElement {
  text-align: center;
 }
 </style>
-         <form  \${spread(props.attributes)}  .validate=\${
-      this.validate
-    }  ref=\\"formRef\\"  .action=\${!this.sendWithJs && this.action}  .method=\${
-      this.method
-    }  .name=\${this.name}  @submit=\${(event) => this.onSubmit(event)} >
+         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+      !this.sendWithJs && this.action
+    }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
+      this.onSubmit(event)}  \${spread(props.attributes)} >
              
        \${
          this.builderBlock && this.builderBlock.children
@@ -1507,10 +1506,10 @@ export default class ImgComponent extends LitElement {
   render() {
     return html\`
         
-        <img \${spread(props.attributes)} .style=\${{
-      objectFit: this.backgroundSize || \\"cover\\",
-      objectPosition: this.backgroundPosition || \\"center\\",
-    }}
+        <img .style=\${{
+          objectFit: this.backgroundSize || \\"cover\\",
+          objectPosition: this.backgroundPosition || \\"center\\",
+        }} \${spread(props.attributes)}
       .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
       this.altText
     }
@@ -1981,7 +1980,7 @@ export default class SubmitButton extends LitElement {
   render() {
     return html\`
         
-        <button \${spread(props.attributes)} type=\\"submit\\">\${this.text}</button>
+        <button type=\\"submit\\" \${spread(props.attributes)}>\${this.text}</button>
 
       \`;
   }
@@ -2134,7 +2133,7 @@ export default class Video extends LitElement {
   render() {
     return html\`
         
-        <video  \${spread(props.attributes)}  preload=\\"none\\"  .style=\${{
+        <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
       width: \\"100%\\",
       height: \\"100%\\",
       ...this.attributes?.style,
@@ -2454,7 +2453,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
@@ -2612,6 +2611,37 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
         <div></div>
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Javascript Test multipleSpreads 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() attrs = { hello: \\"world\\" };
+
+  render() {
+    return html\`
+      
+      <input \${spread(state.attrs)} \${spread(props)} />
+
+    \`;
   }
 }
 "
@@ -3054,7 +3084,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
@@ -4069,7 +4099,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
@@ -4711,11 +4741,10 @@ export default class FormComponent extends LitElement {
  text-align: center;
 }
 </style>
-         <form  \${spread(props.attributes)}  .validate=\${
-      this.validate
-    }  ref=\\"formRef\\"  .action=\${!this.sendWithJs && this.action}  .method=\${
-      this.method
-    }  .name=\${this.name}  @submit=\${(event) => this.onSubmit(event)} >
+         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+      !this.sendWithJs && this.action
+    }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
+      this.onSubmit(event)}  \${spread(props.attributes)} >
              
        \${
          this.builderBlock && this.builderBlock.children
@@ -4965,10 +4994,10 @@ export default class ImgComponent extends LitElement {
   render() {
     return html\`
         
-        <img \${spread(props.attributes)} .style=\${{
-      objectFit: this.backgroundSize || \\"cover\\",
-      objectPosition: this.backgroundPosition || \\"center\\",
-    }}
+        <img .style=\${{
+          objectFit: this.backgroundSize || \\"cover\\",
+          objectPosition: this.backgroundPosition || \\"center\\",
+        }} \${spread(props.attributes)}
       .key=\${(Builder.isEditing && this.imgSrc) || \\"default-key\\"} .alt=\${
       this.altText
     }
@@ -5439,7 +5468,7 @@ export default class SubmitButton extends LitElement {
   render() {
     return html\`
         
-        <button \${spread(props.attributes)} type=\\"submit\\">\${this.text}</button>
+        <button type=\\"submit\\" \${spread(props.attributes)}>\${this.text}</button>
 
       \`;
   }
@@ -5592,7 +5621,7 @@ export default class Video extends LitElement {
   render() {
     return html\`
         
-        <video  \${spread(props.attributes)}  preload=\\"none\\"  .style=\${{
+        <video  preload=\\"none\\"  \${spread(props.attributes)}  .style=\${{
       width: \\"100%\\",
       height: \\"100%\\",
       ...this.attributes?.style,
@@ -5912,7 +5941,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
@@ -6071,6 +6100,37 @@ export default class MultipleOnUpdateWithDeps extends LitElement {
         <div></div>
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test multipleSpreads 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+const spread = (properties) =>
+  directive((part) => {
+    for (const property in properties) {
+      const value = properties[attr];
+      part.element[property] = value;
+    }
+  });
+
+@customElement(\\"my-basic-component\\")
+export default class MyBasicComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() attrs = { hello: \\"world\\" };
+
+  render() {
+    return html\`
+      
+      <input \${spread(state.attrs)} \${spread(props)} />
+
+    \`;
   }
 }
 "
@@ -6513,7 +6573,7 @@ export default class Button extends LitElement {
             
       \${
         !this.link
-          ? html\`<button  \${spread(props.attributes)}  type=\\"button\\" >
+          ? html\`<button  type=\\"button\\"  \${spread(props.attributes)} >
                 
       \${this.text}
 
