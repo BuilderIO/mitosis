@@ -1,5 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
-import { filter, pickBy } from 'lodash';
+import { filter } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
