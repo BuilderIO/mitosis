@@ -39,6 +39,7 @@ const className = getRawFile('./data/styles/className.raw');
 const classAndClassName = getRawFile('./data/styles/class-and-className.raw');
 const classState = getRawFile('./data/styles/classState.raw');
 const useStyle = getRawFile('./data/styles/use-style.raw');
+const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw');
 const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw');
 
 const button = getRawFile('./data/blocks/button.raw');
@@ -137,6 +138,7 @@ const BASIC_TESTS: Tests = {
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
+  'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
   rootFragmentMultiNode,
