@@ -1,4 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
+import { filter, pickBy } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -284,9 +285,7 @@ const stringifyBinding =
   (node: MitosisNode) =>
   ([key, value]: [string, Binding | undefined]) => {
     if (node.bindings[key]?.type === 'spread') {
-      return ` v-bind="${encodeQuotes(
-        stripStateAndPropsRefs(node.bindings[key]?.code as string),
-      )}"`;
+      return ''; // we handle this after
     } else if (key === 'class') {
       return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
         replaceWith: '',
@@ -383,6 +382,21 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     .join('');
 
   str += stringifiedBindings;
+
+  // spreads
+
+  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map(
+    (value) => value?.code,
+  );
+
+  if (spreads?.length) {
+    if (spreads.length > 1) {
+      let spreadsString = `{...${spreads.join(', ...')}}`;
+      str += ` v-bind="${encodeQuotes(stripStateAndPropsRefs(spreadsString))}"`;
+    } else {
+      str += ` v-bind="${encodeQuotes(stripStateAndPropsRefs(spreads.join('')))}"`;
+    }
+  }
 
   if (selfClosingTags.has(node.name)) {
     return str + ' />';
