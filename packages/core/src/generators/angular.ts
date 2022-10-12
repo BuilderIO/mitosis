@@ -29,6 +29,8 @@ import { isSlotProperty } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { MitosisComponent } from '../types/mitosis-component';
+import { addImportToMitosisComponent } from '../helpers/add-import';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -224,6 +226,44 @@ export const blockToAngular = (
   return str;
 };
 
+const populatedWithAngularImports = (params: {
+  json: MitosisComponent;
+  props: Set<string>;
+  outputs: Array<string | any>;
+  domRefs: Set<any>;
+  options: Record<string, any>;
+}): MitosisComponent => {
+  const { json, props, outputs, domRefs, options } = params;
+  const coreImports = [
+    'Component',
+    props.size && 'Input',
+    outputs.length && 'Output',
+    outputs.length && 'EventEmitter',
+    domRefs.size && 'ViewChild',
+    domRefs.size && 'ElementRef',
+    options?.experimental?.inject && 'Inject',
+    options?.experimental?.inject && 'forwardRef',
+  ]
+    .filter(Boolean)
+    .reduce((imports, importName) => {
+      imports[importName] = importName;
+      return imports;
+    }, {});
+  const commonImports = [options.standalone && 'CommonModule']
+    .filter(Boolean)
+    .reduce((imports, importName) => {
+      imports[importName] = importName;
+      return imports;
+    }, {});
+  if (Object.keys(coreImports).length > 0) {
+    addImportToMitosisComponent(json, { imports: coreImports, path: '@angular/core' });
+  }
+  if (Object.keys(commonImports).length > 0) {
+    addImportToMitosisComponent(json, { imports: commonImports, path: '@angular/common' });
+  }
+  return json;
+};
+
 export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
   (userOptions = {}) =>
   ({ component: _component }) => {
@@ -309,6 +349,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       return `this.${isDomRef ? '' : '_'}${refName}${isDomRef ? '.nativeElement' : ''}`;
     });
 
+    json = populatedWithAngularImports({
+      json,
+      props,
+      outputs,
+      domRefs,
+      options,
+    });
+
     if (options.plugins) {
       json = runPostJsonPlugins(json, options.plugins);
     }
@@ -368,21 +416,14 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       componentMetadata[key] = value;
     });
     let str = dedent`
-    import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
-      options?.experimental?.inject ? 'Inject, forwardRef,' : ''
-    } Component ${domRefs.size ? ', ViewChild, ElementRef' : ''}${
-      props.size ? ', Input' : ''
-    } } from '@angular/core';
-    ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
-
-    ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
     ${renderPreComponent({
       component: json,
       target: 'angular',
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
       preserveFileExtensions: options.preserveFileExtensions,
     })}
+    ${json.types ? json.types.join('\n') : ''}
+    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
 
     @Component({
       ${Object.entries(componentMetadata)
