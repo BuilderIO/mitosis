@@ -139,6 +139,7 @@ const preProcessBlockCode = ({
       json.bindings[key] = {
         arguments: value.arguments,
         code: updateStateCode({ options, component, updateSetters: true })(value.code),
+        type: value?.type,
       };
     }
   }
@@ -193,22 +194,20 @@ const blockToSolid = ({
     str += ` class=${classString} `;
   }
 
-  if (json.bindings._spread?.code) {
-    str += ` {...(${json.bindings._spread.code})} `;
-  }
-
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const { code, arguments: cusArg = ['event'] } = json.bindings[key]!;
-    if (key === '_spread' || key === '_forName') {
+    const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
+    if (key === '_forName') {
       continue;
     }
     if (!code) continue;
 
-    if (key.startsWith('on')) {
+    if (type === 'spread') {
+      str += ` {...(${code})} `;
+    } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;
       str += ` ${useKey}={(${cusArg.join(',')}) => ${code}} `;
     } else {
@@ -397,10 +396,6 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
     export default ${json.name};
   `;
-
-    // HACK: for some reason we are generating `state.state.foo` instead of `state.foo`
-    // need a full fix, but this unblocks a lot in the short term
-    str = str.replace(/state\.state\./g, 'state.');
 
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);

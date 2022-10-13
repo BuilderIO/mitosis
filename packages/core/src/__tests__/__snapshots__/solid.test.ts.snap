@@ -930,7 +930,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -961,7 +961,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -1734,13 +1734,13 @@ function FormComponent(props) {
 
   return (
     <form
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
@@ -2037,13 +2037,13 @@ function FormComponent(props) {
   return (
     <>
       <form
-        {...props.attributes}
         validate={props.validate}
         ref={formRef}
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
         onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
       >
         <Show when={props.builderBlock && props.builderBlock.children}>
           <For each={props.builderBlock?.children}>
@@ -2072,7 +2072,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-5bf2897a\\">
+          <pre class=\\"builder-form-error-text pre-15416702\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -2084,7 +2084,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-5bf2897a {
+        .pre-15416702 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -2346,11 +2346,11 @@ exports[`Solid Javascript Test Img 1`] = `
 function ImgComponent(props) {
   return (
     <img
-      {...props.attributes}
       style={{
         \\"object-fit\\": props.backgroundSize || \\"cover\\",
         \\"object-position\\": props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -2371,11 +2371,11 @@ function ImgComponent(props) {
   return (
     <>
       <img
-        {...props.attributes}
         style={{
           \\"object-fit\\": props.backgroundSize || \\"cover\\",
           \\"object-position\\": props.backgroundPosition || \\"center\\",
         }}
+        {...props.attributes}
         key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
         alt={props.altText}
         src={props.imgSrc}
@@ -2963,7 +2963,7 @@ export default SmileReviews;
 exports[`Solid Javascript Test Submit 1`] = `
 "function SubmitButton(props) {
   return (
-    <button {...props.attributes} type=\\"submit\\">
+    <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
@@ -2979,7 +2979,7 @@ exports[`Solid Javascript Test Submit 2`] = `
 function SubmitButton(props) {
   return (
     <>
-      <button {...props.attributes} type=\\"submit\\">
+      <button type=\\"submit\\" {...props.attributes}>
         {props.text}
       </button>
     </>
@@ -3092,8 +3092,8 @@ exports[`Solid Javascript Test Video 1`] = `
 "function Video(props) {
   return (
     <video
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -3125,8 +3125,8 @@ function Video(props) {
   return (
     <>
       <video
-        {...props.attributes}
         preload=\\"none\\"
+        {...props.attributes}
         style={{
           width: \\"100%\\",
           height: \\"100%\\",
@@ -3478,7 +3478,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -3509,7 +3509,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -3719,6 +3719,42 @@ function MultipleOnUpdateWithDeps(props) {
 }
 
 export default MultipleOnUpdateWithDeps;
+"
+`;
+
+exports[`Solid Javascript Test multipleSpreads 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyBasicComponent(props) {
+  const [attrs, setAttrs] = createSignal({
+    hello: \\"world\\",
+  });
+
+  return <input {...attrs()} {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test multipleSpreads 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [attrs, setAttrs] = createSignal({
+    hello: \\"world\\",
+  });
+
+  return (
+    <>
+      <input {...attrs()} {...props} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -4205,7 +4241,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -4236,7 +4272,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -4413,6 +4449,78 @@ export default NestedShow;
 "
 `;
 
+exports[`Solid Javascript Test spreadAttrs 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...attrs} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test spreadAttrs 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...attrs} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test spreadNestedProps 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...props.nested} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test spreadNestedProps 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...props.nested} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test spreadProps 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Javascript Test spreadProps 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...props} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid Javascript Test subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.jsx\\";
 
@@ -4536,6 +4644,40 @@ function MyComponent(props) {
         }
 
         button {
+          font-size: 12px;
+          outline: 1px solid black;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Javascript Test use-style-outside-component 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return <button type=\\"button\\">Button</button>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Javascript Test use-style-outside-component 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+      <style jsx>{\`
+        button {
+          background: blue;
+          color: white;
           font-size: 12px;
           outline: 1px solid black;
         }
@@ -5518,7 +5660,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -5549,7 +5691,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -6322,13 +6464,13 @@ function FormComponent(props) {
 
   return (
     <form
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       <Show when={props.builderBlock && props.builderBlock.children}>
         <For each={props.builderBlock?.children}>
@@ -6625,13 +6767,13 @@ function FormComponent(props) {
   return (
     <>
       <form
-        {...props.attributes}
         validate={props.validate}
         ref={formRef}
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
         onSubmit={(event) => onSubmit(event)}
+        {...props.attributes}
       >
         <Show when={props.builderBlock && props.builderBlock.children}>
           <For each={props.builderBlock?.children}>
@@ -6660,7 +6802,7 @@ function FormComponent(props) {
           ></BuilderBlocks>
         </Show>
         <Show when={submissionState() === \\"error\\" && responseData()}>
-          <pre class=\\"builder-form-error-text pre-2e32b23f\\">
+          <pre class=\\"builder-form-error-text pre-78552c52\\">
             {JSON.stringify(responseData(), null, 2)}
           </pre>
         </Show>
@@ -6672,7 +6814,7 @@ function FormComponent(props) {
         </Show>
       </form>
       <style jsx>{\`
-        .pre-2e32b23f {
+        .pre-78552c52 {
           padding: 10px;
           color: red;
           text-align: center;
@@ -6934,11 +7076,11 @@ exports[`Solid Typescript Test Img 1`] = `
 function ImgComponent(props) {
   return (
     <img
-      {...props.attributes}
       style={{
         \\"object-fit\\": props.backgroundSize || \\"cover\\",
         \\"object-position\\": props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -6959,11 +7101,11 @@ function ImgComponent(props) {
   return (
     <>
       <img
-        {...props.attributes}
         style={{
           \\"object-fit\\": props.backgroundSize || \\"cover\\",
           \\"object-position\\": props.backgroundPosition || \\"center\\",
         }}
+        {...props.attributes}
         key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
         alt={props.altText}
         src={props.imgSrc}
@@ -7551,7 +7693,7 @@ export default SmileReviews;
 exports[`Solid Typescript Test Submit 1`] = `
 "function SubmitButton(props) {
   return (
-    <button {...props.attributes} type=\\"submit\\">
+    <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
@@ -7567,7 +7709,7 @@ exports[`Solid Typescript Test Submit 2`] = `
 function SubmitButton(props) {
   return (
     <>
-      <button {...props.attributes} type=\\"submit\\">
+      <button type=\\"submit\\" {...props.attributes}>
         {props.text}
       </button>
     </>
@@ -7680,8 +7822,8 @@ exports[`Solid Typescript Test Video 1`] = `
 "function Video(props) {
   return (
     <video
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -7713,8 +7855,8 @@ function Video(props) {
   return (
     <>
       <video
-        {...props.attributes}
         preload=\\"none\\"
+        {...props.attributes}
         style={{
           width: \\"100%\\",
           height: \\"100%\\",
@@ -8066,7 +8208,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -8097,7 +8239,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -8309,6 +8451,42 @@ function MultipleOnUpdateWithDeps(props) {
 }
 
 export default MultipleOnUpdateWithDeps;
+"
+`;
+
+exports[`Solid Typescript Test multipleSpreads 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyBasicComponent(props) {
+  const [attrs, setAttrs] = createSignal({
+    hello: \\"world\\",
+  });
+
+  return <input {...attrs()} {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test multipleSpreads 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  const [attrs, setAttrs] = createSignal({
+    hello: \\"world\\",
+  });
+
+  return (
+    <>
+      <input {...attrs()} {...props} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
 "
 `;
 
@@ -8795,7 +8973,7 @@ function Button(props) {
         </a>
       </Show>
       <Show when={!props.link}>
-        <button {...props.attributes} type=\\"button\\">
+        <button type=\\"button\\" {...props.attributes}>
           {props.text}
         </button>
       </Show>
@@ -8826,7 +9004,7 @@ function Button(props) {
           </a>
         </Show>
         <Show when={!props.link}>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </Show>
@@ -9003,6 +9181,78 @@ export default NestedShow;
 "
 `;
 
+exports[`Solid Typescript Test spreadAttrs 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...attrs} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test spreadAttrs 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...attrs} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test spreadNestedProps 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...props.nested} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test spreadNestedProps 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...props.nested} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test spreadProps 1`] = `
+"function MyBasicComponent(props) {
+  return <input {...props} />;
+}
+
+export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test spreadProps 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyBasicComponent(props) {
+  return (
+    <>
+      <input {...props} />
+    </>
+  );
+}
+
+export default MyBasicComponent;
+"
+`;
+
 exports[`Solid Typescript Test subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.jsx\\";
 
@@ -9126,6 +9376,40 @@ function MyComponent(props) {
         }
 
         button {
+          font-size: 12px;
+          outline: 1px solid black;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Typescript Test use-style-outside-component 1`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return <button type=\\"button\\">Button</button>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Typescript Test use-style-outside-component 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+      <style jsx>{\`
+        button {
+          background: blue;
+          color: white;
           font-size: 12px;
           outline: 1px solid black;
         }

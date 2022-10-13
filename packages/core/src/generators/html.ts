@@ -383,7 +383,7 @@ const blockToHtml = (
     let startInjectVar = '%%START_VARS%%';
 
     for (const key in json.bindings) {
-      if (key === '_spread' || key === 'css') {
+      if (json.bindings[key]?.type === 'spread' || key === 'css') {
         continue;
       }
       const value = json.bindings[key]?.code as string;

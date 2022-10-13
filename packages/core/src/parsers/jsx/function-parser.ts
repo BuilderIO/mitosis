@@ -15,6 +15,10 @@ import { jsxElementToJson } from './element-parser';
 
 const { types } = babel;
 
+export function generateUseStyleCode(expression: babel.types.CallExpression) {
+  return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
+}
+
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
  */
@@ -146,10 +150,7 @@ export const componentFunctionToJson = (
               });
             }
           } else if (expression.callee.name === HOOKS.STYLE) {
-            context.builder.component.style = generate(expression.arguments[0]).code.replace(
-              /(^("|'|`)|("|'|`)$)/g,
-              '',
-            );
+            context.builder.component.style = generateUseStyleCode(expression);
           }
         }
       }

@@ -40,7 +40,7 @@ watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 });
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -324,7 +324,7 @@ const inputNoArgRef = ref(null);
 
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -353,7 +353,7 @@ const holdValueRef = ref(null);
 function handlerClick(event) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>
 "
@@ -387,8 +387,8 @@ const count = ref(0);
 
 const prevCount = ref(null);
 
-watch([count.value], ([count]) => {
-  prevCount = count.value;
+watch([count], ([count]) => {
+  prevCount.value = count;
 });
 </script>
 "
@@ -399,16 +399,16 @@ exports[`Vue Javascript Test Button 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -543,9 +543,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -630,9 +630,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -692,13 +692,13 @@ function _classStringToObject(str) {
 exports[`Vue Javascript Test Form 1`] = `
 "<template>
   <form
-    v-bind=\\"attributes\\"
     :validate=\\"validate\\"
     ref=\\"formRef\\"
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
+    v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
       <template
@@ -881,8 +881,8 @@ function onSubmit(event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -940,8 +940,8 @@ function onSubmit(event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -949,19 +949,19 @@ function onSubmit(event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -979,8 +979,8 @@ function onSubmit(event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -1053,8 +1053,8 @@ onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
+      if (pictureRef.value) {
+        const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -1143,7 +1143,6 @@ const images = ref([\\"http://example.com/qwik.png\\"]);
 exports[`Vue Javascript Test Img 1`] = `
 "<template>
   <img
-    v-bind=\\"attributes\\"
     :style=\\"{
       objectFit: backgroundSize || 'cover',
       objectPosition: backgroundPosition || 'center',
@@ -1151,6 +1150,7 @@ exports[`Vue Javascript Test Img 1`] = `
     :key=\\"(Builder.isEditing && imgSrc) || 'default-key'\\"
     :alt=\\"altText\\"
     :src=\\"imgSrc\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -1171,7 +1171,6 @@ const props = defineProps([
 exports[`Vue Javascript Test Input 1`] = `
 "<template>
   <input
-    v-bind=\\"attributes\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :placeholder=\\"placeholder\\"
     :type=\\"type\\"
@@ -1179,6 +1178,7 @@ exports[`Vue Javascript Test Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -1231,7 +1231,6 @@ function _classStringToObject(str) {
 exports[`Vue Javascript Test Section 1`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     :style=\\"
       maxWidth && typeof maxWidth === 'number'
         ? {
@@ -1239,6 +1238,7 @@ exports[`Vue Javascript Test Section 1`] = `
           }
         : undefined
     \\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -1255,10 +1255,10 @@ exports[`Vue Javascript Test Section 2`] = `
   <template v-if=\\"max\\">
     <template :key=\\"index\\" v-for=\\"(item, index) in items\\">
       <section
-        v-bind=\\"attributes\\"
         :style=\\"{
           maxWidth: item + max,
         }\\"
+        v-bind=\\"attributes\\"
       >
         <slot />
       </section>
@@ -1279,11 +1279,11 @@ const items = ref([42]);
 exports[`Vue Javascript Test Select 1`] = `
 "<template>
   <select
-    v-bind=\\"attributes\\"
     :value=\\"value\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
+    v-bind=\\"attributes\\"
   >
     <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
       <option :value=\\"option.value\\" :data-index=\\"index\\">
@@ -1383,58 +1383,50 @@ exports[`Vue Javascript Test Stamped.io 1`] = `
 </template>
 
 <script setup>
-    import { onMounted, ref } from \\"vue\\"
+import { onMounted, ref } from \\"vue\\";
 
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
+const props = defineProps([\\"apiKey\\", \\"productId\\"]);
+const reviews = ref([]);
+const name = ref(\\"test\\");
+const showReviewPrompt = ref(false);
 
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
-
-
-
-
-    const props = defineProps(['apiKey','productId'])
-const reviews= ref([])
-const name= ref('test')
-const showReviewPrompt= ref(false)
-
-
-
-
-
-
-
-
-onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews.value = data.data;
-})})
-
-
-
-
+onMounted(() => {
+  fetch(
+    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+    }&productId=\${props.productId || \\"2410511106127\\"}\`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      reviews.value = data.data;
+    });
+});
 
 function kebabCaseValue() {
-return kebabCase('testThat');
+  return kebabCase(\\"testThat\\");
 }
 
 function snakeCaseValue() {
-return snakeCase('testThis');
+  return snakeCase(\\"testThis\\");
 }
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name.value of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 
@@ -1467,7 +1459,7 @@ return obj;
 
 exports[`Vue Javascript Test Submit 1`] = `
 "<template>
-  <button v-bind=\\"attributes\\" type=\\"submit\\">
+  <button type=\\"submit\\" v-bind=\\"attributes\\">
     {{ text }}
   </button>
 </template>
@@ -1503,11 +1495,11 @@ const name = ref(\\"Decadef20\\");
 exports[`Vue Javascript Test Textarea 1`] = `
 "<template>
   <textarea
-    v-bind=\\"attributes\\"
     :placeholder=\\"placeholder\\"
     :name=\\"name\\"
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
+    v-bind=\\"attributes\\"
   ></textarea>
 </template>
 
@@ -1526,7 +1518,6 @@ const props = defineProps([
 exports[`Vue Javascript Test Video 1`] = `
 "<template>
   <video
-    v-bind=\\"attributes\\"
     preload=\\"none\\"
     :style=\\"{
       width: '100%',
@@ -1544,6 +1535,7 @@ exports[`Vue Javascript Test Video 1`] = `
     :muted=\\"muted\\"
     :controls=\\"controls\\"
     :loop=\\"loop\\"
+    v-bind=\\"attributes\\"
   ></video>
 </template>
 
@@ -1627,7 +1619,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1772,16 +1764,16 @@ exports[`Vue Javascript Test defaultProps 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -1862,20 +1854,35 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
+  if (a === \\"a\\") {
     a.value = \\"b\\";
   }
 }),
-  watch([c.value, d.value], ([c, d]) => {
+  watch([c, d], ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
   });
+</script>
+"
+`;
+
+exports[`Vue Javascript Test multipleSpreads 1`] = `
+"<template>
+  <input v-bind=\\"{ ...attrs, ...props }\\" />
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const attrs = ref({
+  hello: \\"world\\",
+});
 </script>
 "
 `;
@@ -2010,7 +2017,7 @@ const props = defineProps([\\"size\\"]);
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, props.size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
@@ -2086,16 +2093,16 @@ exports[`Vue Javascript Test rootFragmentMultiNode 1`] = `
 "<template>
   <template v-if=\\"link\\">
     <a
-      v-bind=\\"attributes\\"
       :href=\\"link\\"
       :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      v-bind=\\"attributes\\"
     >
       {{ text }}
     </a>
   </template>
 
   <template v-if=\\"!link\\">
-    <button v-bind=\\"attributes\\" type=\\"button\\">
+    <button type=\\"button\\" v-bind=\\"attributes\\">
       {{ text }}
     </button>
   </template>
@@ -2180,6 +2187,35 @@ const props = defineProps([\\"conditionA\\", \\"items\\"]);
 "
 `;
 
+exports[`Vue Javascript Test spreadAttrs 1`] = `
+"<template>
+  <input v-bind=\\"attrs\\" />
+</template>
+
+<script setup></script>
+"
+`;
+
+exports[`Vue Javascript Test spreadNestedProps 1`] = `
+"<template>
+  <input v-bind=\\"nested\\" />
+</template>
+
+<script setup>
+const props = defineProps([\\"nested\\"]);
+</script>
+"
+`;
+
+exports[`Vue Javascript Test spreadProps 1`] = `
+"<template>
+  <input v-bind=\\"props\\" />
+</template>
+
+<script setup></script>
+"
+`;
+
 exports[`Vue Javascript Test subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -2234,6 +2270,24 @@ exports[`Vue Javascript Test use-style-and-css 1`] = `
 }
 
 button {
+  font-size: 12px;
+  outline: 1px solid black;
+}
+</style>
+"
+`;
+
+exports[`Vue Javascript Test use-style-outside-component 1`] = `
+"<template>
+  <button type=\\"button\\">Button</button>
+</template>
+
+<script setup></script>
+
+<style scoped>
+button {
+  background: blue;
+  color: white;
   font-size: 12px;
   outline: 1px solid black;
 }
@@ -2297,7 +2351,7 @@ watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
 });
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -2596,7 +2650,7 @@ const inputNoArgRef = ref<HTMLLabelElement>();
 
 function onBlur() {
   // Maintain focus
-  inputRef.focus();
+  inputRef.value.focus();
 }
 
 function lowerCaseName() {
@@ -2629,7 +2683,7 @@ const holdValueRef = ref<undefined>();
 function handlerClick(event) {
   event.preventDefault();
   console.log(\\"current value\\", holdValueRef);
-  holdValueRef = holdValueRef + \\"JS\\";
+  holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
 </script>
 "
@@ -2666,8 +2720,8 @@ const count = ref(0);
 
 const prevCount = ref<undefined>();
 
-watch([count.value], ([count]) => {
-  prevCount = count.value;
+watch([count], ([count]) => {
+  prevCount.value = count;
 });
 </script>
 "
@@ -2678,16 +2732,16 @@ exports[`Vue Typescript Test Button 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -2857,9 +2911,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -2948,9 +3002,9 @@ onMounted(() => {
 
 function findAndRunScripts() {
   // TODO: Move this function to standalone one in '@builder.io/utils'
-  if (elem && typeof window !== \\"undefined\\") {
+  if (elem.value && typeof window !== \\"undefined\\") {
     /** @type {HTMLScriptElement[]} */
-    const scripts = elem.getElementsByTagName(\\"script\\");
+    const scripts = elem.value.getElementsByTagName(\\"script\\");
 
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i];
@@ -3010,13 +3064,13 @@ function _classStringToObject(str) {
 exports[`Vue Typescript Test Form 1`] = `
 "<template>
   <form
-    v-bind=\\"attributes\\"
     :validate=\\"validate\\"
     ref=\\"formRef\\"
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
+    v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
       <template
@@ -3203,8 +3257,8 @@ function onSubmit(event) {
       },
     });
 
-    if (formRef) {
-      formRef.dispatchEvent(presubmitEvent);
+    if (formRef.value) {
+      formRef.value.dispatchEvent(presubmitEvent);
 
       if (presubmitEvent.defaultPrevented) {
         return;
@@ -3262,8 +3316,8 @@ function onSubmit(event) {
             },
           });
 
-          if (formRef) {
-            formRef.dispatchEvent(submitSuccessEvent);
+          if (formRef.value) {
+            formRef.value.dispatchEvent(submitSuccessEvent);
 
             if (submitSuccessEvent.defaultPrevented) {
               return;
@@ -3271,19 +3325,19 @@ function onSubmit(event) {
             /* TODO: option to turn this on/off? */
 
             if (props.resetFormOnSubmit !== false) {
-              formRef.reset();
+              formRef.value.reset();
             }
           }
           /* TODO: client side route event first that can be preventDefaulted */
 
           if (props.successUrl) {
-            if (formRef) {
+            if (formRef.value) {
               const event = new CustomEvent(\\"route\\", {
                 detail: {
                   url: props.successUrl,
                 },
               });
-              formRef.dispatchEvent(event);
+              formRef.value.dispatchEvent(event);
 
               if (!event.defaultPrevented) {
                 location.href = props.successUrl;
@@ -3301,8 +3355,8 @@ function onSubmit(event) {
           },
         });
 
-        if (formRef) {
-          formRef.dispatchEvent(submitErrorEvent);
+        if (formRef.value) {
+          formRef.value.dispatchEvent(submitErrorEvent);
 
           if (submitErrorEvent.defaultPrevented) {
             return;
@@ -3385,8 +3439,8 @@ onMounted(() => {
   if (useLazyLoading()) {
     // throttled scroll capture listener
     const listener = () => {
-      if (pictureRef) {
-        const rect = pictureRef.getBoundingClientRect();
+      if (pictureRef.value) {
+        const rect = pictureRef.value.getBoundingClientRect();
         const buffer = window.innerHeight / 2;
 
         if (rect.top < window.innerHeight + buffer) {
@@ -3475,7 +3529,6 @@ const images = ref([\\"http://example.com/qwik.png\\"]);
 exports[`Vue Typescript Test Img 1`] = `
 "<template>
   <img
-    v-bind=\\"attributes\\"
     :style=\\"{
       objectFit: backgroundSize || 'cover',
       objectPosition: backgroundPosition || 'center',
@@ -3483,6 +3536,7 @@ exports[`Vue Typescript Test Img 1`] = `
     :key=\\"(Builder.isEditing && imgSrc) || 'default-key'\\"
     :alt=\\"altText\\"
     :src=\\"imgSrc\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -3514,7 +3568,6 @@ const props = defineProps<ImgProps>();
 exports[`Vue Typescript Test Input 1`] = `
 "<template>
   <input
-    v-bind=\\"attributes\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :placeholder=\\"placeholder\\"
     :type=\\"type\\"
@@ -3522,6 +3575,7 @@ exports[`Vue Typescript Test Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -3581,7 +3635,6 @@ function _classStringToObject(str) {
 exports[`Vue Typescript Test Section 1`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     :style=\\"
       maxWidth && typeof maxWidth === 'number'
         ? {
@@ -3589,6 +3642,7 @@ exports[`Vue Typescript Test Section 1`] = `
           }
         : undefined
     \\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -3611,10 +3665,10 @@ exports[`Vue Typescript Test Section 2`] = `
   <template v-if=\\"max\\">
     <template :key=\\"index\\" v-for=\\"(item, index) in items\\">
       <section
-        v-bind=\\"attributes\\"
         :style=\\"{
           maxWidth: item + max,
         }\\"
+        v-bind=\\"attributes\\"
       >
         <slot />
       </section>
@@ -3640,11 +3694,11 @@ const items = ref([42]);
 exports[`Vue Typescript Test Select 1`] = `
 "<template>
   <select
-    v-bind=\\"attributes\\"
     :value=\\"value\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
+    v-bind=\\"attributes\\"
   >
     <template :key=\\"index\\" v-for=\\"(option, index) in options\\">
       <option :value=\\"option.value\\" :data-index=\\"index\\">
@@ -3757,61 +3811,54 @@ exports[`Vue Typescript Test Stamped.io 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { onMounted, ref } from \\"vue\\"
-    type SmileReviewsProps = {
-productId: string;
-apiKey: string;
+import { onMounted, ref } from \\"vue\\";
+type SmileReviewsProps = {
+  productId: string;
+  apiKey: string;
 };
 
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
 
-  import { kebabCase } from 'lodash';
-import { snakeCase } from 'lodash';
+const props = defineProps<SmileReviewsProps>();
+const reviews = ref([]);
+const name = ref(\\"test\\");
+const showReviewPrompt = ref(false);
 
-
-
-
-    const props = defineProps<SmileReviewsProps>()
-const reviews= ref([])
-const name= ref('test')
-const showReviewPrompt= ref(false)
-
-
-
-
-
-
-
-
-onMounted(() => { fetch(\`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${props.apiKey || 'pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM'}&productId=\${props.productId || '2410511106127'}\`).then(res => res.json()).then(data => {
-reviews.value = data.data;
-})})
-
-
-
-
+onMounted(() => {
+  fetch(
+    \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+      props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+    }&productId=\${props.productId || \\"2410511106127\\"}\`
+  )
+    .then((res) => res.json())
+    .then((data) => {
+      reviews.value = data.data;
+    });
+});
 
 function kebabCaseValue() {
-return kebabCase('testThat');
+  return kebabCase(\\"testThat\\");
 }
 
 function snakeCaseValue() {
-return snakeCase('testThis');
+  return snakeCase(\\"testThis\\");
 }
 
 function _classStringToObject(str) {
-const obj = {};
+  const obj = {};
 
-if (typeof str !== 'string') {
-return obj;
-}
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
 
-const classNames = str.trim().split(/\\\\s+/);
+  const classNames = str.trim().split(/\\\\s+/);
 
-for (const name.value of classNames) {
-obj[name] = true;
-}
+  for (const name of classNames) {
+    obj[name] = true;
+  }
 
-return obj;
+  return obj;
 }
 </script>
 
@@ -3844,7 +3891,7 @@ return obj;
 
 exports[`Vue Typescript Test Submit 1`] = `
 "<template>
-  <button v-bind=\\"attributes\\" type=\\"submit\\">
+  <button type=\\"submit\\" v-bind=\\"attributes\\">
     {{ text }}
   </button>
 </template>
@@ -3892,11 +3939,11 @@ const name = ref(\\"Decadef20\\");
 exports[`Vue Typescript Test Textarea 1`] = `
 "<template>
   <textarea
-    v-bind=\\"attributes\\"
     :placeholder=\\"placeholder\\"
     :name=\\"name\\"
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
+    v-bind=\\"attributes\\"
   ></textarea>
 </template>
 
@@ -3917,7 +3964,6 @@ const props = defineProps<TextareaProps>();
 exports[`Vue Typescript Test Video 1`] = `
 "<template>
   <video
-    v-bind=\\"attributes\\"
     preload=\\"none\\"
     :style=\\"{
       width: '100%',
@@ -3935,6 +3981,7 @@ exports[`Vue Typescript Test Video 1`] = `
     :muted=\\"muted\\"
     :controls=\\"controls\\"
     :loop=\\"loop\\"
+    v-bind=\\"attributes\\"
   ></video>
 </template>
 
@@ -4042,7 +4089,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -4191,16 +4238,16 @@ exports[`Vue Typescript Test defaultProps 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4299,20 +4346,35 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
+  if (a === \\"a\\") {
     a.value = \\"b\\";
   }
 }),
-  watch([c.value, d.value], ([c, d]) => {
+  watch([c, d], ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
   });
+</script>
+"
+`;
+
+exports[`Vue Typescript Test multipleSpreads 1`] = `
+"<template>
+  <input v-bind=\\"{ ...attrs, ...props }\\" />
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const attrs = ref({
+  hello: \\"world\\",
+});
 </script>
 "
 `;
@@ -4458,7 +4520,7 @@ const props = defineProps<Props>();
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, props.size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
@@ -4571,16 +4633,16 @@ exports[`Vue Typescript Test rootFragmentMultiNode 1`] = `
 "<template>
   <template v-if=\\"link\\">
     <a
-      v-bind=\\"attributes\\"
       :href=\\"link\\"
       :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+      v-bind=\\"attributes\\"
     >
       {{ text }}
     </a>
   </template>
 
   <template v-if=\\"!link\\">
-    <button v-bind=\\"attributes\\" type=\\"button\\">
+    <button type=\\"button\\" v-bind=\\"attributes\\">
       {{ text }}
     </button>
   </template>
@@ -4681,6 +4743,35 @@ const props = defineProps<Props>();
 "
 `;
 
+exports[`Vue Typescript Test spreadAttrs 1`] = `
+"<template>
+  <input v-bind=\\"attrs\\" />
+</template>
+
+<script setup lang=\\"ts\\"></script>
+"
+`;
+
+exports[`Vue Typescript Test spreadNestedProps 1`] = `
+"<template>
+  <input v-bind=\\"nested\\" />
+</template>
+
+<script setup lang=\\"ts\\">
+const props = defineProps([\\"nested\\"]);
+</script>
+"
+`;
+
+exports[`Vue Typescript Test spreadProps 1`] = `
+"<template>
+  <input v-bind=\\"props\\" />
+</template>
+
+<script setup lang=\\"ts\\"></script>
+"
+`;
+
 exports[`Vue Typescript Test subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -4742,6 +4833,24 @@ exports[`Vue Typescript Test use-style-and-css 1`] = `
 }
 
 button {
+  font-size: 12px;
+  outline: 1px solid black;
+}
+</style>
+"
+`;
+
+exports[`Vue Typescript Test use-style-outside-component 1`] = `
+"<template>
+  <button type=\\"button\\">Button</button>
+</template>
+
+<script setup lang=\\"ts\\"></script>
+
+<style scoped>
+button {
+  background: blue;
+  color: white;
   font-size: 12px;
   outline: 1px solid black;
 }

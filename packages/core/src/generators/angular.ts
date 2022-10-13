@@ -161,7 +161,7 @@ export const blockToAngular = (
       str += ` ${key}="${value}" `;
     }
     for (const key in json.bindings) {
-      if (key === '_spread') {
+      if (json.bindings[key]?.type === 'spread') {
         continue;
       }
       if (key.startsWith('$')) {

@@ -39,6 +39,7 @@ const className = getRawFile('./data/styles/className.raw');
 const classAndClassName = getRawFile('./data/styles/class-and-className.raw');
 const classState = getRawFile('./data/styles/classState.raw');
 const useStyle = getRawFile('./data/styles/use-style.raw');
+const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw');
 const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw');
 
 const button = getRawFile('./data/blocks/button.raw');
@@ -74,6 +75,11 @@ const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw');
 const text = getRawFile('./data/blocks/text.raw');
 const textarea = getRawFile('./data/blocks/textarea.raw');
 const video = getRawFile('./data/blocks/video.raw');
+
+const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw');
+const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw');
+const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw');
+const spreadProps = getRawFile('./data/spread/spread-props.raw');
 
 const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
 
@@ -133,9 +139,14 @@ const BASIC_TESTS: Tests = {
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
+  'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
   rootFragmentMultiNode,
+  multipleSpreads,
+  spreadAttrs,
+  spreadNestedProps,
+  spreadProps,
 };
 
 const SLOTS_TESTS: Tests = {
