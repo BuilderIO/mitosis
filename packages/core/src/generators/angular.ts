@@ -30,6 +30,17 @@ import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 
+// double quotes and backticks are invalid in an angular component prop binding's value (not the evaluated value of a variable, just the raw value in the template)
+function escapeComponentPropValue(str: string): string {
+  let newString = str;
+
+  ["'", '"', '`'].forEach((char) => {
+    newString = newString.replaceAll(char, `\\'`);
+  });
+
+  return newString;
+}
+
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
@@ -133,11 +144,13 @@ export const blockToAngular = (
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
-      contextVars,
-      outputVars,
-      domRefs,
-    })}">`;
+    str += `<ng-container *ngIf="${escapeComponentPropValue(
+      stripStateAndPropsRefs(json.bindings.when?.code, {
+        contextVars,
+        outputVars,
+        domRefs,
+      }),
+    )}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
@@ -453,7 +466,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !hasOnMount
           ? ''
           : `ngOnInit() {
-              
+
               ${
                 !json.hooks?.onMount
                   ? ''
