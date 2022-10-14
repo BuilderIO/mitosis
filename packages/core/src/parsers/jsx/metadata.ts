@@ -1,7 +1,7 @@
 import * as babel from '@babel/core';
 import { HOOKS } from '../../constants/hooks';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { generateUseStyleCode } from './function-parser';
+import { generateUseStyleCode, parseDefaultPropsHook } from './function-parser';
 import { parseCodeJson } from './helpers';
 import { ParseMitosisOptions } from './types';
 
@@ -52,6 +52,8 @@ export const collectMetadata = (
       } else if (hook.callee.name === HOOKS.STYLE) {
         component.style = generateUseStyleCode(hook);
         return false;
+      } else if (hook.callee.name === HOOKS.DEFAULT_PROPS) {
+        parseDefaultPropsHook(component, hook);
       }
     }
 
