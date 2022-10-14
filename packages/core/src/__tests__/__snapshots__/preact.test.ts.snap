@@ -1923,6 +1923,51 @@ Button.defaultProps = {
 "
 `;
 
+exports[`Preact Javascript Test defaultPropsOutsideComponent 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <div>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
 exports[`Preact Javascript Test defaultValsWithTypes 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4490,6 +4535,51 @@ export default function MyBasicComponent(props: any) {
 `;
 
 exports[`Preact Typescript Test defaultProps 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <div>
+      {props.link ? (
+        <Fragment>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </Fragment>
+      ) : null}
+
+      {!props.link ? (
+        <Fragment>
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </Fragment>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`Preact Typescript Test defaultPropsOutsideComponent 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
 
