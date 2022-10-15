@@ -40,7 +40,7 @@ const rule: Rule.RuleModule = {
         context.report({
           node,
           message:
-            '<Show> is preferred over ternary expression as its guaranteed to work across all generators',
+            'Ternary expression support is minimal. Please use the Mitosis `<Show>` component instead.',
         });
       },
     };
