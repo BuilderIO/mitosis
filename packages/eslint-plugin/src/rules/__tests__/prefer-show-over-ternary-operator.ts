@@ -16,7 +16,7 @@ var ruleTester = new RuleTester({
   parser: require.resolve('@typescript-eslint/parser'),
 });
 
-ruleTester.run('only-default-function-and-imports', rule, {
+ruleTester.run('prefer-show-over-ternary-operator', rule, {
   valid: [
     {
       ...opts,
@@ -34,6 +34,24 @@ ruleTester.run('only-default-function-and-imports', rule, {
         );
       }
     `,
+    },
+    {
+      ...opts,
+      code: `export default function MyComponent(props) {
+      const state = useState({ 
+        getName() {
+          props.a ? 'a' : 'b'
+        } 
+      })
+      return <div />;
+    }`,
+    },
+    {
+      ...opts,
+      code: `
+      export default function MyComponent(props) {
+        return <div> <input value={props.a ? 'a' : 'b'} /> </div>;
+      }`,
     },
     {
       ...opts,

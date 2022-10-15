@@ -1,4 +1,4 @@
-# only-default-function-and-imports (only-default-function-and-imports)
+# prefer-show-over-ternary-operator (prefer-show-over-ternary-operator)
 
 This rule warns about a Mitosis limitation.
 
@@ -30,4 +30,19 @@ export default function MyComponent(props) {
     </div>
   );
 }
+```
+
+```js
+  export default function MyComponent(props) {
+    return <div> <input value={props.a ? 'a' : 'b'} /> </div>;
+```
+
+```js
+export default function MyComponent(props) {
+      const state = useState({
+        getName() {
+          props.a ? 'a' : 'b'
+        }
+      })
+return <div />;
 ```

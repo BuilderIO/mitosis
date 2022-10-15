@@ -1,3 +1,4 @@
+import { types } from '@babel/core';
 import { Rule } from 'eslint';
 import isMitosisPath from '../helpers/isMitosisPath';
 
@@ -32,6 +33,10 @@ const rule: Rule.RuleModule = {
     //
     const listener: Rule.RuleListener = {
       ConditionalExpression(node) {
+        if (types.isJSXAttribute(node.parent.parent) && types.isJSXExpressionContainer(node.parent))
+          return;
+        if (types.isExpressionStatement(node.parent)) return;
+
         context.report({
           node,
           message:
