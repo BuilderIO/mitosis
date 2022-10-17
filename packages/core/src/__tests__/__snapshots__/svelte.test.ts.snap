@@ -1513,6 +1513,34 @@ exports[`Svelte Javascript Test defaultProps 1`] = `
 "
 `;
 
+exports[`Svelte Javascript Test defaultPropsOutsideComponent 1`] = `
+"<script>
+  export let link = \\"https://builder.io/\\";
+  export let attributes;
+  export let openLinkInNewTab = false;
+  export let text = \\"default text\\";
+</script>
+
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
+
+  {#if !link}
+    <button type=\\"button\\" {...attributes}>
+      {text}
+    </button>
+  {/if}
+</div>
+"
+`;
+
 exports[`Svelte Javascript Test defaultValsWithTypes 1`] = `
 "<script>
   const DEFAULT_VALUES: Props = {
@@ -3746,6 +3774,43 @@ exports[`Svelte Typescript Test className 1`] = `
 `;
 
 exports[`Svelte Typescript Test defaultProps 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ButtonProps {
+    attributes?: any;
+    text?: string;
+    link?: string;
+    openLinkInNewTab?: boolean;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  export let link: ButtonProps[\\"link\\"] = \\"https://builder.io/\\";
+  export let attributes: ButtonProps[\\"attributes\\"];
+  export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
+  export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+</script>
+
+<div>
+  {#if link}
+    <a
+      {...attributes}
+      href={link}
+      target={openLinkInNewTab ? \\"_blank\\" : undefined}
+    >
+      {text}
+    </a>
+  {/if}
+
+  {#if !link}
+    <button type=\\"button\\" {...attributes}>
+      {text}
+    </button>
+  {/if}
+</div>
+"
+`;
+
+exports[`Svelte Typescript Test defaultPropsOutsideComponent 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface ButtonProps {
     attributes?: any;
