@@ -33,6 +33,9 @@ const preserveTyping = getRawFile('./data/types/preserve-typing.raw');
 const typeDependency = getRawFile('./data/types/type-dependency.raw');
 
 const defaultProps = getRawFile('./data/default-props/default-props.raw');
+const defaultPropsOutsideComponent = getRawFile(
+  './data/default-props/default-props-outside-component.raw',
+);
 
 const classRaw = getRawFile('./data/styles/class.raw');
 const className = getRawFile('./data/styles/className.raw');
@@ -119,6 +122,7 @@ const BASIC_TESTS: Tests = {
   propsType: propsType,
   propsInterface: propsInterface,
   defaultProps: defaultProps,
+  defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
   defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw'),

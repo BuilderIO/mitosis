@@ -2060,6 +2060,47 @@ export default class Button {
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions Javascript Test defaultPropsOutsideComponent 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions Javascript Test defaultValsWithTypes 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -4804,6 +4845,47 @@ export default class MyBasicComponent {
 `;
 
 exports[`Angular with Preserve Imports and File Extensions Typescript Test defaultProps 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Typescript Test defaultPropsOutsideComponent 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {

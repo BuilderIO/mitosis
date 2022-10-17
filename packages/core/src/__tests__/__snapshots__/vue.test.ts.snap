@@ -1919,6 +1919,42 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test defaultPropsOutsideComponent 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"button\\",
+
+  props: {
+    link: { default: \\"https://builder.io/\\" },
+    attributes: {},
+    openLinkInNewTab: { default: false },
+    text: { default: \\"default text\\" },
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue Javascript Test defaultValsWithTypes 1`] = `
 "<template>
   <div>Hello {{ name || DEFAULT_VALUES.name }}</div>
@@ -4664,6 +4700,49 @@ export default {
 `;
 
 exports[`Vue Typescript Test defaultProps 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default {
+  name: \\"button\\",
+
+  props: {
+    link: { default: \\"https://builder.io/\\" },
+    attributes: {},
+    openLinkInNewTab: { default: false },
+    text: { default: \\"default text\\" },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test defaultPropsOutsideComponent 1`] = `
 "<template>
   <div>
     <template v-if=\\"link\\">

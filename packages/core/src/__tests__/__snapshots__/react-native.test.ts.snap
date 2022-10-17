@@ -1833,6 +1833,51 @@ Button.defaultProps = {
 "
 `;
 
+exports[`React Native Javascript Test defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
 exports[`React Native Javascript Test defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -4302,6 +4347,51 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 `;
 
 exports[`React Native Typescript Test defaultProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React Native Typescript Test defaultPropsOutsideComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
