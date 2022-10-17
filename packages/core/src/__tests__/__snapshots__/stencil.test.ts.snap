@@ -1895,6 +1895,47 @@ export default class Button {
 "
 `;
 
+exports[`Stencil Javascript Test defaultPropsOutsideComponent 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() link: any;
+  @Prop() attributes: any;
+  @Prop() openLinkInNewTab: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <div>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
+
+        {!this.link ? (
+          <>
+            <button type=\\"button\\" {...props.attributes}>
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil Javascript Test defaultValsWithTypes 1`] = `
 "const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
@@ -4331,6 +4372,47 @@ export default class MyBasicComponent {
 `;
 
 exports[`Stencil Typescript Test defaultProps 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"button\\",
+})
+export default class Button {
+  @Prop() link: any;
+  @Prop() attributes: any;
+  @Prop() openLinkInNewTab: any;
+  @Prop() text: any;
+
+  render() {
+    return (
+      <div>
+        {this.link ? (
+          <>
+            <a
+              {...props.attributes}
+              href={this.link}
+              target={this.openLinkInNewTab ? \\"_blank\\" : undefined}
+            >
+              {this.text}
+            </a>
+          </>
+        ) : null}
+
+        {!this.link ? (
+          <>
+            <button type=\\"button\\" {...props.attributes}>
+              {this.text}
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil Typescript Test defaultPropsOutsideComponent 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
 @Component({
