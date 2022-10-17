@@ -397,7 +397,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -900,11 +900,11 @@ export default function FormComponent(props: FormProps) {
     <>
       {\\" \\"}
       <form
-        {...props.attributes}
         validate={props.validate}
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
+        {...props.attributes}
       >
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
@@ -939,7 +939,7 @@ export default function FormComponent(props: FormProps) {
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-6d0b0b40\\">
+            <pre className=\\"builder-form-error-text pre-5263aeff\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -955,7 +955,7 @@ export default function FormComponent(props: FormProps) {
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-6d0b0b40 {  padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-5263aeff {  padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -1091,11 +1091,11 @@ export default function ImgComponent(props: ImgProps) {
 
   return (
     <img
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -1371,7 +1371,7 @@ export default function SubmitButton(props: ButtonProps) {
   const _context = { ...props[\\"_context\\"] };
 
   return (
-    <button {...props.attributes} type=\\"submit\\">
+    <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
@@ -1477,8 +1477,8 @@ export default function Video(props: VideoProps) {
 
   return (
     <video
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -1708,7 +1708,53 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`RSC Javascript Test defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <div>
+      {props.link ? (
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -1802,6 +1848,19 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   const state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
 
   return <div />;
+}
+"
+`;
+
+exports[`RSC Javascript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { attrs: { hello: \\"world\\" } };
+
+  return <input {...state.attrs} {...props} />;
 }
 "
 `;
@@ -2097,7 +2156,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -2207,6 +2266,39 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`RSC Javascript Test spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...attrs} />;
+}
+"
+`;
+
+exports[`RSC Javascript Test spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...props.nested} />;
+}
+"
+`;
+
+exports[`RSC Javascript Test spreadProps 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...props} />;
+}
+"
+`;
+
 exports[`RSC Javascript Test subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -2280,6 +2372,30 @@ color: white; }
           outline: 1px solid black;
       }
   \`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`RSC Javascript Test use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+      <style>{\`
+
+button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+}
+\`}</style>
     </>
   );
 }
@@ -2701,7 +2817,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -3204,11 +3320,11 @@ export default function FormComponent(props: FormProps) {
     <>
       {\\" \\"}
       <form
-        {...props.attributes}
         validate={props.validate}
         action={!props.sendWithJs && props.action}
         method={props.method}
         name={props.name}
+        {...props.attributes}
       >
         {\\" \\"}
         {props.builderBlock && props.builderBlock.children ? (
@@ -3243,7 +3359,7 @@ export default function FormComponent(props: FormProps) {
         ) : null}{\\" \\"}
         {state.submissionState === \\"error\\" && state.responseData ? (
           <>
-            <pre className=\\"builder-form-error-text pre-48ee83d7\\">
+            <pre className=\\"builder-form-error-text pre-17c113a6\\">
               {\\" \\"}
               {JSON.stringify(state.responseData, null, 2)}{\\" \\"}
             </pre>
@@ -3259,7 +3375,7 @@ export default function FormComponent(props: FormProps) {
           </>
         ) : null}{\\" \\"}
       </form>{\\" \\"}
-      <style>{\`.pre-48ee83d7 {  padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
+      <style>{\`.pre-17c113a6 {  padding: 10px; color: red; text-align: center; }\`}</style>{\\" \\"}
     </>
   );
 }
@@ -3395,11 +3511,11 @@ export default function ImgComponent(props: ImgProps) {
 
   return (
     <img
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -3675,7 +3791,7 @@ export default function SubmitButton(props: ButtonProps) {
   const _context = { ...props[\\"_context\\"] };
 
   return (
-    <button {...props.attributes} type=\\"submit\\">
+    <button type=\\"submit\\" {...props.attributes}>
       {props.text}
     </button>
   );
@@ -3781,8 +3897,8 @@ export default function Video(props: VideoProps) {
 
   return (
     <video
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -4012,7 +4128,53 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
+            {props.text}
+          </button>
+        </>
+      ) : null}
+    </div>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`RSC Typescript Test defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <div>
+      {props.link ? (
+        <>
+          <a
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            {props.text}
+          </a>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -4107,6 +4269,19 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   const state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
 
   return <div />;
+}
+"
+`;
+
+exports[`RSC Typescript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { attrs: { hello: \\"world\\" } };
+
+  return <input {...state.attrs} {...props} />;
 }
 "
 `;
@@ -4402,7 +4577,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <button {...props.attributes} type=\\"button\\">
+          <button type=\\"button\\" {...props.attributes}>
             {props.text}
           </button>
         </>
@@ -4512,6 +4687,39 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`RSC Typescript Test spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...attrs} />;
+}
+"
+`;
+
+exports[`RSC Typescript Test spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...props.nested} />;
+}
+"
+`;
+
+exports[`RSC Typescript Test spreadProps 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input {...props} />;
+}
+"
+`;
+
 exports[`RSC Typescript Test subComponent 1`] = `
 "import * as React from \\"react\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -4585,6 +4793,30 @@ color: white; }
           outline: 1px solid black;
       }
   \`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`RSC Typescript Test use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <button type=\\"button\\">Button</button>
+      <style>{\`
+
+button {
+    background: blue;
+    color: white;
+    font-size: 12px;
+    outline: 1px solid black;
+}
+\`}</style>
     </>
   );
 }
