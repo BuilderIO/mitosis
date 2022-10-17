@@ -28,7 +28,6 @@ export function parseDefaultPropsHook(
   if (types.isObjectExpression(firstArg)) {
     const objectProperties = firstArg.properties?.filter((i) => types.isObjectProperty(i));
     objectProperties?.forEach((i: any) => {
-      console.log({ i });
       if (i.key?.name) {
         component.defaultProps = {
           ...(component.defaultProps ?? {}),
