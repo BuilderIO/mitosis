@@ -110,8 +110,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
             case 'hooks':
               return (code) => appendValueToRefs(code, component, options);
             case 'bindings':
-            case 'hooks-deps':
               return (c) => stripStateAndPropsRefs(c);
+            case 'hooks-deps':
+              return (c) => stripStateAndPropsRefs(c, { includeProps: false });
             case 'properties':
               return (c) => c;
           }
