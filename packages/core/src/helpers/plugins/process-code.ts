@@ -29,11 +29,8 @@ const preProcessBlockCode = ({
   const bindingsProcessor = codeProcessor('bindings');
   for (const key in json.bindings) {
     const value = json.bindings[key];
-    if (value?.code && value.type !== 'spread') {
-      json.bindings[key] = {
-        arguments: value.arguments,
-        code: bindingsProcessor(value.code),
-      };
+    if (value?.code) {
+      value.code = bindingsProcessor(value.code);
     }
   }
 };
