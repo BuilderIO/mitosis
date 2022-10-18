@@ -147,8 +147,9 @@ const parseTypescript = (code: string, options: AngularToMitosisOptions) => {
   const ast = getTsAST(code);
   for (const statement of ast.statements) {
     if (ts.isClassDeclaration(statement)) {
-      if (statement.decorators) {
-        for (const decorator of statement.decorators) {
+      const decorators = ts.canHaveDecorators(statement) ? ts.getDecorators(statement) : undefined;
+      if (decorators) {
+        for (const decorator of decorators) {
           // TODO: proper reference tracing
           if (ts.isCallExpression(decorator.expression))
             if (

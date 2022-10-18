@@ -3,11 +3,11 @@ import json5 from 'json5';
 import { pickBy } from 'lodash';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { types } from '@babel/core';
 import { processBinding } from './helpers';
 import { ToVueOptions } from './types';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 const getCompositionPropDefinition = ({
   options,
@@ -73,7 +73,11 @@ function shouldAppendValueToRef(path: babel.NodePath<babel.types.Identifier>) {
   return true;
 }
 
-function appendValueToRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
+export function appendValueToRefs(
+  input: string,
+  component: MitosisComponent,
+  options: ToVueOptions,
+) {
   const refKeys = Object.keys(component.refs);
   const stateKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
   const allKeys = [...refKeys, ...stateKeys];
@@ -153,59 +157,37 @@ export function generateCompositionApiScript(
         }
       })
       .join('\n')}
-    ${appendValueToRefs(component.hooks.onInit?.code ?? '', component, options)}
-    ${
-      !component.hooks.onMount?.code
-        ? ''
-        : `onMounted(() => { ${appendValueToRefs(
-            component.hooks.onMount.code,
-            component,
-            options,
-          )}})`
-    }
+    ${component.hooks.onInit?.code ?? ''}
+    ${!component.hooks.onMount?.code ? '' : `onMounted(() => { ${component.hooks.onMount.code}})`}
     ${
       !component.hooks.onUnMount?.code
         ? ''
-        : `onMounted(() => { ${appendValueToRefs(
-            component.hooks.onUnMount.code,
-            component,
-            options,
-          )}})`
+        : `onMounted(() => { ${component.hooks.onUnMount.code}})`
     }
     ${
-      !getterKeys
-        ? ''
-        : getterKeys
-            .map((key) => {
-              const code = component.state[key]?.code?.toString();
-              return !code
-                ? ''
-                : `const ${key} = computed(${appendValueToRefs(
-                    code.replace(key, '').replace('get ()', '() =>'),
-                    component,
-                    options,
-                  )})`;
-            })
-            .join('\n')
-    }
-    ${
-      !onUpdateWithoutDeps?.length
-        ? ''
-        : onUpdateWithoutDeps.map((hook) => {
-            return `onUpdated(() => ${appendValueToRefs(hook.code, component, options)})`;
-          })
+      getterKeys
+        ?.map((key) => {
+          const code = component.state[key]?.code?.toString();
+          return !code
+            ? ''
+            : `const ${key} = computed(${appendValueToRefs(
+                code.replace(key, '').replace('get ()', '() =>'),
+                component,
+                options,
+              )})`;
+        })
+        .join('\n') || ''
     }
 
+    ${onUpdateWithoutDeps?.map((hook) => `onUpdated(() => ${hook.code})`).join('\n') || ''}
+
     ${
-      !onUpdateWithDeps?.length
-        ? ''
-        : onUpdateWithDeps.map((hook) => {
-            return appendValueToRefs(
-              `watch(${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code}})\n`,
-              component,
-              options,
-            );
-          })
+      onUpdateWithDeps
+        ?.map(
+          (hook) =>
+            `watch(${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
+        )
+        .join('\n') || ''
     }
     ${methods?.length ? appendValueToRefs(methods, component, options) : ''}
   `;

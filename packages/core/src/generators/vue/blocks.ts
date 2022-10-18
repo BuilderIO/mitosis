@@ -6,7 +6,6 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
 import {
@@ -47,9 +46,7 @@ const NODE_MAPPERS: {
   For(_json, options) {
     const json = _json as ForNode;
     const keyValue = json.bindings.key || { code: 'index' };
-    const forValue = `(${json.scope.forName}, index) in ${stripStateAndPropsRefs(
-      json.bindings.each?.code,
-    )}`;
+    const forValue = `(${json.scope.forName}, index) in ${json.bindings.each?.code}`;
 
     if (options.vueVersion >= 3) {
       // TODO: tmk key goes on different element (parent vs child) based on Vue 2 vs Vue 3
@@ -79,7 +76,7 @@ const NODE_MAPPERS: {
   },
   Show(json, options, scope) {
     const ifValue = replaceSlotsInString(
-      stripStateAndPropsRefs(json.bindings.when?.code),
+      json.bindings.when?.code || '',
       (slotName) => `$slots.${slotName}`,
     );
 
@@ -147,7 +144,7 @@ const NODE_MAPPERS: {
             const innerBlock = child.children.filter(filterEmptyTextNodes)[0];
 
             if (!isLast) {
-              const childIfValue = pipe(child.bindings.when?.code, stripStateAndPropsRefs);
+              const childIfValue = child.bindings.when?.code;
               const elseIfString = pipe(
                 innerBlock,
                 addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
@@ -209,11 +206,7 @@ const NODE_MAPPERS: {
             (block) => blockToVue(block, options),
           );
 
-          const childIfValue = pipe(
-            firstChild.bindings.when?.code,
-            stripStateAndPropsRefs,
-            invertBooleanExpression,
-          );
+          const childIfValue = pipe(firstChild.bindings.when?.code || '', invertBooleanExpression);
           const elseIfString = pipe(
             childElseBlock,
             addPropertiesToJson({ [SPECIAL_PROPERTIES.V_ELSE_IF]: childIfValue }),
@@ -273,9 +266,8 @@ const NODE_MAPPERS: {
         </template>
       `;
     }
-    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
 
-    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
+    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
       ?.map((item) => blockToVue(item, options))
       .join('\n')}</slot>`;
   },
@@ -287,14 +279,12 @@ const stringifyBinding =
     if (node.bindings[key]?.type === 'spread') {
       return ''; // we handle this after
     } else if (key === 'class') {
-      return ` :class="_classStringToObject(${stripStateAndPropsRefs(value?.code, {
-        replaceWith: '',
-      })})" `;
+      return ` :class="_classStringToObject(${value?.code})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
       // https://vuejs.org/v2/guide/class-and-style.html
     } else {
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value?.code);
+      const useValue = value?.code || '';
 
       if (key.startsWith('on')) {
         const { arguments: cusArgs = ['event'] } = value!;
@@ -349,11 +339,10 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   const textCode = node.bindings._text?.code;
   if (textCode) {
-    const strippedTextCode = stripStateAndPropsRefs(textCode);
-    if (isSlotProperty(strippedTextCode)) {
-      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode)) {
+      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
     }
-    return `{{${strippedTextCode}}}`;
+    return `{{${textCode}}}`;
   }
 
   let str = '';
@@ -392,9 +381,9 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
   if (spreads?.length) {
     if (spreads.length > 1) {
       let spreadsString = `{...${spreads.join(', ...')}}`;
-      str += ` v-bind="${encodeQuotes(stripStateAndPropsRefs(spreadsString))}"`;
+      str += ` v-bind="${encodeQuotes(spreadsString)}"`;
     } else {
-      str += ` v-bind="${encodeQuotes(stripStateAndPropsRefs(spreads.join('')))}"`;
+      str += ` v-bind="${encodeQuotes(spreads.join(''))}"`;
     }
   }
 

@@ -388,7 +388,7 @@ const count = ref(0);
 const prevCount = ref(null);
 
 watch([count], ([count]) => {
-  prevCount.value = count;
+  prevCount.value = count.value;
 });
 </script>
 "
@@ -1866,8 +1866,8 @@ exports[`Vue Javascript Test multipleOnUpdate 1`] = `
 <script setup>
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\")),
-  onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
+onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
+onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
 </script>
 "
 `;
@@ -1888,17 +1888,17 @@ const d = ref(\\"d\\");
 watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a === \\"a\\") {
+  if (a.value === \\"a\\") {
     a.value = \\"b\\";
   }
-}),
-  watch([c, d], ([c, d]) => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+});
+watch([c, d], ([c, d]) => {
+  console.log(\\"Runs when c or d changes\\", c, d);
 
-    if (a.value === \\"a\\") {
-      a.value = \\"b\\";
-    }
-  });
+  if (a.value === \\"a\\") {
+    a.value = \\"b\\";
+  }
+});
 </script>
 "
 `;
@@ -2752,7 +2752,7 @@ const count = ref(0);
 const prevCount = ref<undefined>();
 
 watch([count], ([count]) => {
-  prevCount.value = count;
+  prevCount.value = count.value;
 });
 </script>
 "
@@ -4396,8 +4396,8 @@ exports[`Vue Typescript Test multipleOnUpdate 1`] = `
 <script setup lang=\\"ts\\">
 import { onUpdated } from \\"vue\\";
 
-onUpdated(() => console.log(\\"Runs on every update/rerender\\")),
-  onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
+onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
+onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
 </script>
 "
 `;
@@ -4418,17 +4418,17 @@ const d = ref(\\"d\\");
 watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a === \\"a\\") {
+  if (a.value === \\"a\\") {
     a.value = \\"b\\";
   }
-}),
-  watch([c, d], ([c, d]) => {
-    console.log(\\"Runs when c or d changes\\", c, d);
+});
+watch([c, d], ([c, d]) => {
+  console.log(\\"Runs when c or d changes\\", c, d);
 
-    if (a.value === \\"a\\") {
-      a.value = \\"b\\";
-    }
-  });
+  if (a.value === \\"a\\") {
+    a.value = \\"b\\";
+  }
+});
 </script>
 "
 `;

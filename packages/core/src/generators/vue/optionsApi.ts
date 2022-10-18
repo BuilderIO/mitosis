@@ -218,23 +218,21 @@ export function generateOptionsApiScript(
         ${
           component.hooks.onInit?.code
             ? `created() {
-                ${processBinding({ code: component.hooks.onInit.code, options, json: component })}
+                ${component.hooks.onInit.code}
               },`
             : ''
         }
         ${
           component.hooks.onMount?.code
             ? `mounted() {
-                ${processBinding({ code: component.hooks.onMount.code, options, json: component })}
+                ${component.hooks.onMount.code}
               },`
             : ''
         }
         ${
           onUpdateWithoutDeps.length
             ? `updated() {
-            ${onUpdateWithoutDeps
-              .map((hook) => processBinding({ code: hook.code, options, json: component }))
-              .join('\n')}
+            ${onUpdateWithoutDeps.map((hook) => hook.code).join('\n')}
           },`
             : ''
         }
@@ -245,7 +243,7 @@ export function generateOptionsApiScript(
               .map(
                 (hook, index) =>
                   `${getOnUpdateHookName(index)}() {
-                  ${processBinding({ code: hook.code, options, json: component })}
+                  ${hook.code}
                   }
                 `,
               )
@@ -256,11 +254,7 @@ export function generateOptionsApiScript(
         ${
           component.hooks.onUnMount
             ? `unmounted() {
-                ${processBinding({
-                  code: component.hooks.onUnMount.code,
-                  options,
-                  json: component,
-                })}
+                ${component.hooks.onUnMount.code}
               },`
             : ''
         }
