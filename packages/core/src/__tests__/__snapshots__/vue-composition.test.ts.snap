@@ -35,7 +35,7 @@ const name = ref(\\"PatrickJS\\");
 const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
-watch([inputRef.value, inputNoArgRef.value], ([inputRef, inputNoArgRef]) => {
+watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
   console.log(\\"Received an update\\");
 });
 function onBlur() {
@@ -387,7 +387,7 @@ const count = ref(0);
 
 const prevCount = ref(null);
 
-watch([count.value], ([count]) => {
+watch([count], ([count]) => {
   prevCount.value = count.value;
 });
 </script>
@@ -1619,7 +1619,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -1885,14 +1885,14 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
   if (a.value === \\"a\\") {
     a.value = \\"b\\";
   }
 });
-watch([c.value, d.value], ([c, d]) => {
+watch([c, d], ([c, d]) => {
   console.log(\\"Runs when c or d changes\\", c, d);
 
   if (a.value === \\"a\\") {
@@ -2048,7 +2048,7 @@ const props = defineProps([\\"size\\"]);
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>
@@ -2377,7 +2377,7 @@ const name = ref(\\"PatrickJS\\");
 const inputRef = ref<HTMLInputElement>();
 const inputNoArgRef = ref<HTMLLabelElement>();
 
-watch([inputRef.value, inputNoArgRef.value], ([inputRef, inputNoArgRef]) => {
+watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
   console.log(\\"Received an update\\");
 });
 function onBlur() {
@@ -2751,7 +2751,7 @@ const count = ref(0);
 
 const prevCount = ref<undefined>();
 
-watch([count.value], ([count]) => {
+watch([count], ([count]) => {
   prevCount.value = count.value;
 });
 </script>
@@ -4120,7 +4120,7 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name.value], ([name]) => {
+watch([name], ([name]) => {
   const controller = new AbortController();
   const signal = controller.signal;
   fetch(\\"https://patrickjs.com/api/resource.json\\", {
@@ -4415,14 +4415,14 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a.value, b.value], ([a, b]) => {
+watch([a, b], ([a, b]) => {
   console.log(\\"Runs when a or b changes\\", a, b);
 
   if (a.value === \\"a\\") {
     a.value = \\"b\\";
   }
 });
-watch([c.value, d.value], ([c, d]) => {
+watch([c, d], ([c, d]) => {
   console.log(\\"Runs when c or d changes\\", c, d);
 
   if (a.value === \\"a\\") {
@@ -4589,7 +4589,7 @@ const props = defineProps<Props>();
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a.value, b.value, props.size], ([a, b, size]) => {
+watch([a, b, size], ([a, b, size]) => {
   console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
 });
 </script>

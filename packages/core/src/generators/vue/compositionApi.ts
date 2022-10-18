@@ -7,7 +7,6 @@ import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { types } from '@babel/core';
 import { processBinding } from './helpers';
 import { ToVueOptions } from './types';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 const getCompositionPropDefinition = ({
   options,
@@ -183,14 +182,7 @@ export function generateCompositionApiScript(
 
     ${
       onUpdateWithDeps
-        ?.map(
-          (hook) =>
-            `watch(${appendValueToRefs(
-              hook.deps || '',
-              component,
-              options,
-            )}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
-        )
+        ?.map((hook) => `watch(${hook.deps}, (${hook.deps}) => { ${hook.code} })`)
         .join('\n') || ''
     }
     ${methods?.length ? appendValueToRefs(methods, component, options) : ''}
