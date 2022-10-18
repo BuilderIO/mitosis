@@ -76,6 +76,9 @@ export function mapStateIdentifiers(json: MitosisComponent) {
           if (value.arguments?.length) {
             item.bindings[key]!.arguments = value.arguments;
           }
+          if (value.type?.length) {
+            item.bindings[key]!.type = value.type;
+          }
         }
       }
 

@@ -2060,6 +2060,47 @@ export default class Button {
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions Javascript Test defaultPropsOutsideComponent 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions Javascript Test defaultValsWithTypes 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -2173,6 +2214,21 @@ export default class MultipleOnUpdateWithDeps {
       this.a = \\"b\\";
     }
   }
+}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Javascript Test multipleSpreads 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {
+  attrs = { hello: \\"world\\" };
 }
 "
 `;
@@ -2604,6 +2660,47 @@ export default class NestedShow {
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions Javascript Test spreadAttrs 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Javascript Test spreadNestedProps 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() nested: any;
+}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Javascript Test spreadProps 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions Javascript Test subComponent 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -2680,6 +2777,29 @@ exports[`Angular with Preserve Imports and File Extensions Javascript Test use-s
       }
 
       button {
+        font-size: 12px;
+        outline: 1px solid black;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Javascript Test use-style-outside-component 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <button type=\\"button\\">Button</button>
+  \`,
+  styles: [
+    \`
+      button {
+        background: blue;
+        color: white;
         font-size: 12px;
         outline: 1px solid black;
       }
@@ -4765,6 +4885,47 @@ export default class Button {
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions Typescript Test defaultPropsOutsideComponent 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+const defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+
+@Component({
+  selector: \\"button, Button\\",
+  template: \`
+    <div>
+      <ng-container *ngIf=\\"link\\">
+        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+          {{text}}
+        </a>
+      </ng-container>
+
+      <ng-container *ngIf=\\"!link\\">
+        <button type=\\"button\\">{{text}}</button>
+      </ng-container>
+    </div>
+  \`,
+})
+export default class Button {
+  @Input() link: ButtonProps[\\"link\\"] = defaultProps[\\"link\\"];
+  @Input() attributes: ButtonProps[\\"attributes\\"];
+  @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
+    defaultProps[\\"openLinkInNewTab\\"];
+  @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions Typescript Test defaultValsWithTypes 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -4884,6 +5045,21 @@ export default class MultipleOnUpdateWithDeps {
       this.a = \\"b\\";
     }
   }
+}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Typescript Test multipleSpreads 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {
+  attrs = { hello: \\"world\\" };
 }
 "
 `;
@@ -5315,6 +5491,47 @@ export default class NestedShow {
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions Typescript Test spreadAttrs 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Typescript Test spreadNestedProps 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {
+  @Input() nested: any;
+}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Typescript Test spreadProps 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-basic-component, MyBasicComponent\\",
+  template: \`
+    <input />
+  \`,
+})
+export default class MyBasicComponent {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions Typescript Test subComponent 1`] = `
 "import { Component } from \\"@angular/core\\";
 
@@ -5391,6 +5608,29 @@ exports[`Angular with Preserve Imports and File Extensions Typescript Test use-s
       }
 
       button {
+        font-size: 12px;
+        outline: 1px solid black;
+      }
+    \`,
+  ],
+})
+export default class MyComponent {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions Typescript Test use-style-outside-component 1`] = `
+"import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <button type=\\"button\\">Button</button>
+  \`,
+  styles: [
+    \`
+      button {
+        background: blue;
+        color: white;
         font-size: 12px;
         outline: 1px solid black;
       }

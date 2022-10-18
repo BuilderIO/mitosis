@@ -100,7 +100,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
             emitJSX(file, component, mutable);
           },
         ],
-        [component.propsTypeRef + (isLightComponent ? '&{key?:any}' : '') || 'any'],
+        [(component.propsTypeRef || 'any') + (isLightComponent ? '&{key?:any}' : '')],
       );
       file.src.const(
         component.name,

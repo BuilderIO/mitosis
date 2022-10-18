@@ -33,12 +33,16 @@ const preserveTyping = getRawFile('./data/types/preserve-typing.raw');
 const typeDependency = getRawFile('./data/types/type-dependency.raw');
 
 const defaultProps = getRawFile('./data/default-props/default-props.raw');
+const defaultPropsOutsideComponent = getRawFile(
+  './data/default-props/default-props-outside-component.raw',
+);
 
 const classRaw = getRawFile('./data/styles/class.raw');
 const className = getRawFile('./data/styles/className.raw');
 const classAndClassName = getRawFile('./data/styles/class-and-className.raw');
 const classState = getRawFile('./data/styles/classState.raw');
 const useStyle = getRawFile('./data/styles/use-style.raw');
+const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw');
 const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw');
 
 const button = getRawFile('./data/blocks/button.raw');
@@ -74,6 +78,11 @@ const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw');
 const text = getRawFile('./data/blocks/text.raw');
 const textarea = getRawFile('./data/blocks/textarea.raw');
 const video = getRawFile('./data/blocks/video.raw');
+
+const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw');
+const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw');
+const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw');
+const spreadProps = getRawFile('./data/spread/spread-props.raw');
 
 const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
 
@@ -113,6 +122,7 @@ const BASIC_TESTS: Tests = {
   propsType: propsType,
   propsInterface: propsInterface,
   defaultProps: defaultProps,
+  defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
   defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw'),
@@ -133,9 +143,14 @@ const BASIC_TESTS: Tests = {
   'class + ClassName + css': classAndClassName,
   'use-style': useStyle,
   'use-style-and-css': useStyleAndCss,
+  'use-style-outside-component': useStyleOutsideComponent,
   'self-referencing component with children': selfRefCompWChildren,
   'self-referencing component': selfRefComp,
   rootFragmentMultiNode,
+  multipleSpreads,
+  spreadAttrs,
+  spreadNestedProps,
+  spreadProps,
 };
 
 const SLOTS_TESTS: Tests = {
@@ -197,6 +212,17 @@ const JSX_TESTS: Tests[] = [
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
+    BASIC_TESTS,
+    SLOTS_TESTS,
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+    // FOR_SHOW_TESTS,
+  ],
+  rsc: [
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,

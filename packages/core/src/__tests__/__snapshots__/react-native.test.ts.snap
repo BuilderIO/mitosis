@@ -464,7 +464,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -957,13 +957,13 @@ export default function FormComponent(props: FormProps) {
   }
   return (
     <View
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
@@ -1176,11 +1176,11 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function ImgComponent(props: ImgProps) {
   return (
     <View
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -1464,7 +1464,7 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <View {...props.attributes} type=\\"submit\\">
+    <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
@@ -1568,8 +1568,8 @@ export interface VideoProps {
 export default function Video(props: VideoProps) {
   return (
     <View
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -1816,7 +1816,52 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React Native Javascript Test defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -1877,7 +1922,7 @@ export default function RenderContent(props: RenderContentProps) {
 
   return (
     <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -1932,6 +1977,21 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   }, [c, d]);
 
   return <View />;
+}
+"
+`;
+
+exports[`React Native Javascript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <View {...state.attrs} {...props} />;
 }
 "
 `;
@@ -2252,7 +2312,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -2368,6 +2428,36 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`React Native Javascript Test spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...attrs} />;
+}
+"
+`;
+
+exports[`React Native Javascript Test spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...props.nested} />;
+}
+"
+`;
+
+exports[`React Native Javascript Test spreadProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...props} />;
+}
+"
+`;
+
 exports[`React Native Javascript Test subComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -2430,6 +2520,22 @@ export default function MyComponent(props: any) {
 const styles = StyleSheet.create({
   view1: { background: \\"blue\\", color: \\"white\\" },
 });
+"
+`;
+
+exports[`React Native Javascript Test use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <View type=\\"button\\">
+      <Text>Button</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});
 "
 `;
 
@@ -2916,7 +3022,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -3409,13 +3515,13 @@ export default function FormComponent(props: FormProps) {
   }
   return (
     <View
-      {...props.attributes}
       validate={props.validate}
       ref={formRef}
       action={!props.sendWithJs && props.action}
       method={props.method}
       name={props.name}
       onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
     >
       {\\" \\"}
       {props.builderBlock && props.builderBlock.children ? (
@@ -3628,11 +3734,11 @@ import { Builder } from \\"@builder.io/sdk\\";
 export default function ImgComponent(props: ImgProps) {
   return (
     <View
-      {...props.attributes}
       style={{
         objectFit: props.backgroundSize || \\"cover\\",
         objectPosition: props.backgroundPosition || \\"center\\",
       }}
+      {...props.attributes}
       key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
       alt={props.altText}
       src={props.imgSrc}
@@ -3916,7 +4022,7 @@ export interface ButtonProps {
 
 export default function SubmitButton(props: ButtonProps) {
   return (
-    <View {...props.attributes} type=\\"submit\\">
+    <View type=\\"submit\\" {...props.attributes}>
       <Text>{props.text}</Text>
     </View>
   );
@@ -4020,8 +4126,8 @@ export interface VideoProps {
 export default function Video(props: VideoProps) {
   return (
     <View
-      {...props.attributes}
       preload=\\"none\\"
+      {...props.attributes}
       style={{
         width: \\"100%\\",
         height: \\"100%\\",
@@ -4268,7 +4374,52 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React Native Typescript Test defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default function Button(props: ButtonProps) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -4330,7 +4481,7 @@ export default function RenderContent(props: RenderContentProps) {
 
   return (
     <RenderBlock
-      {...getRenderContentProps(props.renderContentProps.block, 0)}
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
     />
   );
 }
@@ -4385,6 +4536,21 @@ export default function MultipleOnUpdateWithDeps(props: any) {
   }, [c, d]);
 
   return <View />;
+}
+"
+`;
+
+exports[`React Native Typescript Test multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props: any) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <View {...state.attrs} {...props} />;
 }
 "
 `;
@@ -4705,7 +4871,7 @@ export default function Button(props: ButtonProps) {
 
       {!props.link ? (
         <>
-          <View {...props.attributes} type=\\"button\\">
+          <View type=\\"button\\" {...props.attributes}>
             <Text>{props.text}</Text>
           </View>
         </>
@@ -4821,6 +4987,36 @@ export default function NestedShow(props: Props) {
 "
 `;
 
+exports[`React Native Typescript Test spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...attrs} />;
+}
+"
+`;
+
+exports[`React Native Typescript Test spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...props.nested} />;
+}
+"
+`;
+
+exports[`React Native Typescript Test spreadProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props: any) {
+  return <View {...props} />;
+}
+"
+`;
+
 exports[`React Native Typescript Test subComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -4883,5 +5079,21 @@ export default function MyComponent(props: any) {
 const styles = StyleSheet.create({
   view1: { background: \\"blue\\", color: \\"white\\" },
 });
+"
+`;
+
+exports[`React Native Typescript Test use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <View type=\\"button\\">
+      <Text>Button</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});
 "
 `;

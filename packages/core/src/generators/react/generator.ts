@@ -47,6 +47,8 @@ import { processBinding } from './helpers';
 import hash from 'hash-sum';
 import { getForArguments } from '../../helpers/nodes/for';
 
+export const contextPropDrillingKey = '_context';
+
 const openFrag = (options: ToReactOptions) => getFragment('open', options);
 const closeFrag = (options: ToReactOptions) => getFragment('close', options);
 function getFragment(type: 'open' | 'close', options: ToReactOptions) {
@@ -161,10 +163,6 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread?.code) {
-    str += ` {...(${processBinding(json.bindings._spread.code as string, options)})} `;
-  }
-
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
@@ -187,15 +185,16 @@ export const blockToReact = (json: MitosisNode, options: ToReactOptions, parentS
 
   for (const key in json.bindings) {
     const value = String(json.bindings[key]?.code);
-    if (key === '_spread') {
-      continue;
-    }
+
     if (key === 'css' && value.trim() === '{}') {
       continue;
     }
 
     const useBindingValue = processBinding(value, options);
-    if (key.startsWith('on')) {
+
+    if (json.bindings[key]?.type === 'spread') {
+      str += ` {...(${value})} `;
+    } else if (key.startsWith('on')) {
       const { arguments: cusArgs = ['event'] } = json.bindings[key]!;
       str += ` ${key}={(${cusArgs.join(',')}) => ${updateStateSettersInCode(
         useBindingValue,
@@ -272,37 +271,51 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
   return [hasStateArgument, code];
 };
 
-function addProviderComponents(json: MitosisComponent, options: ToReactOptions) {
-  for (const key in json.context.set) {
-    const { name, ref, value } = json.context.set[key];
-    if (value) {
-      json.children = [
-        createMitosisNode({
-          name: `${name}.Provider`,
-          children: json.children,
-          ...(value && {
-            bindings: {
-              value: {
-                code: stringifyContextValue(value),
+function provideContext(json: MitosisComponent, options: ToReactOptions): string | void {
+  if (options.contextType === 'prop-drill') {
+    let str = '';
+    for (const key in json.context.set) {
+      const { name, ref, value } = json.context.set[key];
+      if (value) {
+        str += `
+          ${contextPropDrillingKey}.${name} = ${stringifyContextValue(value)};
+        `;
+      }
+      // TODO: support refs. I'm not sure what those are so unclear how to support them
+    }
+    return str;
+  } else {
+    for (const key in json.context.set) {
+      const { name, ref, value } = json.context.set[key];
+      if (value) {
+        json.children = [
+          createMitosisNode({
+            name: `${name}.Provider`,
+            children: json.children,
+            ...(value && {
+              bindings: {
+                value: {
+                  code: stringifyContextValue(value),
+                },
               },
-            },
+            }),
           }),
-        }),
-      ];
-    } else if (ref) {
-      json.children = [
-        createMitosisNode({
-          name: 'Context.Provider',
-          children: json.children,
-          ...(ref && {
-            bindings: {
-              value: {
-                code: ref,
+        ];
+      } else if (ref) {
+        json.children = [
+          createMitosisNode({
+            name: 'Context.Provider',
+            children: json.children,
+            ...(ref && {
+              bindings: {
+                value: {
+                  code: ref,
+                },
               },
-            },
+            }),
           }),
-        }),
-      ];
+        ];
+      }
     }
   }
 }
@@ -310,9 +323,15 @@ function addProviderComponents(json: MitosisComponent, options: ToReactOptions) 
 function getContextString(component: MitosisComponent, options: ToReactOptions) {
   let str = '';
   for (const key in component.context.get) {
-    str += `
-      const ${key} = useContext(${component.context.get[key].name});
-    `;
+    if (options.contextType === 'prop-drill') {
+      str += `
+        const ${key} = ${contextPropDrillingKey}['${component.context.get[key].name}'];
+      `;
+    } else {
+      str += `
+        const ${key} = useContext(${component.context.get[key].name});
+      `;
+    }
   }
 
   return str;
@@ -392,7 +411,7 @@ const _componentToReact = (
   processHttpRequests(json);
   handleMissingState(json);
   processTagReferences(json);
-  addProviderComponents(json, options);
+  const contextStr = provideContext(json, options);
   const componentHasStyles = hasCss(json);
   if (options.stateType === 'useState') {
     gettersToFunctions(json);
@@ -448,7 +467,7 @@ const _componentToReact = (
   if (useStateCode && useStateCode.includes('useState')) {
     reactLibImports.add('useState');
   }
-  if (hasContext(json)) {
+  if (hasContext(json) && options.contextType !== 'prop-drill') {
     reactLibImports.add('useContext');
   }
   if (allRefs.length) {
@@ -509,7 +528,7 @@ const _componentToReact = (
     ${hasState && stateType === 'solid' ? `import { useMutable } from 'react-solid-state';` : ''}
     ${
       stateType === 'mobx' && hasState
-        ? `import { useLocalObservable } from 'mobx-react-lite';`
+        ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
         : ''
     }
     ${json.types ? json.types.join('\n') : ''}
@@ -517,11 +536,16 @@ const _componentToReact = (
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
-    ${isSubComponent ? '' : 'export default '}${
-    isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''
-  }function ${json.name || 'MyComponent'}(${propsArgs}${
-    isForwardRef ? `, ${options.forwardRef}` : ''
-  }) {
+    ${stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``}${
+    isSubComponent || stateType === 'mobx' ? '' : 'export default '
+  }${isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''}function ${
+    json.name || 'MyComponent'
+  }(${propsArgs}${isForwardRef ? `, ${options.forwardRef}` : ''}) {
+    ${
+      options.contextType === 'prop-drill'
+        ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`
+        : ''
+    }
     ${hasStateArgument ? '' : refsString}
       ${
         hasState
@@ -534,13 +558,16 @@ const _componentToReact = (
             : stateType === 'solid'
             ? `const state = useMutable(${getStateObjectStringFromComponent(json)});`
             : stateType === 'builder'
-            ? `var state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            ? `const state = useBuilderState(${getStateObjectStringFromComponent(json)});`
+            : stateType === 'variables'
+            ? `const state = ${getStateObjectStringFromComponent(json)};`
             : `const state = useLocalProxy(${getStateObjectStringFromComponent(json)});`
           : ''
       }
       ${hasStateArgument ? refsString : ''}
       ${getContextString(json, options)}
       ${getInitCode(json, options)}
+      ${contextStr || ''}
 
       ${
         json.hooks.onInit?.code
@@ -570,7 +597,7 @@ const _componentToReact = (
           ?.map(
             (hook) => `useEffect(() => {
             ${processHookCode({ str: hook.code, options })}
-          }, 
+          },
           ${hook.deps ? processHookCode({ str: hook.deps, options }) : ''})`,
           )
           .join(';') ?? ''
@@ -618,6 +645,15 @@ const _componentToReact = (
     }
 
     ${styledComponentsCode ? styledComponentsCode : ''}
+    ${
+      stateType === 'mobx'
+        ? `
+      const observed${json.name || 'MyComponent'} = observer(${json.name || 'MyComponent'});
+      export default observed${json.name || 'MyComponent'};
+    `
+        : ''
+    }
+
   `;
 
   str = stripNewlinesInStrings(str);

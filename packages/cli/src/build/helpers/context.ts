@@ -1,5 +1,6 @@
 import {
   contextToReact,
+  contextToRsc,
   contextToSolid,
   contextToSvelte,
   contextToVue,
@@ -39,6 +40,8 @@ export const generateContextFile = async ({
       case 'preact':
       case 'reactNative':
         return contextToReact()({ context });
+      case 'rsc':
+        return contextToRsc()({ context });
       case 'qwik':
         return contextToQwik()({ context });
       default:

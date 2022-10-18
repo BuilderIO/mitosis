@@ -1,5 +1,7 @@
 import * as babel from '@babel/core';
+import { HOOKS } from '../../constants/hooks';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { generateUseStyleCode, parseDefaultPropsHook } from './function-parser';
 import { parseCodeJson } from './helpers';
 import { ParseMitosisOptions } from './types';
 
@@ -38,15 +40,23 @@ export const collectMetadata = (
     if (!hook) {
       return true;
     }
-    if (types.isIdentifier(hook.callee) && hookNames.has(hook.callee.name)) {
-      try {
-        component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
+    if (types.isIdentifier(hook.callee)) {
+      if (hookNames.has(hook.callee.name)) {
+        try {
+          component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
+          return false;
+        } catch (e) {
+          console.error(`Error parsing metadata hook ${hook.callee.name}`);
+          throw e;
+        }
+      } else if (hook.callee.name === HOOKS.STYLE) {
+        component.style = generateUseStyleCode(hook);
         return false;
-      } catch (e) {
-        console.error(`Error parsing metadata hook ${hook.callee.name}`);
-        throw e;
+      } else if (hook.callee.name === HOOKS.DEFAULT_PROPS) {
+        parseDefaultPropsHook(component, hook);
       }
     }
+
     return true;
   });
 };

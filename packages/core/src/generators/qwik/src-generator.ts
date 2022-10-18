@@ -304,7 +304,7 @@ export class SrcBuilder {
       }
     }
     for (const rawKey in bindings) {
-      if (rawKey === '_spread') {
+      if (bindings[rawKey].type === 'spread') {
         if (this.isJSX) {
           this.emit('{...', bindings[rawKey].code, '}');
         } else {

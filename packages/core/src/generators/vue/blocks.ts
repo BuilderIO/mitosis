@@ -1,4 +1,5 @@
 import { pipe } from 'fp-ts/lib/function';
+import { filter } from 'lodash';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import isChildren from '../../helpers/is-children';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
@@ -6,7 +7,7 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { replaceSlotsInString, stripSlotPrefix, isSlotProperty } from '../../helpers/slots';
 import { selfClosingTags } from '../../parsers/jsx';
-import { MitosisNode, ForNode } from '../../types/mitosis-node';
+import { MitosisNode, ForNode, Binding } from '../../types/mitosis-node';
 import {
   encodeQuotes,
   addBindingsToJson,
@@ -274,9 +275,9 @@ const NODE_MAPPERS: {
 
 const stringifyBinding =
   (node: MitosisNode) =>
-  ([key, value]: [string, { code: string; arguments?: string[] } | undefined]) => {
-    if (key === '_spread') {
-      return '';
+  ([key, value]: [string, Binding | undefined]) => {
+    if (node.bindings[key]?.type === 'spread') {
+      return ''; // we handle this after
     } else if (key === 'class') {
       return ` :class="_classStringToObject(${value?.code})" `;
       // TODO: support dynamic classes as objects somehow like Vue requires
@@ -348,10 +349,6 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   str += `<${node.name} `;
 
-  if (node.bindings._spread?.code) {
-    str += `v-bind="${encodeQuotes(node.bindings._spread.code)}"`;
-  }
-
   for (const key in node.properties) {
     const value = node.properties[key];
 
@@ -374,6 +371,21 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     .join('');
 
   str += stringifiedBindings;
+
+  // spreads
+
+  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map(
+    (value) => value?.code,
+  );
+
+  if (spreads?.length) {
+    if (spreads.length > 1) {
+      let spreadsString = `{...${spreads.join(', ...')}}`;
+      str += ` v-bind="${encodeQuotes(spreadsString)}"`;
+    } else {
+      str += ` v-bind="${encodeQuotes(spreads.join(''))}"`;
+    }
+  }
 
   if (selfClosingTags.has(node.name)) {
     return str + ' />';

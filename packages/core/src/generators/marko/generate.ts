@@ -78,21 +78,19 @@ const blockToMarko = (json: MitosisNode, options: InternalToMarkoOptions): strin
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread?.code) {
-    str += ` ...(${json.bindings._spread.code}) `;
-  }
-
   for (const key in json.properties) {
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
   for (const key in json.bindings) {
-    const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
-    if (key === '_spread' || key === '_forName') {
+    const { code, arguments: cusArgs = ['event'], type } = json.bindings[key]!;
+    if (key === '_forName') {
       continue;
     }
 
-    if (key === 'ref') {
+    if (type === 'spread') {
+      str += ` ...(${code}) `;
+    } else if (key === 'ref') {
       str += ` key="${camelCase(code)}" `;
     } else if (key.startsWith('on')) {
       const useKey = key === 'onChange' && json.name === 'input' ? 'onInput' : key;

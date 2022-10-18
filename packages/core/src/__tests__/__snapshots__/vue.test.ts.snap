@@ -459,16 +459,16 @@ exports[`Vue Javascript Test Button 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -766,13 +766,13 @@ export default {
 exports[`Vue Javascript Test Form 1`] = `
 "<template>
   <form
-    v-bind=\\"attributes\\"
     :validate=\\"validate\\"
     ref=\\"formRef\\"
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
+    v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
       <builder-block-component
@@ -1212,7 +1212,6 @@ export default {
 exports[`Vue Javascript Test Img 1`] = `
 "<template>
   <img
-    v-bind=\\"attributes\\"
     :style=\\"{
       objectFit: backgroundSize || 'cover',
       objectPosition: backgroundPosition || 'center',
@@ -1220,6 +1219,7 @@ exports[`Vue Javascript Test Img 1`] = `
     :key=\\"(Builder.isEditing && imgSrc) || 'default-key'\\"
     :alt=\\"altText\\"
     :src=\\"imgSrc\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -1244,7 +1244,6 @@ export default {
 exports[`Vue Javascript Test Input 1`] = `
 "<template>
   <input
-    v-bind=\\"attributes\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :placeholder=\\"placeholder\\"
     :type=\\"type\\"
@@ -1252,6 +1251,7 @@ exports[`Vue Javascript Test Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -1310,7 +1310,6 @@ export default {
 exports[`Vue Javascript Test Section 1`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     :style=\\"
       maxWidth && typeof maxWidth === 'number'
         ? {
@@ -1318,6 +1317,7 @@ exports[`Vue Javascript Test Section 1`] = `
           }
         : undefined
     \\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -1336,13 +1336,13 @@ export default {
 exports[`Vue Javascript Test Section 2`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     v-for=\\"(item, index) in items\\"
     v-if=\\"max\\"
     :style=\\"{
       maxWidth: item + max,
     }\\"
     :key=\\"index\\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -1363,11 +1363,11 @@ export default {
 exports[`Vue Javascript Test Select 1`] = `
 "<template>
   <select
-    v-bind=\\"attributes\\"
     :value=\\"value\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
+    v-bind=\\"attributes\\"
   >
     <option
       v-for=\\"(option, index) in options\\"
@@ -1547,7 +1547,7 @@ export default {
 
 exports[`Vue Javascript Test Submit 1`] = `
 "<template>
-  <button v-bind=\\"attributes\\" type=\\"submit\\">
+  <button type=\\"submit\\" v-bind=\\"attributes\\">
     {{ text }}
   </button>
 </template>
@@ -1590,11 +1590,11 @@ export default {
 exports[`Vue Javascript Test Textarea 1`] = `
 "<template>
   <textarea
-    v-bind=\\"attributes\\"
     :placeholder=\\"placeholder\\"
     :name=\\"name\\"
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
+    v-bind=\\"attributes\\"
   ></textarea>
 </template>
 
@@ -1611,7 +1611,6 @@ export default {
 exports[`Vue Javascript Test Video 1`] = `
 "<template>
   <video
-    v-bind=\\"attributes\\"
     preload=\\"none\\"
     :style=\\"{
       width: '100%',
@@ -1629,6 +1628,7 @@ exports[`Vue Javascript Test Video 1`] = `
     :muted=\\"muted\\"
     :controls=\\"controls\\"
     :loop=\\"loop\\"
+    v-bind=\\"attributes\\"
   ></video>
 </template>
 
@@ -1888,16 +1888,52 @@ exports[`Vue Javascript Test defaultProps 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"button\\",
+
+  props: {
+    link: { default: \\"https://builder.io/\\" },
+    attributes: {},
+    openLinkInNewTab: { default: false },
+    text: { default: \\"default text\\" },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Javascript Test defaultPropsOutsideComponent 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -2028,6 +2064,21 @@ export default {
       };
     },
   },
+};
+</script>
+"
+`;
+
+exports[`Vue Javascript Test multipleSpreads 1`] = `
+"<template>
+  <input v-bind=\\"{ ...attrs, ...props }\\" />
+</template>
+
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  data: () => ({ attrs: { hello: \\"world\\" } }),
 };
 </script>
 "
@@ -2365,6 +2416,47 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test spreadAttrs 1`] = `
+"<template>
+  <input v-bind=\\"attrs\\" />
+</template>
+
+<script>
+export default {
+  name: \\"my-basic-component\\",
+};
+</script>
+"
+`;
+
+exports[`Vue Javascript Test spreadNestedProps 1`] = `
+"<template>
+  <input v-bind=\\"nested\\" />
+</template>
+
+<script>
+export default {
+  name: \\"my-basic-component\\",
+
+  props: [\\"nested\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue Javascript Test spreadProps 1`] = `
+"<template>
+  <input v-bind=\\"props\\" />
+</template>
+
+<script>
+export default {
+  name: \\"my-basic-component\\",
+};
+</script>
+"
+`;
+
 exports[`Vue Javascript Test subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -2436,6 +2528,28 @@ export default {
 }
 
 button {
+  font-size: 12px;
+  outline: 1px solid black;
+}
+</style>
+"
+`;
+
+exports[`Vue Javascript Test use-style-outside-component 1`] = `
+"<template>
+  <button type=\\"button\\">Button</button>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+};
+</script>
+
+<style scoped>
+button {
+  background: blue;
+  color: white;
   font-size: 12px;
   outline: 1px solid black;
 }
@@ -2947,16 +3061,16 @@ exports[`Vue Typescript Test Button 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -3295,13 +3409,13 @@ export default {
 exports[`Vue Typescript Test Form 1`] = `
 "<template>
   <form
-    v-bind=\\"attributes\\"
     :validate=\\"validate\\"
     ref=\\"formRef\\"
     :action=\\"!sendWithJs && action\\"
     :method=\\"method\\"
     :name=\\"name\\"
     @submit=\\"onSubmit($event)\\"
+    v-bind=\\"attributes\\"
   >
     <template v-if=\\"builderBlock && builderBlock.children\\">
       <builder-block-component
@@ -3784,7 +3898,6 @@ export default {
 exports[`Vue Typescript Test Img 1`] = `
 "<template>
   <img
-    v-bind=\\"attributes\\"
     :style=\\"{
       objectFit: backgroundSize || 'cover',
       objectPosition: backgroundPosition || 'center',
@@ -3792,6 +3905,7 @@ exports[`Vue Typescript Test Img 1`] = `
     :key=\\"(Builder.isEditing && imgSrc) || 'default-key'\\"
     :alt=\\"altText\\"
     :src=\\"imgSrc\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -3833,7 +3947,6 @@ export default {
 exports[`Vue Typescript Test Input 1`] = `
 "<template>
   <input
-    v-bind=\\"attributes\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :placeholder=\\"placeholder\\"
     :type=\\"type\\"
@@ -3841,6 +3954,7 @@ exports[`Vue Typescript Test Input 1`] = `
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
     :required=\\"required\\"
+    v-bind=\\"attributes\\"
   />
 </template>
 
@@ -3914,7 +4028,6 @@ export default {
 exports[`Vue Typescript Test Section 1`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     :style=\\"
       maxWidth && typeof maxWidth === 'number'
         ? {
@@ -3922,6 +4035,7 @@ exports[`Vue Typescript Test Section 1`] = `
           }
         : undefined
     \\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -3946,13 +4060,13 @@ export default {
 exports[`Vue Typescript Test Section 2`] = `
 "<template>
   <section
-    v-bind=\\"attributes\\"
     v-for=\\"(item, index) in items\\"
     v-if=\\"max\\"
     :style=\\"{
       maxWidth: item + max,
     }\\"
     :key=\\"index\\"
+    v-bind=\\"attributes\\"
   >
     <slot />
   </section>
@@ -3979,11 +4093,11 @@ export default {
 exports[`Vue Typescript Test Select 1`] = `
 "<template>
   <select
-    v-bind=\\"attributes\\"
     :value=\\"value\\"
     :key=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
     :defaultValue=\\"defaultValue\\"
     :name=\\"name\\"
+    v-bind=\\"attributes\\"
   >
     <option
       v-for=\\"(option, index) in options\\"
@@ -4187,7 +4301,7 @@ export default {
 
 exports[`Vue Typescript Test Submit 1`] = `
 "<template>
-  <button v-bind=\\"attributes\\" type=\\"submit\\">
+  <button type=\\"submit\\" v-bind=\\"attributes\\">
     {{ text }}
   </button>
 </template>
@@ -4243,11 +4357,11 @@ export default {
 exports[`Vue Typescript Test Textarea 1`] = `
 "<template>
   <textarea
-    v-bind=\\"attributes\\"
     :placeholder=\\"placeholder\\"
     :name=\\"name\\"
     :value=\\"value\\"
     :defaultValue=\\"defaultValue\\"
+    v-bind=\\"attributes\\"
   ></textarea>
 </template>
 
@@ -4272,7 +4386,6 @@ export default {
 exports[`Vue Typescript Test Video 1`] = `
 "<template>
   <video
-    v-bind=\\"attributes\\"
     preload=\\"none\\"
     :style=\\"{
       width: '100%',
@@ -4290,6 +4403,7 @@ exports[`Vue Typescript Test Video 1`] = `
     :muted=\\"muted\\"
     :controls=\\"controls\\"
     :loop=\\"loop\\"
+    v-bind=\\"attributes\\"
   ></video>
 </template>
 
@@ -4590,16 +4704,59 @@ exports[`Vue Typescript Test defaultProps 1`] = `
   <div>
     <template v-if=\\"link\\">
       <a
-        v-bind=\\"attributes\\"
         :href=\\"link\\"
         :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
       >
         {{ text }}
       </a>
     </template>
 
     <template v-if=\\"!link\\">
-      <button v-bind=\\"attributes\\" type=\\"button\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
+        {{ text }}
+      </button>
+    </template>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export interface ButtonProps {
+  attributes?: any;
+  text?: string;
+  link?: string;
+  openLinkInNewTab?: boolean;
+}
+
+export default {
+  name: \\"button\\",
+
+  props: {
+    link: { default: \\"https://builder.io/\\" },
+    attributes: {},
+    openLinkInNewTab: { default: false },
+    text: { default: \\"default text\\" },
+  },
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test defaultPropsOutsideComponent 1`] = `
+"<template>
+  <div>
+    <template v-if=\\"link\\">
+      <a
+        :href=\\"link\\"
+        :target=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        v-bind=\\"attributes\\"
+      >
+        {{ text }}
+      </a>
+    </template>
+
+    <template v-if=\\"!link\\">
+      <button type=\\"button\\" v-bind=\\"attributes\\">
         {{ text }}
       </button>
     </template>
@@ -4748,6 +4905,21 @@ export default {
       };
     },
   },
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test multipleSpreads 1`] = `
+"<template>
+  <input v-bind=\\"{ ...attrs, ...props }\\" />
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-component\\",
+
+  data: () => ({ attrs: { hello: \\"world\\" } }),
 };
 </script>
 "
@@ -5145,6 +5317,47 @@ export default {
 "
 `;
 
+exports[`Vue Typescript Test spreadAttrs 1`] = `
+"<template>
+  <input v-bind=\\"attrs\\" />
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-component\\",
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test spreadNestedProps 1`] = `
+"<template>
+  <input v-bind=\\"nested\\" />
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-component\\",
+
+  props: [\\"nested\\"],
+};
+</script>
+"
+`;
+
+exports[`Vue Typescript Test spreadProps 1`] = `
+"<template>
+  <input v-bind=\\"props\\" />
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-basic-component\\",
+};
+</script>
+"
+`;
+
 exports[`Vue Typescript Test subComponent 1`] = `
 "<template>
   <foo></foo>
@@ -5223,6 +5436,28 @@ export default {
 }
 
 button {
+  font-size: 12px;
+  outline: 1px solid black;
+}
+</style>
+"
+`;
+
+exports[`Vue Typescript Test use-style-outside-component 1`] = `
+"<template>
+  <button type=\\"button\\">Button</button>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+};
+</script>
+
+<style scoped>
+button {
+  background: blue;
+  color: white;
   font-size: 12px;
   outline: 1px solid black;
 }

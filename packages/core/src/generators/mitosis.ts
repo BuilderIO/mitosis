@@ -64,10 +64,6 @@ export const blockToMitosis = (
 
   str += `<${json.name} `;
 
-  if (json.bindings._spread?.code) {
-    str += ` {...(${json.bindings._spread.code})} `;
-  }
-
   for (const key in json.properties) {
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
@@ -79,11 +75,10 @@ export const blockToMitosis = (
   }
   for (const key in json.bindings) {
     const value = json.bindings[key]?.code as string;
-    if (key === '_spread') {
-      continue;
-    }
 
-    if (key.startsWith('on')) {
+    if (json.bindings[key]?.type === 'spread') {
+      str += ` {...(${json.bindings[key]?.code})} `;
+    } else if (key.startsWith('on')) {
       str += ` ${key}={event => ${value.replace(/\s*;$/, '')}} `;
     } else {
       if (!isValidAttributeName(key)) {

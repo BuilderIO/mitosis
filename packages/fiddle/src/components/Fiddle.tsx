@@ -12,6 +12,7 @@ import {
   componentToMarko,
   componentToReactNative,
   componentToSolid,
+  componentToRsc,
   componentToSvelte,
   componentToSwift,
   componentToPreact,
@@ -335,6 +336,8 @@ export default function Fiddle() {
             ? componentToPreact({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'lit'
             ? componentToLit({ plugins, ...commonOptions })({ component: json })
+            : state.outputTab === 'rsc'
+            ? componentToRsc({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'qwik'
             ? componentToQwik({ plugins, ...commonOptions })({ component: json })
                 // Remove the comment at the
@@ -932,6 +935,7 @@ export default function Fiddle() {
                 <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
                 <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
                 <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
+                <Tab label="RSC" value="rsc" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
                 <Tab
                   label={
@@ -1292,6 +1296,7 @@ export default function Fiddle() {
                       ? 'json'
                       : state.outputTab === 'react' ||
                         state.outputTab === 'preact' ||
+                        state.outputTab === 'rsc' ||
                         state.outputTab === 'qwik' ||
                         state.outputTab === 'lit' ||
                         state.outputTab === 'reactNative' ||

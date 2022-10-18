@@ -147,7 +147,7 @@ exports[`Liquid Javascript Test Button 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -227,7 +227,12 @@ exports[`Liquid Javascript Test Embed 1`] = `
 `;
 
 exports[`Liquid Javascript Test Form 1`] = `
-"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
+"<form
+  validate=\\"{{validate}}\\"
+  method=\\"{{method}}\\"
+  name=\\"{{name}}\\"
+  props.attributes=\\"{{attributes}}\\"
+></form>
 <style>
   .pre {
     padding: 10px;
@@ -269,12 +274,13 @@ exports[`Liquid Javascript Test Image State 1`] = `
 `;
 
 exports[`Liquid Javascript Test Img 1`] = `
-"<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
+"<img props.attributes=\\"{{attributes}}\\" alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
 "
 `;
 
 exports[`Liquid Javascript Test Input 1`] = `
 "<input
+  props.attributes=\\"{{attributes}}\\"
   placeholder=\\"{{placeholder}}\\"
   type=\\"{{type}}\\"
   name=\\"{{name}}\\"
@@ -291,12 +297,17 @@ exports[`Liquid Javascript Test RawText 1`] = `
 `;
 
 exports[`Liquid Javascript Test Section 1`] = `
-"<section>{{children}}</section>
+"<section props.attributes=\\"{{attributes}}\\">{{children}}</section>
 "
 `;
 
 exports[`Liquid Javascript Test Select 1`] = `
-"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+"<select
+  props.attributes=\\"{{attributes}}\\"
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+  name=\\"{{name}}\\"
+>
   {% for option in options %}
   <option value=\\"{{option.value}}\\" data-index=\\"{{index}}\\"></option>
   {% endfor %}
@@ -376,7 +387,7 @@ exports[`Liquid Javascript Test Stamped.io 1`] = `
 `;
 
 exports[`Liquid Javascript Test Submit 1`] = `
-"<button type=\\"submit\\">{{text}}</button>
+"<button type=\\"submit\\" props.attributes=\\"{{attributes}}\\">{{text}}</button>
 "
 `;
 
@@ -387,6 +398,7 @@ exports[`Liquid Javascript Test Text 1`] = `
 
 exports[`Liquid Javascript Test Textarea 1`] = `
 "<textarea
+  props.attributes=\\"{{attributes}}\\"
   placeholder=\\"{{placeholder}}\\"
   name=\\"{{name}}\\"
   value=\\"{{value}}\\"
@@ -398,6 +410,7 @@ exports[`Liquid Javascript Test Textarea 1`] = `
 exports[`Liquid Javascript Test Video 1`] = `
 "<video
   preload=\\"none\\"
+  props.attributes=\\"{{attributes}}\\"
   poster=\\"{{posterImage}}\\"
   autoplay=\\"{{autoPlay}}\\"
   muted=\\"{{muted}}\\"
@@ -493,7 +506,18 @@ exports[`Liquid Javascript Test defaultProps 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
+
+  {% endif %}
+</div>
+"
+`;
+
+exports[`Liquid Javascript Test defaultPropsOutsideComponent 1`] = `
+"<div>
+  {% if link %}
+
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -517,6 +541,11 @@ exports[`Liquid Javascript Test multipleOnUpdate 1`] = `
 
 exports[`Liquid Javascript Test multipleOnUpdateWithDeps 1`] = `
 "<div></div>
+"
+`;
+
+exports[`Liquid Javascript Test multipleSpreads 1`] = `
+"<input attrs=\\"{{attrs}}\\" props=\\"{{props}}\\" />
 "
 `;
 
@@ -603,7 +632,7 @@ exports[`Liquid Javascript Test rootFragmentMultiNode 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -626,6 +655,21 @@ exports[`Liquid Javascript Test showWithFor 1`] = `
 "{% if conditionA %} {% for item in items %}
 <div key=\\"{{idx}}\\">{{item}}</div>
 {% endfor %} {% endif %}
+"
+`;
+
+exports[`Liquid Javascript Test spreadAttrs 1`] = `
+"<input attrs=\\"{{attrs}}\\" />
+"
+`;
+
+exports[`Liquid Javascript Test spreadNestedProps 1`] = `
+"<input props.nested=\\"{{nested}}\\" />
+"
+`;
+
+exports[`Liquid Javascript Test spreadProps 1`] = `
+"<input props=\\"{{props}}\\" />
 "
 `;
 
@@ -661,6 +705,19 @@ exports[`Liquid Javascript Test use-style-and-css 1`] = `
   }
 
   button {
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+"
+`;
+
+exports[`Liquid Javascript Test use-style-outside-component 1`] = `
+"<button type=\\"button\\">Button</button>
+<style>
+  button {
+    background: blue;
+    color: white;
     font-size: 12px;
     outline: 1px solid black;
   }
@@ -820,7 +877,7 @@ exports[`Liquid Typescript Test Button 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -900,7 +957,12 @@ exports[`Liquid Typescript Test Embed 1`] = `
 `;
 
 exports[`Liquid Typescript Test Form 1`] = `
-"<form validate=\\"{{validate}}\\" method=\\"{{method}}\\" name=\\"{{name}}\\"></form>
+"<form
+  validate=\\"{{validate}}\\"
+  method=\\"{{method}}\\"
+  name=\\"{{name}}\\"
+  props.attributes=\\"{{attributes}}\\"
+></form>
 <style>
   .pre {
     padding: 10px;
@@ -942,12 +1004,13 @@ exports[`Liquid Typescript Test Image State 1`] = `
 `;
 
 exports[`Liquid Typescript Test Img 1`] = `
-"<img alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
+"<img props.attributes=\\"{{attributes}}\\" alt=\\"{{altText}}\\" src=\\"{{imgSrc}}\\" />
 "
 `;
 
 exports[`Liquid Typescript Test Input 1`] = `
 "<input
+  props.attributes=\\"{{attributes}}\\"
   placeholder=\\"{{placeholder}}\\"
   type=\\"{{type}}\\"
   name=\\"{{name}}\\"
@@ -964,12 +1027,17 @@ exports[`Liquid Typescript Test RawText 1`] = `
 `;
 
 exports[`Liquid Typescript Test Section 1`] = `
-"<section>{{children}}</section>
+"<section props.attributes=\\"{{attributes}}\\">{{children}}</section>
 "
 `;
 
 exports[`Liquid Typescript Test Select 1`] = `
-"<select value=\\"{{value}}\\" defaultValue=\\"{{defaultValue}}\\" name=\\"{{name}}\\">
+"<select
+  props.attributes=\\"{{attributes}}\\"
+  value=\\"{{value}}\\"
+  defaultValue=\\"{{defaultValue}}\\"
+  name=\\"{{name}}\\"
+>
   {% for option in options %}
   <option value=\\"{{option.value}}\\" data-index=\\"{{index}}\\"></option>
   {% endfor %}
@@ -1049,7 +1117,7 @@ exports[`Liquid Typescript Test Stamped.io 1`] = `
 `;
 
 exports[`Liquid Typescript Test Submit 1`] = `
-"<button type=\\"submit\\">{{text}}</button>
+"<button type=\\"submit\\" props.attributes=\\"{{attributes}}\\">{{text}}</button>
 "
 `;
 
@@ -1060,6 +1128,7 @@ exports[`Liquid Typescript Test Text 1`] = `
 
 exports[`Liquid Typescript Test Textarea 1`] = `
 "<textarea
+  props.attributes=\\"{{attributes}}\\"
   placeholder=\\"{{placeholder}}\\"
   name=\\"{{name}}\\"
   value=\\"{{value}}\\"
@@ -1071,6 +1140,7 @@ exports[`Liquid Typescript Test Textarea 1`] = `
 exports[`Liquid Typescript Test Video 1`] = `
 "<video
   preload=\\"none\\"
+  props.attributes=\\"{{attributes}}\\"
   poster=\\"{{posterImage}}\\"
   autoplay=\\"{{autoPlay}}\\"
   muted=\\"{{muted}}\\"
@@ -1166,7 +1236,18 @@ exports[`Liquid Typescript Test defaultProps 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
+
+  {% endif %}
+</div>
+"
+`;
+
+exports[`Liquid Typescript Test defaultPropsOutsideComponent 1`] = `
+"<div>
+  {% if link %}
+
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -1190,6 +1271,11 @@ exports[`Liquid Typescript Test multipleOnUpdate 1`] = `
 
 exports[`Liquid Typescript Test multipleOnUpdateWithDeps 1`] = `
 "<div></div>
+"
+`;
+
+exports[`Liquid Typescript Test multipleSpreads 1`] = `
+"<input attrs=\\"{{attrs}}\\" props=\\"{{props}}\\" />
 "
 `;
 
@@ -1276,7 +1362,7 @@ exports[`Liquid Typescript Test rootFragmentMultiNode 1`] = `
 "<div>
   {% if link %}
 
-  <a href=\\"{{link}}\\">{{text}}</a>
+  <a props.attributes=\\"{{attributes}}\\" href=\\"{{link}}\\">{{text}}</a>
 
   {% endif %}
 </div>
@@ -1299,6 +1385,21 @@ exports[`Liquid Typescript Test showWithFor 1`] = `
 "{% if conditionA %} {% for item in items %}
 <div key=\\"{{idx}}\\">{{item}}</div>
 {% endfor %} {% endif %}
+"
+`;
+
+exports[`Liquid Typescript Test spreadAttrs 1`] = `
+"<input attrs=\\"{{attrs}}\\" />
+"
+`;
+
+exports[`Liquid Typescript Test spreadNestedProps 1`] = `
+"<input props.nested=\\"{{nested}}\\" />
+"
+`;
+
+exports[`Liquid Typescript Test spreadProps 1`] = `
+"<input props=\\"{{props}}\\" />
 "
 `;
 
@@ -1334,6 +1435,19 @@ exports[`Liquid Typescript Test use-style-and-css 1`] = `
   }
 
   button {
+    font-size: 12px;
+    outline: 1px solid black;
+  }
+</style>
+"
+`;
+
+exports[`Liquid Typescript Test use-style-outside-component 1`] = `
+"<button type=\\"button\\">Button</button>
+<style>
+  button {
+    background: blue;
+    color: white;
     font-size: 12px;
     outline: 1px solid black;
   }

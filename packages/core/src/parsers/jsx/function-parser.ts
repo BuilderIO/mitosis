@@ -15,6 +15,29 @@ import { jsxElementToJson } from './element-parser';
 
 const { types } = babel;
 
+export function generateUseStyleCode(expression: babel.types.CallExpression) {
+  return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
+}
+
+export function parseDefaultPropsHook(
+  component: MitosisComponent,
+  expression: babel.types.CallExpression,
+) {
+  const firstArg = expression.arguments[0];
+
+  if (types.isObjectExpression(firstArg)) {
+    const objectProperties = firstArg.properties?.filter((i) => types.isObjectProperty(i));
+    objectProperties?.forEach((i: any) => {
+      if (i.key?.name) {
+        component.defaultProps = {
+          ...(component.defaultProps ?? {}),
+          [i.key?.name]: i.value.value,
+        };
+      }
+    });
+  }
+}
+
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
  */
@@ -131,25 +154,9 @@ export const componentFunctionToJson = (
               hooks.onInit = { code };
             }
           } else if (expression.callee.name === HOOKS.DEFAULT_PROPS) {
-            const firstArg = expression.arguments[0];
-            if (types.isObjectExpression(firstArg)) {
-              const objectProperties = firstArg.properties?.filter((i) =>
-                types.isObjectProperty(i),
-              );
-              objectProperties?.forEach((i: any) => {
-                if (i.key?.name) {
-                  context.builder.component.defaultProps = {
-                    ...(context.builder.component.defaultProps ?? {}),
-                    [i.key?.name]: i.value.value,
-                  };
-                }
-              });
-            }
+            parseDefaultPropsHook(context.builder.component, expression);
           } else if (expression.callee.name === HOOKS.STYLE) {
-            context.builder.component.style = generate(expression.arguments[0]).code.replace(
-              /(^("|'|`)|("|'|`)$)/g,
-              '',
-            );
+            context.builder.component.style = generateUseStyleCode(expression);
           }
         }
       }
