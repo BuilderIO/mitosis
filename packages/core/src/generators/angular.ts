@@ -29,6 +29,7 @@ import { isSlotProperty } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
+import { VALID_HTML_TAGS } from '../constants/html_tags';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -90,6 +91,7 @@ export const blockToAngular = (
   const outputVars = blockOptions?.outputVars || [];
   const childComponents = blockOptions?.childComponents || [];
   const domRefs = blockOptions?.domRefs || [];
+  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
     return mappers[json.name](json, options, blockOptions);
@@ -200,10 +202,11 @@ export const blockToAngular = (
         needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
         str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
-      } else if (key.includes('-')) {
+      } else if (isValidHtmlTag || key.includes('-')) {
+        // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
         str += ` [attr.${key}]="${useValue}" `;
       } else {
-        str += ` [${key}]="${useValue}" `;
+        str += `[${key}]="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -453,7 +456,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !hasOnMount
           ? ''
           : `ngOnInit() {
-              
+
               ${
                 !json.hooks?.onMount
                   ? ''
