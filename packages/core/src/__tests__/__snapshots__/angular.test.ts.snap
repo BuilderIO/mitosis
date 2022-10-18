@@ -16,7 +16,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -82,7 +82,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -149,7 +149,7 @@ export const DEFAULT_VALUES = {
   template: \`
     <div class=\\"test div\\">
       <input
-        [value]=\\"DEFAULT_VALUES.name || name\\"
+        [attr.value]=\\"DEFAULT_VALUES.name || name\\"
         (input)=\\"name = $event.target.value\\"
       />
 
@@ -185,7 +185,7 @@ exports[`Angular Javascript Test Basic 2`] = `
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -222,7 +222,7 @@ export const DEFAULT_VALUES = {
   template: \`
     <div class=\\"test div\\">
       <input
-        [value]=\\"DEFAULT_VALUES.name || name\\"
+        [attr.value]=\\"DEFAULT_VALUES.name || name\\"
         (input)=\\"name = $event.target.value\\"
       />
 
@@ -261,7 +261,7 @@ import { CommonModule } from \\"@angular/common\\";
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -679,7 +679,7 @@ exports[`Angular Javascript Test BasicFor 1`] = `
       <ng-container *ngFor=\\"let person of names\\">
         <div>
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -714,7 +714,7 @@ import { CommonModule } from \\"@angular/common\\";
       <ng-container *ngFor=\\"let person of names\\">
         <div>
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -756,7 +756,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -818,7 +818,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -1024,7 +1024,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -1060,7 +1063,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -1694,11 +1700,11 @@ import { get } from \\"@fake\\";
   selector: \\"form-component, FormComponent\\",
   template: \`
     <form
-      [validate]=\\"validate\\"
+      [attr.validate]=\\"validate\\"
       #formRef
-      [action]=\\"!sendWithJs && action\\"
-      [method]=\\"method\\"
-      [name]=\\"name\\"
+      [attr.action]=\\"!sendWithJs && action\\"
+      [attr.method]=\\"method\\"
+      [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
@@ -2039,11 +2045,11 @@ import { get } from \\"@fake\\";
   selector: \\"form-component, FormComponent\\",
   template: \`
     <form
-      [validate]=\\"validate\\"
+      [attr.validate]=\\"validate\\"
       #formRef
-      [action]=\\"!sendWithJs && action\\"
-      [method]=\\"method\\"
-      [name]=\\"name\\"
+      [attr.action]=\\"!sendWithJs && action\\"
+      [attr.method]=\\"method\\"
+      [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
@@ -2377,17 +2383,17 @@ export interface ImageProps {
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
-            [alt]=\\"altText\\"
+            [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
-            [src]=\\"image\\"
+            [attr.src]=\\"image\\"
             (load)=\\"setLoaded()\\"
-            [srcset]=\\"srcset\\"
-            [sizes]=\\"sizes\\"
+            [attr.srcset]=\\"srcset\\"
+            [attr.sizes]=\\"sizes\\"
           />
         </ng-container>
 
-        <source [srcset]=\\"srcset\\" />
+        <source [attr.srcset]=\\"srcset\\" />
       </picture>
 
       <ng-content></ng-content>
@@ -2494,17 +2500,17 @@ export interface ImageProps {
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
-            [alt]=\\"altText\\"
+            [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
-            [src]=\\"image\\"
+            [attr.src]=\\"image\\"
             (load)=\\"setLoaded()\\"
-            [srcset]=\\"srcset\\"
-            [sizes]=\\"sizes\\"
+            [attr.srcset]=\\"srcset\\"
+            [attr.sizes]=\\"sizes\\"
           />
         </ng-container>
 
-        <source [srcset]=\\"srcset\\" />
+        <source [attr.srcset]=\\"srcset\\" />
       </picture>
 
       <ng-content></ng-content>
@@ -2592,7 +2598,7 @@ exports[`Angular Javascript Test Image State 1`] = `
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
-          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
         </div>
       </ng-container>
     </div>
@@ -2615,7 +2621,7 @@ import { CommonModule } from \\"@angular/common\\";
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
-          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
         </div>
       </ng-container>
     </div>
@@ -2660,9 +2666,9 @@ import { Builder } from \\"@builder.io/sdk\\";
         objectFit: backgroundSize || 'cover',
         objectPosition: backgroundPosition || 'center'
       }\\"
-      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
-      [alt]=\\"altText\\"
-      [src]=\\"imgSrc\\"
+      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [attr.alt]=\\"altText\\"
+      [attr.src]=\\"imgSrc\\"
     />
   \`,
 })
@@ -2707,9 +2713,9 @@ import { Builder } from \\"@builder.io/sdk\\";
         objectFit: backgroundSize || 'cover',
         objectPosition: backgroundPosition || 'center'
       }\\"
-      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
-      [alt]=\\"altText\\"
-      [src]=\\"imgSrc\\"
+      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [attr.alt]=\\"altText\\"
+      [attr.src]=\\"imgSrc\\"
     />
   \`,
   standalone: true,
@@ -2744,13 +2750,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [placeholder]=\\"placeholder\\"
-      [type]=\\"type\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
-      [required]=\\"required\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.type]=\\"type\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.required]=\\"required\\"
     />
   \`,
 })
@@ -2786,13 +2792,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [placeholder]=\\"placeholder\\"
-      [type]=\\"type\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
-      [required]=\\"required\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.type]=\\"type\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.required]=\\"required\\"
     />
   \`,
   standalone: true,
@@ -3011,13 +3017,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"select-component, SelectComponent\\",
   template: \`
     <select
-      [value]=\\"value\\"
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [defaultValue]=\\"defaultValue\\"
-      [name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
-        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -3055,13 +3061,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"select-component, SelectComponent\\",
   template: \`
     <select
-      [value]=\\"value\\"
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [defaultValue]=\\"defaultValue\\"
-      [name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
-        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -3213,8 +3219,8 @@ import { snakeCase } from \\"lodash\\";
       </ng-container>
 
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [key]=\\"review.id\\">
-          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+          <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
 
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -3323,8 +3329,8 @@ import { snakeCase } from \\"lodash\\";
       </ng-container>
 
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [key]=\\"review.id\\">
-          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+          <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
 
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -3457,7 +3463,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"text, Text\\",
   template: \`
     <div
-      [contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
@@ -3492,7 +3498,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"text, Text\\",
   template: \`
     <div
-      [contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
@@ -3526,10 +3532,10 @@ export interface TextareaProps {
   selector: \\"textarea, Textarea\\",
   template: \`
     <textarea
-      [placeholder]=\\"placeholder\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
     ></textarea>
   \`,
 })
@@ -3559,10 +3565,10 @@ export interface TextareaProps {
   selector: \\"textarea, Textarea\\",
   template: \`
     <textarea
-      [placeholder]=\\"placeholder\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
     ></textarea>
   \`,
   standalone: true,
@@ -3622,12 +3628,12 @@ export interface VideoProps {
         // not have the video overflow
         borderRadius: 1
       }\\"
-      [key]=\\"video || 'no-src'\\"
-      [poster]=\\"posterImage\\"
-      [autoplay]=\\"autoPlay\\"
-      [muted]=\\"muted\\"
-      [controls]=\\"controls\\"
-      [loop]=\\"loop\\"
+      [attr.key]=\\"video || 'no-src'\\"
+      [attr.poster]=\\"posterImage\\"
+      [attr.autoplay]=\\"autoPlay\\"
+      [attr.muted]=\\"muted\\"
+      [attr.controls]=\\"controls\\"
+      [attr.loop]=\\"loop\\"
     ></video>
   \`,
 })
@@ -3690,12 +3696,12 @@ export interface VideoProps {
         // not have the video overflow
         borderRadius: 1
       }\\"
-      [key]=\\"video || 'no-src'\\"
-      [poster]=\\"posterImage\\"
-      [autoplay]=\\"autoPlay\\"
-      [muted]=\\"muted\\"
-      [controls]=\\"controls\\"
-      [loop]=\\"loop\\"
+      [attr.key]=\\"video || 'no-src'\\"
+      [attr.poster]=\\"posterImage\\"
+      [attr.autoplay]=\\"autoPlay\\"
+      [attr.muted]=\\"muted\\"
+      [attr.controls]=\\"controls\\"
+      [attr.loop]=\\"loop\\"
     ></video>
   \`,
   standalone: true,
@@ -3729,7 +3735,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -3763,7 +3769,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -3798,7 +3804,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -3832,7 +3838,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -4187,7 +4193,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -4229,7 +4238,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -4272,7 +4284,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -4314,7 +4329,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -5270,7 +5288,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -5306,7 +5327,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -5484,7 +5508,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [key]=\\"idx\\">{{item}}</div>
+        <div [attr.key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
   \`,
@@ -5510,7 +5534,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [key]=\\"idx\\">{{item}}</div>
+        <div [attr.key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
   \`,
@@ -5895,7 +5919,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -5961,7 +5985,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -6028,7 +6052,7 @@ export const DEFAULT_VALUES = {
   template: \`
     <div class=\\"test div\\">
       <input
-        [value]=\\"DEFAULT_VALUES.name || name\\"
+        [attr.value]=\\"DEFAULT_VALUES.name || name\\"
         (input)=\\"name = $event.target.value\\"
       />
 
@@ -6064,7 +6088,7 @@ exports[`Angular Typescript Test Basic 2`] = `
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -6101,7 +6125,7 @@ export const DEFAULT_VALUES = {
   template: \`
     <div class=\\"test div\\">
       <input
-        [value]=\\"DEFAULT_VALUES.name || name\\"
+        [attr.value]=\\"DEFAULT_VALUES.name || name\\"
         (input)=\\"name = $event.target.value\\"
       />
 
@@ -6140,7 +6164,7 @@ import { CommonModule } from \\"@angular/common\\";
       <ng-container *ngFor=\\"let person of names\\">
         <ng-container *ngIf=\\"person === name\\">
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -6558,7 +6582,7 @@ exports[`Angular Typescript Test BasicFor 1`] = `
       <ng-container *ngFor=\\"let person of names\\">
         <div>
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -6593,7 +6617,7 @@ import { CommonModule } from \\"@angular/common\\";
       <ng-container *ngFor=\\"let person of names\\">
         <div>
           <input
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (input)=\\"
          name = $event.target.value + ' and ' + person;
        \\"
@@ -6635,7 +6659,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -6697,7 +6721,7 @@ export interface Props {
           <input
             class=\\"input\\"
             #inputRef
-            [value]=\\"name\\"
+            [attr.value]=\\"name\\"
             (blur)=\\"onBlur()\\"
             (input)=\\"name = $event.target.value\\"
           />
@@ -6903,7 +6927,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -6939,7 +6966,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -7573,11 +7603,11 @@ import { get } from \\"@fake\\";
   selector: \\"form-component, FormComponent\\",
   template: \`
     <form
-      [validate]=\\"validate\\"
+      [attr.validate]=\\"validate\\"
       #formRef
-      [action]=\\"!sendWithJs && action\\"
-      [method]=\\"method\\"
-      [name]=\\"name\\"
+      [attr.action]=\\"!sendWithJs && action\\"
+      [attr.method]=\\"method\\"
+      [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
@@ -7918,11 +7948,11 @@ import { get } from \\"@fake\\";
   selector: \\"form-component, FormComponent\\",
   template: \`
     <form
-      [validate]=\\"validate\\"
+      [attr.validate]=\\"validate\\"
       #formRef
-      [action]=\\"!sendWithJs && action\\"
-      [method]=\\"method\\"
-      [name]=\\"name\\"
+      [attr.action]=\\"!sendWithJs && action\\"
+      [attr.method]=\\"method\\"
+      [attr.name]=\\"name\\"
       (submit)=\\"onSubmit($event)\\"
     >
       <ng-container *ngIf=\\"builderBlock && builderBlock.children\\">
@@ -8256,17 +8286,17 @@ export interface ImageProps {
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
-            [alt]=\\"altText\\"
+            [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
-            [src]=\\"image\\"
+            [attr.src]=\\"image\\"
             (load)=\\"setLoaded()\\"
-            [srcset]=\\"srcset\\"
-            [sizes]=\\"sizes\\"
+            [attr.srcset]=\\"srcset\\"
+            [attr.sizes]=\\"sizes\\"
           />
         </ng-container>
 
-        <source [srcset]=\\"srcset\\" />
+        <source [attr.srcset]=\\"srcset\\" />
       </picture>
 
       <ng-content></ng-content>
@@ -8373,17 +8403,17 @@ export interface ImageProps {
       <picture #pictureRef>
         <ng-container *ngIf=\\"!useLazyLoading() || load\\">
           <img
-            [alt]=\\"altText\\"
+            [attr.alt]=\\"altText\\"
             [attr.aria-role]=\\"altText ? 'presentation' : undefined\\"
             [class]=\\"'builder-image' + (_class ? ' ' + _class : '') + ' img'\\"
-            [src]=\\"image\\"
+            [attr.src]=\\"image\\"
             (load)=\\"setLoaded()\\"
-            [srcset]=\\"srcset\\"
-            [sizes]=\\"sizes\\"
+            [attr.srcset]=\\"srcset\\"
+            [attr.sizes]=\\"sizes\\"
           />
         </ng-container>
 
-        <source [srcset]=\\"srcset\\" />
+        <source [attr.srcset]=\\"srcset\\" />
       </picture>
 
       <ng-content></ng-content>
@@ -8471,7 +8501,7 @@ exports[`Angular Typescript Test Image State 1`] = `
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
-          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
         </div>
       </ng-container>
     </div>
@@ -8494,7 +8524,7 @@ import { CommonModule } from \\"@angular/common\\";
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
         <div>
-          <img class=\\"custom-class\\" [src]=\\"item\\" [key]=\\"itemIndex\\" />
+          <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
         </div>
       </ng-container>
     </div>
@@ -8539,9 +8569,9 @@ import { Builder } from \\"@builder.io/sdk\\";
         objectFit: backgroundSize || 'cover',
         objectPosition: backgroundPosition || 'center'
       }\\"
-      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
-      [alt]=\\"altText\\"
-      [src]=\\"imgSrc\\"
+      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [attr.alt]=\\"altText\\"
+      [attr.src]=\\"imgSrc\\"
     />
   \`,
 })
@@ -8586,9 +8616,9 @@ import { Builder } from \\"@builder.io/sdk\\";
         objectFit: backgroundSize || 'cover',
         objectPosition: backgroundPosition || 'center'
       }\\"
-      [key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
-      [alt]=\\"altText\\"
-      [src]=\\"imgSrc\\"
+      [attr.key]=\\"Builder.isEditing && imgSrc || 'default-key'\\"
+      [attr.alt]=\\"altText\\"
+      [attr.src]=\\"imgSrc\\"
     />
   \`,
   standalone: true,
@@ -8623,13 +8653,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [placeholder]=\\"placeholder\\"
-      [type]=\\"type\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
-      [required]=\\"required\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.type]=\\"type\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.required]=\\"required\\"
     />
   \`,
 })
@@ -8665,13 +8695,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"form-input-component, FormInputComponent\\",
   template: \`
     <input
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [placeholder]=\\"placeholder\\"
-      [type]=\\"type\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
-      [required]=\\"required\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.type]=\\"type\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.required]=\\"required\\"
     />
   \`,
   standalone: true,
@@ -8890,13 +8920,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"select-component, SelectComponent\\",
   template: \`
     <select
-      [value]=\\"value\\"
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [defaultValue]=\\"defaultValue\\"
-      [name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
-        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -8934,13 +8964,13 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"select-component, SelectComponent\\",
   template: \`
     <select
-      [value]=\\"value\\"
-      [key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
-      [defaultValue]=\\"defaultValue\\"
-      [name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.key]=\\"Builder.isEditing && defaultValue ? defaultValue : 'default-key'\\"
+      [attr.defaultValue]=\\"defaultValue\\"
+      [attr.name]=\\"name\\"
     >
       <ng-container *ngFor=\\"let option of options; let index = index\\">
-        <option [value]=\\"option.value\\" [attr.data-index]=\\"index\\">
+        <option [attr.value]=\\"option.value\\" [attr.data-index]=\\"index\\">
           {{option.name || option.value}}
         </option>
       </ng-container>
@@ -9092,8 +9122,8 @@ import { snakeCase } from \\"lodash\\";
       </ng-container>
 
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [key]=\\"review.id\\">
-          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+          <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
 
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -9202,8 +9232,8 @@ import { snakeCase } from \\"lodash\\";
       </ng-container>
 
       <ng-container *ngFor=\\"let review of reviews; let index = index\\">
-        <div class=\\"review\\" [key]=\\"review.id\\">
-          <img class=\\"img\\" [src]=\\"review.avatar\\" />
+        <div class=\\"review\\" [attr.key]=\\"review.id\\">
+          <img class=\\"img\\" [attr.src]=\\"review.avatar\\" />
 
           <div [class]=\\"showReviewPrompt ? 'bg-primary' : 'bg-secondary'\\">
             <div>N: {{index}}</div>
@@ -9336,7 +9366,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"text, Text\\",
   template: \`
     <div
-      [contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
@@ -9371,7 +9401,7 @@ import { Builder } from \\"@builder.io/sdk\\";
   selector: \\"text, Text\\",
   template: \`
     <div
-      [contentEditable]=\\"allowEditingText || undefined\\"
+      [attr.contentEditable]=\\"allowEditingText || undefined\\"
       [attr.data-name]=\\"{
         test: name || 'any name'
       }\\"
@@ -9405,10 +9435,10 @@ export interface TextareaProps {
   selector: \\"textarea, Textarea\\",
   template: \`
     <textarea
-      [placeholder]=\\"placeholder\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
     ></textarea>
   \`,
 })
@@ -9438,10 +9468,10 @@ export interface TextareaProps {
   selector: \\"textarea, Textarea\\",
   template: \`
     <textarea
-      [placeholder]=\\"placeholder\\"
-      [name]=\\"name\\"
-      [value]=\\"value\\"
-      [defaultValue]=\\"defaultValue\\"
+      [attr.placeholder]=\\"placeholder\\"
+      [attr.name]=\\"name\\"
+      [attr.value]=\\"value\\"
+      [attr.defaultValue]=\\"defaultValue\\"
     ></textarea>
   \`,
   standalone: true,
@@ -9501,12 +9531,12 @@ export interface VideoProps {
         // not have the video overflow
         borderRadius: 1
       }\\"
-      [key]=\\"video || 'no-src'\\"
-      [poster]=\\"posterImage\\"
-      [autoplay]=\\"autoPlay\\"
-      [muted]=\\"muted\\"
-      [controls]=\\"controls\\"
-      [loop]=\\"loop\\"
+      [attr.key]=\\"video || 'no-src'\\"
+      [attr.poster]=\\"posterImage\\"
+      [attr.autoplay]=\\"autoPlay\\"
+      [attr.muted]=\\"muted\\"
+      [attr.controls]=\\"controls\\"
+      [attr.loop]=\\"loop\\"
     ></video>
   \`,
 })
@@ -9569,12 +9599,12 @@ export interface VideoProps {
         // not have the video overflow
         borderRadius: 1
       }\\"
-      [key]=\\"video || 'no-src'\\"
-      [poster]=\\"posterImage\\"
-      [autoplay]=\\"autoPlay\\"
-      [muted]=\\"muted\\"
-      [controls]=\\"controls\\"
-      [loop]=\\"loop\\"
+      [attr.key]=\\"video || 'no-src'\\"
+      [attr.poster]=\\"posterImage\\"
+      [attr.autoplay]=\\"autoPlay\\"
+      [attr.muted]=\\"muted\\"
+      [attr.controls]=\\"controls\\"
+      [attr.loop]=\\"loop\\"
     ></video>
   \`,
   standalone: true,
@@ -9608,7 +9638,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -9642,7 +9672,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -9677,7 +9707,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -9711,7 +9741,7 @@ export interface Props {
     <div>
       <input
         class=\\"input\\"
-        [value]=\\"name\\"
+        [attr.value]=\\"name\\"
         (input)=\\"name = $event.target.value\\"
       />
     </div>
@@ -10066,7 +10096,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -10108,7 +10141,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -10151,7 +10187,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -10193,7 +10232,10 @@ const defaultProps = {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -11160,7 +11202,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -11196,7 +11241,10 @@ export interface ButtonProps {
   template: \`
     <div>
       <ng-container *ngIf=\\"link\\">
-        <a [href]=\\"link\\" [target]=\\"openLinkInNewTab ? '_blank' : undefined\\">
+        <a
+          [attr.href]=\\"link\\"
+          [attr.target]=\\"openLinkInNewTab ? '_blank' : undefined\\"
+        >
           {{text}}
         </a>
       </ng-container>
@@ -11374,7 +11422,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [key]=\\"idx\\">{{item}}</div>
+        <div [attr.key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
   \`,
@@ -11400,7 +11448,7 @@ interface Props {
   template: \`
     <ng-container *ngIf=\\"conditionA\\">
       <ng-container *ngFor=\\"let item of items; let idx = index\\">
-        <div [key]=\\"idx\\">{{item}}</div>
+        <div [attr.key]=\\"idx\\">{{item}}</div>
       </ng-container>
     </ng-container>
   \`,
