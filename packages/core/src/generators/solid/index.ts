@@ -195,9 +195,6 @@ const blockToSolid = ({
   }
   for (const key in json.bindings) {
     const { code, arguments: cusArg = ['event'], type } = json.bindings[key]!;
-    if (key === '_forName') {
-      continue;
-    }
     if (!code) continue;
 
     if (type === 'spread') {
