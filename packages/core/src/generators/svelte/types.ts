@@ -1,5 +1,5 @@
 import { BaseTranspilerOptions } from '../../types/transpiler';
 
-export interface ToSvelteOptions extends BaseTranspilerOptions {
+export type ToSvelteOptions = BaseTranspilerOptions & {
   stateType?: 'proxies' | 'variables';
-}
+};
