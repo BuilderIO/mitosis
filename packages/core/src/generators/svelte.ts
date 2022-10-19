@@ -269,35 +269,6 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     const value = json.properties[key];
     str += ` ${key}="${value}" `;
   }
-  for (const key in json.bindings) {
-    if (key === 'innerHTML') {
-      continue;
-    }
-
-    const { code: value, arguments: cusArgs = ['event'], type } = json.bindings[key]!;
-    // TODO: proper babel transform to replace. Util for this
-    const useValue = stripStateAndProps(value, options);
-
-    if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : useValue;
-      str += ` {...${spreadValue}} `;
-    } else if (key.startsWith('on')) {
-      const event = key.replace('on', '').toLowerCase();
-      // TODO: handle quotes in event handler values
-
-      const valueWithoutBlock = removeSurroundingBlock(useValue);
-
-      if (valueWithoutBlock === key) {
-        str += ` on:${event}={${valueWithoutBlock}} `;
-      } else {
-        str += ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
-      }
-    } else if (key === 'ref') {
-      str += ` bind:this={${useValue}} `;
-    } else {
-      str += ` ${key}={${useValue}} `;
-    }
-  }
 
   const stringifiedBindings = Object.entries(json.bindings).map(stringifyBinding).join('');
 
