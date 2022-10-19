@@ -37,7 +37,6 @@ import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { getForArguments } from '../helpers/nodes/for';
 import { mergeOptions } from '../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -192,33 +191,36 @@ const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) 
     replaceWith: (name) => (name === 'children' ? '$$slots.default' : name),
   });
 
-const stringifyBinding = ([key, binding]: [string, Binding | undefined]) => {
-  if (key === 'innerHTML' || !binding) {
-    return '';
-  }
-
-  const { code, arguments: cusArgs = ['event'], type } = binding;
-
-  if (type === 'spread') {
-    const spreadValue = key === 'props' ? '$$props' : code;
-    return ` {...${spreadValue}} `;
-  } else if (key.startsWith('on')) {
-    const event = key.replace('on', '').toLowerCase();
-    // TODO: handle quotes in event handler values
-
-    const valueWithoutBlock = removeSurroundingBlock(code);
-
-    if (valueWithoutBlock === key) {
-      return ` on:${event}={${valueWithoutBlock}} `;
-    } else {
-      return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+const stringifyBinding =
+  (options: ToSvelteOptions) =>
+  ([key, binding]: [string, Binding | undefined]) => {
+    if (key === 'innerHTML' || !binding) {
+      return '';
     }
-  } else if (key === 'ref') {
-    return ` bind:this={${code}} `;
-  } else {
-    return ` ${key}={${code}} `;
-  }
-};
+
+    const { code, arguments: cusArgs = ['event'], type } = binding;
+    const useValue = stripStateAndProps(code, options);
+
+    if (type === 'spread') {
+      const spreadValue = key === 'props' ? '$$props' : useValue;
+      return ` {...${spreadValue}} `;
+    } else if (key.startsWith('on')) {
+      const event = key.replace('on', '').toLowerCase();
+      // TODO: handle quotes in event handler values
+
+      const valueWithoutBlock = removeSurroundingBlock(useValue);
+
+      if (valueWithoutBlock === key) {
+        return ` on:${event}={${valueWithoutBlock}} `;
+      } else {
+        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
+      }
+    } else if (key === 'ref') {
+      return ` bind:this={${useValue}} `;
+    } else {
+      return ` ${key}={${useValue}} `;
+    }
+  };
 
 export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
   if (mappers[json.name as keyof typeof mappers]) {
@@ -270,7 +272,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     str += ` ${key}="${value}" `;
   }
 
-  const stringifiedBindings = Object.entries(json.bindings).map(stringifyBinding).join('');
+  const stringifiedBindings = Object.entries(json.bindings).map(stringifyBinding(options)).join('');
 
   str += stringifiedBindings;
 
@@ -348,19 +350,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   ({ plugins = [], ...userProvidedOptions } = {}) =>
   ({ component }) => {
     const options = mergeOptions(DEFAULT_OPTIONS, userProvidedOptions);
-    options.plugins = [
-      ...options.plugins,
-      CODE_PROCESSOR_PLUGIN((codeType) => {
-        switch (codeType) {
-          case 'bindings':
-            return (c) => stripStateAndProps(c, options);
-          case 'hooks':
-          case 'hooks-deps':
-          case 'properties':
-            return (c) => c;
-        }
-      }),
-    ];
 
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
