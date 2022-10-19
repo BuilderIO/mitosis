@@ -381,6 +381,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     gettersToFunctions(json);
 
+    const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
+
     json = runPostJsonPlugins(json, options.plugins);
 
     const css = collectCss(json);
@@ -427,8 +429,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     );
 
     const hasData = dataString.length > 4;
-
-    const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
 
     let str = '';
 
