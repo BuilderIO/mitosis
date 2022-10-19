@@ -361,14 +361,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     }
   }
 
-  const stringifiedBindings = Object.entries(node.bindings)
-    .map(([k, v]) =>
-      stringifyBinding(node)([k, v] as [
-        string,
-        { code: string; arguments?: string[] } | undefined,
-      ]),
-    )
-    .join('');
+  const stringifiedBindings = Object.entries(node.bindings).map(stringifyBinding(node)).join('');
 
   str += stringifiedBindings;
 
