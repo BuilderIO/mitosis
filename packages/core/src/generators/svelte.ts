@@ -519,26 +519,25 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : dataString
       }
       ${stripStateAndPropsRefs(json.hooks.onInit?.code ?? '')}
+      
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
 
       ${
-        !json.hooks.onUpdate?.length
-          ? ''
-          : json.hooks.onUpdate
-              .map(({ code, deps }, index) => {
-                if (deps) {
-                  const fnName = `onUpdateFn_${index}`;
-                  return `
-                    function ${fnName}() {
-                      ${code}
-                    }
-                    $: ${fnName}(...${stripStateAndProps(deps, options)})
-                    `;
-                } else {
-                  return `afterUpdate(() => { ${code} })`;
-                }
-              })
-              .join(';')
+        json.hooks.onUpdate
+          ?.map(({ code, deps }, index) => {
+            if (!deps) {
+              return `afterUpdate(() => { ${code} });`;
+            }
+
+            const fnName = `onUpdateFn_${index}`;
+            return `
+              function ${fnName}() {
+                ${code}
+              }
+              $: ${fnName}(...${stripStateAndProps(deps, options)})
+            `;
+          })
+          .join(';') || ''
       }
 
       ${!json.hooks.onUnMount?.code ? '' : `onDestroy(() => { ${json.hooks.onUnMount.code} });`}
