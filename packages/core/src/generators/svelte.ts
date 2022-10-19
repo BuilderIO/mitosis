@@ -37,6 +37,7 @@ import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { getForArguments } from '../helpers/nodes/for';
 import { mergeOptions } from '../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
@@ -346,10 +347,27 @@ const DEFAULT_OPTIONS: ToSvelteOptions = {
   plugins: [FUNCTION_HACK_PLUGIN],
 };
 
+const transformHookCode = (options: ToSvelteOptions) => (hookCode: string) =>
+  pipe(stripStateAndProps(hookCode, options), babelTransformCode);
+
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
   (userProvidedOptions) =>
   ({ component }) => {
     const options = mergeOptions(DEFAULT_OPTIONS, userProvidedOptions);
+
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'hooks':
+            return transformHookCode(options);
+          case 'bindings':
+          case 'hooks-deps':
+          case 'properties':
+            return (c) => c;
+        }
+      }),
+    ];
 
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
@@ -411,9 +429,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     const hasData = dataString.length > 4;
 
     const props = Array.from(getProps(json)).filter((prop) => !isSlotProperty(prop));
-
-    const transformHookCode = (hookCode: string) =>
-      pipe(stripStateAndProps(hookCode, options), babelTransformCode);
 
     let str = '';
 
@@ -504,39 +519,29 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : dataString
       }
       ${stripStateAndPropsRefs(json.hooks.onInit?.code ?? '')}
-      ${
-        !json.hooks.onMount?.code
-          ? ''
-          : `onMount(() => { ${transformHookCode(json.hooks.onMount.code)} });`
-      }
+      ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
 
       ${
         !json.hooks.onUpdate?.length
           ? ''
           : json.hooks.onUpdate
               .map(({ code, deps }, index) => {
-                const hookCode = transformHookCode(code);
-
                 if (deps) {
                   const fnName = `onUpdateFn_${index}`;
                   return `
                     function ${fnName}() {
-                      ${hookCode}
+                      ${code}
                     }
                     $: ${fnName}(...${stripStateAndProps(deps, options)})
                     `;
                 } else {
-                  return `afterUpdate(() => { ${hookCode} })`;
+                  return `afterUpdate(() => { ${code} })`;
                 }
               })
               .join(';')
       }
 
-      ${
-        !json.hooks.onUnMount?.code
-          ? ''
-          : `onDestroy(() => { ${transformHookCode(json.hooks.onUnMount.code)} });`
-      }
+      ${!json.hooks.onUnMount?.code ? '' : `onDestroy(() => { ${json.hooks.onUnMount.code} });`}
     </script>
 
     ${json.children
