@@ -1,122 +1,39 @@
 import dedent from 'dedent';
 import { format } from 'prettier/standalone';
 import traverse from 'traverse';
-import { collectCss } from '../helpers/styles/collect-css';
-import { hasStyle } from '../helpers/styles/helpers';
-import { fastClone } from '../helpers/fast-clone';
-import { getProps } from '../helpers/get-props';
-import { getRefs } from '../helpers/get-refs';
+import { collectCss } from '../../helpers/styles/collect-css';
+import { hasStyle } from '../../helpers/styles/helpers';
+import { fastClone } from '../../helpers/fast-clone';
+import { getProps } from '../../helpers/get-props';
+import { getRefs } from '../../helpers/get-refs';
 import {
   stringifyContextValue,
   getStateObjectStringFromComponent,
-} from '../helpers/get-state-object-string';
-import { isMitosisNode } from '../helpers/is-mitosis-node';
-import { renderPreComponent } from '../helpers/render-imports';
-import { stripStateAndPropsRefs } from '../helpers/strip-state-and-props-refs';
-import { selfClosingTags } from '../parsers/jsx';
-import { MitosisComponent } from '../types/mitosis-component';
-import { BaseNode, Binding, ForNode, MitosisNode } from '../types/mitosis-node';
+} from '../../helpers/get-state-object-string';
+import { isMitosisNode } from '../../helpers/is-mitosis-node';
+import { renderPreComponent } from '../../helpers/render-imports';
+import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { MitosisComponent } from '../../types/mitosis-component';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
   runPreCodePlugins,
   runPreJsonPlugins,
-} from '../modules/plugins';
-import isChildren from '../helpers/is-children';
-import { stripMetaProperties } from '../helpers/strip-meta-properties';
-import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
-import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
-import { gettersToFunctions } from '../helpers/getters-to-functions';
-import { babelTransformCode } from '../helpers/babel-transform';
+} from '../../modules/plugins';
+import { stripMetaProperties } from '../../helpers/strip-meta-properties';
+import { TranspilerGenerator } from '../../types/transpiler';
+import { gettersToFunctions } from '../../helpers/getters-to-functions';
+import { babelTransformCode } from '../../helpers/babel-transform';
 import { pipe } from 'fp-ts/lib/function';
-import { hasContext } from './helpers/context';
-import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
-import { VALID_HTML_TAGS } from '../constants/html_tags';
-import { isUpperCase } from '../helpers/is-upper-case';
+import { hasContext } from '../helpers/context';
+import { isSlotProperty } from '../../helpers/slots';
 import json5 from 'json5';
-import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
-import { getForArguments } from '../helpers/nodes/for';
-import { mergeOptions } from '../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
-
-export interface ToSvelteOptions extends BaseTranspilerOptions {
-  stateType?: 'proxies' | 'variables';
-}
-
-const mappers: {
-  For: BlockToSvelte<ForNode>;
-  Fragment: BlockToSvelte;
-  Show: BlockToSvelte;
-  Slot: BlockToSvelte;
-} = {
-  Fragment: ({ json, options, parentComponent }) => {
-    if (json.bindings.innerHTML?.code) {
-      return BINDINGS_MAPPER.innerHTML(json, options);
-    } else if (json.children.length > 0) {
-      return `${json.children
-        .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-        .join('\n')}`;
-    } else {
-      return '';
-    }
-  },
-  For: ({ json, options, parentComponent }) => {
-    const firstChild = json.children[0];
-    const keyValue = firstChild.properties.key || firstChild.bindings.key?.code;
-
-    if (keyValue) {
-      // we remove extraneous prop which Svelte does not use
-      delete firstChild.properties.key;
-      delete firstChild.bindings.key;
-    }
-
-    const args = getForArguments(json, { excludeCollectionName: true }).join(', ');
-
-    return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${args} ${
-      keyValue ? `(${keyValue})` : ''
-    }}
-${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
-{/each}
-`;
-  },
-  Show: ({ json, options, parentComponent }) => {
-    return `
-{#if ${stripStateAndProps(json.bindings.when?.code, options)} }
-${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
-
-  ${
-    json.meta.else
-      ? `
-  {:else}
-  ${blockToSvelte({
-    json: json.meta.else as MitosisNode,
-    options,
-    parentComponent,
-  })}
-  `
-      : ''
-  }
-{/if}`;
-  },
-  Slot({ json, options, parentComponent }) {
-    if (!json.bindings.name) {
-      const key = Object.keys(json.bindings).find(Boolean);
-      if (!key) return '<slot />';
-
-      return `
-        <span #${key}>
-        ${stripStateAndPropsRefs(json.bindings[key]?.code)}
-        </span>
-      `;
-    }
-    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
-
-    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
-      ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('\n')}</slot>`;
-  },
-};
+import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
+import { mergeOptions } from '../../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { stripStateAndProps } from './helpers';
+import { ToSvelteOptions } from './types';
+import { blockToSvelte } from './blocks';
 
 const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
@@ -140,165 +57,6 @@ const setContextCode = (json: MitosisComponent) => {
       });`;
     })
     .join('\n');
-};
-
-const BINDINGS_MAPPER = {
-  innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
-    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML?.code)}}`,
-};
-
-const SVELTE_SPECIAL_TAGS = {
-  COMPONENT: 'svelte:component',
-  ELEMENT: 'svelte:element',
-  SELF: 'svelte:self',
-} as const;
-
-const getTagName = ({
-  json,
-  parentComponent,
-}: {
-  json: MitosisNode;
-  parentComponent: MitosisComponent;
-}) => {
-  if (parentComponent && json.name === parentComponent.name) {
-    return SVELTE_SPECIAL_TAGS.SELF;
-  }
-
-  const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name);
-  const isSpecialSvelteTag = json.name.startsWith('svelte:');
-  // Check if any import matches `json.name`
-  const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
-    Object.keys(imports).some((name) => name === json.name),
-  );
-  // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
-  // overrides for now
-  if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
-    json.bindings.this = { code: json.name };
-    return SVELTE_SPECIAL_TAGS.COMPONENT;
-  }
-
-  return json.name;
-};
-
-type BlockToSvelte<T extends BaseNode = MitosisNode> = (props: {
-  json: T;
-  options: ToSvelteOptions;
-  parentComponent: MitosisComponent;
-}) => string;
-
-const stripStateAndProps = (code: string | undefined, options: ToSvelteOptions) =>
-  stripStateAndPropsRefs(code, {
-    includeState: options.stateType === 'variables',
-    replaceWith: (name) => (name === 'children' ? '$$slots.default' : name),
-  });
-
-const stringifyBinding =
-  (options: ToSvelteOptions) =>
-  ([key, binding]: [string, Binding | undefined]) => {
-    if (key === 'innerHTML' || !binding) {
-      return '';
-    }
-
-    const { code, arguments: cusArgs = ['event'], type } = binding;
-    const useValue = stripStateAndProps(code, options);
-
-    if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : useValue;
-      return ` {...${spreadValue}} `;
-    } else if (key.startsWith('on')) {
-      const event = key.replace('on', '').toLowerCase();
-      // TODO: handle quotes in event handler values
-
-      const valueWithoutBlock = removeSurroundingBlock(useValue);
-
-      if (valueWithoutBlock === key) {
-        return ` on:${event}={${valueWithoutBlock}} `;
-      } else {
-        return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
-      }
-    } else if (key === 'ref') {
-      return ` bind:this={${useValue}} `;
-    } else {
-      return ` ${key}={${useValue}} `;
-    }
-  };
-
-export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent }) => {
-  if (mappers[json.name as keyof typeof mappers]) {
-    return mappers[json.name as keyof typeof mappers]({
-      json: json as any,
-      options,
-      parentComponent,
-    });
-  }
-
-  const tagName = getTagName({ json, parentComponent });
-
-  if (isChildren(json)) {
-    return `<slot></slot>`;
-  }
-
-  if (json.properties._text) {
-    return json.properties._text;
-  }
-
-  const textCode = json.bindings._text?.code;
-
-  if (textCode) {
-    const strippedTextCode = stripStateAndProps(textCode, options);
-    if (isSlotProperty(strippedTextCode)) {
-      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
-    }
-    return `{${strippedTextCode}}`;
-  }
-
-  let str = '';
-
-  str += `<${tagName} `;
-
-  const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
-  if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
-    const useValue = stripStateAndProps(
-      json.bindings.style?.code || json.properties.style,
-      options,
-    );
-
-    str += `use:mitosis_styling={${useValue}}`;
-    delete json.bindings.style;
-    delete json.properties.style;
-  }
-
-  for (const key in json.properties) {
-    const value = json.properties[key];
-    str += ` ${key}="${value}" `;
-  }
-
-  const stringifiedBindings = Object.entries(json.bindings).map(stringifyBinding(options)).join('');
-
-  str += stringifiedBindings;
-
-  // if we have innerHTML, it doesn't matter whether we have closing tags or not, or children or not.
-  // we use the innerHTML content as children and don't render the self-closing tag.
-  if (json.bindings.innerHTML?.code) {
-    str += '>';
-    str += BINDINGS_MAPPER.innerHTML(json, options);
-    str += `</${tagName}>`;
-    return str;
-  }
-
-  if (selfClosingTags.has(tagName)) {
-    return str + ' />';
-  }
-  str += '>';
-  if (json.children) {
-    str += json.children
-      .map((item) => blockToSvelte({ json: item, options, parentComponent }))
-      .join('');
-  }
-
-  str += `</${tagName}>`;
-
-  return str;
 };
 
 /**
