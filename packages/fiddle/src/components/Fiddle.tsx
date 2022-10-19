@@ -155,7 +155,6 @@ const builderOptions = {
 const BuilderEditor = adapt('builder-editor');
 
 const smallBreakpoint = breakpoints.mediaQueries.small;
-const responsiveColHeight = 'calc(50vh - 30px)';
 
 const builderEnvParam = getQueryParam('builderEnv');
 
@@ -690,7 +689,7 @@ export default function Fiddle() {
             display: 'flex',
             flexGrow: 1,
             overflow: 'hidden',
-            [smallBreakpoint]: { flexDirection: 'column' },
+            [smallBreakpoint]: { flexDirection: 'column', overflow: 'unset' },
           }}
         >
           <div
@@ -702,7 +701,7 @@ export default function Fiddle() {
               borderRight: `1px solid ${colors.contrast}`,
               [smallBreakpoint]: {
                 width: '100%',
-                height: responsiveColHeight,
+                height: 'calc(50vh - 30px)',
                 overflow: 'hidden',
               },
             }}
@@ -754,14 +753,19 @@ export default function Fiddle() {
                   }
                   value="mitosis"
                 />
-                {/* <Tab
-                  label={<TabLabelWithIcon label="Liquid Lite" />}
-                  value="liquid"
-                /> */}
               </Tabs>
             </div>
             <Show when={state.inputTab === 'mitosis'}>
-              <div css={{ paddingTop: 15, flexGrow: 1, position: 'relative' }}>
+              <div
+                css={{
+                  paddingTop: 15,
+                  flexGrow: 1,
+                  position: 'relative',
+                  [smallBreakpoint]: {
+                    paddingTop: 0,
+                  },
+                }}
+              >
                 <Select
                   disableUnderline
                   css={{
@@ -769,6 +773,14 @@ export default function Fiddle() {
                     position: 'absolute',
                     right: 10,
                     zIndex: 10,
+                    [smallBreakpoint]: {
+                      display: 'block',
+                      width: '160px',
+                      marginLeft: 'auto',
+                      position: 'relative',
+                      top: 0,
+                      right: 0,
+                    },
                   }}
                   renderValue={(value) => (
                     <span css={{ textTransform: 'capitalize' }}>
@@ -867,7 +879,7 @@ export default function Fiddle() {
               flexDirection: 'column',
               [smallBreakpoint]: {
                 width: '100%',
-                height: responsiveColHeight,
+                height: 'calc(100vh - 30px)',
                 overflow: 'hidden',
               },
             }}
@@ -1380,7 +1392,12 @@ export default function Fiddle() {
             builder-editor { 
               flex-grow: 1; 
               pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
-            }`}
+            }
+            
+            builder-editor iframe {
+              min-width: unset
+            }
+            `}
           </style>
           <BuilderEditor
             onChange={(e: CustomEvent) => {
