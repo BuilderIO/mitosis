@@ -142,14 +142,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     processDynamicComponents(component, options);
     processForKeys(component, options);
 
-    // need to run this before we process the component's code
-    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
-
     component = runPreJsonPlugins(component, options.plugins);
 
     if (options.api === 'options') {
       mapRefs(component, (refName) => `this.$refs.${refName}`);
     }
+
+    // need to run this before we process the component's code
+    const elementProps = Array.from(getProps(component)).filter((prop) => !isSlotProperty(prop));
 
     component = runPostJsonPlugins(component, options.plugins);
 

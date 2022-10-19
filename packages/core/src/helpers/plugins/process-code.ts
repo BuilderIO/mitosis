@@ -42,7 +42,7 @@ export const CODE_PROCESSOR_PLUGIN =
   (codeProcessor: CodeProcessor): Plugin =>
   () => ({
     json: {
-      pre: (json: MitosisComponent) => {
+      post: (json: MitosisComponent) => {
         const processCode = codeProcessor('hooks');
 
         /**
