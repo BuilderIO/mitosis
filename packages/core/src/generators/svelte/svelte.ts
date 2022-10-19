@@ -130,9 +130,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
     json = runPreJsonPlugins(json, options.plugins);
-    if (json.name === 'RenderBlock') {
-      console.log(json.hooks.preComponent);
-    }
 
     const refs = Array.from(getRefs(json));
     useBindValue(json, options);
