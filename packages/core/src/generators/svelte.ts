@@ -347,14 +347,15 @@ const DEFAULT_OPTIONS: ToSvelteOptions = {
 };
 
 export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
-  ({ plugins = [], ...userProvidedOptions } = {}) =>
+  (userProvidedOptions) =>
   ({ component }) => {
     const options = mergeOptions(DEFAULT_OPTIONS, userProvidedOptions);
 
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(component);
-    if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
+    json = runPreJsonPlugins(json, options.plugins);
+    if (json.name === 'RenderBlock') {
+      console.log(json.hooks.preComponent);
     }
 
     const refs = Array.from(getRefs(json));
@@ -362,9 +363,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
 
     gettersToFunctions(json);
 
-    if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
-    }
+    json = runPostJsonPlugins(json, options.plugins);
+
     const css = collectCss(json);
     stripMetaProperties(json);
 
@@ -558,9 +558,8 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     }
   `;
 
-    if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
-    }
+    str = runPreCodePlugins(str, options.plugins);
+
     if (options.prettier !== false) {
       try {
         str = format(str, {
@@ -579,8 +578,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         console.warn({ string: str }, err);
       }
     }
-    if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
-    }
+    str = runPostCodePlugins(str, options.plugins);
+
     return str;
   };
