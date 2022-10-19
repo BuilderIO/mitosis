@@ -37,7 +37,7 @@ import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from './helpers/functions';
 import { getForArguments } from '../helpers/nodes/for';
 import { mergeOptions } from '../helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
+import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 export interface ToSvelteOptions extends BaseTranspilerOptions {
   stateType?: 'proxies' | 'variables';
