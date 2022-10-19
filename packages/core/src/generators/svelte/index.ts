@@ -1,0 +1,1 @@
+export { componentToSvelte } from './svelte';
