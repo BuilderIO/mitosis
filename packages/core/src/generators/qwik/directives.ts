@@ -95,6 +95,11 @@ export function Image(props: ImageProps) {
       loading: isPixel ? 'eager' : 'lazy',
       srcset: undefined as string | undefined,
     };
+    const qwikBugWorkaround = (imgProps: any) =>
+      Object.keys(imgProps).forEach(
+        (k) => (imgProps as any)[k] === undefined && delete (imgProps as any)[k],
+      );
+    qwikBugWorkaround(imgProps);
     if (isBuilderIoImage) {
       const webpImage = updateQueryParam(image, 'format', 'webp');
       const srcset = ['100', '200', '400', '800', '1200', '1600', '2000']
