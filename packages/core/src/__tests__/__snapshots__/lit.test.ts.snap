@@ -2403,6 +2403,38 @@ padding: 10px;
 "
 `;
 
+exports[`Lit Javascript Test componentWithContext 1`] = `
+"import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+@customElement(\\"component-with-context\\")
+export default class ComponentWithContext extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment>
+        <my-fragment>\${foo.value}</my-fragment>
+      </my-fragment>
+
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit Javascript Test defaultProps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -5950,6 +5982,38 @@ padding: 10px;
         <div  class={state.classState + ' div'}  .style=\${this.styleState} >
             Hello! I can run in React, Vue, Solid, or Liquid!
           </div>
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit Typescript Test componentWithContext 1`] = `
+"import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+@customElement(\\"component-with-context\\")
+export default class ComponentWithContext extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+
+  render() {
+    return html\`
+        
+        <my-fragment>
+        <my-fragment>\${foo.value}</my-fragment>
+      </my-fragment>
+
       \`;
   }
 }

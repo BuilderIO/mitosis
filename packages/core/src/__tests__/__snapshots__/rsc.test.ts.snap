@@ -1679,6 +1679,35 @@ padding: 10px; }\`}</style>
 "
 `;
 
+exports[`RSC Javascript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const foo = _context[\\"Context1\\"];
+
+  _context.Context1 = {
+    foo: \\"bar\\",
+    content() {
+      return props.content;
+    },
+  };
+
+  _context.Context2 = { bar: \\"baz\\" };
+
+  return <>{foo.value}</>;
+}
+"
+`;
+
 exports[`RSC Javascript Test defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -4095,6 +4124,35 @@ export default function MyBasicComponent(props: any) {
 padding: 10px; }\`}</style>
     </>
   );
+}
+"
+`;
+
+exports[`RSC Typescript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const foo = _context[\\"Context1\\"];
+
+  _context.Context1 = {
+    foo: \\"bar\\",
+    content() {
+      return props.content;
+    },
+  };
+
+  _context.Context2 = { bar: \\"baz\\" };
+
+  return <>{foo.value}</>;
 }
 "
 `;

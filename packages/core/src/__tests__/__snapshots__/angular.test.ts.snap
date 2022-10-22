@@ -4173,6 +4173,61 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Angular Javascript Test componentWithContext 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <div>
+      <div>{{foo.value}}</div>
+    </div>
+  \`,
+})
+export default class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
+}
+"
+`;
+
+exports[`Angular Javascript Test componentWithContext 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <div>
+      <div>{{foo.value}}</div>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
+}
+"
+`;
+
 exports[`Angular Javascript Test defaultProps 1`] = `
 "import { Component, Input } from \\"@angular/core\\";
 
@@ -10072,6 +10127,61 @@ import { CommonModule } from \\"@angular/common\\";
 export default class MyBasicComponent {
   classState = \\"testClassName\\";
   styleState = { color: \\"red\\" };
+}
+"
+`;
+
+exports[`Angular Typescript Test componentWithContext 1`] = `
+"import { Component, Input } from \\"@angular/core\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <div>
+      <div>{{foo.value}}</div>
+    </div>
+  \`,
+})
+export default class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
+}
+"
+`;
+
+exports[`Angular Typescript Test componentWithContext 2`] = `
+"import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+@Component({
+  selector: \\"component-with-context, ComponentWithContext\\",
+  template: \`
+    <div>
+      <div>{{foo.value}}</div>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export default class ComponentWithContext {
+  @Input() content: ComponentWithContextProps[\\"content\\"];
+
+  constructor(public foo: Context1) {}
 }
 "
 `;

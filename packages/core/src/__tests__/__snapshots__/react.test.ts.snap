@@ -1837,6 +1837,43 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
+exports[`React Javascript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`React Javascript Test defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -4414,6 +4451,43 @@ export default function MyBasicComponent(props: any) {
         }
       \`}</style>
     </>
+  );
+}
+"
+`;
+
+exports[`React Typescript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>{foo.value}</>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 "

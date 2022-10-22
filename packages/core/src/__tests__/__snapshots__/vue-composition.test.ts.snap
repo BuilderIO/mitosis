@@ -1759,6 +1759,32 @@ function _classStringToObject(str) {
 "
 `;
 
+exports[`Vue Javascript Test componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script setup>
+import { inject, provide } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps([\\"content\\"]);
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>
+"
+`;
+
 exports[`Vue Javascript Test defaultProps 1`] = `
 "<template>
   <div>
@@ -4261,6 +4287,35 @@ function _classStringToObject(str) {
   padding: 10px;
 }
 </style>
+"
+`;
+
+exports[`Vue Typescript Test componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script setup lang=\\"ts\\">
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps<ComponentWithContextProps>();
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>
 "
 `;
 

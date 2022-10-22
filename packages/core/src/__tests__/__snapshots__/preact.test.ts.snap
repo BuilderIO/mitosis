@@ -1878,6 +1878,44 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
+exports[`Preact Javascript Test componentWithContext 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>{foo.value}</Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
 exports[`Preact Javascript Test defaultProps 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4529,6 +4567,44 @@ export default function MyBasicComponent(props: any) {
         }
       \`}</style>
     </Fragment>
+  );
+}
+"
+`;
+
+exports[`Preact Typescript Test componentWithContext 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useContext } from \\"preact/hooks\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <Fragment>{foo.value}</Fragment>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 "

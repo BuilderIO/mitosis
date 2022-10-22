@@ -184,7 +184,6 @@ export function generateOptionsApiScript(
         ${
           size(component.context.set)
             ? `provide() {
-                const _this = this;
                 return ${getContextProvideString(component, options)}
               },`
             : ''

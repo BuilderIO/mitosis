@@ -3462,6 +3462,88 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid Javascript Test componentWithContext 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Dynamic
+      value={{
+        bar: \\"baz\\",
+      }}
+      component={Context2.Provider}
+    >
+      <Dynamic
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+        component={Context1.Provider}
+      >
+        <>
+          <>{foo.value}</>
+        </>
+      </Dynamic>
+    </Dynamic>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid Javascript Test componentWithContext 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          bar: \\"baz\\",
+        }}
+        component={Context2.Provider}
+      >
+        <Dynamic
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+          component={Context1.Provider}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Dynamic>
+      </Dynamic>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
 exports[`Solid Javascript Test defaultProps 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -8249,6 +8331,88 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test componentWithContext 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Dynamic
+      value={{
+        bar: \\"baz\\",
+      }}
+      component={Context2.Provider}
+    >
+      <Dynamic
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+        component={Context1.Provider}
+      >
+        <>
+          <>{foo.value}</>
+        </>
+      </Dynamic>
+    </Dynamic>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid Typescript Test componentWithContext 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          bar: \\"baz\\",
+        }}
+        component={Context2.Provider}
+      >
+        <Dynamic
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+          component={Context1.Provider}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Dynamic>
+      </Dynamic>
+    </>
+  );
+}
+
+export default ComponentWithContext;
 "
 `;
 
