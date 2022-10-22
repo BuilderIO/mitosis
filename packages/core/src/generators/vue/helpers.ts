@@ -1,6 +1,8 @@
+import { Nullable } from '../../helpers/nullable';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
 
@@ -71,3 +73,21 @@ export function processBinding({
     to: (name) => (options.api === 'options' ? `this.${name}` : `${name}.value`),
   });
 }
+
+export const getContextValue = ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+  const valueStr = value
+    ? stringifyContextValue(value, { valueMapper: (code) => stripStateAndPropsRefs(code) })
+    : ref
+    ? stripStateAndPropsRefs(ref)
+    : null;
+
+  return valueStr;
+};
+
+export const getContextProvideString = (component: MitosisComponent, options: ToVueOptions) => {
+  return `{
+    ${Object.values(component.context.set)
+      .map((setVal) => `${setVal.name}: ${getContextValue(setVal)}`)
+      .join(',')}
+  }`;
+};

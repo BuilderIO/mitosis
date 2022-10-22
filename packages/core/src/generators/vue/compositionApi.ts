@@ -5,7 +5,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { types } from '@babel/core';
-import { processBinding } from './helpers';
+import { getContextValue, processBinding } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
@@ -122,13 +122,13 @@ export function generateCompositionApiScript(
 
   if (template.includes('_classStringToObject')) {
     methods += ` function _classStringToObject(str) {
-    const obj = {};
-    if (typeof str !== 'string') { return obj }
-    const classNames = str.trim().split(/\\s+/);
-    for (const name of classNames) {
-      obj[name] = true;
-    }
-    return obj;
+      const obj = {};
+      if (typeof str !== 'string') { return obj }
+      const classNames = str.trim().split(/\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
     } `;
   }
 
@@ -142,10 +142,8 @@ export function generateCompositionApiScript(
       ?.map((key) => `const ${key} = inject(${component.context.get[key].name})`)
       .join('\n')}
 
-    ${Object.keys(component.context.set)
-      ?.map(
-        (key) => `provide(${component.context.set[key].name}, ${component.context.set[key].ref})`,
-      )
+    ${Object.values(component.context.set)
+      ?.map((contextSet) => `provide(${contextSet.name}, ${getContextValue(contextSet)})`)
       .join('\n')}
 
     ${Object.keys(component.refs)
