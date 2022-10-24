@@ -62,7 +62,7 @@ export const CODE_PROCESSOR_PLUGIN =
           } else if (checkIsDefined(hooks)) {
             hooks.code = processHookCode(hooks.code);
             if (hooks.deps) {
-              hooks.deps = processHookCode(hooks.deps);
+              hooks.deps = codeProcessor('hooks-deps')(hooks.deps);
             }
           }
         }
