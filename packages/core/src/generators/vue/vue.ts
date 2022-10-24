@@ -110,16 +110,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
           switch (codeType) {
             case 'hooks':
               return (code) =>
-                pipe(
-                  processBinding({
-                    code,
-                    options,
-                    json: component,
-                    // we don't want to process `props`, because Vue 3 code has a `props` ref, and
-                    // therefore we can keep pointing to `props.${value}`
-                    includeProps: false,
-                  }),
-                );
+                processBinding({
+                  code,
+                  options,
+                  json: component,
+                  // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                  // therefore we can keep pointing to `props.${value}`
+                  includeProps: false,
+                });
             case 'state':
               return (code) =>
                 pipe(
