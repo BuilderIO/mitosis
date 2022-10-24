@@ -1,11 +1,9 @@
 import dedent from 'dedent';
 import json5 from 'json5';
 import { pickBy } from 'lodash';
-import { babelTransformExpression } from '../../helpers/babel-transform';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
-import { types } from '@babel/core';
-import { getContextValue, processBinding } from './helpers';
+import { getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
@@ -31,68 +29,6 @@ const getCompositionPropDefinition = ({
   return str;
 };
 
-function shouldAppendValueToRef(path: babel.NodePath<babel.types.Identifier>) {
-  const { parent, node } = path;
-
-  if (types.isFunctionDeclaration(parent) && parent.id === node) {
-    return false;
-  }
-
-  if (types.isCallExpression(parent)) {
-    return false;
-  }
-
-  const isMemberExpression = types.isMemberExpression(parent);
-
-  if (
-    isMemberExpression &&
-    types.isThisExpression(parent.object) &&
-    types.isProgram(path.scope.block) &&
-    path.scope.hasReference(node.name)
-  ) {
-    return false;
-  }
-
-  if (
-    isMemberExpression &&
-    types.isIdentifier(parent.object) &&
-    types.isIdentifier(parent.property) &&
-    parent.property.name === node.name
-  ) {
-    return false;
-  }
-
-  if (Object.keys(path.scope.bindings).includes(path.node.name)) {
-    return false;
-  }
-
-  if (path.parentPath.listKey === 'arguments' || path.parentPath.listKey === 'params') {
-    return false;
-  }
-
-  return true;
-}
-
-export function appendValueToRefs(
-  input: string,
-  component: MitosisComponent,
-  options: ToVueOptions,
-) {
-  const refKeys = Object.keys(component.refs);
-  const stateKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
-  const allKeys = [...refKeys, ...stateKeys];
-
-  let output = processBinding({ code: input, options, json: component, includeProps: false });
-
-  return babelTransformExpression(output, {
-    Identifier(path: babel.NodePath<babel.types.Identifier>) {
-      if (allKeys.includes(path.node.name) && shouldAppendValueToRef(path)) {
-        path.replaceWith(types.identifier(`${path.node.name}.value`));
-      }
-    },
-  });
-}
-
 export function generateCompositionApiScript(
   component: MitosisComponent,
   options: ToVueOptions,
@@ -106,9 +42,7 @@ export function generateCompositionApiScript(
     functions: false,
     getters: false,
     format: 'variables',
-    valueMapper: (code) => {
-      return processBinding({ code: `ref(${code})`, options, json: component });
-    },
+    valueMapper: (code) => `ref(${code})`,
     keyPrefix: 'const',
   });
 
@@ -116,7 +50,6 @@ export function generateCompositionApiScript(
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding({ code, options, json: component, includeProps: false }),
     format: 'variables',
   });
 
@@ -143,7 +76,13 @@ export function generateCompositionApiScript(
       .join('\n')}
 
     ${Object.values(component.context.set)
-      ?.map((contextSet) => `provide(${contextSet.name}, ${getContextValue(contextSet)})`)
+      ?.map(
+        (contextSet) =>
+          `provide(${contextSet.name}, ${getContextValue({
+            json: component,
+            options,
+          })(contextSet)})`,
+      )
       .join('\n')}
 
     ${Object.keys(component.refs)
@@ -166,13 +105,17 @@ export function generateCompositionApiScript(
       getterKeys
         ?.map((key) => {
           const code = component.state[key]?.code?.toString();
-          return !code
-            ? ''
-            : `const ${key} = computed(${appendValueToRefs(
-                code.replace(key, '').replace('get ()', '() =>'),
-                component,
-                options,
-              )})`;
+
+          if (!code) {
+            return '';
+          }
+
+          // transform `foo() { return this.bar }` to `() => { return bar.value }`
+          const getterAsFunction = code.replace(key, '').trim().replace(/^\(\)/, '() =>');
+
+          const computedCode = `const ${key} = computed(${getterAsFunction})`;
+
+          return computedCode;
         })
         .join('\n') || ''
     }
@@ -187,7 +130,7 @@ export function generateCompositionApiScript(
         )
         .join('\n') || ''
     }
-    ${methods?.length ? appendValueToRefs(methods, component, options) : ''}
+    ${methods ?? ''}
   `;
 
   str = str.replace(/this\./g, ''); // strip this elsewhere (e.g. functions)

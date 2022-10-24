@@ -25,11 +25,12 @@ import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
-import { appendValueToRefs, generateCompositionApiScript } from './compositionApi';
+import { generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { GETTER } from '../../helpers/patterns';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -108,7 +109,17 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
         if (options.api === 'composition') {
           switch (codeType) {
             case 'hooks':
-              return (code) => appendValueToRefs(code, component, options);
+              return (code) =>
+                pipe(
+                  processBinding({
+                    code,
+                    options,
+                    json: component,
+                    // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                    // therefore we can keep pointing to `props.${value}`
+                    includeProps: false,
+                  }),
+                );
             case 'state':
               return (code) =>
                 pipe(
