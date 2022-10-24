@@ -109,6 +109,21 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
           switch (codeType) {
             case 'hooks':
               return (code) => appendValueToRefs(code, component, options);
+            case 'state':
+              return (code) =>
+                pipe(
+                  // workaround so that getter code is valid and parseable by babel.
+                  code.replace(GETTER, ''),
+                  (c) =>
+                    processBinding({
+                      code: c,
+                      options,
+                      json: component,
+                      // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                      // therefore we can keep pointing to `props.${value}`
+                      includeProps: false,
+                    }),
+                );
             case 'bindings':
               return (c) => stripStateAndPropsRefs(c);
             case 'hooks-deps':
@@ -124,6 +139,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return (c) => stripStateAndPropsRefs(c);
             case 'properties':
             case 'hooks-deps':
+            case 'state':
               return (c) => c;
           }
         }
