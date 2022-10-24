@@ -121,6 +121,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             return transformHookCode(options);
           case 'bindings':
           case 'hooks-deps':
+          case 'state':
           case 'properties':
             return (c) => c;
         }

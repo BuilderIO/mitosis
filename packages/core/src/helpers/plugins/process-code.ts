@@ -4,7 +4,7 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { checkIsDefined } from '../nullable';
 import { tarverseNodes } from '../traverse-nodes';
 
-type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties';
+type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
 
 type CodeProcessor = (codeType: CodeType) => (code: string) => string;
 
@@ -43,7 +43,7 @@ export const CODE_PROCESSOR_PLUGIN =
   () => ({
     json: {
       post: (json: MitosisComponent) => {
-        const processCode = codeProcessor('hooks');
+        const processHookCode = codeProcessor('hooks');
 
         /**
          * process code in hooks
@@ -54,16 +54,23 @@ export const CODE_PROCESSOR_PLUGIN =
 
           if (checkIsDefined(hooks) && Array.isArray(hooks)) {
             for (const hook of hooks) {
-              hook.code = processCode(hook.code);
+              hook.code = processHookCode(hook.code);
               if (hook.deps) {
                 hook.deps = codeProcessor('hooks-deps')(hook.deps);
               }
             }
           } else if (checkIsDefined(hooks)) {
-            hooks.code = processCode(hooks.code);
+            hooks.code = processHookCode(hooks.code);
             if (hooks.deps) {
-              hooks.deps = processCode(hooks.deps);
+              hooks.deps = processHookCode(hooks.deps);
             }
+          }
+        }
+
+        for (const key in json.state) {
+          const state = json.state[key];
+          if (state && state.type !== 'property') {
+            state.code = codeProcessor('state')(state.code);
           }
         }
 
