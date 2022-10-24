@@ -123,36 +123,23 @@ export const processBinding = ({
   json: MitosisComponent;
   includeProps?: boolean;
 }): string => {
-  const isX = code.includes('const hi ');
-
-  if (isX) {
-    console.log('start', { code });
-  }
   return pipe(
     stripStateAndPropsRefs(code, {
       includeState: true,
       includeProps,
       replaceWith: (name) => {
-        if (isX) {
-          console.log('name', name);
+        switch (options.api) {
+          case 'composition':
+            return name;
+          case 'options':
+            if (name === 'children' || name.startsWith('children.')) {
+              return 'this.$slots.default';
+            }
+            return `this.${name}`;
         }
-
-        if (name === 'children' || name.startsWith('children.')) {
-          return 'this.$slots.default';
-        }
-        return `this.${name}`;
       },
     }),
-    (c) => {
-      if (isX) {
-        console.log('after strip', { c });
-      }
-      const newLocal = processRefs(c, json, options);
-      if (isX) {
-        console.log('after process', { newLocal });
-      }
-      return newLocal;
-    },
+    (c) => processRefs(c, json, options),
   );
 };
 
