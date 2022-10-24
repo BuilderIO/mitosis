@@ -152,7 +152,6 @@ const BASIC_TESTS: Tests = {
   spreadAttrs,
   spreadNestedProps,
   spreadProps,
-  componentWithContext,
 };
 
 const SLOTS_TESTS: Tests = {
@@ -200,6 +199,10 @@ const IMPORT_TEST: Tests = {
   importRaw: getRawFile('./data/import.raw'),
 };
 
+const CONTEXT_TEST: Tests = {
+  componentWithContext,
+};
+
 const JSX_TESTS: Tests[] = [
   BASIC_TESTS,
   SLOTS_TESTS,
@@ -214,6 +217,7 @@ const JSX_TESTS: Tests[] = [
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   react: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -225,6 +229,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS,
   ],
   rsc: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -236,6 +241,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS,
   ],
   angular: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -248,6 +254,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     IMPORT_TEST,
   ],
   lit: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -259,6 +266,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
   ],
   marko: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -270,6 +278,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
   ],
   webcomponent: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -281,6 +290,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FORM_BLOCK_TESTS
   ],
   vue: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -292,6 +302,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
   ],
   svelte: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SHOW_TESTS,
     FORWARD_REF_TESTS,
@@ -302,6 +313,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
   ],
   html: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -313,6 +325,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FORM_BLOCK_TESTS
   ],
   stencil: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     // ROOT_SHOW_TESTS,
@@ -324,6 +337,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS
   ],
   solid: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -335,6 +349,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     ON_UPDATE_RETURN,
   ],
   reactNative: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
@@ -346,6 +361,7 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
     // FOR_SHOW_TESTS,
   ],
   liquid: [
+    CONTEXT_TEST,
     BASIC_TESTS,
     SLOTS_TESTS,
     SHOW_TESTS,
