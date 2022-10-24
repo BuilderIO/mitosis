@@ -74,20 +74,24 @@ export function processBinding({
   });
 }
 
-export const getContextValue = ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
-  const valueStr = value
-    ? stringifyContextValue(value, { valueMapper: (code) => stripStateAndPropsRefs(code) })
-    : ref
-    ? stripStateAndPropsRefs(ref)
-    : null;
+export const getContextValue =
+  ({ options, json }: { options: ToVueOptions; json: MitosisComponent }) =>
+  ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+    const valueStr = value
+      ? stringifyContextValue(value, {
+          valueMapper: (code) => processBinding({ code, options, json }),
+        })
+      : ref
+      ? processBinding({ code: ref, options, json })
+      : null;
 
-  return valueStr;
-};
+    return valueStr;
+  };
 
-export const getContextProvideString = (component: MitosisComponent, options: ToVueOptions) => {
+export const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
   return `{
-    ${Object.values(component.context.set)
-      .map((setVal) => `${setVal.name}: ${getContextValue(setVal)}`)
+    ${Object.values(json.context.set)
+      .map((setVal) => `${setVal.name}: ${getContextValue({ options, json })(setVal)}`)
       .join(',')}
   }`;
 };
