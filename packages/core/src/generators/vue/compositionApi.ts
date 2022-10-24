@@ -133,6 +133,5 @@ export function generateCompositionApiScript(
     ${methods ?? ''}
   `;
 
-  str = str.replace(/this\./g, ''); // strip this elsewhere (e.g. functions)
   return str;
 }

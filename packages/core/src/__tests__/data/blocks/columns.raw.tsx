@@ -26,14 +26,14 @@ export default function Column(props: ColumnProps) {
       return typeof props.space === 'number' ? props.space || 0 : 20;
     },
     getWidth(index: number) {
-      const columns = this.getColumns();
+      const columns = state.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
     getColumnCssWidth(index: number) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
+      const columns = state.getColumns();
+      const gutterSize = state.getGutterSize();
       const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-      return `calc(${this.getWidth(index)}% - ${subtractWidth}px)`;
+      return `calc(${state.getWidth(index)}% - ${subtractWidth}px)`;
     },
   });
 
