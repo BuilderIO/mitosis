@@ -1483,6 +1483,29 @@ exports[`Svelte Javascript Test className 1`] = `
 "
 `;
 
+exports[`Svelte Javascript Test componentWithContext 1`] = `
+"<script>
+  import { getContext, setContext } from \\"svelte\\";
+
+  import Context1 from \\"@dummy/1\\";
+  import Context2 from \\"@dummy/2\\";
+
+  export let content;
+
+  let foo = getContext(Context1.key);
+  setContext(Context1.key, {
+    foo: \\"bar\\",
+    content() {
+      return content;
+    },
+  });
+  setContext(Context2.key, { bar: \\"baz\\" });
+</script>
+
+{foo.value}
+"
+`;
+
 exports[`Svelte Javascript Test defaultProps 1`] = `
 "<script>
   export let link = \\"https://builder.io/\\";
@@ -3765,6 +3788,35 @@ exports[`Svelte Typescript Test className 1`] = `
 
   <div class={bindings}>With binding</div>
 </div>
+"
+`;
+
+exports[`Svelte Typescript Test componentWithContext 1`] = `
+"<script context=\\"module\\" lang=\\"ts\\">
+  export interface ComponentWithContextProps {
+    content: string;
+  }
+</script>
+
+<script lang=\\"ts\\">
+  import { getContext, setContext } from \\"svelte\\";
+
+  import Context1 from \\"@dummy/1\\";
+  import Context2 from \\"@dummy/2\\";
+
+  export let content: ComponentWithContextProps[\\"content\\"];
+
+  let foo = getContext(Context1.key);
+  setContext(Context1.key, {
+    foo: \\"bar\\",
+    content() {
+      return content;
+    },
+  });
+  setContext(Context2.key, { bar: \\"baz\\" });
+</script>
+
+{foo.value}
 "
 `;
 

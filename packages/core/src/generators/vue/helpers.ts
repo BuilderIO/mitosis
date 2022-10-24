@@ -1,8 +1,13 @@
-import { replaceIdentifiers } from '../../helpers/replace-identifiers';
+import { Nullable } from '../../helpers/nullable';
+import { stringifyContextValue } from '../../helpers/get-state-object-string';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { ContextSetInfo, MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { ToVueOptions } from './types';
+import { pipe } from 'fp-ts/lib/function';
+import { babelTransformExpression } from '../../helpers/babel-transform';
+import { types } from '@babel/core';
+import { pickBy } from 'lodash';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -42,9 +47,72 @@ export function getContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get);
 }
 
+function shouldAppendValueToRef(path: babel.NodePath<babel.types.Identifier>) {
+  const { parent, node } = path;
+
+  if (types.isFunctionDeclaration(parent) && parent.id === node) {
+    return false;
+  }
+
+  if (types.isCallExpression(parent)) {
+    return false;
+  }
+
+  const isMemberExpression = types.isMemberExpression(parent);
+
+  if (
+    isMemberExpression &&
+    types.isThisExpression(parent.object) &&
+    types.isProgram(path.scope.block) &&
+    path.scope.hasReference(node.name)
+  ) {
+    return false;
+  }
+
+  if (
+    isMemberExpression &&
+    types.isIdentifier(parent.object) &&
+    types.isIdentifier(parent.property) &&
+    parent.property.name === node.name
+  ) {
+    return false;
+  }
+
+  if (Object.keys(path.scope.bindings).includes(path.node.name)) {
+    return false;
+  }
+
+  if (path.parentPath.listKey === 'arguments' || path.parentPath.listKey === 'params') {
+    return false;
+  }
+
+  return true;
+}
+const getAllRefs = (component: MitosisComponent) => {
+  const refKeys = Object.keys(component.refs);
+  const stateKeys = Object.keys(pickBy(component.state, (i) => i?.type === 'property'));
+  const allKeys = [...refKeys, ...stateKeys];
+
+  return allKeys;
+};
+
+function processRefs(input: string, component: MitosisComponent, options: ToVueOptions) {
+  const refs = options.api === 'options' ? getContextNames(component) : getAllRefs(component);
+
+  return babelTransformExpression(input, {
+    Identifier(path: babel.NodePath<babel.types.Identifier>) {
+      const name = path.node.name;
+      if (refs.includes(name) && shouldAppendValueToRef(path)) {
+        const newValue = options.api === 'options' ? `this.${name}` : `${name}.value`;
+        path.replaceWith(types.identifier(newValue));
+      }
+    },
+  });
+}
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
-export function processBinding({
+export const processBinding = ({
   code,
   options,
   json,
@@ -54,20 +122,45 @@ export function processBinding({
   options: ToVueOptions;
   json: MitosisComponent;
   includeProps?: boolean;
-}): string {
-  return replaceIdentifiers({
-    code: stripStateAndPropsRefs(code, {
+}): string => {
+  return pipe(
+    stripStateAndPropsRefs(code, {
       includeState: true,
       includeProps,
       replaceWith: (name) => {
-        if (name === 'children' || name.startsWith('children.')) {
-          return 'this.$slots.default';
+        switch (options.api) {
+          case 'composition':
+            return name;
+          case 'options':
+            if (name === 'children' || name.startsWith('children.')) {
+              return 'this.$slots.default';
+            }
+            return `this.${name}`;
         }
-
-        return 'this.' + name;
       },
     }),
-    from: getContextNames(json),
-    to: (name) => (options.api === 'options' ? `this.${name}` : `${name}.value`),
-  });
-}
+    (c) => processRefs(c, json, options),
+  );
+};
+
+export const getContextValue =
+  ({ options, json }: { options: ToVueOptions; json: MitosisComponent }) =>
+  ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
+    const valueStr = value
+      ? stringifyContextValue(value, {
+          valueMapper: (code) => processBinding({ code, options, json }),
+        })
+      : ref
+      ? processBinding({ code: ref, options, json })
+      : null;
+
+    return valueStr;
+  };
+
+export const getContextProvideString = (json: MitosisComponent, options: ToVueOptions) => {
+  return `{
+    ${Object.values(json.context.set)
+      .map((setVal) => `${setVal.name}: ${getContextValue({ options, json })(setVal)}`)
+      .join(',')}
+  }`;
+};

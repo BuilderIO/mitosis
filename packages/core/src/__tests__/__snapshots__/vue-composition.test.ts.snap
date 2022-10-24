@@ -35,14 +35,16 @@ const name = ref(\\"PatrickJS\\");
 const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
-watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
-  console.log(\\"Received an update\\");
-});
+watch(
+  () => [inputRef, inputNoArgRef],
+  ([inputRef, inputNoArgRef]) => {
+    console.log(\\"Received an update\\");
+  }
+);
 function onBlur() {
   // Maintain focus
   inputRef.value.focus();
 }
-
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -136,15 +138,15 @@ const myService = inject(MyService);
 
 provide(Injector, createInjector());
 
-const hi = myService.value.method(\\"hi\\");
+const hi = myService.method(\\"hi\\");
 console.log(hi);
 onMounted(() => {
-  const bye = myService.value.method(\\"hi\\");
+  const bye = myService.method(\\"hi\\");
   console.log(bye);
 });
 
 function onChange() {
-  const change = myService.value.value.method(\\"change\\");
+  const change = myService.method(\\"change\\");
   console.log(change);
 }
 </script>
@@ -326,7 +328,6 @@ function onBlur() {
   // Maintain focus
   inputRef.value.focus();
 }
-
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -387,9 +388,12 @@ const count = ref(0);
 
 const prevCount = ref(null);
 
-watch([count], ([count]) => {
-  prevCount.value = count.value;
-});
+watch(
+  () => [count],
+  ([count]) => {
+    prevCount.value = count.value;
+  }
+);
 </script>
 "
 `;
@@ -436,16 +440,13 @@ const props = defineProps([\\"columns\\", \\"space\\"]);
 function getColumns() {
   return props.columns || [];
 }
-
 function getGutterSize() {
   return typeof props.space === \\"number\\" ? props.space || 0 : 20;
 }
-
 function getWidth(index) {
   const columns = getColumns();
   return (columns[index] && columns[index].width) || 100 / columns.length;
 }
-
 function getColumnCssWidth(index) {
   const columns = getColumns();
   const gutterSize = getGutterSize();
@@ -582,20 +583,15 @@ function findAndRunScripts() {
     }
   }
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -669,20 +665,15 @@ function findAndRunScripts() {
     }
   }
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1032,7 +1023,7 @@ exports[`Vue Javascript Test Image 1`] = `
 </template>
 
 <script setup>
-import { onMounted, onUnMounted, ref } from \\"vue\\";
+import { onMounted, onUnmounted, ref } from \\"vue\\";
 
 const props = defineProps([
   \\"lazy\\",
@@ -1073,7 +1064,7 @@ onMounted(() => {
     listener();
   }
 });
-onMounted(() => {
+onUnmounted(() => {
   if (scrollListener.value) {
     window.removeEventListener(\\"scroll\\", scrollListener);
   }
@@ -1082,31 +1073,24 @@ onMounted(() => {
 function setLoaded() {
   imageLoaded.value = true;
 }
-
 function useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && isBrowser();
 }
-
 function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1211,17 +1195,13 @@ const props = defineProps([\\"attributes\\", \\"text\\"]);
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1408,24 +1388,18 @@ onMounted(() => {
 function kebabCaseValue() {
   return kebabCase(\\"testThat\\");
 }
-
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1619,22 +1593,25 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name], ([name]) => {
-  const controller = new AbortController();
-  const signal = controller.signal;
-  fetch(\\"https://patrickjs.com/api/resource.json\\", {
-    signal,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      name.value = data.name;
-    });
-  return () => {
-    if (!signal.aborted) {
-      controller.abort();
-    }
-  };
-});
+watch(
+  () => [name],
+  ([name]) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        name.value = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+);
 </script>
 "
 `;
@@ -1702,17 +1679,13 @@ const bindings = ref(\\"a binding\\");
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1730,23 +1703,17 @@ exports[`Vue Javascript Test classState 1`] = `
 import { ref } from \\"vue\\";
 
 const classState = ref(\\"testClassName\\");
-const styleState = ref({
-  color: \\"red\\",
-});
+const styleState = ref({ color: \\"red\\" });
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -1756,6 +1723,32 @@ function _classStringToObject(str) {
   padding: 10px;
 }
 </style>
+"
+`;
+
+exports[`Vue Javascript Test componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script setup>
+import { inject, provide } from \\"vue\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps([\\"content\\"]);
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>
 "
 `;
 
@@ -1885,20 +1878,26 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a, b], ([a, b]) => {
-  console.log(\\"Runs when a or b changes\\", a, b);
+watch(
+  () => [a, b],
+  ([a, b]) => {
+    console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
-    a.value = \\"b\\";
+    if (a.value === \\"a\\") {
+      a.value = \\"b\\";
+    }
   }
-});
-watch([c, d], ([c, d]) => {
-  console.log(\\"Runs when c or d changes\\", c, d);
+);
+watch(
+  () => [c, d],
+  ([c, d]) => {
+    console.log(\\"Runs when c or d changes\\", c, d);
 
-  if (a.value === \\"a\\") {
-    a.value = \\"b\\";
+    if (a.value === \\"a\\") {
+      a.value = \\"b\\";
+    }
   }
-});
+);
 </script>
 "
 `;
@@ -1911,9 +1910,7 @@ exports[`Vue Javascript Test multipleSpreads 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const attrs = ref({
-  hello: \\"world\\",
-});
+const attrs = ref({ hello: \\"world\\" });
 </script>
 "
 `;
@@ -2011,12 +2008,12 @@ exports[`Vue Javascript Test onMount 1`] = `
 </template>
 
 <script setup>
-import { onMounted, onUnMounted } from \\"vue\\";
+import { onMounted, onUnmounted } from \\"vue\\";
 
 onMounted(() => {
   console.log(\\"Runs on mount\\");
 });
-onMounted(() => {
+onUnmounted(() => {
   console.log(\\"Runs on unMount\\");
 });
 </script>
@@ -2048,9 +2045,12 @@ const props = defineProps([\\"size\\"]);
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a, b, props.size], ([a, b, size]) => {
-  console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-});
+watch(
+  () => [a, b, props.size],
+  ([a, b, size]) => {
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }
+);
 </script>
 "
 `;
@@ -2377,14 +2377,16 @@ const name = ref(\\"PatrickJS\\");
 const inputRef = ref<HTMLInputElement>();
 const inputNoArgRef = ref<HTMLLabelElement>();
 
-watch([inputRef, inputNoArgRef], ([inputRef, inputNoArgRef]) => {
-  console.log(\\"Received an update\\");
-});
+watch(
+  () => [inputRef, inputNoArgRef],
+  ([inputRef, inputNoArgRef]) => {
+    console.log(\\"Received an update\\");
+  }
+);
 function onBlur() {
   // Maintain focus
   inputRef.value.focus();
 }
-
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -2481,15 +2483,15 @@ const myService = inject(MyService);
 
 provide(Injector, createInjector());
 
-const hi = myService.value.method(\\"hi\\");
+const hi = myService.method(\\"hi\\");
 console.log(hi);
 onMounted(() => {
-  const bye = myService.value.method(\\"hi\\");
+  const bye = myService.method(\\"hi\\");
   console.log(bye);
 });
 
 function onChange() {
-  const change = myService.value.value.method(\\"change\\");
+  const change = myService.method(\\"change\\");
   console.log(change);
 }
 </script>
@@ -2683,7 +2685,6 @@ function onBlur() {
   // Maintain focus
   inputRef.value.focus();
 }
-
 function lowerCaseName() {
   return name.value.toLowerCase();
 }
@@ -2751,9 +2752,12 @@ const count = ref(0);
 
 const prevCount = ref<undefined>();
 
-watch([count], ([count]) => {
-  prevCount.value = count.value;
-});
+watch(
+  () => [count],
+  ([count]) => {
+    prevCount.value = count.value;
+  }
+);
 </script>
 "
 `;
@@ -2822,16 +2826,13 @@ const props = defineProps<ColumnProps>();
 function getColumns() {
   return props.columns || [];
 }
-
 function getGutterSize() {
   return typeof props.space === \\"number\\" ? props.space || 0 : 20;
 }
-
 function getWidth(index) {
   const columns = getColumns();
   return (columns[index] && columns[index].width) || 100 / columns.length;
 }
-
 function getColumnCssWidth(index) {
   const columns = getColumns();
   const gutterSize = getGutterSize();
@@ -2981,20 +2982,15 @@ function findAndRunScripts() {
     }
   }
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -3072,20 +3068,15 @@ function findAndRunScripts() {
     }
   }
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -3439,7 +3430,7 @@ exports[`Vue Typescript Test Image 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { onMounted, onUnMounted, ref } from \\"vue\\";
+import { onMounted, onUnmounted, ref } from \\"vue\\";
 // TODO: AMP Support?
 export interface ImageProps {
   _class?: string;
@@ -3490,7 +3481,7 @@ onMounted(() => {
     listener();
   }
 });
-onMounted(() => {
+onUnmounted(() => {
   if (scrollListener.value) {
     window.removeEventListener(\\"scroll\\", scrollListener);
   }
@@ -3499,31 +3490,24 @@ onMounted(() => {
 function setLoaded() {
   imageLoaded.value = true;
 }
-
 function useLazyLoading() {
   // TODO: Add more checks here, like testing for real web browsers
   return !!props.lazy && isBrowser();
 }
-
 function isBrowser() {
   return (
     typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
   );
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -3646,17 +3630,13 @@ const props = defineProps<RawTextProps>();
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -3871,24 +3851,18 @@ onMounted(() => {
 function kebabCaseValue() {
   return kebabCase(\\"testThat\\");
 }
-
 function snakeCaseValue() {
   return snakeCase(\\"testThis\\");
 }
-
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -4120,22 +4094,25 @@ import { ref, watch } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 
-watch([name], ([name]) => {
-  const controller = new AbortController();
-  const signal = controller.signal;
-  fetch(\\"https://patrickjs.com/api/resource.json\\", {
-    signal,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      name.value = data.name;
-    });
-  return () => {
-    if (!signal.aborted) {
-      controller.abort();
-    }
-  };
-});
+watch(
+  () => [name],
+  ([name]) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        name.value = data.name;
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }
+);
 </script>
 "
 `;
@@ -4207,17 +4184,13 @@ const bindings = ref(\\"a binding\\");
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -4235,23 +4208,17 @@ exports[`Vue Typescript Test classState 1`] = `
 import { ref } from \\"vue\\";
 
 const classState = ref(\\"testClassName\\");
-const styleState = ref({
-  color: \\"red\\",
-});
+const styleState = ref({ color: \\"red\\" });
 
 function _classStringToObject(str) {
   const obj = {};
-
   if (typeof str !== \\"string\\") {
     return obj;
   }
-
   const classNames = str.trim().split(/\\\\s+/);
-
   for (const name of classNames) {
     obj[name] = true;
   }
-
   return obj;
 }
 </script>
@@ -4261,6 +4228,35 @@ function _classStringToObject(str) {
   padding: 10px;
 }
 </style>
+"
+`;
+
+exports[`Vue Typescript Test componentWithContext 1`] = `
+"<template>
+  {{ foo.value }}
+</template>
+
+<script setup lang=\\"ts\\">
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+const props = defineProps<ComponentWithContextProps>();
+
+const foo = inject(Context1);
+
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+</script>
 "
 `;
 
@@ -4415,20 +4411,26 @@ const b = ref(\\"b\\");
 const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
-watch([a, b], ([a, b]) => {
-  console.log(\\"Runs when a or b changes\\", a, b);
+watch(
+  () => [a, b],
+  ([a, b]) => {
+    console.log(\\"Runs when a or b changes\\", a, b);
 
-  if (a.value === \\"a\\") {
-    a.value = \\"b\\";
+    if (a.value === \\"a\\") {
+      a.value = \\"b\\";
+    }
   }
-});
-watch([c, d], ([c, d]) => {
-  console.log(\\"Runs when c or d changes\\", c, d);
+);
+watch(
+  () => [c, d],
+  ([c, d]) => {
+    console.log(\\"Runs when c or d changes\\", c, d);
 
-  if (a.value === \\"a\\") {
-    a.value = \\"b\\";
+    if (a.value === \\"a\\") {
+      a.value = \\"b\\";
+    }
   }
-});
+);
 </script>
 "
 `;
@@ -4441,9 +4443,7 @@ exports[`Vue Typescript Test multipleSpreads 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const attrs = ref({
-  hello: \\"world\\",
-});
+const attrs = ref({ hello: \\"world\\" });
 </script>
 "
 `;
@@ -4549,12 +4549,12 @@ exports[`Vue Typescript Test onMount 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-import { onMounted, onUnMounted } from \\"vue\\";
+import { onMounted, onUnmounted } from \\"vue\\";
 
 onMounted(() => {
   console.log(\\"Runs on mount\\");
 });
-onMounted(() => {
+onUnmounted(() => {
   console.log(\\"Runs on unMount\\");
 });
 </script>
@@ -4589,9 +4589,12 @@ const props = defineProps<Props>();
 const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
-watch([a, b, props.size], ([a, b, size]) => {
-  console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-});
+watch(
+  () => [a, b, props.size],
+  ([a, b, size]) => {
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }
+);
 </script>
 "
 `;

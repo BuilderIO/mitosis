@@ -2,18 +2,19 @@ import json5 from 'json5';
 import { uniq, kebabCase, size } from 'lodash';
 import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
-import {
-  getStateObjectStringFromComponent,
-  stringifyContextValue,
-} from '../../helpers/get-state-object-string';
+import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
 import { GETTER } from '../../helpers/patterns';
 import { checkIsComponentImport } from '../../helpers/render-imports';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import { encodeQuotes, getOnUpdateHookName, processBinding } from './helpers';
+import {
+  encodeQuotes,
+  getContextProvideString,
+  getOnUpdateHookName,
+  processBinding,
+} from './helpers';
 import { ToVueOptions } from './types';
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 
 function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
   let str = '{';
@@ -21,28 +22,6 @@ function getContextInjectString(component: MitosisComponent, options: ToVueOptio
   for (const key in component.context.get) {
     str += `
       ${key}: "${encodeQuotes(component.context.get[key].name)}",
-    `;
-  }
-
-  str += '}';
-  return str;
-}
-
-function getContextProvideString(component: MitosisComponent, options: ToVueOptions) {
-  let str = '{';
-
-  for (const key in component.context.set) {
-    const { ref, value, name } = component.context.set[key];
-    str += `
-      ${name}: ${
-      value
-        ? stringifyContextValue(value, {
-            valueMapper: (code) => stripStateAndPropsRefs(code, { replaceWith: '_this.' }),
-          })
-        : ref
-        ? stripStateAndPropsRefs(ref, { replaceWith: '_this.' })
-        : null
-    },
     `;
   }
 
@@ -205,7 +184,6 @@ export function generateOptionsApiScript(
         ${
           size(component.context.set)
             ? `provide() {
-                const _this = this;
                 return ${getContextProvideString(component, options)}
               },`
             : ''

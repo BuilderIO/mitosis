@@ -25,11 +25,12 @@ import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { getOnUpdateHookName, processBinding, renameMitosisComponentsToKebabCase } from './helpers';
 import { ToVueOptions, VueOptsWithoutVersion } from './types';
 import { generateOptionsApiScript } from './optionsApi';
-import { appendValueToRefs, generateCompositionApiScript } from './compositionApi';
+import { generateCompositionApiScript } from './compositionApi';
 import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
+import { GETTER } from '../../helpers/patterns';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -108,7 +109,30 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
         if (options.api === 'composition') {
           switch (codeType) {
             case 'hooks':
-              return (code) => appendValueToRefs(code, component, options);
+              return (code) =>
+                processBinding({
+                  code,
+                  options,
+                  json: component,
+                  // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                  // therefore we can keep pointing to `props.${value}`
+                  includeProps: false,
+                });
+            case 'state':
+              return (code) =>
+                pipe(
+                  // workaround so that getter code is valid and parseable by babel.
+                  code.replace(GETTER, ''),
+                  (c) =>
+                    processBinding({
+                      code: c,
+                      options,
+                      json: component,
+                      // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                      // therefore we can keep pointing to `props.${value}`
+                      includeProps: false,
+                    }),
+                );
             case 'bindings':
               return (c) => stripStateAndPropsRefs(c);
             case 'hooks-deps':
@@ -124,6 +148,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return (c) => stripStateAndPropsRefs(c);
             case 'properties':
             case 'hooks-deps':
+            case 'state':
               return (c) => c;
           }
         }
@@ -178,7 +203,7 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     if (options.api === 'composition') {
       onUpdateWithDeps.length && vueImports.push('watch');
       component.hooks.onMount?.code && vueImports.push('onMounted');
-      component.hooks.onUnMount?.code && vueImports.push('onUnMounted');
+      component.hooks.onUnMount?.code && vueImports.push('onUnmounted');
       onUpdateWithoutDeps.length && vueImports.push('onUpdated');
       size(getterKeys) && vueImports.push('computed');
       size(component.context.set) && vueImports.push('provide');
