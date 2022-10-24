@@ -213,6 +213,7 @@ const JSX_TESTS: Tests[] = [
   ADVANCED_REF,
   ON_UPDATE_RETURN,
   FOR_SHOW_TESTS,
+  CONTEXT_TEST,
 ];
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
