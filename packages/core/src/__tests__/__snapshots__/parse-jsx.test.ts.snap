@@ -2529,10 +2529,10 @@ Object {
   "state": Object {
     "getColumnCssWidth": Object {
       "code": "getColumnCssWidth(index: number) {
-  const columns = this.getColumns();
-  const gutterSize = this.getGutterSize();
+  const columns = state.getColumns();
+  const gutterSize = state.getGutterSize();
   const subtractWidth = gutterSize * (columns.length - 1) / columns.length;
-  return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
 }",
       "type": "method",
     },
@@ -2550,7 +2550,7 @@ Object {
     },
     "getWidth": Object {
       "code": "getWidth(index: number) {
-  const columns = this.getColumns();
+  const columns = state.getColumns();
   return columns[index] && columns[index].width || 100 / columns.length;
 }",
       "type": "method",
