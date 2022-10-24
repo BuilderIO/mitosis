@@ -183,7 +183,7 @@ export function generateCompositionApiScript(
       onUpdateWithDeps
         ?.map(
           (hook) =>
-            `watch(${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
+            `watch(() => ${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
         )
         .join('\n') || ''
     }
