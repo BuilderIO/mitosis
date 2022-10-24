@@ -160,7 +160,7 @@ export function generateCompositionApiScript(
     ${
       !component.hooks.onUnMount?.code
         ? ''
-        : `onMounted(() => { ${component.hooks.onUnMount.code}})`
+        : `onUnmounted(() => { ${component.hooks.onUnMount.code}})`
     }
     ${
       getterKeys
