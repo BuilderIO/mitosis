@@ -118,10 +118,10 @@ const NODE_MAPPERS: {
 };
 
 const ATTTRIBUTE_MAPPERS: { [key: string]: string } = {
-  'spellcheck': 'spellCheck',
-  'autocapitalize': 'autoCapitalize',
-  'autocomplete': 'autoComplete'
-}
+  spellcheck: 'spellCheck',
+  autocapitalize: 'autoCapitalize',
+  autocomplete: 'autoComplete',
+};
 
 // TODO: Maybe in the future allow defining `string | function` as values
 const BINDING_MAPPERS: {
