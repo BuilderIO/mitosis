@@ -13,10 +13,24 @@ import {
 import { stripMetaProperties } from '../../helpers/strip-meta-properties';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
+import { dashCase } from '../../helpers/dash-case';
+import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
+import { camelCase } from 'lodash';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
-  reactive?: boolean;
+  /**
+   * use @on and : instead of `x-on` and `x-bind`
+   */
+  useShorthandSyntax?: boolean,
+  /**
+   * If true, the javascript won't be extracted into a separate script block.
+   */
+  inlineState?: boolean,
 }
+
+export const checkIsComponentNode = (node: MitosisNode): boolean => node.name === '@builder.io/mitosis/component';
+
+const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)))
 
 /**
  * Test if the binding expression would be likely to generate
@@ -38,6 +52,27 @@ export const isValidAlpineBinding = (str = '') => {
   );
 };
 
+const removeOnFromEventName = (str: string) => str.replace(/^on/, '')
+const prefixEvent = (str: string) => str.replace(/(?<=[\s]|^)event/gm, '$event')
+const removeTrailingSemicolon = (str: string) => str.replace(/;$/, '')
+const replaceStateWithThis = (str: string) => str.replaceAll('state.', 'this.');
+
+const bindEventHandlerKey = compose(
+  dashCase,
+  removeOnFromEventName
+);
+const bindEventHandlerValue = compose(
+  prefixEvent,
+  removeTrailingSemicolon,
+  removeSurroundingBlock,
+  stripStateAndPropsRefs
+);
+
+const bindEventHandler = (useShorthandSyntax: boolean) => (eventName: string, code: string) => {
+  const bind = useShorthandSyntax ? '@' : 'x-on:'
+  return ` ${bind}${bindEventHandlerKey(eventName)}="${bindEventHandlerValue(code).trim()}"`;
+};
+
 // TODO: spread support
 const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string => {
   if (mappers[json.name]) {
@@ -54,7 +89,9 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
     if (!isValidAlpineBinding(json.bindings._text.code as string)) {
       return '';
     }
-    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string)}}}`;
+    // @todo
+    return `<span x-html="${stripStateAndPropsRefs(json.bindings._text.code as string)}"></span>`;
+    // return `{{${stripStateAndPropsRefs(json.bindings._text.code as string)}}}`;
   }
 
   let str = '';
@@ -65,22 +102,22 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
     ) {
       return str;
     }
-    str += `{% for ${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)} %}`;
+    str += `<template x-for="${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)}">`;
     if (json.children) {
       str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
     }
 
-    str += '{% endfor %}';
+    str += '</template>';
   } else if (json.name === 'Show') {
     if (!isValidAlpineBinding(json.bindings.when?.code)) {
       return str;
     }
-    str += `{% if ${stripStateAndPropsRefs(json.bindings.when?.code)} %}`;
+    str += `<template x-if="${stripStateAndPropsRefs(json.bindings.when?.code)}">`;
     if (json.children) {
       str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
     }
 
-    str += '{% endif %}';
+    str += '</template>';
   } else {
     str += `<${json.name} `;
 
@@ -109,9 +146,9 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
       const useValue = stripStateAndPropsRefs(value);
 
       if (key.startsWith('on')) {
-        // Do nothing
+        str += bindEventHandler(options.long)(key, value);
       } else if (isValidAlpineBinding(useValue)) {
-        str += ` ${key}="{{${useValue}}}" `;
+        str += ` :${key}="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -138,53 +175,56 @@ const mappers: {
 // TODO: add JS support similar to componentToHtml()
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
   (options = {}) =>
-  ({ component }) => {
-    let json = fastClone(component);
-    if (options.plugins) {
-      json = runPreJsonPlugins(json, options.plugins);
-    }
-    const css = collectCss(json);
-    stripMetaProperties(json);
-    if (options.plugins) {
-      json = runPostJsonPlugins(json, options.plugins);
-    }
-    let str = json.children.map((item) => blockToAlpine(item)).join('\n');
-    if (css.trim().length) {
-      str += `<style>${css}</style>`;
-    }
+    ({ component }) => {
+      let json = fastClone(component);
+      if (options.plugins) {
+        json = runPreJsonPlugins(json, options.plugins);
+      }
+      const css = collectCss(json);
+      stripMetaProperties(json);
+      if (options.plugins) {
+        json = runPostJsonPlugins(json, options.plugins);
+      }
 
-    if (options.reactive) {
-      const stateObjectString = getStateObjectStringFromComponent(json);
-      if (stateObjectString.trim().length > 4) {
-        str += `<script reactive>
-        export default {
-          state: ${stateObjectString}
+      const stateObjectString = replaceStateWithThis(getStateObjectStringFromComponent(json).trim());
+      json.children[0].properties['x-data'] = options.inlineState
+        ? stateObjectString
+        : `${camelCase(json.name)}()`;
+
+      let str = json.children.map((item) => blockToAlpine(item, options)).join('\n');
+      if (css.trim().length) {
+        str += `<style>${css}</style>`;
+      }
+
+      if (!options.inlineState) {
+        str += `<script>
+          document.addEventListener('alpine:init', () => {
+              Alpine.data('${camelCase(json.name)}', () => (${stateObjectString}))
+          })
+        </script>`
+      }
+
+      if (options.plugins) {
+        str = runPreCodePlugins(str, options.plugins);
+      }
+      if (options.prettier !== false) {
+        try {
+          str = format(str, {
+            parser: 'html',
+            htmlWhitespaceSensitivity: 'ignore',
+            plugins: [
+              // To support running in browsers
+              require('prettier/parser-html'),
+              require('prettier/parser-postcss'),
+              require('prettier/parser-babel'),
+            ],
+          });
+        } catch (err) {
+          console.warn('Could not prettify', { string: str }, err);
         }
-      </script>`;
       }
-    }
-
-    if (options.plugins) {
-      str = runPreCodePlugins(str, options.plugins);
-    }
-    if (options.prettier !== false) {
-      try {
-        str = format(str, {
-          parser: 'html',
-          htmlWhitespaceSensitivity: 'ignore',
-          plugins: [
-            // To support running in browsers
-            require('prettier/parser-html'),
-            require('prettier/parser-postcss'),
-            require('prettier/parser-babel'),
-          ],
-        });
-      } catch (err) {
-        console.warn('Could not prettify', { string: str }, err);
+      if (options.plugins) {
+        str = runPostCodePlugins(str, options.plugins);
       }
-    }
-    if (options.plugins) {
-      str = runPostCodePlugins(str, options.plugins);
-    }
-    return str;
-  };
+      return str;
+    };
