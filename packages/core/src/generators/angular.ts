@@ -20,7 +20,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, uniq } from 'lodash';
+import { kebabCase, transform, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
@@ -31,12 +31,16 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 
+import { isClassDeclaration, isFunctionDeclaration, isVariableDeclaration } from 'typescript';
+
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
+  skipModuleGeneration?: boolean;
+  addFrameworkPathToImport?: string;
 }
 
 interface AngularBlockOptions {
@@ -74,6 +78,22 @@ const mappers: {
       })
       .join('\n')}</ng-content>`;
   },
+};
+
+const generateNgModule = (content: string, name: string, componentsUsed: string[]): string => {
+  return `import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+
+${content.replace('export default', 'export')}
+
+@NgModule({
+  declarations: [${name}],
+  imports: [BrowserModule${
+    componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
+  }],
+  exports: [${name}],
+})
+export default class ${name}Module {}`;
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
@@ -303,9 +323,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const stateVars = Object.keys(json?.state || {});
 
-    const componentsUsed = Array.from(getComponentsUsed(json)).filter(
-      (item) => item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item),
-    );
+    const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
+      return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
+    });
 
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
@@ -385,6 +405,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       target: 'angular',
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
       preserveFileExtensions: options.preserveFileExtensions,
+      componentsUsed,
+      addFrameworkPathToImport: options.addFrameworkPathToImport || '',
     })}
 
     @Component({
@@ -507,6 +529,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
   `;
 
+    str = generateNgModule(str, json.name, componentsUsed);
+
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
     }
@@ -516,6 +540,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
+
     return str;
   };
 
