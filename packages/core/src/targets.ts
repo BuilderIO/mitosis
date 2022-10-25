@@ -5,6 +5,7 @@ import {
   componentToCustomElement as webcomponent,
   componentToHtml as html,
 } from './generators/html';
+import { componentToAlpine as alpine } from './generators/alpine';
 import { componentToMitosis as mitosis } from './generators/mitosis';
 import { componentToLiquid as liquid } from './generators/liquid';
 import { componentToReact as react } from './generators/react';
@@ -24,6 +25,7 @@ import { componentToRsc as rsc } from './generators/rsc';
 export const builder = componentToBuilder;
 
 export const targets = {
+  alpine,
   angular,
   customElement,
   html,
