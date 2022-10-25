@@ -52,6 +52,7 @@ export * from './parsers/builder';
 export * from './parsers/angular';
 export * from './parsers/context';
 export * from './generators/vue';
+export * from './generators/alpine';
 export * from './generators/angular';
 export * from './generators/context/react';
 export * from './generators/context/qwik';

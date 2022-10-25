@@ -2,6 +2,7 @@ import {
   builderContentToMitosisComponent,
   compileAwayBuilderComponents,
   componentToAngular,
+  componentToAlpine,
   componentToBuilder,
   componentToCustomElement,
   componentToHtml,
@@ -327,6 +328,8 @@ export default function Fiddle() {
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
+            : state.outputTab === 'alpine'
+            ? componentToAlpine({ plugins, ...commonOptions})({ component: json })
             : state.outputTab === 'html'
             ? componentToHtml({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'webcomponents'
@@ -925,6 +928,7 @@ export default function Fiddle() {
                 indicatorColor="primary"
                 textColor="primary"
               >
+                <Tab label={<TabLabelWithIcon label="Alpine.js" />} value="alpine" />
                 <Tab
                   label={
                     <TabLabelWithIcon
