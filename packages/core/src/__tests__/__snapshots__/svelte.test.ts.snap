@@ -115,14 +115,17 @@ exports[`Svelte Javascript Test Basic 2`] = `
 exports[`Svelte Javascript Test Basic Context 1`] = `
 "<script>
   import { getContext, onMount, setContext } from \\"svelte\\";
+  import { writable } from \\"svelte/store\\";
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector, createInjector());
+
+  const InjectorContextStoreValue = writable(createInjector());
+  setContext(Injector, InjectorContextStoreValue);
 
   function onChange() {
-    const change = myService.method(\\"change\\");
+    const change = $myService.method(\\"change\\");
     console.log(change);
   }
 
@@ -137,7 +140,7 @@ exports[`Svelte Javascript Test Basic Context 1`] = `
 </script>
 
 <div>
-  {myService.method(\\"hello\\") + name}
+  {$myService.method(\\"hello\\") + name}
   Hello! I can run in React, Vue, Solid, or Liquid!
   <input on:change={onChange} />
 </div>
@@ -1486,6 +1489,7 @@ exports[`Svelte Javascript Test className 1`] = `
 exports[`Svelte Javascript Test componentWithContext 1`] = `
 "<script>
   import { getContext, setContext } from \\"svelte\\";
+  import { writable } from \\"svelte/store\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
@@ -1493,16 +1497,20 @@ exports[`Svelte Javascript Test componentWithContext 1`] = `
   export let content;
 
   let foo = getContext(Context1.key);
-  setContext(Context1.key, {
+
+  const Context1ContextStoreValue = writable({
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(Context2.key, { bar: \\"baz\\" });
+  setContext(Context1.key, Context1ContextStoreValue);
+
+  const Context2ContextStoreValue = writable({ bar: \\"baz\\" });
+  setContext(Context2.key, Context2ContextStoreValue);
 </script>
 
-{foo.value}
+{$foo.value}
 "
 `;
 
@@ -2152,14 +2160,17 @@ exports[`Svelte Typescript Test Basic 2`] = `
 exports[`Svelte Typescript Test Basic Context 1`] = `
 "<script lang=\\"ts\\">
   import { getContext, onMount, setContext } from \\"svelte\\";
+  import { writable } from \\"svelte/store\\";
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
   let myService = getContext(MyService.key);
-  setContext(Injector, createInjector());
+
+  const InjectorContextStoreValue = writable(createInjector());
+  setContext(Injector, InjectorContextStoreValue);
 
   function onChange() {
-    const change = myService.method(\\"change\\");
+    const change = $myService.method(\\"change\\");
     console.log(change);
   }
 
@@ -2174,7 +2185,7 @@ exports[`Svelte Typescript Test Basic Context 1`] = `
 </script>
 
 <div>
-  {myService.method(\\"hello\\") + name}
+  {$myService.method(\\"hello\\") + name}
   Hello! I can run in React, Vue, Solid, or Liquid!
   <input on:change={onChange} />
 </div>
@@ -3800,6 +3811,7 @@ exports[`Svelte Typescript Test componentWithContext 1`] = `
 
 <script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
+  import { writable } from \\"svelte/store\\";
 
   import Context1 from \\"@dummy/1\\";
   import Context2 from \\"@dummy/2\\";
@@ -3807,16 +3819,20 @@ exports[`Svelte Typescript Test componentWithContext 1`] = `
   export let content: ComponentWithContextProps[\\"content\\"];
 
   let foo = getContext(Context1.key);
-  setContext(Context1.key, {
+
+  const Context1ContextStoreValue = writable({
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(Context2.key, { bar: \\"baz\\" });
+  setContext(Context1.key, Context1ContextStoreValue);
+
+  const Context2ContextStoreValue = writable({ bar: \\"baz\\" });
+  setContext(Context2.key, Context2ContextStoreValue);
 </script>
 
-{foo.value}
+{$foo.value}
 "
 `;
 
