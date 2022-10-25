@@ -8,6 +8,7 @@ import { pipe } from 'fp-ts/lib/function';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { pickBy } from 'lodash';
+import { stripGetter } from '../../helpers/patterns';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -139,6 +140,8 @@ export const processBinding = ({
         }
       },
     }),
+    // workaround so that getter code is valid and parseable by babel.
+    stripGetter,
     (c) => processRefs(c, json, options),
   );
 };
