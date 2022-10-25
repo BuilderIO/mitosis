@@ -28,7 +28,6 @@ describe('React', () => {
   test('verify attributes are transformed to camelCase', () => {
     const component = parseJsx(attribute);
     const output = componentToReact()({ component });
-    console.log(output);
     expect(output).toMatchSnapshot();
   });
 });
