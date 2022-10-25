@@ -64,6 +64,7 @@ import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { CodeEditor } from './CodeEditor';
+import { ToAlpineOptions } from '@builder.io/mitosis';
 
 type Position = { row: number; column: number };
 
@@ -301,6 +302,8 @@ export default function Fiddle() {
         localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
       vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
       vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
+      alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
+      alpineInline: localStorageGet('options.alpineInline') || 'false',
     },
     applyPendingBuilderChange(update?: any) {
       const builderJson = update || state.pendingBuilderChange;
@@ -324,12 +327,16 @@ export default function Fiddle() {
         let commonOptions: { typescript: boolean } = {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
         };
+        let alpineOptions: ToAlpineOptions = {
+          useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
+          inlineState: this.options.alpineInline === 'true',
+        }
 
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'alpine'
-            ? componentToAlpine({ plugins, ...commonOptions})({ component: json })
+            ? componentToAlpine({ plugins, ...commonOptions, ...alpineOptions})({ component: json })
             : state.outputTab === 'html'
             ? componentToHtml({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'webcomponents'
@@ -1287,6 +1294,89 @@ export default function Fiddle() {
                 </RadioGroup>
               </div>
               <Divider />
+            </Show>
+            <Show when={state.outputTab === 'alpine'}>
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  Bindings:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Alpine Binding Type"
+                  name="alpineShorthandSyntax"
+                  value={state.options.alpineShorthandSyntax}
+                  onChange={(e) => {
+                    state.options.alpineShorthandSyntax = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Short"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Full"
+                  />
+                </RadioGroup>
+              </div>
+              <Divider css={{ opacity: 0.6 }} />
+              <div
+                css={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'rgba(0, 0, 0, 0.03)',
+                }}
+              >
+                <Typography variant="body2" css={{ marginRight: 'auto', marginLeft: 10 }}>
+                  Inline:
+                </Typography>
+                <RadioGroup
+                  css={{
+                    flexDirection: 'row',
+                    marginRight: 10,
+                    '& .MuiFormControlLabel-label': {
+                      fontSize: 12,
+                    },
+                  }}
+                  aria-label="Alpine Component Type"
+                  name="alpineInline"
+                  value={state.options.alpineInline}
+                  onChange={(e) => {
+                    state.options.alpineInline = e.target.value;
+                    state.updateOutput();
+                  }}
+                >
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="primary" />}
+                    labelPlacement="start"
+                    label="Inline"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    labelPlacement="start"
+                    control={<Radio color="primary" />}
+                    label="Separate"
+                  />
+                </RadioGroup>
+              </div>
             </Show>
             <div css={{ flexGrow: 1 }}>
               <div css={{ paddingTop: 15, height: '100%' }}>

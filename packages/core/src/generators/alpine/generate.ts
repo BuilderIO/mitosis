@@ -3,7 +3,7 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { fastClone } from '../../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../../parsers/jsx';
-import { checkIsForNode, MitosisNode } from '../../types/mitosis-node';
+import { ForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -40,6 +40,8 @@ const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)))
  * Shopify will reject our PUT to update the template
  */
 export const isValidAlpineBinding = (str = '') => {
+  return true;
+  /*
   const strictMatches = Boolean(
     // Test for our `context.shopify.liquid.*(expression), which
     // we regex out later to transform back into valid liquid expressions
@@ -52,6 +54,7 @@ export const isValidAlpineBinding = (str = '') => {
     // e.g. `state.product.price` -> `{{product.price}}	    // we regex out later to transform back into valid liquid expressions
     Boolean(str.match(/^[a-z0-9_\.\s]+$/i))
   );
+  */
 };
 
 const removeOnFromEventName = (str: string) => str.replace(/^on/, '')
@@ -85,9 +88,29 @@ const bindEventHandlerValue = compose(
   stripStateAndPropsRefs
 );
 
-const bindEventHandler = (useShorthandSyntax: boolean) => (eventName: string, code: string) => {
+const bindEventHandler = ({useShorthandSyntax}: ToAlpineOptions) => (eventName: string, code: string) => {
   const bind = useShorthandSyntax ? '@' : 'x-on:'
   return ` ${bind}${bindEventHandlerKey(eventName)}="${bindEventHandlerValue(code).trim()}"`;
+};
+
+const mappers: {
+  [key: string]: (json: ForNode, options: ToAlpineOptions) => string;
+} = {
+  For: (json, options) => (
+    !(isValidAlpineBinding(json.bindings.each?.code) && isValidAlpineBinding(json.scope.forName))
+      ? ''
+      : `<template x-for="${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)}">
+    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}
+    </template>`
+  ),
+  Fragment: (json, options) => blockToAlpine({ ...json, name: "div" }, options),
+  Show: (json, options) => (
+    !isValidAlpineBinding(json.bindings.when?.code)
+      ? ''
+      : `<template x-if="${stripStateAndPropsRefs(json.bindings.when?.code)}">
+    ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}
+    </template>`
+  )
 };
 
 // TODO: spread support
@@ -104,88 +127,57 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
 
   if (json.bindings._text?.code) {
     return isValidAlpineBinding(json.bindings._text.code)
-    ? `<span x-html="${stripStateAndPropsRefs(json.bindings._text.code as string)}"></span>`
-    : '';
+      ? `<span x-html="${stripStateAndPropsRefs(json.bindings._text.code as string)}"></span>`
+      : '';
   }
 
-  let str = '';
+  let str = `<${json.name} `;
 
-  if (checkIsForNode(json)) {
-    if (
-      !(isValidAlpineBinding(json.bindings.each?.code) && isValidAlpineBinding(json.scope.forName))
-    ) {
-      return str;
-    }
-    str += `<template x-for="${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)}">`;
-    if (json.children) {
-      str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
-    }
-
-    str += '</template>';
-  } else if (json.name === 'Show') {
-    if (!isValidAlpineBinding(json.bindings.when?.code)) {
-      return str;
-    }
-    str += `<template x-if="${stripStateAndPropsRefs(json.bindings.when?.code)}">`;
-    if (json.children) {
-      str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
-    }
-
-    str += '</template>';
-  } else {
-    str += `<${json.name} `;
-
-    if (
-      json.bindings._spread?.code === '_spread' &&
-      isValidAlpineBinding(json.bindings._spread.code)
-    ) {
-      str += `
+  if (
+    json.bindings._spread?.code === '_spread' &&
+    isValidAlpineBinding(json.bindings._spread.code)
+  ) {
+    str += `
           <template x-for="_attr in ${json.bindings._spread.code}">
             {{ _attr[0] }}="{{ _attr[1] }}"
           </template>
         `;
-    }
-
-    for (const key in json.properties) {
-      const value = json.properties[key];
-      str += ` ${key}="${value}" `;
-    }
-
-    for (const key in json.bindings) {
-      if (key === '_spread' || key === 'css') {
-        continue;
-      }
-      const { code: value } = json.bindings[key]!;
-      // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(value);
-
-      if (key.startsWith('on')) {
-        str += bindEventHandler(options.long)(key, value);
-      } else if (key === 'ref') {
-        str += ` x-ref="${useValue}"`;
-      } else if (isValidAlpineBinding(useValue)) {
-        const bind = options.useShorthandSyntax ? ':' : 'x-bind:'
-        str += ` ${bind}${key}="${useValue}" `;
-      }
-    }
-    if (selfClosingTags.has(json.name)) {
-      return str + ' />';
-    }
-    str += '>';
-    if (json.children) {
-      str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
-    }
-
-    str += `</${json.name}>`;
   }
+
+  for (const key in json.properties) {
+    const value = json.properties[key];
+    str += ` ${key}="${value}" `;
+  }
+
+  for (const key in json.bindings) {
+    if (key === '_spread' || key === 'css') {
+      continue;
+    }
+    const { code: value } = json.bindings[key]!;
+    // TODO: proper babel transform to replace. Util for this
+    const useValue = stripStateAndPropsRefs(value);
+
+    if (key.startsWith('on')) {
+      str += bindEventHandler(options)(key, value);
+    } else if (key === 'ref') {
+      str += ` x-ref="${useValue}"`;
+    } else if (isValidAlpineBinding(useValue)) {
+      const bind = options.useShorthandSyntax ? ':' : 'x-bind:'
+      str += ` ${bind}${key}="${useValue}" `;
+    }
+  }
+  if (selfClosingTags.has(json.name)) {
+    return str + ' />';
+  }
+  str += '>';
+  if (json.children) {
+    str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
+  }
+
+  str += `</${json.name}>`;
   return str;
 };
 
-const mappers: {
-  [key: string]: (json: MitosisNode, options: ToAlpineOptions) => string;
-} = {
-  Fragment: (json, options) => blockToAlpine({...json, name: "div"}, options),
-  };
 
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
   (options = {}) =>
@@ -209,8 +201,6 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       if (css.trim().length) {
         str += `<style>${css}</style>`;
       }
-
-      // str += getRefs(json).join("\n");
 
       if (!options.inlineState) {
         str += `<script>
