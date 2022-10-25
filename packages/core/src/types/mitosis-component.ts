@@ -50,13 +50,15 @@ export type MitosisComponentInput = {
   defaultValue: any;
 };
 
-export type MitosisExport = {
-  [name: string]: {
-    code: string;
-    usedInLocal?: boolean;
-    isFunction?: boolean;
-  };
+export type MitosisExports = {
+  [name: string]: MitosisExport;
 };
+
+export interface MitosisExport {
+  code: string;
+  usedInLocal?: boolean;
+  isFunction?: boolean;
+}
 
 export type StateValueType = 'function' | 'getter' | 'method' | 'property';
 
@@ -90,7 +92,7 @@ export type MitosisComponent = {
   '@type': '@builder.io/mitosis/component';
   name: string;
   imports: MitosisImport[];
-  exports?: MitosisExport;
+  exports?: MitosisExports;
   meta: JSONObject & {
     useMetadata?: JSONObject;
   };
