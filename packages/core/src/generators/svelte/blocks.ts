@@ -1,4 +1,3 @@
-import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../../parsers/jsx';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseNode, Binding, ForNode, MitosisNode } from '../../types/mitosis-node';
@@ -9,7 +8,6 @@ import { isSlotProperty, stripSlotPrefix } from '../../helpers/slots';
 import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
-import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 
 const mappers: {
@@ -42,16 +40,14 @@ const mappers: {
     const args = getForArguments(json, { excludeCollectionName: true }).join(', ');
 
     return `
-{#each ${stripStateAndProps(json.bindings.each?.code, options)} as ${args} ${
-      keyValue ? `(${keyValue})` : ''
-    }}
+{#each ${json.bindings.each?.code} as ${args} ${keyValue ? `(${keyValue})` : ''}}
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 {/each}
 `;
   },
   Show: ({ json, options, parentComponent }) => {
     return `
-{#if ${stripStateAndProps(json.bindings.when?.code, options)} }
+{#if ${json.bindings.when?.code} }
 ${json.children.map((item) => blockToSvelte({ json: item, options, parentComponent })).join('\n')}
 
   ${
@@ -75,13 +71,12 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 
       return `
         <span #${key}>
-        ${stripStateAndPropsRefs(json.bindings[key]?.code)}
+        ${json.bindings[key]?.code}
         </span>
       `;
     }
-    const strippedTextCode = stripStateAndPropsRefs(json.bindings.name.code);
 
-    return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}">${json.children
+    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
       ?.map((item) => blockToSvelte({ json: item, options, parentComponent }))
       .join('\n')}</slot>`;
   },
@@ -89,7 +84,7 @@ ${json.children.map((item) => blockToSvelte({ json: item, options, parentCompone
 
 const BINDINGS_MAPPER = {
   innerHTML: (json: MitosisNode, options: ToSvelteOptions) =>
-    `{@html ${stripStateAndPropsRefs(json.bindings.innerHTML?.code)}}`,
+    `{@html ${json.bindings.innerHTML?.code}}`,
 };
 
 const SVELTE_SPECIAL_TAGS = {
@@ -139,16 +134,15 @@ const stringifyBinding =
     }
 
     const { code, arguments: cusArgs = ['event'], type } = binding;
-    const useValue = stripStateAndProps(code, options);
 
     if (type === 'spread') {
-      const spreadValue = key === 'props' ? '$$props' : useValue;
+      const spreadValue = key === 'props' ? '$$props' : code;
       return ` {...${spreadValue}} `;
     } else if (key.startsWith('on')) {
       const event = key.replace('on', '').toLowerCase();
       // TODO: handle quotes in event handler values
 
-      const valueWithoutBlock = removeSurroundingBlock(useValue);
+      const valueWithoutBlock = removeSurroundingBlock(code);
 
       if (valueWithoutBlock === key) {
         return ` on:${event}={${valueWithoutBlock}} `;
@@ -156,9 +150,9 @@ const stringifyBinding =
         return ` on:${event}="{${cusArgs.join(',')} => {${valueWithoutBlock}}}" `;
       }
     } else if (key === 'ref') {
-      return ` bind:this={${useValue}} `;
+      return ` bind:this={${code}} `;
     } else {
-      return ` ${key}={${useValue}} `;
+      return ` ${key}={${code}} `;
     }
   };
 
@@ -173,7 +167,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
 
   const tagName = getTagName({ json, parentComponent });
 
-  if (isChildren(json)) {
+  if (isChildren({ node: json, extraMatches: ['$$slots.default'] })) {
     return `<slot></slot>`;
   }
 
@@ -184,11 +178,10 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
   const textCode = json.bindings._text?.code;
 
   if (textCode) {
-    const strippedTextCode = stripStateAndProps(textCode, options);
-    if (isSlotProperty(strippedTextCode)) {
-      return `<slot name="${stripSlotPrefix(strippedTextCode).toLowerCase()}"/>`;
+    if (isSlotProperty(textCode)) {
+      return `<slot name="${stripSlotPrefix(textCode).toLowerCase()}"/>`;
     }
-    return `{${strippedTextCode}}`;
+    return `{${textCode}}`;
   }
 
   let str = '';
@@ -197,10 +190,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
 
   const isComponent = Boolean(tagName[0] && isUpperCase(tagName[0]));
   if ((json.bindings.style?.code || json.properties.style) && !isComponent) {
-    const useValue = stripStateAndProps(
-      json.bindings.style?.code || json.properties.style,
-      options,
-    );
+    const useValue = json.bindings.style?.code || json.properties.style;
 
     str += `use:mitosis_styling={${useValue}}`;
     delete json.bindings.style;
