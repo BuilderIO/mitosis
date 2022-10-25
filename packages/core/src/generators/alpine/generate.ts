@@ -103,12 +103,9 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
   }
 
   if (json.bindings._text?.code) {
-    if (!isValidAlpineBinding(json.bindings._text.code as string)) {
-      return '';
-    }
-    // @todo
-    return `<span x-html="${stripStateAndPropsRefs(json.bindings._text.code as string)}"></span>`;
-    // return `{{${stripStateAndPropsRefs(json.bindings._text.code as string)}}}`;
+    return isValidAlpineBinding(json.bindings._text.code)
+    ? `<span x-html="${stripStateAndPropsRefs(json.bindings._text.code as string)}"></span>`
+    : '';
   }
 
   let str = '';
@@ -143,9 +140,9 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
       isValidAlpineBinding(json.bindings._spread.code)
     ) {
       str += `
-          {% for _attr in ${json.bindings._spread.code} %}
+          <template x-for="_attr in ${json.bindings._spread.code}">
             {{ _attr[0] }}="{{ _attr[1] }}"
-          {% endfor %}
+          </template>
         `;
     }
 
@@ -187,10 +184,8 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
 const mappers: {
   [key: string]: (json: MitosisNode, options: ToAlpineOptions) => string;
 } = {
-  Fragment: (json, options) => {
-    return `<div>${json.children.map((item) => blockToAlpine(item, options)).join('\n')}</div>`;
-  },
-};
+  Fragment: (json, options) => blockToAlpine({...json, name: "div"}, options),
+  };
 
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
   (options = {}) =>
