@@ -167,7 +167,8 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
       } else if (key === 'ref') {
         str += ` x-ref="${useValue}"`;
       } else if (isValidAlpineBinding(useValue)) {
-        str += ` :${key}="${useValue}" `;
+        const bind = options.useShorthandSyntax ? ':' : 'x-bind:'
+        str += ` ${bind}${key}="${useValue}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
