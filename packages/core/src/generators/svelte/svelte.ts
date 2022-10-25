@@ -30,15 +30,26 @@ import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { replaceContextGetters, stripStateAndProps } from './helpers';
+import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 import { blockToSvelte } from './blocks';
-import { GETTER } from '../../helpers/patterns';
+import { stripGetter } from '../../helpers/patterns';
 
 const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
   return Object.keys(contextGetters)
-    .map((key) => `let ${key} = getContext(${contextGetters[key].name}.key);`)
+    .map((key) => {
+      const contextValueKey = `${key}ContextValue`;
+      return `
+      let ${contextValueKey} = getContext(${contextGetters[key].name}.key);
+      $: ${key} = new Proxy($${contextValueKey}, {
+        set: (obj, prop, value) => {
+          $${contextValueKey}[prop] = value
+          return true;
+        }
+      })
+      `;
+    })
     .join('\n');
 };
 
@@ -125,18 +136,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-            return flow(
-              stripStateAndProps({ json, options }),
-              (code) => {
-                return code.replace(GETTER, '');
-                // if (code.startsWith(GETTER)) {
-                //   return code.replace(/^get ([a-zA-Z_\$0-9]+)/, '$1 = ').replace(/\)/, ') => ');
-                // }
-
-                // return code
-              },
-              replaceContextGetters({ json }),
-            );
+            return flow(stripStateAndProps({ json, options }), stripGetter);
           case 'properties':
             return stripStateAndProps({ json, options });
         }
