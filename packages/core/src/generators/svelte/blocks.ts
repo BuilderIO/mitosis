@@ -9,6 +9,7 @@ import { VALID_HTML_TAGS } from '../../constants/html_tags';
 import { isUpperCase } from '../../helpers/is-upper-case';
 import { getForArguments } from '../../helpers/nodes/for';
 import { ToSvelteOptions } from './types';
+import { stripStateAndProps } from './helpers';
 
 const mappers: {
   For: BlockToSvelte<ForNode>;
@@ -96,9 +97,11 @@ const SVELTE_SPECIAL_TAGS = {
 const getTagName = ({
   json,
   parentComponent,
+  options,
 }: {
   json: MitosisNode;
   parentComponent: MitosisComponent;
+  options: ToSvelteOptions;
 }) => {
   if (parentComponent && json.name === parentComponent.name) {
     return SVELTE_SPECIAL_TAGS.SELF;
@@ -110,10 +113,13 @@ const getTagName = ({
   const hasMatchingImport = parentComponent.imports.some(({ imports }) =>
     Object.keys(imports).some((name) => name === json.name),
   );
+
   // TO-DO: no way to decide between <svelte:component> and <svelte:element>...need to do that through metadata
   // overrides for now
   if (!isValidHtmlTag && !isSpecialSvelteTag && !hasMatchingImport) {
-    json.bindings.this = { code: json.name };
+    json.bindings.this = {
+      code: stripStateAndProps({ json: parentComponent, options })(json.name),
+    };
     return SVELTE_SPECIAL_TAGS.COMPONENT;
   }
 
@@ -165,7 +171,7 @@ export const blockToSvelte: BlockToSvelte = ({ json, options, parentComponent })
     });
   }
 
-  const tagName = getTagName({ json, parentComponent });
+  const tagName = getTagName({ json, parentComponent, options });
 
   if (isChildren({ node: json, extraMatches: ['$$slots.default'] })) {
     return `<slot></slot>`;
