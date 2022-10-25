@@ -16,6 +16,8 @@ import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpil
 import { dashCase } from '../../helpers/dash-case';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { camelCase } from 'lodash';
+import { getRefs } from '../../helpers/get-refs';
+import { MitosisComponent } from 'src/types/mitosis-component';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -55,7 +57,21 @@ export const isValidAlpineBinding = (str = '') => {
 const removeOnFromEventName = (str: string) => str.replace(/^on/, '')
 const prefixEvent = (str: string) => str.replace(/(?<=[\s]|^)event/gm, '$event')
 const removeTrailingSemicolon = (str: string) => str.replace(/;$/, '')
+const trim = (str: string) => str.trim();
+
+const replaceInputRefs = (json: MitosisComponent, str: string) => {
+  getRefs(json).forEach(value => {
+    str = str.replaceAll(value, `this.$refs.${value}`);
+  });
+
+  return str;
+}
 const replaceStateWithThis = (str: string) => str.replaceAll('state.', 'this.');
+const getStateObjectString = compose(
+  replaceStateWithThis,
+  trim,
+  getStateObjectStringFromComponent,
+);
 
 const bindEventHandlerKey = compose(
   dashCase,
@@ -64,6 +80,7 @@ const bindEventHandlerKey = compose(
 const bindEventHandlerValue = compose(
   prefixEvent,
   removeTrailingSemicolon,
+  trim,
   removeSurroundingBlock,
   stripStateAndPropsRefs
 );
@@ -138,7 +155,7 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
     }
 
     for (const key in json.bindings) {
-      if (key === '_spread' || key === 'ref' || key === 'css') {
+      if (key === '_spread' || key === 'css') {
         continue;
       }
       const { code: value } = json.bindings[key]!;
@@ -147,6 +164,8 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
 
       if (key.startsWith('on')) {
         str += bindEventHandler(options.long)(key, value);
+      } else if (key === 'ref') {
+        str += ` x-ref="${useValue}"`;
       } else if (isValidAlpineBinding(useValue)) {
         str += ` :${key}="${useValue}" `;
       }
@@ -172,7 +191,6 @@ const mappers: {
   },
 };
 
-// TODO: add JS support similar to componentToHtml()
 export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
   (options = {}) =>
     ({ component }) => {
@@ -186,7 +204,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
         json = runPostJsonPlugins(json, options.plugins);
       }
 
-      const stateObjectString = replaceStateWithThis(getStateObjectStringFromComponent(json).trim());
+      const stateObjectString = replaceInputRefs(json, getStateObjectString(json));
       json.children[0].properties['x-data'] = options.inlineState
         ? stateObjectString
         : `${camelCase(json.name)}()`;
@@ -195,6 +213,8 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       if (css.trim().length) {
         str += `<style>${css}</style>`;
       }
+
+      // str += getRefs(json).join("\n");
 
       if (!options.inlineState) {
         str += `<script>
