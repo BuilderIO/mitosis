@@ -1,13 +1,12 @@
-import { componentToAlpine } from '../generators/alpine';
+import { componentToAlpine, ToAlpineOptions } from '../generators/alpine';
 import { runTestsForTarget } from './shared';
 
 describe('Alpine.js', () => {
-  runTestsForTarget({ options: {}, target: 'alpine', generator: componentToAlpine });
-  // runTestsForTarget({
-  //   options: {
-  //     standalone: true,
-  //   },
-  //   target: 'alpine',
-  //   generator: componentToAlpine,
-  // });
+  const possibleOptions: ToAlpineOptions[] = [
+    {},
+    // { inlineState: true },
+    // { useShorthandSyntax: true },
+    // { inlineState: true, useShorthandSyntax: true },
+  ]
+  possibleOptions.map(options => runTestsForTarget({ options, target: 'alpine', generator: componentToAlpine }));
 });
