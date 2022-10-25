@@ -68,7 +68,9 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
 });
 
 async function clean(options: MitosisConfig) {
-  const patterns = options.targets.map((target) => `${options.dest}/${target}/*/${options.files}`);
+  const patterns = options.targets.map(
+    (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
+  );
   const files = await glob(patterns);
   await Promise.all(
     files.map(async (file) => {
