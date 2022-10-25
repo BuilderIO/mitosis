@@ -74,6 +74,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
     try {
       emitImports(file, component);
       emitTypes(file, component);
+      emitExports(file, component);
       const metadata: Record<string, any> = component.meta.useMetadata || ({} as any);
       const isLightComponent: boolean = metadata?.qwik?.component?.isLight || false;
       const mutable: string[] = metadata?.qwik?.mutable || [];
@@ -124,6 +125,14 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       return (e as Error).stack || String(e);
     }
   };
+
+function emitExports(file: File, component: MitosisComponent) {
+  component.exports &&
+    Object.keys(component.exports).forEach((key) => {
+      const exportObj = component.exports![key]!;
+      file.src.emit(exportObj.code);
+    });
+}
 
 function emitTagNameHack(file: File, component: MitosisComponent, metadataValue: unknown) {
   if (typeof metadataValue === 'string' && metadataValue) {
@@ -189,14 +198,6 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
   const handlers = new Map<string, string>();
   const styles = new Map();
   const parentSymbolBindings = {};
-  const mutablePredicate =
-    mutable.length > 0
-      ? (code: string) => {
-          return !!mutable.find((txt) => {
-            return code.indexOf(txt) !== -1;
-          });
-        }
-      : undefined;
   file.src.emit(
     'return ',
     renderJSXNodes(
@@ -206,7 +207,6 @@ function emitJSX(file: File, component: MitosisComponent, mutable: string[]) {
       component.children,
       styles,
       parentSymbolBindings,
-      mutablePredicate,
     ),
   );
 }
