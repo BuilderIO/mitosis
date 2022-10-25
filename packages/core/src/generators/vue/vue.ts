@@ -30,7 +30,6 @@ import { blockToVue } from './blocks';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { GETTER } from '../../helpers/patterns';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, _options: ToVueOptions) {
@@ -120,19 +119,14 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
                 });
             case 'state':
               return (code) =>
-                pipe(
-                  // workaround so that getter code is valid and parseable by babel.
-                  code.replace(GETTER, ''),
-                  (c) =>
-                    processBinding({
-                      code: c,
-                      options,
-                      json: component,
-                      // we don't want to process `props`, because Vue 3 code has a `props` ref, and
-                      // therefore we can keep pointing to `props.${value}`
-                      includeProps: false,
-                    }),
-                );
+                processBinding({
+                  code,
+                  options,
+                  json: component,
+                  // we don't want to process `props`, because Vue 3 code has a `props` ref, and
+                  // therefore we can keep pointing to `props.${value}`
+                  includeProps: false,
+                });
             case 'bindings':
               return (c) => stripStateAndPropsRefs(c);
             case 'hooks-deps':
@@ -148,8 +142,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
               return (c) => stripStateAndPropsRefs(c);
             case 'properties':
             case 'hooks-deps':
-            case 'state':
               return (c) => c;
+            case 'state':
+              return (c) => processBinding({ code: c, options, json: component });
           }
         }
       }),
