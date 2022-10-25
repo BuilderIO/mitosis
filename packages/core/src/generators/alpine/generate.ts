@@ -88,7 +88,7 @@ const bindEventHandlerValue = compose(
   stripStateAndPropsRefs
 );
 
-const bindEventHandler = ({useShorthandSyntax}: ToAlpineOptions) => (eventName: string, code: string) => {
+const bindEventHandler = ({ useShorthandSyntax }: ToAlpineOptions) => (eventName: string, code: string) => {
   const bind = useShorthandSyntax ? '@' : 'x-on:'
   return ` ${bind}${bindEventHandlerKey(eventName)}="${bindEventHandlerValue(code).trim()}"`;
 };
@@ -166,16 +166,9 @@ const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string
       str += ` ${bind}${key}="${useValue}" `;
     }
   }
-  if (selfClosingTags.has(json.name)) {
-    return str + ' />';
-  }
-  str += '>';
-  if (json.children) {
-    str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
-  }
-
-  str += `</${json.name}>`;
-  return str;
+  return selfClosingTags.has(json.name)
+    ? `${str} />`
+    : `${str}>${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}</${json.name}>`;
 };
 
 
@@ -197,10 +190,10 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
         ? stateObjectString
         : `${camelCase(json.name)}()`;
 
-      let str = json.children.map((item) => blockToAlpine(item, options)).join('\n');
-      if (css.trim().length) {
-        str += `<style>${css}</style>`;
-      }
+      let str = css.trim().length
+        ? `<style>${css}</style>`
+        : '';
+      str += json.children.map((item) => blockToAlpine(item, options)).join('\n');
 
       if (!options.inlineState) {
         str += `<script>
