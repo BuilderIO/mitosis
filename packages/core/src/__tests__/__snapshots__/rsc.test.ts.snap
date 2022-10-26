@@ -172,6 +172,17 @@ export default function MyBasicOutputsComponent(props: any) {
 "
 `;
 
+exports[`RSC Javascript Test BasicAttribute 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+}
+"
+`;
+
 exports[`RSC Javascript Test BasicBooleanAttribute 1`] = `
 "import * as React from \\"react\\";
 
@@ -437,36 +448,36 @@ export default function Column(props: ColumnProps) {
       return typeof props.space === \\"number\\" ? props.space || 0 : 20;
     },
     getWidth(index) {
-      const columns = this.getColumns();
+      const columns = state.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
     getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
+      const columns = state.getColumns();
+      const gutterSize = state.getGutterSize();
       const subtractWidth =
         (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   };
 
   return (
     <>
-      <div className=\\"builder-columns div-19e3fd4c\\">
+      <div className=\\"builder-columns div-47a9ecfb\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-19e3fd4c-2\\">
+          <div className=\\"builder-column div-47a9ecfb-2\\">
             {column.content}
 
             {index}
           </div>
         ))}
       </div>
-      <style>{\`.div-19e3fd4c { 
+      <style>{\`.div-47a9ecfb { 
 display: flex;
 flex-direction: column;
 align-items: stretch;
-line-height: normal; }@media (max-width: 999px) { .div-19e3fd4c { 
-flex-direction: row; } }@media (max-width: 639px) { .div-19e3fd4c { 
-flex-direction: row-reverse; } }.div-19e3fd4c-2 { 
+line-height: normal; }@media (max-width: 999px) { .div-47a9ecfb { 
+flex-direction: row; } }@media (max-width: 639px) { .div-47a9ecfb { 
+flex-direction: row-reverse; } }.div-47a9ecfb-2 { 
 flex-grow: 1; }\`}</style>
     </>
   );
@@ -1679,6 +1690,35 @@ padding: 10px; }\`}</style>
 "
 `;
 
+exports[`RSC Javascript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const foo = _context[\\"Context1\\"];
+
+  _context.Context1 = {
+    foo: \\"bar\\",
+    content() {
+      return props.content;
+    },
+  };
+
+  _context.Context2 = { bar: \\"baz\\" };
+
+  return <>{foo.value}</>;
+}
+"
+`;
+
 exports[`RSC Javascript Test defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -2592,6 +2632,17 @@ export default function MyBasicOutputsComponent(props: any) {
 "
 `;
 
+exports[`RSC Typescript Test BasicAttribute 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <input autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+}
+"
+`;
+
 exports[`RSC Typescript Test BasicBooleanAttribute 1`] = `
 "import * as React from \\"react\\";
 
@@ -2857,36 +2908,36 @@ export default function Column(props: ColumnProps) {
       return typeof props.space === \\"number\\" ? props.space || 0 : 20;
     },
     getWidth(index) {
-      const columns = this.getColumns();
+      const columns = state.getColumns();
       return (columns[index] && columns[index].width) || 100 / columns.length;
     },
     getColumnCssWidth(index) {
-      const columns = this.getColumns();
-      const gutterSize = this.getGutterSize();
+      const columns = state.getColumns();
+      const gutterSize = state.getGutterSize();
       const subtractWidth =
         (gutterSize * (columns.length - 1)) / columns.length;
-      return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+      return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
     },
   };
 
   return (
     <>
-      <div className=\\"builder-columns div-19e3fd4c\\">
+      <div className=\\"builder-columns div-47a9ecfb\\">
         {props.columns?.map((column, index) => (
-          <div className=\\"builder-column div-19e3fd4c-2\\">
+          <div className=\\"builder-column div-47a9ecfb-2\\">
             {column.content}
 
             {index}
           </div>
         ))}
       </div>
-      <style>{\`.div-19e3fd4c { 
+      <style>{\`.div-47a9ecfb { 
 display: flex;
 flex-direction: column;
 align-items: stretch;
-line-height: normal; }@media (max-width: 999px) { .div-19e3fd4c { 
-flex-direction: row; } }@media (max-width: 639px) { .div-19e3fd4c { 
-flex-direction: row-reverse; } }.div-19e3fd4c-2 { 
+line-height: normal; }@media (max-width: 999px) { .div-47a9ecfb { 
+flex-direction: row; } }@media (max-width: 639px) { .div-47a9ecfb { 
+flex-direction: row-reverse; } }.div-47a9ecfb-2 { 
 flex-grow: 1; }\`}</style>
     </>
   );
@@ -4095,6 +4146,35 @@ export default function MyBasicComponent(props: any) {
 padding: 10px; }\`}</style>
     </>
   );
+}
+"
+`;
+
+exports[`RSC Typescript Test componentWithContext 1`] = `
+"import * as React from \\"react\\";
+
+export interface ComponentWithContextProps {
+  content: string;
+}
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props: ComponentWithContextProps) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const foo = _context[\\"Context1\\"];
+
+  _context.Context1 = {
+    foo: \\"bar\\",
+    content() {
+      return props.content;
+    },
+  };
+
+  _context.Context2 = { bar: \\"baz\\" };
+
+  return <>{foo.value}</>;
 }
 "
 `;

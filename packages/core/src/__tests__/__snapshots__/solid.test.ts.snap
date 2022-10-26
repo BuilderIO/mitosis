@@ -484,6 +484,30 @@ export default MyBasicOutputsComponent;
 "
 `;
 
+exports[`Solid Javascript Test BasicAttribute 1`] = `
+"function MyComponent(props) {
+  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Javascript Test BasicAttribute 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid Javascript Test BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
@@ -989,15 +1013,15 @@ function Column(props) {
   }
 
   function getWidth(index) {
-    const columns = this.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
   function getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -1059,25 +1083,25 @@ function Column(props) {
   }
 
   function getWidth(index) {
-    const columns = this.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
   function getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
     <>
-      <div class=\\"builder-columns div-911072f8\\">
+      <div class=\\"builder-columns div-3489e5a0\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder-column div-911072f8-2\\">
+              <div class=\\"builder-column div-3489e5a0-2\\">
                 {column.content}
                 {index}
               </div>
@@ -1086,23 +1110,23 @@ function Column(props) {
         </For>
       </div>
       <style jsx>{\`
-        .div-911072f8 {
+        .div-3489e5a0 {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-911072f8 {
+          .div-3489e5a0 {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-911072f8 {
+          .div-3489e5a0 {
             flex-direction: row-reverse;
           }
         }
-        .div-911072f8-2 {
+        .div-3489e5a0-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -3462,6 +3486,88 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid Javascript Test componentWithContext 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Dynamic
+      value={{
+        bar: \\"baz\\",
+      }}
+      component={Context2.Provider}
+    >
+      <Dynamic
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+        component={Context1.Provider}
+      >
+        <>
+          <>{foo.value}</>
+        </>
+      </Dynamic>
+    </Dynamic>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid Javascript Test componentWithContext 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          bar: \\"baz\\",
+        }}
+        component={Context2.Provider}
+      >
+        <Dynamic
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+          component={Context1.Provider}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Dynamic>
+      </Dynamic>
+    </>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
 exports[`Solid Javascript Test defaultProps 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -5274,6 +5380,30 @@ export default MyBasicOutputsComponent;
 "
 `;
 
+exports[`Solid Typescript Test BasicAttribute 1`] = `
+"function MyComponent(props) {
+  return <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid Typescript Test BasicAttribute 2`] = `
+"import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  return (
+    <>
+      <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck={true} />
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid Typescript Test BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
@@ -5779,15 +5909,15 @@ function Column(props) {
   }
 
   function getWidth(index) {
-    const columns = this.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
   function getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
@@ -5849,25 +5979,25 @@ function Column(props) {
   }
 
   function getWidth(index) {
-    const columns = this.getColumns();
+    const columns = getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
 
   function getColumnCssWidth(index) {
-    const columns = this.getColumns();
-    const gutterSize = this.getGutterSize();
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
   }
 
   return (
     <>
-      <div class=\\"builder-columns div-911072f8\\">
+      <div class=\\"builder-columns div-3489e5a0\\">
         <For each={props.columns}>
           {(column, _index) => {
             const index = _index();
             return (
-              <div class=\\"builder-column div-911072f8-2\\">
+              <div class=\\"builder-column div-3489e5a0-2\\">
                 {column.content}
                 {index}
               </div>
@@ -5876,23 +6006,23 @@ function Column(props) {
         </For>
       </div>
       <style jsx>{\`
-        .div-911072f8 {
+        .div-3489e5a0 {
           display: flex;
           flex-direction: column;
           align-items: stretch;
           line-height: normal;
         }
         @media (max-width: 999px) {
-          .div-911072f8 {
+          .div-3489e5a0 {
             flex-direction: row;
           }
         }
         @media (max-width: 639px) {
-          .div-911072f8 {
+          .div-3489e5a0 {
             flex-direction: row-reverse;
           }
         }
-        .div-911072f8-2 {
+        .div-3489e5a0-2 {
           flex-grow: 1;
         }
       \`}</style>
@@ -8249,6 +8379,88 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test componentWithContext 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Dynamic
+      value={{
+        bar: \\"baz\\",
+      }}
+      component={Context2.Provider}
+    >
+      <Dynamic
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+        component={Context1.Provider}
+      >
+        <>
+          <>{foo.value}</>
+        </>
+      </Dynamic>
+    </Dynamic>
+  );
+}
+
+export default ComponentWithContext;
+"
+`;
+
+exports[`Solid Typescript Test componentWithContext 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          bar: \\"baz\\",
+        }}
+        component={Context2.Provider}
+      >
+        <Dynamic
+          value={{
+            foo: \\"bar\\",
+
+            content() {
+              return props.content;
+            },
+          }}
+          component={Context1.Provider}
+        >
+          <>
+            <>{foo.value}</>
+          </>
+        </Dynamic>
+      </Dynamic>
+    </>
+  );
+}
+
+export default ComponentWithContext;
 "
 `;
 

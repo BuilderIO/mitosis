@@ -1,12 +1,12 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { MitosisExport } from '../../types/mitosis-component';
+import { MitosisExports } from '../../types/mitosis-component';
 import { isTypeOrInterface } from './component-types';
 import { isImportOrDefaultExport } from './helpers';
 
 const { types } = babel;
 
-export const generateExports = (path: babel.NodePath<babel.types.Program>): MitosisExport => {
+export const generateExports = (path: babel.NodePath<babel.types.Program>): MitosisExports => {
   const exportsOrLocalVariables = path.node.body.filter(
     (statement) =>
       !isImportOrDefaultExport(statement) &&
@@ -14,7 +14,7 @@ export const generateExports = (path: babel.NodePath<babel.types.Program>): Mito
       !types.isExpressionStatement(statement),
   );
 
-  return exportsOrLocalVariables.reduce<MitosisExport>((pre, node) => {
+  return exportsOrLocalVariables.reduce<MitosisExports>((pre, node) => {
     let name, isFunction;
     if (babel.types.isExportNamedDeclaration(node)) {
       if (

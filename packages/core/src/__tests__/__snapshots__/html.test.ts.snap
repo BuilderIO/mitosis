@@ -576,6 +576,52 @@ exports[`Html Javascript Test Basic Outputs Meta 1`] = `
 "
 `;
 
+exports[`Html Javascript Test BasicAttribute 1`] = `
+"<input
+  autocapitalize=\\"on\\"
+  autocomplete=\\"on\\"
+  data-el=\\"input-1\\"
+  data-dom-state=\\"input-2\\"
+/>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.setAttribute(\\"spellcheck\\", true);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html Javascript Test BasicBooleanAttribute 1`] = `
 "<div>
   <slot></slot>
@@ -1290,15 +1336,15 @@ exports[`Html Javascript Test Columns 1`] = `
         return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
       getWidth(index) {
-        const columns = this.getColumns();
+        const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
       getColumnCssWidth(index) {
-        const columns = this.getColumns();
-        const gutterSize = this.getGutterSize();
+        const columns = state.getColumns();
+        const gutterSize = state.getGutterSize();
         const subtractWidth =
           (gutterSize * (columns.length - 1)) / columns.length;
-        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+        return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
       },
     };
     let props = {};
@@ -3383,6 +3429,61 @@ exports[`Html Javascript Test classState 1`] = `
 "
 `;
 
+exports[`Html Javascript Test componentWithContext 1`] = `
+"<template data-el=\\"div-1\\"><!-- foo.value --></template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, foo.value);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html Javascript Test defaultProps 1`] = `
 "<div>
   <template data-el=\\"show\\">
@@ -5407,6 +5508,52 @@ exports[`Html Typescript Test Basic Outputs Meta 1`] = `
 "
 `;
 
+exports[`Html Typescript Test BasicAttribute 1`] = `
+"<input
+  autocapitalize=\\"on\\"
+  autocomplete=\\"on\\"
+  data-el=\\"input-1\\"
+  data-dom-state=\\"input-2\\"
+/>
+<script>
+  (() => {
+    const state = {};
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.setAttribute(\\"spellcheck\\", true);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
+</script>
+"
+`;
+
 exports[`Html Typescript Test BasicBooleanAttribute 1`] = `
 "<div>
   <slot></slot>
@@ -6121,15 +6268,15 @@ exports[`Html Typescript Test Columns 1`] = `
         return typeof props.space === \\"number\\" ? props.space || 0 : 20;
       },
       getWidth(index) {
-        const columns = this.getColumns();
+        const columns = state.getColumns();
         return (columns[index] && columns[index].width) || 100 / columns.length;
       },
       getColumnCssWidth(index) {
-        const columns = this.getColumns();
-        const gutterSize = this.getGutterSize();
+        const columns = state.getColumns();
+        const gutterSize = state.getGutterSize();
         const subtractWidth =
           (gutterSize * (columns.length - 1)) / columns.length;
-        return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+        return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
       },
     };
     let props = {};
@@ -8209,6 +8356,61 @@ exports[`Html Typescript Test classState 1`] = `
 
     // Update with initial state on first load
     update();
+  })();
+</script>
+"
+`;
+
+exports[`Html Typescript Test componentWithContext 1`] = `
+"<template data-el=\\"div-1\\"><!-- foo.value --></template>
+
+<script>
+  (() => {
+    const state = {};
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, foo.value);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
   })();
 </script>
 "

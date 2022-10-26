@@ -285,13 +285,21 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
     const options = mergeOptions(DEFAULT_OPTIONS, passedOptions);
     options.plugins = [
       ...(options.plugins || []),
-      CODE_PROCESSOR_PLUGIN((codeType) =>
-        updateStateCode({
-          component: json,
-          options,
-          updateSetters: codeType === 'properties' ? false : true,
-        }),
-      ),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'state':
+            return (c) => c;
+          case 'bindings':
+          case 'hooks':
+          case 'hooks-deps':
+          case 'properties':
+            return updateStateCode({
+              component: json,
+              options,
+              updateSetters: codeType === 'properties' ? false : true,
+            });
+        }
+      }),
     ];
 
     if (options.plugins) {

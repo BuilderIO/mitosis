@@ -945,6 +945,43 @@ Object {
 }
 `;
 
+exports[`Parse JSX BasicAttribute 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {
+        "spellcheck": Object {
+          "code": "true",
+        },
+      },
+      "children": Array [],
+      "meta": Object {},
+      "name": "input",
+      "properties": Object {
+        "autocapitalize": "on",
+        "autocomplete": "on",
+      },
+      "scope": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {},
+    "set": Object {},
+  },
+  "exports": Object {},
+  "hooks": Object {},
+  "imports": Array [],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "MyComponent",
+  "refs": Object {},
+  "state": Object {},
+  "subComponents": Array [],
+}
+`;
+
 exports[`Parse JSX BasicBooleanAttribute 1`] = `
 Object {
   "@type": "@builder.io/mitosis/component",
@@ -2529,10 +2566,10 @@ Object {
   "state": Object {
     "getColumnCssWidth": Object {
       "code": "getColumnCssWidth(index: number) {
-  const columns = this.getColumns();
-  const gutterSize = this.getGutterSize();
+  const columns = state.getColumns();
+  const gutterSize = state.getGutterSize();
   const subtractWidth = gutterSize * (columns.length - 1) / columns.length;
-  return \`calc(\${this.getWidth(index)}% - \${subtractWidth}px)\`;
+  return \`calc(\${state.getWidth(index)}% - \${subtractWidth}px)\`;
 }",
       "type": "method",
     },
@@ -2550,7 +2587,7 @@ Object {
     },
     "getWidth": Object {
       "code": "getWidth(index: number) {
-  const columns = this.getColumns();
+  const columns = state.getColumns();
   return columns[index] && columns[index].width || 100 / columns.length;
 }",
       "type": "method",
@@ -6909,6 +6946,133 @@ Object {
     },
   },
   "subComponents": Array [],
+}
+`;
+
+exports[`Parse JSX componentWithContext 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {},
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [
+            Object {
+              "@type": "@builder.io/mitosis/node",
+              "bindings": Object {
+                "_text": Object {
+                  "code": "foo.value",
+                },
+              },
+              "children": Array [],
+              "meta": Object {},
+              "name": "div",
+              "properties": Object {},
+              "scope": Object {},
+            },
+          ],
+          "meta": Object {},
+          "name": "Fragment",
+          "properties": Object {},
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+          "scope": Object {},
+        },
+      ],
+      "meta": Object {},
+      "name": "Fragment",
+      "properties": Object {},
+      "scope": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {
+      "foo": Object {
+        "name": "Context1",
+        "path": "@dummy/1:default",
+      },
+    },
+    "set": Object {
+      "@dummy/1:default": Object {
+        "name": "Context1",
+        "value": Object {
+          "content": Object {
+            "code": "content() {
+  return props.content;
+}",
+            "type": "method",
+          },
+          "foo": Object {
+            "code": "bar",
+            "type": "property",
+          },
+        },
+      },
+      "@dummy/2:default": Object {
+        "name": "Context2",
+        "value": Object {
+          "bar": Object {
+            "code": "baz",
+            "type": "property",
+          },
+        },
+      },
+    },
+  },
+  "exports": Object {},
+  "hooks": Object {},
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "Context1": "default",
+      },
+      "path": "@dummy/1",
+    },
+    Object {
+      "imports": Object {
+        "Context2": "default",
+      },
+      "path": "@dummy/2",
+    },
+  ],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "ComponentWithContext",
+  "propsTypeRef": "ComponentWithContextProps",
+  "refs": Object {},
+  "state": Object {},
+  "subComponents": Array [],
+  "types": Array [
+    "export interface ComponentWithContextProps {
+  content: string
+}",
+  ],
 }
 `;
 
