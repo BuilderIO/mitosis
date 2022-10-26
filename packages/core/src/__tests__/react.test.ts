@@ -3,7 +3,6 @@ import { componentToReact } from '../generators/react';
 import { runTestsForTarget } from './shared';
 
 const stamped = require('./data/blocks/stamped-io.raw');
-const attribute = require('./data/basic-attribute.raw');
 
 describe('React', () => {
   runTestsForTarget({ options: {}, target: 'react', generator: componentToReact });
@@ -22,12 +21,6 @@ describe('React', () => {
       stylesType: 'style-tag',
       stateType: 'mobx',
     })({ component });
-    expect(output).toMatchSnapshot();
-  });
-
-  test('verify attributes are transformed to camelCase', () => {
-    const component = parseJsx(attribute);
-    const output = componentToReact()({ component });
     expect(output).toMatchSnapshot();
   });
 });
