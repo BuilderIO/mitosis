@@ -1,4 +1,3 @@
-import { components } from '..';
 import { Target } from '../types/config';
 import { MitosisComponent, MitosisImport } from '../types/mitosis-component';
 

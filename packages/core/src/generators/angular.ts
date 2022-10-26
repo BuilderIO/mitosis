@@ -20,7 +20,7 @@ import isChildren from '../helpers/is-children';
 import { getProps } from '../helpers/get-props';
 import { getPropsRef } from '../helpers/get-props-ref';
 import { getPropFunctions } from '../helpers/get-prop-functions';
-import { kebabCase, transform, uniq } from 'lodash';
+import { kebabCase, uniq } from 'lodash';
 import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
@@ -31,7 +31,6 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 
-import { isClassDeclaration, isFunctionDeclaration, isVariableDeclaration } from 'typescript';
 import { MitosisComponent } from '..';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
