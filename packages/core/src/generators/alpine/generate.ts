@@ -3,7 +3,7 @@ import { collectCss } from '../../helpers/styles/collect-css';
 import { fastClone } from '../../helpers/fast-clone';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
 import { selfClosingTags } from '../../parsers/jsx';
-import { ForNode, MitosisNode } from '../../types/mitosis-node';
+import { checkIsForNode, ForNode, MitosisNode } from '../../types/mitosis-node';
 import {
   runPostCodePlugins,
   runPostJsonPlugins,
@@ -32,7 +32,7 @@ export interface ToAlpineOptions extends BaseTranspilerOptions {
 
 export const checkIsComponentNode = (node: MitosisNode): boolean => node.name === '@builder.io/mitosis/component';
 
-const compose = (...fns) => fns.reduce((f, g) => (...args) => f(g(...args)))
+const compose = (...fns: any[]) => fns.reduce((f, g) => (...args: any[]) => f(g(...args)))
 
 /**
  * Test if the binding expression would be likely to generate
@@ -94,10 +94,10 @@ const bindEventHandler = ({ useShorthandSyntax }: ToAlpineOptions) => (eventName
 };
 
 const mappers: {
-  [key: string]: (json: ForNode, options: ToAlpineOptions) => string;
+  [key: string]: (json: MitosisNode, options: ToAlpineOptions) => string;
 } = {
   For: (json, options) => (
-    !(isValidAlpineBinding(json.bindings.each?.code) && isValidAlpineBinding(json.scope.forName))
+    !(checkIsForNode(json) && isValidAlpineBinding(json.bindings.each?.code) && isValidAlpineBinding(json.scope.forName))
       ? ''
       : `<template x-for="${json.scope.forName} in ${stripStateAndPropsRefs(json.bindings.each?.code)}">
     ${(json.children ?? []).map((item) => blockToAlpine(item, options)).join('\n')}
@@ -114,7 +114,7 @@ const mappers: {
 };
 
 // TODO: spread support
-const blockToAlpine = (json: MitosisNode, options: ToAlpineOptions = {}): string => {
+const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {}): string => {
   if (mappers[json.name]) {
     return mappers[json.name](json, options);
   }

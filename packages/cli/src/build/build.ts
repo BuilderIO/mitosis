@@ -1,4 +1,5 @@
 import {
+  componentToAlpine,
   componentToAngular,
   componentToCustomElement,
   componentToHtml,
@@ -202,6 +203,8 @@ export async function build(config?: MitosisConfig) {
 
 const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['generator'] => {
   switch (target) {
+    case 'alpine':
+      return componentToAlpine;
     case 'customElement':
       return componentToCustomElement;
     case 'html':
