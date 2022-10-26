@@ -15,9 +15,9 @@ import { getStateObjectStringFromComponent } from '../../helpers/get-state-objec
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { dashCase } from '../../helpers/dash-case';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { camelCase } from 'lodash';
+import { camelCase, flowRight as compose } from 'lodash';
 import { getRefs } from '../../helpers/get-refs';
-import { MitosisComponent } from 'src/types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -32,7 +32,7 @@ export interface ToAlpineOptions extends BaseTranspilerOptions {
 
 export const checkIsComponentNode = (node: MitosisNode): boolean => node.name === '@builder.io/mitosis/component';
 
-const compose = (...fns: any[]) => fns.reduce((f, g) => (...args: any[]) => f(g(...args)))
+// const compose = (...fns: any[]) => fns.reduce((f, g) => (...args: any[]) => f(g(...args)))
 
 /**
  * Test if the binding expression would be likely to generate
