@@ -108,15 +108,15 @@ export const renderImport = ({
   target,
   asyncComponentImports,
   preserveFileExtensions = false,
-  component,
-  componentsUsed,
+  component = undefined,
+  componentsUsed = [],
   importMapper,
 }: {
   theImport: MitosisImport;
   target: Target;
   asyncComponentImports: boolean;
   preserveFileExtensions?: boolean;
-  component: MitosisComponent;
+  component?: MitosisComponent | null | undefined;
   componentsUsed?: string[];
   importMapper?: Function | null | undefined;
 }): string => {
