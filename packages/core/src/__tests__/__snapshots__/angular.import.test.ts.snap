@@ -326,7 +326,10 @@ export class MyBasicOutputsComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions Javascript Test BasicAttribute 1`] = `
-"import { Component } from \\"@angular/core\\";
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -334,7 +337,14 @@ exports[`Angular with Preserve Imports and File Extensions Javascript Test Basic
     <input autocapitalize=\\"on\\" autocomplete=\\"on\\" [attr.spellcheck]=\\"true\\" />
   \`,
 })
-export default class MyComponent {}
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -2470,7 +2480,10 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions Javascript Test componentWithContext 1`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
 
 export interface ComponentWithContextProps {
   content: string;
@@ -2487,11 +2500,18 @@ import Context2 from \\"@dummy/2\\";
     </div>
   \`,
 })
-export default class ComponentWithContext {
+export class ComponentWithContext {
   @Input() content: ComponentWithContextProps[\\"content\\"];
 
   constructor(public foo: Context1) {}
 }
+
+@NgModule({
+  declarations: [ComponentWithContext],
+  imports: [BrowserModule],
+  exports: [ComponentWithContext],
+})
+export class ComponentWithContextModule {}
 "
 `;
 
@@ -3976,7 +3996,10 @@ export class MyBasicOutputsComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions Typescript Test BasicAttribute 1`] = `
-"import { Component } from \\"@angular/core\\";
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
 
 @Component({
   selector: \\"my-component, MyComponent\\",
@@ -3984,7 +4007,14 @@ exports[`Angular with Preserve Imports and File Extensions Typescript Test Basic
     <input autocapitalize=\\"on\\" autocomplete=\\"on\\" [attr.spellcheck]=\\"true\\" />
   \`,
 })
-export default class MyComponent {}
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -6120,7 +6150,10 @@ export class MyBasicComponentModule {}
 `;
 
 exports[`Angular with Preserve Imports and File Extensions Typescript Test componentWithContext 1`] = `
-"import { Component, Input } from \\"@angular/core\\";
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
 
 export interface ComponentWithContextProps {
   content: string;
@@ -6137,11 +6170,18 @@ import Context2 from \\"@dummy/2\\";
     </div>
   \`,
 })
-export default class ComponentWithContext {
+export class ComponentWithContext {
   @Input() content: ComponentWithContextProps[\\"content\\"];
 
   constructor(public foo: Context1) {}
 }
+
+@NgModule({
+  declarations: [ComponentWithContext],
+  imports: [BrowserModule],
+  exports: [ComponentWithContext],
+})
+export class ComponentWithContextModule {}
 "
 `;
 
