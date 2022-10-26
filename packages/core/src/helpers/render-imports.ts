@@ -55,17 +55,7 @@ const transformImportPath = (
   theImport: MitosisImport,
   target: Target,
   preserveFileExtensions: boolean,
-  componentsUsed?: string[],
-  addFrameworkPathToImport?: string,
 ) => {
-  // 'my-path' becomes 'my-path/angular'
-  if (target === 'angular') {
-    for (const componentName of componentsUsed || []) {
-      if (theImport.imports[componentName]) {
-        return theImport.path + addFrameworkPathToImport;
-      }
-    }
-  }
   // We need to drop the `.lite` from context files, because the context generator does so as well.
   if (theImport.path.endsWith('.context.lite')) {
     return theImport.path.replace('.lite', '.js');
@@ -106,25 +96,7 @@ const getImportedValues = ({ theImport }: { theImport: MitosisImport }): ImportV
   return { starImport, defaultImport, namedImports };
 };
 
-const getImportValue = (
-  { defaultImport, namedImports, starImport }: ImportValues,
-  target: Target,
-  componentsUsed: string[],
-) => {
-  if (target === 'angular') {
-    return [defaultImport, namedImports]
-      .filter(Boolean)
-      .map((importName) => {
-        for (const usedComponentName of componentsUsed || []) {
-          if ((importName || '').indexOf(usedComponentName) > -1) {
-            return (importName || '').replace(usedComponentName, `${usedComponentName}Module`);
-          }
-        }
-        return importName;
-      })
-      .join(', ');
-  }
-
+const getImportValue = ({ defaultImport, namedImports, starImport }: ImportValues) => {
   if (starImport) {
     return ` * as ${starImport} `;
   } else {
@@ -137,26 +109,22 @@ export const renderImport = ({
   target,
   asyncComponentImports,
   preserveFileExtensions = false,
-  componentsUsed = [],
-  addFrameworkPathToImport,
+  component,
+  componentsUsed,
+  importMapper,
 }: {
   theImport: MitosisImport;
   target: Target;
   asyncComponentImports: boolean;
   preserveFileExtensions?: boolean;
+  component: MitosisComponent;
   componentsUsed?: string[];
-  addFrameworkPathToImport?: string;
+  importMapper?: Function | null | undefined;
 }): string => {
   const importedValues = getImportedValues({ theImport });
 
-  const path = transformImportPath(
-    theImport,
-    target,
-    preserveFileExtensions,
-    componentsUsed,
-    addFrameworkPathToImport,
-  );
-  const importValue = getImportValue(importedValues, target, componentsUsed);
+  const path = transformImportPath(theImport, target, preserveFileExtensions);
+  const importValue = getImportValue(importedValues);
 
   const isComponentImport = checkIsComponentImport(theImport);
   const shouldBeAsyncImport = asyncComponentImports && isComponentImport;
@@ -183,6 +151,10 @@ export const renderImport = ({
     }
   }
 
+  if (importMapper) {
+    return importMapper(component, theImport, importedValues, componentsUsed);
+  }
+
   return importValue ? `import ${importValue} from '${path}';` : `import '${path}';`;
 };
 
@@ -192,16 +164,18 @@ export const renderImports = ({
   asyncComponentImports,
   excludeMitosisComponents,
   preserveFileExtensions = false,
+  component,
   componentsUsed,
-  addFrameworkPathToImport,
+  importMapper,
 }: {
   imports: MitosisImport[];
   target: Target;
   asyncComponentImports: boolean;
   excludeMitosisComponents?: boolean;
   preserveFileExtensions?: boolean;
+  component: MitosisComponent;
   componentsUsed?: string[];
-  addFrameworkPathToImport?: string;
+  importMapper?: Function | null | undefined;
 }): string =>
   imports
     .filter((theImport) => {
@@ -224,8 +198,9 @@ export const renderImports = ({
         target,
         asyncComponentImports,
         preserveFileExtensions,
+        component,
         componentsUsed,
-        addFrameworkPathToImport,
+        importMapper,
       }),
     )
     .join('\n');
@@ -237,7 +212,7 @@ export const renderPreComponent = ({
   asyncComponentImports = false,
   preserveFileExtensions = false,
   componentsUsed = [],
-  addFrameworkPathToImport = '',
+  importMapper,
 }: {
   component: MitosisComponent;
   target: Target;
@@ -245,7 +220,7 @@ export const renderPreComponent = ({
   excludeMitosisComponents?: boolean;
   preserveFileExtensions?: boolean;
   componentsUsed?: string[];
-  addFrameworkPathToImport?: string;
+  importMapper?: Function | null | undefined;
 }): string => `
     ${renderImports({
       imports: component.imports,
@@ -253,8 +228,9 @@ export const renderPreComponent = ({
       asyncComponentImports,
       excludeMitosisComponents,
       preserveFileExtensions,
+      component,
       componentsUsed,
-      addFrameworkPathToImport,
+      importMapper,
     })}
     ${renderExportAndLocal(component)}
     ${component.hooks.preComponent?.code || ''}

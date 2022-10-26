@@ -32,6 +32,7 @@ import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 
 import { isClassDeclaration, isFunctionDeclaration, isVariableDeclaration } from 'typescript';
+import { MitosisComponent } from '..';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -39,8 +40,8 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
-  skipModuleGeneration?: boolean;
-  addFrameworkPathToImport?: string;
+  importMapper?: Function;
+  bootstrapMapper?: Function;
 }
 
 interface AngularBlockOptions {
@@ -80,7 +81,13 @@ const mappers: {
   },
 };
 
-const generateNgModule = (content: string, name: string, componentsUsed: string[]): string => {
+const generateNgModule = (
+  content: string,
+  name: string,
+  componentsUsed: string[],
+  component: MitosisComponent,
+  bootstrapMapper: Function | null | undefined,
+): string => {
   return `import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
@@ -92,8 +99,9 @@ ${content.replace('export default', 'export')}
     componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
   }],
   exports: [${name}],
+  ${bootstrapMapper ? bootstrapMapper(name, componentsUsed, component) : ''}
 })
-export default class ${name}Module {}`;
+export class ${name}Module {}`;
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
@@ -406,7 +414,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
       preserveFileExtensions: options.preserveFileExtensions,
       componentsUsed,
-      addFrameworkPathToImport: options.addFrameworkPathToImport || '',
+      importMapper: options?.importMapper,
     })}
 
     @Component({
@@ -414,7 +422,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(([k, v]) => `${k}: ${v}`)
         .join(',')}
     })
-    export default class ${json.name} {
+    export class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -529,7 +537,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
   `;
 
-    str = generateNgModule(str, json.name, componentsUsed);
+    str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
 
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
