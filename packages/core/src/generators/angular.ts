@@ -90,7 +90,7 @@ const generateNgModule = (
   return `import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
-${content.replace('export default', 'export')}
+${content}
 
 @NgModule({
   declarations: [${name}],
