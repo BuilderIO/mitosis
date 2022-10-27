@@ -32,8 +32,6 @@ export interface ToAlpineOptions extends BaseTranspilerOptions {
 
 export const checkIsComponentNode = (node: MitosisNode): boolean => node.name === '@builder.io/mitosis/component';
 
-// const compose = (...fns: any[]) => fns.reduce((f, g) => (...args: any[]) => f(g(...args)))
-
 /**
  * Test if the binding expression would be likely to generate
  * valid or invalid liquid. If we generate invalid liquid tags
@@ -133,6 +131,8 @@ const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {})
 
   let str = `<${json.name} `;
 
+  /*
+  // Copied from the liquid generator. Not sure what it does. 
   if (
     json.bindings._spread?.code === '_spread' &&
     isValidAlpineBinding(json.bindings._spread.code)
@@ -143,6 +143,7 @@ const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {})
           </template>
         `;
   }
+  */
 
   for (const key in json.properties) {
     const value = json.properties[key];
@@ -153,7 +154,7 @@ const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {})
     if (key === '_spread' || key === 'css') {
       continue;
     }
-    const { code: value } = json.bindings[key]!;
+    const { code: value, type: bindingType } = json.bindings[key]!;
     // TODO: proper babel transform to replace. Util for this
     const useValue = stripStateAndPropsRefs(value);
 
@@ -163,7 +164,7 @@ const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {})
       str += ` x-ref="${useValue}"`;
     } else if (isValidAlpineBinding(useValue)) {
       const bind = options.useShorthandSyntax ? ':' : 'x-bind:'
-      str += ` ${bind}${key}="${useValue}" `;
+      str += ` ${bind}${bindingType === 'spread' ? '' : key}="${useValue}" `.replace(':=', '=');
     }
   }
   return selfClosingTags.has(json.name)
