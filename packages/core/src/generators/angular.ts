@@ -31,12 +31,16 @@ import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 
+import { MitosisComponent } from '..';
+
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
 export interface ToAngularOptions extends BaseTranspilerOptions {
   standalone?: boolean;
   preserveImports?: boolean;
   preserveFileExtensions?: boolean;
+  importMapper?: Function;
+  bootstrapMapper?: Function;
 }
 
 interface AngularBlockOptions {
@@ -74,6 +78,29 @@ const mappers: {
       })
       .join('\n')}</ng-content>`;
   },
+};
+
+const generateNgModule = (
+  content: string,
+  name: string,
+  componentsUsed: string[],
+  component: MitosisComponent,
+  bootstrapMapper: Function | null | undefined,
+): string => {
+  return `import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+
+${content}
+
+@NgModule({
+  declarations: [${name}],
+  imports: [BrowserModule${
+    componentsUsed.length ? ', ' + componentsUsed.map((comp) => `${comp}Module`).join(', ') : ''
+  }],
+  exports: [${name}],
+  ${bootstrapMapper ? bootstrapMapper(name, componentsUsed, component) : ''}
+})
+export class ${name}Module {}`;
 };
 
 // TODO: Maybe in the future allow defining `string | function` as values
@@ -303,9 +330,9 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
 
     const stateVars = Object.keys(json?.state || {});
 
-    const componentsUsed = Array.from(getComponentsUsed(json)).filter(
-      (item) => item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item),
-    );
+    const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
+      return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
+    });
 
     mapRefs(json, (refName) => {
       const isDomRef = domRefs.has(refName);
@@ -385,6 +412,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       target: 'angular',
       excludeMitosisComponents: !options.standalone && !options.preserveImports,
       preserveFileExtensions: options.preserveFileExtensions,
+      componentsUsed,
+      importMapper: options?.importMapper,
     })}
 
     @Component({
@@ -392,7 +421,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         .map(([k, v]) => `${k}: ${v}`)
         .join(',')}
     })
-    export default class ${json.name} {
+    export class ${json.name} {
       ${localExportVars.join('\n')}
       ${customImports.map((name) => `${name} = ${name}`).join('\n')}
 
@@ -507,6 +536,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
   `;
 
+    str = generateNgModule(str, json.name, componentsUsed, json, options.bootstrapMapper);
+
     if (options.plugins) {
       str = runPreCodePlugins(str, options.plugins);
     }
@@ -516,6 +547,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
+
     return str;
   };
 

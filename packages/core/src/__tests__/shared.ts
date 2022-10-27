@@ -14,6 +14,7 @@ const subComponent = getRawFile('./data/sub-component.lite.jsx');
 const componentWithContext = require('./data/context/component-with-context.lite');
 
 const basic = getRawFile('./data/basic.raw');
+const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw');
 const basicFor = getRawFile('./data/basic-for.raw');
@@ -95,6 +96,7 @@ type Tests = { [index: string]: string };
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
+  BasicAttribute: basicAttribute,
   BasicBooleanAttribute: basicBooleanAttribute,
   BasicRef: basicRef,
   BasicRefPrevious: basicRefPrevious,
