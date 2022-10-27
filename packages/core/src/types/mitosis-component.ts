@@ -30,18 +30,20 @@ export interface MitosisImport {
   };
 }
 
-export interface ContextGetInfo {
+export type ContextType = 'normal' | 'reactive';
+
+export type ContextOptions = {
+  type?: ContextType;
+};
+export interface ContextGetInfo extends ContextOptions {
   name: string;
   path: string;
 }
-export interface ContextSetInfo {
+export interface ContextSetInfo extends ContextOptions {
   name: string;
   value?: MitosisState;
   ref?: string;
 }
-
-export type ContextGet = { [key: string]: ContextGetInfo };
-export type ContextSet = { [key: string]: ContextSetInfo };
 
 export type extendedHook = { code: string; deps?: string };
 
@@ -99,8 +101,8 @@ export type MitosisComponent = {
   inputs: MitosisComponentInput[];
   state: MitosisState;
   context: {
-    get: ContextGet;
-    set: ContextSet;
+    get: Dictionary<ContextGetInfo>;
+    set: Dictionary<ContextSetInfo>;
   };
   refs: {
     [useRef: string]: {

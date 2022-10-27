@@ -37,18 +37,25 @@ import { stripGetter } from '../../helpers/patterns';
 
 const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
-  return Object.keys(contextGetters)
-    .map((key) => {
-      const contextValueKey = `${key}ContextValue`;
-      return `
-      let ${contextValueKey} = getContext(${contextGetters[key].name}.key);
-      $: ${key} = new Proxy($${contextValueKey}, {
-        set: (obj, prop, value) => {
-          $${contextValueKey}[prop] = value
-          return true;
-        }
-      })
-      `;
+  return Object.entries(contextGetters)
+    .map(([key, context]): string => {
+      const { name, type = 'normal' } = context;
+
+      switch (type) {
+        case 'reactive':
+          const contextValueKey = `${key}ContextValue`;
+          return `
+          let ${contextValueKey} = getContext(${name}.key);
+          $: ${key} = new Proxy($${contextValueKey}, {
+            set: (obj, prop, value) => {
+              $${contextValueKey}[prop] = value
+              return true;
+            }
+          })
+          `;
+        case 'normal':
+          return `let ${key} = getContext(${name}.key);`;
+      }
     })
     .join('\n');
 };
@@ -63,7 +70,7 @@ const setContextCode = ({
   const processCode = stripStateAndProps({ json, options });
 
   return Object.values(json.context.set)
-    .map(({ value, name, ref }) => {
+    .map(({ value, name, ref, type = 'normal' }) => {
       const key = value ? `${name}.key` : name;
 
       const valueStr = value
@@ -72,12 +79,17 @@ const setContextCode = ({
         ? processCode(ref)
         : 'undefined';
 
-      const storeName = `${name}ContextStoreValue`;
+      switch (type) {
+        case 'normal':
+          return `setContext(${key}, ${valueStr});`;
+        case 'reactive':
+          const storeName = `${name}ContextStoreValue`;
 
-      return `
-        const ${storeName} = writable(${valueStr});
-        setContext(${key}, ${storeName});
-      `;
+          return `
+            const ${storeName} = writable(${valueStr});
+            setContext(${key}, ${storeName});
+          `;
+      }
     })
     .join('\n');
 };
