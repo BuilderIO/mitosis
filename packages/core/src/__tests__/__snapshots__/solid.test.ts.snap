@@ -3492,30 +3492,80 @@ import { Dynamic } from \\"solid-js/web\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
+
+  const foo2 = useContext(ReactiveContext1);
+
+  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <Dynamic
       value={{
         bar: \\"baz\\",
       }}
-      component={Context2.Provider}
+      component={ReactiveContext2.Provider}
     >
       <Dynamic
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
-        component={Context1.Provider}
+        component={ReactiveProxyContext2.Provider}
       >
-        <>
-          <>{foo.value}</>
-        </>
+        <Dynamic
+          value={{
+            bar: \\"baz\\",
+          }}
+          component={Context2.Provider}
+        >
+          <Dynamic
+            value={{
+              foo: \\"bar\\",
+
+              content() {
+                return props.content;
+              },
+            }}
+            component={ReactiveProxyContext1.Provider}
+          >
+            <Dynamic
+              value={{
+                foo: \\"bar\\",
+
+                content() {
+                  return props.content;
+                },
+              }}
+              component={ReactiveContext1.Provider}
+            >
+              <Dynamic
+                value={{
+                  foo: \\"bar\\",
+
+                  content() {
+                    return props.content;
+                  },
+                }}
+                component={Context1.Provider}
+              >
+                <>
+                  <>
+                    <>
+                      <>{foo.value}</>
+                      <>{foo2.value}</>
+                      <>{foo3.value}</>
+                    </>
+                  </>
+                </>
+              </Dynamic>
+            </Dynamic>
+          </Dynamic>
+        </Dynamic>
       </Dynamic>
     </Dynamic>
   );
@@ -3533,9 +3583,17 @@ import { css } from \\"solid-styled-components\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
+
+  const foo2 = useContext(ReactiveContext1);
+
+  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <>
@@ -3543,21 +3601,63 @@ function ComponentWithContext(props) {
         value={{
           bar: \\"baz\\",
         }}
-        component={Context2.Provider}
+        component={ReactiveContext2.Provider}
       >
         <Dynamic
           value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
+            bar: \\"baz\\",
           }}
-          component={Context1.Provider}
+          component={ReactiveProxyContext2.Provider}
         >
-          <>
-            <>{foo.value}</>
-          </>
+          <Dynamic
+            value={{
+              bar: \\"baz\\",
+            }}
+            component={Context2.Provider}
+          >
+            <Dynamic
+              value={{
+                foo: \\"bar\\",
+
+                content() {
+                  return props.content;
+                },
+              }}
+              component={ReactiveProxyContext1.Provider}
+            >
+              <Dynamic
+                value={{
+                  foo: \\"bar\\",
+
+                  content() {
+                    return props.content;
+                  },
+                }}
+                component={ReactiveContext1.Provider}
+              >
+                <Dynamic
+                  value={{
+                    foo: \\"bar\\",
+
+                    content() {
+                      return props.content;
+                    },
+                  }}
+                  component={Context1.Provider}
+                >
+                  <>
+                    <>
+                      <>
+                        <>{foo.value}</>
+                        <>{foo2.value}</>
+                        <>{foo3.value}</>
+                      </>
+                    </>
+                  </>
+                </Dynamic>
+              </Dynamic>
+            </Dynamic>
+          </Dynamic>
         </Dynamic>
       </Dynamic>
     </>
@@ -8388,30 +8488,80 @@ import { Dynamic } from \\"solid-js/web\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
+
+  const foo2 = useContext(ReactiveContext1);
+
+  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <Dynamic
       value={{
         bar: \\"baz\\",
       }}
-      component={Context2.Provider}
+      component={ReactiveContext2.Provider}
     >
       <Dynamic
         value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
+          bar: \\"baz\\",
         }}
-        component={Context1.Provider}
+        component={ReactiveProxyContext2.Provider}
       >
-        <>
-          <>{foo.value}</>
-        </>
+        <Dynamic
+          value={{
+            bar: \\"baz\\",
+          }}
+          component={Context2.Provider}
+        >
+          <Dynamic
+            value={{
+              foo: \\"bar\\",
+
+              content() {
+                return props.content;
+              },
+            }}
+            component={ReactiveProxyContext1.Provider}
+          >
+            <Dynamic
+              value={{
+                foo: \\"bar\\",
+
+                content() {
+                  return props.content;
+                },
+              }}
+              component={ReactiveContext1.Provider}
+            >
+              <Dynamic
+                value={{
+                  foo: \\"bar\\",
+
+                  content() {
+                    return props.content;
+                  },
+                }}
+                component={Context1.Provider}
+              >
+                <>
+                  <>
+                    <>
+                      <>{foo.value}</>
+                      <>{foo2.value}</>
+                      <>{foo3.value}</>
+                    </>
+                  </>
+                </>
+              </Dynamic>
+            </Dynamic>
+          </Dynamic>
+        </Dynamic>
       </Dynamic>
     </Dynamic>
   );
@@ -8429,9 +8579,17 @@ import { css } from \\"solid-styled-components\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 function ComponentWithContext(props) {
   const foo = useContext(Context1);
+
+  const foo2 = useContext(ReactiveContext1);
+
+  const foo3 = useContext(ReactiveProxyContext1);
 
   return (
     <>
@@ -8439,21 +8597,63 @@ function ComponentWithContext(props) {
         value={{
           bar: \\"baz\\",
         }}
-        component={Context2.Provider}
+        component={ReactiveContext2.Provider}
       >
         <Dynamic
           value={{
-            foo: \\"bar\\",
-
-            content() {
-              return props.content;
-            },
+            bar: \\"baz\\",
           }}
-          component={Context1.Provider}
+          component={ReactiveProxyContext2.Provider}
         >
-          <>
-            <>{foo.value}</>
-          </>
+          <Dynamic
+            value={{
+              bar: \\"baz\\",
+            }}
+            component={Context2.Provider}
+          >
+            <Dynamic
+              value={{
+                foo: \\"bar\\",
+
+                content() {
+                  return props.content;
+                },
+              }}
+              component={ReactiveProxyContext1.Provider}
+            >
+              <Dynamic
+                value={{
+                  foo: \\"bar\\",
+
+                  content() {
+                    return props.content;
+                  },
+                }}
+                component={ReactiveContext1.Provider}
+              >
+                <Dynamic
+                  value={{
+                    foo: \\"bar\\",
+
+                    content() {
+                      return props.content;
+                    },
+                  }}
+                  component={Context1.Provider}
+                >
+                  <>
+                    <>
+                      <>
+                        <>{foo.value}</>
+                        <>{foo2.value}</>
+                        <>{foo3.value}</>
+                      </>
+                    </>
+                  </>
+                </Dynamic>
+              </Dynamic>
+            </Dynamic>
+          </Dynamic>
         </Dynamic>
       </Dynamic>
     </>
