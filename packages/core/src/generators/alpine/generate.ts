@@ -15,7 +15,7 @@ import { getStateObjectStringFromComponent } from '../../helpers/get-state-objec
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { dashCase } from '../../helpers/dash-case';
 import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
-import { camelCase, flowRight as compose } from 'lodash';
+import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { getRefs } from '../../helpers/get-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
 
@@ -60,19 +60,24 @@ const prefixEvent = (str: string) => str.replace(/(?<=[\s]|^)event/gm, '$event')
 const removeTrailingSemicolon = (str: string) => str.replace(/;$/, '')
 const trim = (str: string) => str.trim();
 
-const replaceInputRefs = (json: MitosisComponent, str: string) => {
+const replaceInputRefs = curry((json: MitosisComponent, str: string) => {
   getRefs(json).forEach(value => {
     str = str.replaceAll(value, `this.$refs.${value}`);
   });
 
   return str;
-}
+});
 const replaceStateWithThis = (str: string) => str.replaceAll('state.', 'this.');
-const getStateObjectString = compose(
-  replaceStateWithThis,
-  trim,
+const renderMountHook = curry((json: MitosisComponent, objectString: string) => {
+  return objectString.replace(/(?:,)?(\s*)(}\s*)$/, `, init() {${json.hooks.onMount?.code}}$1$2`)
+});
+const getStateObjectString = (json: MitosisComponent) => flow(
   getStateObjectStringFromComponent,
-);
+  trim,
+  replaceInputRefs(json),
+  renderMountHook(json),
+  replaceStateWithThis,
+)(json);
 
 const bindEventHandlerKey = compose(
   dashCase,
@@ -163,7 +168,7 @@ const blockToAlpine = (json: MitosisNode|ForNode, options: ToAlpineOptions = {})
     } else if (key === 'ref') {
       str += ` x-ref="${useValue}"`;
     } else if (isValidAlpineBinding(useValue)) {
-      const bind = options.useShorthandSyntax ? ':' : 'x-bind:'
+      const bind = options.useShorthandSyntax && bindingType !== 'spread' ? ':' : 'x-bind:'
       str += ` ${bind}${bindingType === 'spread' ? '' : key}="${useValue}" `.replace(':=', '=');
     }
   }
@@ -186,7 +191,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
         json = runPostJsonPlugins(json, options.plugins);
       }
 
-      const stateObjectString = replaceInputRefs(json, getStateObjectString(json));
+      const stateObjectString = getStateObjectString(json);
       json.children[0].properties['x-data'] = options.inlineState
         ? stateObjectString
         : `${camelCase(json.name)}()`;
