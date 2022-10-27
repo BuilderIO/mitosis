@@ -24,13 +24,13 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { hasContext } from '../helpers/context';
+import { getContextType, hasContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { stripStateAndProps } from './helpers';
+import { makeContextGettersReactive, stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 import { blockToSvelte } from './blocks';
 import { stripGetter } from '../../helpers/patterns';
@@ -39,10 +39,12 @@ const getContextCode = (json: MitosisComponent) => {
   const contextGetters = json.context.get;
   return Object.entries(contextGetters)
     .map(([key, context]): string => {
-      const { name, type = 'normal' } = context;
+      const { name } = context;
 
-      switch (type) {
-        case 'reactive':
+      const contextType = getContextType({ component: json, context, key });
+
+      switch (contextType) {
+        case 'reactive-proxy':
           const contextValueKey = `${key}ContextValue`;
           return `
           let ${contextValueKey} = getContext(${name}.key);
@@ -53,6 +55,7 @@ const getContextCode = (json: MitosisComponent) => {
             }
           })
           `;
+        case 'reactive':
         case 'normal':
           return `let ${key} = getContext(${name}.key);`;
       }
@@ -70,7 +73,8 @@ const setContextCode = ({
   const processCode = stripStateAndProps({ json, options });
 
   return Object.values(json.context.set)
-    .map(({ value, name, ref, type = 'normal' }) => {
+    .map((context) => {
+      const { value, name, ref } = context;
       const key = value ? `${name}.key` : name;
 
       const valueStr = value
@@ -79,10 +83,13 @@ const setContextCode = ({
         ? processCode(ref)
         : 'undefined';
 
-      switch (type) {
+      const contextType = getContextType({ component: json, context, key: name });
+
+      switch (contextType) {
         case 'normal':
           return `setContext(${key}, ${valueStr});`;
         case 'reactive':
+        case 'reactive-proxy':
           const storeName = `${name}ContextStoreValue`;
 
           return `
@@ -148,7 +155,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-            return flow(stripStateAndProps({ json, options }), stripGetter);
+            return flow(
+              stripStateAndProps({ json, options }),
+              stripGetter,
+              makeContextGettersReactive({ json }),
+            );
           case 'properties':
             return stripStateAndProps({ json, options });
         }

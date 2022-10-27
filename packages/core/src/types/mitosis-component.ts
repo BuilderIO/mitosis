@@ -30,7 +30,7 @@ export interface MitosisImport {
   };
 }
 
-export type ContextType = 'normal' | 'reactive';
+export type ContextType = 'normal' | 'reactive' | 'reactive-proxy';
 
 export type ContextOptions = {
   type?: ContextType;
