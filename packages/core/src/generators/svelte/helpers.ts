@@ -7,13 +7,12 @@ import { getContextType } from '../helpers/context';
 
 function getReactiveContextNames(json: MitosisComponent) {
   return Object.keys(json.context.get).filter((key) => {
-    return (
-      getContextType({
-        context: json.context.get[key],
-        key,
-        component: json,
-      }) === 'reactive'
-    );
+    const newLocal = getContextType({
+      context: json.context.get[key],
+      component: json,
+    });
+    console.log(newLocal, json.context.get, json.meta.useMetadata?.context);
+    return newLocal === 'reactive';
   });
 }
 

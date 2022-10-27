@@ -41,7 +41,7 @@ const getContextCode = (json: MitosisComponent) => {
     .map(([key, context]): string => {
       const { name } = context;
 
-      const contextType = getContextType({ component: json, context, key });
+      const contextType = getContextType({ component: json, context });
 
       switch (contextType) {
         case 'reactive-proxy':
@@ -83,7 +83,7 @@ const setContextCode = ({
         ? processCode(ref)
         : 'undefined';
 
-      const contextType = getContextType({ component: json, context, key: name });
+      const contextType = getContextType({ component: json, context });
 
       switch (contextType) {
         case 'normal':

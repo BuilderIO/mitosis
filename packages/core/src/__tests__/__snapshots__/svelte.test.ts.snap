@@ -1508,7 +1508,15 @@ exports[`Svelte Javascript Test componentWithContext 1`] = `
 
   let foo = getContext(Context1.key);
   let foo2 = getContext(ReactiveContext1.key);
-  let foo3 = getContext(ReactiveProxyContext1.key);
+
+  let foo3ContextValue = getContext(ReactiveProxyContext1.key);
+  $: foo3 = new Proxy($foo3ContextValue, {
+    set: (obj, prop, value) => {
+      $foo3ContextValue[prop] = value;
+      return true;
+    },
+  });
+
   setContext(Context1.key, {
     foo: \\"bar\\",
     content() {
@@ -1543,7 +1551,7 @@ exports[`Svelte Javascript Test componentWithContext 1`] = `
 
 {foo.value}
 
-{foo2.value}
+{$foo2.value}
 
 {foo3.value}
 "
@@ -3865,7 +3873,15 @@ exports[`Svelte Typescript Test componentWithContext 1`] = `
 
   let foo = getContext(Context1.key);
   let foo2 = getContext(ReactiveContext1.key);
-  let foo3 = getContext(ReactiveProxyContext1.key);
+
+  let foo3ContextValue = getContext(ReactiveProxyContext1.key);
+  $: foo3 = new Proxy($foo3ContextValue, {
+    set: (obj, prop, value) => {
+      $foo3ContextValue[prop] = value;
+      return true;
+    },
+  });
+
   setContext(Context1.key, {
     foo: \\"bar\\",
     content() {
@@ -3900,7 +3916,7 @@ exports[`Svelte Typescript Test componentWithContext 1`] = `
 
 {foo.value}
 
-{foo2.value}
+{$foo2.value}
 
 {foo3.value}
 "

@@ -11,11 +11,9 @@ export const hasContext = (component: MitosisComponent) =>
 export const getContextType = ({
   component,
   context,
-  key,
 }: {
   component: MitosisComponent;
   context: ContextGetInfo | ContextSetInfo;
-  key: string;
 }): ContextType => {
-  return (component.meta.useMetadata?.context as any)?.[key] || context.type || 'normal';
+  return (component.meta.useMetadata?.context as any)?.[context.name] || context.type || 'normal';
 };
