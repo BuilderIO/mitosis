@@ -151,11 +151,9 @@ function emitTagNameHack(file: File, component: MitosisComponent, metadataValue:
 
 function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onMount) {
-    // This is called useMount, but in practice it is used as
-    // useClientEffect. Not sure if this is correct, but for now.
     const code = component.hooks.onMount.code;
     file.src.emit(
-      file.import(file.qwikModule, 'useClientEffect$').localName,
+      file.import(file.qwikModule, 'useMount').localName,
       '(()=>{',
       code,
       '});',
