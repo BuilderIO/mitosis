@@ -2205,6 +2205,50 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
+exports[`RSC Javascript Test renderContentExample 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default function RenderContent(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  _context.BuilderContext = {
+    get content() {
+      return 3;
+    },
+    get registeredComponents() {
+      return 4;
+    },
+  };
+
+  return (
+    <>
+      <div className=\\"div-0c70c6dc\\">
+        <RenderBlocks blocks={props.content.blocks} _context={_context} />
+      </div>
+      <style>{\`.div-0c70c6dc { 
+display: flex;
+flex-direction: columns; }\`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`RSC Javascript Test rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 
@@ -4699,6 +4743,50 @@ export default function MyBasicComponent(props: Person) {
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`RSC Typescript Test renderContentExample 1`] = `
+"import * as React from \\"react\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default function RenderContent(props: Props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  _context.BuilderContext = {
+    get content() {
+      return 3;
+    },
+    get registeredComponents() {
+      return 4;
+    },
+  };
+
+  return (
+    <>
+      <div className=\\"div-0c70c6dc\\">
+        <RenderBlocks blocks={props.content.blocks} _context={_context} />
+      </div>
+      <style>{\`.div-0c70c6dc { 
+display: flex;
+flex-direction: columns; }\`}</style>
+    </>
   );
 }
 "

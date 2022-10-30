@@ -4491,6 +4491,119 @@ export default MyBasicComponent;
 "
 `;
 
+exports[`Solid Javascript Test renderContentExample 1`] = `
+"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.jsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+function RenderContent(props) {
+  onMount(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+  createEffect(on(() => [props.content], onUpdateFn_0));
+
+  return (
+    <Dynamic
+      value={{
+        get content() {
+          return 3;
+        },
+
+        get registeredComponents() {
+          return 4;
+        },
+      }}
+      component={BuilderContext.Provider}
+    >
+      <div
+        class={css({
+          display: \\"flex\\",
+          flexDirection: \\"columns\\",
+        })}
+        onClick={(event) => trackClick(props.content.id)}
+      >
+        <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+      </div>
+    </Dynamic>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Solid Javascript Test renderContentExample 2`] = `
+"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.jsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+function RenderContent(props) {
+  onMount(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+  createEffect(on(() => [props.content], onUpdateFn_0));
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+        component={BuilderContext.Provider}
+      >
+        <div
+          class=\\"div-4d48d7ae\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
+          <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+        </div>
+      </Dynamic>
+      <style jsx>{\`
+        .div-4d48d7ae {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
 exports[`Solid Javascript Test rootFragmentMultiNode 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -9486,6 +9599,119 @@ function MyBasicComponent(props) {
 }
 
 export default MyBasicComponent;
+"
+`;
+
+exports[`Solid Typescript Test renderContentExample 1`] = `
+"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.jsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+function RenderContent(props) {
+  onMount(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+  createEffect(on(() => [props.content], onUpdateFn_0));
+
+  return (
+    <Dynamic
+      value={{
+        get content() {
+          return 3;
+        },
+
+        get registeredComponents() {
+          return 4;
+        },
+      }}
+      component={BuilderContext.Provider}
+    >
+      <div
+        class={css({
+          display: \\"flex\\",
+          flexDirection: \\"columns\\",
+        })}
+        onClick={(event) => trackClick(props.content.id)}
+      >
+        <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+      </div>
+    </Dynamic>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Solid Typescript Test renderContentExample 2`] = `
+"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.jsx\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+function RenderContent(props) {
+  onMount(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  });
+
+  function onUpdateFn_0() {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+  createEffect(on(() => [props.content], onUpdateFn_0));
+
+  return (
+    <>
+      <Dynamic
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+        component={BuilderContext.Provider}
+      >
+        <div
+          class=\\"div-4d48d7ae\\"
+          onClick={(event) => trackClick(props.content.id)}
+        >
+          <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
+        </div>
+      </Dynamic>
+      <style jsx>{\`
+        .div-4d48d7ae {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </>
+  );
+}
+
+export default RenderContent;
 "
 `;
 
