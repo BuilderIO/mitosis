@@ -935,7 +935,6 @@ export default function Fiddle() {
                 indicatorColor="primary"
                 textColor="primary"
               >
-                <Tab label={<TabLabelWithIcon label="Alpine.js" />} value="alpine" />
                 <Tab
                   label={
                     <TabLabelWithIcon
@@ -973,6 +972,7 @@ export default function Fiddle() {
                 <Tab label={<TabLabelWithIcon label="Marko" />} value="marko" />
                 <Tab label={<TabLabelWithIcon label="Preact" />} value="preact" />
                 <Tab label={<TabLabelWithIcon label="Lit" />} value="lit" />
+                <Tab label={<TabLabelWithIcon label="Alpine.js" />} value="alpine" />
                 <Tab label={<TabLabelWithIcon label="Webcomponents" />} value="webcomponents" />
                 <Tab label={<TabLabelWithIcon label="HTML" />} value="html" />
                 <Tab
