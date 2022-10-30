@@ -153,7 +153,7 @@ function emitUseMount(file: File, component: MitosisComponent) {
   if (component.hooks.onMount) {
     const code = component.hooks.onMount.code;
     file.src.emit(
-      file.import(file.qwikModule, 'useMount').localName,
+      file.import(file.qwikModule, 'useMount$').localName,
       '(()=>{',
       code,
       '});',
