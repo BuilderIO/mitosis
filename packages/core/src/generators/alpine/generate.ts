@@ -18,6 +18,7 @@ import { removeSurroundingBlock } from '../../helpers/remove-surrounding-block';
 import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { getRefs } from '../../helpers/get-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
+import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -69,13 +70,16 @@ const replaceInputRefs = curry((json: MitosisComponent, str: string) => {
 });
 const replaceStateWithThis = (str: string) => str.replaceAll('state.', 'this.');
 const renderMountHook = curry((json: MitosisComponent, objectString: string) => {
-  return objectString.replace(/(?:,)?(\s*)(}\s*)$/, `, init() {${json.hooks.onMount?.code}}$1$2`)
+  return json.hooks.onMount
+  ? objectString.replace(/(?:,)?(\s*)(}\s*)$/, `, init() {${json.hooks.onMount?.code}}$1$2`)
+  : objectString;
 });
 const getStateObjectString = (json: MitosisComponent) => flow(
   getStateObjectStringFromComponent,
   trim,
   replaceInputRefs(json),
   renderMountHook(json),
+  renderUpdateHooks(json),
   replaceStateWithThis,
 )(json);
 
@@ -192,9 +196,14 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
       }
 
       const stateObjectString = getStateObjectString(json);
+      // Set x-data on root element
       json.children[0].properties['x-data'] = options.inlineState
         ? stateObjectString
         : `${camelCase(json.name)}()`;
+
+      if (hasRootUpdateHook(json)) {
+        json.children[0].properties['x-effect'] = 'onUpdate'
+      }
 
       let str = css.trim().length
         ? `<style>${css}</style>`
