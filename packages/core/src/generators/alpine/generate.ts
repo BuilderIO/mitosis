@@ -19,6 +19,7 @@ import { camelCase, curry, flow, flowRight as compose } from 'lodash';
 import { getRefs } from '../../helpers/get-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
+import { renderMountHook } from './render-mount-hook';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -69,11 +70,6 @@ const replaceInputRefs = curry((json: MitosisComponent, str: string) => {
   return str;
 });
 const replaceStateWithThis = (str: string) => str.replaceAll('state.', 'this.');
-const renderMountHook = curry((json: MitosisComponent, objectString: string) => {
-  return json.hooks.onMount
-  ? objectString.replace(/(?:,)?(\s*)(}\s*)$/, `, init() {${json.hooks.onMount?.code}}$1$2`)
-  : objectString;
-});
 const getStateObjectString = (json: MitosisComponent) => flow(
   getStateObjectStringFromComponent,
   trim,
