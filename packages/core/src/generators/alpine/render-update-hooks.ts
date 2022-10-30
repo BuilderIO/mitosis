@@ -1,5 +1,5 @@
 import { curry } from "lodash";
-import { extendedHook, MitosisComponent } from "src/types/mitosis-component";
+import { extendedHook, MitosisComponent } from "../../types/mitosis-component";
 
 const extractCode = (hook: extendedHook) => hook.code;
 function renderRootUpdateHook(hooks: extendedHook[], output: string) {
