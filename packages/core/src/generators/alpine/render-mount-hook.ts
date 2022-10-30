@@ -1,10 +1,10 @@
 import { curry } from 'lodash';
 import { MitosisComponent } from '../../types/mitosis-component';
-import { hasRootUpdateHook, renderWatchHooks } from './render-update-hooks';
+import { hasWatchHooks, renderWatchHooks } from './render-update-hooks';
 
 function shouldRenderMountHook(json: MitosisComponent): boolean {
   return json.hooks.onMount !== undefined
-      || hasRootUpdateHook(json);
+      || hasWatchHooks(json)
 }
 
 export const renderMountHook = curry((json: MitosisComponent, objectString: string) => {

@@ -10,7 +10,7 @@ function renderRootUpdateHook(hooks: extendedHook[], output: string) {
         ${hooks.map(extractCode).join('\n')}
     }`;
 
-    return output.replace(/(,)(\s*}?)$/g, `$1${str}$2`);
+    return output.replace(/,?(\s*})$/, `,\n${str}$1`);
 }
 
 function getRootUpdateHooks(json: MitosisComponent) {
@@ -26,10 +26,10 @@ export const renderUpdateHooks = curry((json: MitosisComponent, output: string) 
 });
 
 function getWatchHooks(json: MitosisComponent) {
-    return (json.hooks.onUpdate ?? []).filter(hook => hook.deps?.match('state')) 
+    return (json.hooks.onUpdate ?? []).filter(hook => hook.deps?.match(/state|this/)) 
 }
 
-const hasWatchHooks = (json: MitosisComponent): boolean => {
+export const hasWatchHooks = (json: MitosisComponent): boolean => {
     return getWatchHooks(json).length > 0
 }
 
