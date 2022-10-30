@@ -117,17 +117,19 @@ export const processBinding = ({
   code,
   options,
   json,
-  includeProps = true,
+  preserveGetter = false,
 }: {
   code: string;
   options: ToVueOptions;
   json: MitosisComponent;
-  includeProps?: boolean;
+  preserveGetter?: boolean;
 }): string => {
   return pipe(
     stripStateAndPropsRefs(code, {
       includeState: true,
-      includeProps,
+      // we don't want to process `props` in the Composition API because it has a `props` ref,
+      // therefore we can keep pointing to `props.${value}`
+      includeProps: options.api === 'options',
       replaceWith: (name) => {
         switch (options.api) {
           case 'composition':
@@ -143,6 +145,7 @@ export const processBinding = ({
     // workaround so that getter code is valid and parseable by babel.
     stripGetter,
     (c) => processRefs(c, json, options),
+    (x) => (preserveGetter ? `get ${x}` : x),
   );
 };
 
@@ -151,10 +154,10 @@ export const getContextValue =
   ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
     const valueStr = value
       ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, options, json }),
+          valueMapper: (code) => processBinding({ code, options, json, preserveGetter: true }),
         })
       : ref
-      ? processBinding({ code: ref, options, json })
+      ? processBinding({ code: ref, options, json, preserveGetter: true })
       : null;
 
     return valueStr;
