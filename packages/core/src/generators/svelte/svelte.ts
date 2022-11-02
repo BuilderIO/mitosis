@@ -24,13 +24,13 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { getContextType, hasContext } from '../helpers/context';
+import { hasContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
-import { makeContextGettersReactive, stripStateAndProps } from './helpers';
+import { stripStateAndProps } from './helpers';
 import { ToSvelteOptions } from './types';
 import { blockToSvelte } from './blocks';
 import { stripGetter } from '../../helpers/patterns';
@@ -41,24 +41,7 @@ const getContextCode = (json: MitosisComponent) => {
     .map(([key, context]): string => {
       const { name } = context;
 
-      const contextType = getContextType({ component: json, context });
-
-      switch (contextType) {
-        case 'reactive-proxy':
-          const contextValueKey = `${key}ContextValue`;
-          return `
-          let ${contextValueKey} = getContext(${name}.key);
-          $: ${key} = new Proxy($${contextValueKey}, {
-            set: (obj, prop, value) => {
-              $${contextValueKey}[prop] = value
-              return true;
-            }
-          })
-          `;
-        case 'reactive':
-        case 'normal':
-          return `let ${key} = getContext(${name}.key);`;
-      }
+      return `let ${key} = getContext(${name}.key);`;
     })
     .join('\n');
 };
@@ -83,20 +66,7 @@ const setContextCode = ({
         ? processCode(ref)
         : 'undefined';
 
-      const contextType = getContextType({ component: json, context });
-
-      switch (contextType) {
-        case 'normal':
-          return `setContext(${key}, ${valueStr});`;
-        case 'reactive':
-        case 'reactive-proxy':
-          const storeName = `${name}ContextStoreValue`;
-
-          return `
-            const ${storeName} = writable(${valueStr});
-            setContext(${key}, ${storeName});
-          `;
-      }
+      return `setContext(${key}, ${valueStr});`;
     })
     .join('\n');
 };
@@ -155,11 +125,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           case 'bindings':
           case 'hooks-deps':
           case 'state':
-            return flow(
-              stripStateAndProps({ json, options }),
-              stripGetter,
-              makeContextGettersReactive({ json }),
-            );
+            return flow(stripStateAndProps({ json, options }), stripGetter);
           case 'properties':
             return stripStateAndProps({ json, options });
         }

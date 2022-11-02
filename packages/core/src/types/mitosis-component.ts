@@ -30,16 +30,11 @@ export interface MitosisImport {
   };
 }
 
-export type ContextType = 'normal' | 'reactive' | 'reactive-proxy';
-
-export type ContextOptions = {
-  type?: ContextType;
-};
-export interface ContextGetInfo extends ContextOptions {
+export interface ContextGetInfo {
   name: string;
   path: string;
 }
-export interface ContextSetInfo extends ContextOptions {
+export interface ContextSetInfo {
   name: string;
   value?: MitosisState;
   ref?: string;
