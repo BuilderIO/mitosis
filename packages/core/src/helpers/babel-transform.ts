@@ -42,11 +42,7 @@ const handleErrorOrExpression = <VisitorContextType = any>({
     return result;
   } catch (err) {
     console.error('Error parsing code:\n', code, '\n', result);
-    try {
-      return babelTransformExpression(code, visitor, 'functionBody');
-    } catch (err) {
-      throw err;
-    }
+    throw err;
   }
 };
 
@@ -84,34 +80,36 @@ const trimExpression = (type: ExpressionType) => (code: string) => {
 
 type ExpressionType = 'expression' | 'unknown' | 'block' | 'functionBody';
 
+export const getType = (code: string, initialType: ExpressionType): ExpressionType => {
+  // match for object literal like { foo: ... }
+  if (initialType === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
+    return 'expression';
+  }
+
+  // For Builder content
+  if (
+    initialType === 'unknown' &&
+    (code.includes('return _virtual_index') || code.trim().startsWith('return ')) &&
+    !code.trim().startsWith('function')
+  ) {
+    return 'functionBody';
+  }
+
+  return initialType;
+};
+
 export const babelTransformExpression = <VisitorContextType = any>(
   code: string,
   visitor: Visitor<VisitorContextType>,
-  type: ExpressionType = 'unknown',
+  initialType: ExpressionType = 'unknown',
 ): string => {
   if (!code) {
     return '';
   }
 
-  // match for object literal like { foo: ... }
-  if (type === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
-    type = 'expression';
-  }
+  const type = getType(code, initialType);
 
-  // For Builder content
-  if (
-    type === 'unknown' &&
-    (code.includes('return _virtual_index') || code.trim().startsWith('return ')) &&
-    !code.trim().startsWith('function')
-  ) {
-    type = 'functionBody';
-  }
-
-  let useCode = code;
-
-  if (type === 'functionBody') {
-    useCode = `function(){${useCode}}`;
-  }
+  const useCode = type === 'functionBody' ? `function(){${code}}` : code;
 
   if (type !== 'expression') {
     try {

@@ -58,9 +58,9 @@ const mappers: {
   ) => string;
 } = {
   Fragment: (json, options, blockOptions) => {
-    return `<div>${json.children
+    return `<ng-container>${json.children
       .map((item) => blockToAngular(item, options, blockOptions))
-      .join('\n')}</div>`;
+      .join('\n')}</ng-container>`;
   },
   Slot: (json, options, blockOptions) => {
     return `<ng-content ${Object.keys(json.bindings)
@@ -124,7 +124,7 @@ export const blockToAngular = (
     return mappers[json.name](json, options, blockOptions);
   }
 
-  if (isChildren(json)) {
+  if (isChildren({ node: json })) {
     return `<ng-content></ng-content>`;
   }
 

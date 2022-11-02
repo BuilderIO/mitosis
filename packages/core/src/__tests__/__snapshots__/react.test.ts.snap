@@ -2362,6 +2362,63 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
+exports[`React Javascript Test renderContentExample 1`] = `
+"import * as React from \\"react\\";
+import { useContext, useEffect } from \\"react\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default function RenderContent(props: Props) {
+  useEffect(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  }, []);
+
+  useEffect(() => {
+    dispatchNewContentToVisualEditor(props.content);
+  }, [props.content]);
+
+  return (
+    <>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+      >
+        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+          <RenderBlocks blocks={props.content.blocks} />
+        </div>
+      </BuilderContext.Provider>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
 exports[`React Javascript Test rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 
@@ -4986,6 +5043,63 @@ export default function MyBasicComponent(props: Person) {
       Hello! I can run in React, Vue, Solid, or Liquid!
       {props.name}
     </div>
+  );
+}
+"
+`;
+
+exports[`React Typescript Test renderContentExample 1`] = `
+"import * as React from \\"react\\";
+import { useContext, useEffect } from \\"react\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default function RenderContent(props: Props) {
+  useEffect(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  }, []);
+
+  useEffect(() => {
+    dispatchNewContentToVisualEditor(props.content);
+  }, [props.content]);
+
+  return (
+    <>
+      <BuilderContext.Provider
+        value={{
+          get content() {
+            return 3;
+          },
+
+          get registeredComponents() {
+            return 4;
+          },
+        }}
+      >
+        <div className=\\"div\\" onClick={(event) => trackClick(props.content.id)}>
+          <RenderBlocks blocks={props.content.blocks} />
+        </div>
+      </BuilderContext.Provider>
+      <style jsx>{\`
+        .div {
+          display: flex;
+          flex-direction: columns;
+        }
+      \`}</style>
+    </>
   );
 }
 "

@@ -15,7 +15,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -31,7 +31,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -91,7 +91,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -107,7 +107,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -917,7 +917,7 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let person of names\\">
-        <div>
+        <ng-container>
           <input
             [attr.value]=\\"name\\"
             (input)=\\"
@@ -927,7 +927,7 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -962,7 +962,7 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let person of names\\">
-        <div>
+        <ng-container>
           <input
             [attr.value]=\\"name\\"
             (input)=\\"
@@ -972,7 +972,7 @@ import { CommonModule } from \\"@angular/common\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -1012,7 +1012,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -1028,7 +1028,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -1084,7 +1084,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -1100,7 +1100,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -3077,9 +3077,9 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
-        <div>
+        <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -3110,9 +3110,9 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
-        <div>
+        <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -5106,9 +5106,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
-    <div>
-      <div>{{foo.value}}</div>
-    </div>
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+    </ng-container>
   \`,
 })
 export class ComponentWithContext {
@@ -5143,9 +5143,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
-    <div>
-      <div>{{foo.value}}</div>
-    </div>
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -6665,6 +6665,131 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular Javascript Test renderContentExample 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
+      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: columns;
+      }
+    \`,
+  ],
+})
+export class RenderContent {
+  trackClick = trackClick;
+
+  @Input() content: Props[\\"content\\"];
+  @Input() customComponents: Props[\\"customComponents\\"];
+
+  ngOnInit() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  ngAfterContentChecked() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule, RenderBlocksModule],
+  exports: [RenderContent],
+})
+export class RenderContentModule {}
+"
+`;
+
+exports[`Angular Javascript Test renderContentExample 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
+      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: columns;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule, RenderBlocks],
+})
+export class RenderContent {
+  trackClick = trackClick;
+
+  @Input() content: Props[\\"content\\"];
+  @Input() customComponents: Props[\\"customComponents\\"];
+
+  ngOnInit() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  ngAfterContentChecked() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule, RenderBlocksModule],
+  exports: [RenderContent],
+})
+export class RenderContentModule {}
+"
+`;
+
 exports[`Angular Javascript Test rootFragmentMultiNode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -6681,7 +6806,7 @@ export interface ButtonProps {
 @Component({
   selector: \\"button, Button\\",
   template: \`
-    <div>
+    <ng-container>
       <ng-container *ngIf=\\"link\\">
         <a
           [attr.href]=\\"link\\"
@@ -6694,7 +6819,7 @@ export interface ButtonProps {
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\">{{text}}</button>
       </ng-container>
-    </div>
+    </ng-container>
   \`,
 })
 export class Button {
@@ -6730,7 +6855,7 @@ export interface ButtonProps {
 @Component({
   selector: \\"button, Button\\",
   template: \`
-    <div>
+    <ng-container>
       <ng-container *ngIf=\\"link\\">
         <a
           [attr.href]=\\"link\\"
@@ -6743,7 +6868,7 @@ export interface ButtonProps {
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\">{{text}}</button>
       </ng-container>
-    </div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -7590,7 +7715,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -7606,7 +7731,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -7666,7 +7791,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -7682,7 +7807,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -8492,7 +8617,7 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let person of names\\">
-        <div>
+        <ng-container>
           <input
             [attr.value]=\\"name\\"
             (input)=\\"
@@ -8502,7 +8627,7 @@ import { Component } from \\"@angular/core\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -8537,7 +8662,7 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let person of names\\">
-        <div>
+        <ng-container>
           <input
             [attr.value]=\\"name\\"
             (input)=\\"
@@ -8547,7 +8672,7 @@ import { CommonModule } from \\"@angular/common\\";
 
           Hello {{person}} ! I can run in Qwik, Web Component, React, Vue,
           Solid, or Liquid!
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -8587,7 +8712,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -8603,7 +8728,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -8659,7 +8784,7 @@ export interface Props {
   template: \`
     <div>
       <ng-container *ngIf=\\"showInput\\">
-        <div>
+        <ng-container>
           <input
             class=\\"input\\"
             #inputRef
@@ -8675,7 +8800,7 @@ export interface Props {
 
             <option value=\\"86\\">GR 86</option>
           </select>
-        </div>
+        </ng-container>
       </ng-container>
 
       Hello {{lowerCaseName()}} ! I can run in React, Qwik, Vue, Solid, or Web
@@ -10652,9 +10777,9 @@ import { Component } from \\"@angular/core\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
-        <div>
+        <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -10685,9 +10810,9 @@ import { CommonModule } from \\"@angular/common\\";
   template: \`
     <div>
       <ng-container *ngFor=\\"let item of images; let itemIndex = index\\">
-        <div>
+        <ng-container>
           <img class=\\"custom-class\\" [attr.src]=\\"item\\" [attr.key]=\\"itemIndex\\" />
-        </div>
+        </ng-container>
       </ng-container>
     </div>
   \`,
@@ -12681,9 +12806,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
-    <div>
-      <div>{{foo.value}}</div>
-    </div>
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+    </ng-container>
   \`,
 })
 export class ComponentWithContext {
@@ -12718,9 +12843,9 @@ import Context2 from \\"@dummy/2\\";
 @Component({
   selector: \\"component-with-context, ComponentWithContext\\",
   template: \`
-    <div>
-      <div>{{foo.value}}</div>
-    </div>
+    <ng-container>
+      <ng-container>{{foo.value}}</ng-container>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],
@@ -14251,6 +14376,131 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular Typescript Test renderContentExample 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
+      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: columns;
+      }
+    \`,
+  ],
+})
+export class RenderContent {
+  trackClick = trackClick;
+
+  @Input() content: Props[\\"content\\"];
+  @Input() customComponents: Props[\\"customComponents\\"];
+
+  ngOnInit() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  ngAfterContentChecked() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule, RenderBlocksModule],
+  exports: [RenderContent],
+})
+export class RenderContentModule {}
+"
+`;
+
+exports[`Angular Typescript Test renderContentExample 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
+      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
+    </div>
+  \`,
+  styles: [
+    \`
+      .div {
+        display: flex;
+        flex-direction: columns;
+      }
+    \`,
+  ],
+  standalone: true,
+  imports: [CommonModule, RenderBlocks],
+})
+export class RenderContent {
+  trackClick = trackClick;
+
+  @Input() content: Props[\\"content\\"];
+  @Input() customComponents: Props[\\"customComponents\\"];
+
+  ngOnInit() {
+    sendComponentsToVisualEditor(this.customComponents);
+  }
+
+  ngAfterContentChecked() {
+    dispatchNewContentToVisualEditor(this.content);
+  }
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule, RenderBlocksModule],
+  exports: [RenderContent],
+})
+export class RenderContentModule {}
+"
+`;
+
 exports[`Angular Typescript Test rootFragmentMultiNode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -14267,7 +14517,7 @@ export interface ButtonProps {
 @Component({
   selector: \\"button, Button\\",
   template: \`
-    <div>
+    <ng-container>
       <ng-container *ngIf=\\"link\\">
         <a
           [attr.href]=\\"link\\"
@@ -14280,7 +14530,7 @@ export interface ButtonProps {
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\">{{text}}</button>
       </ng-container>
-    </div>
+    </ng-container>
   \`,
 })
 export class Button {
@@ -14316,7 +14566,7 @@ export interface ButtonProps {
 @Component({
   selector: \\"button, Button\\",
   template: \`
-    <div>
+    <ng-container>
       <ng-container *ngIf=\\"link\\">
         <a
           [attr.href]=\\"link\\"
@@ -14329,7 +14579,7 @@ export interface ButtonProps {
       <ng-container *ngIf=\\"!link\\">
         <button type=\\"button\\">{{text}}</button>
       </ng-container>
-    </div>
+    </ng-container>
   \`,
   standalone: true,
   imports: [CommonModule],

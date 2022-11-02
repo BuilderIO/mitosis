@@ -2349,6 +2349,71 @@ export default {
 "
 `;
 
+exports[`Vue Javascript Test renderContentExample 1`] = `
+"<template>
+  <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
+    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+  </div>
+</template>
+
+<script>
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.vue\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  props: [\\"content\\", \\"customComponents\\"],
+
+  data: () => ({ trackClick }),
+
+  provide() {
+    return {
+      BuilderContext: {
+        get content() {
+          return 3;
+        },
+        get registeredComponents() {
+          return 4;
+        },
+      },
+    };
+  },
+
+  mounted() {
+    sendComponentsToVisualEditor(this.customComponents);
+  },
+
+  watch: {
+    onUpdateHook0() {
+      dispatchNewContentToVisualEditor(this.content);
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.content,
+      };
+    },
+  },
+};
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: columns;
+}
+</style>
+"
+`;
+
 exports[`Vue Javascript Test rootFragmentMultiNode 1`] = `"Vue 2 template should have a single root element"`;
 
 exports[`Vue Javascript Test rootShow 1`] = `
@@ -5252,6 +5317,79 @@ export default {
   props: [\\"name\\"],
 };
 </script>
+"
+`;
+
+exports[`Vue Typescript Test renderContentExample 1`] = `
+"<template>
+  <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
+    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.vue\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { RenderBlocks: RenderBlocks, BuilderContext: BuilderContext },
+  props: [\\"content\\", \\"customComponents\\"],
+
+  data: () => ({ trackClick }),
+
+  provide() {
+    return {
+      BuilderContext: {
+        get content() {
+          return 3;
+        },
+        get registeredComponents() {
+          return 4;
+        },
+      },
+    };
+  },
+
+  mounted() {
+    sendComponentsToVisualEditor(this.customComponents);
+  },
+
+  watch: {
+    onUpdateHook0() {
+      dispatchNewContentToVisualEditor(this.content);
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.content,
+      };
+    },
+  },
+};
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: columns;
+}
+</style>
 "
 `;
 

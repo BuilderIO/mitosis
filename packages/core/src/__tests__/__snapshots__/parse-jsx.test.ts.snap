@@ -7995,6 +7995,7 @@ Object {
       "foo": Object {
         "bar": "baz",
       },
+      "fun": "more metadata",
     },
   },
   "name": "Button",
@@ -9225,6 +9226,147 @@ Object {
     "type Person = {
   name: string;
   age?: number;
+};",
+  ],
+}
+`;
+
+exports[`Parse JSX renderContentExample 1`] = `
+Object {
+  "@type": "@builder.io/mitosis/component",
+  "children": Array [
+    Object {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": Object {
+        "css": Object {
+          "code": "{
+  display: 'flex',
+  flexDirection: 'columns'
+}",
+        },
+        "onClick": Object {
+          "code": "trackClick(props.content.id)",
+        },
+      },
+      "children": Array [
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+      ",
+          },
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {
+            "blocks": Object {
+              "code": "props.content.blocks",
+            },
+          },
+          "children": Array [],
+          "meta": Object {},
+          "name": "RenderBlocks",
+          "properties": Object {},
+          "scope": Object {},
+        },
+        Object {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": Object {},
+          "children": Array [],
+          "meta": Object {},
+          "name": "div",
+          "properties": Object {
+            "_text": "
+    ",
+          },
+          "scope": Object {},
+        },
+      ],
+      "meta": Object {},
+      "name": "div",
+      "properties": Object {},
+      "scope": Object {},
+    },
+  ],
+  "context": Object {
+    "get": Object {},
+    "set": Object {
+      "@dummy/context.lite:default": Object {
+        "name": "BuilderContext",
+        "value": Object {
+          "content": Object {
+            "code": "get content() {
+  return 3;
+}",
+            "type": "getter",
+          },
+          "registeredComponents": Object {
+            "code": "get registeredComponents() {
+  return 4;
+}",
+            "type": "getter",
+          },
+        },
+      },
+    },
+  },
+  "exports": Object {},
+  "hooks": Object {
+    "onMount": Object {
+      "code": "
+  sendComponentsToVisualEditor(props.customComponents);
+",
+    },
+    "onUpdate": Array [
+      Object {
+        "code": "
+  dispatchNewContentToVisualEditor(props.content);
+",
+        "deps": "[props.content]",
+      },
+    ],
+  },
+  "imports": Array [
+    Object {
+      "imports": Object {
+        "dispatchNewContentToVisualEditor": "dispatchNewContentToVisualEditor",
+        "sendComponentsToVisualEditor": "sendComponentsToVisualEditor",
+        "trackClick": "trackClick",
+      },
+      "path": "@dummy/injection-js",
+    },
+    Object {
+      "imports": Object {
+        "BuilderContext": "default",
+      },
+      "path": "@dummy/context.lite",
+    },
+    Object {
+      "imports": Object {
+        "RenderBlocks": "default",
+      },
+      "path": "@dummy/RenderBlocks.lite.tsx",
+    },
+  ],
+  "inputs": Array [],
+  "meta": Object {},
+  "name": "RenderContent",
+  "propsTypeRef": "Props",
+  "refs": Object {},
+  "state": Object {},
+  "subComponents": Array [],
+  "types": Array [
+    "type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
 };",
   ],
 }
