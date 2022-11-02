@@ -291,7 +291,7 @@ ${htmlString}
     if (options.plugins) {
       finalStr = runPostCodePlugins(finalStr, options.plugins);
     }
-    return finalStr;
+    return [{ content: finalStr, type: 'component' }];
   };
 
 /**

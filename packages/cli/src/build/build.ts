@@ -307,7 +307,9 @@ async function buildAndOutputComponentFiles({
     try {
       const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
 
-      transpiled = overrideFile ?? generator(options.options[target])({ path, component });
+      // TODO: this fix is only temporary.
+      transpiled =
+        overrideFile ?? generator(options.options[target])({ path, component })[0].content;
       debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
     } catch (error) {
       debugTarget(`Failure: transpiled ${path}.`);

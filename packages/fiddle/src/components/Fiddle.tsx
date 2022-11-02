@@ -307,7 +307,7 @@ export default function Fiddle() {
         return;
       }
       const jsxJson = builderContentToMitosisComponent(builderJson);
-      state.code = componentToMitosis()({ component: jsxJson });
+      state.code = componentToMitosis()({ component: jsxJson })[0].content;
       state.pendingBuilderChange = null;
     },
 
@@ -324,7 +324,7 @@ export default function Fiddle() {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
         };
 
-        state.output =
+        const output =
           state.outputTab === 'liquid'
             ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'html'
@@ -409,6 +409,8 @@ export default function Fiddle() {
                 component: json,
                 path: '',
               });
+
+        state.output = output[0].content;
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);

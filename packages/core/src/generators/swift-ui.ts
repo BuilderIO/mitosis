@@ -383,5 +383,5 @@ export const componentToSwift: TranspilerGenerator<ToSwiftOptions> =
       str = format(str);
     }
 
-    return str;
+    return [{ content: str, type: 'component' }];
   };
