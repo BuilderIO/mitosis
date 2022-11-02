@@ -142,53 +142,37 @@ exports[`Vue Javascript Test Basic Context 1`] = `
 </template>
 
 <script>
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+export default {
+  name: \\"my-basic-component\\",
 
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
-
-
-
-
-
-      export default {
-      name: 'my-basic-component',
-
-
-
-      data: () => ({ name: 'PatrickJS',}),
-
-
-      provide() {
-              return {
-  Injector: get createInjector()
-}
-            },
-      inject: {
+  provide() {
+    return {
+      Injector: createInjector(),
+    };
+  },
+  inject: {
     myService: \\"MyService\\",
   },
-      created() {
-              const hi = this.myService.method('hi');
-console.log(hi)
-            },
-      mounted() {
-              const bye = this.myService.method('hi');
-console.log(bye)
-            },
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
+  mounted() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  },
 
-
-
-
-
-
-        methods: { onChange : function onChange() {
-const change = this.myService.method('change');
-console.log(change);
-},},
-
-
-    }
+  methods: {
+    onChange: function onChange() {
+      const change = this.myService.method(\\"change\\");
+      console.log(change);
+    },
+  },
+};
 </script>
 "
 `;
@@ -2817,53 +2801,37 @@ exports[`Vue Typescript Test Basic Context 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+export default {
+  name: \\"my-basic-component\\",
 
+  data: () => ({ name: \\"PatrickJS\\" }),
 
-
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
-
-
-
-
-
-      export default {
-      name: 'my-basic-component',
-
-
-
-      data: () => ({ name: 'PatrickJS',}),
-
-
-      provide() {
-              return {
-  Injector: get createInjector()
-}
-            },
-      inject: {
+  provide() {
+    return {
+      Injector: createInjector(),
+    };
+  },
+  inject: {
     myService: \\"MyService\\",
   },
-      created() {
-              const hi = this.myService.method('hi');
-console.log(hi)
-            },
-      mounted() {
-              const bye = this.myService.method('hi');
-console.log(bye)
-            },
+  created() {
+    const hi = this.myService.method(\\"hi\\");
+    console.log(hi);
+  },
+  mounted() {
+    const bye = this.myService.method(\\"hi\\");
+    console.log(bye);
+  },
 
-
-
-
-
-
-        methods: { onChange : function onChange() {
-const change = this.myService.method('change');
-console.log(change);
-},},
-
-
-    }
+  methods: {
+    onChange: function onChange() {
+      const change = this.myService.method(\\"change\\");
+      console.log(change);
+    },
+  },
+};
 </script>
 "
 `;

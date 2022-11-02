@@ -128,36 +128,26 @@ exports[`Vue Javascript Test Basic Context 1`] = `
 </template>
 
 <script setup>
-    import { inject, onMounted, provide, ref } from \\"vue\\"
+import { inject, onMounted, provide, ref } from \\"vue\\";
 
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+const name = ref(\\"PatrickJS\\");
 
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
+const myService = inject(MyService);
 
+provide(Injector, createInjector());
 
+const hi = myService.method(\\"hi\\");
+console.log(hi);
+onMounted(() => {
+  const bye = myService.method(\\"hi\\");
+  console.log(bye);
+});
 
-
-    const name= ref('PatrickJS')
-
-
-const myService = inject(MyService)
-
-provide(Injector, get createInjector())
-
-
-const hi = myService.method('hi');
-console.log(hi)
-onMounted(() => { const bye = myService.method('hi');
-console.log(bye)})
-
-
-
-
-
-
- function onChange() {
-const change = myService.method('change');
-console.log(change);
+function onChange() {
+  const change = myService.method(\\"change\\");
+  console.log(change);
 }
 </script>
 "
@@ -1755,39 +1745,42 @@ exports[`Vue Javascript Test componentWithContext 1`] = `
 </template>
 
 <script setup>
-    import { inject, provide } from \\"vue\\"
+import { inject, provide } from \\"vue\\";
 
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
+const props = defineProps([\\"content\\"]);
 
-  import Context1 from '@dummy/1';
-import Context2 from '@dummy/2';
-import ReactiveContext1 from '@dummy/3';
-import ReactiveContext2 from '@dummy/4';
-import ReactiveProxyContext1 from '@dummy/5';
-import ReactiveProxyContext2 from '@dummy/6';
+const foo = inject(Context1);
+const foo2 = inject(ReactiveContext1);
+const foo3 = inject(ReactiveProxyContext1);
 
-
-
-
-    const props = defineProps(['content'])
-
-
-const foo = inject(Context1)
-const foo2 = inject(ReactiveContext1)
-const foo3 = inject(ReactiveProxyContext1)
-
-provide(Context1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(ReactiveContext1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(ReactiveProxyContext1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(Context2, { bar: get 'baz',})
-provide(ReactiveProxyContext2, { bar: get 'baz',})
-provide(ReactiveContext2, { bar: get 'baz',})
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(ReactiveContext1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(ReactiveProxyContext1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+provide(ReactiveProxyContext2, { bar: \\"baz\\" });
+provide(ReactiveContext2, { bar: \\"baz\\" });
 </script>
 "
 `;
@@ -2563,36 +2556,26 @@ exports[`Vue Typescript Test Basic Context 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { inject, onMounted, provide, ref } from \\"vue\\"
+import { inject, onMounted, provide, ref } from \\"vue\\";
 
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+const name = ref(\\"PatrickJS\\");
 
-  import { Injector, createInjector, MyService } from '@dummy/injection-js';
+const myService = inject(MyService);
 
+provide(Injector, createInjector());
 
+const hi = myService.method(\\"hi\\");
+console.log(hi);
+onMounted(() => {
+  const bye = myService.method(\\"hi\\");
+  console.log(bye);
+});
 
-
-    const name= ref('PatrickJS')
-
-
-const myService = inject(MyService)
-
-provide(Injector, get createInjector())
-
-
-const hi = myService.method('hi');
-console.log(hi)
-onMounted(() => { const bye = myService.method('hi');
-console.log(bye)})
-
-
-
-
-
-
- function onChange() {
-const change = myService.method('change');
-console.log(change);
+function onChange() {
+  const change = myService.method(\\"change\\");
+  console.log(change);
 }
 </script>
 "
@@ -4350,41 +4333,45 @@ exports[`Vue Typescript Test componentWithContext 1`] = `
 </template>
 
 <script setup lang=\\"ts\\">
-    import { inject, provide } from \\"vue\\"
-    export interface ComponentWithContextProps {
-content: string
+import { inject, provide } from \\"vue\\";
+export interface ComponentWithContextProps {
+  content: string;
 }
 
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+import ReactiveContext1 from \\"@dummy/3\\";
+import ReactiveContext2 from \\"@dummy/4\\";
+import ReactiveProxyContext1 from \\"@dummy/5\\";
+import ReactiveProxyContext2 from \\"@dummy/6\\";
 
-  import Context1 from '@dummy/1';
-import Context2 from '@dummy/2';
-import ReactiveContext1 from '@dummy/3';
-import ReactiveContext2 from '@dummy/4';
-import ReactiveProxyContext1 from '@dummy/5';
-import ReactiveProxyContext2 from '@dummy/6';
+const props = defineProps<ComponentWithContextProps>();
 
+const foo = inject(Context1);
+const foo2 = inject(ReactiveContext1);
+const foo3 = inject(ReactiveProxyContext1);
 
-
-
-    const props = defineProps<ComponentWithContextProps>()
-
-
-const foo = inject(Context1)
-const foo2 = inject(ReactiveContext1)
-const foo3 = inject(ReactiveProxyContext1)
-
-provide(Context1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(ReactiveContext1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(ReactiveProxyContext1, { foo: get 'bar', get  content() {
-return props.content;
-},})
-provide(Context2, { bar: get 'baz',})
-provide(ReactiveProxyContext2, { bar: get 'baz',})
-provide(ReactiveContext2, { bar: get 'baz',})
+provide(Context1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(ReactiveContext1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(ReactiveProxyContext1, {
+  foo: \\"bar\\",
+  content() {
+    return props.content;
+  },
+});
+provide(Context2, { bar: \\"baz\\" });
+provide(ReactiveProxyContext2, { bar: \\"baz\\" });
+provide(ReactiveContext2, { bar: \\"baz\\" });
 </script>
 "
 `;
