@@ -3300,69 +3300,6 @@ export class MyBasicComponentModule {}
 "
 `;
 
-exports[`Angular with Import Mapper Tests Javascript Test renderContentExample 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { BrowserModule } from \\"@angular/platform-browser\\";
-
-import { Component, Input } from \\"@angular/core\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-
-import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocksModule from \\"@dummy/RenderBlocks.lite.tsx/angular\\";
-
-@Component({
-  selector: \\"render-content, RenderContent\\",
-  template: \`
-    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
-      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
-    </div>
-  \`,
-  styles: [
-    \`
-      .div {
-        display: flex;
-        flex-direction: columns;
-      }
-    \`,
-  ],
-})
-export class RenderContent {
-  trackClick = trackClick;
-
-  @Input() content: Props[\\"content\\"];
-  @Input() customComponents: Props[\\"customComponents\\"];
-
-  ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-}
-
-@NgModule({
-  declarations: [RenderContent],
-  imports: [BrowserModule, RenderBlocksModule],
-  exports: [RenderContent],
-  bootstrap: [SomeOtherComponent],
-})
-export class RenderContentModule {}
-"
-`;
-
 exports[`Angular with Import Mapper Tests Javascript Test rootFragmentMultiNode 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -7117,69 +7054,6 @@ export class MyBasicComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyBasicComponentModule {}
-"
-`;
-
-exports[`Angular with Import Mapper Tests Typescript Test renderContentExample 1`] = `
-"import { NgModule } from \\"@angular/core\\";
-import { BrowserModule } from \\"@angular/platform-browser\\";
-
-import { Component, Input } from \\"@angular/core\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-
-import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocksModule from \\"@dummy/RenderBlocks.lite.tsx/angular\\";
-
-@Component({
-  selector: \\"render-content, RenderContent\\",
-  template: \`
-    <div class=\\"div\\" (click)=\\"trackClick(content.id)\\">
-      <render-blocks [blocks]=\\"content.blocks\\"></render-blocks>
-    </div>
-  \`,
-  styles: [
-    \`
-      .div {
-        display: flex;
-        flex-direction: columns;
-      }
-    \`,
-  ],
-})
-export class RenderContent {
-  trackClick = trackClick;
-
-  @Input() content: Props[\\"content\\"];
-  @Input() customComponents: Props[\\"customComponents\\"];
-
-  ngOnInit() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  ngAfterContentChecked() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-}
-
-@NgModule({
-  declarations: [RenderContent],
-  imports: [BrowserModule, RenderBlocksModule],
-  exports: [RenderContent],
-  bootstrap: [SomeOtherComponent],
-})
-export class RenderContentModule {}
 "
 `;
 

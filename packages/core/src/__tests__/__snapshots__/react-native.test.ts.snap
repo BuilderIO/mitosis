@@ -2334,63 +2334,6 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
-exports[`React Native Javascript Test renderContentExample 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useContext, useEffect } from \\"react\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-export default function RenderContent(props: Props) {
-  useEffect(() => {
-    sendComponentsToVisualEditor(props.customComponents);
-  }, []);
-
-  useEffect(() => {
-    dispatchNewContentToVisualEditor(props.content);
-  }, [props.content]);
-
-  return (
-    <BuilderContext.Provider
-      value={{
-        get content() {
-          return 3;
-        },
-
-        get registeredComponents() {
-          return 4;
-        },
-      }}
-    >
-      <View
-        onClick={(event) => trackClick(props.content.id)}
-        style={styles.view1}
-      >
-        <RenderBlocks blocks={props.content.blocks} />
-      </View>
-    </BuilderContext.Provider>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
-});
-"
-`;
-
 exports[`React Native Javascript Test rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -4997,63 +4940,6 @@ export default function MyBasicComponent(props: Person) {
     </View>
   );
 }
-"
-`;
-
-exports[`React Native Typescript Test renderContentExample 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useContext, useEffect } from \\"react\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-export default function RenderContent(props: Props) {
-  useEffect(() => {
-    sendComponentsToVisualEditor(props.customComponents);
-  }, []);
-
-  useEffect(() => {
-    dispatchNewContentToVisualEditor(props.content);
-  }, [props.content]);
-
-  return (
-    <BuilderContext.Provider
-      value={{
-        get content() {
-          return 3;
-        },
-
-        get registeredComponents() {
-          return 4;
-        },
-      }}
-    >
-      <View
-        onClick={(event) => trackClick(props.content.id)}
-        style={styles.view1}
-      >
-        <RenderBlocks blocks={props.content.blocks} />
-      </View>
-    </BuilderContext.Provider>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
-});
 "
 `;
 

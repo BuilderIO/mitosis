@@ -3152,61 +3152,6 @@ export default class MyBasicComponent extends LitElement {
 "
 `;
 
-exports[`Lit Javascript Test renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-
-@customElement(\\"render-content\\")
-export default class RenderContent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @property() content: any;
-  @property() customComponents: any;
-
-  connectedCallback() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  updated() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-
-  render() {
-    return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
-}
-</style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
-
-           </div>
-       \`;
-  }
-}
-"
-`;
-
 exports[`Lit Javascript Test rootFragmentMultiNode 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6809,61 +6754,6 @@ export default class MyBasicComponent extends LitElement {
         <div>Hello! I can run in React, Vue, Solid, or Liquid! \${this.name}</div>
 
       \`;
-  }
-}
-"
-`;
-
-exports[`Lit Typescript Test renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import \\"@dummy/context.js\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-import { LitElement, html, css } from \\"lit\\";
-import { customElement, property, state, query } from \\"lit/decorators.js\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-
-@customElement(\\"render-content\\")
-export default class RenderContent extends LitElement {
-  createRenderRoot() {
-    return this;
-  }
-
-  @property() content: any;
-  @property() customComponents: any;
-
-  connectedCallback() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  updated() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-
-  render() {
-    return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
-}
-</style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
-
-           </div>
-       \`;
   }
 }
 "

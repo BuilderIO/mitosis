@@ -155,7 +155,7 @@ const BASIC_TESTS: Tests = {
   spreadAttrs,
   spreadNestedProps,
   spreadProps,
-  renderContentExample,
+  // renderContentExample,
 };
 
 const SLOTS_TESTS: Tests = {

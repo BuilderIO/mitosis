@@ -1841,59 +1841,6 @@ exports[`Svelte Javascript Test propsType 1`] = `
 "
 `;
 
-exports[`Svelte Javascript Test renderContentExample 1`] = `
-"<script>
-  import { afterUpdate, getContext, onMount, setContext } from \\"svelte\\";
-  import { writable } from \\"svelte/store\\";
-
-  import {
-    sendComponentsToVisualEditor,
-    dispatchNewContentToVisualEditor,
-    trackClick,
-  } from \\"@dummy/injection-js\\";
-  import BuilderContext from \\"@dummy/context.svelte\\";
-  import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-  export let content;
-  export let customComponents;
-
-  setContext(BuilderContext.key, {
-    get content() {
-      return 3;
-    },
-    get registeredComponents() {
-      return 4;
-    },
-  });
-
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
-
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
-</script>
-
-<div
-  class=\\"div\\"
-  on:click={(event) => {
-    trackClick(content.id);
-  }}
->
-  <RenderBlocks blocks={content.blocks} />
-</div>
-
-<style>
-  .div {
-    display: flex;
-    flex-direction: columns;
-  }
-</style>
-"
-`;
-
 exports[`Svelte Javascript Test rootFragmentMultiNode 1`] = `
 "<script>
   export let link;
@@ -4321,69 +4268,6 @@ exports[`Svelte Typescript Test propsType 1`] = `
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>
-"
-`;
-
-exports[`Svelte Typescript Test renderContentExample 1`] = `
-"<script context=\\"module\\" lang=\\"ts\\">
-  type Props = {
-    customComponents: string[];
-    content: {
-      blocks: any[];
-      id: string;
-    };
-  };
-</script>
-
-<script lang=\\"ts\\">
-  import { afterUpdate, getContext, onMount, setContext } from \\"svelte\\";
-  import { writable } from \\"svelte/store\\";
-
-  import {
-    sendComponentsToVisualEditor,
-    dispatchNewContentToVisualEditor,
-    trackClick,
-  } from \\"@dummy/injection-js\\";
-  import BuilderContext from \\"@dummy/context.svelte\\";
-  import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-  export let content: Props[\\"content\\"];
-  export let customComponents: Props[\\"customComponents\\"];
-
-  setContext(BuilderContext.key, {
-    get content() {
-      return 3;
-    },
-    get registeredComponents() {
-      return 4;
-    },
-  });
-
-  onMount(() => {
-    sendComponentsToVisualEditor(customComponents);
-  });
-
-  function onUpdateFn_0() {
-    dispatchNewContentToVisualEditor(content);
-  }
-  $: onUpdateFn_0(...[content]);
-</script>
-
-<div
-  class=\\"div\\"
-  on:click={(event) => {
-    trackClick(content.id);
-  }}
->
-  <RenderBlocks blocks={content.blocks} />
-</div>
-
-<style>
-  .div {
-    display: flex;
-    flex-direction: columns;
-  }
-</style>
 "
 `;
 

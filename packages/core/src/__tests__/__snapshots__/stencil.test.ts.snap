@@ -2290,49 +2290,6 @@ export default class MyBasicComponent {
 "
 `;
 
-exports[`Stencil Javascript Test renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
-
-@Component({
-  tag: \\"render-content\\",
-  styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
-\`,
-})
-export default class RenderContent {
-  @Prop() content: any;
-  @Prop() customComponents: any;
-
-  componentDidLoad() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  componentDidUpdate() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-
-  render() {
-    return (
-      <div onClick={(event) => trackClick(this.content.id)}>
-        <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
-      </div>
-    );
-  }
-}
-"
-`;
-
 exports[`Stencil Javascript Test rootFragmentMultiNode 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -4881,49 +4838,6 @@ export default class MyBasicComponent {
       <div>
         Hello! I can run in React, Vue, Solid, or Liquid!
         {this.name}
-      </div>
-    );
-  }
-}
-"
-`;
-
-exports[`Stencil Typescript Test renderContentExample 1`] = `
-"import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
-
-@Component({
-  tag: \\"render-content\\",
-  styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
-\`,
-})
-export default class RenderContent {
-  @Prop() content: any;
-  @Prop() customComponents: any;
-
-  componentDidLoad() {
-    sendComponentsToVisualEditor(this.customComponents);
-  }
-
-  componentDidUpdate() {
-    dispatchNewContentToVisualEditor(this.content);
-  }
-
-  render() {
-    return (
-      <div onClick={(event) => trackClick(this.content.id)}>
-        <RenderBlocks blocks={this.content.blocks}></RenderBlocks>
       </div>
     );
   }
