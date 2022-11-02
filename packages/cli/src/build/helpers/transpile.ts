@@ -13,7 +13,7 @@ export const transformImports = (target: Target, options: MitosisConfig) => (cod
       // we start by replacing all `context.lite` imports with `context`
       // This Context replace is only needed for non-mitosis components, i.e. plain `.js`/`.ts` files.
       // Mitosis components have logic that transform context import paths correctly.
-      /\.context\.lite/g,
+      /\.context\.lite['"]/g,
       `.context.js$1`,
     )
     .replace(
