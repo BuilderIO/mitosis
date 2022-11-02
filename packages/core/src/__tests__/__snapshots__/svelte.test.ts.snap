@@ -1508,50 +1508,33 @@ exports[`Svelte Javascript Test componentWithContext 1`] = `
 
   let foo = getContext(Context1.key);
   let foo2 = getContext(ReactiveContext1.key);
-
-  let foo3ContextValue = getContext(ReactiveProxyContext1.key);
-  $: foo3 = new Proxy($foo3ContextValue, {
-    set: (obj, prop, value) => {
-      $foo3ContextValue[prop] = value;
-      return true;
-    },
-  });
-
+  let foo3 = getContext(ReactiveProxyContext1.key);
   setContext(Context1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-
-  const ReactiveContext1ContextStoreValue = writable({
+  setContext(ReactiveContext1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(ReactiveContext1.key, ReactiveContext1ContextStoreValue);
-
-  const ReactiveProxyContext1ContextStoreValue = writable({
+  setContext(ReactiveProxyContext1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(ReactiveProxyContext1.key, ReactiveProxyContext1ContextStoreValue);
-
   setContext(Context2.key, { bar: \\"baz\\" });
-
-  const ReactiveProxyContext2ContextStoreValue = writable({ bar: \\"baz\\" });
-  setContext(ReactiveProxyContext2.key, ReactiveProxyContext2ContextStoreValue);
-
-  const ReactiveContext2ContextStoreValue = writable({ bar: \\"baz\\" });
-  setContext(ReactiveContext2.key, ReactiveContext2ContextStoreValue);
+  setContext(ReactiveProxyContext2.key, { bar: \\"baz\\" });
+  setContext(ReactiveContext2.key, { bar: \\"baz\\" });
 </script>
 
 {foo.value}
 
-{$foo2.value}
+{foo2.value}
 
 {foo3.value}
 "
@@ -3926,50 +3909,33 @@ exports[`Svelte Typescript Test componentWithContext 1`] = `
 
   let foo = getContext(Context1.key);
   let foo2 = getContext(ReactiveContext1.key);
-
-  let foo3ContextValue = getContext(ReactiveProxyContext1.key);
-  $: foo3 = new Proxy($foo3ContextValue, {
-    set: (obj, prop, value) => {
-      $foo3ContextValue[prop] = value;
-      return true;
-    },
-  });
-
+  let foo3 = getContext(ReactiveProxyContext1.key);
   setContext(Context1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-
-  const ReactiveContext1ContextStoreValue = writable({
+  setContext(ReactiveContext1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(ReactiveContext1.key, ReactiveContext1ContextStoreValue);
-
-  const ReactiveProxyContext1ContextStoreValue = writable({
+  setContext(ReactiveProxyContext1.key, {
     foo: \\"bar\\",
     content() {
       return content;
     },
   });
-  setContext(ReactiveProxyContext1.key, ReactiveProxyContext1ContextStoreValue);
-
   setContext(Context2.key, { bar: \\"baz\\" });
-
-  const ReactiveProxyContext2ContextStoreValue = writable({ bar: \\"baz\\" });
-  setContext(ReactiveProxyContext2.key, ReactiveProxyContext2ContextStoreValue);
-
-  const ReactiveContext2ContextStoreValue = writable({ bar: \\"baz\\" });
-  setContext(ReactiveContext2.key, ReactiveContext2ContextStoreValue);
+  setContext(ReactiveProxyContext2.key, { bar: \\"baz\\" });
+  setContext(ReactiveContext2.key, { bar: \\"baz\\" });
 </script>
 
 {foo.value}
 
-{$foo2.value}
+{foo2.value}
 
 {foo3.value}
 "
