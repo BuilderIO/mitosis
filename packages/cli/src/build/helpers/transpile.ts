@@ -18,7 +18,7 @@ export const transformImports = (target: Target, options: MitosisConfig) => (cod
     )
     .replace(
       // afterwards, we replace all `.lite` imports with the correct file extension
-      /\.lite/g,
+      /\.lite['"]/g,
       `${getFileExtensionForTarget({ type: 'import', target, options })}$1`,
     )
     .replace(
