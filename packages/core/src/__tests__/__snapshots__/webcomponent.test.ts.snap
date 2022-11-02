@@ -7127,10 +7127,6 @@ exports[`webcomponent Javascript Test componentWithContext 1`] = `
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 /**
  * Usage:
@@ -7172,8 +7168,6 @@ class ComponentWithContext extends HTMLElement {
 
   connectedCallback() {
     this.foo = this.getContext(this._root, Context1);
-    this.foo2 = this.getContext(this._root, ReactiveContext1);
-    this.foo3 = this.getContext(this._root, ReactiveProxyContext1);
 
     this.getAttributeNames().forEach((attr) => {
       const jsVar = attr.replace(/-/g, \\"\\");
@@ -7189,11 +7183,7 @@ class ComponentWithContext extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <template data-el=\\"div-component-with-context-1\\"><!-- foo.value --></template>
-      
-      <template data-el=\\"div-component-with-context-2\\"><!-- foo2.value --></template>
-      
-      <template data-el=\\"div-component-with-context-3\\"><!-- foo3.value --></template>\`;
+      <template data-el=\\"div-component-with-context-1\\"><!-- foo.value --></template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -7227,18 +7217,6 @@ class ComponentWithContext extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-component-with-context-1']\\")
       .forEach((el) => {
         this.renderTextNode(el, this.foo.value);
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='div-component-with-context-2']\\")
-      .forEach((el) => {
-        this.renderTextNode(el, this.foo2.value);
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='div-component-with-context-3']\\")
-      .forEach((el) => {
-        this.renderTextNode(el, this.foo3.value);
       });
   }
 
@@ -19096,10 +19074,6 @@ exports[`webcomponent Typescript Test componentWithContext 1`] = `
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 /**
  * Usage:
@@ -19141,8 +19115,6 @@ class ComponentWithContext extends HTMLElement {
 
   connectedCallback() {
     this.foo = this.getContext(this._root, Context1);
-    this.foo2 = this.getContext(this._root, ReactiveContext1);
-    this.foo3 = this.getContext(this._root, ReactiveProxyContext1);
 
     this.getAttributeNames().forEach((attr) => {
       const jsVar = attr.replace(/-/g, \\"\\");
@@ -19158,11 +19130,7 @@ class ComponentWithContext extends HTMLElement {
     });
 
     this._root.innerHTML = \`
-      <template data-el=\\"div-component-with-context-1\\"><!-- foo.value --></template>
-      
-      <template data-el=\\"div-component-with-context-2\\"><!-- foo2.value --></template>
-      
-      <template data-el=\\"div-component-with-context-3\\"><!-- foo3.value --></template>\`;
+      <template data-el=\\"div-component-with-context-1\\"><!-- foo.value --></template>\`;
     this.pendingUpdate = true;
 
     this.render();
@@ -19196,18 +19164,6 @@ class ComponentWithContext extends HTMLElement {
       .querySelectorAll(\\"[data-el='div-component-with-context-1']\\")
       .forEach((el) => {
         this.renderTextNode(el, this.foo.value);
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='div-component-with-context-2']\\")
-      .forEach((el) => {
-        this.renderTextNode(el, this.foo2.value);
-      });
-
-    this._root
-      .querySelectorAll(\\"[data-el='div-component-with-context-3']\\")
-      .forEach((el) => {
-        this.renderTextNode(el, this.foo3.value);
       });
   }
 

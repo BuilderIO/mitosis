@@ -1738,10 +1738,6 @@ function _classStringToObject(str) {
 exports[`Vue Javascript Test componentWithContext 1`] = `
 "<template>
   {{ foo.value }}
-
-  {{ foo2.value }}
-
-  {{ foo3.value }}
 </template>
 
 <script setup>
@@ -1749,16 +1745,10 @@ import { inject, provide } from \\"vue\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 const props = defineProps([\\"content\\"]);
 
 const foo = inject(Context1);
-const foo2 = inject(ReactiveContext1);
-const foo3 = inject(ReactiveProxyContext1);
 
 provide(Context1, {
   foo: \\"bar\\",
@@ -1766,21 +1756,7 @@ provide(Context1, {
     return props.content;
   },
 });
-provide(ReactiveContext1, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
-provide(ReactiveProxyContext1, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
 provide(Context2, { bar: \\"baz\\" });
-provide(ReactiveProxyContext2, { bar: \\"baz\\" });
-provide(ReactiveContext2, { bar: \\"baz\\" });
 </script>
 "
 `;
@@ -4326,10 +4302,6 @@ function _classStringToObject(str) {
 exports[`Vue Typescript Test componentWithContext 1`] = `
 "<template>
   {{ foo.value }}
-
-  {{ foo2.value }}
-
-  {{ foo3.value }}
 </template>
 
 <script setup lang=\\"ts\\">
@@ -4340,16 +4312,10 @@ export interface ComponentWithContextProps {
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
-import ReactiveContext1 from \\"@dummy/3\\";
-import ReactiveContext2 from \\"@dummy/4\\";
-import ReactiveProxyContext1 from \\"@dummy/5\\";
-import ReactiveProxyContext2 from \\"@dummy/6\\";
 
 const props = defineProps<ComponentWithContextProps>();
 
 const foo = inject(Context1);
-const foo2 = inject(ReactiveContext1);
-const foo3 = inject(ReactiveProxyContext1);
 
 provide(Context1, {
   foo: \\"bar\\",
@@ -4357,21 +4323,7 @@ provide(Context1, {
     return props.content;
   },
 });
-provide(ReactiveContext1, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
-provide(ReactiveProxyContext1, {
-  foo: \\"bar\\",
-  content() {
-    return props.content;
-  },
-});
 provide(Context2, { bar: \\"baz\\" });
-provide(ReactiveProxyContext2, { bar: \\"baz\\" });
-provide(ReactiveContext2, { bar: \\"baz\\" });
 </script>
 "
 `;
