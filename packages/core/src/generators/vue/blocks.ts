@@ -322,7 +322,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
     return nodeMapper(node, options, scope);
   }
 
-  if (isChildren(node)) {
+  if (isChildren({ node })) {
     return `<slot/>`;
   }
 

@@ -89,6 +89,7 @@ const spreadProps = getRawFile('./data/spread/spread-props.raw');
 const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
 
 const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw');
+const renderContentExample = getRawFile('./data/render-content.raw');
 
 const path = 'test-path';
 
@@ -154,6 +155,7 @@ const BASIC_TESTS: Tests = {
   spreadAttrs,
   spreadNestedProps,
   spreadProps,
+  // renderContentExample,
 };
 
 const SLOTS_TESTS: Tests = {

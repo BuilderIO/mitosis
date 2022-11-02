@@ -35,7 +35,6 @@ export const onMount = (fn: () => any) => {
   return null as any;
 };
 export const onUpdate = (fn: () => any, deps?: any[]) => null as any;
-export const onCreate = (fn: () => any) => null as any;
 export const onInit = (fn: () => any) => null as any;
 export const onUnMount = (fn: () => any) => null as any;
 export const useDynamicTag = (fn: () => any) => null as any;

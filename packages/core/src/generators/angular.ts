@@ -124,7 +124,7 @@ export const blockToAngular = (
     return mappers[json.name](json, options, blockOptions);
   }
 
-  if (isChildren(json)) {
+  if (isChildren({ node: json })) {
     return `<ng-content></ng-content>`;
   }
 
