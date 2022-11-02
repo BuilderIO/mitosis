@@ -122,7 +122,7 @@ export const componentToQwik: TranspilerGenerator<ToQwikOptions> =
       return [{ content: sourceFile, type: 'component' }];
     } catch (e) {
       console.error(e);
-      return [{ content: (e as Error).stack || String(e), type: 'error' }];
+      return [{ content: (e as Error).stack || String(e), type: 'component' }];
     }
   };
 

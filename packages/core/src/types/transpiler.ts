@@ -10,7 +10,7 @@ export type GeneratorOutput<R = string> = {
   // content of output. Currently either a component string or a builder component JSON.
   content: R;
   // in the future, we will add more types like 'styles' for CSS Modules, etc.
-  type: 'css' | 'html' | 'js' | 'jsx' | 'component' | 'error';
+  type: 'component';
 };
 
 export type Transpiler<R = string> = (args: TranspilerArgs) => GeneratorOutput<R>[];
