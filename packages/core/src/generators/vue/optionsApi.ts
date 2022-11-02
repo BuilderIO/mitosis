@@ -4,16 +4,10 @@ import { getComponentsUsed } from '../../helpers/get-components-used';
 import { getCustomImports } from '../../helpers/get-custom-imports';
 import { getStateObjectStringFromComponent } from '../../helpers/get-state-object-string';
 import { checkIsDefined } from '../../helpers/nullable';
-import { GETTER } from '../../helpers/patterns';
 import { checkIsComponentImport } from '../../helpers/render-imports';
 import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { PropsDefinition, DefaultProps } from 'vue/types/options';
-import {
-  encodeQuotes,
-  getContextProvideString,
-  getOnUpdateHookName,
-  processBinding,
-} from './helpers';
+import { encodeQuotes, getContextProvideString, getOnUpdateHookName } from './helpers';
 import { ToVueOptions } from './types';
 
 function getContextInjectString(component: MitosisComponent, options: ToVueOptions) {
@@ -99,15 +93,12 @@ export function generateOptionsApiScript(
     data: false,
     getters: true,
     functions: false,
-    valueMapper: (code) =>
-      processBinding({ code: code.replace(GETTER, ''), options, json: component }),
   });
 
   let functionsString = getStateObjectStringFromComponent(component, {
     data: false,
     getters: false,
     functions: true,
-    valueMapper: (code) => processBinding({ code, options, json: component }),
   });
 
   const includeClassMapHelper = template.includes('_classStringToObject');

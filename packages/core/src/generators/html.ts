@@ -268,7 +268,7 @@ const blockToHtml = (
     return mappers[json.name](json, options, blockOptions);
   }
 
-  if (isChildren(json)) {
+  if (isChildren({ node: json })) {
     return `<slot></slot>`;
   }
 

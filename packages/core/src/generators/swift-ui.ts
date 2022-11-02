@@ -74,7 +74,7 @@ const blockToSwift = (json: MitosisNode, options: ToSwiftOptions): string => {
   // TODO: Add support for `{props.children}` bindings
   // Right now we return an empty string because the generated code
   // is very likely wrong.
-  if (isChildren(json)) {
+  if (isChildren({ node: json })) {
     return '/* `props.children` is not supported yet for SwiftUI */';
   }
 

@@ -1753,7 +1753,7 @@ const foo = inject(Context1);
 provide(Context1, {
   foo: \\"bar\\",
   content() {
-    return content;
+    return props.content;
   },
 });
 provide(Context2, { bar: \\"baz\\" });
@@ -2126,6 +2126,56 @@ exports[`Vue Javascript Test propsType 1`] = `
 <script setup>
 const props = defineProps([\\"name\\"]);
 </script>
+"
+`;
+
+exports[`Vue Javascript Test renderContentExample 1`] = `
+"<template>
+  <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
+    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+  </div>
+</template>
+
+<script setup>
+import { onMounted, provide, watch } from \\"vue\\";
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.vue\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+const props = defineProps([\\"content\\", \\"customComponents\\"]);
+
+provide(BuilderContext, {
+  get content() {
+    return 3;
+  },
+  get registeredComponents() {
+    return 4;
+  },
+});
+
+onMounted(() => {
+  sendComponentsToVisualEditor(props.customComponents);
+});
+
+watch(
+  () => [props.content],
+  ([content]) => {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+);
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: columns;
+}
+</style>
 "
 `;
 
@@ -4270,7 +4320,7 @@ const foo = inject(Context1);
 provide(Context1, {
   foo: \\"bar\\",
   content() {
-    return content;
+    return props.content;
   },
 });
 provide(Context2, { bar: \\"baz\\" });
@@ -4716,6 +4766,63 @@ type Person = {
 
 const props = defineProps<Person>();
 </script>
+"
+`;
+
+exports[`Vue Typescript Test renderContentExample 1`] = `
+"<template>
+  <div class=\\"div\\" @click=\\"trackClick(content.id)\\">
+    <render-blocks :blocks=\\"content.blocks\\"></render-blocks>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { onMounted, provide, watch } from \\"vue\\";
+type Props = {
+  customComponents: string[];
+  content: {
+    blocks: any[];
+    id: string;
+  };
+};
+
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.vue\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+const props = defineProps<Props>();
+
+provide(BuilderContext, {
+  get content() {
+    return 3;
+  },
+  get registeredComponents() {
+    return 4;
+  },
+});
+
+onMounted(() => {
+  sendComponentsToVisualEditor(props.customComponents);
+});
+
+watch(
+  () => [props.content],
+  ([content]) => {
+    dispatchNewContentToVisualEditor(props.content);
+  }
+);
+</script>
+
+<style scoped>
+.div {
+  display: flex;
+  flex-direction: columns;
+}
+</style>
 "
 `;
 

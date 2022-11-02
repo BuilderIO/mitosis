@@ -1,3 +1,4 @@
+import { prefixWithFunction } from '../../helpers/patterns';
 import { Plugin } from '../../modules/plugins';
 
 export const FUNCTION_HACK_PLUGIN: Plugin = () => ({
@@ -7,7 +8,7 @@ export const FUNCTION_HACK_PLUGIN: Plugin = () => ({
         const value = json.state[key]?.code;
         const type = json.state[key]?.type;
         if (typeof value === 'string' && type === 'method') {
-          const newValue = `function ${value}`;
+          const newValue = prefixWithFunction(value);
           json.state[key] = {
             code: newValue,
             type: 'method',
