@@ -43,7 +43,14 @@ export const collectMetadata = (
     if (types.isIdentifier(hook.callee)) {
       if (hookNames.has(hook.callee.name)) {
         try {
-          component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
+          if (component.meta[hook.callee.name]) {
+            component.meta[hook.callee.name] = {
+              ...(component.meta[hook.callee.name] as Object),
+              ...parseCodeJson(hook.arguments[0]),
+            };
+          } else {
+            component.meta[hook.callee.name] = parseCodeJson(hook.arguments[0]);
+          }
           return false;
         } catch (e) {
           console.error(`Error parsing metadata hook ${hook.callee.name}`);
