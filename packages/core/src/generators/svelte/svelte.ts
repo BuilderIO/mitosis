@@ -217,7 +217,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     }
     if (hasContext(component)) {
       svelteImports.push('getContext', 'setContext');
-      svelteStoreImports.push('writable');
     }
 
     str += dedent`
