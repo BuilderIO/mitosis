@@ -1,5 +1,4 @@
 import dedent from 'dedent';
-import * as fs from 'fs';
 import { componentToBuilder } from '../generators/builder';
 import { componentToMitosis } from '../generators/mitosis';
 import { componentToHtml } from '../generators/html';
@@ -8,20 +7,12 @@ import { parseJsx } from '../parsers/jsx';
 import { compileAwayBuilderComponents } from '../plugins/compile-away-builder-components';
 import { componentToReact, ToMitosisOptions } from '..';
 
-/**
- * Load a file using nodejs resolution as a string.
- */
-function fixture(path: string): string {
-  const localpath = require.resolve(path);
-  return fs.readFileSync(localpath, { encoding: 'utf-8' });
-}
-
-const stamped = fixture('./data/blocks/stamped-io.raw');
-const customCode = fixture('./data/blocks/custom-code.raw');
-const embed = fixture('./data/blocks/embed.raw');
-const image = fixture('./data/blocks/image.raw');
-const columns = fixture('./data/blocks/columns.raw');
-const lazyLoadSection = JSON.parse(fixture('./data/builder/lazy-load-section.json'));
+import stamped from './data/blocks/stamped-io.raw.tsx?raw';
+import customCode from './data/blocks/custom-code.raw.tsx?raw';
+import embed from './data/blocks/embed.raw.tsx?raw';
+import image from './data/blocks/image.raw.tsx?raw';
+import columns from './data/blocks/columns.raw.tsx?raw';
+import lazyLoadSection from './data/builder/lazy-load-section.json?raw';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
@@ -92,7 +83,7 @@ describe('Builder', () => {
   });
 
   test('Section', async () => {
-    const component = builderContentToMitosisComponent(lazyLoadSection);
+    const component = builderContentToMitosisComponent(JSON.parse(lazyLoadSection));
 
     const html = await componentToHtml({
       plugins: [compileAwayBuilderComponents()],

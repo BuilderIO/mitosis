@@ -13,6 +13,10 @@ useMetadata({
   },
 });
 
+useMetadata({
+  fun: 'more metadata',
+});
+
 export default function Button(props: ButtonProps) {
   return (
     <>

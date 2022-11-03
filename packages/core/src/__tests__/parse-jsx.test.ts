@@ -3,10 +3,10 @@ import { parseJsx } from '../parsers/jsx';
 import { SPEC } from './data/jsx-json.spec';
 import { runTestsForJsx } from './shared';
 
-const buttonWithMetadata = require('./data/blocks/button-with-metadata.raw');
-const basicPropsRaw = require('./data/basic-props.raw');
-const basicBooleanAttribute = require('./data/basic-boolean-attribute.raw');
-const basicPropsDestructureRaw = require('./data/basic-props-destructure.raw');
+import buttonWithMetadata from './data/blocks/button-with-metadata.raw.tsx?raw';
+import basicPropsRaw from './data/basic-props.raw.tsx?raw';
+import basicBooleanAttribute from './data/basic-boolean-attribute.raw.tsx?raw';
+import basicPropsDestructureRaw from './data/basic-props-destructure.raw.tsx?raw';
 
 describe('Parse JSX', () => {
   test('parseStateObject', () => {

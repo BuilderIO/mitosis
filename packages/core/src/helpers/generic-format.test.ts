@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import { format } from './generic-format';
 
 test('Can generic format sloppy Swift code', () => {

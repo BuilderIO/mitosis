@@ -1,8 +1,8 @@
 import { parseJsx } from '../parsers/jsx';
 
-const classRaw = require('./data/styles/class.raw');
-const className = require('./data/styles/className.raw');
-const classAndClassName = require('./data/styles/class-and-className.raw');
+import classRaw from './data/styles/class.raw.tsx?raw';
+import className from './data/styles/className.raw.tsx?raw';
+import classAndClassName from './data/styles/class-and-className.raw.tsx?raw';
 
 describe('Styles', () => {
   test('class and className are equivalent', () => {

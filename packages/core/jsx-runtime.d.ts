@@ -1006,6 +1006,7 @@ export declare namespace JSX {
 
   interface ContainerElementSVGAttributes<T>
     extends CoreSVGAttributes<T>,
+      ShapeElementSVGAttributes<T>,
       Pick<
         PresentationSVGAttributes,
         | 'clip-path'
@@ -1078,6 +1079,7 @@ export declare namespace JSX {
 
   interface ShapeElementSVGAttributes<T>
     extends CoreSVGAttributes<T>,
+      ShapeElementSVGAttributes<T>,
       Pick<
         PresentationSVGAttributes,
         | 'color'
