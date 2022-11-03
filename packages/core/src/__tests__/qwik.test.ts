@@ -14,14 +14,14 @@ import {
 } from '../symbols/symbol-processor';
 import { runTestsForTarget } from './shared';
 
-const todo = require('../../../../examples/todo/src/components/todo.lite');
-const todos = require('../../../../examples/todo/src/components/todos.lite');
+import todo from '../../../../examples/todo/src/components/todo.lite.tsx?raw';
+import todos from '../../../../examples/todo/src/components/todos.lite.tsx?raw';
 
 const debugFiles = true;
 
 const debugOutput = async (fileSet: FileSet) => {
   const testName = expect.getState().currentTestName;
-  const base = 'dist/test/' + testName.split(' ').join('/') + '/';
+  const base = 'dist/test/' + testName?.split(' ').join('/') + '/';
   if (debugFiles) {
     for (const key in fileSet) {
       const file = (fileSet as any)[key];
@@ -263,21 +263,20 @@ describe('qwik', () => {
 
   describe('src-generator', () => {
     let file: File;
-    beforeEach(
-      () =>
-        (file = new File(
-          'test.js',
-          {
-            isPretty: true,
-            isTypeScript: false,
-            isJSX: true,
-            isModule: true,
-            isBuilder: true,
-          },
-          '',
-          '',
-        )),
-    );
+    beforeEach(() => {
+      file = new File(
+        'test.js',
+        {
+          isPretty: true,
+          isTypeScript: false,
+          isJSX: true,
+          isModule: true,
+          isBuilder: true,
+        },
+        '',
+        '',
+      );
+    });
 
     test('should format code', () => {
       file.src.emit('const x=1');
