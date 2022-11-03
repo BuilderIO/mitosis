@@ -16,12 +16,12 @@ function fixture(path: string): string {
   return fs.readFileSync(localpath, { encoding: 'utf-8' });
 }
 
-const stamped = fixture('./data/blocks/stamped-io.raw');
-const customCode = fixture('./data/blocks/custom-code.raw');
-const embed = fixture('./data/blocks/embed.raw');
-const image = fixture('./data/blocks/image.raw');
-const columns = fixture('./data/blocks/columns.raw');
-const lazyLoadSection = JSON.parse(fixture('./data/builder/lazy-load-section.json'));
+import stamped from './data/blocks/stamped-io.raw.tsx?raw';
+import customCode from './data/blocks/custom-code.raw.tsx?raw';
+import embed from './data/blocks/embed.raw.tsx?raw';
+import image from './data/blocks/image.raw.tsx?raw';
+import columns from './data/blocks/columns.raw.tsx?raw';
+import lazyLoadSection from './data/builder/lazy-load-section.json';
 
 const mitosisOptions: ToMitosisOptions = {
   format: 'legacy',
