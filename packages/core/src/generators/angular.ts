@@ -25,15 +25,16 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { indent } from '../helpers/indent';
-import { isSlotProperty } from '../helpers/slots';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { pipe } from 'fp-ts/lib/function';
 
 import { MitosisComponent } from '..';
-import { mergeOptions } from 'src/helpers/merge-options';
-import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
+import { mergeOptions } from '../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -65,17 +66,17 @@ const mappers: {
       .join('\n')}</ng-container>`;
   },
   Slot: (json, options, blockOptions) => {
-    return `<ng-content ${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding === 'name') {
-          const selector = kebabCase(json.bindings.name?.code?.replace('props.slot', ''));
+    return `<ng-content ${Object.entries(json.bindings)
+      .map(([binding, value]) => {
+        if (value && binding === 'name') {
+          const selector = pipe(value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
-      .join('\n')}>${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding !== 'name') {
-          return `${json.bindings[binding]?.code}`;
+      .join('\n')}>${Object.entries(json.bindings)
+      .map(([binding, value]) => {
+        if (value && binding !== 'name') {
+          return value.code;
         }
       })
       .join('\n')}</ng-content>`;
@@ -116,10 +117,7 @@ export const blockToAngular = (
   options: ToAngularOptions = {},
   blockOptions: AngularBlockOptions = {},
 ): string => {
-  const contextVars = blockOptions?.contextVars || [];
-  const outputVars = blockOptions?.outputVars || [];
   const childComponents = blockOptions?.childComponents || [];
-  const domRefs = blockOptions?.domRefs || [];
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
@@ -133,18 +131,14 @@ export const blockToAngular = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (/props\.slot/.test(json.bindings._text?.code as string)) {
-    const selector = kebabCase(json.bindings._text?.code?.replace('props.slot', ''));
-    return `<ng-content select="[${selector}]"></ng-content>`;
-  }
+  const textCode = json.bindings._text?.code;
+  if (textCode) {
+    if (isSlotProperty(textCode)) {
+      const selector = pipe(textCode, stripSlotPrefix, kebabCase);
+      return `<ng-content select="[${selector}]"></ng-content>`;
+    }
 
-  if (json.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
-      // the context is the class
-      contextVars: [],
-      outputVars,
-      domRefs,
-    })}}}`;
+    return `{{${textCode}}}`;
   }
 
   let str = '';
@@ -153,22 +147,13 @@ export const blockToAngular = (
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${stripStateAndPropsRefs(
-      json.bindings.each?.code,
-      {
-        contextVars,
-        outputVars,
-        domRefs,
-      },
-    )}${indexName ? `; let ${indexName} = index` : ''}">`;
+    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
+      indexName ? `; let ${indexName} = index` : ''
+    }">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
-      contextVars,
-      outputVars,
-      domRefs,
-    })}">`;
+    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
@@ -201,11 +186,6 @@ export const blockToAngular = (
 
       const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(code as string, {
-        contextVars,
-        outputVars,
-        domRefs,
-      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -219,23 +199,23 @@ export const blockToAngular = (
           'g',
         );
         const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(useValue.replace(regexp, replacer));
+        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'class') {
-        str += ` [class]="${useValue}" `;
+        str += ` [class]="${code}" `;
       } else if (key === 'ref') {
-        str += ` #${useValue} `;
+        str += ` #${code} `;
       } else if (isSlotProperty(key)) {
         const lowercaseKey =
           key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
-        needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
+        needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
       } else if (isValidHtmlTag || key.includes('-')) {
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        str += ` [attr.${key}]="${useValue}" `;
+        str += ` [attr.${key}]="${code}" `;
       } else {
-        str += `[${key}]="${useValue}" `;
+        str += `[${key}]="${code}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -276,11 +256,10 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     options.plugins = [
       ...(options.plugins || []),
       CODE_PROCESSOR_PLUGIN((codeType) => {
+        const domRefs = getRefs(json);
         switch (codeType) {
           case 'hooks':
             return (code) => {
-              const domRefs = getRefs(json);
-
               return stripStateAndPropsRefs(code, {
                 replaceWith: 'this.',
                 contextVars,
@@ -290,6 +269,13 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               });
             };
           case 'bindings':
+            return (code) => {
+              return stripStateAndPropsRefs(code, {
+                contextVars: [],
+                outputVars,
+                domRefs: [], // the template doesn't need the this keyword.
+              }).replace(/"/g, '&quot;');
+            };
           case 'hooks-deps':
           case 'state':
           case 'properties':
