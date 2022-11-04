@@ -367,8 +367,8 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
 
   // spreads
 
-  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map(
-    (value) => value?.code,
+  let spreads = filter(node.bindings, (binding) => binding?.type === 'spread').map((value) =>
+    value?.code === 'props' ? '$props' : value?.code,
   );
 
   if (spreads?.length) {
@@ -376,7 +376,7 @@ export const blockToVue: BlockRenderer = (node, options, scope) => {
       let spreadsString = `{...${spreads.join(', ...')}}`;
       str += ` v-bind="${encodeQuotes(spreadsString)}"`;
     } else {
-      str += ` v-bind="$${encodeQuotes(spreads.join(''))}"`;
+      str += ` v-bind="${encodeQuotes(spreads.join(''))}"`;
     }
   }
 
