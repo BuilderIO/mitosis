@@ -30,6 +30,7 @@ const nestedStyles = getRawFile('./data/nested-styles.raw');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw',
 );
+const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw');
 
 const propsType = getRawFile('./data/types/component-props-type.raw');
 const propsInterface = getRawFile('./data/types/component-props-interface.raw');
@@ -158,6 +159,7 @@ const BASIC_TESTS: Tests = {
   spreadNestedProps,
   spreadProps,
   renderContentExample,
+  arrowFunctionInUseStore,
 };
 
 const SLOTS_TESTS: Tests = {
