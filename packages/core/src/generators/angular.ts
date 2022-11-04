@@ -206,8 +206,7 @@ export const blockToAngular = (
       } else if (key === 'ref') {
         str += ` #${code} `;
       } else if (isSlotProperty(key)) {
-        const lowercaseKey =
-          key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
+        const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
         needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
         str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
