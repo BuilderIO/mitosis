@@ -12,9 +12,9 @@
     "npm": "99999999.9.9"
   },
   "scripts": {
-    "build:core": "yarn workspace @builder.io/mitosis run build",
-    "build:fiddle": "yarn workspace @builder.io/mitosis-fiddle run build",
-    "ci:build": "yarn workspaces foreach -pt --exclude \"*/e2e*\" --exclude @builder.io/mitosis-fiddle --verbose run build",
+    "build:core": "yarn turbo build --filter mitosis",
+    "build:fiddle": "yarn turbo build --filter mitosis-fiddle",
+    "ci:build": "yarn turbo build --filter='!*e2e*' --filter='!*fiddle'",
     "ci:build:core": "yarn run build:core",
     "ci:build:fiddle": "yarn run build:fiddle",
     "ci:lint": "yarn run lint:prettier && yarn run lint:eslint",
@@ -51,6 +51,7 @@
     "execa": "6.1.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.3.2",
+    "turbo": "^1.6.3",
     "typescript": "^4.8.4"
   },
   "packageManager": "yarn@3.2.0",
