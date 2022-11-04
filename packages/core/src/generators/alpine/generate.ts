@@ -20,6 +20,7 @@ import { getRefs } from '../../helpers/get-refs';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { hasRootUpdateHook, renderUpdateHooks } from './render-update-hooks';
 import { renderMountHook } from './render-mount-hook';
+import { babelTransformCode } from '../../helpers/babel-transform';
 
 export interface ToAlpineOptions extends BaseTranspilerOptions {
   /**
@@ -208,9 +209,9 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
 
       if (!options.inlineState) {
         str += `<script>
-          document.addEventListener('alpine:init', () => {
+          ${babelTransformCode(`document.addEventListener('alpine:init', () => {
               Alpine.data('${camelCase(json.name)}', () => (${stateObjectString}))
-          })
+          })`)}
         </script>`
       }
 
