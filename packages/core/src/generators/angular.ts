@@ -32,6 +32,8 @@ import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
 
 import { MitosisComponent } from '..';
+import { mergeOptions } from 'src/helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from 'src/helpers/plugins/process-code';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -262,10 +264,40 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       preserveFileExtensions: false,
     };
 
-    const options = { ...DEFAULT_OPTIONS, ...userOptions };
-
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
+
+    const contextVars = Object.keys(json?.context?.get || {});
+    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
+    const stateVars = Object.keys(json?.state || {});
+
+    const options = mergeOptions({ ...DEFAULT_OPTIONS, ...userOptions });
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        switch (codeType) {
+          case 'hooks':
+            return (code) => {
+              const domRefs = getRefs(json);
+
+              return stripStateAndPropsRefs(code, {
+                replaceWith: 'this.',
+                contextVars,
+                outputVars,
+                domRefs: Array.from(domRefs),
+                stateVars,
+              });
+            };
+          case 'bindings':
+          case 'hooks-deps':
+          case 'state':
+          case 'properties':
+            return (x) => x;
+        }
+      }),
+    ];
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -289,8 +321,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       .filter((key) => localExports[key].usedInLocal)
       .map((key) => `${key} = ${key};`);
 
-    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
-    const contextVars = Object.keys(json?.context?.get || {});
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
       if (options?.experimental?.injectables) {
@@ -310,7 +340,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
     props.delete('children');
 
-    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
@@ -324,12 +353,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     const hasOnMount = Boolean(json.hooks?.onMount);
-
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
-
-    const stateVars = Object.keys(json?.state || {});
-
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
       return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
     });
@@ -471,11 +496,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               !json.hooks?.onInit
                 ? ''
                 : `
-              ${stripStateAndPropsRefs(json.hooks.onInit?.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-              })}
+              ${json.hooks.onInit?.code}
               `
             }
           }
@@ -490,13 +511,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 !json.hooks?.onMount
                   ? ''
                   : `
-                ${stripStateAndPropsRefs(json.hooks.onMount?.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                })}
+                ${json.hooks.onMount?.code}
                 `
               }
             }`
@@ -507,13 +522,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           ? ''
           : `ngAfterContentChecked() {
               ${json.hooks.onUpdate.reduce((code, hook) => {
-                code += stripStateAndPropsRefs(hook.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                });
+                code += hook.code;
                 return code + '\n';
               }, '')}
             }`
@@ -523,13 +532,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !json.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(json.hooks.onUnMount.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-                domRefs: Array.from(domRefs),
-                stateVars,
-              })}
+              ${json.hooks.onUnMount.code}
             }`
       }
 
