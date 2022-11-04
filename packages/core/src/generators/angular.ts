@@ -47,25 +47,18 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
 }
 
 interface AngularBlockOptions {
-  contextVars?: string[];
-  outputVars?: string[];
   childComponents?: string[];
-  domRefs?: string[];
 }
 
 const mappers: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToAngularOptions,
-    blockOptions?: AngularBlockOptions,
-  ) => string;
+  [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
 } = {
-  Fragment: (json, options, blockOptions) => {
+  Fragment: (json, options) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options))
       .join('\n')}</ng-container>`;
   },
-  Slot: (json, options, blockOptions) => {
+  Slot: (json, options) => {
     return `<ng-content ${Object.entries(json.bindings)
       .map(([binding, value]) => {
         if (value && binding === 'name') {
@@ -121,7 +114,7 @@ export const blockToAngular = (
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, blockOptions);
+    return mappers[json.name](json, options);
   }
 
   if (isChildren({ node: json })) {
@@ -357,15 +350,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
-    const blockOptions = {
-      contextVars,
-      outputVars,
-      domRefs: [], // the template doesn't need the this keyword.
-      childComponents,
-    };
-
     let template = json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options, { childComponents }))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
