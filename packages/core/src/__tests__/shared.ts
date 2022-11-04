@@ -2,7 +2,9 @@ import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler'
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
 
-const getRawFile = (path: string): string => require(path);
+const getRawFile = (path: string) => import(`${path}.tsx?raw`).then((x) => x.default as string);
+
+type RawFile = ReturnType<typeof getRawFile>;
 
 const basicForShow = getRawFile('./data/basic-for-show.raw');
 const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw');
@@ -10,11 +12,11 @@ const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw');
 const basicContext = getRawFile('./data/basic-context.raw');
 const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw');
 const basicOutputs = getRawFile('./data/basic-outputs.raw');
-const subComponent = getRawFile('./data/sub-component.lite.jsx');
-const componentWithContext = require('./data/context/component-with-context.lite');
+const subComponent = getRawFile('./data/sub-component.raw');
+const componentWithContext = getRawFile('./data/context/component-with-context.raw');
 
 const basic = getRawFile('./data/basic.raw');
-const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
+const basicAttribute = getRawFile('./data/basic-attribute.raw');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw');
 const basicChildComponent = getRawFile('./data/basic-child-component.raw');
 const basicFor = getRawFile('./data/basic-for.raw');
@@ -24,7 +26,7 @@ const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw
 const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw');
 const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw');
 const propsDestructure = getRawFile('./data/basic-props-destructure.raw');
-const nestedStyles = getRawFile('./data/nested-styles.lite');
+const nestedStyles = getRawFile('./data/nested-styles.raw');
 const preserveExportOrLocalStatement = getRawFile(
   './data/basic-preserve-export-or-local-statement.raw',
 );
@@ -93,7 +95,7 @@ const renderContentExample = getRawFile('./data/render-content.raw');
 
 const path = 'test-path';
 
-type Tests = { [index: string]: string };
+type Tests = { [index: string]: RawFile };
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
@@ -388,8 +390,8 @@ const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
 };
 
 export const runTestsForJsx = () => {
-  test('Remove Internal mitosis package', () => {
-    const component = parseJsx(basicMitosis, {
+  test('Remove Internal mitosis package', async () => {
+    const component = parseJsx(await basicMitosis, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
     });
     expect(component).toMatchSnapshot();
@@ -397,8 +399,8 @@ export const runTestsForJsx = () => {
 
   JSX_TESTS.forEach((tests) => {
     Object.keys(tests).forEach((key) => {
-      test(key, () => {
-        const component = parseJsx(tests[key]);
+      test(key, async () => {
+        const component = parseJsx(await tests[key]);
         expect(component).toMatchSnapshot();
       });
     });
@@ -416,8 +418,8 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
 }) => {
   const testsArray = TESTS_FOR_TARGET[target];
 
-  test('Remove Internal mitosis package', () => {
-    const component = parseJsx(basicMitosis, {
+  test('Remove Internal mitosis package', async () => {
+    const component = parseJsx(await basicMitosis, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
     });
     const output = generator(options)({ component, path });
@@ -434,8 +436,8 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
       describe(testName, () => {
         testsArray.forEach((tests) => {
           Object.keys(tests).forEach((key) => {
-            test(key, () => {
-              const component = parseJsx(tests[key], { typescript: options.typescript });
+            test(key, async () => {
+              const component = parseJsx(await tests[key], { typescript: options.typescript });
               const getOutput = () => generator(options)({ component, path });
               try {
                 expect(getOutput()).toMatchSnapshot();
