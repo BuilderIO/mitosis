@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`qwik Accordion 1`] = `
-Object {
+exports[`qwik > Accordion 1`] = `
+{
   "high.jsx": "",
   "low.jsx": "import {
   Fragment,
@@ -252,8 +252,8 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik For 1`] = `
-Object {
+exports[`qwik > For 1`] = `
+{
   "high.jsx": "",
   "low.jsx": "import {
   Fragment,
@@ -318,8 +318,8 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik Image 1`] = `
-Object {
+exports[`qwik > Image 1`] = `
+{
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -392,52 +392,45 @@ export const MyComponent = componentQrl(
   qrl(\\"./med.js\\", \\"MyComponentOnMount\\", [])
 );
 export const Image = function Image(props) {
-  var _a;
-  var jsx = props.children || [];
-  var image = props.image;
+  let jsx = props.children || [];
+  let image = props.image;
   if (image) {
-    var isBuilderIoImage =
+    const isBuilderIoImage =
       !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
-    var isPixel =
-      (_a = props.builderBlock) === null || _a === void 0
-        ? void 0
-        : _a.id.startsWith(\\"builder-pixel-\\");
-    var imgProps = {
+    const isPixel = props.builderBlock?.id.startsWith(\\"builder-pixel-\\");
+    const imgProps = {
       src: props.image,
       style:
-        \\"object-fit:\\"
-          .concat(props.backgroundSize || \\"cover\\", \\";object-position:\\")
-          .concat(props.backgroundPosition || \\"center\\", \\";\\") +
+        \`object-fit:\${props.backgroundSize || \\"cover\\"};object-position:\${
+          props.backgroundPosition || \\"center\\"
+        };\` +
         (props.aspectRatio
           ? \\"position:absolute;height:100%;width:100%;top:0;left:0\\"
           : \\"\\"),
       sizes: props.sizes,
       alt: props.altText,
-      role: !props.altText ? \\"presentation\\" : undefined,
+      role: !props.altText ? \\"presentation\\" : void 0,
       loading: isPixel ? \\"eager\\" : \\"lazy\\",
-      srcset: undefined,
+      srcset: void 0,
     };
-    var qwikBugWorkaround = function (imgProps) {
-      return Object.keys(imgProps).forEach(function (k) {
-        return imgProps[k] === undefined && delete imgProps[k];
-      });
-    };
+    const qwikBugWorkaround = (imgProps2) =>
+      Object.keys(imgProps2).forEach(
+        (k) => imgProps2[k] === void 0 && delete imgProps2[k]
+      );
     qwikBugWorkaround(imgProps);
     if (isBuilderIoImage) {
-      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
-      var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+      const webpImage = updateQueryParam(image, \\"format\\", \\"webp\\");
+      const srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
-        .map(function (size) {
-          return (
-            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
-          );
+        .map((size) => {
+          return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
         .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
         h(\\"picture\\", {}, [
-          h(\\"source\\", { type: \\"image/webp\\", srcset: srcset }),
+          h(\\"source\\", { type: \\"image/webp\\", srcset }),
           h(\\"img\\", imgProps, jsx),
         ]),
       ];
@@ -448,28 +441,24 @@ export const Image = function Image(props) {
       props.aspectRatio &&
       !(props.fitContent && props.children && props.children.length)
     ) {
-      var sizingDiv = h(\\"div\\", {
+      const sizingDiv = h(\\"div\\", {
         class: \\"builder-image-sizer\\",
-        style: \\"width:100%;padding-top:\\".concat(
-          (props.aspectRatio || 1) * 100,
-          \\"%;pointer-events:none;font-size:0\\"
-        ),
+        style: \`width:100%;padding-top:\${
+          (props.aspectRatio || 1) * 100
+        }%;pointer-events:none;font-size:0\`,
       });
       jsx.push(sizingDiv);
     }
   }
-  var children = props.children ? [jsx].concat(props.children) : [jsx];
+  const children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? \\"a\\" : \\"div\\",
     __passThroughProps__({ href: props.href, class: props.class }, props),
     children
   );
-  function updateQueryParam(uri, key, value) {
-    if (uri === void 0) {
-      uri = \\"\\";
-    }
-    var re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
-    var separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
+  function updateQueryParam(uri = \\"\\", key, value) {
+    const re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
+    const separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
     if (uri.match(re)) {
       return uri.replace(
         re,
@@ -483,7 +472,7 @@ export const __passThroughProps__ = function __passThroughProps__(
   dstProps,
   srcProps
 ) {
-  for (var key in srcProps) {
+  for (const key in srcProps) {
     if (
       Object.prototype.hasOwnProperty.call(srcProps, key) &&
       ((key.startsWith(\\"on\\") && key.endsWith(\\"$\\")) || key == \\"style\\")
@@ -497,8 +486,8 @@ export const __passThroughProps__ = function __passThroughProps__(
 }
 `;
 
-exports[`qwik Image.slow 1`] = `
-Object {
+exports[`qwik > Image.slow 1`] = `
+{
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -571,52 +560,45 @@ export const MyComponent = componentQrl(
   qrl(\\"./med.js\\", \\"MyComponentOnMount\\", [])
 );
 export const Image = function Image(props) {
-  var _a;
-  var jsx = props.children || [];
-  var image = props.image;
+  let jsx = props.children || [];
+  let image = props.image;
   if (image) {
-    var isBuilderIoImage =
+    const isBuilderIoImage =
       !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
-    var isPixel =
-      (_a = props.builderBlock) === null || _a === void 0
-        ? void 0
-        : _a.id.startsWith(\\"builder-pixel-\\");
-    var imgProps = {
+    const isPixel = props.builderBlock?.id.startsWith(\\"builder-pixel-\\");
+    const imgProps = {
       src: props.image,
       style:
-        \\"object-fit:\\"
-          .concat(props.backgroundSize || \\"cover\\", \\";object-position:\\")
-          .concat(props.backgroundPosition || \\"center\\", \\";\\") +
+        \`object-fit:\${props.backgroundSize || \\"cover\\"};object-position:\${
+          props.backgroundPosition || \\"center\\"
+        };\` +
         (props.aspectRatio
           ? \\"position:absolute;height:100%;width:100%;top:0;left:0\\"
           : \\"\\"),
       sizes: props.sizes,
       alt: props.altText,
-      role: !props.altText ? \\"presentation\\" : undefined,
+      role: !props.altText ? \\"presentation\\" : void 0,
       loading: isPixel ? \\"eager\\" : \\"lazy\\",
-      srcset: undefined,
+      srcset: void 0,
     };
-    var qwikBugWorkaround = function (imgProps) {
-      return Object.keys(imgProps).forEach(function (k) {
-        return imgProps[k] === undefined && delete imgProps[k];
-      });
-    };
+    const qwikBugWorkaround = (imgProps2) =>
+      Object.keys(imgProps2).forEach(
+        (k) => imgProps2[k] === void 0 && delete imgProps2[k]
+      );
     qwikBugWorkaround(imgProps);
     if (isBuilderIoImage) {
-      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
-      var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+      const webpImage = updateQueryParam(image, \\"format\\", \\"webp\\");
+      const srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
-        .map(function (size) {
-          return (
-            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
-          );
+        .map((size) => {
+          return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
         .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
         h(\\"picture\\", {}, [
-          h(\\"source\\", { type: \\"image/webp\\", srcset: srcset }),
+          h(\\"source\\", { type: \\"image/webp\\", srcset }),
           h(\\"img\\", imgProps, jsx),
         ]),
       ];
@@ -627,28 +609,24 @@ export const Image = function Image(props) {
       props.aspectRatio &&
       !(props.fitContent && props.children && props.children.length)
     ) {
-      var sizingDiv = h(\\"div\\", {
+      const sizingDiv = h(\\"div\\", {
         class: \\"builder-image-sizer\\",
-        style: \\"width:100%;padding-top:\\".concat(
-          (props.aspectRatio || 1) * 100,
-          \\"%;pointer-events:none;font-size:0\\"
-        ),
+        style: \`width:100%;padding-top:\${
+          (props.aspectRatio || 1) * 100
+        }%;pointer-events:none;font-size:0\`,
       });
       jsx.push(sizingDiv);
     }
   }
-  var children = props.children ? [jsx].concat(props.children) : [jsx];
+  const children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? \\"a\\" : \\"div\\",
     __passThroughProps__({ href: props.href, class: props.class }, props),
     children
   );
-  function updateQueryParam(uri, key, value) {
-    if (uri === void 0) {
-      uri = \\"\\";
-    }
-    var re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
-    var separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
+  function updateQueryParam(uri = \\"\\", key, value) {
+    const re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
+    const separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
     if (uri.match(re)) {
       return uri.replace(
         re,
@@ -662,7 +640,7 @@ export const __passThroughProps__ = function __passThroughProps__(
   dstProps,
   srcProps
 ) {
-  for (var key in srcProps) {
+  for (const key in srcProps) {
     if (
       Object.prototype.hasOwnProperty.call(srcProps, key) &&
       ((key.startsWith(\\"on\\") && key.endsWith(\\"$\\")) || key == \\"style\\")
@@ -676,7 +654,7 @@ export const __passThroughProps__ = function __passThroughProps__(
 }
 `;
 
-exports[`qwik Javascript Test Basic 1`] = `
+exports[`qwik > Javascript Test > Basic 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -711,7 +689,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test Basic 2`] = `
+exports[`qwik > Javascript Test > Basic 2`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -740,7 +718,7 @@ export default MyBasicForShowComponent;
 "
 `;
 
-exports[`qwik Javascript Test Basic Context 1`] = `
+exports[`qwik > Javascript Test > Basic Context 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -750,6 +728,7 @@ import {
   useClientEffect$,
   useContext,
   useContextProvider,
+  useMount$,
   useStore,
 } from \\"@builder.io/qwik\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -765,6 +744,10 @@ export const MyBasicComponent = component$((props) => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
+  useMount$(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  });
   return (
     <div>
       {myService.method(\\"hello\\") + state.name}
@@ -777,7 +760,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test Basic OnMount Update 1`] = `
+exports[`qwik > Javascript Test > Basic OnMount Update 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -785,6 +768,7 @@ import {
   component$,
   h,
   useClientEffect$,
+  useMount$,
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOnMountUpdateComponent = component$((props) => {
@@ -792,13 +776,16 @@ export const MyBasicOnMountUpdateComponent = component$((props) => {
   useClientEffect$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
+  useMount$(() => {
+    state.name = \\"PatrickJS onInit\\" + props.hi;
+  });
   return <div>Hello {state.name}</div>;
 });
 export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`qwik Javascript Test Basic Outputs 1`] = `
+exports[`qwik > Javascript Test > Basic Outputs 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -820,7 +807,7 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`qwik Javascript Test Basic Outputs Meta 1`] = `
+exports[`qwik > Javascript Test > Basic Outputs Meta 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -842,7 +829,7 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`qwik Javascript Test BasicAttribute 1`] = `
+exports[`qwik > Javascript Test > BasicAttribute 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -855,7 +842,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Javascript Test BasicBooleanAttribute 1`] = `
+exports[`qwik > Javascript Test > BasicBooleanAttribute 1`] = `
 "// GENERATED BY MITOSIS
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
@@ -875,7 +862,7 @@ export default MyBooleanAttribute;
 "
 `;
 
-exports[`qwik Javascript Test BasicChildComponent 1`] = `
+exports[`qwik > Javascript Test > BasicChildComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -899,7 +886,7 @@ export default MyBasicChildComponent;
 "
 `;
 
-exports[`qwik Javascript Test BasicFor 1`] = `
+exports[`qwik > Javascript Test > BasicFor 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -937,7 +924,7 @@ export default MyBasicForComponent;
 "
 `;
 
-exports[`qwik Javascript Test BasicRef 1`] = `
+exports[`qwik > Javascript Test > BasicRef 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -997,7 +984,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Javascript Test BasicRefAssignment 1`] = `
+exports[`qwik > Javascript Test > BasicRefAssignment 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
@@ -1024,7 +1011,7 @@ export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`qwik Javascript Test BasicRefPrevious 1`] = `
+exports[`qwik > Javascript Test > BasicRefPrevious 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -1067,7 +1054,7 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`qwik Javascript Test Button 1`] = `
+exports[`qwik > Javascript Test > Button 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -1095,7 +1082,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Javascript Test Columns 1`] = `
+exports[`qwik > Javascript Test > Columns 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -1147,7 +1134,7 @@ flex-grow: 1; }\`;
 "
 `;
 
-exports[`qwik Javascript Test ContentSlotHtml 1`] = `
+exports[`qwik > Javascript Test > ContentSlotHtml 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Slot } from \\"./med.js\\";
@@ -1169,7 +1156,7 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`qwik Javascript Test ContentSlotJSX 1`] = `
+exports[`qwik > Javascript Test > ContentSlotJSX 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -1190,7 +1177,7 @@ export default ContentSlotJsxCode;
 "
 `;
 
-exports[`qwik Javascript Test CustomCode 1`] = `
+exports[`qwik > Javascript Test > CustomCode 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -1266,7 +1253,7 @@ export default CustomCode;
 "
 `;
 
-exports[`qwik Javascript Test Embed 1`] = `
+exports[`qwik > Javascript Test > Embed 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -1342,7 +1329,7 @@ export default CustomCode;
 "
 `;
 
-exports[`qwik Javascript Test Form 1`] = `
+exports[`qwik > Javascript Test > Form 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -1642,7 +1629,7 @@ text-align: center; }\`;
 "
 `;
 
-exports[`qwik Javascript Test Image 1`] = `
+exports[`qwik > Javascript Test > Image 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -1742,7 +1729,7 @@ object-position: center; }\`;
 "
 `;
 
-exports[`qwik Javascript Test Image State 1`] = `
+exports[`qwik > Javascript Test > Image State 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -1767,7 +1754,7 @@ export default ImgStateComponent;
 "
 `;
 
-exports[`qwik Javascript Test Img 1`] = `
+exports[`qwik > Javascript Test > Img 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -1790,7 +1777,7 @@ export default ImgComponent;
 "
 `;
 
-exports[`qwik Javascript Test Input 1`] = `
+exports[`qwik > Javascript Test > Input 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -1817,7 +1804,7 @@ export default FormInputComponent;
 "
 `;
 
-exports[`qwik Javascript Test RawText 1`] = `
+exports[`qwik > Javascript Test > RawText 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -1833,7 +1820,7 @@ export default RawText;
 "
 `;
 
-exports[`qwik Javascript Test Section 1`] = `
+exports[`qwik > Javascript Test > Section 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -1857,7 +1844,7 @@ export default SectionComponent;
 "
 `;
 
-exports[`qwik Javascript Test Section 2`] = `
+exports[`qwik > Javascript Test > Section 2`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -1886,7 +1873,7 @@ export default SectionStateComponent;
 "
 `;
 
-exports[`qwik Javascript Test Select 1`] = `
+exports[`qwik > Javascript Test > Select 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -1918,7 +1905,7 @@ export default SelectComponent;
 "
 `;
 
-exports[`qwik Javascript Test SlotHtml 1`] = `
+exports[`qwik > Javascript Test > SlotHtml 1`] = `
 "// GENERATED BY MITOSIS
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -1941,7 +1928,7 @@ export default SlotCode;
 "
 `;
 
-exports[`qwik Javascript Test SlotJsx 1`] = `
+exports[`qwik > Javascript Test > SlotJsx 1`] = `
 "// GENERATED BY MITOSIS
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -1961,7 +1948,7 @@ export default SlotCode;
 "
 `;
 
-exports[`qwik Javascript Test Stamped.io 1`] = `
+exports[`qwik > Javascript Test > Stamped.io 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2054,7 +2041,7 @@ margin-right: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test Submit 1`] = `
+exports[`qwik > Javascript Test > Submit 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2069,7 +2056,7 @@ export default SubmitButton;
 "
 `;
 
-exports[`qwik Javascript Test Text 1`] = `
+exports[`qwik > Javascript Test > Text 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -2095,7 +2082,7 @@ export default Text;
 "
 `;
 
-exports[`qwik Javascript Test Textarea 1`] = `
+exports[`qwik > Javascript Test > Textarea 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2114,7 +2101,7 @@ export default Textarea;
 "
 `;
 
-exports[`qwik Javascript Test Video 1`] = `
+exports[`qwik > Javascript Test > Video 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2146,7 +2133,7 @@ export default Video;
 "
 `;
 
-exports[`qwik Javascript Test basicForwardRef 1`] = `
+exports[`qwik > Javascript Test > basicForwardRef 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2176,7 +2163,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Javascript Test basicForwardRefMetadata 1`] = `
+exports[`qwik > Javascript Test > basicForwardRefMetadata 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2206,7 +2193,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Javascript Test class + ClassName + css 1`] = `
+exports[`qwik > Javascript Test > class + ClassName + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2224,7 +2211,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test class + css 1`] = `
+exports[`qwik > Javascript Test > class + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2242,7 +2229,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test className + css 1`] = `
+exports[`qwik > Javascript Test > className + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2260,7 +2247,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test className 1`] = `
+exports[`qwik > Javascript Test > className 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -2277,7 +2264,7 @@ export default ClassNameCode;
 "
 `;
 
-exports[`qwik Javascript Test classState 1`] = `
+exports[`qwik > Javascript Test > classState 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2308,7 +2295,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Javascript Test defaultProps 1`] = `
+exports[`qwik > Javascript Test > defaultProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2336,7 +2323,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Javascript Test defaultPropsOutsideComponent 1`] = `
+exports[`qwik > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2364,7 +2351,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Javascript Test defaultValsWithTypes 1`] = `
+exports[`qwik > Javascript Test > defaultValsWithTypes 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2378,7 +2365,7 @@ export default ComponentWithTypes;
 "
 `;
 
-exports[`qwik Javascript Test import types 1`] = `
+exports[`qwik > Javascript Test > import types 1`] = `
 "// GENERATED BY MITOSIS
 
 import RenderBlock from \\"./builder-render-block.raw\\";
@@ -2411,7 +2398,7 @@ export default RenderContent;
 "
 `;
 
-exports[`qwik Javascript Test multipleOnUpdate 1`] = `
+exports[`qwik > Javascript Test > multipleOnUpdate 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useWatch$ } from \\"@builder.io/qwik\\";
@@ -2428,7 +2415,7 @@ export default MultipleOnUpdate;
 "
 `;
 
-exports[`qwik Javascript Test multipleOnUpdateWithDeps 1`] = `
+exports[`qwik > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
@@ -2458,7 +2445,7 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`qwik Javascript Test multipleSpreads 1`] = `
+exports[`qwik > Javascript Test > multipleSpreads 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -2470,7 +2457,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test nestedShow 1`] = `
+exports[`qwik > Javascript Test > nestedShow 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2493,7 +2480,7 @@ export default NestedShow;
 "
 `;
 
-exports[`qwik Javascript Test nestedStyles 1`] = `
+exports[`qwik > Javascript Test > nestedStyles 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2511,13 +2498,22 @@ display: grid; }\`;
 "
 `;
 
-exports[`qwik Javascript Test onInit & onMount 1`] = `
+exports[`qwik > Javascript Test > onInit & onMount 1`] = `
 "// GENERATED BY MITOSIS
 
-import { Fragment, component$, h, useClientEffect$ } from \\"@builder.io/qwik\\";
+import {
+  Fragment,
+  component$,
+  h,
+  useClientEffect$,
+  useMount$,
+} from \\"@builder.io/qwik\\";
 export const OnInit = component$((props) => {
   useClientEffect$(() => {
     console.log(\\"onMount\\");
+  });
+  useMount$(() => {
+    console.log(\\"onInit\\");
   });
   return <div></div>;
 });
@@ -2525,22 +2521,26 @@ export default OnInit;
 "
 `;
 
-exports[`qwik Javascript Test onInit 1`] = `
+exports[`qwik > Javascript Test > onInit 1`] = `
 "// GENERATED BY MITOSIS
 
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
 export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 export const OnInit = component$((props) => {
   const state = useStore({ name: \\"\\" });
+  useMount$(() => {
+    state.name = defaultValues.name || props.name;
+    console.log(\\"set defaults with props\\");
+  });
   return <div>Default name defined by parent {state.name}</div>;
 });
 export default OnInit;
 "
 `;
 
-exports[`qwik Javascript Test onMount 1`] = `
+exports[`qwik > Javascript Test > onMount 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2563,7 +2563,7 @@ export default Comp;
 "
 `;
 
-exports[`qwik Javascript Test onUpdate 1`] = `
+exports[`qwik > Javascript Test > onUpdate 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useWatch$ } from \\"@builder.io/qwik\\";
@@ -2577,7 +2577,7 @@ export default OnUpdate;
 "
 `;
 
-exports[`qwik Javascript Test onUpdateWithDeps 1`] = `
+exports[`qwik > Javascript Test > onUpdateWithDeps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
@@ -2595,7 +2595,7 @@ export default OnUpdateWithDeps;
 "
 `;
 
-exports[`qwik Javascript Test preserveExportOrLocalStatement 1`] = `
+exports[`qwik > Javascript Test > preserveExportOrLocalStatement 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2611,7 +2611,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test preserveTyping 1`] = `
+exports[`qwik > Javascript Test > preserveTyping 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2624,7 +2624,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test propsDestructure 1`] = `
+exports[`qwik > Javascript Test > propsDestructure 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -2642,7 +2642,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test propsInterface 1`] = `
+exports[`qwik > Javascript Test > propsInterface 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2655,7 +2655,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test propsType 1`] = `
+exports[`qwik > Javascript Test > propsType 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2668,7 +2668,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test renderContentExample 1`] = `
+exports[`qwik > Javascript Test > renderContentExample 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -2724,7 +2724,7 @@ flex-direction: columns; }\`;
 "
 `;
 
-exports[`qwik Javascript Test rootFragmentMultiNode 1`] = `
+exports[`qwik > Javascript Test > rootFragmentMultiNode 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2752,7 +2752,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Javascript Test rootShow 1`] = `
+exports[`qwik > Javascript Test > rootShow 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2763,7 +2763,7 @@ export default RenderStyles;
 "
 `;
 
-exports[`qwik Javascript Test self-referencing component 1`] = `
+exports[`qwik > Javascript Test > self-referencing component 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2781,7 +2781,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Javascript Test self-referencing component with children 1`] = `
+exports[`qwik > Javascript Test > self-referencing component with children 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -2802,7 +2802,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Javascript Test showWithFor 1`] = `
+exports[`qwik > Javascript Test > showWithFor 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2823,7 +2823,7 @@ export default NestedShow;
 "
 `;
 
-exports[`qwik Javascript Test spreadAttrs 1`] = `
+exports[`qwik > Javascript Test > spreadAttrs 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2834,7 +2834,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test spreadNestedProps 1`] = `
+exports[`qwik > Javascript Test > spreadNestedProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2845,7 +2845,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test spreadProps 1`] = `
+exports[`qwik > Javascript Test > spreadProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2856,7 +2856,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Javascript Test subComponent 1`] = `
+exports[`qwik > Javascript Test > subComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import Foo from \\"./foo-sub-component\\";
@@ -2868,7 +2868,7 @@ export default SubComponent;
 "
 `;
 
-exports[`qwik Javascript Test typeDependency 1`] = `
+exports[`qwik > Javascript Test > typeDependency 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -2879,7 +2879,7 @@ export default TypeDependency;
 "
 `;
 
-exports[`qwik Javascript Test use-style 1`] = `
+exports[`qwik > Javascript Test > use-style 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2900,7 +2900,7 @@ export const STYLES = \`
 "
 `;
 
-exports[`qwik Javascript Test use-style-and-css 1`] = `
+exports[`qwik > Javascript Test > use-style-and-css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2925,7 +2925,7 @@ color: white; }
 "
 `;
 
-exports[`qwik Javascript Test use-style-outside-component 1`] = `
+exports[`qwik > Javascript Test > use-style-outside-component 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -2946,7 +2946,7 @@ export const STYLES = \`
 "
 `;
 
-exports[`qwik Remove Internal mitosis package 1`] = `
+exports[`qwik > Remove Internal mitosis package 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -2962,7 +2962,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test Basic 1`] = `
+exports[`qwik > Typescript Test > Basic 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3000,7 +3000,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test Basic 2`] = `
+exports[`qwik > Typescript Test > Basic 2`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -3032,7 +3032,7 @@ export default MyBasicForShowComponent;
 "
 `;
 
-exports[`qwik Typescript Test Basic Context 1`] = `
+exports[`qwik > Typescript Test > Basic Context 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3042,6 +3042,7 @@ import {
   useClientEffect$,
   useContext,
   useContextProvider,
+  useMount$,
   useStore,
 } from \\"@builder.io/qwik\\";
 import { Injector, MyService, createInjector } from \\"@dummy/injection-js\\";
@@ -3057,6 +3058,10 @@ export const MyBasicComponent = component$((props: any) => {
     const bye = myService.method(\\"hi\\");
     console.log(bye);
   });
+  useMount$(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  });
   return (
     <div>
       {myService.method(\\"hello\\") + state.name}
@@ -3069,7 +3074,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test Basic OnMount Update 1`] = `
+exports[`qwik > Typescript Test > Basic OnMount Update 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3077,6 +3082,7 @@ import {
   component$,
   h,
   useClientEffect$,
+  useMount$,
   useStore,
 } from \\"@builder.io/qwik\\";
 export interface Props {
@@ -3091,13 +3097,16 @@ export const MyBasicOnMountUpdateComponent = component$((props: Props) => {
   useClientEffect$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
+  useMount$(() => {
+    state.name = \\"PatrickJS onInit\\" + props.hi;
+  });
   return <div>Hello {state.name}</div>;
 });
 export default MyBasicOnMountUpdateComponent;
 "
 `;
 
-exports[`qwik Typescript Test Basic Outputs 1`] = `
+exports[`qwik > Typescript Test > Basic Outputs 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3119,7 +3128,7 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`qwik Typescript Test Basic Outputs Meta 1`] = `
+exports[`qwik > Typescript Test > Basic Outputs Meta 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3141,7 +3150,7 @@ export default MyBasicOutputsComponent;
 "
 `;
 
-exports[`qwik Typescript Test BasicAttribute 1`] = `
+exports[`qwik > Typescript Test > BasicAttribute 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -3154,7 +3163,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Typescript Test BasicBooleanAttribute 1`] = `
+exports[`qwik > Typescript Test > BasicBooleanAttribute 1`] = `
 "// GENERATED BY MITOSIS
 
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
@@ -3178,7 +3187,7 @@ export default MyBooleanAttribute;
 "
 `;
 
-exports[`qwik Typescript Test BasicChildComponent 1`] = `
+exports[`qwik > Typescript Test > BasicChildComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
@@ -3202,7 +3211,7 @@ export default MyBasicChildComponent;
 "
 `;
 
-exports[`qwik Typescript Test BasicFor 1`] = `
+exports[`qwik > Typescript Test > BasicFor 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3243,7 +3252,7 @@ export default MyBasicForComponent;
 "
 `;
 
-exports[`qwik Typescript Test BasicRef 1`] = `
+exports[`qwik > Typescript Test > BasicRef 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3306,7 +3315,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Typescript Test BasicRefAssignment 1`] = `
+exports[`qwik > Typescript Test > BasicRefAssignment 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useRef } from \\"@builder.io/qwik\\";
@@ -3336,7 +3345,7 @@ export default MyBasicRefAssignmentComponent;
 "
 `;
 
-exports[`qwik Typescript Test BasicRefPrevious 1`] = `
+exports[`qwik > Typescript Test > BasicRefPrevious 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3382,7 +3391,7 @@ export default MyPreviousComponent;
 "
 `;
 
-exports[`qwik Typescript Test Button 1`] = `
+exports[`qwik > Typescript Test > Button 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -3416,7 +3425,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Typescript Test Columns 1`] = `
+exports[`qwik > Typescript Test > Columns 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -3482,7 +3491,7 @@ flex-grow: 1; }\`;
 "
 `;
 
-exports[`qwik Typescript Test ContentSlotHtml 1`] = `
+exports[`qwik > Typescript Test > ContentSlotHtml 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Slot } from \\"./med.js\\";
@@ -3508,7 +3517,7 @@ export default ContentSlotCode;
 "
 `;
 
-exports[`qwik Typescript Test ContentSlotJSX 1`] = `
+exports[`qwik > Typescript Test > ContentSlotJSX 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -3532,7 +3541,7 @@ export default ContentSlotJsxCode;
 "
 `;
 
-exports[`qwik Typescript Test CustomCode 1`] = `
+exports[`qwik > Typescript Test > CustomCode 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3612,7 +3621,7 @@ export default CustomCode;
 "
 `;
 
-exports[`qwik Typescript Test Embed 1`] = `
+exports[`qwik > Typescript Test > Embed 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -3692,7 +3701,7 @@ export default CustomCode;
 "
 `;
 
-exports[`qwik Typescript Test Form 1`] = `
+exports[`qwik > Typescript Test > Form 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4025,7 +4034,7 @@ text-align: center; }\`;
 "
 `;
 
-exports[`qwik Typescript Test Image 1`] = `
+exports[`qwik > Typescript Test > Image 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4142,7 +4151,7 @@ object-position: center; }\`;
 "
 `;
 
-exports[`qwik Typescript Test Image State 1`] = `
+exports[`qwik > Typescript Test > Image State 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -4167,7 +4176,7 @@ export default ImgStateComponent;
 "
 `;
 
-exports[`qwik Typescript Test Img 1`] = `
+exports[`qwik > Typescript Test > Img 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4206,7 +4215,7 @@ export default ImgComponent;
 "
 `;
 
-exports[`qwik Typescript Test Input 1`] = `
+exports[`qwik > Typescript Test > Input 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4242,7 +4251,7 @@ export default FormInputComponent;
 "
 `;
 
-exports[`qwik Typescript Test RawText 1`] = `
+exports[`qwik > Typescript Test > RawText 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4262,7 +4271,7 @@ export default RawText;
 "
 `;
 
-exports[`qwik Typescript Test Section 1`] = `
+exports[`qwik > Typescript Test > Section 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -4291,7 +4300,7 @@ export default SectionComponent;
 "
 `;
 
-exports[`qwik Typescript Test Section 2`] = `
+exports[`qwik > Typescript Test > Section 2`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -4325,7 +4334,7 @@ export default SectionStateComponent;
 "
 `;
 
-exports[`qwik Typescript Test Select 1`] = `
+exports[`qwik > Typescript Test > Select 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4367,7 +4376,7 @@ export default SelectComponent;
 "
 `;
 
-exports[`qwik Typescript Test SlotHtml 1`] = `
+exports[`qwik > Typescript Test > SlotHtml 1`] = `
 "// GENERATED BY MITOSIS
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -4393,7 +4402,7 @@ export default SlotCode;
 "
 `;
 
-exports[`qwik Typescript Test SlotJsx 1`] = `
+exports[`qwik > Typescript Test > SlotJsx 1`] = `
 "// GENERATED BY MITOSIS
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
@@ -4416,7 +4425,7 @@ export default SlotCode;
 "
 `;
 
-exports[`qwik Typescript Test Stamped.io 1`] = `
+exports[`qwik > Typescript Test > Stamped.io 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4513,7 +4522,7 @@ margin-right: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test Submit 1`] = `
+exports[`qwik > Typescript Test > Submit 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4532,7 +4541,7 @@ export default SubmitButton;
 "
 `;
 
-exports[`qwik Typescript Test Text 1`] = `
+exports[`qwik > Typescript Test > Text 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -4565,7 +4574,7 @@ export default Text;
 "
 `;
 
-exports[`qwik Typescript Test Textarea 1`] = `
+exports[`qwik > Typescript Test > Textarea 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4591,7 +4600,7 @@ export default Textarea;
 "
 `;
 
-exports[`qwik Typescript Test Video 1`] = `
+exports[`qwik > Typescript Test > Video 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4648,7 +4657,7 @@ export default Video;
 "
 `;
 
-exports[`qwik Typescript Test basicForwardRef 1`] = `
+exports[`qwik > Typescript Test > basicForwardRef 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4682,7 +4691,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Typescript Test basicForwardRefMetadata 1`] = `
+exports[`qwik > Typescript Test > basicForwardRefMetadata 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4716,7 +4725,7 @@ color: red; }\`;
 "
 `;
 
-exports[`qwik Typescript Test class + ClassName + css 1`] = `
+exports[`qwik > Typescript Test > class + ClassName + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -4734,7 +4743,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test class + css 1`] = `
+exports[`qwik > Typescript Test > class + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -4752,7 +4761,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test className + css 1`] = `
+exports[`qwik > Typescript Test > className + css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -4770,7 +4779,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test className 1`] = `
+exports[`qwik > Typescript Test > className 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -4791,7 +4800,7 @@ export default ClassNameCode;
 "
 `;
 
-exports[`qwik Typescript Test classState 1`] = `
+exports[`qwik > Typescript Test > classState 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4822,7 +4831,7 @@ padding: 10px; }\`;
 "
 `;
 
-exports[`qwik Typescript Test defaultProps 1`] = `
+exports[`qwik > Typescript Test > defaultProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4856,7 +4865,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Typescript Test defaultPropsOutsideComponent 1`] = `
+exports[`qwik > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4890,7 +4899,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Typescript Test defaultValsWithTypes 1`] = `
+exports[`qwik > Typescript Test > defaultValsWithTypes 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -4907,7 +4916,7 @@ export default ComponentWithTypes;
 "
 `;
 
-exports[`qwik Typescript Test import types 1`] = `
+exports[`qwik > Typescript Test > import types 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -4949,7 +4958,7 @@ export default RenderContent;
 "
 `;
 
-exports[`qwik Typescript Test multipleOnUpdate 1`] = `
+exports[`qwik > Typescript Test > multipleOnUpdate 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useWatch$ } from \\"@builder.io/qwik\\";
@@ -4966,7 +4975,7 @@ export default MultipleOnUpdate;
 "
 `;
 
-exports[`qwik Typescript Test multipleOnUpdateWithDeps 1`] = `
+exports[`qwik > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
@@ -4996,7 +5005,7 @@ export default MultipleOnUpdateWithDeps;
 "
 `;
 
-exports[`qwik Typescript Test multipleSpreads 1`] = `
+exports[`qwik > Typescript Test > multipleSpreads 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -5008,7 +5017,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test nestedShow 1`] = `
+exports[`qwik > Typescript Test > nestedShow 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5035,7 +5044,7 @@ export default NestedShow;
 "
 `;
 
-exports[`qwik Typescript Test nestedStyles 1`] = `
+exports[`qwik > Typescript Test > nestedStyles 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -5053,13 +5062,22 @@ display: grid; }\`;
 "
 `;
 
-exports[`qwik Typescript Test onInit & onMount 1`] = `
+exports[`qwik > Typescript Test > onInit & onMount 1`] = `
 "// GENERATED BY MITOSIS
 
-import { Fragment, component$, h, useClientEffect$ } from \\"@builder.io/qwik\\";
+import {
+  Fragment,
+  component$,
+  h,
+  useClientEffect$,
+  useMount$,
+} from \\"@builder.io/qwik\\";
 export const OnInit = component$((props: any) => {
   useClientEffect$(() => {
     console.log(\\"onMount\\");
+  });
+  useMount$(() => {
+    console.log(\\"onInit\\");
   });
   return <div></div>;
 });
@@ -5067,10 +5085,10 @@ export default OnInit;
 "
 `;
 
-exports[`qwik Typescript Test onInit 1`] = `
+exports[`qwik > Typescript Test > onInit 1`] = `
 "// GENERATED BY MITOSIS
 
-import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
+import { Fragment, component$, h, useMount$, useStore } from \\"@builder.io/qwik\\";
 type Props = {
   name: string;
 };
@@ -5079,13 +5097,17 @@ export const defaultValues = {
 };
 export const OnInit = component$((props: Props) => {
   const state = useStore<any>({ name: \\"\\" });
+  useMount$(() => {
+    state.name = defaultValues.name || props.name;
+    console.log(\\"set defaults with props\\");
+  });
   return <div>Default name defined by parent {state.name}</div>;
 });
 export default OnInit;
 "
 `;
 
-exports[`qwik Typescript Test onMount 1`] = `
+exports[`qwik > Typescript Test > onMount 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -5108,7 +5130,7 @@ export default Comp;
 "
 `;
 
-exports[`qwik Typescript Test onUpdate 1`] = `
+exports[`qwik > Typescript Test > onUpdate 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useWatch$ } from \\"@builder.io/qwik\\";
@@ -5122,7 +5144,7 @@ export default OnUpdate;
 "
 `;
 
-exports[`qwik Typescript Test onUpdateWithDeps 1`] = `
+exports[`qwik > Typescript Test > onUpdateWithDeps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
@@ -5143,7 +5165,7 @@ export default OnUpdateWithDeps;
 "
 `;
 
-exports[`qwik Typescript Test preserveExportOrLocalStatement 1`] = `
+exports[`qwik > Typescript Test > preserveExportOrLocalStatement 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5168,7 +5190,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test preserveTyping 1`] = `
+exports[`qwik > Typescript Test > preserveTyping 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5193,7 +5215,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test propsDestructure 1`] = `
+exports[`qwik > Typescript Test > propsDestructure 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
@@ -5215,7 +5237,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test propsInterface 1`] = `
+exports[`qwik > Typescript Test > propsInterface 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5232,7 +5254,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test propsType 1`] = `
+exports[`qwik > Typescript Test > propsType 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5249,7 +5271,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test renderContentExample 1`] = `
+exports[`qwik > Typescript Test > renderContentExample 1`] = `
 "// GENERATED BY MITOSIS
 
 import {
@@ -5312,7 +5334,7 @@ flex-direction: columns; }\`;
 "
 `;
 
-exports[`qwik Typescript Test rootFragmentMultiNode 1`] = `
+exports[`qwik > Typescript Test > rootFragmentMultiNode 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5346,7 +5368,7 @@ export default Button;
 "
 `;
 
-exports[`qwik Typescript Test rootShow 1`] = `
+exports[`qwik > Typescript Test > rootShow 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5360,7 +5382,7 @@ export default RenderStyles;
 "
 `;
 
-exports[`qwik Typescript Test self-referencing component 1`] = `
+exports[`qwik > Typescript Test > self-referencing component 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5378,7 +5400,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Typescript Test self-referencing component with children 1`] = `
+exports[`qwik > Typescript Test > self-referencing component with children 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, Slot, component$, h } from \\"@builder.io/qwik\\";
@@ -5399,7 +5421,7 @@ export default MyComponent;
 "
 `;
 
-exports[`qwik Typescript Test showWithFor 1`] = `
+exports[`qwik > Typescript Test > showWithFor 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5424,7 +5446,7 @@ export default NestedShow;
 "
 `;
 
-exports[`qwik Typescript Test spreadAttrs 1`] = `
+exports[`qwik > Typescript Test > spreadAttrs 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5435,7 +5457,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test spreadNestedProps 1`] = `
+exports[`qwik > Typescript Test > spreadNestedProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5446,7 +5468,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test spreadProps 1`] = `
+exports[`qwik > Typescript Test > spreadProps 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5457,7 +5479,7 @@ export default MyBasicComponent;
 "
 `;
 
-exports[`qwik Typescript Test subComponent 1`] = `
+exports[`qwik > Typescript Test > subComponent 1`] = `
 "// GENERATED BY MITOSIS
 
 import Foo from \\"./foo-sub-component\\";
@@ -5469,7 +5491,7 @@ export default SubComponent;
 "
 `;
 
-exports[`qwik Typescript Test typeDependency 1`] = `
+exports[`qwik > Typescript Test > typeDependency 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h } from \\"@builder.io/qwik\\";
@@ -5486,7 +5508,7 @@ export default TypeDependency;
 "
 `;
 
-exports[`qwik Typescript Test use-style 1`] = `
+exports[`qwik > Typescript Test > use-style 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -5507,7 +5529,7 @@ export const STYLES = \`
 "
 `;
 
-exports[`qwik Typescript Test use-style-and-css 1`] = `
+exports[`qwik > Typescript Test > use-style-and-css 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -5532,7 +5554,7 @@ color: white; }
 "
 `;
 
-exports[`qwik Typescript Test use-style-outside-component 1`] = `
+exports[`qwik > Typescript Test > use-style-outside-component 1`] = `
 "// GENERATED BY MITOSIS
 
 import { Fragment, component$, h, useStylesScoped$ } from \\"@builder.io/qwik\\";
@@ -5553,8 +5575,8 @@ export const STYLES = \`
 "
 `;
 
-exports[`qwik bindings 1`] = `
-Object {
+exports[`qwik > bindings 1`] = `
+{
   "high.cjs": "",
   "low.cjs": "const Fragment = require(\\"@builder.io/qwik\\").Fragment;
 const h = require(\\"@builder.io/qwik\\").h;
@@ -5609,8 +5631,8 @@ exports.MyComponent = componentQrl(qrl(\\"./low.js\\", \\"MyComponentOnMount\\",
 }
 `;
 
-exports[`qwik button 1`] = `
-Object {
+exports[`qwik > button 1`] = `
+{
   "high.js": "export const MyComponent_onClick_0 = (event) => {
   alert(\\"WORKS!\\");
 };
@@ -5646,8 +5668,8 @@ export const MyComponent = componentQrl(
   qrl(\\"./low.js\\", \\"MyComponentOnMount\\", [])
 );
 export const CoreButton = function CoreButton(props) {
-  var hasLink = !!props.link;
-  var hProps = {
+  const hasLink = !!props.link;
+  const hProps = {
     dangerouslySetInnerHTML: props.text || \\"\\",
     href: props.link,
     target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
@@ -5662,7 +5684,7 @@ export const __passThroughProps__ = function __passThroughProps__(
   dstProps,
   srcProps
 ) {
-  for (var key in srcProps) {
+  for (const key in srcProps) {
     if (
       Object.prototype.hasOwnProperty.call(srcProps, key) &&
       ((key.startsWith(\\"on\\") && key.endsWith(\\"$\\")) || key == \\"style\\")
@@ -5676,28 +5698,28 @@ export const __passThroughProps__ = function __passThroughProps__(
 }
 `;
 
-exports[`qwik component bindings 1`] = `
-Object {
-  "ROOT_COMPONENT_STATE": Object {
+exports[`qwik > component > bindings 1`] = `
+{
+  "ROOT_COMPONENT_STATE": {
     "deviceSize": "large",
-    "location": Object {
+    "location": {
       "path": "",
-      "query": Object {},
+      "query": {},
     },
     "something": "works!",
   },
-  "w8x6w6": Object {
+  "w8x6w6": {
     "deviceSize": "large",
-    "location": Object {
+    "location": {
       "path": "",
-      "query": Object {},
+      "query": {},
     },
   },
 }
 `;
 
-exports[`qwik component bindings 2`] = `
-Object {
+exports[`qwik > component > bindings 2`] = `
+{
   "high.jsx": "",
   "low.jsx": "import { ComponentD187055AF171488FAD843ACF045D6BF7 } from \\"./med.js\\";
 import {
@@ -5819,10 +5841,10 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik component component inputs 1`] = `Object {}`;
+exports[`qwik > component > component inputs 1`] = `{}`;
 
-exports[`qwik component component inputs 2`] = `
-Object {
+exports[`qwik > component > component inputs 2`] = `
+{
   "high.cjsx": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 exports.MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -5878,8 +5900,8 @@ exports.MyComponentOnMount = (props) => {
 };
 exports.MyComponent = componentQrl(qrl(\\"./med.js\\", \\"MyComponentOnMount\\", []));
 const CoreButton = (exports.CoreButton = function CoreButton(props) {
-  var hasLink = !!props.link;
-  var hProps = {
+  const hasLink = !!props.link;
+  const hProps = {
     dangerouslySetInnerHTML: props.text || \\"\\",
     href: props.link,
     target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
@@ -5892,7 +5914,7 @@ const CoreButton = (exports.CoreButton = function CoreButton(props) {
 });
 const __passThroughProps__ = (exports.__passThroughProps__ =
   function __passThroughProps__(dstProps, srcProps) {
-    for (var key in srcProps) {
+    for (const key in srcProps) {
       if (
         Object.prototype.hasOwnProperty.call(srcProps, key) &&
         ((key.startsWith(\\"on\\") && key.endsWith(\\"$\\")) || key == \\"style\\")
@@ -5906,8 +5928,8 @@ const __passThroughProps__ = (exports.__passThroughProps__ =
 }
 `;
 
-exports[`qwik for-loop.bindings 1`] = `
-Object {
+exports[`qwik > for-loop.bindings 1`] = `
+{
   "high.cjs": "",
   "low.cjs": "const Component000013 = require(\\"./med.js\\").Component000013;
 const Fragment = require(\\"@builder.io/qwik\\").Fragment;
@@ -5977,8 +5999,8 @@ exports.Component000012 = componentQrl(
 }
 `;
 
-exports[`qwik hello_world stylesheet 1`] = `
-Object {
+exports[`qwik > hello_world > stylesheet 1`] = `
+{
   "high.jsx": "",
   "low.jsx": "import {
   Fragment,
@@ -6015,8 +6037,8 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik mount 1`] = `
-Object {
+exports[`qwik > mount 1`] = `
+{
   "high.cjs": "",
   "low.cjs": "const Fragment = require(\\"@builder.io/qwik\\").Fragment;
 const h = require(\\"@builder.io/qwik\\").h;
@@ -6073,8 +6095,8 @@ exports.MyComponent = componentQrl(qrl(\\"./low.js\\", \\"MyComponentOnMount\\",
 }
 `;
 
-exports[`qwik page-with-symbol 1`] = `
-Object {
+exports[`qwik > page-with-symbol 1`] = `
+{
   "high.js": "",
   "low.js": "import { Symbol1 } from \\"./med.js\\";
 import {
@@ -6118,10 +6140,10 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik show-hide 1`] = `Object {}`;
+exports[`qwik > show-hide 1`] = `{}`;
 
-exports[`qwik show-hide 2`] = `
-Object {
+exports[`qwik > show-hide 2`] = `
+{
   "high.jsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 export const MyComponent_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -6200,8 +6222,8 @@ export const MyComponent = componentQrl(
   qrl(\\"./med.js\\", \\"MyComponentOnMount\\", [])
 );
 export const CoreButton = function CoreButton(props) {
-  var hasLink = !!props.link;
-  var hProps = {
+  const hasLink = !!props.link;
+  const hProps = {
     dangerouslySetInnerHTML: props.text || \\"\\",
     href: props.link,
     target: props.openInNewTab ? \\"_blank\\" : \\"_self\\",
@@ -6216,7 +6238,7 @@ export const __passThroughProps__ = function __passThroughProps__(
   dstProps,
   srcProps
 ) {
-  for (var key in srcProps) {
+  for (const key in srcProps) {
     if (
       Object.prototype.hasOwnProperty.call(srcProps, key) &&
       ((key.startsWith(\\"on\\") && key.endsWith(\\"$\\")) || key == \\"style\\")
@@ -6227,52 +6249,45 @@ export const __passThroughProps__ = function __passThroughProps__(
   return dstProps;
 };
 export const Image = function Image(props) {
-  var _a;
-  var jsx = props.children || [];
-  var image = props.image;
+  let jsx = props.children || [];
+  let image = props.image;
   if (image) {
-    var isBuilderIoImage =
+    const isBuilderIoImage =
       !!(image || \\"\\").match(/\\\\.builder\\\\.io/) && !props.noWebp;
-    var isPixel =
-      (_a = props.builderBlock) === null || _a === void 0
-        ? void 0
-        : _a.id.startsWith(\\"builder-pixel-\\");
-    var imgProps = {
+    const isPixel = props.builderBlock?.id.startsWith(\\"builder-pixel-\\");
+    const imgProps = {
       src: props.image,
       style:
-        \\"object-fit:\\"
-          .concat(props.backgroundSize || \\"cover\\", \\";object-position:\\")
-          .concat(props.backgroundPosition || \\"center\\", \\";\\") +
+        \`object-fit:\${props.backgroundSize || \\"cover\\"};object-position:\${
+          props.backgroundPosition || \\"center\\"
+        };\` +
         (props.aspectRatio
           ? \\"position:absolute;height:100%;width:100%;top:0;left:0\\"
           : \\"\\"),
       sizes: props.sizes,
       alt: props.altText,
-      role: !props.altText ? \\"presentation\\" : undefined,
+      role: !props.altText ? \\"presentation\\" : void 0,
       loading: isPixel ? \\"eager\\" : \\"lazy\\",
-      srcset: undefined,
+      srcset: void 0,
     };
-    var qwikBugWorkaround = function (imgProps) {
-      return Object.keys(imgProps).forEach(function (k) {
-        return imgProps[k] === undefined && delete imgProps[k];
-      });
-    };
+    const qwikBugWorkaround = (imgProps2) =>
+      Object.keys(imgProps2).forEach(
+        (k) => imgProps2[k] === void 0 && delete imgProps2[k]
+      );
     qwikBugWorkaround(imgProps);
     if (isBuilderIoImage) {
-      var webpImage_1 = updateQueryParam(image, \\"format\\", \\"webp\\");
-      var srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
+      const webpImage = updateQueryParam(image, \\"format\\", \\"webp\\");
+      const srcset = [\\"100\\", \\"200\\", \\"400\\", \\"800\\", \\"1200\\", \\"1600\\", \\"2000\\"]
         .concat(props.srcsetSizes ? String(props.srcsetSizes).split(\\" \\") : [])
-        .map(function (size) {
-          return (
-            updateQueryParam(webpImage_1, \\"width\\", size) + \\" \\" + size + \\"w\\"
-          );
+        .map((size) => {
+          return updateQueryParam(webpImage, \\"width\\", size) + \\" \\" + size + \\"w\\";
         })
         .concat([image])
         .join(\\",\\");
       imgProps.srcset = srcset;
       jsx = jsx = [
         h(\\"picture\\", {}, [
-          h(\\"source\\", { type: \\"image/webp\\", srcset: srcset }),
+          h(\\"source\\", { type: \\"image/webp\\", srcset }),
           h(\\"img\\", imgProps, jsx),
         ]),
       ];
@@ -6283,28 +6298,24 @@ export const Image = function Image(props) {
       props.aspectRatio &&
       !(props.fitContent && props.children && props.children.length)
     ) {
-      var sizingDiv = h(\\"div\\", {
+      const sizingDiv = h(\\"div\\", {
         class: \\"builder-image-sizer\\",
-        style: \\"width:100%;padding-top:\\".concat(
-          (props.aspectRatio || 1) * 100,
-          \\"%;pointer-events:none;font-size:0\\"
-        ),
+        style: \`width:100%;padding-top:\${
+          (props.aspectRatio || 1) * 100
+        }%;pointer-events:none;font-size:0\`,
       });
       jsx.push(sizingDiv);
     }
   }
-  var children = props.children ? [jsx].concat(props.children) : [jsx];
+  const children = props.children ? [jsx].concat(props.children) : [jsx];
   return h(
     props.href ? \\"a\\" : \\"div\\",
     __passThroughProps__({ href: props.href, class: props.class }, props),
     children
   );
-  function updateQueryParam(uri, key, value) {
-    if (uri === void 0) {
-      uri = \\"\\";
-    }
-    var re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
-    var separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
+  function updateQueryParam(uri = \\"\\", key, value) {
+    const re = new RegExp(\\"([?&])\\" + key + \\"=.*?(&|$)\\", \\"i\\");
+    const separator = uri.indexOf(\\"?\\") !== -1 ? \\"&\\" : \\"?\\";
     if (uri.match(re)) {
       return uri.replace(
         re,
@@ -6318,8 +6329,8 @@ export const Image = function Image(props) {
 }
 `;
 
-exports[`qwik svg 1`] = `
-Object {
+exports[`qwik > svg 1`] = `
+{
   "high.js": "",
   "low.js": "import {
   Fragment,
@@ -6360,8 +6371,8 @@ export const MyComponent = componentQrl(
 }
 `;
 
-exports[`qwik todo Todo.cjs 1`] = `
-Object {
+exports[`qwik > todo > Todo.cjs 1`] = `
+{
   "high.cjs": "const useLexicalScope = require(\\"@builder.io/qwik\\").useLexicalScope;
 exports.Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -6438,8 +6449,8 @@ exports.Todo = componentQrl(qrl(\\"./med.js\\", \\"TodoOnMount\\", []));
 }
 `;
 
-exports[`qwik todo Todo.js 1`] = `
-Object {
+exports[`qwik > todo > Todo.js 1`] = `
+{
   "high.js": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 export const Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -6512,8 +6523,8 @@ export const Todo = componentQrl(qrl(\\"./med.js\\", \\"TodoOnMount\\", []));
 }
 `;
 
-exports[`qwik todo Todo.tsx 1`] = `
-Object {
+exports[`qwik > todo > Todo.tsx 1`] = `
+{
   "high.tsx": "import { useLexicalScope } from \\"@builder.io/qwik\\";
 export const Todo_onClick_0 = (event) => {
   const state = useLexicalScope()[0];
@@ -6582,8 +6593,8 @@ export const Todo = componentQrl<any, any>(qrl(\\"./med.js\\", \\"TodoOnMount\\"
 }
 `;
 
-exports[`qwik todos Todo.tsx 1`] = `
-Object {
+exports[`qwik > todos > Todo.tsx 1`] = `
+{
   "high.tsx": "export const Todos_onClick_0 = (event) => {
   const newValue = !todosState.allCompleted;
 

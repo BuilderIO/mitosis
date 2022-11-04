@@ -1,8 +1,8 @@
 import { collectCss } from './collect-css';
 import { parseJsx } from '../../parsers/jsx';
 
-const classRaw = require('../../__tests__/data/styles/class.raw');
-const classState = require('../../__tests__/data/styles/classState.raw');
+import classRaw from '../../__tests__/data/styles/class.raw.tsx?raw';
+import classState from '../../__tests__/data/styles/classState.raw.tsx?raw';
 
 describe('Styles', () => {
   test('class property and CSS are merged', () => {
