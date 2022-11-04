@@ -12,6 +12,7 @@ import { Context } from './types';
 import { parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
+import { METADATA_HOOK_NAME } from './metadata';
 
 const { types } = babel;
 
@@ -157,6 +158,11 @@ export const componentFunctionToJson = (
             parseDefaultPropsHook(context.builder.component, expression);
           } else if (expression.callee.name === HOOKS.STYLE) {
             context.builder.component.style = generateUseStyleCode(expression);
+          } else if (expression.callee.name === METADATA_HOOK_NAME) {
+            context.builder.component.meta[METADATA_HOOK_NAME] = {
+              ...context.builder.component.meta[METADATA_HOOK_NAME],
+              ...parseCodeJson(expression.arguments[0]),
+            };
           }
         }
       }

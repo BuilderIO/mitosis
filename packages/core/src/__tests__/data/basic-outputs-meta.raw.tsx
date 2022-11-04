@@ -4,6 +4,10 @@ useMetadata({
   outputs: ['onMessage', 'onEvent'],
 });
 export default function MyBasicOutputsComponent(props: any) {
+  useMetadata({
+    baz: 'metadata inside component',
+  });
+
   const state = useStore({
     name: 'PatrickJS',
   });
