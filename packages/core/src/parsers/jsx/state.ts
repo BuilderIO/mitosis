@@ -127,7 +127,7 @@ const parseStateValue = (
       return createFunctionStringLiteralObjectProperty(item.key, item.value);
     } else if (types.isArrowFunctionExpression(item.value)) {
       // convert this to an object method instead
-      let n = babel.types.objectMethod(
+      const n = babel.types.objectMethod(
         'method',
         item.key as babel.types.Expression,
         item.value.params,
