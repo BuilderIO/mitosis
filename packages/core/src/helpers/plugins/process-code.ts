@@ -2,7 +2,7 @@ import { Plugin } from '../../types/plugins';
 import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { checkIsDefined } from '../nullable';
-import { tarverseNodes } from '../traverse-nodes';
+import { traverseNodes } from '../traverse-nodes';
 
 type CodeType = 'hooks' | 'hooks-deps' | 'bindings' | 'properties' | 'state';
 
@@ -74,7 +74,7 @@ export const CODE_PROCESSOR_PLUGIN =
           }
         }
 
-        tarverseNodes(json, (node) => {
+        traverseNodes(json, (node) => {
           preProcessBlockCode({ json: node, codeProcessor });
         });
       },
