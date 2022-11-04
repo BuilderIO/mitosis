@@ -14,8 +14,6 @@ import { parseCodeJson, uncapitalize } from './helpers';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { JSONObject } from '../../types/json';
 import { mapJsonObjectToStateValue } from '../helpers/state';
-import { omit } from 'lodash';
-import { BlockStatement } from '@marko/compiler/babel-types';
 
 const { types } = babel;
 
