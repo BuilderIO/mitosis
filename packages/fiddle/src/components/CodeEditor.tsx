@@ -1,8 +1,7 @@
 import { Linter as ESLinter } from 'eslint';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-// TODO: add back when build fixed
-// import { rules } from 'eslint-plugin-mitosis';
+import { rules } from '@builder.io/eslint-plugin-mitosis';
 
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
 const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
@@ -12,8 +11,7 @@ import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@mona
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 
 const linter = new Linter();
-// TODO: add back when build fixed
-// linter.defineRules(rules as any);
+linter.defineRules(rules as any);
 
 function eslint(code: string, version: any) {
   try {
@@ -22,7 +20,21 @@ function eslint(code: string, version: any) {
         code,
         {
           rules: {
+            'css-no-vars': 'error',
+            'ref-no-current': 'error',
             'static-control-flow': 'error',
+            'no-state-destructuring': 'error',
+            'jsx-callback-arg-name': 'error',
+            'no-assign-props-to-state': 'error',
+            'use-state-var-declarator': 'error',
+            'no-async-methods-on-state': 'error',
+            'no-var-declaration-in-jsx': 'error',
+            'no-var-name-same-as-prop-name': 'error',
+            'jsx-callback-arrow-function': 'error',
+            'no-var-name-same-as-state-property': 'error',
+            'only-default-function-and-imports': 'error',
+            'no-conditional-logic-in-component-render': 'error',
+            'no-var-declaration-or-assignment-in-component': 'error',
           },
           parserOptions: {
             sourceType: 'module',
@@ -33,7 +45,7 @@ function eslint(code: string, version: any) {
           },
         },
         {
-          filename: 'mitosis-file.tsx',
+          filename: 'mitosis.lite.tsx',
         },
       )
       .map((err) => ({
@@ -132,7 +144,7 @@ export function CodeEditor(props: MonacoEditorProps) {
       monaco.editor.setModelMarkers(model, 'eslint', result.markers);
     },
     2000,
-    [props.value],
+    [props.value, editor],
   );
 
   return (

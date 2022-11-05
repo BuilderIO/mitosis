@@ -19,10 +19,10 @@ module.exports = {
       jsx: true,
     },
   },
-  plugins: ['@builder.io/mitosis'],
+  plugins: ['@builder.io/eslint-plugin-mitosis'],
   extends: [
     // Use this approach for our recommended rules configuration
-    'plugin:@builder.io/mitosis/recommended',
+    'plugin:@builder.io/eslint-plugin-mitosis/recommended',
   ],
   rules: {
     // Use this to configure rules individually
