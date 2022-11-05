@@ -137,10 +137,6 @@ export function CodeEditor(props: MonacoEditorProps) {
 
   return (
     <MonacoEditor
-      onMount={(editor, monaco) => {
-        setEditor(editor);
-        props.onMount?.(editor, monaco);
-      }}
       options={{
         renderLineHighlightOnlyWhenFocus: true,
         overviewRulerBorder: false,
@@ -153,6 +149,10 @@ export function CodeEditor(props: MonacoEditorProps) {
       language="typescript"
       path="mitosis.tsx"
       {...props}
+      onMount={(editor, monaco) => {
+        setEditor(editor);
+        props.onMount?.(editor, monaco);
+      }}
     />
   );
 }
