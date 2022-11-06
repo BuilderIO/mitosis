@@ -1,7 +1,6 @@
 import { Linter as ESLinter } from 'eslint';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-import { rules } from '@builder.io/eslint-plugin-mitosis';
 
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
 const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
@@ -11,7 +10,6 @@ import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@mona
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 
 const linter = new Linter();
-linter.defineRules(rules as any);
 
 function eslint(code: string, version: any) {
   try {
@@ -19,23 +17,8 @@ function eslint(code: string, version: any) {
       .verify(
         code,
         {
-          rules: {
-            'css-no-vars': 'error',
-            'ref-no-current': 'error',
-            'static-control-flow': 'error',
-            'no-state-destructuring': 'error',
-            'jsx-callback-arg-name': 'error',
-            'no-assign-props-to-state': 'error',
-            'use-state-var-declarator': 'error',
-            'no-async-methods-on-state': 'error',
-            'no-var-declaration-in-jsx': 'error',
-            'no-var-name-same-as-prop-name': 'error',
-            'jsx-callback-arrow-function': 'error',
-            'no-var-name-same-as-state-property': 'error',
-            'only-default-function-and-imports': 'error',
-            'no-conditional-logic-in-component-render': 'error',
-            'no-var-declaration-or-assignment-in-component': 'error',
-          },
+          plugins: ['@builder.io/mitosis'],
+          extends: ['plugin:@builder.io/mitosis/recommended'],
           parserOptions: {
             sourceType: 'module',
             ecmaVersion: 2020,
