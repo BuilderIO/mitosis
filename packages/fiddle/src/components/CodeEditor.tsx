@@ -1,6 +1,7 @@
 import { Linter as ESLinter } from 'eslint';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
+import { rules, configs as lintConfigs } from '@builder.io/eslint-plugin-mitosis';
 
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
 const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
@@ -10,6 +11,12 @@ import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@mona
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
 
 const linter = new Linter();
+linter.defineRules(rules as any);
+const recommendedRules: Record<string, any> = {};
+Object.entries(lintConfigs.recommended.rules).forEach(([key, value]) => {
+  const trimmedKey = key.replace(/^@builder.io\/mitosis\//, '');
+  recommendedRules[trimmedKey] = value;
+});
 
 function eslint(code: string, version: any) {
   try {
@@ -17,8 +24,7 @@ function eslint(code: string, version: any) {
       .verify(
         code,
         {
-          plugins: ['@builder.io/mitosis'],
-          extends: ['plugin:@builder.io/mitosis/recommended'],
+          rules: recommendedRules,
           parserOptions: {
             sourceType: 'module',
             ecmaVersion: 2020,
