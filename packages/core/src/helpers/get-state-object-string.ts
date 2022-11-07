@@ -6,7 +6,11 @@ interface GetStateObjectStringOptions {
   data?: boolean;
   functions?: boolean;
   getters?: boolean;
-  valueMapper?: (code: string, type: 'data' | 'function' | 'getter') => string;
+  valueMapper?: (
+    code: string,
+    type: 'data' | 'function' | 'getter',
+    typeParameter?: string,
+  ) => string;
   format?: 'object' | 'class' | 'variables';
   keyPrefix?: string;
 }
@@ -31,26 +35,30 @@ const convertStateMemberToString =
       return undefined;
     }
 
-    const code = state.code;
+    const { code, typeParameter } = state;
     switch (state.type) {
       case 'function': {
         if (functions === false || typeof code !== 'string') {
           return undefined;
         }
-        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(code, 'function')}`;
+        return `${keyPrefix} ${key} ${keyValueDelimiter} ${valueMapper(
+          code,
+          'function',
+          typeParameter,
+        )}`;
       }
       case 'method': {
         if (functions === false || typeof code !== 'string') {
           return undefined;
         }
-        return `${keyPrefix} ${valueMapper(code, 'function')}`;
+        return `${keyPrefix} ${valueMapper(code, 'function', typeParameter)}`;
       }
       case 'getter': {
         if (getters === false || typeof code !== 'string') {
           return undefined;
         }
 
-        return `${keyPrefix} ${valueMapper(code, 'getter')}`;
+        return `${keyPrefix} ${valueMapper(code, 'getter', typeParameter)}`;
       }
       case 'property': {
         if (data === false) {
@@ -59,6 +67,7 @@ const convertStateMemberToString =
         return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
           json5.stringify(code),
           'data',
+          typeParameter,
         )}`;
       }
       default:
