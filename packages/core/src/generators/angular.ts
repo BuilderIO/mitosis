@@ -25,13 +25,16 @@ import { stripMetaProperties } from '../helpers/strip-meta-properties';
 import { removeSurroundingBlock } from '../helpers/remove-surrounding-block';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { indent } from '../helpers/indent';
-import { isSlotProperty } from '../helpers/slots';
+import { isSlotProperty, stripSlotPrefix } from '../helpers/slots';
 import { getCustomImports } from '../helpers/get-custom-imports';
 import { getComponentsUsed } from '../helpers/get-components-used';
 import { isUpperCase } from '../helpers/is-upper-case';
 import { VALID_HTML_TAGS } from '../constants/html_tags';
+import { pipe } from 'fp-ts/lib/function';
 
 import { MitosisComponent } from '..';
+import { mergeOptions } from '../helpers/merge-options';
+import { CODE_PROCESSOR_PLUGIN } from '../helpers/plugins/process-code';
 
 const BUILT_IN_COMPONENTS = new Set(['Show', 'For', 'Fragment']);
 
@@ -44,36 +47,29 @@ export interface ToAngularOptions extends BaseTranspilerOptions {
 }
 
 interface AngularBlockOptions {
-  contextVars?: string[];
-  outputVars?: string[];
   childComponents?: string[];
-  domRefs?: string[];
 }
 
 const mappers: {
-  [key: string]: (
-    json: MitosisNode,
-    options: ToAngularOptions,
-    blockOptions?: AngularBlockOptions,
-  ) => string;
+  [key: string]: (json: MitosisNode, options: ToAngularOptions) => string;
 } = {
-  Fragment: (json, options, blockOptions) => {
+  Fragment: (json, options) => {
     return `<ng-container>${json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options))
       .join('\n')}</ng-container>`;
   },
-  Slot: (json, options, blockOptions) => {
-    return `<ng-content ${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding === 'name') {
-          const selector = kebabCase(json.bindings.name?.code?.replace('props.slot', ''));
+  Slot: (json, options) => {
+    return `<ng-content ${Object.entries(json.bindings)
+      .map(([binding, value]) => {
+        if (value && binding === 'name') {
+          const selector = pipe(value.code, stripSlotPrefix, kebabCase);
           return `select="[${selector}]"`;
         }
       })
-      .join('\n')}>${Object.keys(json.bindings)
-      .map((binding) => {
-        if (binding !== 'name') {
-          return `${json.bindings[binding]?.code}`;
+      .join('\n')}>${Object.entries(json.bindings)
+      .map(([binding, value]) => {
+        if (value && binding !== 'name') {
+          return value.code;
         }
       })
       .join('\n')}</ng-content>`;
@@ -114,14 +110,11 @@ export const blockToAngular = (
   options: ToAngularOptions = {},
   blockOptions: AngularBlockOptions = {},
 ): string => {
-  const contextVars = blockOptions?.contextVars || [];
-  const outputVars = blockOptions?.outputVars || [];
   const childComponents = blockOptions?.childComponents || [];
-  const domRefs = blockOptions?.domRefs || [];
   const isValidHtmlTag = VALID_HTML_TAGS.includes(json.name.trim());
 
   if (mappers[json.name]) {
-    return mappers[json.name](json, options, blockOptions);
+    return mappers[json.name](json, options);
   }
 
   if (isChildren({ node: json })) {
@@ -131,18 +124,14 @@ export const blockToAngular = (
   if (json.properties._text) {
     return json.properties._text;
   }
-  if (/props\.slot/.test(json.bindings._text?.code as string)) {
-    const selector = kebabCase(json.bindings._text?.code?.replace('props.slot', ''));
-    return `<ng-content select="[${selector}]"></ng-content>`;
-  }
+  const textCode = json.bindings._text?.code;
+  if (textCode) {
+    if (isSlotProperty(textCode)) {
+      const selector = pipe(textCode, stripSlotPrefix, kebabCase);
+      return `<ng-content select="[${selector}]"></ng-content>`;
+    }
 
-  if (json.bindings._text?.code) {
-    return `{{${stripStateAndPropsRefs(json.bindings._text.code as string, {
-      // the context is the class
-      contextVars: [],
-      outputVars,
-      domRefs,
-    })}}}`;
+    return `{{${textCode}}}`;
   }
 
   let str = '';
@@ -151,22 +140,13 @@ export const blockToAngular = (
 
   if (checkIsForNode(json)) {
     const indexName = json.scope.indexName;
-    str += `<ng-container *ngFor="let ${json.scope.forName} of ${stripStateAndPropsRefs(
-      json.bindings.each?.code,
-      {
-        contextVars,
-        outputVars,
-        domRefs,
-      },
-    )}${indexName ? `; let ${indexName} = index` : ''}">`;
+    str += `<ng-container *ngFor="let ${json.scope.forName} of ${json.bindings.each?.code}${
+      indexName ? `; let ${indexName} = index` : ''
+    }">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else if (json.name === 'Show') {
-    str += `<ng-container *ngIf="${stripStateAndPropsRefs(json.bindings.when?.code, {
-      contextVars,
-      outputVars,
-      domRefs,
-    })}">`;
+    str += `<ng-container *ngIf="${json.bindings.when?.code}">`;
     str += json.children.map((item) => blockToAngular(item, options, blockOptions)).join('\n');
     str += `</ng-container>`;
   } else {
@@ -199,11 +179,6 @@ export const blockToAngular = (
 
       const { code, arguments: cusArgs = ['event'] } = json.bindings[key]!;
       // TODO: proper babel transform to replace. Util for this
-      const useValue = stripStateAndPropsRefs(code as string, {
-        contextVars,
-        outputVars,
-        domRefs,
-      }).replace(/"/g, '&quot;');
 
       if (key.startsWith('on')) {
         let event = key.replace('on', '').toLowerCase();
@@ -217,23 +192,22 @@ export const blockToAngular = (
           'g',
         );
         const replacer = '$1$event$2';
-        const finalValue = removeSurroundingBlock(useValue.replace(regexp, replacer));
+        const finalValue = removeSurroundingBlock(code.replace(regexp, replacer));
         str += ` (${event})="${finalValue}" `;
       } else if (key === 'class') {
-        str += ` [class]="${useValue}" `;
+        str += ` [class]="${code}" `;
       } else if (key === 'ref') {
-        str += ` #${useValue} `;
+        str += ` #${code} `;
       } else if (isSlotProperty(key)) {
-        const lowercaseKey =
-          key.replace('slot', '')[0].toLowerCase() + key.replace('slot', '').substring(1);
-        needsToRenderSlots.push(`${useValue.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
+        const lowercaseKey = pipe(key, stripSlotPrefix, (x) => x.toLowerCase());
+        needsToRenderSlots.push(`${code.replace(/(\/\>)|\>/, ` ${lowercaseKey}>`)}`);
       } else if (BINDINGS_MAPPER[key]) {
-        str += ` [${BINDINGS_MAPPER[key]}]="${useValue}"  `;
+        str += ` [${BINDINGS_MAPPER[key]}]="${code}"  `;
       } else if (isValidHtmlTag || key.includes('-')) {
         // standard html elements need the attr to satisfy the compiler in many cases: eg: svg elements and [fill]
-        str += ` [attr.${key}]="${useValue}" `;
+        str += ` [attr.${key}]="${code}" `;
       } else {
-        str += `[${key}]="${useValue}" `;
+        str += `[${key}]="${code}" `;
       }
     }
     if (selfClosingTags.has(json.name)) {
@@ -262,10 +236,46 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       preserveFileExtensions: false,
     };
 
-    const options = { ...DEFAULT_OPTIONS, ...userOptions };
-
     // Make a copy we can safely mutate, similar to babel's toolchain
     let json = fastClone(_component);
+
+    const contextVars = Object.keys(json?.context?.get || {});
+    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
+    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
+    const stateVars = Object.keys(json?.state || {});
+
+    const options = mergeOptions({ ...DEFAULT_OPTIONS, ...userOptions });
+    options.plugins = [
+      ...(options.plugins || []),
+      CODE_PROCESSOR_PLUGIN((codeType) => {
+        const domRefs = getRefs(json);
+        switch (codeType) {
+          case 'hooks':
+            return (code) => {
+              return stripStateAndPropsRefs(code, {
+                replaceWith: 'this.',
+                contextVars,
+                outputVars,
+                domRefs: Array.from(domRefs),
+                stateVars,
+              });
+            };
+          case 'bindings':
+            return (code) => {
+              return stripStateAndPropsRefs(code, {
+                contextVars: [],
+                outputVars,
+                domRefs: [], // the template doesn't need the this keyword.
+              }).replace(/"/g, '&quot;');
+            };
+          case 'hooks-deps':
+          case 'state':
+          case 'properties':
+            return (x) => x;
+        }
+      }),
+    ];
+
     if (options.plugins) {
       json = runPreJsonPlugins(json, options.plugins);
     }
@@ -289,8 +299,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       .filter((key) => localExports[key].usedInLocal)
       .map((key) => `${key} = ${key};`);
 
-    const metaOutputVars: string[] = (json.meta?.useMetadata?.outputs as string[]) || [];
-    const contextVars = Object.keys(json?.context?.get || {});
     const injectables: string[] = contextVars.map((variableName) => {
       const variableType = json?.context?.get[variableName].name;
       if (options?.experimental?.injectables) {
@@ -310,7 +318,6 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     }
     props.delete('children');
 
-    const outputVars = uniq([...metaOutputVars, ...getPropFunctions(json)]);
     // remove props for outputs
     outputVars.forEach((variableName) => {
       props.delete(variableName);
@@ -324,12 +331,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     });
 
     const hasOnMount = Boolean(json.hooks?.onMount);
-
     const domRefs = getRefs(json);
     const jsRefs = Object.keys(json.refs).filter((ref) => !domRefs.has(ref));
-
-    const stateVars = Object.keys(json?.state || {});
-
     const componentsUsed = Array.from(getComponentsUsed(json)).filter((item) => {
       return item.length && isUpperCase(item[0]) && !BUILT_IN_COMPONENTS.has(item);
     });
@@ -347,15 +350,8 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
       css = tryFormat(css, 'css');
     }
 
-    const blockOptions = {
-      contextVars,
-      outputVars,
-      domRefs: [], // the template doesn't need the this keyword.
-      childComponents,
-    };
-
     let template = json.children
-      .map((item) => blockToAngular(item, options, blockOptions))
+      .map((item) => blockToAngular(item, options, { childComponents }))
       .join('\n');
     if (options.prettier !== false) {
       template = tryFormat(template, 'html');
@@ -471,11 +467,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
               !json.hooks?.onInit
                 ? ''
                 : `
-              ${stripStateAndPropsRefs(json.hooks.onInit?.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-              })}
+              ${json.hooks.onInit?.code}
               `
             }
           }
@@ -490,13 +482,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
                 !json.hooks?.onMount
                   ? ''
                   : `
-                ${stripStateAndPropsRefs(json.hooks.onMount?.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                })}
+                ${json.hooks.onMount?.code}
                 `
               }
             }`
@@ -507,13 +493,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
           ? ''
           : `ngAfterContentChecked() {
               ${json.hooks.onUpdate.reduce((code, hook) => {
-                code += stripStateAndPropsRefs(hook.code, {
-                  replaceWith: 'this.',
-                  contextVars,
-                  outputVars,
-                  domRefs: Array.from(domRefs),
-                  stateVars,
-                });
+                code += hook.code;
                 return code + '\n';
               }, '')}
             }`
@@ -523,13 +503,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
         !json.hooks.onUnMount
           ? ''
           : `ngOnDestroy() {
-              ${stripStateAndPropsRefs(json.hooks.onUnMount.code, {
-                replaceWith: 'this.',
-                contextVars,
-                outputVars,
-                domRefs: Array.from(domRefs),
-                stateVars,
-              })}
+              ${json.hooks.onUnMount.code}
             }`
       }
 
