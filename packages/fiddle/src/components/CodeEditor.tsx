@@ -24,6 +24,8 @@ function eslint(code: string, version: any) {
       .verify(
         code,
         {
+          parser: '@typescript-eslint/parser',
+          plugins: ['@typescript-eslint'],
           rules: recommendedRules,
           parserOptions: {
             sourceType: 'module',
