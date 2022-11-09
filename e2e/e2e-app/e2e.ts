@@ -47,6 +47,19 @@ async function yarn(...args) {
   });
 }
 
+async function nxRunMany(target: string, projects: string[]) {
+  return new Promise((res, reject) => {
+    let child = spawn(`nx run-many --target ${target} --parallel 4 --projects ${projects.join()}`, {
+      cwd: resolve(__dirname, '../..'),
+      shell: true,
+      stdio: 'inherit',
+    });
+
+    child.on('error', reject);
+    child.on('exit', (code) => (code === 0 ? res(0) : reject(code)));
+  });
+}
+
 function allOk(specs: Entry[]) {
   return specs.every((s) => s.ok);
 }
@@ -96,9 +109,7 @@ async function main() {
 
     // Clean the output - don't want Vite or other tools to leave behind
     // previous app on failure.
-    for (const p of packages) {
-      await yarn('workspace', p, 'run', 'clean');
-    }
+    await nxRunMany('clean', packages);
 
     // Mitosis all targets - with a workaround to tolerate failure, until:
     // https://github.com/BuilderIO/mitosis/issues/510
@@ -108,12 +119,10 @@ async function main() {
     // Ideally we could use Yarn Workspace, but it lacks a partial-success-OK flag.
     // await yarn('workspaces', 'foreach', '-pt', '--include', '*/e2e-*', '--verbose', 'run', 'build');
 
-    for (const p of packages) {
-      try {
-        await yarn('workspace', p, 'run', 'build');
-      } catch (e) {
-        console.log('Failed', p, 'proceeding with E2E');
-      }
+    try {
+      await nxRunMany('build', packages);
+    } catch (e) {
+      console.log('Build Failed', 'proceeding with E2E');
     }
 
     // Invoke Playwright to test them all.
