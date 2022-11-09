@@ -42,7 +42,8 @@ export function generateCompositionApiScript(
     functions: false,
     getters: false,
     format: 'variables',
-    valueMapper: (code) => `ref(${code})`,
+    valueMapper: (code, _, typeParameter) =>
+      options.typescript && typeParameter ? `ref<${typeParameter}>(${code})` : `ref(${code})`,
     keyPrefix: 'const',
   });
 
