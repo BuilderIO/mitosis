@@ -117,6 +117,8 @@ export class MyBasicComponent {
   underscore_fn_name() {
     return \\"bar\\";
   }
+  age = 1;
+  sports = [\\"\\"];
 }
 
 @NgModule({
@@ -1923,7 +1925,7 @@ import { snakeCase } from \\"lodash\\";
     <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
 
-      <ng-container *ngIf=\\"showReviewPrompt\\">
+      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\">
         <input placeholder=\\"Email\\" />
 
         <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -2218,6 +2220,38 @@ export class Video {
   bootstrap: [SomeOtherComponent],
 })
 export class VideoModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > Javascript Test > arrowFunctionInUseStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>Hello {{name}}</div>
+  \`,
+})
+export class MyComponent {
+  name = \\"steve\\";
+  setName(value) {
+    this.name = value;
+  }
+  updateNameWithArrowFn(value) {
+    this.name = value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -3929,6 +3963,8 @@ export class MyBasicComponent {
   underscore_fn_name() {
     return \\"bar\\";
   }
+  age = 1;
+  sports = [\\"\\"];
 }
 
 @NgModule({
@@ -5735,7 +5771,7 @@ import { snakeCase } from \\"lodash\\";
     <div [attr.data-user]=\\"name\\">
       <button (click)=\\"showReviewPrompt = true\\">Write a review</button>
 
-      <ng-container *ngIf=\\"showReviewPrompt\\">
+      <ng-container *ngIf=\\"showReviewPrompt || 'asdf'\\">
         <input placeholder=\\"Email\\" />
 
         <input placeholder=\\"Title\\" class=\\"input\\" />
@@ -6030,6 +6066,38 @@ export class Video {
   bootstrap: [SomeOtherComponent],
 })
 export class VideoModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > Typescript Test > arrowFunctionInUseStore 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>Hello {{name}}</div>
+  \`,
+})
+export class MyComponent {
+  name = \\"steve\\";
+  setName(value) {
+    this.name = value;
+  }
+  updateNameWithArrowFn(value) {
+    this.name = value;
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 

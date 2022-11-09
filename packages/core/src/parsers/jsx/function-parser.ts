@@ -4,7 +4,7 @@ import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-mod
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { JSONOrNode } from '../../types/json';
-import { MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent, StateValue } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { HOOKS } from '../../constants/hooks';
 import { parseStateObjectToMitosisState } from './state';
@@ -202,6 +202,13 @@ export const componentFunctionToJson = (
                 code: parseCodeJson(value),
                 type: 'property',
               };
+            }
+
+            // Typescript Parameter
+            if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
+              (state[varName] as StateValue).typeParameter = generate(
+                init.typeParameters.params[0],
+              ).code;
             }
           }
         }

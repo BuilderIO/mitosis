@@ -123,8 +123,21 @@ const parseStateValue = (
   item: babel.types.ObjectMethod | babel.types.ObjectProperty | babel.types.SpreadElement,
 ): ParsedStateValue => {
   if (types.isObjectProperty(item)) {
-    if (types.isFunctionExpression(item.value) || types.isArrowFunctionExpression(item.value)) {
+    if (types.isFunctionExpression(item.value)) {
       return createFunctionStringLiteralObjectProperty(item.key, item.value);
+    } else if (types.isArrowFunctionExpression(item.value)) {
+      // convert this to an object method instead
+      const n = babel.types.objectMethod(
+        'method',
+        item.key as babel.types.Expression,
+        item.value.params,
+        item.value.body as babel.types.BlockStatement,
+      );
+
+      return types.objectProperty(
+        item.key,
+        types.stringLiteral(`${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate(n).code}`),
+      );
     }
   }
   if (types.isObjectMethod(item)) {

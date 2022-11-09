@@ -18,6 +18,7 @@ const cases = [
 // Update this array when Mitosis adds new targets
 
 const packages = [
+  '@builder.io/e2e-alpine',
   '@builder.io/e2e-app-qwik-output',
   '@builder.io/e2e-app-vue3-output',
   '@builder.io/e2e-angular',

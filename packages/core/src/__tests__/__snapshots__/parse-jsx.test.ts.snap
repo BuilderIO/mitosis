@@ -442,9 +442,21 @@ exports[`Parse JSX > Basic 1`] = `
   "propsTypeRef": "MyBasicComponentProps",
   "refs": {},
   "state": {
+    "age": {
+      "code": 1,
+      "type": "property",
+      "typeParameter": "number",
+    },
     "name": {
       "code": "Steve",
       "type": "property",
+    },
+    "sports": {
+      "code": [
+        "",
+      ],
+      "type": "property",
+      "typeParameter": "Array<string>",
     },
     "underscore_fn_name": {
       "code": "underscore_fn_name() {
@@ -5338,7 +5350,7 @@ exports[`Parse JSX > Stamped.io 1`] = `
           "@type": "@builder.io/mitosis/node",
           "bindings": {
             "when": {
-              "code": "state.showReviewPrompt",
+              "code": "state.showReviewPrompt || 'asdf'",
             },
           },
           "children": [
@@ -6120,6 +6132,78 @@ exports[`Parse JSX > Video 1`] = `
   lazyLoad?: boolean;
 }",
   ],
+}
+`;
+
+exports[`Parse JSX > arrowFunctionInUseStore 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "Hello ",
+          },
+          "scope": {},
+        },
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.name",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "name": {
+      "code": "steve",
+      "type": "property",
+    },
+    "setName": {
+      "code": "setName(value) {
+  state.name = value;
+}",
+      "type": "method",
+    },
+    "updateNameWithArrowFn": {
+      "code": "updateNameWithArrowFn(value) {
+  state.name = value;
+}",
+      "type": "method",
+    },
+  },
+  "subComponents": [],
 }
 `;
 
