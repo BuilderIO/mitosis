@@ -330,13 +330,15 @@ export default function Fiddle() {
         let alpineOptions: ToAlpineOptions = {
           useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
           inlineState: this.options.alpineInline === 'true',
-        }
+        };
 
         state.output =
           state.outputTab === 'liquid'
             ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'alpine'
-            ? componentToAlpine({ plugins, ...commonOptions, ...alpineOptions})({ component: json })
+            ? componentToAlpine({ plugins, ...commonOptions, ...alpineOptions })({
+                component: json,
+              })
             : state.outputTab === 'html'
             ? componentToHtml({ plugins, ...commonOptions })({ component: json })
             : state.outputTab === 'webcomponents'

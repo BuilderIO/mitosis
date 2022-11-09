@@ -7,6 +7,8 @@ describe('Alpine.js', () => {
     // { inlineState: true },
     // { useShorthandSyntax: true },
     // { inlineState: true, useShorthandSyntax: true },
-  ]
-  possibleOptions.map(options => runTestsForTarget({ options, target: 'alpine', generator: componentToAlpine }));
+  ];
+  possibleOptions.map((options) =>
+    runTestsForTarget({ options, target: 'alpine', generator: componentToAlpine }),
+  );
 });
