@@ -2,6 +2,7 @@ import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 
 export const targets = [
+  { packageName: 'e2e-alpine', port: 7508 },
   { packageName: 'e2e-angular', port: 7506 },
   { packageName: 'e2e-qwik', port: 7507 },
   { packageName: 'e2e-react', port: 7502 },
