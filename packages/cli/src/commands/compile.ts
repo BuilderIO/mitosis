@@ -11,6 +11,7 @@ import { GluegunCommand } from 'gluegun';
 import { join } from 'path';
 import { UnionToIntersection } from '../types';
 import { getMitosisConfig } from '../helpers/get-mitosis-config';
+import { flow } from 'fp-ts/lib/function';
 
 type GeneratorOpts = GeneratorOptions[Target];
 
@@ -101,8 +102,6 @@ const command: GluegunCommand = {
     }
 
     for await (const { data, path } of readFiles()) {
-      let output: any;
-
       if (outDir) {
         out = join(outDir, path);
       }
@@ -131,7 +130,28 @@ const command: GluegunCommand = {
         }
 
         // TODO validate generator options
-        output = generator(generatorOpts as any)({ component: json, path });
+        const outputFiles = generator(generatorOpts as any)({ component: json, path });
+
+        const withHeader = (str: string | object) => {
+          return header && !isJSON(str) ? `${header}\n${str}` : str;
+        };
+        const prettyPrint = (str: string | object): string => {
+          return isJSON(str) ? JSON.stringify(str, null, 2) : str;
+        };
+        const formattedOutput = flow(withHeader, prettyPrint);
+
+        outputFiles.map((output) => {
+          if (!out) {
+            console.log(formattedOutput(output.content));
+            return;
+          }
+
+          print.info(out);
+
+          if (!dryRun) {
+            filesystem.write(out, formattedOutput(output.content));
+          }
+        });
       } catch (e) {
         print.divider();
         print.info(`Path: ${path}`);
@@ -139,27 +159,6 @@ const command: GluegunCommand = {
         print.info('Error:');
         print.error(e);
         process.exit(1);
-      }
-
-      const isJSON = typeof output === 'object';
-
-      if (!isJSON) {
-        output = header ? `${header}\n${output}` : output;
-      }
-
-      if (!out) {
-        if (isJSON) {
-          console.log(JSON.stringify(output, null, 2));
-          return;
-        }
-        console.log(output);
-        return;
-      }
-
-      print.info(out);
-
-      if (!dryRun) {
-        filesystem.write(out, output);
       }
     }
   },
@@ -180,6 +179,10 @@ function listTargets() {
 
 function isTarget(term: string): term is Target {
   return typeof targets[term] !== 'undefined';
+}
+
+function isJSON(obj: any): obj is object {
+  return typeof obj === 'object';
 }
 
 async function readStdin() {
