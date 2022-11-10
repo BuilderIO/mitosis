@@ -11,6 +11,7 @@ const nextConfig = {
       // https://webpack.js.org/configuration/resolve/#resolvealias
       fs: false,
     };
+    config.resolve.mainFields = ['browser', 'main', 'module'];
 
     config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
 
