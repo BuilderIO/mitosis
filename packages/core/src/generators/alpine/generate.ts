@@ -241,5 +241,5 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     if (options.plugins) {
       str = runPostCodePlugins(str, options.plugins);
     }
-    return str;
+    return [{ content: str, type: 'component' }];
   };
