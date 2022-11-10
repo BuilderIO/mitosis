@@ -214,7 +214,7 @@ export const componentToAlpine: TranspilerGenerator<ToAlpineOptions> =
     if (!options.inlineState) {
       str += `<script>
           ${babelTransformCode(`document.addEventListener('alpine:init', () => {
-              Alpine.data('${camelCase(json.name)}', () => (${stateObjectString}))
+              Alpine.data('${camelCase(json.name)}', (props) => (${stateObjectString}))
           })`)}
         </script>`;
     }
