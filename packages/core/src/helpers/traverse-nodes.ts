@@ -3,7 +3,7 @@ import { MitosisNode } from '../types/mitosis-node';
 import traverse, { TraverseContext } from 'traverse';
 import { isMitosisNode } from './is-mitosis-node';
 
-export function tarverseNodes(
+export function traverseNodes(
   component: MitosisComponent | MitosisNode,
   cb: (node: MitosisNode, context: TraverseContext) => void,
 ) {

@@ -13,6 +13,7 @@ export const getFileExtensionForTarget = ({
   switch (target) {
     case 'angular':
       return '.ts';
+    case 'alpine':
     case 'html':
       return '.html';
     case 'solid':
