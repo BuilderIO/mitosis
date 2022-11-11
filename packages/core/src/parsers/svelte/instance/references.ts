@@ -30,7 +30,7 @@ function isPropertyOrStateReference(index: string) {
 
 export function parseReferences(json: SveltosisComponent, node: VariableDeclaration) {
   const declaration = node.declarations[0];
-  let code: string[] | Record<string, string> | string;
+  let code: string[] | Record<string, string> | string | {}[];
   let type: any = 'property';
 
   switch (declaration?.init?.type) {
@@ -39,14 +39,14 @@ export function parseReferences(json: SveltosisComponent, node: VariableDeclarat
         return getParsedValue(json, element as Expression);
       });
 
-      if (some(code, (index: string) => isPropertyOrStateReference(index))) {
+      if (some(code, (c: string) => isPropertyOrStateReference(c))) {
         const name = (declaration.id as Identifier).name;
         json.state[name] = {
-          code: `get ${name}() { return [${code.map((index) => {
-            if (isPropertyOrStateReference(index)) {
-              return index;
+          code: `get ${name}() { return [${code.map((c) => {
+            if (isPropertyOrStateReference(c as string)) {
+              return c;
             }
-            return JSON.stringify(index);
+            return JSON.stringify(c);
           })}]}`,
           type: 'getter',
         };
