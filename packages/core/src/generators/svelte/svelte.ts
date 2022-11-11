@@ -244,7 +244,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           }
 
           if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
-            propDeclaration += `=${json5.stringify(json.defaultProps[name])}`;
+            propDeclaration += `=${
+              json.defaultProps[name]?.type === 'method'
+                ? json.defaultProps[name]?.code
+                : json5.stringify(json.defaultProps[name]?.code)
+            }`;
           }
 
           propDeclaration += ';';
@@ -284,7 +288,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           : dataString
       }
       ${json.hooks.onInit?.code ?? ''}
-      
+
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
 
       ${

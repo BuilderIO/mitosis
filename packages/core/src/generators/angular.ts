@@ -393,6 +393,21 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     Object.entries(json.meta.angularConfig || {}).forEach(([key, value]) => {
       componentMetadata[key] = value;
     });
+
+    const getPropsDefinition = ({ json }: { json: MitosisComponent }) => {
+      if (!json.defaultProps) return '';
+      const defalutPropsString = Object.keys(json.defaultProps)
+        .map((prop) => {
+          const value = json.defaultProps!.hasOwnProperty(prop)
+            ? json.defaultProps![prop]?.code
+            : {};
+          const isMethod = json.defaultProps![prop]?.type === 'method';
+          return `${prop}: ${isMethod ? `${value}}` : json5.stringify(value)}`;
+        })
+        .join(',');
+      return `const defaultProps = {${defalutPropsString}};\n`;
+    };
+
     let str = dedent`
     import { ${outputs.length ? 'Output, EventEmitter, \n' : ''} ${
       options?.experimental?.inject ? 'Inject, forwardRef,' : ''
@@ -402,7 +417,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
     ${options.standalone ? `import { CommonModule } from '@angular/common';` : ''}
 
     ${json.types ? json.types.join('\n') : ''}
-    ${!json.defaultProps ? '' : `const defaultProps = ${json5.stringify(json.defaultProps)}\n`}
+    ${getPropsDefinition({ json })}
     ${renderPreComponent({
       component: json,
       target: 'angular',

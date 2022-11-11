@@ -20,7 +20,16 @@ const getCompositionPropDefinition = ({
 
   if (component.defaultProps) {
     const generic = options.typescript ? `<${component.propsTypeRef}>` : '';
-    str += `withDefaults(defineProps${generic}(), ${json5.stringify(component.defaultProps)})`;
+    const defalutPropsString = props
+      .map((prop) => {
+        const value = component.defaultProps!.hasOwnProperty(prop)
+          ? component.defaultProps![prop]?.code
+          : {};
+        const isMethod = component.defaultProps![prop]?.type === 'method';
+        return `${prop}: ${isMethod ? `${value}}` : json5.stringify(value)}`;
+      })
+      .join(',');
+    str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;
   } else if (options.typescript && component.propsTypeRef && component.propsTypeRef !== 'any') {
     str += `defineProps<${component.propsTypeRef}>()`;
   } else {

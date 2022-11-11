@@ -136,22 +136,35 @@ export function generateOptionsApiScript(
 
   const componentsUsed = uniq([...componentsUsedInTemplate, ...importedComponents]);
 
-  let propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
-    (prop) => prop !== 'children' && prop !== 'class',
-  );
-
-  // add default props (if set)
-  if (component.defaultProps) {
-    propsDefinition = propsDefinition.reduce(
-      (propsDefinition: DefaultProps, curr: string) => (
-        (propsDefinition[curr] = component.defaultProps?.hasOwnProperty(curr)
-          ? { default: component.defaultProps[curr] }
-          : {}),
-        propsDefinition
-      ),
-      {},
+  const getPropDefinition = ({
+    component,
+    props,
+  }: {
+    component: MitosisComponent;
+    props: string[];
+  }) => {
+    const propsDefinition: PropsDefinition<DefaultProps> = Array.from(props).filter(
+      (prop) => prop !== 'children' && prop !== 'class',
     );
-  }
+    let str = 'props: ';
+
+    if (component.defaultProps) {
+      const defalutPropsString = propsDefinition
+        .map((prop) => {
+          const value = component.defaultProps!.hasOwnProperty(prop)
+            ? component.defaultProps![prop]?.code
+            : {};
+          const isMethod = component.defaultProps![prop]?.type === 'method';
+          return `${prop}: { default: ${isMethod ? `${value}}` : json5.stringify(value)}}`;
+        })
+        .join(',');
+
+      str += `{${defalutPropsString}}`;
+    } else {
+      str += `${json5.stringify(propsDefinition)}`;
+    }
+    return `${str},`;
+  };
 
   return `
         export default {
@@ -163,7 +176,7 @@ export function generateOptionsApiScript(
               }${kebabCase(component.name)}',`
         }
         ${generateComponents(componentsUsed, options)}
-        ${props.length ? `props: ${json5.stringify(propsDefinition)},` : ''}
+        ${props.length ? getPropDefinition({ component, props }) : ''}
         ${
           dataString.length < 4
             ? ''
@@ -231,7 +244,7 @@ export function generateOptionsApiScript(
         ${
           getterString.length < 4
             ? ''
-            : ` 
+            : `
           computed: ${getterString},
         `
         }

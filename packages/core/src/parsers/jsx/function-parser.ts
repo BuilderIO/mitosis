@@ -20,6 +20,21 @@ export function generateUseStyleCode(expression: babel.types.CallExpression) {
   return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
 }
 
+function processDefaultPropsValue(value: any) {
+  if (types.isFunctionExpression(value) || types.isArrowFunctionExpression(value)) {
+    const code = generate(value)
+      .code.trim()
+      // Remove arbitrary block wrapping if any
+      // AKA
+      //  { console.log('hi') } -> console.log('hi')
+      .replace(/^{/, '')
+      .replace(/}$/, '');
+    return { type: 'method', code };
+  } else {
+    return { type: 'property', code: value.value };
+  }
+}
+
 export function parseDefaultPropsHook(
   component: MitosisComponent,
   expression: babel.types.CallExpression,
@@ -32,7 +47,7 @@ export function parseDefaultPropsHook(
       if (i.key?.name) {
         component.defaultProps = {
           ...(component.defaultProps ?? {}),
-          [i.key?.name]: i.value.value,
+          [i.key?.name]: processDefaultPropsValue(i.value),
         };
       }
     });
