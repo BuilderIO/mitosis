@@ -16,6 +16,7 @@ const subComponent = getRawFile('./data/sub-component.raw');
 const componentWithContext = getRawFile('./data/context/component-with-context.raw');
 
 const expressionState = getRawFile('./data/expression-state.raw');
+const contentState = getRawFile('./data/context-state.raw');
 
 const basic = getRawFile('./data/basic.raw');
 const basicAttribute = getRawFile('./data/basic-attribute.raw');
@@ -162,7 +163,8 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
-  // expressionState,
+  expressionState,
+  contentState,
 };
 
 const SLOTS_TESTS: Tests = {

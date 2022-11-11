@@ -1926,6 +1926,32 @@ export default {
 
 exports[`Vue > Javascript Test > componentWithContext 1`] = `"Vue 2 template should have a single root element"`;
 
+exports[`Vue > Javascript Test > contentState 1`] = `
+"<template>
+  <div>setting context</div>
+</template>
+
+<script>
+import BuilderContext from \\"@dummy/context.vue\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { BuilderContext: BuilderContext },
+  props: [\\"content\\", \\"customComponents\\"],
+
+  provide() {
+    return {
+      BuilderContext: {
+        content: this.content,
+        registeredComponents: this.customComponents,
+      },
+    };
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue > Javascript Test > defaultProps 1`] = `
 "<template>
   <div>
@@ -2014,6 +2040,27 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ DEFAULT_VALUES }),
+};
+</script>
+"
+`;
+
+exports[`Vue > Javascript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"componentRef\\"],
+
+  data: () => ({
+    refToUse: !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null,
+  }),
 };
 </script>
 "
@@ -4854,6 +4901,32 @@ export default {
 
 exports[`Vue > Typescript Test > componentWithContext 1`] = `"Vue 2 template should have a single root element"`;
 
+exports[`Vue > Typescript Test > contentState 1`] = `
+"<template>
+  <div>setting context</div>
+</template>
+
+<script lang=\\"ts\\">
+import BuilderContext from \\"@dummy/context.vue\\";
+
+export default {
+  name: \\"render-content\\",
+  components: { BuilderContext: BuilderContext },
+  props: [\\"content\\", \\"customComponents\\"],
+
+  provide() {
+    return {
+      BuilderContext: {
+        content: this.content,
+        registeredComponents: this.customComponents,
+      },
+    };
+  },
+};
+</script>
+"
+`;
+
 exports[`Vue > Typescript Test > defaultProps 1`] = `
 "<template>
   <div>
@@ -4960,6 +5033,27 @@ export default {
   props: [\\"name\\"],
 
   data: () => ({ DEFAULT_VALUES }),
+};
+</script>
+"
+`;
+
+exports[`Vue > Typescript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  props: [\\"componentRef\\"],
+
+  data: () => ({
+    refToUse: !(this.componentRef instanceof Function)
+      ? this.componentRef
+      : null,
+  }),
 };
 </script>
 "

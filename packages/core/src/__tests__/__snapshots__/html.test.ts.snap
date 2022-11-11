@@ -3553,6 +3553,11 @@ exports[`Html > Javascript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Html > Javascript Test > contentState 1`] = `
+"<div>setting context</div>
+"
+`;
+
 exports[`Html > Javascript Test > defaultProps 1`] = `
 "<div>
   <template data-el=\\"show\\">
@@ -3811,6 +3816,66 @@ exports[`Html > Javascript Test > defaultValsWithTypes 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.name || DEFAULT_VALUES.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > Javascript Test > expressionState 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.refToUse --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.refToUse);
       });
 
       destroyAnyNodes();
@@ -8618,6 +8683,11 @@ exports[`Html > Typescript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Html > Typescript Test > contentState 1`] = `
+"<div>setting context</div>
+"
+`;
+
 exports[`Html > Typescript Test > defaultProps 1`] = `
 "<div>
   <template data-el=\\"show\\">
@@ -8876,6 +8946,66 @@ exports[`Html > Typescript Test > defaultValsWithTypes 1`] = `
 
       document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
         renderTextNode(el, props.name || DEFAULT_VALUES.name);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > Typescript Test > expressionState 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.refToUse --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    };
+    let props = {};
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.refToUse);
       });
 
       destroyAnyNodes();

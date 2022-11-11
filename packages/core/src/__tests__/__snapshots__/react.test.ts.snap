@@ -1912,6 +1912,26 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
+exports[`React > Javascript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props: any) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+"
+`;
+
 exports[`React > Javascript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -2019,6 +2039,20 @@ export default function ComponentWithTypes(props: Props) {
       {props.name || DEFAULT_VALUES.name}
     </div>
   );
+}
+"
+`;
+
+exports[`React > Javascript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
 }
 "
 `;
@@ -4626,6 +4660,26 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
+exports[`React > Typescript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props: any) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <div>setting context</div>
+    </BuilderContext.Provider>
+  );
+}
+"
+`;
+
 exports[`React > Typescript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -4733,6 +4787,20 @@ export default function ComponentWithTypes(props: Props) {
       {props.name || DEFAULT_VALUES.name}
     </div>
   );
+}
+"
+`;
+
+exports[`React > Typescript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
 }
 "
 `;

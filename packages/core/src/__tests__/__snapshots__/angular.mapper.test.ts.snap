@@ -2596,6 +2596,35 @@ export class ComponentWithContextModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > Javascript Test > contentState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+import BuilderContext from \\"@dummy/context.lite\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div>setting context</div>
+  \`,
+})
+export class RenderContent {
+  @Input() content: any;
+  @Input() customComponents: any;
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule],
+  exports: [RenderContent],
+  bootstrap: [SomeOtherComponent],
+})
+export class RenderContentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > Javascript Test > defaultProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -2739,6 +2768,36 @@ export class ComponentWithTypes {
   bootstrap: [SomeOtherComponent],
 })
 export class ComponentWithTypesModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > Javascript Test > expressionState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{refToUse}}</div>
+  \`,
+})
+export class MyComponent {
+  @Input() componentRef: any;
+
+  refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 
@@ -6446,6 +6505,35 @@ export class ComponentWithContextModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > Typescript Test > contentState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+import BuilderContext from \\"@dummy/context.lite\\";
+
+@Component({
+  selector: \\"render-content, RenderContent\\",
+  template: \`
+    <div>setting context</div>
+  \`,
+})
+export class RenderContent {
+  @Input() content: any;
+  @Input() customComponents: any;
+}
+
+@NgModule({
+  declarations: [RenderContent],
+  imports: [BrowserModule],
+  exports: [RenderContent],
+  bootstrap: [SomeOtherComponent],
+})
+export class RenderContentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > Typescript Test > defaultProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -6589,6 +6677,36 @@ export class ComponentWithTypes {
   bootstrap: [SomeOtherComponent],
 })
 export class ComponentWithTypesModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > Typescript Test > expressionState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{refToUse}}</div>
+  \`,
+})
+export class MyComponent {
+  @Input() componentRef: any;
+
+  refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
 "
 `;
 

@@ -2490,6 +2490,32 @@ export default class ComponentWithContext extends LitElement {
 "
 `;
 
+exports[`Lit > Javascript Test > contentState 1`] = `
+"import \\"@dummy/context.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"render-content\\")
+export default class RenderContent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+  @property() customComponents: any;
+
+  render() {
+    return html\`
+      
+      <div>setting context</div>
+
+    \`;
+  }
+}
+"
+`;
+
 exports[`Lit > Javascript Test > defaultProps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -2646,6 +2672,33 @@ export default class ComponentWithTypes extends LitElement {
         <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > Javascript Test > expressionState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() componentRef: any;
+
+  @state() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return html\`
+      
+      <div>\${this.refToUse}</div>
+
+    \`;
   }
 }
 "
@@ -6187,6 +6240,32 @@ export default class ComponentWithContext extends LitElement {
 "
 `;
 
+exports[`Lit > Typescript Test > contentState 1`] = `
+"import \\"@dummy/context.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"render-content\\")
+export default class RenderContent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() content: any;
+  @property() customComponents: any;
+
+  render() {
+    return html\`
+      
+      <div>setting context</div>
+
+    \`;
+  }
+}
+"
+`;
+
 exports[`Lit > Typescript Test > defaultProps 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -6343,6 +6422,33 @@ export default class ComponentWithTypes extends LitElement {
         <div>Hello \${this.name || DEFAULT_VALUES.name}</div>
 
       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > Typescript Test > expressionState 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @property() componentRef: any;
+
+  @state() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return html\`
+      
+      <div>\${this.refToUse}</div>
+
+    \`;
   }
 }
 "

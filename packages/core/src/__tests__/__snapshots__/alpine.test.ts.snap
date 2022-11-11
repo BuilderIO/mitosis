@@ -1541,6 +1541,16 @@ exports[`Alpine.js > Javascript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Alpine.js > Javascript Test > contentState 1`] = `
+"<div x-data=\\"renderContent()\\">setting context</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > Javascript Test > defaultProps 1`] = `
 "<div x-data=\\"button()\\">
   <template x-if=\\"link\\">
@@ -1601,6 +1611,20 @@ exports[`Alpine.js > Javascript Test > defaultValsWithTypes 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"componentWithTypes\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > Javascript Test > expressionState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    }));
   });
 </script>
 "
@@ -3648,6 +3672,16 @@ exports[`Alpine.js > Typescript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Alpine.js > Typescript Test > contentState 1`] = `
+"<div x-data=\\"renderContent()\\">setting context</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"renderContent\\", () => ({}));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > Typescript Test > defaultProps 1`] = `
 "<div x-data=\\"button()\\">
   <template x-if=\\"link\\">
@@ -3708,6 +3742,20 @@ exports[`Alpine.js > Typescript Test > defaultValsWithTypes 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"componentWithTypes\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > Typescript Test > expressionState 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"refToUse\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      refToUse: !(props.componentRef instanceof Function)
+        ? props.componentRef
+        : null,
+    }));
   });
 </script>
 "
