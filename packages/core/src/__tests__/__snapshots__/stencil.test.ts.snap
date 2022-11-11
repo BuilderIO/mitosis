@@ -1923,6 +1923,25 @@ export default class ComponentWithContext {
 "
 `;
 
+exports[`Stencil > Javascript Test > contentState 1`] = `
+"import BuilderContext from \\"@dummy/context.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+})
+export default class RenderContent {
+  @Prop() content: any;
+  @Prop() customComponents: any;
+
+  render() {
+    return <div>setting context</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > Javascript Test > defaultProps 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -2026,6 +2045,26 @@ export default class ComponentWithTypes {
         {this.name || DEFAULT_VALUES.name}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > Javascript Test > expressionState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() componentRef: any;
+
+  @State() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return <div>{this.refToUse}</div>;
   }
 }
 "
@@ -4554,6 +4593,25 @@ export default class ComponentWithContext {
 "
 `;
 
+exports[`Stencil > Typescript Test > contentState 1`] = `
+"import BuilderContext from \\"@dummy/context.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"render-content\\",
+})
+export default class RenderContent {
+  @Prop() content: any;
+  @Prop() customComponents: any;
+
+  render() {
+    return <div>setting context</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > Typescript Test > defaultProps 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -4657,6 +4715,26 @@ export default class ComponentWithTypes {
         {this.name || DEFAULT_VALUES.name}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > Typescript Test > expressionState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() componentRef: any;
+
+  @State() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return <div>{this.refToUse}</div>;
   }
 }
 "

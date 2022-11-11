@@ -17,6 +17,7 @@ const subComponent = getRawFile('./data/sub-component.raw.tsx');
 const componentWithContext = getRawFile('./data/context/component-with-context.raw.tsx');
 
 const expressionState = getRawFile('./data/expression-state.raw');
+const contentState = getRawFile('./data/context-state.raw');
 
 const basic = getRawFile('./data/basic.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
@@ -163,7 +164,8 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
-  // expressionState,
+  expressionState,
+  contentState,
 };
 
 const SLOTS_TESTS: Tests = {

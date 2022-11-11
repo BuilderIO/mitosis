@@ -1752,6 +1752,23 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
+exports[`RSC > Javascript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  _context.BuilderContext = {
+    content: props.content,
+    registeredComponents: props.customComponents,
+  };
+
+  return <div>setting context</div>;
+}
+"
+`;
+
 exports[`RSC > Javascript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -1865,6 +1882,23 @@ export default function ComponentWithTypes(props: Props) {
       {props.name || DEFAULT_VALUES.name}
     </div>
   );
+}
+"
+`;
+
+exports[`RSC > Javascript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    refToUse: !(props.componentRef instanceof Function)
+      ? props.componentRef
+      : null,
+  };
+
+  return <div>{state.refToUse}</div>;
 }
 "
 `;
@@ -4293,6 +4327,23 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
+exports[`RSC > Typescript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  _context.BuilderContext = {
+    content: props.content,
+    registeredComponents: props.customComponents,
+  };
+
+  return <div>setting context</div>;
+}
+"
+`;
+
 exports[`RSC > Typescript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 
@@ -4406,6 +4457,23 @@ export default function ComponentWithTypes(props: Props) {
       {props.name || DEFAULT_VALUES.name}
     </div>
   );
+}
+"
+`;
+
+exports[`RSC > Typescript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    refToUse: !(props.componentRef instanceof Function)
+      ? props.componentRef
+      : null,
+  };
+
+  return <div>{state.refToUse}</div>;
 }
 "
 `;
