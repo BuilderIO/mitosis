@@ -123,11 +123,13 @@ const addUpdateAfterSet = (json: MitosisComponent, options: InternalToHtmlOption
   traverse(json).forEach(function (item) {
     if (isMitosisNode(item)) {
       for (const key in item.bindings) {
-        const value = item.bindings[key]?.code as string;
+        const value = item.bindings[key]?.code;
 
-        const newValue = addUpdateAfterSetInCode(value, options);
-        if (newValue !== value) {
-          item.bindings[key]!.code = newValue;
+        if (value) {
+          const newValue = addUpdateAfterSetInCode(value, options);
+          if (newValue !== value) {
+            item.bindings[key]!.code = newValue;
+          }
         }
       }
     }
@@ -507,7 +509,7 @@ const blockToHtml = (
 };
 
 function addUpdateAfterSetInCode(
-  code: string,
+  code = '',
   options: InternalToHtmlOptions,
   useString = options.format === 'class' ? 'this.update' : 'update',
 ) {

@@ -1,7 +1,7 @@
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { checkIsCodeValue, MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './add-prevent-default';
@@ -16,6 +16,7 @@ import {
 } from '../../modules/plugins';
 import traverse from 'traverse';
 import { stableJSONserialize } from './stable-serialize';
+import { stableInject } from './stable-inject';
 
 Error.stackTraceLimit = 9999;
 
@@ -142,7 +143,7 @@ function emitTagNameHack(file: File, component: MitosisComponent, metadataValue:
       '=',
       convertMethodToFunction(
         metadataValue,
-        stateToMethodOrGetter(component.state),
+        getStateMethodsAndGetters(component.state),
         getLexicalScopeVars(component),
       ),
       ';',
@@ -288,7 +289,7 @@ function emitUseStore(file: File, stateInit: StateInit) {
       file.src.emit('<any>');
     }
     file.src.emit('(');
-    file.src.emit(stableJSONserialize(state));
+    file.src.emit(stableInject(state));
     file.src.emit(');');
   } else {
     // TODO hack for now so that `state` variable is defined, even though it is never read.
@@ -309,7 +310,7 @@ function emitStateMethodsAndRewriteBindings(
 ): StateInit {
   const lexicalArgs = getLexicalScopeVars(component);
   const state: StateInit = emitStateMethods(file, component.state, lexicalArgs);
-  const methodMap = stateToMethodOrGetter(component.state);
+  const methodMap = getStateMethodsAndGetters(component.state);
   rewriteCodeExpr(component, methodMap, lexicalArgs, metadata.qwik?.replace);
   return state;
 }
@@ -325,7 +326,7 @@ function rewriteCodeExpr(
   replace: Record<string, string> | undefined = {},
 ) {
   traverse(component).forEach(function (item) {
-    if (!(checkIsCodeValue(item) || checkIsObjectWithCodeBlock(item))) {
+    if (!checkIsObjectWithCodeBlock(item)) {
       return;
     }
 
@@ -361,35 +362,44 @@ function emitStateMethods(
 ): StateInit {
   const stateValues: StateValues = {};
   const stateInit: StateInit = [stateValues];
-  const methodMap = stateToMethodOrGetter(componentState);
-  Object.keys(componentState).forEach((key) => {
+  const methodMap = getStateMethodsAndGetters(componentState);
+  for (const key in componentState) {
     const stateValue = componentState[key];
-    if (checkIsCodeValue(stateValue)) {
-      let code = stateValue.code;
-      let prefixIdx = 0;
-      if (stateValue.type === 'getter') {
-        prefixIdx += 'get '.length;
-      } else if (stateValue.type === 'function') {
-        prefixIdx += 'function '.length;
-      }
-      code = code.substring(prefixIdx);
-      code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
-        '(',
-        `(${lexicalArgs.join(',')},`,
-      );
-      const functionName = code.split(/\(/)[0];
-      if (stateValue.type === 'getter') {
-        stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
-      }
-      if (!file.options.isTypeScript) {
-        // Erase type information
-        code = convertTypeScriptToJS(code);
-      }
-      file.exportConst(functionName, 'function ' + code, true);
-    } else {
-      stateValues[key] = stateValue?.code;
+
+    switch (stateValue?.type) {
+      case 'method':
+      case 'getter':
+      case 'function':
+        let code = stateValue.code;
+        let prefixIdx = 0;
+        if (stateValue.type === 'getter') {
+          prefixIdx += 'get '.length;
+        } else if (stateValue.type === 'function') {
+          prefixIdx += 'function '.length;
+        }
+        code = code.substring(prefixIdx);
+        code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
+          '(',
+          `(${lexicalArgs.join(',')},`,
+        );
+        const functionName = code.split(/\(/)[0];
+        if (stateValue.type === 'getter') {
+          stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
+        }
+        if (!file.options.isTypeScript) {
+          // Erase type information
+          code = convertTypeScriptToJS(code);
+        }
+        file.exportConst(functionName, 'function ' + code, true);
+
+        continue;
+
+      case 'property':
+        stateValues[key] = stateValue.code;
+        continue;
     }
-  });
+  }
+
   return stateInit;
 }
 
@@ -403,7 +413,7 @@ function extractGetterBody(code: string): string {
   return code.substring(start + 1, end).trim();
 }
 
-function stateToMethodOrGetter(
+function getStateMethodsAndGetters(
   state: MitosisComponent['state'],
 ): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};

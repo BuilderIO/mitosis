@@ -15,6 +15,8 @@ const basicOutputs = getRawFile('./data/basic-outputs.raw');
 const subComponent = getRawFile('./data/sub-component.raw');
 const componentWithContext = getRawFile('./data/context/component-with-context.raw');
 
+const expressionState = getRawFile('./data/expression-state.raw');
+
 const basic = getRawFile('./data/basic.raw');
 const basicAttribute = getRawFile('./data/basic-attribute.raw');
 const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw');
@@ -160,6 +162,7 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
+  // expressionState,
 };
 
 const SLOTS_TESTS: Tests = {

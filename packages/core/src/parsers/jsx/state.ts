@@ -6,7 +6,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { parseCode, parseCodeJson, uncapitalize } from './helpers';
+import { parseCode, uncapitalize } from './helpers';
 
 const { types } = babel;
 
@@ -127,12 +127,12 @@ const processStateObjectSlice = (
       // { foo: ('string' as SomeType) }
       if (types.isTSAsExpression(item.value)) {
         return {
-          code: parseCodeJson(item.value.expression),
+          code: parseCode(item.value.expression),
           type: 'property',
         };
       }
       return {
-        code: parseCodeJson(item.value),
+        code: parseCode(item.value),
         type: 'property',
       };
     }
