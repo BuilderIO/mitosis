@@ -4,7 +4,7 @@ import { traceReferenceToModulePath } from '../../helpers/trace-reference-to-mod
 import { createMitosisComponent } from '../../helpers/create-mitosis-component';
 import { getBindingsCode } from '../../helpers/get-bindings';
 import { JSONOrNode } from '../../types/json';
-import { MitosisComponent, StateValue } from '../../types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { MitosisNode } from '../../types/mitosis-node';
 import { HOOKS } from '../../constants/hooks';
 import { parseStateObjectToMitosisState } from './state';
@@ -12,7 +12,7 @@ import { Context } from './types';
 import { parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
-import { METADATA_HOOK_NAME } from './metadata';
+import { METADATA_HOOK_NAME } from './hooks';
 
 const { types } = babel;
 
@@ -54,6 +54,16 @@ export function parseDefaultPropsHook(
   }
 }
 
+const processHookCode = (
+  firstArg: babel.types.ArrowFunctionExpression | babel.types.FunctionExpression,
+) =>
+  generate(firstArg.body)
+    .code.trim()
+    // Remove arbitrary block wrapping if any
+    // AKA
+    //  { console.log('hi') } -> console.log('hi')
+    .replace(/^{/, '')
+    .replace(/}$/, '');
 /**
  * Parses function declarations within the Mitosis copmonent's body to JSON
  */
@@ -103,33 +113,17 @@ export const componentFunctionToJson = (
                 };
               }
             }
-          } else if (
-            expression.callee.name === 'onMount' ||
-            expression.callee.name === 'useEffect'
-          ) {
+          } else if (expression.callee.name === 'onMount') {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
-              const code = generate(firstArg.body)
-                .code.trim()
-                // Remove arbitrary block wrapping if any
-                // AKA
-                //  { console.log('hi') } -> console.log('hi')
-                .replace(/^{/, '')
-                .replace(/}$/, '');
-              // TODO: add arguments
+              const code = processHookCode(firstArg);
               hooks.onMount = { code };
             }
           } else if (expression.callee.name === 'onUpdate') {
             const firstArg = expression.arguments[0];
             const secondArg = expression.arguments[1];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
-              const code = generate(firstArg.body)
-                .code.trim()
-                // Remove arbitrary block wrapping if any
-                // AKA
-                //  { console.log('hi') } -> console.log('hi')
-                .replace(/^{/, '')
-                .replace(/}$/, '');
+              const code = processHookCode(firstArg);
               if (
                 !secondArg ||
                 (types.isArrayExpression(secondArg) && secondArg.elements.length > 0)
@@ -148,25 +142,13 @@ export const componentFunctionToJson = (
           } else if (expression.callee.name === 'onUnMount') {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
-              const code = generate(firstArg.body)
-                .code.trim()
-                // Remove arbitrary block wrapping if any
-                // AKA
-                //  { console.log('hi') } -> console.log('hi')
-                .replace(/^{/, '')
-                .replace(/}$/, '');
+              const code = processHookCode(firstArg);
               hooks.onUnMount = { code };
             }
           } else if (expression.callee.name === 'onInit') {
             const firstArg = expression.arguments[0];
             if (types.isFunctionExpression(firstArg) || types.isArrowFunctionExpression(firstArg)) {
-              const code = generate(firstArg.body)
-                .code.trim()
-                // Remove arbitrary block wrapping if any
-                // AKA
-                //  { console.log('hi') } -> console.log('hi')
-                .replace(/^{/, '')
-                .replace(/}$/, '');
+              const code = processHookCode(firstArg);
               hooks.onInit = { code };
             }
           } else if (expression.callee.name === HOOKS.DEFAULT_PROPS) {
@@ -195,10 +177,10 @@ export const componentFunctionToJson = (
     if (types.isVariableDeclaration(item)) {
       const declaration = item.declarations[0];
       const init = declaration.init;
-      if (types.isCallExpression(init)) {
+      if (types.isCallExpression(init) && types.isIdentifier(init.callee)) {
         // React format, like:
         // const [foo, setFoo] = useState(...)
-        if (types.isArrayPattern(declaration.id)) {
+        if (types.isArrayPattern(declaration.id) && init.callee.name === HOOKS.STATE) {
           const varName =
             types.isIdentifier(declaration.id.elements[0]) && declaration.id.elements[0].name;
           if (varName) {
@@ -221,51 +203,47 @@ export const componentFunctionToJson = (
 
             // Typescript Parameter
             if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
-              (state[varName] as StateValue).typeParameter = generate(
-                init.typeParameters.params[0],
-              ).code;
+              state[varName]!.typeParameter = generate(init.typeParameters.params[0]).code;
             }
           }
         }
-        // Legacy format, like:
+        // Solid store format, like:
         // const state = useStore({...})
-        else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === HOOKS.STATE || init.callee.name === HOOKS.STORE) {
-            const firstArg = init.arguments[0];
-            if (types.isObjectExpression(firstArg)) {
-              const useStoreState = parseStateObjectToMitosisState(firstArg);
-              Object.assign(state, useStoreState);
-            }
-          } else if (init.callee.name === HOOKS.CONTEXT) {
-            const firstArg = init.arguments[0];
-            if (types.isVariableDeclarator(declaration) && types.isIdentifier(declaration.id)) {
-              if (types.isIdentifier(firstArg)) {
-                const varName = declaration.id.name;
-                const name = firstArg.name;
-                accessedContext[varName] = {
-                  name,
-                  path: traceReferenceToModulePath(context.builder.component.imports, name)!,
-                };
-              } else {
-                const varName = declaration.id.name;
-                const name = generate(firstArg).code;
-                accessedContext[varName] = {
-                  name,
-                  path: '',
-                };
-              }
-            }
-          } else if (init.callee.name === HOOKS.REF) {
-            if (types.isIdentifier(declaration.id)) {
-              const firstArg = init.arguments[0];
+        if (init.callee.name === HOOKS.STORE) {
+          const firstArg = init.arguments[0];
+          if (types.isObjectExpression(firstArg)) {
+            const useStoreState = parseStateObjectToMitosisState(firstArg);
+            Object.assign(state, useStoreState);
+          }
+        } else if (init.callee.name === HOOKS.CONTEXT) {
+          const firstArg = init.arguments[0];
+          if (types.isVariableDeclarator(declaration) && types.isIdentifier(declaration.id)) {
+            if (types.isIdentifier(firstArg)) {
               const varName = declaration.id.name;
-              refs[varName] = {
-                argument: generate(firstArg).code,
+              const name = firstArg.name;
+              accessedContext[varName] = {
+                name,
+                path: traceReferenceToModulePath(context.builder.component.imports, name)!,
               };
-              // Typescript Parameter
-              if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
-                refs[varName].typeParameter = generate(init.typeParameters.params[0]).code;
-              }
+            } else {
+              const varName = declaration.id.name;
+              const name = generate(firstArg).code;
+              accessedContext[varName] = {
+                name,
+                path: '',
+              };
+            }
+          }
+        } else if (init.callee.name === HOOKS.REF) {
+          if (types.isIdentifier(declaration.id)) {
+            const firstArg = init.arguments[0];
+            const varName = declaration.id.name;
+            refs[varName] = {
+              argument: generate(firstArg).code,
+            };
+            // Typescript Parameter
+            if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
+              refs[varName].typeParameter = generate(init.typeParameters.params[0]).code;
             }
           }
         }

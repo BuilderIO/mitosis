@@ -225,6 +225,18 @@ const JSX_TESTS: Tests[] = [
 ];
 
 const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
+  alpine: [
+    CONTEXT_TEST,
+    BASIC_TESTS,
+    SLOTS_TESTS, // Slots not implemented
+    SHOW_TESTS,
+    FORWARD_REF_TESTS,
+    MULTI_ON_UPDATE_TESTS,
+    FORM_BLOCK_TESTS,
+    FOR_SHOW_TESTS,
+    ADVANCED_REF,
+    ON_UPDATE_RETURN,
+  ],
   react: [
     CONTEXT_TEST,
     BASIC_TESTS,
