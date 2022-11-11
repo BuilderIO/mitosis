@@ -22,24 +22,6 @@ export const staticControlFlow: Rule.RuleModule = {
         }
       },
 
-      CallExpression(node) {
-        if (types.isCallExpression(node)) {
-          if (types.isIdentifier(node.callee) && node.callee.name === 'useEffect') {
-            const useEffectMessage =
-              'Only useEffect with an empty array second argument is allowed. E.g. useEffect(...) must be useEffect(..., [])';
-            const secondArg = node.arguments[1];
-            if (
-              !(secondArg && types.isArrayExpression(secondArg) && secondArg.elements.length === 0)
-            ) {
-              context.report({
-                node: node,
-                message: useEffectMessage,
-              });
-            }
-          }
-        }
-      },
-
       JSXExpressionContainer(node) {
         if (types.isJSXExpressionContainer(node)) {
           if (types.isConditionalExpression(node.expression)) {
