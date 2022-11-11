@@ -1,6 +1,4 @@
 import * as babel from '@babel/core';
-import json5 from 'json5';
-import generate from '@babel/generator';
 
 import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import traverse from 'traverse';
@@ -8,7 +6,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { uncapitalize } from './helpers';
+import { parseCode, parseCodeJson, uncapitalize } from './helpers';
 
 const { types } = babel;
 
@@ -109,7 +107,7 @@ const processStateObjectSlice = (
   if (types.isObjectProperty(item)) {
     if (types.isFunctionExpression(item.value)) {
       return {
-        code: generate(item.value).code,
+        code: parseCode(item.value),
         type: 'function',
       };
     } else if (types.isArrowFunctionExpression(item.value)) {
@@ -119,7 +117,7 @@ const processStateObjectSlice = (
         item.value.params,
         item.value.body as babel.types.BlockStatement,
       );
-      const code = generate(n).code;
+      const code = parseCode(n);
       return {
         code: code,
         type: 'method',
@@ -129,17 +127,17 @@ const processStateObjectSlice = (
       // { foo: ('string' as SomeType) }
       if (types.isTSAsExpression(item.value)) {
         return {
-          code: json5.parse(generate(item.value.expression).code),
+          code: parseCodeJson(item.value.expression),
           type: 'property',
         };
       }
       return {
-        code: json5.parse(generate(item.value).code),
+        code: parseCodeJson(item.value),
         type: 'property',
       };
     }
   } else if (types.isObjectMethod(item)) {
-    const n = generate({ ...item, returnType: null }).code;
+    const n = parseCode({ ...item, returnType: null });
 
     const isGetter = item.kind === 'get';
 
