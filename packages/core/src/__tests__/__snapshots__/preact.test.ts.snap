@@ -2070,6 +2070,21 @@ export default function ComponentWithTypes(props: Props) {
 "
 `;
 
+exports[`Preact > Javascript Test > expressionState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
+}
+"
+`;
+
 exports[`Preact > Javascript Test > import types 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4858,6 +4873,21 @@ export default function ComponentWithTypes(props: Props) {
       {props.name || DEFAULT_VALUES.name}
     </div>
   );
+}
+"
+`;
+
+exports[`Preact > Typescript Test > expressionState 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse}</div>;
 }
 "
 `;

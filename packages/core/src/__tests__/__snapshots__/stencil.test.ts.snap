@@ -1878,14 +1878,16 @@ exports[`Stencil > Javascript Test > classState 1`] = `
 @Component({
   tag: \\"my-basic-component\\",
   styles: \`
-    .div {
-      padding: 10px;
-    }
+      .div {
+        padding: 10px;
+      }
 \`,
 })
 export default class MyBasicComponent {
   @State() classState = \\"testClassName\\";
-  @State() styleState = { color: \\"red\\" };
+  @State() styleState = {
+    color: \\"red\\",
+  };
 
   render() {
     return (
@@ -2029,6 +2031,26 @@ export default class ComponentWithTypes {
 "
 `;
 
+exports[`Stencil > Javascript Test > expressionState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() componentRef: any;
+
+  @State() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
 
@@ -2065,7 +2087,9 @@ exports[`Stencil > Javascript Test > multipleSpreads 1`] = `
   tag: \\"my-basic-component\\",
 })
 export default class MyBasicComponent {
-  @State() attrs = { hello: \\"world\\" };
+  @State() attrs = {
+    hello: \\"world\\",
+  };
 
   render() {
     return <input {...state.attrs} {...props} />;
@@ -4505,14 +4529,16 @@ exports[`Stencil > Typescript Test > classState 1`] = `
 @Component({
   tag: \\"my-basic-component\\",
   styles: \`
-    .div {
-      padding: 10px;
-    }
+      .div {
+        padding: 10px;
+      }
 \`,
 })
 export default class MyBasicComponent {
   @State() classState = \\"testClassName\\";
-  @State() styleState = { color: \\"red\\" };
+  @State() styleState = {
+    color: \\"red\\",
+  };
 
   render() {
     return (
@@ -4656,6 +4682,26 @@ export default class ComponentWithTypes {
 "
 `;
 
+exports[`Stencil > Typescript Test > expressionState 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() componentRef: any;
+
+  @State() refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+
+  render() {
+    return <div>{this.refToUse}</div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > Typescript Test > import types 1`] = `
 "import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
 import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
@@ -4693,7 +4739,9 @@ exports[`Stencil > Typescript Test > multipleSpreads 1`] = `
   tag: \\"my-basic-component\\",
 })
 export default class MyBasicComponent {
-  @State() attrs = { hello: \\"world\\" };
+  @State() attrs = {
+    hello: \\"world\\",
+  };
 
   render() {
     return <input {...state.attrs} {...props} />;

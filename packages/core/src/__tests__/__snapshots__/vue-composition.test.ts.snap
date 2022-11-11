@@ -1734,7 +1734,9 @@ exports[`Vue > Javascript Test > classState 1`] = `
 import { ref } from \\"vue\\";
 
 const classState = ref(\\"testClassName\\");
-const styleState = ref({ color: \\"red\\" });
+const styleState = ref({
+  color: \\"red\\",
+});
 
 function _classStringToObject(str) {
   const obj = {};
@@ -1860,6 +1862,22 @@ const props = defineProps([\\"name\\"]);
 "
 `;
 
+exports[`Vue > Javascript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const props = defineProps([\\"componentRef\\"]);
+const refToUse = ref(
+  !(props.componentRef instanceof Function) ? props.componentRef : null
+);
+</script>
+"
+`;
+
 exports[`Vue > Javascript Test > import types 1`] = `
 "<template>
   <render-block
@@ -1941,7 +1959,9 @@ exports[`Vue > Javascript Test > multipleSpreads 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const attrs = ref({ hello: \\"world\\" });
+const attrs = ref({
+  hello: \\"world\\",
+});
 </script>
 "
 `;
@@ -4320,7 +4340,9 @@ exports[`Vue > Typescript Test > classState 1`] = `
 import { ref } from \\"vue\\";
 
 const classState = ref(\\"testClassName\\");
-const styleState = ref({ color: \\"red\\" });
+const styleState = ref({
+  color: \\"red\\",
+});
 
 function _classStringToObject(str) {
   const obj = {};
@@ -4467,6 +4489,22 @@ const props = defineProps<Props>();
 "
 `;
 
+exports[`Vue > Typescript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const props = defineProps([\\"componentRef\\"]);
+const refToUse = ref(
+  !(props.componentRef instanceof Function) ? props.componentRef : null
+);
+</script>
+"
+`;
+
 exports[`Vue > Typescript Test > import types 1`] = `
 "<template>
   <render-block
@@ -4555,7 +4593,9 @@ exports[`Vue > Typescript Test > multipleSpreads 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const attrs = ref({ hello: \\"world\\" });
+const attrs = ref({
+  hello: \\"world\\",
+});
 </script>
 "
 `;

@@ -2500,7 +2500,9 @@ import { Component } from \\"@angular/core\\";
 })
 export class MyBasicComponent {
   classState = \\"testClassName\\";
-  styleState = { color: \\"red\\" };
+  styleState = {
+    color: \\"red\\",
+  };
 }
 
 @NgModule({
@@ -2691,6 +2693,35 @@ export class ComponentWithTypesModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > Javascript Test > expressionState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{refToUse}}</div>
+  \`,
+})
+export class MyComponent {
+  @Input() componentRef: any;
+
+  refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > Javascript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -2836,7 +2867,9 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyBasicComponent {
-  attrs = { hello: \\"world\\" };
+  attrs = {
+    hello: \\"world\\",
+  };
 }
 
 @NgModule({
@@ -6265,7 +6298,9 @@ import { Component } from \\"@angular/core\\";
 })
 export class MyBasicComponent {
   classState = \\"testClassName\\";
-  styleState = { color: \\"red\\" };
+  styleState = {
+    color: \\"red\\",
+  };
 }
 
 @NgModule({
@@ -6456,6 +6491,35 @@ export class ComponentWithTypesModule {}
 "
 `;
 
+exports[`Angular with Preserve Imports and File Extensions > Typescript Test > expressionState 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{refToUse}}</div>
+  \`,
+})
+export class MyComponent {
+  @Input() componentRef: any;
+
+  refToUse = !(this.componentRef instanceof Function)
+    ? this.componentRef
+    : null;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Preserve Imports and File Extensions > Typescript Test > import types 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -6607,7 +6671,9 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyBasicComponent {
-  attrs = { hello: \\"world\\" };
+  attrs = {
+    hello: \\"world\\",
+  };
 }
 
 @NgModule({
