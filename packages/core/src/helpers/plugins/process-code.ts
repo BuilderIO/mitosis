@@ -69,7 +69,7 @@ export const CODE_PROCESSOR_PLUGIN =
 
         for (const key in json.state) {
           const state = json.state[key];
-          if (state && state.type !== 'property') {
+          if (state) {
             state.code = codeProcessor('state')(state.code);
           }
         }

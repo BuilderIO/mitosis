@@ -34,14 +34,14 @@ export const collectModuleScopeHooks = (
   component: MitosisComponent,
   options: ParseMitosisOptions,
 ) => {
-  const hookNames = new Set((options.jsonHookNames || []).concat(METADATA_HOOK_NAME));
   return nodes.filter((node) => {
     const hook = getHook(node);
     if (!hook) {
       return true;
     }
     if (types.isIdentifier(hook.callee)) {
-      if (hookNames.has(hook.callee.name)) {
+      const metadataHooks = new Set((options.jsonHookNames || []).concat(METADATA_HOOK_NAME));
+      if (metadataHooks.has(hook.callee.name)) {
         try {
           if (component.meta[hook.callee.name]) {
             component.meta[hook.callee.name] = {
