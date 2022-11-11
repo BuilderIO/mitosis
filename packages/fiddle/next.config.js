@@ -16,7 +16,7 @@ const nextConfig = {
     config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
 
     config.module.rules.push({
-      test: /d.ts/,
+      test: /svelte-preprocess.+d\.ts/,
       loader: 'ignore-loader',
     });
 
