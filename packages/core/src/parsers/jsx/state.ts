@@ -120,9 +120,6 @@ const processStateObjectSlice = (
         item.value.body as babel.types.BlockStatement,
       );
       const code = generate(n).code;
-      if (code.includes('Builder.isEditing')) {
-        console.log('OOG', n);
-      }
       return {
         code: code,
         type: 'method',
@@ -143,9 +140,6 @@ const processStateObjectSlice = (
     }
   } else if (types.isObjectMethod(item)) {
     const n = generate({ ...item, returnType: null }).code;
-    if (n.includes('Builder.isEditing')) {
-      console.log('OOG', n);
-    }
 
     const isGetter = item.kind === 'get';
 
