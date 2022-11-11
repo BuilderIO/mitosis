@@ -1,7 +1,7 @@
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { fastClone } from '../../helpers/fast-clone';
 import { collectCss } from '../../helpers/styles/collect-css';
-import { checkIsCodeValue, MitosisComponent } from '../../types/mitosis-component';
+import { MitosisComponent } from '../../types/mitosis-component';
 import { BaseTranspilerOptions, TranspilerGenerator } from '../../types/transpiler';
 import { checkHasState } from '../../helpers/state';
 import { addPreventDefault } from './add-prevent-default';
@@ -325,7 +325,7 @@ function rewriteCodeExpr(
   replace: Record<string, string> | undefined = {},
 ) {
   traverse(component).forEach(function (item) {
-    if (!(checkIsCodeValue(item) || checkIsObjectWithCodeBlock(item))) {
+    if (!checkIsObjectWithCodeBlock(item)) {
       return;
     }
 
@@ -364,7 +364,7 @@ function emitStateMethods(
   const methodMap = stateToMethodOrGetter(componentState);
   Object.keys(componentState).forEach((key) => {
     const stateValue = componentState[key];
-    if (checkIsCodeValue(stateValue)) {
+    if (stateValue) {
       let code = stateValue.code;
       let prefixIdx = 0;
       if (stateValue.type === 'getter') {
@@ -386,8 +386,6 @@ function emitStateMethods(
         code = convertTypeScriptToJS(code);
       }
       file.exportConst(functionName, 'function ' + code, true);
-    } else {
-      stateValues[key] = stateValue?.code;
     }
   });
   return stateInit;
