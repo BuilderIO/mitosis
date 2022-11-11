@@ -3,7 +3,6 @@ import { isString, some } from 'lodash';
 import type {
   Identifier,
   VariableDeclaration,
-  Property,
   SimpleLiteral,
   Expression,
   Pattern,
