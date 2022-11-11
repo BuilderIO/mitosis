@@ -364,7 +364,7 @@ function emitStateMethods(
   for (const key in componentState) {
     const stateValue = componentState[key];
 
-    if (!stateValue) {
+    if (!stateValue || stateValue.type === 'property') {
       continue;
     }
 
@@ -388,7 +388,6 @@ function emitStateMethods(
       // Erase type information
       code = convertTypeScriptToJS(code);
     }
-    console.log({ stateValue, functionName, code });
     file.exportConst(functionName, 'function ' + code, true);
   }
 
