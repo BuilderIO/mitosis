@@ -391,8 +391,11 @@ function emitStateMethods(
         }
         file.exportConst(functionName, 'function ' + code, true);
 
+        continue;
+
       case 'property':
         stateValues[key] = stateValue.code;
+        continue;
     }
   }
 
