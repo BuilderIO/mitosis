@@ -16,6 +16,7 @@ import {
 } from '../../modules/plugins';
 import traverse from 'traverse';
 import { stableJSONserialize } from './stable-serialize';
+import { stableInject } from './stable-inject';
 
 Error.stackTraceLimit = 9999;
 
@@ -288,7 +289,7 @@ function emitUseStore(file: File, stateInit: StateInit) {
       file.src.emit('<any>');
     }
     file.src.emit('(');
-    file.src.emit(stableJSONserialize(state));
+    file.src.emit(stableInject(state));
     file.src.emit(');');
   } else {
     // TODO hack for now so that `state` variable is defined, even though it is never read.

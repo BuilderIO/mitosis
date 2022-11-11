@@ -672,7 +672,7 @@ export const underscore_fn_name = function underscore_fn_name(props, state) {
 };
 export const MyBasicComponent = component$((props) => {
   useStylesScoped$(STYLES);
-  const state = useStore({ age: \\"1\\", name: \\"'Steve'\\", sports: \\"['']\\" });
+  const state = useStore({ age: 1, name: \\"Steve\\", sports: [\\"\\"] });
   return (
     <div class=\\"test div-MyBasicComponent\\">
       <input
@@ -694,10 +694,7 @@ exports[`qwik > Javascript Test > Basic 2`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicForShowComponent = component$((props) => {
-  const state = useStore({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
-  });
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
   return (
     <div>
       {(state.names || []).map(function (person) {
@@ -741,7 +738,7 @@ export const onChange = function onChange(props, state, myService) {
 };
 export const MyBasicComponent = component$((props) => {
   const myService = useContext(MyService);
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   useContextProvider(Injector, useStore({}));
   useClientEffect$(() => {
     const bye = myService.method(\\"hi\\");
@@ -775,10 +772,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOnMountUpdateComponent = component$((props) => {
-  const state = useStore({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
-  });
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
   useClientEffect$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
   });
@@ -802,7 +796,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOutputsComponent = component$((props) => {
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   useClientEffect$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
@@ -824,7 +818,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOutputsComponent = component$((props) => {
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   useClientEffect$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
@@ -875,7 +869,7 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicChildComponent = component$((props) => {
-  const state = useStore({ dev: \\"'PatrickJS'\\", name: \\"'Steve'\\" });
+  const state = useStore({ dev: \\"PatrickJS\\", name: \\"Steve\\" });
   return (
     <div>
       <MyBasicComponent id={state.dev}></MyBasicComponent>
@@ -903,10 +897,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicForComponent = component$((props) => {
-  const state = useStore({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
-  });
+  const state = useStore({ name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] });
   useClientEffect$(() => {
     console.log(\\"onMount code\\");
   });
@@ -960,7 +951,7 @@ export const MyBasicRefComponent = component$((props) => {
   useStylesScoped$(STYLES);
   const inputRef = useRef();
   const inputNoArgRef = useRef();
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   return (
     <div>
       {props.showInput ? (
@@ -1045,7 +1036,7 @@ export function usePrevious<T>(value: T) {
 }
 export const MyPreviousComponent = component$((props) => {
   const prevCount = useRef();
-  const state = useStore({ count: \\"0\\" });
+  const state = useStore({ count: 0 });
   useWatch$(({ track }) => {
     state && track(state, \\"count\\");
     prevCount = state.count;
@@ -1244,7 +1235,7 @@ export const findAndRunScripts = function findAndRunScripts(
 };
 export const CustomCode = component$((props) => {
   const elem = useRef();
-  const state = useStore({ scriptsInserted: \\"[]\\", scriptsRun: \\"[]\\" });
+  const state = useStore({ scriptsInserted: [], scriptsRun: [] });
   useClientEffect$(() => {
     findAndRunScripts(props, state, elem);
   });
@@ -1320,7 +1311,7 @@ export const findAndRunScripts = function findAndRunScripts(
 };
 export const CustomCode = component$((props) => {
   const elem = useRef();
-  const state = useStore({ scriptsInserted: \\"[]\\", scriptsRun: \\"[]\\" });
+  const state = useStore({ scriptsInserted: [], scriptsRun: [] });
   useClientEffect$(() => {
     findAndRunScripts(props, state, elem);
   });
@@ -1576,9 +1567,9 @@ export const FormComponent = component$((props) => {
   useStylesScoped$(STYLES);
   const formRef = useRef();
   const state = useStore({
-    formErrorMessage: \\"''\\",
-    formState: \\"'unsubmitted'\\",
-    responseData: \\"null\\",
+    formErrorMessage: \\"\\",
+    formState: \\"unsubmitted\\",
+    responseData: null,
   });
   return (
     <form
@@ -1672,9 +1663,9 @@ export const Image = component$((props) => {
   useStylesScoped$(STYLES);
   const pictureRef = useRef();
   const state = useStore({
-    imageLoaded: \\"false\\",
-    load: \\"false\\",
-    scrollListener: \\"null\\",
+    imageLoaded: false,
+    load: false,
+    scrollListener: null,
   });
   useClientEffect$(() => {
     if (useLazyLoading(props, state, pictureRef)) {
@@ -1744,8 +1735,8 @@ exports[`qwik > Javascript Test > Image State 1`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const ImgStateComponent = component$((props) => {
   const state = useStore({
-    canShow: \\"true\\",
-    images: \\"['http://example.com/qwik.png']\\",
+    canShow: true,
+    images: [\\"http://example.com/qwik.png\\"],
   });
   return (
     <div>
@@ -1858,7 +1849,7 @@ exports[`qwik > Javascript Test > Section 2`] = `
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const SectionStateComponent = component$((props) => {
-  const state = useStore({ items: \\"[42]\\", max: \\"42\\" });
+  const state = useStore({ items: [42], max: 42 });
   return (
     <>
       {state.max
@@ -1978,9 +1969,9 @@ export const snakeCaseValue = function snakeCaseValue(props, state) {
 export const SmileReviews = component$((props) => {
   useStylesScoped$(STYLES);
   const state = useStore({
-    name: \\"'test'\\",
-    reviews: \\"[]\\",
-    showReviewPrompt: \\"false\\",
+    name: \\"test\\",
+    reviews: [],
+    showReviewPrompt: false,
   });
   useClientEffect$(() => {
     fetch(
@@ -2071,7 +2062,7 @@ exports[`qwik > Javascript Test > Text 1`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 import { Builder } from \\"@builder.io/sdk\\";
 export const Text = component$((props) => {
-  const state = useStore({ name: \\"'Decadef20'\\" });
+  const state = useStore({ name: \\"Decadef20\\" });
   return (
     <div
       contentEditable={allowEditingText || undefined}
@@ -2157,7 +2148,7 @@ export const updateNameWithArrowFn = function updateNameWithArrowFn(
   state.name = value;
 };
 export const MyComponent = component$((props) => {
-  const state = useStore({ name: \\"'steve'\\" });
+  const state = useStore({ name: \\"steve\\" });
   return <div>Hello {state.name}</div>;
 });
 export default MyComponent;
@@ -2176,7 +2167,7 @@ import {
 } from \\"@builder.io/qwik\\";
 export const MyBasicForwardRefComponent = component$((props) => {
   useStylesScoped$(STYLES);
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   return (
     <div>
       <input
@@ -2206,7 +2197,7 @@ import {
 } from \\"@builder.io/qwik\\";
 export const MyBasicForwardRefComponent = component$((props) => {
   useStylesScoped$(STYLES);
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   return (
     <div>
       <input
@@ -2283,7 +2274,7 @@ exports[`qwik > Javascript Test > className 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const ClassNameCode = component$((props) => {
-  const state = useStore({ bindings: \\"'a binding'\\" });
+  const state = useStore({ bindings: \\"a binding\\" });
   return (
     <div>
       <div class=\\"no binding\\">Without Binding</div>
@@ -2308,8 +2299,10 @@ import {
 export const MyBasicComponent = component$((props) => {
   useStylesScoped$(STYLES);
   const state = useStore({
-    classState: \\"'testClassName'\\",
-    styleState: \\"{\\\\n  color: 'red'\\\\n}\\",
+    classState: \\"testClassName\\",
+    styleState: {
+      color: \\"red\\",
+    },
   });
   return (
     <div
@@ -2451,7 +2444,7 @@ exports[`qwik > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
 export const MultipleOnUpdateWithDeps = component$((props) => {
-  const state = useStore({ a: \\"'a'\\", b: \\"'b'\\", c: \\"'c'\\", d: \\"'d'\\" });
+  const state = useStore({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
@@ -2481,7 +2474,11 @@ exports[`qwik > Javascript Test > multipleSpreads 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props) => {
-  const state = useStore({ attrs: \\"{\\\\n  hello: 'world'\\\\n}\\" });
+  const state = useStore({
+    attrs: {
+      hello: \\"world\\",
+    },
+  });
   return <input {...state.attrs} {...props}></input>;
 });
 export default MyBasicComponent;
@@ -2560,7 +2557,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 export const OnInit = component$((props) => {
-  const state = useStore({ name: \\"''\\" });
+  const state = useStore({ name: \\"\\" });
   useMount$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
@@ -2613,7 +2610,7 @@ exports[`qwik > Javascript Test > onUpdateWithDeps 1`] = `
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
 export const OnUpdateWithDeps = component$((props) => {
-  const state = useStore({ a: \\"'a'\\", b: \\"'b'\\" });
+  const state = useStore({ a: \\"a\\", b: \\"b\\" });
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
@@ -2660,7 +2657,7 @@ exports[`qwik > Javascript Test > propsDestructure 1`] = `
 
 import { Fragment, Slot, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props) => {
-  const state = useStore({ name: \\"'Decadef20'\\" });
+  const state = useStore({ name: \\"Decadef20\\" });
   return (
     <div>
       <Slot></Slot>
@@ -2982,7 +2979,7 @@ exports[`qwik > Remove Internal mitosis package 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props) => {
-  const state = useStore({ name: \\"'PatrickJS'\\" });
+  const state = useStore({ name: \\"PatrickJS\\" });
   return (
     <div>
       Hello {state.name}! I can run in React, Qwik, Vue, Solid, or Liquid!
@@ -3014,7 +3011,7 @@ export const underscore_fn_name = function underscore_fn_name(props, state) {
 };
 export const MyBasicComponent = component$((props: MyBasicComponentProps) => {
   useStylesScoped$(STYLES);
-  const state = useStore<any>({ age: \\"1\\", name: \\"'Steve'\\", sports: \\"['']\\" });
+  const state = useStore<any>({ age: 1, name: \\"Steve\\", sports: [\\"\\"] });
   return (
     <div class=\\"test div-MyBasicComponent\\">
       <input
@@ -3037,8 +3034,8 @@ exports[`qwik > Typescript Test > Basic 2`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicForShowComponent = component$((props: any) => {
   const state = useStore<any>({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
   });
   return (
     <div>
@@ -3083,7 +3080,7 @@ export const onChange = function onChange(props, state, myService) {
 };
 export const MyBasicComponent = component$((props: any) => {
   const myService = useContext(MyService);
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   useContextProvider(Injector, useStore({}));
   useClientEffect$(() => {
     const bye = myService.method(\\"hi\\");
@@ -3122,8 +3119,8 @@ export interface Props {
 }
 export const MyBasicOnMountUpdateComponent = component$((props: Props) => {
   const state = useStore<any>({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
   });
   useClientEffect$(() => {
     state.name = \\"PatrickJS onMount\\" + props.bye;
@@ -3148,7 +3145,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOutputsComponent = component$((props: any) => {
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   useClientEffect$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
@@ -3170,7 +3167,7 @@ import {
   useStore,
 } from \\"@builder.io/qwik\\";
 export const MyBasicOutputsComponent = component$((props: any) => {
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   useClientEffect$(() => {
     props.onMessage(state.name);
     props.onEvent(props.message);
@@ -3225,7 +3222,7 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 import MyBasicComponent from \\"./basic.raw\\";
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicChildComponent = component$((props: any) => {
-  const state = useStore<any>({ dev: \\"'PatrickJS'\\", name: \\"'Steve'\\" });
+  const state = useStore<any>({ dev: \\"PatrickJS\\", name: \\"Steve\\" });
   return (
     <div>
       <MyBasicComponent id={state.dev}></MyBasicComponent>
@@ -3254,8 +3251,8 @@ import {
 } from \\"@builder.io/qwik\\";
 export const MyBasicForComponent = component$((props: any) => {
   const state = useStore<any>({
-    name: \\"'PatrickJS'\\",
-    names: \\"['Steve', 'PatrickJS']\\",
+    name: \\"PatrickJS\\",
+    names: [\\"Steve\\", \\"PatrickJS\\"],
   });
   useClientEffect$(() => {
     console.log(\\"onMount code\\");
@@ -3313,7 +3310,7 @@ export const MyBasicRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
   const inputRef = useRef();
   const inputNoArgRef = useRef();
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   return (
     <div>
       {props.showInput ? (
@@ -3404,7 +3401,7 @@ export function usePrevious<T>(value: T) {
 }
 export const MyPreviousComponent = component$((props: Props) => {
   const prevCount = useRef();
-  const state = useStore<any>({ count: \\"0\\" });
+  const state = useStore<any>({ count: 0 });
   useWatch$(({ track }) => {
     state && track(state, \\"count\\");
     prevCount = state.count;
@@ -3634,7 +3631,7 @@ export const findAndRunScripts = function findAndRunScripts(
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
   const elem = useRef();
-  const state = useStore<any>({ scriptsInserted: \\"[]\\", scriptsRun: \\"[]\\" });
+  const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
   useClientEffect$(() => {
     findAndRunScripts(props, state, elem);
   });
@@ -3714,7 +3711,7 @@ export const findAndRunScripts = function findAndRunScripts(
 };
 export const CustomCode = component$((props: CustomCodeProps) => {
   const elem = useRef();
-  const state = useStore<any>({ scriptsInserted: \\"[]\\", scriptsRun: \\"[]\\" });
+  const state = useStore<any>({ scriptsInserted: [], scriptsRun: [] });
   useClientEffect$(() => {
     findAndRunScripts(props, state, elem);
   });
@@ -4003,9 +4000,9 @@ export const FormComponent = component$((props: FormProps) => {
   useStylesScoped$(STYLES);
   const formRef = useRef();
   const state = useStore<any>({
-    formErrorMessage: \\"''\\",
-    formState: \\"'unsubmitted'\\",
-    responseData: \\"null\\",
+    formErrorMessage: \\"\\",
+    formState: \\"unsubmitted\\",
+    responseData: null,
   });
   return (
     <form
@@ -4116,9 +4113,9 @@ export const Image = component$((props: ImageProps) => {
   useStylesScoped$(STYLES);
   const pictureRef = useRef();
   const state = useStore<any>({
-    imageLoaded: \\"false\\",
-    load: \\"false\\",
-    scrollListener: \\"null\\",
+    imageLoaded: false,
+    load: false,
+    scrollListener: null,
   });
   useClientEffect$(() => {
     if (useLazyLoading(props, state, pictureRef)) {
@@ -4188,8 +4185,8 @@ exports[`qwik > Typescript Test > Image State 1`] = `
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const ImgStateComponent = component$((props: any) => {
   const state = useStore<any>({
-    canShow: \\"true\\",
-    images: \\"['http://example.com/qwik.png']\\",
+    canShow: true,
+    images: [\\"http://example.com/qwik.png\\"],
   });
   return (
     <div>
@@ -4341,7 +4338,7 @@ export interface SectionProps {
   children?: any;
 }
 export const SectionStateComponent = component$((props: SectionProps) => {
-  const state = useStore<any>({ items: \\"[42]\\", max: \\"42\\" });
+  const state = useStore<any>({ items: [42], max: 42 });
   return (
     <>
       {state.max
@@ -4481,9 +4478,9 @@ export const snakeCaseValue = function snakeCaseValue(props, state) {
 export const SmileReviews = component$((props: SmileReviewsProps) => {
   useStylesScoped$(STYLES);
   const state = useStore<any>({
-    name: \\"'test'\\",
-    reviews: \\"[]\\",
-    showReviewPrompt: \\"false\\",
+    name: \\"test\\",
+    reviews: [],
+    showReviewPrompt: false,
   });
   useClientEffect$(() => {
     fetch(
@@ -4585,7 +4582,7 @@ export interface TextProps {
   builderBlock?: any;
 }
 export const Text = component$((props: TextProps) => {
-  const state = useStore<any>({ name: \\"'Decadef20'\\" });
+  const state = useStore<any>({ name: \\"Decadef20\\" });
   return (
     <div
       contentEditable={allowEditingText || undefined}
@@ -4703,7 +4700,7 @@ export const updateNameWithArrowFn = function updateNameWithArrowFn(
   state.name = value;
 };
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ name: \\"'steve'\\" });
+  const state = useStore<any>({ name: \\"steve\\" });
   return <div>Hello {state.name}</div>;
 });
 export default MyComponent;
@@ -4726,7 +4723,7 @@ export interface Props {
 }
 export const MyBasicForwardRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   return (
     <div>
       <input
@@ -4760,7 +4757,7 @@ export interface Props {
 }
 export const MyBasicForwardRefComponent = component$((props: Props) => {
   useStylesScoped$(STYLES);
-  const state = useStore<any>({ name: \\"'PatrickJS'\\" });
+  const state = useStore<any>({ name: \\"PatrickJS\\" });
   return (
     <div>
       <input
@@ -4841,7 +4838,7 @@ type Props = {
   slotTesting: JSX.Element;
 };
 export const ClassNameCode = component$((props: Props) => {
-  const state = useStore<any>({ bindings: \\"'a binding'\\" });
+  const state = useStore<any>({ bindings: \\"a binding\\" });
   return (
     <div>
       <div class=\\"no binding\\">Without Binding</div>
@@ -4866,8 +4863,10 @@ import {
 export const MyBasicComponent = component$((props: any) => {
   useStylesScoped$(STYLES);
   const state = useStore<any>({
-    classState: \\"'testClassName'\\",
-    styleState: \\"{\\\\n  color: 'red'\\\\n}\\",
+    classState: \\"testClassName\\",
+    styleState: {
+      color: \\"red\\",
+    },
   });
   return (
     <div
@@ -5033,7 +5032,7 @@ exports[`qwik > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 
 import { Fragment, component$, h, useStore, useWatch$ } from \\"@builder.io/qwik\\";
 export const MultipleOnUpdateWithDeps = component$((props: any) => {
-  const state = useStore<any>({ a: \\"'a'\\", b: \\"'b'\\", c: \\"'c'\\", d: \\"'d'\\" });
+  const state = useStore<any>({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" });
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
@@ -5063,7 +5062,11 @@ exports[`qwik > Typescript Test > multipleSpreads 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyBasicComponent = component$((props: any) => {
-  const state = useStore<any>({ attrs: \\"{\\\\n  hello: 'world'\\\\n}\\" });
+  const state = useStore<any>({
+    attrs: {
+      hello: \\"world\\",
+    },
+  });
   return <input {...state.attrs} {...props}></input>;
 });
 export default MyBasicComponent;
@@ -5149,7 +5152,7 @@ export const defaultValues = {
   name: \\"PatrickJS\\",
 };
 export const OnInit = component$((props: Props) => {
-  const state = useStore<any>({ name: \\"''\\" });
+  const state = useStore<any>({ name: \\"\\" });
   useMount$(() => {
     state.name = defaultValues.name || props.name;
     console.log(\\"set defaults with props\\");
@@ -5205,7 +5208,7 @@ type Props = {
   size: string;
 };
 export const OnUpdateWithDeps = component$((props: Props) => {
-  const state = useStore<any>({ a: \\"'a'\\", b: \\"'b'\\" });
+  const state = useStore<any>({ a: \\"a\\", b: \\"b\\" });
   useWatch$(({ track }) => {
     state && track(state, \\"a\\");
     state && track(state, \\"b\\");
@@ -5277,7 +5280,7 @@ type Props = {
   type: string;
 };
 export const MyBasicComponent = component$((props: Props) => {
-  const state = useStore<any>({ name: \\"'Decadef20'\\" });
+  const state = useStore<any>({ name: \\"Decadef20\\" });
   return (
     <div>
       <Slot></Slot>
