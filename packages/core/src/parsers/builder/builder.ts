@@ -12,7 +12,7 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
 import { parseJsx } from '../jsx';
 import { parseCode, isExpression } from '../../helpers/parsers';
-import { hashCodeAsString, MitosisComponent } from '../..';
+import { hashCodeAsString, MitosisComponent, MitosisState } from '../..';
 import { mapBuilderContentStateToMitosisState } from './helpers';
 import { parseStateObjectToMitosisState } from '../jsx/state';
 
@@ -683,9 +683,12 @@ const getHooks = (content: BuilderContent) => {
  * and return it as a JS object along with the inputted code with the hook
  * code extracted
  */
-export function extractStateHook(code: string) {
+export function extractStateHook(code: string): {
+  code: string;
+  state: MitosisState;
+} {
   const { types } = babel;
-  let state: any = {};
+  let state: MitosisState = {};
   const body = parseCode(code);
   const newBody = body.slice();
   for (let i = 0; i < body.length; i++) {

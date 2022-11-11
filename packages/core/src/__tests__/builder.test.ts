@@ -21,15 +21,7 @@ const mitosisOptions: ToMitosisOptions = {
 describe('Builder', () => {
   test('extractStateHook', () => {
     const code = `useState({ foo: 'bar' }); alert('hi');`;
-    expect(extractStateHook(code)).toEqual({
-      code: `alert('hi');`,
-      state: { foo: 'bar' },
-    });
-
-    expect(extractStateHook(code)).toEqual({
-      code: `alert('hi');`,
-      state: { foo: 'bar' },
-    });
+    expect(extractStateHook(code)).matchSnapshot();
   });
 
   test('Stamped', () => {
