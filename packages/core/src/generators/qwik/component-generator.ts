@@ -359,35 +359,39 @@ function emitStateMethods(
   componentState: MitosisComponent['state'],
   lexicalArgs: string[],
 ): StateInit {
-  const stateValues: StateValues = {};
-  const stateInit: StateInit = [stateValues];
+  const stateInit: StateInit = [{}];
   const methodMap = stateToMethodOrGetter(componentState);
-  Object.keys(componentState).forEach((key) => {
+  for (const key in componentState) {
     const stateValue = componentState[key];
-    if (stateValue) {
-      let code = stateValue.code;
-      let prefixIdx = 0;
-      if (stateValue.type === 'getter') {
-        prefixIdx += 'get '.length;
-      } else if (stateValue.type === 'function') {
-        prefixIdx += 'function '.length;
-      }
-      code = code.substring(prefixIdx);
-      code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
-        '(',
-        `(${lexicalArgs.join(',')},`,
-      );
-      const functionName = code.split(/\(/)[0];
-      if (stateValue.type === 'getter') {
-        stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
-      }
-      if (!file.options.isTypeScript) {
-        // Erase type information
-        code = convertTypeScriptToJS(code);
-      }
-      file.exportConst(functionName, 'function ' + code, true);
+
+    if (!stateValue) {
+      continue;
     }
-  });
+
+    let code = stateValue.code;
+    let prefixIdx = 0;
+    if (stateValue.type === 'getter') {
+      prefixIdx += 'get '.length;
+    } else if (stateValue.type === 'function') {
+      prefixIdx += 'function '.length;
+    }
+    code = code.substring(prefixIdx);
+    code = convertMethodToFunction(code, methodMap, lexicalArgs).replace(
+      '(',
+      `(${lexicalArgs.join(',')},`,
+    );
+    const functionName = code.split(/\(/)[0];
+    if (stateValue.type === 'getter') {
+      stateInit.push(`state.${key}=${functionName}(${lexicalArgs.join(',')})`);
+    }
+    if (!file.options.isTypeScript) {
+      // Erase type information
+      code = convertTypeScriptToJS(code);
+    }
+    console.log({ stateValue, functionName, code });
+    file.exportConst(functionName, 'function ' + code, true);
+  }
+
   return stateInit;
 }
 
