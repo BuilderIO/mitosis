@@ -452,21 +452,13 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   generator: TranspilerGenerator<X>;
   options: X;
 }) => {
-  test('Remove Internal mitosis package', async () => {
-    const component = parseJsx(await basicMitosis, {
-      compileAwayPackages: ['@dummy/custom-mitosis'],
-    });
-    const output = generator(options)({ component, path });
-    expect(output).toMatchSnapshot();
-  });
-
   const configurations: { options: X; testName: string }[] = [
     { options: { ...options, typescript: false }, testName: 'Javascript Test' },
     { options: { ...options, typescript: true }, testName: 'Typescript Test' },
   ];
 
   type ParserConfig = {
-    name: string;
+    name: 'jsx' | 'svelte';
     parser: (code: string) => Promise<MitosisComponent>;
     testsArray?: Tests[];
   };
@@ -488,6 +480,15 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
     if (testsArray) {
       describe(name, () => {
         configurations.forEach(({ options, testName }) => {
+          if (name === 'jsx' && options.typescript === false) {
+            test('Remove Internal mitosis package', async () => {
+              const component = parseJsx(await basicMitosis, {
+                compileAwayPackages: ['@dummy/custom-mitosis'],
+              });
+              const output = generator(options)({ component, path });
+              expect(output).toMatchSnapshot();
+            });
+          }
           describe(testName, () => {
             testsArray.forEach((tests) => {
               Object.keys(tests).forEach((key) => {
