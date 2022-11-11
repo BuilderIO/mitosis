@@ -48,7 +48,7 @@ function mapAstToMitosisJson(
   return omit(json, ['props']);
 }
 
-export const sveltosis = async function (
+export const parseSvelte = async function (
   string_: string,
   path = 'MyComponent.svelte',
 ): Promise<MitosisComponent | undefined> {
