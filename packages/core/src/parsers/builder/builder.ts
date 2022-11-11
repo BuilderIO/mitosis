@@ -12,9 +12,9 @@ import { createMitosisNode } from '../../helpers/create-mitosis-node';
 import { MitosisNode } from '../../types/mitosis-node';
 import { parseJsx } from '../jsx';
 import { parseCode, isExpression } from '../../helpers/parsers';
-import { hashCodeAsString } from '../..';
-import { JSONObject } from '../../types/json';
-import { mapJsonObjectToStateValue, parseStateObject } from './helpers';
+import { hashCodeAsString, MitosisComponent } from '../..';
+import { mapBuilderContentStateToMitosisState } from './helpers';
+import { parseStateObjectToMitosisState } from '../jsx/state';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [
@@ -697,7 +697,7 @@ export function extractStateHook(code: string) {
         if (types.isIdentifier(expression.callee) && expression.callee.name === 'useState') {
           const arg = expression.arguments[0];
           if (types.isObjectExpression(arg)) {
-            state = parseStateObject(arg);
+            state = parseStateObjectToMitosisState(arg);
             newBody.splice(i, 1);
           }
         }
@@ -713,7 +713,7 @@ export function extractStateHook(code: string) {
             ) {
               const arg = expression.arguments[1];
               if (types.isObjectExpression(arg)) {
-                state = parseStateObject(arg);
+                state = parseStateObjectToMitosisState(arg);
                 newBody.splice(i, 1);
               }
             }
@@ -852,6 +852,8 @@ const builderContentPartToMitosisComponent = (
 
   const parsed = getHooks(builderContent);
 
+  const parsedState = parsed?.state || {};
+
   const componentJson = createMitosisComponent({
     meta: {
       useMetadata: {
@@ -863,10 +865,13 @@ const builderContentPartToMitosisComponent = (
       name: input.name,
       defaultValue: input.defaultValue,
     })),
-    state: parsed?.state || {
-      ...state,
-      ...mapJsonObjectToStateValue(builderContent.data?.state as JSONObject),
-    },
+    state:
+      Object.keys(parsedState).length > 0
+        ? parsedState
+        : {
+            ...state,
+            ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
+          },
     hooks: {
       ...((parsed?.hooks.onMount?.code || (customCode && { code: customCode })) && {
         onMount: parsed?.hooks.onMount || { code: customCode },
@@ -888,12 +893,12 @@ const builderContentPartToMitosisComponent = (
 export const builderContentToMitosisComponent = (
   builderContent: BuilderContent,
   options: BuilderToMitosisOptions = {},
-) => {
+): MitosisComponent => {
   builderContent = fastClone(builderContent);
 
   const separated = extractSymbols(builderContent);
 
-  const componentJson = {
+  const componentJson: MitosisComponent = {
     ...builderContentPartToMitosisComponent(separated.content, options),
     subComponents: separated.subComponents.map((item) => ({
       ...builderContentPartToMitosisComponent(item.content, options),
