@@ -19,12 +19,12 @@ export function preventNameCollissions(
     const regex = () => new RegExp(`(?<!=(?:\\s))${key}\\b`, 'g');
     let isInArguments = false;
 
-    for (const [index, argument] of argumentsOutput.entries()) {
+    argumentsOutput.forEach((argument, index) => {
       if (regex().test(argument)) {
         isInArguments = true;
         argumentsOutput.splice(index, 1, argument.replace(regex(), `${prepend}${key}${append}`));
       }
-    }
+    });
 
     const isInOutput = regex().test(output);
 
@@ -146,10 +146,10 @@ function postProcessHooks(json: SveltosisComponent) {
       continue;
     }
 
-    if (key === 'onUpdate' && hook) {
-      for (const [index, hookEntry] of (hook as extendedHook[]).entries()) {
-        json.hooks[key]?.splice(index, 1, addPropertiesAndStateToHook(json, hookEntry));
-      }
+    if (key === 'onUpdate' && Array.isArray(hook)) {
+      hook.forEach((item, index) => {
+        json.hooks[key]?.splice(index, 1, addPropertiesAndStateToHook(json, item));
+      });
       continue;
     }
 

@@ -18,7 +18,7 @@ export function parseAction(
   const actionHandler = uniqueName(Object.keys(json.state), 'actionHandler');
 
   json.state[actionHandler] = {
-    code: null,
+    code: 'null',
     type: 'property',
   };
 

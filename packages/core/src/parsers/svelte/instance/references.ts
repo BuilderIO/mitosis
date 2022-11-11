@@ -72,7 +72,7 @@ export function parseReferences(json: SveltosisComponent, node: VariableDeclarat
   }
 
   json.state[(declaration.id as Identifier).name] = {
-    code,
+    code: JSON.stringify(code),
     type,
   };
 }
