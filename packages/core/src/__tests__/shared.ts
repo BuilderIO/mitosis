@@ -162,7 +162,7 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
-  expressionState,
+  // expressionState,
 };
 
 const SLOTS_TESTS: Tests = {
