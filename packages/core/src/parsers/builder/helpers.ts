@@ -1,17 +1,13 @@
-import { mapValues } from 'lodash';
 import { GETTER } from '../../helpers/patterns';
-import {
-  __DO_NOT_USE_METHOD_LITERAL_PREFIX,
-  __DO_NOT_USE_FUNCTION_LITERAL_PREFIX,
-} from '../constants/outdated-prefixes';
-import { JSONObject } from '../../types/json';
 import { MitosisComponent, StateValue, StateValueType } from '../../types/mitosis-component';
+import { JSONObject } from '../../types/json';
+import { mapValues } from 'lodash';
+
+const __DO_NOT_USE_FUNCTION_LITERAL_PREFIX = `@builder.io/mitosis/function:`;
+const __DO_NOT_USE_METHOD_LITERAL_PREFIX = `@builder.io/mitosis/method:`;
 
 /**
- * Sets StateTypeValue based on the string prefixes we've set previously.
- *
- * This is a temporary workaround until we eliminate the prefixes and make this StateValueType the
- * source of truth.
+ * Maps the Builder State format to the Mitosis State format.
  */
 const mapJsonToStateValue = (value: any): StateValue => {
   if (typeof value === 'string') {
@@ -27,5 +23,6 @@ const mapJsonToStateValue = (value: any): StateValue => {
   return { type: 'property', code: value };
 };
 
-export const mapJsonObjectToStateValue = (value: JSONObject): MitosisComponent['state'] =>
-  mapValues(value, mapJsonToStateValue);
+export const mapBuilderContentStateToMitosisState = (
+  value: JSONObject,
+): MitosisComponent['state'] => mapValues(value, mapJsonToStateValue);
