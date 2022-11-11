@@ -20,7 +20,7 @@ const mapJsonToStateValue = (value: any): StateValue => {
       return { type, code: strippedValue };
     }
   }
-  return { type: 'property', code: value };
+  return { type: 'property', code: JSON.stringify(value) };
 };
 
 export const mapBuilderContentStateToMitosisState = (

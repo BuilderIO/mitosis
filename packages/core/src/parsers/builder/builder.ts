@@ -857,6 +857,14 @@ const builderContentPartToMitosisComponent = (
 
   const parsedState = parsed?.state || {};
 
+  const mitosisState =
+    Object.keys(parsedState).length > 0
+      ? parsedState
+      : {
+          ...state,
+          ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
+        };
+
   const componentJson = createMitosisComponent({
     meta: {
       useMetadata: {
@@ -868,13 +876,7 @@ const builderContentPartToMitosisComponent = (
       name: input.name,
       defaultValue: input.defaultValue,
     })),
-    state:
-      Object.keys(parsedState).length > 0
-        ? parsedState
-        : {
-            ...state,
-            ...mapBuilderContentStateToMitosisState(builderContent.data?.state || {}),
-          },
+    state: mitosisState,
     hooks: {
       ...((parsed?.hooks.onMount?.code || (customCode && { code: customCode })) && {
         onMount: parsed?.hooks.onMount || { code: customCode },
