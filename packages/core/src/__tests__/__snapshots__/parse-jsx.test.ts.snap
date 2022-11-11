@@ -7146,6 +7146,69 @@ exports[`Parse JSX > componentWithContext 1`] = `
 }
 `;
 
+exports[`Parse JSX > contentState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {},
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {
+            "_text": "setting context",
+          },
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {
+      "@dummy/context.lite:default": {
+        "name": "BuilderContext",
+        "value": {
+          "content": {
+            "code": "props.content",
+            "type": "property",
+          },
+          "registeredComponents": {
+            "code": "props.customComponents",
+            "type": "property",
+          },
+        },
+      },
+    },
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [
+    {
+      "imports": {
+        "BuilderContext": "default",
+      },
+      "path": "@dummy/context.lite",
+    },
+  ],
+  "inputs": [],
+  "meta": {},
+  "name": "RenderContent",
+  "refs": {},
+  "state": {},
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > defaultProps 1`] = `
 {
   "@type": "@builder.io/mitosis/component",
@@ -7750,6 +7813,55 @@ exports[`Parse JSX > defaultValsWithTypes 1`] = `
   name: string;
 };",
   ],
+}
+`;
+
+exports[`Parse JSX > expressionState 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [
+        {
+          "@type": "@builder.io/mitosis/node",
+          "bindings": {
+            "_text": {
+              "code": "state.refToUse",
+            },
+          },
+          "children": [],
+          "meta": {},
+          "name": "div",
+          "properties": {},
+          "scope": {},
+        },
+      ],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {},
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "MyComponent",
+  "refs": {},
+  "state": {
+    "refToUse": {
+      "code": "!(props.componentRef instanceof Function) ? props.componentRef : null",
+      "type": "property",
+    },
+  },
+  "subComponents": [],
 }
 `;
 

@@ -3632,6 +3632,58 @@ export default ComponentWithContext;
 "
 `;
 
+exports[`Solid > Javascript Test > contentState 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <Dynamic
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+      component={BuilderContext.Provider}
+    >
+      <div>setting context</div>
+    </Dynamic>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Solid > Javascript Test > contentState 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <>
+      <Dynamic
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+        component={BuilderContext.Provider}
+      >
+        <div>setting context</div>
+      </Dynamic>
+    </>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
 exports[`Solid > Javascript Test > defaultProps 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -3789,6 +3841,42 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Solid > Javascript Test > expressionState 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [refToUse, setRefToUse] = createSignal(
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse()}</div>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > Javascript Test > expressionState 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [refToUse, setRefToUse] = createSignal(
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return (
+    <>
+      <div>{refToUse()}</div>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 
@@ -8705,6 +8793,58 @@ export default ComponentWithContext;
 "
 `;
 
+exports[`Solid > Typescript Test > contentState 1`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <Dynamic
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+      component={BuilderContext.Provider}
+    >
+      <div>setting context</div>
+    </Dynamic>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
+exports[`Solid > Typescript Test > contentState 2`] = `
+"import { useContext } from \\"solid-js\\";
+import { Dynamic } from \\"solid-js/web\\";
+
+import { css } from \\"solid-styled-components\\";
+
+import BuilderContext from \\"@dummy/context.jsx\\";
+
+function RenderContent(props) {
+  return (
+    <>
+      <Dynamic
+        value={{
+          content: props.content,
+          registeredComponents: props.customComponents,
+        }}
+        component={BuilderContext.Provider}
+      >
+        <div>setting context</div>
+      </Dynamic>
+    </>
+  );
+}
+
+export default RenderContent;
+"
+`;
+
 exports[`Solid > Typescript Test > defaultProps 1`] = `
 "import { Show } from \\"solid-js\\";
 
@@ -8862,6 +9002,42 @@ function ComponentWithTypes(props) {
 }
 
 export default ComponentWithTypes;
+"
+`;
+
+exports[`Solid > Typescript Test > expressionState 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [refToUse, setRefToUse] = createSignal(
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return <div>{refToUse()}</div>;
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > Typescript Test > expressionState 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [refToUse, setRefToUse] = createSignal(
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return (
+    <>
+      <div>{refToUse()}</div>
+    </>
+  );
+}
+
+export default MyComponent;
 "
 `;
 

@@ -1533,6 +1533,25 @@ exports[`Svelte > Javascript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Svelte > Javascript Test > contentState 1`] = `
+"<script>
+  import { getContext, setContext } from \\"svelte\\";
+
+  import BuilderContext from \\"@dummy/context.svelte\\";
+
+  export let content;
+  export let customComponents;
+
+  setContext(BuilderContext.key, {
+    content: content,
+    registeredComponents: customComponents,
+  });
+</script>
+
+<div>setting context</div>
+"
+`;
+
 exports[`Svelte > Javascript Test > defaultProps 1`] = `
 "<script>
   export let link = \\"https://builder.io/\\";
@@ -1599,6 +1618,17 @@ exports[`Svelte > Javascript Test > defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
+"
+`;
+
+exports[`Svelte > Javascript Test > expressionState 1`] = `
+"<script>
+  export let componentRef;
+
+  let refToUse = !(componentRef instanceof Function) ? componentRef : null;
+</script>
+
+<div>{refToUse}</div>
 "
 `;
 
@@ -3926,6 +3956,25 @@ exports[`Svelte > Typescript Test > componentWithContext 1`] = `
 "
 `;
 
+exports[`Svelte > Typescript Test > contentState 1`] = `
+"<script lang=\\"ts\\">
+  import { getContext, setContext } from \\"svelte\\";
+
+  import BuilderContext from \\"@dummy/context.svelte\\";
+
+  export let content;
+  export let customComponents;
+
+  setContext(BuilderContext.key, {
+    content: content,
+    registeredComponents: customComponents,
+  });
+</script>
+
+<div>setting context</div>
+"
+`;
+
 exports[`Svelte > Typescript Test > defaultProps 1`] = `
 "<script context=\\"module\\" lang=\\"ts\\">
   export interface ButtonProps {
@@ -4016,6 +4065,17 @@ exports[`Svelte > Typescript Test > defaultValsWithTypes 1`] = `
 </script>
 
 <div>Hello {name || DEFAULT_VALUES.name}</div>
+"
+`;
+
+exports[`Svelte > Typescript Test > expressionState 1`] = `
+"<script lang=\\"ts\\">
+  export let componentRef;
+
+  let refToUse = !(componentRef instanceof Function) ? componentRef : null;
+</script>
+
+<div>{refToUse}</div>
 "
 `;
 

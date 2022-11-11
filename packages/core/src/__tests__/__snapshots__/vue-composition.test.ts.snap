@@ -1785,6 +1785,26 @@ provide(Context2, { bar: \\"baz\\" });
 "
 `;
 
+exports[`Vue > Javascript Test > contentState 1`] = `
+"<template>
+  <div>setting context</div>
+</template>
+
+<script setup>
+import { provide } from \\"vue\\";
+
+import BuilderContext from \\"@dummy/context.vue\\";
+
+const props = defineProps([\\"content\\", \\"customComponents\\"]);
+
+provide(BuilderContext, {
+  content: props.content,
+  registeredComponents: props.customComponents,
+});
+</script>
+"
+`;
+
 exports[`Vue > Javascript Test > defaultProps 1`] = `
 "<template>
   <div>
@@ -1858,6 +1878,22 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps([\\"name\\"]);
+</script>
+"
+`;
+
+exports[`Vue > Javascript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const props = defineProps([\\"componentRef\\"]);
+const refToUse = ref(
+  !(props.componentRef instanceof Function) ? props.componentRef : null
+);
 </script>
 "
 `;
@@ -4378,6 +4414,26 @@ provide(Context2, { bar: \\"baz\\" });
 "
 `;
 
+exports[`Vue > Typescript Test > contentState 1`] = `
+"<template>
+  <div>setting context</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { provide } from \\"vue\\";
+
+import BuilderContext from \\"@dummy/context.vue\\";
+
+const props = defineProps([\\"content\\", \\"customComponents\\"]);
+
+provide(BuilderContext, {
+  content: props.content,
+  registeredComponents: props.customComponents,
+});
+</script>
+"
+`;
+
 exports[`Vue > Typescript Test > defaultProps 1`] = `
 "<template>
   <div>
@@ -4469,6 +4525,22 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps<Props>();
+</script>
+"
+`;
+
+exports[`Vue > Typescript Test > expressionState 1`] = `
+"<template>
+  <div>{{ refToUse }}</div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const props = defineProps([\\"componentRef\\"]);
+const refToUse = ref(
+  !(props.componentRef instanceof Function) ? props.componentRef : null
+);
 </script>
 "
 `;
