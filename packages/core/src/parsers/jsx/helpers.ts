@@ -29,8 +29,17 @@ export const uncapitalize = (str: string) => {
   return str[0].toLowerCase() + str.slice(1);
 };
 
+export const parseCode = (node: babel.types.Node) => {
+  // if the node is a string literal, make sure to wrap the return value with quotes
+  if (types.isStringLiteral(node)) {
+    return `"${node.value}"`;
+  }
+
+  return generate(node).code;
+};
+
 export const parseCodeJson = (node: babel.types.Node) => {
-  const code = generate(node).code;
+  const code = parseCode(node);
   return tryParseJson(code);
 };
 

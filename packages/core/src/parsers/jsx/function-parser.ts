@@ -180,10 +180,10 @@ export const componentFunctionToJson = (
     if (types.isVariableDeclaration(item)) {
       const declaration = item.declarations[0];
       const init = declaration.init;
-      if (types.isCallExpression(init)) {
+      if (types.isCallExpression(init) && types.isIdentifier(init.callee)) {
         // React format, like:
         // const [foo, setFoo] = useState(...)
-        if (types.isArrayPattern(declaration.id)) {
+        if (types.isArrayPattern(declaration.id) && init.callee.name === HOOKS.STATE) {
           const varName =
             types.isIdentifier(declaration.id.elements[0]) && declaration.id.elements[0].name;
           if (varName) {
@@ -212,45 +212,43 @@ export const componentFunctionToJson = (
             }
           }
         }
-        // Legacy format, like:
+        // Solid store format, like:
         // const state = useStore({...})
-        else if (types.isIdentifier(init.callee)) {
-          if (init.callee.name === HOOKS.STATE || init.callee.name === HOOKS.STORE) {
-            const firstArg = init.arguments[0];
-            if (types.isObjectExpression(firstArg)) {
-              const useStoreState = parseStateObjectToMitosisState(firstArg);
-              Object.assign(state, useStoreState);
-            }
-          } else if (init.callee.name === HOOKS.CONTEXT) {
-            const firstArg = init.arguments[0];
-            if (types.isVariableDeclarator(declaration) && types.isIdentifier(declaration.id)) {
-              if (types.isIdentifier(firstArg)) {
-                const varName = declaration.id.name;
-                const name = firstArg.name;
-                accessedContext[varName] = {
-                  name,
-                  path: traceReferenceToModulePath(context.builder.component.imports, name)!,
-                };
-              } else {
-                const varName = declaration.id.name;
-                const name = generate(firstArg).code;
-                accessedContext[varName] = {
-                  name,
-                  path: '',
-                };
-              }
-            }
-          } else if (init.callee.name === HOOKS.REF) {
-            if (types.isIdentifier(declaration.id)) {
-              const firstArg = init.arguments[0];
+        if (init.callee.name === HOOKS.STORE) {
+          const firstArg = init.arguments[0];
+          if (types.isObjectExpression(firstArg)) {
+            const useStoreState = parseStateObjectToMitosisState(firstArg);
+            Object.assign(state, useStoreState);
+          }
+        } else if (init.callee.name === HOOKS.CONTEXT) {
+          const firstArg = init.arguments[0];
+          if (types.isVariableDeclarator(declaration) && types.isIdentifier(declaration.id)) {
+            if (types.isIdentifier(firstArg)) {
               const varName = declaration.id.name;
-              refs[varName] = {
-                argument: generate(firstArg).code,
+              const name = firstArg.name;
+              accessedContext[varName] = {
+                name,
+                path: traceReferenceToModulePath(context.builder.component.imports, name)!,
               };
-              // Typescript Parameter
-              if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
-                refs[varName].typeParameter = generate(init.typeParameters.params[0]).code;
-              }
+            } else {
+              const varName = declaration.id.name;
+              const name = generate(firstArg).code;
+              accessedContext[varName] = {
+                name,
+                path: '',
+              };
+            }
+          }
+        } else if (init.callee.name === HOOKS.REF) {
+          if (types.isIdentifier(declaration.id)) {
+            const firstArg = init.arguments[0];
+            const varName = declaration.id.name;
+            refs[varName] = {
+              argument: generate(firstArg).code,
+            };
+            // Typescript Parameter
+            if (types.isTSTypeParameterInstantiation(init.typeParameters)) {
+              refs[varName].typeParameter = generate(init.typeParameters.params[0]).code;
             }
           }
         }

@@ -138,6 +138,13 @@ const parseStateValue = (
         item.key,
         types.stringLiteral(`${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate(n).code}`),
       );
+    } else {
+      // Remove typescript types, e.g. from
+      // { foo: ('string' as SomeType) }
+      if (types.isTSAsExpression(item.value)) {
+        return types.objectProperty(item.key, item.value.expression);
+      }
+      return types.objectProperty(item.key, item.value);
     }
   }
   if (types.isObjectMethod(item)) {
@@ -147,15 +154,6 @@ const parseStateValue = (
         `${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate({ ...item, returnType: null }).code}`,
       ),
     );
-  }
-  // Remove typescript types, e.g. from
-  // { foo: ('string' as SomeType) }
-  if (types.isObjectProperty(item)) {
-    let value = item.value;
-    if (types.isTSAsExpression(value)) {
-      value = value.expression;
-    }
-    return types.objectProperty(item.key, value);
   }
   return item;
 };
