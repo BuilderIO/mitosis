@@ -142,7 +142,7 @@ function emitTagNameHack(file: File, component: MitosisComponent, metadataValue:
       '=',
       convertMethodToFunction(
         metadataValue,
-        stateToMethodOrGetter(component.state),
+        getStateMethodsAndGetters(component.state),
         getLexicalScopeVars(component),
       ),
       ';',
@@ -309,7 +309,7 @@ function emitStateMethodsAndRewriteBindings(
 ): StateInit {
   const lexicalArgs = getLexicalScopeVars(component);
   const state: StateInit = emitStateMethods(file, component.state, lexicalArgs);
-  const methodMap = stateToMethodOrGetter(component.state);
+  const methodMap = getStateMethodsAndGetters(component.state);
   rewriteCodeExpr(component, methodMap, lexicalArgs, metadata.qwik?.replace);
   return state;
 }
@@ -360,7 +360,7 @@ function emitStateMethods(
   lexicalArgs: string[],
 ): StateInit {
   const stateInit: StateInit = [{}];
-  const methodMap = stateToMethodOrGetter(componentState);
+  const methodMap = getStateMethodsAndGetters(componentState);
   for (const key in componentState) {
     const stateValue = componentState[key];
 
@@ -405,7 +405,7 @@ function extractGetterBody(code: string): string {
   return code.substring(start + 1, end).trim();
 }
 
-function stateToMethodOrGetter(
+function getStateMethodsAndGetters(
   state: MitosisComponent['state'],
 ): Record<string, 'method' | 'getter'> {
   const methodMap: Record<string, 'method' | 'getter'> = {};
