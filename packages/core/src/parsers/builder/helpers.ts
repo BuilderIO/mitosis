@@ -1,6 +1,6 @@
 import * as babel from '@babel/core';
 import generate from '@babel/generator';
-import { GETTER } from 'src/helpers/patterns';
+import { GETTER } from '../../helpers/patterns';
 import { MitosisComponent, StateValue, StateValueType } from '../../types/mitosis-component';
 import { JSONObject } from '../../types/json';
 import { parseCodeJson } from '../jsx/helpers';
