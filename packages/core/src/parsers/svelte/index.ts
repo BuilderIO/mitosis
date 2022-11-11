@@ -51,7 +51,7 @@ function mapAstToMitosisJson(
 export const parseSvelte = async function (
   string_: string,
   path = 'MyComponent.svelte',
-): Promise<MitosisComponent | undefined> {
+): Promise<MitosisComponent> {
   const usesTypescript = isTypeScriptComponent(string_);
 
   const processedString = await preprocess(

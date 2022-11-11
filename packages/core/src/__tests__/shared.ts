@@ -1,7 +1,7 @@
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
-import { parseSvelte } from '..';
+import { MitosisComponent, parseSvelte } from '..';
 
 const getRawFile = (path: string) => import(`${path}?raw`).then((x) => x.default as string);
 
@@ -16,8 +16,8 @@ const basicOutputs = getRawFile('./data/basic-outputs.raw.tsx');
 const subComponent = getRawFile('./data/sub-component.raw.tsx');
 const componentWithContext = getRawFile('./data/context/component-with-context.raw.tsx');
 
-const expressionState = getRawFile('./data/expression-state.raw');
-const contentState = getRawFile('./data/context-state.raw');
+const expressionState = getRawFile('./data/expression-state.raw.tsx');
+const contentState = getRawFile('./data/context-state.raw.tsx');
 
 const basic = getRawFile('./data/basic.raw.tsx');
 const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
@@ -101,6 +101,22 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const path = 'test-path';
 
 type Tests = { [index: string]: RawFile };
+
+const SVELTE_SYNTAX_TESTS: Tests = {
+  basic: getRawFile('./syntax/svelte/basic.raw.svelte'),
+  bindGroup: getRawFile('./syntax/svelte/bind-group.raw.svelte'),
+  bindProperty: getRawFile('./syntax/svelte/bind-property.raw.svelte'),
+  classDirective: getRawFile('./syntax/svelte/class-directive.raw.svelte'),
+  context: getRawFile('./syntax/svelte/context.raw.svelte'),
+  each: getRawFile('./syntax/svelte/each.raw.svelte'),
+  html: getRawFile('./syntax/svelte/html.raw.svelte'),
+  ifElse: getRawFile('./syntax/svelte/if-else.raw.svelte'),
+  imports: getRawFile('./syntax/svelte/imports.raw.svelte'),
+  lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),
+  reactive: getRawFile('./syntax/svelte/reactive.raw.svelte'),
+  style: getRawFile('./syntax/svelte/style.raw.svelte'),
+  textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
+};
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
@@ -436,8 +452,6 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   generator: TranspilerGenerator<X>;
   options: X;
 }) => {
-  const testsArray = JSX_TESTS_FOR_TARGET[target];
-
   test('Remove Internal mitosis package', async () => {
     const component = parseJsx(await basicMitosis, {
       compileAwayPackages: ['@dummy/custom-mitosis'],
@@ -451,34 +465,46 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
     { options: { ...options, typescript: true }, testName: 'Typescript Test' },
   ];
 
-  const parsers = [
+  type ParserConfig = {
+    name: string;
+    parser: (code: string) => Promise<MitosisComponent>;
+    testsArray?: Tests[];
+  };
+
+  const parsers: ParserConfig[] = [
     {
       name: 'jsx',
-      parser: parseJsx,
+      parser: async (x) => parseJsx(x, { typescript: options.typescript }),
+      testsArray: JSX_TESTS_FOR_TARGET[target],
     },
     {
       name: 'svelte',
-      parser: parseSvelte,
+      parser: async (x) => parseSvelte(x),
+      testsArray: [SVELTE_SYNTAX_TESTS],
     },
   ];
 
-  if (testsArray) {
-    configurations.forEach(({ options, testName }) => {
-      describe(testName, () => {
-        testsArray.forEach((tests) => {
-          Object.keys(tests).forEach((key) => {
-            test(key, async () => {
-              const component = parseJsx(await tests[key], { typescript: options.typescript });
-              const getOutput = () => generator(options)({ component, path });
-              try {
-                expect(getOutput()).toMatchSnapshot();
-              } catch (error) {
-                expect(getOutput).toThrowErrorMatchingSnapshot();
-              }
+  for (const { name, parser, testsArray } of parsers) {
+    if (testsArray) {
+      describe(name, () => {
+        configurations.forEach(({ options, testName }) => {
+          describe(testName, () => {
+            testsArray.forEach((tests) => {
+              Object.keys(tests).forEach((key) => {
+                test(key, async () => {
+                  const component = await parser(await tests[key]);
+                  const getOutput = () => generator(options)({ component, path });
+                  try {
+                    expect(getOutput()).toMatchSnapshot();
+                  } catch (error) {
+                    expect(getOutput).toThrowErrorMatchingSnapshot();
+                  }
+                });
+              });
             });
           });
         });
       });
-    });
+    }
   }
 };
