@@ -158,7 +158,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       }),
       babelTransformCode,
     );
-    console.log({ dataString });
 
     const getterString = pipe(
       getStateObjectStringFromComponent(json, {
