@@ -5238,18 +5238,22 @@ exports[`Angular > Javascript Test > defaultProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -5266,7 +5270,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -5277,6 +5283,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -5292,7 +5300,7 @@ exports[`Angular > Javascript Test > defaultProps 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -5300,11 +5308,15 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -5321,7 +5333,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -5334,6 +5348,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -5349,18 +5365,20 @@ exports[`Angular > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -5377,7 +5395,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -5388,6 +5408,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -5403,7 +5425,7 @@ exports[`Angular > Javascript Test > defaultPropsOutsideComponent 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -5411,11 +5433,13 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -5432,7 +5456,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -5445,6 +5471,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -13007,18 +13035,22 @@ exports[`Angular > Typescript Test > defaultProps 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -13035,7 +13067,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -13046,6 +13080,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -13061,7 +13097,7 @@ exports[`Angular > Typescript Test > defaultProps 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -13069,11 +13105,15 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {
+    console.log(\\"hi\\");
+  },
 };
 
 @Component({
@@ -13090,7 +13130,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -13103,6 +13145,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -13118,18 +13162,20 @@ exports[`Angular > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 
 export interface ButtonProps {
   attributes?: any;
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -13146,7 +13192,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -13157,6 +13205,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({
@@ -13172,7 +13222,7 @@ exports[`Angular > Typescript Test > defaultPropsOutsideComponent 2`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import { Component, Input } from \\"@angular/core\\";
+import { Output, EventEmitter, Component, Input } from \\"@angular/core\\";
 import { CommonModule } from \\"@angular/common\\";
 
 export interface ButtonProps {
@@ -13180,11 +13230,13 @@ export interface ButtonProps {
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }
 const defaultProps = {
   text: \\"default text\\",
   link: \\"https://builder.io/\\",
   openLinkInNewTab: false,
+  onClick: () => {},
 };
 
 @Component({
@@ -13201,7 +13253,9 @@ const defaultProps = {
       </ng-container>
 
       <ng-container *ngIf=\\"!link\\">
-        <button type=\\"button\\">{{text}}</button>
+        <button type=\\"button\\" (click)=\\"this.onClick.emit($event)\\">
+          {{text}}
+        </button>
       </ng-container>
     </div>
   \`,
@@ -13214,6 +13268,8 @@ export class Button {
   @Input() openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] =
     defaultProps[\\"openLinkInNewTab\\"];
   @Input() text: ButtonProps[\\"text\\"] = defaultProps[\\"text\\"];
+
+  @Output() onClick = new EventEmitter();
 }
 
 @NgModule({

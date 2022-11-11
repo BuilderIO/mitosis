@@ -7312,6 +7312,12 @@ exports[`Parse JSX > defaultProps 1`] = `
             {
               "@type": "@builder.io/mitosis/node",
               "bindings": {
+                "onClick": {
+                  "arguments": [
+                    "event",
+                  ],
+                  "code": "props.onClick(event)",
+                },
                 "props.attributes": {
                   "code": "props.attributes",
                   "type": "spread",
@@ -7405,9 +7411,24 @@ exports[`Parse JSX > defaultProps 1`] = `
     "set": {},
   },
   "defaultProps": {
-    "link": "https://builder.io/",
-    "openLinkInNewTab": false,
-    "text": "default text",
+    "link": {
+      "code": "https://builder.io/",
+      "type": "property",
+    },
+    "onClick": {
+      "code": "() => {
+  console.log('hi');
+",
+      "type": "method",
+    },
+    "openLinkInNewTab": {
+      "code": false,
+      "type": "property",
+    },
+    "text": {
+      "code": "default text",
+      "type": "property",
+    },
   },
   "exports": {},
   "hooks": {},
@@ -7425,6 +7446,7 @@ exports[`Parse JSX > defaultProps 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick?: () => void;
 }",
   ],
 }
@@ -7581,6 +7603,12 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
             {
               "@type": "@builder.io/mitosis/node",
               "bindings": {
+                "onClick": {
+                  "arguments": [
+                    "event",
+                  ],
+                  "code": "props.onClick(event)",
+                },
                 "props.attributes": {
                   "code": "props.attributes",
                   "type": "spread",
@@ -7674,9 +7702,22 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
     "set": {},
   },
   "defaultProps": {
-    "link": "https://builder.io/",
-    "openLinkInNewTab": false,
-    "text": "default text",
+    "link": {
+      "code": "https://builder.io/",
+      "type": "property",
+    },
+    "onClick": {
+      "code": "() => {",
+      "type": "method",
+    },
+    "openLinkInNewTab": {
+      "code": false,
+      "type": "property",
+    },
+    "text": {
+      "code": "default text",
+      "type": "property",
+    },
   },
   "exports": {},
   "hooks": {},
@@ -7694,6 +7735,7 @@ exports[`Parse JSX > defaultPropsOutsideComponent 1`] = `
   text?: string;
   link?: string;
   openLinkInNewTab?: boolean;
+  onClick: () => void;
 }",
   ],
 }

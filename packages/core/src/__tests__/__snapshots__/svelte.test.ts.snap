@@ -1539,6 +1539,9 @@ exports[`Svelte > Javascript Test > defaultProps 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
@@ -1553,7 +1556,13 @@ exports[`Svelte > Javascript Test > defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -1567,6 +1576,7 @@ exports[`Svelte > Javascript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes;
   export let openLinkInNewTab = false;
   export let text = \\"default text\\";
+  export let onClick = () => {};
 </script>
 
 <div>
@@ -1581,7 +1591,13 @@ exports[`Svelte > Javascript Test > defaultPropsOutsideComponent 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -3933,6 +3949,7 @@ exports[`Svelte > Typescript Test > defaultProps 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick?: () => void;
   }
 </script>
 
@@ -3941,6 +3958,9 @@ exports[`Svelte > Typescript Test > defaultProps 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {
+    console.log(\\"hi\\");
+  };
 </script>
 
 <div>
@@ -3955,7 +3975,13 @@ exports[`Svelte > Typescript Test > defaultProps 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
@@ -3970,6 +3996,7 @@ exports[`Svelte > Typescript Test > defaultPropsOutsideComponent 1`] = `
     text?: string;
     link?: string;
     openLinkInNewTab?: boolean;
+    onClick: () => void;
   }
 </script>
 
@@ -3978,6 +4005,7 @@ exports[`Svelte > Typescript Test > defaultPropsOutsideComponent 1`] = `
   export let attributes: ButtonProps[\\"attributes\\"];
   export let openLinkInNewTab: ButtonProps[\\"openLinkInNewTab\\"] = false;
   export let text: ButtonProps[\\"text\\"] = \\"default text\\";
+  export let onClick: ButtonProps[\\"onClick\\"] = () => {};
 </script>
 
 <div>
@@ -3992,7 +4020,13 @@ exports[`Svelte > Typescript Test > defaultPropsOutsideComponent 1`] = `
   {/if}
 
   {#if !link}
-    <button type=\\"button\\" {...attributes}>
+    <button
+      type=\\"button\\"
+      {...attributes}
+      on:click={(event) => {
+        onClick(event);
+      }}
+    >
       {text}
     </button>
   {/if}
