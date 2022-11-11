@@ -31,9 +31,9 @@ export const uncapitalize = (str: string) => {
 
 export const parseCode = (node: babel.types.Node) => {
   // if the node is a string literal, make sure to wrap the return value with quotes
-  if (types.isStringLiteral(node)) {
-    return `"${node.value}"`;
-  }
+  // if (types.isStringLiteral(node)) {
+  //   return `"${node.value}"`;
+  // }
 
   return generate(node).code;
 };

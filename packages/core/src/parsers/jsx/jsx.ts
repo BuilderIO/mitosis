@@ -7,7 +7,7 @@ import { tryParseJson } from '../../helpers/json';
 import { jsonToAst } from './ast';
 import { mapStateIdentifiers } from './state';
 import { Context, ParseMitosisOptions } from './types';
-import { collectMetadata } from './metadata';
+import { collectModuleScopeHooks } from './hooks';
 import { extractContextComponents } from './context';
 import { isImportOrDefaultExport } from './helpers';
 import { collectTypes, handleTypeImports, isTypeOrInterface } from './component-types';
@@ -104,7 +104,8 @@ export function parseJsx(
 
             const preComponentCode = pipe(
               path.node.body.filter((statement) => !isImportOrDefaultExport(statement)),
-              (statements) => collectMetadata(statements, context.builder.component, options),
+              (statements) =>
+                collectModuleScopeHooks(statements, context.builder.component, options),
               types.program,
               generate,
               (generatorResult) => generatorResult.code,

@@ -21,15 +21,7 @@ const mitosisOptions: ToMitosisOptions = {
 describe('Builder', () => {
   test('extractStateHook', () => {
     const code = `useState({ foo: 'bar' }); alert('hi');`;
-    expect(extractStateHook(code)).toEqual({
-      code: `alert('hi');`,
-      state: { foo: 'bar' },
-    });
-
-    expect(extractStateHook(code)).toEqual({
-      code: `alert('hi');`,
-      state: { foo: 'bar' },
-    });
+    expect(extractStateHook(code)).matchSnapshot();
   });
 
   test('Stamped', () => {
@@ -121,8 +113,10 @@ describe('Builder', () => {
     `;
 
     const component = parseJsx(code);
+    expect(component.state).toEqual({ people: { code: ['Steve', 'Sewell'], type: 'property' } });
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
+    expect(backToMitosis.state).toEqual(component.state);
     const mitosis = componentToMitosis(mitosisOptions)({
       component: backToMitosis,
     });
