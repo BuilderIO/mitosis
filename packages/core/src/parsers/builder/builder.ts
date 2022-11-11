@@ -3,18 +3,18 @@ import generate from '@babel/generator';
 import { BuilderContent, BuilderElement } from '@builder.io/sdk';
 import json5 from 'json5';
 import { mapKeys, merge, omit, omitBy, sortBy, upperFirst } from 'lodash';
-import { fastClone } from '../helpers/fast-clone';
+import { fastClone } from '../../helpers/fast-clone';
 import traverse from 'traverse';
-import { Size, sizeNames, sizes } from '../constants/media-sizes';
-import { capitalize } from '../helpers/capitalize';
-import { createMitosisComponent } from '../helpers/create-mitosis-component';
-import { createMitosisNode } from '../helpers/create-mitosis-node';
-import { MitosisNode } from '../types/mitosis-node';
-import { parseJsx, parseStateObject } from './jsx';
-import { parseCode, isExpression } from '../helpers/parsers';
-import { hashCodeAsString } from '..';
-import { mapJsonObjectToStateValue } from './helpers/state';
-import { JSONObject } from '../types/json';
+import { Size, sizeNames, sizes } from '../../constants/media-sizes';
+import { capitalize } from '../../helpers/capitalize';
+import { createMitosisComponent } from '../../helpers/create-mitosis-component';
+import { createMitosisNode } from '../../helpers/create-mitosis-node';
+import { MitosisNode } from '../../types/mitosis-node';
+import { parseJsx } from '../jsx';
+import { parseCode, isExpression } from '../../helpers/parsers';
+import { hashCodeAsString } from '../..';
+import { JSONObject } from '../../types/json';
+import { mapJsonObjectToStateValue, parseStateObject } from './helpers';
 
 // Omit some superflous styles that can come from Builder's web importer
 const styleOmitList: (keyof CSSStyleDeclaration | 'backgroundRepeatX' | 'backgroundRepeatY')[] = [

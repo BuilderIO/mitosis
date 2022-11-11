@@ -1,19 +1,14 @@
 import * as babel from '@babel/core';
+import json5 from 'json5';
 import generate from '@babel/generator';
-import {
-  __DO_NOT_USE_FUNCTION_LITERAL_PREFIX,
-  __DO_NOT_USE_METHOD_LITERAL_PREFIX,
-} from '../constants/outdated-prefixes';
-import { MitosisComponent } from '../../types/mitosis-component';
+
+import { MitosisComponent, MitosisState, StateValue } from '../../types/mitosis-component';
 import traverse from 'traverse';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
-import { parseCodeJson, uncapitalize } from './helpers';
-import { flow, pipe } from 'fp-ts/lib/function';
-import { JSONObject } from '../../types/json';
-import { mapJsonObjectToStateValue } from '../helpers/state';
+import { uncapitalize } from './helpers';
 
 const { types } = babel;
 
@@ -71,7 +66,7 @@ export function mapStateIdentifiers(json: MitosisComponent) {
 
         if (value) {
           item.bindings[key] = {
-            code: mapStateIdentifiersInExpression(value.code as string, stateProperties),
+            code: mapStateIdentifiersInExpression(value.code, stateProperties),
           };
           if (value.arguments?.length) {
             item.bindings[key]!.arguments = value.arguments;
@@ -108,57 +103,82 @@ export function mapStateIdentifiers(json: MitosisComponent) {
   });
 }
 
-const createFunctionStringLiteralObjectProperty = (
-  key: babel.types.Expression | babel.types.PrivateName,
-  node: babel.types.Node,
-) =>
-  types.objectProperty(
-    key,
-    types.stringLiteral(`${__DO_NOT_USE_FUNCTION_LITERAL_PREFIX}${generate(node).code}`),
-  );
-
-type ParsedStateValue = babel.types.ObjectProperty | babel.types.SpreadElement;
-
-const parseStateValue = (
-  item: babel.types.ObjectMethod | babel.types.ObjectProperty | babel.types.SpreadElement,
-): ParsedStateValue => {
+const processStateObjectSlice = (
+  item: babel.types.ObjectMethod | babel.types.ObjectProperty,
+): StateValue => {
   if (types.isObjectProperty(item)) {
     if (types.isFunctionExpression(item.value)) {
-      return createFunctionStringLiteralObjectProperty(item.key, item.value);
+      return {
+        code: generate(item.value).code,
+        type: 'function',
+      };
     } else if (types.isArrowFunctionExpression(item.value)) {
-      // convert this to an object method instead
       const n = babel.types.objectMethod(
         'method',
         item.key as babel.types.Expression,
         item.value.params,
         item.value.body as babel.types.BlockStatement,
       );
-
-      return types.objectProperty(
-        item.key,
-        types.stringLiteral(`${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate(n).code}`),
-      );
+      const code = generate(n).code;
+      if (code.includes('Builder.isEditing')) {
+        console.log('OOG', n);
+      }
+      return {
+        code: code,
+        type: 'method',
+      };
     } else {
       // Remove typescript types, e.g. from
       // { foo: ('string' as SomeType) }
       if (types.isTSAsExpression(item.value)) {
-        return types.objectProperty(item.key, item.value.expression);
+        return {
+          code: json5.parse(generate(item.value.expression).code),
+          type: 'property',
+        };
       }
-      return types.objectProperty(item.key, item.value);
+      return {
+        code: json5.parse(generate(item.value).code),
+        type: 'property',
+      };
     }
+  } else if (types.isObjectMethod(item)) {
+    const n = generate({ ...item, returnType: null }).code;
+    if (n.includes('Builder.isEditing')) {
+      console.log('OOG', n);
+    }
+
+    const isGetter = item.kind === 'get';
+
+    return {
+      code: n,
+      type: isGetter ? 'getter' : 'method',
+    };
+  } else {
+    throw new Error('Unexpected state value type', item);
   }
-  if (types.isObjectMethod(item)) {
-    return types.objectProperty(
-      item.key,
-      types.stringLiteral(
-        `${__DO_NOT_USE_METHOD_LITERAL_PREFIX}${generate({ ...item, returnType: null }).code}`,
-      ),
-    );
-  }
-  return item;
 };
 
-export const parseStateObject = (object: babel.types.ObjectExpression): JSONObject =>
-  pipe(object.properties, (p) => p.map(parseStateValue), types.objectExpression, parseCodeJson);
+export const parseStateObjectToMitosisState = (
+  object: babel.types.ObjectExpression,
+): MitosisState => {
+  const state: MitosisState = {};
+  object.properties.forEach((x) => {
+    if (types.isSpreadElement(x)) {
+      throw new Error('Parse Error: Mitosis cannot consume spread element in state object: ' + x);
+    }
 
-export const parseStateObjectToMitosisState = flow(parseStateObject, mapJsonObjectToStateValue);
+    if (types.isPrivateName(x.key)) {
+      throw new Error('Parse Error: Mitosis cannot consume private name in state object: ' + x.key);
+    }
+
+    if (!types.isIdentifier(x.key)) {
+      throw new Error(
+        'Parse Error: Mitosis cannot consume non-identifier key in state object: ' + x.key,
+      );
+    }
+
+    state[x.key.name] = processStateObjectSlice(x);
+  });
+
+  return state;
+};
