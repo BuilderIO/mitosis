@@ -5,6 +5,8 @@ import * as types from '@babel/types';
 
 import { pickBy, some } from 'lodash';
 
+import type { SveltosisComponent } from '../types';
+
 export function isTypeScriptComponent(string_: string) {
   const regex = createTagRegex('script', 'gi');
   const match = regex.exec(string_);

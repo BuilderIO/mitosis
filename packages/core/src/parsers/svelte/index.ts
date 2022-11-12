@@ -11,6 +11,7 @@ import { collectTypes, isTypeScriptComponent } from './typescript';
 
 import type { Ast } from 'svelte/types/compiler/interfaces';
 import type { MitosisComponent } from '../../types/mitosis-component';
+import type { SveltosisComponent } from './types';
 
 function mapAstToMitosisJson(
   ast: Ast,

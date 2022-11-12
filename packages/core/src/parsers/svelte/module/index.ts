@@ -3,6 +3,7 @@ import { generate } from 'astring';
 
 import type { Ast } from 'svelte/types/compiler/interfaces';
 import type { BaseNode, ExportNamedDeclaration, Identifier, VariableDeclaration } from 'estree';
+import type { SveltosisComponent } from '../types';
 
 function handleExportNamedDeclaration(json: SveltosisComponent, node: ExportNamedDeclaration) {
   const declarations = (node.declaration as VariableDeclaration)?.declarations;

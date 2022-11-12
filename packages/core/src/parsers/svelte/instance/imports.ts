@@ -1,4 +1,5 @@
 import type { ImportDeclaration } from 'estree';
+import type { SveltosisComponent } from '../types';
 
 export function parseImports(json: SveltosisComponent, node: ImportDeclaration) {
   const source = node.source?.value;

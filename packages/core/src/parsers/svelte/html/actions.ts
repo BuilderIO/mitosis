@@ -2,6 +2,7 @@ import { uniqueName } from '../helpers/string';
 import { generate } from 'astring';
 
 import type { Element } from 'svelte/types/compiler/interfaces';
+import type { SveltosisComponent } from '../types';
 
 export function parseAction(
   json: SveltosisComponent,

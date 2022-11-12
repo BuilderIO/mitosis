@@ -1,4 +1,5 @@
 import type { MitosisNode } from '../../../types/mitosis-node';
+import type { SveltosisComponent } from '../types';
 
 function replaceGroupWithChecked(node: MitosisNode, isArray = false) {
   if (node.bindings.group?.code?.length) {

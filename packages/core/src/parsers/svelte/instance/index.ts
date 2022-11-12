@@ -24,6 +24,8 @@ import type {
   Statement,
 } from 'estree';
 
+import type { SveltosisComponent } from '../types';
+
 type InstanceHandler<T = BaseNode> = (json: SveltosisComponent, node: T, parent?: BaseNode) => void;
 
 const handleImportDeclaration: InstanceHandler<ImportDeclaration> = (json, node) => {

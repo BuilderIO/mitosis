@@ -5,6 +5,8 @@ import { capitalize } from 'lodash';
 import { walk } from 'svelte/compiler';
 import { stripQuotes } from '../helpers/string';
 
+import type { SveltosisComponent } from '../types';
+
 export function parseFunctions(json: SveltosisComponent, node: FunctionDeclaration) {
   const id = node.id as Identifier;
 

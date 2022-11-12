@@ -5,6 +5,8 @@ import type {
   VariableDeclaration,
 } from 'estree';
 
+import type { SveltosisComponent } from '../types';
+
 export function parseProperties(json: SveltosisComponent, node: ExportNamedDeclaration) {
   const declarations = (node.declaration as VariableDeclaration)?.declarations;
 

@@ -1,8 +1,11 @@
+import { generate } from 'astring';
+
 import { parseHtmlNode } from '.';
 import { createMitosisNode } from '../helpers/mitosis-node';
 import { parseChildren } from '../helpers/children';
+
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
-import { generate } from 'astring';
+import type { SveltosisComponent } from '../types';
 
 export function parseIfElse(json: SveltosisComponent, node: TemplateNode) {
   const mitosisNode = createMitosisNode();

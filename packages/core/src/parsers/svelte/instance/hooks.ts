@@ -1,5 +1,7 @@
 import { generate } from 'astring';
+
 import type { ExpressionStatement, BaseCallExpression, BaseFunction } from 'estree';
+import type { SveltosisComponent } from '../types';
 
 function parseHookBody(node: ExpressionStatement, stripCurlyBraces = true) {
   const arguments_ = (node.expression as BaseCallExpression)?.arguments;

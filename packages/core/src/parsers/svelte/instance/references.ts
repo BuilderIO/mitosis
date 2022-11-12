@@ -1,5 +1,8 @@
 import { generate } from 'astring';
 import { isString, some } from 'lodash';
+
+import { parseObjectExpression } from '../helpers/expressions';
+
 import type {
   Identifier,
   VariableDeclaration,
@@ -8,7 +11,7 @@ import type {
   Pattern,
   ObjectExpression,
 } from 'estree';
-import { parseObjectExpression } from '../helpers/expressions';
+import type { SveltosisComponent } from '../types';
 
 export function getParsedValue(json: SveltosisComponent, element: Expression | Pattern) {
   switch (element.type) {

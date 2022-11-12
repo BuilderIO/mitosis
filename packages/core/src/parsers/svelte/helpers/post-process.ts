@@ -1,5 +1,6 @@
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
+import type { SveltosisComponent } from '../types';
 
 import { processBindings } from './bindings';
 

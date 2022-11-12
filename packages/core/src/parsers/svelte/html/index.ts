@@ -10,6 +10,7 @@ import { parseSlot } from './slot';
 import { parseText } from './text';
 
 import type { Ast, TemplateNode } from 'svelte/types/compiler/interfaces';
+import type { SveltosisComponent } from '../types';
 
 export function parseHtml(ast: Ast, json: SveltosisComponent) {
   // todo: should filter children and check if just 1 has length

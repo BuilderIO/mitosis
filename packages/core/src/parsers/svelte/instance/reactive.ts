@@ -1,10 +1,12 @@
 import { generate } from 'astring';
+
 import type {
   LabeledStatement,
   ExpressionStatement,
   AssignmentExpression,
   Identifier,
 } from 'estree';
+import type { SveltosisComponent } from '../types';
 
 export function parseReactive(json: SveltosisComponent, node: LabeledStatement) {
   const body = node.body as ExpressionStatement;

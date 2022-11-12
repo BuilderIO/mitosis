@@ -7,7 +7,10 @@ import type {
   SimpleLiteral,
   ExpressionStatement,
 } from 'estree';
+
 import { stripQuotes } from '../helpers/string';
+
+import type { SveltosisComponent } from '../types';
 
 export function parseGetContext(json: SveltosisComponent, node: VariableDeclaration) {
   if (node.declarations.length > 0) {

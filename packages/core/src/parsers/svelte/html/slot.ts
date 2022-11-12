@@ -3,6 +3,8 @@ import type { TemplateNode } from 'svelte/types/compiler/interfaces';
 import { parseChildren } from '../helpers/children';
 import { createMitosisNode } from '../helpers/mitosis-node';
 
+import type { SveltosisComponent } from '../types';
+
 export function parseSlot(json: SveltosisComponent, node: TemplateNode) {
   const mitosisNode = createMitosisNode();
   if (

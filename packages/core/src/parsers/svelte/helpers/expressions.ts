@@ -3,6 +3,8 @@ import { ObjectExpression, Property } from 'estree';
 
 import { getParsedValue } from '../instance/references';
 
+import type { SveltosisComponent } from '../types';
+
 export function parseObjectExpression(json: SveltosisComponent, node: ObjectExpression) {
   const properties = (node as ObjectExpression).properties.map((n: any) => {
     const node_ = n as Property;

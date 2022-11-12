@@ -1,6 +1,8 @@
 import { createMitosisNode } from '../helpers/mitosis-node';
 import { parseChildren } from '../helpers/children';
+
 import type { TemplateNode } from 'svelte/types/compiler/interfaces';
+import type { SveltosisComponent } from '../types';
 
 export function parseFragment(json: SveltosisComponent, node: TemplateNode) {
   let mitosisNode = createMitosisNode();
