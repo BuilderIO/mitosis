@@ -5326,7 +5326,7 @@ exports[`Stencil > svelte > Javascript Test > basic 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() name = Steve;
+  @State() name = \\"Steve\\";
 
   render() {
     return (
@@ -5343,7 +5343,77 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Javascript Test > bindGroup 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() tortilla = \\"Plain\\";
+  @State() fillings = [];
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"radio\\"
+          value=\\"Plain\\"
+          checked={this.tortilla === \\"Plain\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Whole wheat\\"
+          checked={this.tortilla === \\"Whole wheat\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Spinach\\"
+          checked={this.tortilla === \\"Spinach\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Rice\\"
+          checked={this.fillings === \\"Rice\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Beans\\"
+          checked={this.fillings === \\"Beans\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Cheese\\"
+          checked={this.fillings === \\"Cheese\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Guac (extra)\\"
+          checked={this.fillings === \\"Guac (extra)\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <p>
+          Tortilla:
+          {this.tortilla}
+        </p>
+        <p>
+          Fillings:
+          {this.fillings}
+        </p>
+      </div>
+    );
+  }
+}
+"
+`;
 
 exports[`Stencil > svelte > Javascript Test > bindProperty 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -5352,7 +5422,7 @@ exports[`Stencil > svelte > Javascript Test > bindProperty 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() value = hello;
+  @State() value = \\"hello\\";
 
   render() {
     return <input value={this.value} />;
@@ -5361,20 +5431,67 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Javascript Test > classDirective 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
-exports[`Stencil > svelte > Javascript Test > context 1`] = `
-"';' expected. (19:12)
-  17 |     
-  18 |
-> 19 |   render() {
-     |            ^
-  20 |     return (
-  21 |     
-  22 |       <div >{this.activeTab}</div>"
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() disabled: any;
+
+  @State() focus = true;
+
+  render() {
+    return (
+      <input
+        class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          state.focus ? \\"focus\\" : \\"\\"
+        }\`}
+      />
+    );
+  }
+}
+"
 `;
 
-exports[`Stencil > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Javascript Test > context 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() activeTab = 0;
+
+  render() {
+    return <div>{this.activeTab}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Javascript Test > each 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  render() {
+    return (
+      <ul>
+        {this.numbers?.map((num) => (
+          <li>{num}</li>
+        ))}
+      </ul>
+    );
+  }
+}
+"
+`;
 
 exports[`Stencil > svelte > Javascript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -5383,7 +5500,7 @@ exports[`Stencil > svelte > Javascript Test > html 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() html = (<b>bold</b>);
+  @State() html = \\"<b>bold</b>\\";
 
   render() {
     return <div innerHTML={this.html}></div>;
@@ -5392,17 +5509,39 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Javascript Test > ifElse 1`] = `
+"':' expected. (25:14)
+  23 |       return (
+  24 |       
+> 25 |         {this.show ? (
+     |              ^
+  26 |     <button  onClick={event => this.toggle} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  28 |"
+`;
 
 exports[`Stencil > svelte > Javascript Test > imports 1`] = `
-"';' expected. (24:12)
-  22 |     
-  23 |
-> 24 |   render() {
-     |            ^
-  25 |     return (
-  26 |     
-  27 |       <div ><Button  type=\\"button\\"  disabled={this.disabled} ><Slot ></Slot></Button></div>"
+"import Button from \\"./Button.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() disabled = false;
+
+  render() {
+    return (
+      <div>
+        <Button type=\\"button\\" disabled={this.disabled}>
+          <Slot></Slot>
+        </Button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > svelte > Javascript Test > lifecycleHooks 1`] = `
@@ -5436,7 +5575,7 @@ exports[`Stencil > svelte > Javascript Test > reactive 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() name = Steve;
+  @State() name = \\"Steve\\";
 
   get lowercaseName() {
     return this.name.toLowerCase();
@@ -5479,7 +5618,30 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Javascript Test > textExpressions 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 5;
+  @State() b = 12;
+
+  render() {
+    return (
+      <div>
+        normal:
+        {this.a + this.b}
+        <br />
+        conditional
+        {this.a > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    );
+  }
+}
+"
+`;
 
 exports[`Stencil > svelte > Typescript Test > basic 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -5488,7 +5650,7 @@ exports[`Stencil > svelte > Typescript Test > basic 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() name = Steve;
+  @State() name = \\"Steve\\";
 
   render() {
     return (
@@ -5505,7 +5667,77 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Typescript Test > bindGroup 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() tortilla = \\"Plain\\";
+  @State() fillings = [];
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"radio\\"
+          value=\\"Plain\\"
+          checked={this.tortilla === \\"Plain\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Whole wheat\\"
+          checked={this.tortilla === \\"Whole wheat\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <input
+          type=\\"radio\\"
+          value=\\"Spinach\\"
+          checked={this.tortilla === \\"Spinach\\"}
+          onInput={(event) => (this.tortilla = event.target.value)}
+        />
+        <br />
+        <br />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Rice\\"
+          checked={this.fillings === \\"Rice\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Beans\\"
+          checked={this.fillings === \\"Beans\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Cheese\\"
+          checked={this.fillings === \\"Cheese\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <input
+          type=\\"checkbox\\"
+          value=\\"Guac (extra)\\"
+          checked={this.fillings === \\"Guac (extra)\\"}
+          onInput={(event) => (this.fillings = event.target.value)}
+        />
+        <p>
+          Tortilla:
+          {this.tortilla}
+        </p>
+        <p>
+          Fillings:
+          {this.fillings}
+        </p>
+      </div>
+    );
+  }
+}
+"
+`;
 
 exports[`Stencil > svelte > Typescript Test > bindProperty 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -5514,7 +5746,7 @@ exports[`Stencil > svelte > Typescript Test > bindProperty 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() value = hello;
+  @State() value = \\"hello\\";
 
   render() {
     return <input value={this.value} />;
@@ -5523,20 +5755,67 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Typescript Test > classDirective 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
-exports[`Stencil > svelte > Typescript Test > context 1`] = `
-"';' expected. (19:12)
-  17 |     
-  18 |
-> 19 |   render() {
-     |            ^
-  20 |     return (
-  21 |     
-  22 |       <div >{this.activeTab}</div>"
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @Prop() disabled: any;
+
+  @State() focus = true;
+
+  render() {
+    return (
+      <input
+        class={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          state.focus ? \\"focus\\" : \\"\\"
+        }\`}
+      />
+    );
+  }
+}
+"
 `;
 
-exports[`Stencil > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Typescript Test > context 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() activeTab = 0;
+
+  render() {
+    return <div>{this.activeTab}</div>;
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > each 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  render() {
+    return (
+      <ul>
+        {this.numbers?.map((num) => (
+          <li>{num}</li>
+        ))}
+      </ul>
+    );
+  }
+}
+"
+`;
 
 exports[`Stencil > svelte > Typescript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
@@ -5545,7 +5824,7 @@ exports[`Stencil > svelte > Typescript Test > html 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() html = (<b>bold</b>);
+  @State() html = \\"<b>bold</b>\\";
 
   render() {
     return <div innerHTML={this.html}></div>;
@@ -5554,17 +5833,39 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Typescript Test > ifElse 1`] = `
+"':' expected. (25:14)
+  23 |       return (
+  24 |       
+> 25 |         {this.show ? (
+     |              ^
+  26 |     <button  onClick={event => this.toggle} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  28 |"
+`;
 
 exports[`Stencil > svelte > Typescript Test > imports 1`] = `
-"';' expected. (24:12)
-  22 |     
-  23 |
-> 24 |   render() {
-     |            ^
-  25 |     return (
-  26 |     
-  27 |       <div ><Button  type=\\"button\\"  disabled={this.disabled} ><Slot ></Slot></Button></div>"
+"import Button from \\"./Button.lite\\";
+
+import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() disabled = false;
+
+  render() {
+    return (
+      <div>
+        <Button type=\\"button\\" disabled={this.disabled}>
+          <Slot></Slot>
+        </Button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > svelte > Typescript Test > lifecycleHooks 1`] = `
@@ -5598,7 +5899,7 @@ exports[`Stencil > svelte > Typescript Test > reactive 1`] = `
   tag: \\"my-component\\",
 })
 export default class MyComponent {
-  @State() name = Steve;
+  @State() name = \\"Steve\\";
 
   get lowercaseName() {
     return this.name.toLowerCase();
@@ -5641,4 +5942,27 @@ export default class MyComponent {
 "
 `;
 
-exports[`Stencil > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Stencil > svelte > Typescript Test > textExpressions 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 5;
+  @State() b = 12;
+
+  render() {
+    return (
+      <div>
+        normal:
+        {this.a + this.b}
+        <br />
+        conditional
+        {this.a > 2 ? \\"hello\\" : \\"bye\\"}
+      </div>
+    );
+  }
+}
+"
+`;

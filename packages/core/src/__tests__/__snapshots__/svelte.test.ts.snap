@@ -4698,7 +4698,7 @@ exports[`Svelte > jsx > Typescript Test > use-style-outside-component 1`] = `
 
 exports[`Svelte > svelte > Javascript Test > basic 1`] = `
 "<script>
-  let name = Steve;
+  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4708,46 +4708,165 @@ exports[`Svelte > svelte > Javascript Test > basic 1`] = `
 "
 `;
 
-exports[`Svelte > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Javascript Test > bindGroup 1`] = `
+"<script>
+  let tortilla = \\"Plain\\";
+  let fillings = [];
+</script>
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked={tortilla === \\"Plain\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked={tortilla === \\"Whole wheat\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked={tortilla === \\"Spinach\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><br /><br /><input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked={fillings === \\"Rice\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked={fillings === \\"Beans\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked={fillings === \\"Cheese\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked={fillings === \\"Guac (extra)\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  />
+  <p>Tortilla: {tortilla}</p>
+  <p>Fillings: {fillings}</p>
+</div>
+"
+`;
 
 exports[`Svelte > svelte > Javascript Test > bindProperty 1`] = `
 "<script>
-  let value = hello;
+  let value = \\"hello\\";
 </script>
 
 <input {value} />
 "
 `;
 
-exports[`Svelte > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Javascript Test > classDirective 1`] = `
+"<script>
+  export let disabled;
 
-exports[`Svelte > svelte > Javascript Test > context 1`] = `
-"unknown: Unexpected token (2:0)
+  let focus = true;
+</script>
 
-  1 | let  activeTab= 
-> 2 |
-    | ^"
+<input
+  class={\`form-input \${disabled ? \\"disabled\\" : \\"\\"} \${focus ? \\"focus\\" : \\"\\"}\`}
+/>
+"
 `;
 
-exports[`Svelte > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Javascript Test > context 1`] = `
+"<script>
+  import { getContext, setContext } from \\"svelte\\";
+
+  let disabled = getContext(\\"disabled\\".key);
+  setContext(\\"activeTab\\", activeTab);
+
+  let activeTab = 0;
+</script>
+
+<div>{activeTab}</div>
+"
+`;
+
+exports[`Svelte > svelte > Javascript Test > each 1`] = `
+"<script>
+  let numbers = [\\"one\\", \\"two\\", \\"three\\"];
+</script>
+
+<ul>
+  {#each numbers as num}
+    <li>{num}</li>
+  {/each}
+</ul>
+"
+`;
 
 exports[`Svelte > svelte > Javascript Test > html 1`] = `
 "<script>
-  let html = <b>bold</b>;
+  let html = \\"<b>bold</b>\\";
 </script>
 
 <div>{@html html}</div>
 "
 `;
 
-exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
+"<script>
+  function toggle() {
+    show = !show;
+  }
+
+  let show = true;
+</script>
+
+{#if show}
+  <button
+    on:click={(event) => {
+      toggle;
+    }}
+  >
+    Hide
+  </button>
+{:else}
+  <button
+    on:click={(event) => {
+      toggle;
+    }}
+  >
+    Show
+  </button>
+{/if}
+"
+`;
 
 exports[`Svelte > svelte > Javascript Test > imports 1`] = `
-"unknown: Unexpected token (2:0)
+"<script>
+  import Button from \\"./Button.svelte\\";
 
-  1 | let  disabled= 
-> 2 |
-    | ^"
+  let disabled = false;
+</script>
+
+<div><Button type=\\"button\\" {disabled}><slot /></Button></div>
+"
 `;
 
 exports[`Svelte > svelte > Javascript Test > lifecycleHooks 1`] = `
@@ -4777,7 +4896,7 @@ exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
     return name.toLowerCase();
   };
 
-  let name = Steve;
+  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4806,11 +4925,24 @@ exports[`Svelte > svelte > Javascript Test > style 1`] = `
 "
 `;
 
-exports[`Svelte > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Javascript Test > textExpressions 1`] = `
+"<script>
+  let a = 5;
+  let b = 12;
+</script>
+
+<div>
+  normal:
+  {a + b}<br />
+  conditional
+  {a > 2 ? \\"hello\\" : \\"bye\\"}
+</div>
+"
+`;
 
 exports[`Svelte > svelte > Typescript Test > basic 1`] = `
 "<script lang=\\"ts\\">
-  let name = Steve;
+  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4820,46 +4952,165 @@ exports[`Svelte > svelte > Typescript Test > basic 1`] = `
 "
 `;
 
-exports[`Svelte > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Typescript Test > bindGroup 1`] = `
+"<script lang=\\"ts\\">
+  let tortilla = \\"Plain\\";
+  let fillings = [];
+</script>
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked={tortilla === \\"Plain\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked={tortilla === \\"Whole wheat\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked={tortilla === \\"Spinach\\"}
+    on:change={(event) => {
+      tortilla = event.target.value;
+    }}
+  /><br /><br /><input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked={fillings === \\"Rice\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked={fillings === \\"Beans\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked={fillings === \\"Cheese\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  /><input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked={fillings === \\"Guac (extra)\\"}
+    on:change={(event) => {
+      fillings = event.target.value;
+    }}
+  />
+  <p>Tortilla: {tortilla}</p>
+  <p>Fillings: {fillings}</p>
+</div>
+"
+`;
 
 exports[`Svelte > svelte > Typescript Test > bindProperty 1`] = `
 "<script lang=\\"ts\\">
-  let value = hello;
+  let value = \\"hello\\";
 </script>
 
 <input {value} />
 "
 `;
 
-exports[`Svelte > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Typescript Test > classDirective 1`] = `
+"<script lang=\\"ts\\">
+  export let disabled;
 
-exports[`Svelte > svelte > Typescript Test > context 1`] = `
-"unknown: Unexpected token (2:0)
+  let focus = true;
+</script>
 
-  1 | let  activeTab= 
-> 2 |
-    | ^"
+<input
+  class={\`form-input \${disabled ? \\"disabled\\" : \\"\\"} \${focus ? \\"focus\\" : \\"\\"}\`}
+/>
+"
 `;
 
-exports[`Svelte > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Typescript Test > context 1`] = `
+"<script lang=\\"ts\\">
+  import { getContext, setContext } from \\"svelte\\";
+
+  let disabled = getContext(\\"disabled\\".key);
+  setContext(\\"activeTab\\", activeTab);
+
+  let activeTab = 0;
+</script>
+
+<div>{activeTab}</div>
+"
+`;
+
+exports[`Svelte > svelte > Typescript Test > each 1`] = `
+"<script lang=\\"ts\\">
+  let numbers = [\\"one\\", \\"two\\", \\"three\\"];
+</script>
+
+<ul>
+  {#each numbers as num}
+    <li>{num}</li>
+  {/each}
+</ul>
+"
+`;
 
 exports[`Svelte > svelte > Typescript Test > html 1`] = `
 "<script lang=\\"ts\\">
-  let html = <b>bold</b>;
+  let html = \\"<b>bold</b>\\";
 </script>
 
 <div>{@html html}</div>
 "
 `;
 
-exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
+"<script lang=\\"ts\\">
+  function toggle() {
+    show = !show;
+  }
+
+  let show = true;
+</script>
+
+{#if show}
+  <button
+    on:click={(event) => {
+      toggle;
+    }}
+  >
+    Hide
+  </button>
+{:else}
+  <button
+    on:click={(event) => {
+      toggle;
+    }}
+  >
+    Show
+  </button>
+{/if}
+"
+`;
 
 exports[`Svelte > svelte > Typescript Test > imports 1`] = `
-"unknown: Unexpected token (2:0)
+"<script lang=\\"ts\\">
+  import Button from \\"./Button.svelte\\";
 
-  1 | let  disabled= 
-> 2 |
-    | ^"
+  let disabled = false;
+</script>
+
+<div><Button type=\\"button\\" {disabled}><slot /></Button></div>
+"
 `;
 
 exports[`Svelte > svelte > Typescript Test > lifecycleHooks 1`] = `
@@ -4889,7 +5140,7 @@ exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
     return name.toLowerCase();
   };
 
-  let name = Steve;
+  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4918,4 +5169,17 @@ exports[`Svelte > svelte > Typescript Test > style 1`] = `
 "
 `;
 
-exports[`Svelte > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Svelte > svelte > Typescript Test > textExpressions 1`] = `
+"<script lang=\\"ts\\">
+  let a = 5;
+  let b = 12;
+</script>
+
+<div>
+  normal:
+  {a + b}<br />
+  conditional
+  {a > 2 ? \\"hello\\" : \\"bye\\"}
+</div>
+"
+`;

@@ -4255,7 +4255,7 @@ exports[`Alpine.js > svelte > Javascript Test > basic 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      name: Steve,
+      name: \\"Steve\\",
     }));
   });
 </script>
@@ -4263,12 +4263,69 @@ exports[`Alpine.js > svelte > Javascript Test > basic 1`] = `
 `;
 
 exports[`Alpine.js > svelte > Javascript Test > bindGroup 1`] = `
-"unknown: Unexpected token (2:77)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('myComponent', () => ({ tortilla: Plain, fillings: ,}))
-    |                                                                              ^
-  3 |           })"
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > svelte > Javascript Test > bindProperty 1`] = `
@@ -4276,7 +4333,7 @@ exports[`Alpine.js > svelte > Javascript Test > bindProperty 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      value: hello,
+      value: \\"hello\\",
     }));
   });
 </script>
@@ -4319,9 +4376,7 @@ exports[`Alpine.js > svelte > Javascript Test > each 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      numbers: one,
-      two,
-      three,
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
     }));
   });
 </script>
@@ -4333,7 +4388,7 @@ exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      html: <b>bold</b>,
+      html: \\"<b>bold</b>\\",
     }));
   });
 </script>
@@ -4392,7 +4447,7 @@ exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      name: Steve,
+      name: \\"Steve\\",
 
       get lowercaseName() {
         return this.name.toLowerCase();
@@ -4454,7 +4509,7 @@ exports[`Alpine.js > svelte > Typescript Test > basic 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      name: Steve,
+      name: \\"Steve\\",
     }));
   });
 </script>
@@ -4462,12 +4517,69 @@ exports[`Alpine.js > svelte > Typescript Test > basic 1`] = `
 `;
 
 exports[`Alpine.js > svelte > Typescript Test > bindGroup 1`] = `
-"unknown: Unexpected token (2:77)
-
-  1 | document.addEventListener('alpine:init', () => {
-> 2 |               Alpine.data('myComponent', () => ({ tortilla: Plain, fillings: ,}))
-    |                                                                              ^
-  3 |           })"
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
 `;
 
 exports[`Alpine.js > svelte > Typescript Test > bindProperty 1`] = `
@@ -4475,7 +4587,7 @@ exports[`Alpine.js > svelte > Typescript Test > bindProperty 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      value: hello,
+      value: \\"hello\\",
     }));
   });
 </script>
@@ -4518,9 +4630,7 @@ exports[`Alpine.js > svelte > Typescript Test > each 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      numbers: one,
-      two,
-      three,
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
     }));
   });
 </script>
@@ -4532,7 +4642,7 @@ exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      html: <b>bold</b>,
+      html: \\"<b>bold</b>\\",
     }));
   });
 </script>
@@ -4591,7 +4701,7 @@ exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myComponent\\", () => ({
-      name: Steve,
+      name: \\"Steve\\",
 
       get lowercaseName() {
         return this.name.toLowerCase();

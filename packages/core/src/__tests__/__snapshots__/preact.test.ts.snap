@@ -5644,7 +5644,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [name, setName] = useState(() => Steve);
+  const [name, setName] = useState(() => \\"Steve\\");
 
   return (
     <div>
@@ -5656,7 +5656,75 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > bindGroup 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Javascript Test > bindGroup 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Javascript Test > bindProperty 1`] = `
 "/** @jsx h */
@@ -5664,27 +5732,71 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [value, setValue] = useState(() => hello);
+  const [value, setValue] = useState(() => \\"hello\\");
 
   return <input value={value} />;
 }
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > classDirective 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Javascript Test > classDirective 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > svelte > Javascript Test > context 1`] = `
-"Expression expected. (19:55)
-  17 |   
-  18 |   
-> 19 |     const [activeTab, setActiveTab] = useState(() => ())
-     |                                                       ^
-  20 |     
-  21 |     
-  22 |       const disabled = useContext('disabled');"
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
 `;
 
-exports[`Preact > svelte > Javascript Test > each 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Javascript Test > context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Javascript Test > each 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Javascript Test > html 1`] = `
 "/** @jsx h */
@@ -5692,24 +5804,56 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [html, setHtml] = useState(() => <b>bold</b>);
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > ifElse 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Javascript Test > ifElse 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <Fragment>
+      {show ? (
+        <button onClick={(event) => toggle}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle}> Show </button>
+      )}
+    </Fragment>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Javascript Test > imports 1`] = `
-"Expression expected. (19:53)
-  17 |   
-  18 |   
-> 19 |     const [disabled, setDisabled] = useState(() => ())
-     |                                                     ^
-  20 |     
-  21 |     
-  22 |     "
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+"
 `;
 
 exports[`Preact > svelte > Javascript Test > lifecycleHooks 1`] = `
@@ -5743,7 +5887,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [name, setName] = useState(() => Steve);
+  const [name, setName] = useState(() => \\"Steve\\");
 
   function lowercaseName() {
     return name.toLowerCase();
@@ -5784,7 +5928,28 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`Preact > svelte > Javascript Test > textExpressions 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Javascript Test > textExpressions 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Typescript Test > basic 1`] = `
 "/** @jsx h */
@@ -5792,7 +5957,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [name, setName] = useState(() => Steve);
+  const [name, setName] = useState(() => \\"Steve\\");
 
   return (
     <div>
@@ -5804,7 +5969,75 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > bindGroup 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Typescript Test > bindGroup 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Typescript Test > bindProperty 1`] = `
 "/** @jsx h */
@@ -5812,27 +6045,71 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [value, setValue] = useState(() => hello);
+  const [value, setValue] = useState(() => \\"hello\\");
 
   return <input value={value} />;
 }
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > classDirective 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Typescript Test > classDirective 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
 
-exports[`Preact > svelte > Typescript Test > context 1`] = `
-"Expression expected. (19:55)
-  17 |   
-  18 |   
-> 19 |     const [activeTab, setActiveTab] = useState(() => ())
-     |                                                       ^
-  20 |     
-  21 |     
-  22 |       const disabled = useContext('disabled');"
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
 `;
 
-exports[`Preact > svelte > Typescript Test > each 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Typescript Test > context 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useContext } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Typescript Test > each 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Typescript Test > html 1`] = `
 "/** @jsx h */
@@ -5840,24 +6117,56 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [html, setHtml] = useState(() => <b>bold</b>);
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
 
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > ifElse 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Typescript Test > ifElse 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <Fragment>
+      {show ? (
+        <button onClick={(event) => toggle}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle}> Show </button>
+      )}
+    </Fragment>
+  );
+}
+"
+`;
 
 exports[`Preact > svelte > Typescript Test > imports 1`] = `
-"Expression expected. (19:53)
-  17 |   
-  18 |   
-> 19 |     const [disabled, setDisabled] = useState(() => ())
-     |                                                     ^
-  20 |     
-  21 |     
-  22 |     "
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+"
 `;
 
 exports[`Preact > svelte > Typescript Test > lifecycleHooks 1`] = `
@@ -5891,7 +6200,7 @@ import { h, Fragment } from \\"preact\\";
 import { useState } from \\"preact/hooks\\";
 
 export default function MyComponent(props: any) {
-  const [name, setName] = useState(() => Steve);
+  const [name, setName] = useState(() => \\"Steve\\");
 
   function lowercaseName() {
     return name.toLowerCase();
@@ -5932,4 +6241,25 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`Preact > svelte > Typescript Test > textExpressions 1`] = `"code.trim is not a function"`;
+exports[`Preact > svelte > Typescript Test > textExpressions 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;

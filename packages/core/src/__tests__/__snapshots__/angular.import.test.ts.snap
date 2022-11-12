@@ -7644,7 +7644,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  name = Steve;
+  name = \\"Steve\\";
 }
 
 @NgModule({
@@ -7656,7 +7656,78 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > bindGroup 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla === 'Plain'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla === 'Whole wheat'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla === 'Spinach'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings === 'Rice'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings === 'Beans'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings === 'Cheese'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings === 'Guac (extra)'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <p>Tortilla: {{tortilla}}</p>
+      <p>Fillings: {{fillings}}</p>
+    </div>
+  \`,
+})
+export class MyComponent {
+  tortilla = \\"Plain\\";
+  fillings = [];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > bindProperty 1`] = `
 "import { NgModule } from \\"@angular/core\\";
@@ -7671,7 +7742,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  value = hello;
+  value = \\"hello\\";
 }
 
 @NgModule({
@@ -7683,67 +7754,92 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
-
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > context 1`] = `
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > classDirective 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import {   Component  } from '@angular/core';
+import { Component, Input } from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
+const defaultProps = {};
 
 @Component({
-  selector: 'my-component, MyComponent',template: \`
-    <div>{{activeTab}}</div>
-
-    \`
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input
+      [class]=\\"\\\\\`form-input \\\\\${disabled ? 'disabled' : ''} \\\\\${focus ? 'focus' : ''}\\\\\`\\"
+    />
+  \`,
 })
 export class MyComponent {
-  
-  
+  @Input() disabled: any;
 
-  
-
-  
-
-  
-
-   activeTab= 
-
-
-  
-
-  constructor(
-public disabled : 'disabled') {
-        
-      }
-      
-  
-
-  
-
-  
-
+  focus = true;
 }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
   exports: [MyComponent],
-  
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > context 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{activeTab}}</div>
+  \`,
+})
+export class MyComponent {
+  activeTab = 0;
+
+  constructor(public disabled: \\"disabled\\") {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > each 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ul>
+      <ng-container *ngFor=\\"let num of numbers\\">
+        <li>{{num}}</li>
+      </ng-container>
+    </ul>
+  \`,
+})
+export class MyComponent {
+  numbers = [\\"one\\", \\"two\\", \\"three\\"];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
@@ -7758,7 +7854,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  html = (<b>bold</b>);
+  html = \\"<b>bold</b>\\";
 }
 
 @NgModule({
@@ -7770,62 +7866,65 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > ifElse 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container *ngIf=\\"show\\">
+      <button (click)=\\"toggle\\">Hide</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  show = true;
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > imports 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import {   Component  } from '@angular/core';
+import { Component } from \\"@angular/core\\";
 
-
-
-
-
-import Button from './Button.lite';
-
-
-
+import Button from \\"./Button.lite\\";
 
 @Component({
-  selector: 'my-component, MyComponent',template: \`
+  selector: \\"my-component, MyComponent\\",
+  template: \`
     <div>
-      <button type=\\"button\\" [disabled]=\\"disabled\\"><ng-content></ng-content></button>
+      <button type=\\"button\\" [disabled]=\\"disabled\\">
+        <ng-content></ng-content>
+      </button>
     </div>
-
-    \`
+  \`,
 })
 export class MyComponent {
-  
-  
-
-  
-
-  
-
-  
-
-   disabled= 
-
-
-  
-
-  
-  
-
-  
-
-  
-
+  disabled = false;
 }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule, ButtonModule, SlotModule],
   exports: [MyComponent],
-  
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > lifecycleHooks 1`] = `
@@ -7880,7 +7979,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  name = Steve;
+  name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
   }
@@ -7930,7 +8029,36 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Javascript Test > textExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      normal: {{a + b}}
+      <br />
+
+      conditional {{a > 2 ? 'hello' : 'bye'}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 5;
+  b = 12;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > basic 1`] = `
 "import { NgModule } from \\"@angular/core\\";
@@ -7949,7 +8077,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  name = Steve;
+  name = \\"Steve\\";
 }
 
 @NgModule({
@@ -7961,7 +8089,78 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > bindGroup 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla === 'Plain'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla === 'Whole wheat'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla === 'Spinach'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings === 'Rice'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings === 'Beans'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings === 'Cheese'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings === 'Guac (extra)'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <p>Tortilla: {{tortilla}}</p>
+      <p>Fillings: {{fillings}}</p>
+    </div>
+  \`,
+})
+export class MyComponent {
+  tortilla = \\"Plain\\";
+  fillings = [];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > bindProperty 1`] = `
 "import { NgModule } from \\"@angular/core\\";
@@ -7976,7 +8175,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  value = hello;
+  value = \\"hello\\";
 }
 
 @NgModule({
@@ -7988,67 +8187,92 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
-
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > context 1`] = `
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > classDirective 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import {   Component  } from '@angular/core';
+import { Component, Input } from \\"@angular/core\\";
 
-
-
-
-
-
-
-
-
+const defaultProps = {};
 
 @Component({
-  selector: 'my-component, MyComponent',template: \`
-    <div>{{activeTab}}</div>
-
-    \`
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input
+      [class]=\\"\\\\\`form-input \\\\\${disabled ? 'disabled' : ''} \\\\\${focus ? 'focus' : ''}\\\\\`\\"
+    />
+  \`,
 })
 export class MyComponent {
-  
-  
+  @Input() disabled: any;
 
-  
-
-  
-
-  
-
-   activeTab= 
-
-
-  
-
-  constructor(
-public disabled : 'disabled') {
-        
-      }
-      
-  
-
-  
-
-  
-
+  focus = true;
 }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
   exports: [MyComponent],
-  
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > context 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{activeTab}}</div>
+  \`,
+})
+export class MyComponent {
+  activeTab = 0;
+
+  constructor(public disabled: \\"disabled\\") {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > each 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ul>
+      <ng-container *ngFor=\\"let num of numbers\\">
+        <li>{{num}}</li>
+      </ng-container>
+    </ul>
+  \`,
+})
+export class MyComponent {
+  numbers = [\\"one\\", \\"two\\", \\"three\\"];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
@@ -8063,7 +8287,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  html = (<b>bold</b>);
+  html = \\"<b>bold</b>\\";
 }
 
 @NgModule({
@@ -8075,62 +8299,65 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > ifElse 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container *ngIf=\\"show\\">
+      <button (click)=\\"toggle\\">Hide</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  show = true;
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > imports 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
 
-import {   Component  } from '@angular/core';
+import { Component } from \\"@angular/core\\";
 
-
-
-
-
-import Button from './Button.lite';
-
-
-
+import Button from \\"./Button.lite\\";
 
 @Component({
-  selector: 'my-component, MyComponent',template: \`
+  selector: \\"my-component, MyComponent\\",
+  template: \`
     <div>
-      <button type=\\"button\\" [disabled]=\\"disabled\\"><ng-content></ng-content></button>
+      <button type=\\"button\\" [disabled]=\\"disabled\\">
+        <ng-content></ng-content>
+      </button>
     </div>
-
-    \`
+  \`,
 })
 export class MyComponent {
-  
-  
-
-  
-
-  
-
-  
-
-   disabled= 
-
-
-  
-
-  
-  
-
-  
-
-  
-
+  disabled = false;
 }
 
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule, ButtonModule, SlotModule],
   exports: [MyComponent],
-  
 })
-export class MyComponentModule {}"
+export class MyComponentModule {}
+"
 `;
 
 exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > lifecycleHooks 1`] = `
@@ -8185,7 +8412,7 @@ import { Component } from \\"@angular/core\\";
   \`,
 })
 export class MyComponent {
-  name = Steve;
+  name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
   }
@@ -8235,4 +8462,33 @@ export class MyComponentModule {}
 "
 `;
 
-exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Angular with Preserve Imports and File Extensions > svelte > Typescript Test > textExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      normal: {{a + b}}
+      <br />
+
+      conditional {{a > 2 ? 'hello' : 'bye'}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 5;
+  b = 12;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;

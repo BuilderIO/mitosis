@@ -5802,13 +5802,65 @@ exports[`Vue > svelte > Javascript Test > basic 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ name: Steve }),
+  data: () => ({ name: \\"Steve\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `
+"<template>
+  <div>
+    <input
+      type=\\"radio\\"
+      value=\\"Plain\\"
+      :checked=\\"tortilla === 'Plain'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Whole wheat\\"
+      :checked=\\"tortilla === 'Whole wheat'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Spinach\\"
+      :checked=\\"tortilla === 'Spinach'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><br /><br /><input
+      type=\\"checkbox\\"
+      value=\\"Rice\\"
+      :checked=\\"fillings === 'Rice'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Beans\\"
+      :checked=\\"fillings === 'Beans'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Cheese\\"
+      :checked=\\"fillings === 'Cheese'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Guac (extra)\\"
+      :checked=\\"fillings === 'Guac (extra)'\\"
+      @input=\\"fillings = $event.target.value\\"
+    />
+    <p>Tortilla: {{ tortilla }}</p>
+    <p>Fillings: {{ fillings }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ tortilla: \\"Plain\\", fillings: [] }),
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 "<template>
@@ -5819,13 +5871,48 @@ exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ value: hello }),
+  data: () => ({ value: \\"hello\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
+"<template>
+  <input
+    :class=\\"
+      _classStringToObject(
+        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
+      )
+    \\"
+  />
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  props: { disabled: {} },
+
+  data: () => ({ focus: true }),
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > context 1`] = `
 "<template>
@@ -5833,47 +5920,40 @@ exports[`Vue > svelte > Javascript Test > context 1`] = `
 </template>
 
 <script>
+export default {
+  name: \\"my-component\\",
 
+  data: () => ({ activeTab: 0 }),
 
-
-
-
-
-
-
-
-
-      export default {
-      name: 'my-component',
-
-
-
-      data: () => ({ activeTab: ,}),
-
-
-      provide() {
-              return {
-  'activeTab': this.activeTab
-}
-            },
-      inject: {
+  provide() {
+    return {
+      activeTab: this.activeTab,
+    };
+  },
+  inject: {
     disabled: \\"'disabled'\\",
   },
-
-
-
-
-
-
-
-
-
-    }
+};
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > each 1`] = `
+"<template>
+  <ul>
+    <li v-for=\\"(num, index) in numbers\\" :key=\\"index\\">{{ num }}</li>
+  </ul>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ numbers: [\\"one\\", \\"two\\", \\"three\\"] }),
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
@@ -5884,13 +5964,33 @@ exports[`Vue > svelte > Javascript Test > html 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ html: <b>bold</b> }),
+  data: () => ({ html: \\"<b>bold</b>\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
+"<template>
+  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
+  <button v-else @click=\\"toggle\\">Show</button>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ show: true }),
+
+  methods: {
+    toggle: function toggle() {
+      this.show = !this.show;
+    },
+  },
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > imports 1`] = `
 "<template>
@@ -5900,36 +6000,14 @@ exports[`Vue > svelte > Javascript Test > imports 1`] = `
 </template>
 
 <script>
+import Button from \\"./Button.vue\\";
 
+export default {
+  name: \\"my-component\\",
+  components: { Button: Button },
 
-
-
-import Button from './Button.vue';
-
-
-
-
-
-    export default {
-    name: 'my-component',
-    components: { 'Button': Button },
-
-
-    data: () => ({ disabled: ,}),
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }
+  data: () => ({ disabled: false }),
+};
 </script>
 "
 `;
@@ -5967,7 +6045,7 @@ exports[`Vue > svelte > Javascript Test > reactive 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ name: Steve }),
+  data: () => ({ name: \\"Steve\\" }),
 
   computed: {
     lowercaseName() {
@@ -6003,7 +6081,25 @@ input {
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `
+"<template>
+  <div>
+    normal:
+    {{ a + b }}<br />
+    conditional
+    {{ a > 2 ? \\"hello\\" : \\"bye\\" }}
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 5, b: 12 }),
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > basic 1`] = `
 "<template>
@@ -6017,13 +6113,65 @@ exports[`Vue > svelte > Typescript Test > basic 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ name: Steve }),
+  data: () => ({ name: \\"Steve\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `
+"<template>
+  <div>
+    <input
+      type=\\"radio\\"
+      value=\\"Plain\\"
+      :checked=\\"tortilla === 'Plain'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Whole wheat\\"
+      :checked=\\"tortilla === 'Whole wheat'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Spinach\\"
+      :checked=\\"tortilla === 'Spinach'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><br /><br /><input
+      type=\\"checkbox\\"
+      value=\\"Rice\\"
+      :checked=\\"fillings === 'Rice'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Beans\\"
+      :checked=\\"fillings === 'Beans'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Cheese\\"
+      :checked=\\"fillings === 'Cheese'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Guac (extra)\\"
+      :checked=\\"fillings === 'Guac (extra)'\\"
+      @input=\\"fillings = $event.target.value\\"
+    />
+    <p>Tortilla: {{ tortilla }}</p>
+    <p>Fillings: {{ fillings }}</p>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ tortilla: \\"Plain\\", fillings: [] }),
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 "<template>
@@ -6034,13 +6182,48 @@ exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ value: hello }),
+  data: () => ({ value: \\"hello\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
+"<template>
+  <input
+    :class=\\"
+      _classStringToObject(
+        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
+      )
+    \\"
+  />
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  props: { disabled: {} },
+
+  data: () => ({ focus: true }),
+
+  methods: {
+    _classStringToObject(str) {
+      const obj = {};
+      if (typeof str !== \\"string\\") {
+        return obj;
+      }
+      const classNames = str.trim().split(/\\\\s+/);
+      for (const name of classNames) {
+        obj[name] = true;
+      }
+      return obj;
+    },
+  },
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > context 1`] = `
 "<template>
@@ -6048,47 +6231,40 @@ exports[`Vue > svelte > Typescript Test > context 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
 
+  data: () => ({ activeTab: 0 }),
 
-
-
-
-
-
-
-
-
-      export default {
-      name: 'my-component',
-
-
-
-      data: () => ({ activeTab: ,}),
-
-
-      provide() {
-              return {
-  'activeTab': this.activeTab
-}
-            },
-      inject: {
+  provide() {
+    return {
+      activeTab: this.activeTab,
+    };
+  },
+  inject: {
     disabled: \\"'disabled'\\",
   },
-
-
-
-
-
-
-
-
-
-    }
+};
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > each 1`] = `
+"<template>
+  <ul>
+    <li v-for=\\"(num, index) in numbers\\" :key=\\"index\\">{{ num }}</li>
+  </ul>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ numbers: [\\"one\\", \\"two\\", \\"three\\"] }),
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > html 1`] = `
 "<template>
@@ -6099,13 +6275,33 @@ exports[`Vue > svelte > Typescript Test > html 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ html: <b>bold</b> }),
+  data: () => ({ html: \\"<b>bold</b>\\" }),
 };
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
+"<template>
+  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
+  <button v-else @click=\\"toggle\\">Show</button>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ show: true }),
+
+  methods: {
+    toggle: function toggle() {
+      this.show = !this.show;
+    },
+  },
+};
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > imports 1`] = `
 "<template>
@@ -6115,36 +6311,14 @@ exports[`Vue > svelte > Typescript Test > imports 1`] = `
 </template>
 
 <script lang=\\"ts\\">
+import Button from \\"./Button.vue\\";
 
+export default {
+  name: \\"my-component\\",
+  components: { Button: Button },
 
-
-
-import Button from './Button.vue';
-
-
-
-
-
-    export default {
-    name: 'my-component',
-    components: { 'Button': Button },
-
-
-    data: () => ({ disabled: ,}),
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }
+  data: () => ({ disabled: false }),
+};
 </script>
 "
 `;
@@ -6182,7 +6356,7 @@ exports[`Vue > svelte > Typescript Test > reactive 1`] = `
 export default {
   name: \\"my-component\\",
 
-  data: () => ({ name: Steve }),
+  data: () => ({ name: \\"Steve\\" }),
 
   computed: {
     lowercaseName() {
@@ -6218,4 +6392,22 @@ input {
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `
+"<template>
+  <div>
+    normal:
+    {{ a + b }}<br />
+    conditional
+    {{ a > 2 ? \\"hello\\" : \\"bye\\" }}
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 5, b: 12 }),
+};
+</script>
+"
+`;

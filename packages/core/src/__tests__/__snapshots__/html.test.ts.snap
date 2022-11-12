@@ -10210,7 +10210,7 @@ exports[`Html > svelte > Javascript Test > basic 1`] = `
 </div>
 <script>
   (() => {
-    const state = { name: Steve };
+    const state = { name: \\"Steve\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10256,13 +10256,213 @@ exports[`Html > svelte > Javascript Test > basic 1`] = `
 "
 `;
 
-exports[`Html > svelte > Javascript Test > bindGroup 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Javascript Test > bindGroup 1`] = `
+"<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    data-el=\\"input-1\\"
+    data-dom-state=\\"input-2\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    data-el=\\"input-3\\"
+    data-dom-state=\\"input-4\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    data-el=\\"input-5\\"
+    data-dom-state=\\"input-6\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    data-el=\\"input-7\\"
+    data-dom-state=\\"input-8\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    data-el=\\"input-9\\"
+    data-dom-state=\\"input-10\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    data-el=\\"input-11\\"
+    data-dom-state=\\"input-12\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    data-el=\\"input-13\\"
+    data-dom-state=\\"input-14\\"
+  />
+  <p>
+    Tortilla:
+    <template data-el=\\"div-1\\"><!-- state.tortilla --></template>
+  </p>
+  <p>
+    Fillings:
+    <template data-el=\\"div-2\\"><!-- state.fillings --></template>
+  </p>
+</div>
+<script>
+  (() => {
+    const state = { tortilla: \\"Plain\\", fillings: [] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Plain\\");
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Whole wheat\\");
+
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-5']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Spinach\\");
+
+        el.removeEventListener(\\"input\\", onInput5Input);
+        el.addEventListener(\\"input\\", onInput5Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-7']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Rice\\");
+
+        el.removeEventListener(\\"input\\", onInput7Input);
+        el.addEventListener(\\"input\\", onInput7Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-9']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Beans\\");
+
+        el.removeEventListener(\\"input\\", onInput9Input);
+        el.addEventListener(\\"input\\", onInput9Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-11']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Cheese\\");
+
+        el.removeEventListener(\\"input\\", onInput11Input);
+        el.addEventListener(\\"input\\", onInput11Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-13']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Guac (extra)\\");
+
+        el.removeEventListener(\\"input\\", onInput13Input);
+        el.addEventListener(\\"input\\", onInput13Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.tortilla);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.fillings);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-5
+    function onInput5Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-7
+    function onInput7Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-9
+    function onInput9Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-11
+    function onInput11Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-13
+    function onInput13Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
 
 exports[`Html > svelte > Javascript Test > bindProperty 1`] = `
 "<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
-    const state = { value: hello };
+    const state = { value: \\"hello\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10299,27 +10499,21 @@ exports[`Html > svelte > Javascript Test > bindProperty 1`] = `
 "
 `;
 
-exports[`Html > svelte > Javascript Test > classDirective 1`] = `"code.trim is not a function"`;
-
-exports[`Html > svelte > Javascript Test > context 1`] = `
-"<div>
-  <template data-el=\\"div-1\\"><!-- state.activeTab --></template>
-</div>
+exports[`Html > svelte > Javascript Test > classDirective 1`] = `
+"<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
-    const state = { activeTab: ,};
-
+    const state = { focus: true };
+    let props = {};
     let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
-
     function destroyAnyNodes() {
       // destroy current view template refs before rendering again
-      nodesToDestroy.forEach(el => el.remove());
+      nodesToDestroy.forEach((el) => el.remove());
       nodesToDestroy = [];
     }
-
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -10330,58 +10524,203 @@ exports[`Html > svelte > Javascript Test > context 1`] = `
       }
       pendingUpdate = true;
 
-          document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-
-
-  renderTextNode(el, state.activeTab);
-          });
-
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.className = \`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          state.focus ? \\"focus\\" : \\"\\"
+        }\`;
+      });
 
       destroyAnyNodes();
-
-
 
       pendingUpdate = false;
     }
 
-
-
     // Update with initial state on first load
     update();
-
-
-
-
-
-
-
-
-      // Helper text DOM nodes
-      function renderTextNode(el, text) {
-        const textNode = document.createTextNode(text);
-        if (el?.scope) {
-          textNode.scope = el.scope
-        }
-        if (el?.context) {
-          child.context = el.context;
-        }
-        el.after(textNode);
-        nodesToDestroy.push(el.nextSibling);
-      }
-
-
-  })()
+  })();
 </script>
 "
 `;
 
-exports[`Html > svelte > Javascript Test > each 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Javascript Test > context 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.activeTab --></template>
+</div>
+<script>
+  (() => {
+    const state = { activeTab: 0 };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.activeTab);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > svelte > Javascript Test > each 1`] = `
+"<ul>
+  <template data-el=\\"for\\">
+    <li>
+      <template data-el=\\"div-1\\"><!-- num --></template>
+    </li>
+  </template>
+</ul>
+<script>
+  (() => {
+    const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = state.numbers;
+        renderLoop(el, array, \\"num\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const num = getScope(el, \\"num\\");
+        renderTextNode(el, num);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
 
 exports[`Html > svelte > Javascript Test > html 1`] = `
 "<div data-el=\\"div-1\\"></div>
 <script>
   (() => {
-    const state = { html: <b>bold</b> };
+    const state = { html: \\"<b>bold</b>\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10418,27 +10757,27 @@ exports[`Html > svelte > Javascript Test > html 1`] = `
 "
 `;
 
-exports[`Html > svelte > Javascript Test > ifElse 1`] = `"code.trim is not a function"`;
-
-exports[`Html > svelte > Javascript Test > imports 1`] = `
-"<div>
-  <button type=\\"button\\" data-el=\\"button\\"><slot></slot></button>
-</div>
+exports[`Html > svelte > Javascript Test > ifElse 1`] = `
+"<template data-el=\\"show\\"><button data-el=\\"button-1\\">Hide</button></template>
 <script>
   (() => {
-    const state = { disabled: ,};
+    const state = {
+      show: true,
+      toggle: function toggle() {
+        state.show = !state.show;
+        update();
+      },
+    };
 
     let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
-
     function destroyAnyNodes() {
       // destroy current view template refs before rendering again
-      nodesToDestroy.forEach(el => el.remove());
+      nodesToDestroy.forEach((el) => el.remove());
       nodesToDestroy = [];
     }
-
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -10449,39 +10788,94 @@ exports[`Html > svelte > Javascript Test > imports 1`] = `
       }
       pendingUpdate = true;
 
-          document.querySelectorAll(\\"[data-el='button']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = state.show;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
 
-
-
-
-        ;el.setAttribute(\\"disabled\\", state.disabled);
-
-
-
-          });
-
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
 
       destroyAnyNodes();
-
-
 
       pendingUpdate = false;
     }
 
-
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.toggle;
+    }
 
     // Update with initial state on first load
     update();
 
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
 
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+  })();
+</script>
+"
+`;
 
+exports[`Html > svelte > Javascript Test > imports 1`] = `
+"<div>
+  <button type=\\"button\\" data-el=\\"button\\"><slot></slot></button>
+</div>
+<script>
+  (() => {
+    const state = { disabled: false };
 
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
 
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
 
+      document.querySelectorAll(\\"[data-el='button']\\").forEach((el) => {
+        el.setAttribute(\\"disabled\\", state.disabled);
+      });
 
+      destroyAnyNodes();
 
-  })()
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
 </script>
 "
 `;
@@ -10532,7 +10926,72 @@ exports[`Html > svelte > Javascript Test > style 1`] = `
 "
 `;
 
-exports[`Html > svelte > Javascript Test > textExpressions 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Javascript Test > textExpressions 1`] = `
+"<div>
+  normal:
+
+  <template data-el=\\"div-1\\"><!-- state.a + state.b --></template>
+  <br />
+
+  conditional
+
+  <template data-el=\\"div-2\\"><!-- state.a > 2 ? 'hello' : 'bye' --></template>
+</div>
+<script>
+  (() => {
+    const state = { a: 5, b: 12 };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.a + state.b);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.a > 2 ? \\"hello\\" : \\"bye\\");
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
 
 exports[`Html > svelte > Typescript Test > basic 1`] = `
 "<div>
@@ -10542,7 +11001,7 @@ exports[`Html > svelte > Typescript Test > basic 1`] = `
 </div>
 <script>
   (() => {
-    const state = { name: Steve };
+    const state = { name: \\"Steve\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10588,13 +11047,213 @@ exports[`Html > svelte > Typescript Test > basic 1`] = `
 "
 `;
 
-exports[`Html > svelte > Typescript Test > bindGroup 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Typescript Test > bindGroup 1`] = `
+"<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    data-el=\\"input-1\\"
+    data-dom-state=\\"input-2\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    data-el=\\"input-3\\"
+    data-dom-state=\\"input-4\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    data-el=\\"input-5\\"
+    data-dom-state=\\"input-6\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    data-el=\\"input-7\\"
+    data-dom-state=\\"input-8\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    data-el=\\"input-9\\"
+    data-dom-state=\\"input-10\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    data-el=\\"input-11\\"
+    data-dom-state=\\"input-12\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    data-el=\\"input-13\\"
+    data-dom-state=\\"input-14\\"
+  />
+  <p>
+    Tortilla:
+    <template data-el=\\"div-1\\"><!-- state.tortilla --></template>
+  </p>
+  <p>
+    Fillings:
+    <template data-el=\\"div-2\\"><!-- state.fillings --></template>
+  </p>
+</div>
+<script>
+  (() => {
+    const state = { tortilla: \\"Plain\\", fillings: [] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Plain\\");
+
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Whole wheat\\");
+
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-5']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.tortilla === \\"Spinach\\");
+
+        el.removeEventListener(\\"input\\", onInput5Input);
+        el.addEventListener(\\"input\\", onInput5Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-7']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Rice\\");
+
+        el.removeEventListener(\\"input\\", onInput7Input);
+        el.addEventListener(\\"input\\", onInput7Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-9']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Beans\\");
+
+        el.removeEventListener(\\"input\\", onInput9Input);
+        el.addEventListener(\\"input\\", onInput9Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-11']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Cheese\\");
+
+        el.removeEventListener(\\"input\\", onInput11Input);
+        el.addEventListener(\\"input\\", onInput11Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='input-13']\\").forEach((el) => {
+        el.setAttribute(\\"checked\\", state.fillings === \\"Guac (extra)\\");
+
+        el.removeEventListener(\\"input\\", onInput13Input);
+        el.addEventListener(\\"input\\", onInput13Input);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.tortilla);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.fillings);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-5
+    function onInput5Input(event) {
+      state.tortilla = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-7
+    function onInput7Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-9
+    function onInput9Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-11
+    function onInput11Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-13
+    function onInput13Input(event) {
+      state.fillings = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
 
 exports[`Html > svelte > Typescript Test > bindProperty 1`] = `
 "<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
-    const state = { value: hello };
+    const state = { value: \\"hello\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10631,27 +11290,21 @@ exports[`Html > svelte > Typescript Test > bindProperty 1`] = `
 "
 `;
 
-exports[`Html > svelte > Typescript Test > classDirective 1`] = `"code.trim is not a function"`;
-
-exports[`Html > svelte > Typescript Test > context 1`] = `
-"<div>
-  <template data-el=\\"div-1\\"><!-- state.activeTab --></template>
-</div>
+exports[`Html > svelte > Typescript Test > classDirective 1`] = `
+"<input data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
 <script>
   (() => {
-    const state = { activeTab: ,};
-
+    const state = { focus: true };
+    let props = {};
     let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
-
     function destroyAnyNodes() {
       // destroy current view template refs before rendering again
-      nodesToDestroy.forEach(el => el.remove());
+      nodesToDestroy.forEach((el) => el.remove());
       nodesToDestroy = [];
     }
-
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -10662,58 +11315,203 @@ exports[`Html > svelte > Typescript Test > context 1`] = `
       }
       pendingUpdate = true;
 
-          document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
-
-
-  renderTextNode(el, state.activeTab);
-          });
-
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.className = \`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+          state.focus ? \\"focus\\" : \\"\\"
+        }\`;
+      });
 
       destroyAnyNodes();
-
-
 
       pendingUpdate = false;
     }
 
-
-
     // Update with initial state on first load
     update();
-
-
-
-
-
-
-
-
-      // Helper text DOM nodes
-      function renderTextNode(el, text) {
-        const textNode = document.createTextNode(text);
-        if (el?.scope) {
-          textNode.scope = el.scope
-        }
-        if (el?.context) {
-          child.context = el.context;
-        }
-        el.after(textNode);
-        nodesToDestroy.push(el.nextSibling);
-      }
-
-
-  })()
+  })();
 </script>
 "
 `;
 
-exports[`Html > svelte > Typescript Test > each 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Typescript Test > context 1`] = `
+"<div>
+  <template data-el=\\"div-1\\"><!-- state.activeTab --></template>
+</div>
+<script>
+  (() => {
+    const state = { activeTab: 0 };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.activeTab);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
+exports[`Html > svelte > Typescript Test > each 1`] = `
+"<ul>
+  <template data-el=\\"for\\">
+    <li>
+      <template data-el=\\"div-1\\"><!-- num --></template>
+    </li>
+  </template>
+</ul>
+<script>
+  (() => {
+    const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='for']\\").forEach((el) => {
+        let array = state.numbers;
+        renderLoop(el, array, \\"num\\");
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        const num = getScope(el, \\"num\\");
+        renderTextNode(el, num);
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+
+    // Helper to render loops
+    function renderLoop(template, array, itemName, itemIndex, collectionName) {
+      const collection = [];
+      for (let [index, value] of array.entries()) {
+        const elementFragment = template.content.cloneNode(true);
+        const children = Array.from(elementFragment.childNodes);
+        const localScope = {};
+        let scope = localScope;
+        if (template?.scope) {
+          const getParent = {
+            get(target, prop, receiver) {
+              if (prop in target) {
+                return target[prop];
+              }
+              if (prop in template.scope) {
+                return template.scope[prop];
+              }
+              return target[prop];
+            },
+          };
+          scope = new Proxy(localScope, getParent);
+        }
+        children.forEach((child) => {
+          if (itemName !== undefined) {
+            scope[itemName] = value;
+          }
+          if (itemIndex !== undefined) {
+            scope[itemIndex] = index;
+          }
+          if (collectionName !== undefined) {
+            scope[collectionName] = array;
+          }
+          child.scope = scope;
+          if (template.context) {
+            child.context = template.context;
+          }
+          this.nodesToDestroy.push(child);
+          collection.unshift(child);
+        });
+        collection.forEach((child) => template.after(child));
+      }
+    }
+
+    function getScope(el, name) {
+      do {
+        let value = el?.scope?.[name];
+        if (value !== undefined) {
+          return value;
+        }
+      } while ((el = el.parentNode));
+    }
+  })();
+</script>
+"
+`;
 
 exports[`Html > svelte > Typescript Test > html 1`] = `
 "<div data-el=\\"div-1\\"></div>
 <script>
   (() => {
-    const state = { html: <b>bold</b> };
+    const state = { html: \\"<b>bold</b>\\" };
 
     let context = null;
     let nodesToDestroy = [];
@@ -10750,27 +11548,27 @@ exports[`Html > svelte > Typescript Test > html 1`] = `
 "
 `;
 
-exports[`Html > svelte > Typescript Test > ifElse 1`] = `"code.trim is not a function"`;
-
-exports[`Html > svelte > Typescript Test > imports 1`] = `
-"<div>
-  <button type=\\"button\\" data-el=\\"button\\"><slot></slot></button>
-</div>
+exports[`Html > svelte > Typescript Test > ifElse 1`] = `
+"<template data-el=\\"show\\"><button data-el=\\"button-1\\">Hide</button></template>
 <script>
   (() => {
-    const state = { disabled: ,};
+    const state = {
+      show: true,
+      toggle: function toggle() {
+        state.show = !state.show;
+        update();
+      },
+    };
 
     let context = null;
     let nodesToDestroy = [];
     let pendingUpdate = false;
 
-
     function destroyAnyNodes() {
       // destroy current view template refs before rendering again
-      nodesToDestroy.forEach(el => el.remove());
+      nodesToDestroy.forEach((el) => el.remove());
       nodesToDestroy = [];
     }
-
 
     // Function to update data bindings and loops
     // call update() when you mutate state and need the updates to reflect
@@ -10781,39 +11579,94 @@ exports[`Html > svelte > Typescript Test > imports 1`] = `
       }
       pendingUpdate = true;
 
-          document.querySelectorAll(\\"[data-el='button']\\").forEach((el) => {
+      document.querySelectorAll(\\"[data-el='show']\\").forEach((el) => {
+        const whenCondition = state.show;
+        if (whenCondition) {
+          showContent(el);
+        }
+      });
 
-
-
-
-        ;el.setAttribute(\\"disabled\\", state.disabled);
-
-
-
-          });
-
+      document.querySelectorAll(\\"[data-el='button-1']\\").forEach((el) => {
+        el.removeEventListener(\\"click\\", onButton1Click);
+        el.addEventListener(\\"click\\", onButton1Click);
+      });
 
       destroyAnyNodes();
-
-
 
       pendingUpdate = false;
     }
 
-
+    // Event handler for 'click' event on button-1
+    function onButton1Click(event) {
+      state.toggle;
+    }
 
     // Update with initial state on first load
     update();
 
+    function showContent(el) {
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLTemplateElement/content
+      // grabs the content of a node that is between <template> tags
+      // iterates through child nodes to register all content including text elements
+      // attaches the content after the template
 
+      const elementFragment = el.content.cloneNode(true);
+      const children = Array.from(elementFragment.childNodes);
+      children.forEach((child) => {
+        if (el?.scope) {
+          child.scope = el.scope;
+        }
+        if (el?.context) {
+          child.context = el.context;
+        }
+        nodesToDestroy.push(child);
+      });
+      el.after(elementFragment);
+    }
+  })();
+</script>
+"
+`;
 
+exports[`Html > svelte > Typescript Test > imports 1`] = `
+"<div>
+  <button type=\\"button\\" data-el=\\"button\\"><slot></slot></button>
+</div>
+<script>
+  (() => {
+    const state = { disabled: false };
 
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
 
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
 
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
 
+      document.querySelectorAll(\\"[data-el='button']\\").forEach((el) => {
+        el.setAttribute(\\"disabled\\", state.disabled);
+      });
 
+      destroyAnyNodes();
 
-  })()
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+  })();
 </script>
 "
 `;
@@ -10864,4 +11717,69 @@ exports[`Html > svelte > Typescript Test > style 1`] = `
 "
 `;
 
-exports[`Html > svelte > Typescript Test > textExpressions 1`] = `"code.trim is not a function"`;
+exports[`Html > svelte > Typescript Test > textExpressions 1`] = `
+"<div>
+  normal:
+
+  <template data-el=\\"div-1\\"><!-- state.a + state.b --></template>
+  <br />
+
+  conditional
+
+  <template data-el=\\"div-2\\"><!-- state.a > 2 ? 'hello' : 'bye' --></template>
+</div>
+<script>
+  (() => {
+    const state = { a: 5, b: 12 };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.a + state.b);
+      });
+
+      document.querySelectorAll(\\"[data-el='div-2']\\").forEach((el) => {
+        renderTextNode(el, state.a > 2 ? \\"hello\\" : \\"bye\\");
+      });
+
+      destroyAnyNodes();
+
+      pendingUpdate = false;
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;

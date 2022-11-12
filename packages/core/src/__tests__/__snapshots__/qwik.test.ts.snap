@@ -6468,7 +6468,7 @@ exports[`qwik > svelte > Javascript Test > basic 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
-  const state = useStore({ name: Steve });
+  const state = useStore({ name: \\"Steve\\" });
   return (
     <div>
       <input
@@ -6488,7 +6488,7 @@ exports[`qwik > svelte > Javascript Test > bindGroup 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
-  const state = useStore({ fillings: [], tortilla: Plain });
+  const state = useStore({ fillings: [], tortilla: \\"Plain\\" });
   return (
     <div>
       <input
@@ -6520,42 +6520,34 @@ export const MyComponent = component$((props) => {
       <input
         type=\\"checkbox\\"
         value=\\"Rice\\"
-        checked={state.fillings.includes(\\"Rice\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Rice\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Rice\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Beans\\"
-        checked={state.fillings.includes(\\"Beans\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Beans\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Beans\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
-        checked={state.fillings.includes(\\"Cheese\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Cheese\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Cheese\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Guac (extra)\\"
-        checked={state.fillings.includes(\\"Guac (extra)\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Guac (extra)\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Guac (extra)\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <p>Tortilla: {state.tortilla}</p>
       <p>Fillings: {state.fillings}</p>
@@ -6571,7 +6563,7 @@ exports[`qwik > svelte > Javascript Test > bindProperty 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
-  const state = useStore({ value: hello });
+  const state = useStore({ value: \\"hello\\" });
   return <input value={state.value}></input>;
 });
 export default MyComponent;
@@ -6622,7 +6614,7 @@ exports[`qwik > svelte > Javascript Test > each 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
-  const state = useStore({ numbers: [one, two, three] });
+  const state = useStore({ numbers: [\\"one\\", \\"two\\", \\"three\\"] });
   return (
     <ul>
       {(state.numbers || []).map(function (num) {
@@ -6640,7 +6632,7 @@ exports[`qwik > svelte > Javascript Test > html 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props) => {
-  const state = useStore({ html: <b>bold</b> });
+  const state = useStore({ html: \\"<b>bold</b>\\" });
   return <div dangerouslySetInnerHTML={state.html}></div>;
 });
 export default MyComponent;
@@ -6725,7 +6717,7 @@ export const lowercaseName = function lowercaseName(props, state) {
   return state.name.toLowerCase();
 };
 export const MyComponent = component$((props) => {
-  const state = useStore({ name: Steve });
+  const state = useStore({ name: \\"Steve\\" });
   return (
     <div>
       <input value={state.name}></input>
@@ -6785,7 +6777,7 @@ exports[`qwik > svelte > Typescript Test > basic 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ name: Steve });
+  const state = useStore<any>({ name: \\"Steve\\" });
   return (
     <div>
       <input
@@ -6805,7 +6797,7 @@ exports[`qwik > svelte > Typescript Test > bindGroup 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ fillings: [], tortilla: Plain });
+  const state = useStore<any>({ fillings: [], tortilla: \\"Plain\\" });
   return (
     <div>
       <input
@@ -6837,42 +6829,34 @@ export const MyComponent = component$((props: any) => {
       <input
         type=\\"checkbox\\"
         value=\\"Rice\\"
-        checked={state.fillings.includes(\\"Rice\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Rice\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Rice\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Beans\\"
-        checked={state.fillings.includes(\\"Beans\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Beans\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Beans\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Cheese\\"
-        checked={state.fillings.includes(\\"Cheese\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Cheese\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Cheese\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <input
         type=\\"checkbox\\"
         value=\\"Guac (extra)\\"
-        checked={state.fillings.includes(\\"Guac (extra)\\")}
-        onChange$={(event) =>
-          event.target.checked
-            ? state.fillings.push(event.target.value)
-            : state.fillings.splice(state.fillings.indexOf(\\"Guac (extra)\\"), 1)
-        }
+        checked={(() => {
+          state.fillings === \\"Guac (extra)\\";
+        })()}
+        onChange$={(event) => (state.fillings = event.target.value)}
       ></input>
       <p>Tortilla: {state.tortilla}</p>
       <p>Fillings: {state.fillings}</p>
@@ -6888,7 +6872,7 @@ exports[`qwik > svelte > Typescript Test > bindProperty 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ value: hello });
+  const state = useStore<any>({ value: \\"hello\\" });
   return <input value={state.value}></input>;
 });
 export default MyComponent;
@@ -6939,7 +6923,7 @@ exports[`qwik > svelte > Typescript Test > each 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ numbers: [one, two, three] });
+  const state = useStore<any>({ numbers: [\\"one\\", \\"two\\", \\"three\\"] });
   return (
     <ul>
       {(state.numbers || []).map(function (num) {
@@ -6957,7 +6941,7 @@ exports[`qwik > svelte > Typescript Test > html 1`] = `
 
 import { Fragment, component$, h, useStore } from \\"@builder.io/qwik\\";
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ html: <b>bold</b> });
+  const state = useStore<any>({ html: \\"<b>bold</b>\\" });
   return <div dangerouslySetInnerHTML={state.html}></div>;
 });
 export default MyComponent;
@@ -7042,7 +7026,7 @@ export const lowercaseName = function lowercaseName(props, state) {
   return state.name.toLowerCase();
 };
 export const MyComponent = component$((props: any) => {
-  const state = useStore<any>({ name: Steve });
+  const state = useStore<any>({ name: \\"Steve\\" });
   return (
     <div>
       <input value={state.name}></input>

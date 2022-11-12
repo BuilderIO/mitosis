@@ -5138,7 +5138,7 @@ exports[`RSC > svelte > Javascript Test > basic 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { name: Steve };
+  const state = { name: \\"Steve\\" };
 
   return (
     <div>
@@ -5151,14 +5151,56 @@ export default function MyComponent(props: any) {
 `;
 
 exports[`RSC > svelte > Javascript Test > bindGroup 1`] = `
-"Expression expected. (17:48)
-  15 |   const _context = { ...props['_context'] };
-  16 |   
-> 17 |     const state = { tortilla: Plain, fillings: ,};
-     |                                                ^
-  18 |     
-  19 |     
-  20 |     "
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { tortilla: \\"Plain\\", fillings: [] };
+
+  return (
+    <div>
+      <input type=\\"radio\\" value=\\"Plain\\" checked={state.tortilla === \\"Plain\\"} />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={state.tortilla === \\"Whole wheat\\"}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={state.tortilla === \\"Spinach\\"}
+      />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" checked={state.fillings === \\"Rice\\"} />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={state.fillings === \\"Beans\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={state.fillings === \\"Cheese\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={state.fillings === \\"Guac (extra)\\"}
+      />
+      <p>
+        Tortilla:
+        {state.tortilla}
+      </p>
+      <p>
+        Fillings:
+        {state.fillings}
+      </p>
+    </div>
+  );
+}
+"
 `;
 
 exports[`RSC > svelte > Javascript Test > bindProperty 1`] = `
@@ -5167,7 +5209,7 @@ exports[`RSC > svelte > Javascript Test > bindProperty 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { value: hello };
+  const state = { value: \\"hello\\" };
 
   return <input value={state.value} />;
 }
@@ -5212,7 +5254,7 @@ exports[`RSC > svelte > Javascript Test > each 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { numbers: one, two, three };
+  const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
 
   return (
     <ul>
@@ -5231,7 +5273,7 @@ exports[`RSC > svelte > Javascript Test > html 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { html: <b>bold</b> };
+  const state = { html: \\"<b>bold</b>\\" };
 
   return <div dangerouslySetInnerHTML={{ __html: state.html }} />;
 }
@@ -5297,7 +5339,7 @@ export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
   const state = {
-    name: Steve,
+    name: \\"Steve\\",
     get lowercaseName() {
       return state.name.toLowerCase();
     },
@@ -5367,7 +5409,7 @@ exports[`RSC > svelte > Typescript Test > basic 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { name: Steve };
+  const state = { name: \\"Steve\\" };
 
   return (
     <div>
@@ -5380,14 +5422,56 @@ export default function MyComponent(props: any) {
 `;
 
 exports[`RSC > svelte > Typescript Test > bindGroup 1`] = `
-"Expression expected. (17:48)
-  15 |   const _context = { ...props['_context'] };
-  16 |   
-> 17 |     const state = { tortilla: Plain, fillings: ,};
-     |                                                ^
-  18 |     
-  19 |     
-  20 |     "
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { tortilla: \\"Plain\\", fillings: [] };
+
+  return (
+    <div>
+      <input type=\\"radio\\" value=\\"Plain\\" checked={state.tortilla === \\"Plain\\"} />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={state.tortilla === \\"Whole wheat\\"}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={state.tortilla === \\"Spinach\\"}
+      />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" checked={state.fillings === \\"Rice\\"} />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={state.fillings === \\"Beans\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={state.fillings === \\"Cheese\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={state.fillings === \\"Guac (extra)\\"}
+      />
+      <p>
+        Tortilla:
+        {state.tortilla}
+      </p>
+      <p>
+        Fillings:
+        {state.fillings}
+      </p>
+    </div>
+  );
+}
+"
 `;
 
 exports[`RSC > svelte > Typescript Test > bindProperty 1`] = `
@@ -5396,7 +5480,7 @@ exports[`RSC > svelte > Typescript Test > bindProperty 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { value: hello };
+  const state = { value: \\"hello\\" };
 
   return <input value={state.value} />;
 }
@@ -5441,7 +5525,7 @@ exports[`RSC > svelte > Typescript Test > each 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { numbers: one, two, three };
+  const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
 
   return (
     <ul>
@@ -5460,7 +5544,7 @@ exports[`RSC > svelte > Typescript Test > html 1`] = `
 export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
-  const state = { html: <b>bold</b> };
+  const state = { html: \\"<b>bold</b>\\" };
 
   return <div dangerouslySetInnerHTML={{ __html: state.html }} />;
 }
@@ -5526,7 +5610,7 @@ export default function MyComponent(props: any) {
   const _context = { ...props[\\"_context\\"] };
 
   const state = {
-    name: Steve,
+    name: \\"Steve\\",
     get lowercaseName() {
       return state.name.toLowerCase();
     },

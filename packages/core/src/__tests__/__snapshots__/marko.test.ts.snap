@@ -3773,7 +3773,7 @@ style {
 exports[`Marko > svelte > Javascript Test > basic 1`] = `
 "class {
   onCreate() {
-    this.state = { name: Steve };
+    this.state = { name: \\"Steve\\" };
   }
 }
 
@@ -3787,67 +3787,142 @@ exports[`Marko > svelte > Javascript Test > basic 1`] = `
 </div>"
 `;
 
-exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
 
 exports[`Marko > svelte > Javascript Test > bindProperty 1`] = `
 "class {
   onCreate() {
-    this.state = { value: hello };
+    this.state = { value: \\"hello\\" };
   }
 }
 
 <input value=(state.value) />"
 `;
 
-exports[`Marko > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Javascript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
 
 exports[`Marko > svelte > Javascript Test > context 1`] = `
 "class {
-    
-
-    onCreate() {
-      this.state = { activeTab: ,}
-    }
-
-    
-  
-    
-    
-    
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
 }
 
 <div>\${state.activeTab}</div>"
 `;
 
-exports[`Marko > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Javascript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
 
 exports[`Marko > svelte > Javascript Test > html 1`] = `
 "class {
   onCreate() {
-    this.state = { html: <b>bold</b> };
+    this.state = { html: \\"<b>bold</b>\\" };
   }
 }
 
 <div>$!{state.html}</div>"
 `;
 
-exports[`Marko > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.state.show = !this.state.show;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle)>Hide</button></if>
+<else><button on-click(event => component.toggle)>Show</button></else>"
+`;
 
 exports[`Marko > svelte > Javascript Test > imports 1`] = `
-"import Button from './Button.marko';
+"import Button from \\"./Button.marko\\";
 
 class {
-    
-
-    onCreate() {
-      this.state = { disabled: ,}
-    }
-
-    
-  
-    
-    
-    
+  onCreate() {
+    this.state = { disabled: false };
+  }
 }
 
 <div>
@@ -3878,7 +3953,7 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
   }
 
   onCreate() {
-    this.state = { name: Steve };
+    this.state = { name: \\"Steve\\" };
   }
 }
 
@@ -3905,12 +3980,25 @@ style {
 <input class=\\"form-input\\" />"
 `;
 
-exports[`Marko > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Javascript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
+
+<div>
+  normal: \${state.a + state.b}
+  <br />
+
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
+`;
 
 exports[`Marko > svelte > Typescript Test > basic 1`] = `
 "class {
   onCreate() {
-    this.state = { name: Steve };
+    this.state = { name: \\"Steve\\" };
   }
 }
 
@@ -3924,67 +4012,142 @@ exports[`Marko > svelte > Typescript Test > basic 1`] = `
 </div>"
 `;
 
-exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
 
 exports[`Marko > svelte > Typescript Test > bindProperty 1`] = `
 "class {
   onCreate() {
-    this.state = { value: hello };
+    this.state = { value: \\"hello\\" };
   }
 }
 
 <input value=(state.value) />"
 `;
 
-exports[`Marko > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Typescript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
 
 exports[`Marko > svelte > Typescript Test > context 1`] = `
 "class {
-    
-
-    onCreate() {
-      this.state = { activeTab: ,}
-    }
-
-    
-  
-    
-    
-    
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
 }
 
 <div>\${state.activeTab}</div>"
 `;
 
-exports[`Marko > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Typescript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
 
 exports[`Marko > svelte > Typescript Test > html 1`] = `
 "class {
   onCreate() {
-    this.state = { html: <b>bold</b> };
+    this.state = { html: \\"<b>bold</b>\\" };
   }
 }
 
 <div>$!{state.html}</div>"
 `;
 
-exports[`Marko > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.state.show = !this.state.show;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle)>Hide</button></if>
+<else><button on-click(event => component.toggle)>Show</button></else>"
+`;
 
 exports[`Marko > svelte > Typescript Test > imports 1`] = `
-"import Button from './Button.marko';
+"import Button from \\"./Button.marko\\";
 
 class {
-    
-
-    onCreate() {
-      this.state = { disabled: ,}
-    }
-
-    
-  
-    
-    
-    
+  onCreate() {
+    this.state = { disabled: false };
+  }
 }
 
 <div>
@@ -4015,7 +4178,7 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
   }
 
   onCreate() {
-    this.state = { name: Steve };
+    this.state = { name: \\"Steve\\" };
   }
 }
 
@@ -4042,4 +4205,17 @@ style {
 <input class=\\"form-input\\" />"
 `;
 
-exports[`Marko > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Marko > svelte > Typescript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
+
+<div>
+  normal: \${state.a + state.b}
+  <br />
+
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
+`;

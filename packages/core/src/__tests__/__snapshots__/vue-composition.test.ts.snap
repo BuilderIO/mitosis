@@ -5189,12 +5189,63 @@ exports[`Vue > svelte > Javascript Test > basic 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const name = ref(Steve);
+const name = ref(\\"Steve\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `
+"<template>
+  <div>
+    <input
+      type=\\"radio\\"
+      value=\\"Plain\\"
+      :checked=\\"tortilla === 'Plain'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Whole wheat\\"
+      :checked=\\"tortilla === 'Whole wheat'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Spinach\\"
+      :checked=\\"tortilla === 'Spinach'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><br /><br /><input
+      type=\\"checkbox\\"
+      value=\\"Rice\\"
+      :checked=\\"fillings === 'Rice'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Beans\\"
+      :checked=\\"fillings === 'Beans'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Cheese\\"
+      :checked=\\"fillings === 'Cheese'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Guac (extra)\\"
+      :checked=\\"fillings === 'Guac (extra)'\\"
+      @input=\\"fillings = $event.target.value\\"
+    />
+    <p>Tortilla: {{ tortilla }}</p>
+    <p>Fillings: {{ fillings }}</p>
+  </div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const tortilla = ref(\\"Plain\\");
+const fillings = ref([]);
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 "<template>
@@ -5204,12 +5255,42 @@ exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const value = ref(hello);
+const value = ref(\\"hello\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
+"<template>
+  <input
+    :class=\\"
+      _classStringToObject(
+        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
+      )
+    \\"
+  />
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const props = withDefaults(defineProps(), {});
+const focus = ref(true);
+
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > context 1`] = `
 "<template>
@@ -5219,7 +5300,7 @@ exports[`Vue > svelte > Javascript Test > context 1`] = `
 <script setup>
 import { inject, provide, ref } from \\"vue\\";
 
-const activeTab = ref();
+const activeTab = ref(0);
 
 const disabled = inject(\\"disabled\\");
 
@@ -5228,7 +5309,22 @@ provide(\\"activeTab\\", activeTab.value);
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > each 1`] = `
+"<template>
+  <ul>
+    <template :key=\\"index\\" v-for=\\"(num, index) in numbers\\">
+      <li>{{ num }}</li>
+    </template>
+  </ul>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
@@ -5238,12 +5334,33 @@ exports[`Vue > svelte > Javascript Test > html 1`] = `
 <script setup>
 import { ref } from \\"vue\\";
 
-const html = ref(<b>bold</b>);
+const html = ref(\\"<b>bold</b>\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
+"<template>
+  <template v-if=\\"show\\">
+    <button @click=\\"toggle\\">Hide</button>
+  </template>
+
+  <template v-else>
+    <button @click=\\"toggle\\">Show</button>
+  </template>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const show = ref(true);
+
+function toggle() {
+  show.value = !show.value;
+}
+</script>
+"
+`;
 
 exports[`Vue > svelte > Javascript Test > imports 1`] = `
 "<template>
@@ -5257,7 +5374,7 @@ import { ref } from \\"vue\\";
 
 import Button from \\"./Button.vue\\";
 
-const disabled = ref();
+const disabled = ref(false);
 </script>
 "
 `;
@@ -5290,7 +5407,7 @@ exports[`Vue > svelte > Javascript Test > reactive 1`] = `
 <script setup>
 import { computed, ref } from \\"vue\\";
 
-const name = ref(Steve);
+const name = ref(\\"Steve\\");
 
 const lowercaseName = computed(() => {
   return name.value.toLowerCase();
@@ -5319,7 +5436,24 @@ input {
 "
 `;
 
-exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `
+"<template>
+  <div>
+    normal:
+    {{ a + b }}<br />
+    conditional
+    {{ a > 2 ? \\"hello\\" : \\"bye\\" }}
+  </div>
+</template>
+
+<script setup>
+import { ref } from \\"vue\\";
+
+const a = ref(5);
+const b = ref(12);
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > basic 1`] = `
 "<template>
@@ -5332,12 +5466,63 @@ exports[`Vue > svelte > Typescript Test > basic 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const name = ref(Steve);
+const name = ref(\\"Steve\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `
+"<template>
+  <div>
+    <input
+      type=\\"radio\\"
+      value=\\"Plain\\"
+      :checked=\\"tortilla === 'Plain'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Whole wheat\\"
+      :checked=\\"tortilla === 'Whole wheat'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><input
+      type=\\"radio\\"
+      value=\\"Spinach\\"
+      :checked=\\"tortilla === 'Spinach'\\"
+      @input=\\"tortilla = $event.target.value\\"
+    /><br /><br /><input
+      type=\\"checkbox\\"
+      value=\\"Rice\\"
+      :checked=\\"fillings === 'Rice'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Beans\\"
+      :checked=\\"fillings === 'Beans'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Cheese\\"
+      :checked=\\"fillings === 'Cheese'\\"
+      @input=\\"fillings = $event.target.value\\"
+    /><input
+      type=\\"checkbox\\"
+      value=\\"Guac (extra)\\"
+      :checked=\\"fillings === 'Guac (extra)'\\"
+      @input=\\"fillings = $event.target.value\\"
+    />
+    <p>Tortilla: {{ tortilla }}</p>
+    <p>Fillings: {{ fillings }}</p>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const tortilla = ref(\\"Plain\\");
+const fillings = ref([]);
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 "<template>
@@ -5347,12 +5532,42 @@ exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const value = ref(hello);
+const value = ref(\\"hello\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > classDirective 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
+"<template>
+  <input
+    :class=\\"
+      _classStringToObject(
+        \`form-input \${disabled ? 'disabled' : ''} \${focus ? 'focus' : ''}\`
+      )
+    \\"
+  />
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const props = withDefaults(defineProps<undefined>(), {});
+const focus = ref(true);
+
+function _classStringToObject(str) {
+  const obj = {};
+  if (typeof str !== \\"string\\") {
+    return obj;
+  }
+  const classNames = str.trim().split(/\\\\s+/);
+  for (const name of classNames) {
+    obj[name] = true;
+  }
+  return obj;
+}
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > context 1`] = `
 "<template>
@@ -5362,7 +5577,7 @@ exports[`Vue > svelte > Typescript Test > context 1`] = `
 <script setup lang=\\"ts\\">
 import { inject, provide, ref } from \\"vue\\";
 
-const activeTab = ref();
+const activeTab = ref(0);
 
 const disabled = inject(\\"disabled\\");
 
@@ -5371,7 +5586,22 @@ provide(\\"activeTab\\", activeTab.value);
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > each 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > each 1`] = `
+"<template>
+  <ul>
+    <template :key=\\"index\\" v-for=\\"(num, index) in numbers\\">
+      <li>{{ num }}</li>
+    </template>
+  </ul>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > html 1`] = `
 "<template>
@@ -5381,12 +5611,33 @@ exports[`Vue > svelte > Typescript Test > html 1`] = `
 <script setup lang=\\"ts\\">
 import { ref } from \\"vue\\";
 
-const html = ref(<b>bold</b>);
+const html = ref(\\"<b>bold</b>\\");
 </script>
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > ifElse 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
+"<template>
+  <template v-if=\\"show\\">
+    <button @click=\\"toggle\\">Hide</button>
+  </template>
+
+  <template v-else>
+    <button @click=\\"toggle\\">Show</button>
+  </template>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const show = ref(true);
+
+function toggle() {
+  show.value = !show.value;
+}
+</script>
+"
+`;
 
 exports[`Vue > svelte > Typescript Test > imports 1`] = `
 "<template>
@@ -5400,7 +5651,7 @@ import { ref } from \\"vue\\";
 
 import Button from \\"./Button.vue\\";
 
-const disabled = ref();
+const disabled = ref(false);
 </script>
 "
 `;
@@ -5433,7 +5684,7 @@ exports[`Vue > svelte > Typescript Test > reactive 1`] = `
 <script setup lang=\\"ts\\">
 import { computed, ref } from \\"vue\\";
 
-const name = ref(Steve);
+const name = ref(\\"Steve\\");
 
 const lowercaseName = computed(() => {
   return name.value.toLowerCase();
@@ -5462,4 +5713,21 @@ input {
 "
 `;
 
-exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `"newCode.replace is not a function"`;
+exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `
+"<template>
+  <div>
+    normal:
+    {{ a + b }}<br />
+    conditional
+    {{ a > 2 ? \\"hello\\" : \\"bye\\" }}
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref } from \\"vue\\";
+
+const a = ref(5);
+const b = ref(12);
+</script>
+"
+`;
