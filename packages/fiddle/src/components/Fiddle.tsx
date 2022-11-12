@@ -571,6 +571,9 @@ export default function Fiddle() {
     (tab) => {
       if (tab === 'svelte') {
         state.code = defaultSvelteCode;
+        if (state.outputTab === 'svelte') {
+          state.outputTab = 'vue';
+        }
       } else {
         state.code = defaultCode;
       }
@@ -1035,7 +1038,9 @@ export default function Fiddle() {
                 />
                 <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
-                <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                {state.inputTab !== 'svelte' && (
+                  <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                )}
                 <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
                 <Tab label="RSC" value="rsc" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
