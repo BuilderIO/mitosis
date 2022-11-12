@@ -785,7 +785,7 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="Svelte"
+                      label="Sveltosis"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
                     />
                   }
