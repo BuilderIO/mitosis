@@ -20,6 +20,7 @@ import {
   parseJsx,
   Target,
   TranspilerGenerator,
+  parseSvelte,
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
@@ -30,6 +31,7 @@ import micromatch from 'micromatch';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
+import { INPUT_EXTENSIONS, INPUT_EXTENSIONS_ARRAY } from './helpers/inputs-extensions';
 import { transformImports, transpile } from './helpers/transpile';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
@@ -112,37 +114,66 @@ const getRequiredParsers = (
   };
 };
 
-const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
+const parseJsxComponent = async ({
+  options,
+  path,
+  file,
+}: {
+  options: MitosisConfig;
+  path: string;
+  file: string;
+}) => {
   const requiredParses = getRequiredParsers(options);
+  let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
+  let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
+  if (requiredParses.typescript && requiredParses.javascript) {
+    typescriptMitosisJson = options.parser
+      ? await options.parser(file, path)
+      : parseJsx(file, { typescript: true });
+    javascriptMitosisJson = options.parser
+      ? await options.parser(file, path)
+      : parseJsx(file, { typescript: false });
+  } else {
+    const singleParse = options.parser
+      ? await options.parser(file, path)
+      : parseJsx(file, { typescript: requiredParses.typescript });
+
+    // technically only one of these will be used, but we set both to simplify things types-wise.
+    typescriptMitosisJson = singleParse;
+    javascriptMitosisJson = singleParse;
+  }
+
+  const output: ParsedMitosisJson = {
+    path,
+    typescriptMitosisJson,
+    javascriptMitosisJson,
+  };
+  return output;
+};
+
+const parseSvelteComponent = async ({ path, file }: { path: string; file: string }) => {
+  const json = await parseSvelte(file, path);
+
+  const output: ParsedMitosisJson = {
+    path,
+    typescriptMitosisJson: json,
+    javascriptMitosisJson: json,
+  };
+
+  return output;
+};
+
+const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   return Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*.${options.extension}`).map(
+    micromatch(await glob(options.files, { cwd }), `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`).map(
       async (path): Promise<ParsedMitosisJson> => {
         try {
           const file = await readFile(path, 'utf8');
-          let typescriptMitosisJson: ParsedMitosisJson['typescriptMitosisJson'];
-          let javascriptMitosisJson: ParsedMitosisJson['javascriptMitosisJson'];
-          if (requiredParses.typescript && requiredParses.javascript) {
-            typescriptMitosisJson = options.parser
-              ? await options.parser(file, path)
-              : parseJsx(file, { typescript: true });
-            javascriptMitosisJson = options.parser
-              ? await options.parser(file, path)
-              : parseJsx(file, { typescript: false });
+          if (INPUT_EXTENSIONS.svelte.some(path.endsWith)) {
+            return await parseSvelteComponent({ path, file });
           } else {
-            const singleParse = options.parser
-              ? await options.parser(file, path)
-              : parseJsx(file, { typescript: requiredParses.typescript });
-
-            // technically only one of these will be used, but we set both to simplify things types-wise.
-            typescriptMitosisJson = singleParse;
-            javascriptMitosisJson = singleParse;
+            return await parseJsxComponent({ options, path, file });
           }
-
-          return {
-            path,
-            typescriptMitosisJson,
-            javascriptMitosisJson,
-          };
         } catch (err) {
           console.error('Could not parse file:', path);
           throw err;
