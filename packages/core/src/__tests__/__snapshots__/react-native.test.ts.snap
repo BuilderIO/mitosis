@@ -5454,3 +5454,609 @@ export default function MyComponent(props: any) {
 const styles = StyleSheet.create({});
 "
 `;
+
+exports[`React Native > svelte > Javascript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <View>
+      <View onChange={(event) => setName(event.target.value)} value={name} />
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <View>
+      <View
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View />
+      <View />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View>
+        <Text>Tortilla: </Text>
+        <Text>{tortilla}</Text>
+      </View>
+      <View>
+        <Text>Fillings: </Text>
+        <Text>{fillings}</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <View value={value} />;
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return <View />;
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <View>
+        <Text>{activeTab}</Text>
+      </View>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <View>
+      {numbers?.map((num) => (
+        <View>
+          <Text>{num}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <View onClick={(event) => toggle}>
+          <Text> Hide </Text>
+        </View>
+      ) : (
+        <View onClick={(event) => toggle}>
+          <Text> Show </Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <View>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <View>
+      <View value={name} />
+      <Text>Lowercase: </Text>
+      <Text>{lowercaseName()}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > style 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return <View />;
+}
+
+const styles = StyleSheet.create({});
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <View>
+      <Text>normal:</Text>
+      <Text>{a + b}</Text>
+      <View />
+      <Text>conditional</Text>
+      <Text>{a > 2 ? \\"hello\\" : \\"bye\\"}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <View>
+      <View onChange={(event) => setName(event.target.value)} value={name} />
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <View>
+      <View
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View />
+      <View />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View>
+        <Text>Tortilla: </Text>
+        <Text>{tortilla}</Text>
+      </View>
+      <View>
+        <Text>Fillings: </Text>
+        <Text>{fillings}</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <View value={value} />;
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return <View />;
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <View>
+        <Text>{activeTab}</Text>
+      </View>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <View>
+      {numbers?.map((num) => (
+        <View>
+          <Text>{num}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <View onClick={(event) => toggle}>
+          <Text> Hide </Text>
+        </View>
+      ) : (
+        <View onClick={(event) => toggle}>
+          <Text> Show </Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <View>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <View>
+      <View value={name} />
+      <Text>Lowercase: </Text>
+      <Text>{lowercaseName()}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > style 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props: any) {
+  return <View />;
+}
+
+const styles = StyleSheet.create({});
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <View>
+      <Text>normal:</Text>
+      <Text>{a + b}</Text>
+      <View />
+      <Text>conditional</Text>
+      <Text>{a > 2 ? \\"hello\\" : \\"bye\\"}</Text>
+    </View>
+  );
+}
+"
+`;

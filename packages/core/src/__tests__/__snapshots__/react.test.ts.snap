@@ -5683,3 +5683,603 @@ margin-right: 10px; }\`}</style>
 }
 "
 `;
+
+exports[`React > svelte > Javascript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <div>
+      <input onChange={(event) => setName(event.target.value)} value={name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <input value={value} />;
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`React > svelte > Javascript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <button onClick={(event) => toggle}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle}> Show </button>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style jsx>{\`
+        input {
+          color: red;
+          font-size: 12px;
+        }
+
+        .form-input:focus {
+          outline: 1px solid blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > basic 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  return (
+    <div>
+      <input onChange={(event) => setName(event.target.value)} value={name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
+
+  const [fillings, setFillings] = useState(() => []);
+
+  return (
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <p>
+        Tortilla:
+        {tortilla}
+      </p>
+      <p>
+        Fillings:
+        {fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <input value={value} />;
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`React > svelte > Typescript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { useState, useContext } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <div>{activeTab}</div>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > each 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
+
+  return (
+    <ul>
+      {numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > html 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
+  return (
+    <>
+      {show ? (
+        <button onClick={(event) => toggle}> Hide </button>
+      ) : (
+        <button onClick={(event) => toggle}> Show </button>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <div>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <div />;
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <div>
+      <input value={name} />
+      Lowercase:
+      {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style jsx>{\`
+        input {
+          color: red;
+          font-size: 12px;
+        }
+
+        .form-input:focus {
+          outline: 1px solid blue;
+        }
+      \`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
+  return (
+    <div>
+      normal:
+      {a + b}
+      <br />
+      conditional
+      {a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;

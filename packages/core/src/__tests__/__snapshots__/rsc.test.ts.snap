@@ -5131,3 +5131,545 @@ button {
 }
 "
 `;
+
+exports[`RSC > svelte > Javascript Test > basic 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { name: \\"Steve\\" };
+
+  return (
+    <div>
+      <input value={state.name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { tortilla: \\"Plain\\", fillings: [] };
+
+  return (
+    <div>
+      <input type=\\"radio\\" value=\\"Plain\\" checked={state.tortilla === \\"Plain\\"} />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={state.tortilla === \\"Whole wheat\\"}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={state.tortilla === \\"Spinach\\"}
+      />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" checked={state.fillings === \\"Rice\\"} />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={state.fillings === \\"Beans\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={state.fillings === \\"Cheese\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={state.fillings === \\"Guac (extra)\\"}
+      />
+      <p>
+        Tortilla:
+        {state.tortilla}
+      </p>
+      <p>
+        Fillings:
+        {state.fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { value: \\"hello\\" };
+
+  return <input value={state.value} />;
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { focus: true };
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        state.focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > context 1`] = `
+"']' expected. (20:35)
+  18 |     
+  19 |     
+> 20 |       const disabled = _context[''disabled''];
+     |                                   ^
+  21 |     
+  22 |     
+  23 |     "
+`;
+
+exports[`RSC > svelte > Javascript Test > each 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+
+  return (
+    <ul>
+      {state.numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > html 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { html: \\"<b>bold</b>\\" };
+
+  return <div dangerouslySetInnerHTML={{ __html: state.html }} />;
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    show: true,
+    toggle: function toggle() {
+      state.show = !state.show;
+    },
+  };
+
+  return <>{state.show ? <button> Hide </button> : <button> Show </button>}</>;
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { disabled: false };
+
+  return (
+    <div>
+      <Button
+        type=\\"button\\"
+        disabled={state.disabled}
+        _context={_context}
+        slotContext={_context}
+      ></Button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div />;
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"Steve\\",
+    get lowercaseName() {
+      return state.name.toLowerCase();
+    },
+  };
+
+  return (
+    <div>
+      <input value={state.name} />
+      Lowercase:
+      {state.lowercaseName}
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style>{\`
+
+input {
+  color: red;
+  font-size: 12px;
+}
+
+.form-input:focus {
+  outline: 1px solid blue;
+}
+\`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Javascript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { a: 5, b: 12 };
+
+  return (
+    <div>
+      normal:
+      {state.a + state.b}
+      <br />
+      conditional
+      {state.a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > basic 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { name: \\"Steve\\" };
+
+  return (
+    <div>
+      <input value={state.name} />
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > bindGroup 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { tortilla: \\"Plain\\", fillings: [] };
+
+  return (
+    <div>
+      <input type=\\"radio\\" value=\\"Plain\\" checked={state.tortilla === \\"Plain\\"} />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={state.tortilla === \\"Whole wheat\\"}
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={state.tortilla === \\"Spinach\\"}
+      />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" checked={state.fillings === \\"Rice\\"} />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={state.fillings === \\"Beans\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={state.fillings === \\"Cheese\\"}
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={state.fillings === \\"Guac (extra)\\"}
+      />
+      <p>
+        Tortilla:
+        {state.tortilla}
+      </p>
+      <p>
+        Fillings:
+        {state.fillings}
+      </p>
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { value: \\"hello\\" };
+
+  return <input value={state.value} />;
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { focus: true };
+
+  return (
+    <input
+      className={\`form-input \${props.disabled ? \\"disabled\\" : \\"\\"} \${
+        state.focus ? \\"focus\\" : \\"\\"
+      }\`}
+    />
+  );
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > context 1`] = `
+"']' expected. (20:35)
+  18 |     
+  19 |     
+> 20 |       const disabled = _context[''disabled''];
+     |                                   ^
+  21 |     
+  22 |     
+  23 |     "
+`;
+
+exports[`RSC > svelte > Typescript Test > each 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+
+  return (
+    <ul>
+      {state.numbers?.map((num) => (
+        <li>{num}</li>
+      ))}
+    </ul>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > html 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { html: \\"<b>bold</b>\\" };
+
+  return <div dangerouslySetInnerHTML={{ __html: state.html }} />;
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    show: true,
+    toggle: function toggle() {
+      state.show = !state.show;
+    },
+  };
+
+  return <>{state.show ? <button> Hide </button> : <button> Show </button>}</>;
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { disabled: false };
+
+  return (
+    <div>
+      <Button
+        type=\\"button\\"
+        disabled={state.disabled}
+        _context={_context}
+        slotContext={_context}
+      ></Button>
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return <div />;
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    name: \\"Steve\\",
+    get lowercaseName() {
+      return state.name.toLowerCase();
+    },
+  };
+
+  return (
+    <div>
+      <input value={state.name} />
+      Lowercase:
+      {state.lowercaseName}
+    </div>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > style 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  return (
+    <>
+      <input className=\\"form-input\\" />
+      <style>{\`
+
+input {
+  color: red;
+  font-size: 12px;
+}
+
+.form-input:focus {
+  outline: 1px solid blue;
+}
+\`}</style>
+    </>
+  );
+}
+"
+`;
+
+exports[`RSC > svelte > Typescript Test > textExpressions 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = { a: 5, b: 12 };
+
+  return (
+    <div>
+      normal:
+      {state.a + state.b}
+      <br />
+      conditional
+      {state.a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+  );
+}
+"
+`;

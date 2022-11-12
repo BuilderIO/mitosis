@@ -47,6 +47,7 @@ export const useDefaultProps = <T = { [key: string]: any }>(value: T): T => null
 export const useStyle = (value: string) => null as any;
 
 export * from './parsers/jsx';
+export * from './parsers/svelte';
 export * from './parsers/builder';
 export * from './parsers/angular';
 export * from './parsers/context';

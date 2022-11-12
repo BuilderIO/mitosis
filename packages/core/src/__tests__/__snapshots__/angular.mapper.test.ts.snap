@@ -7791,3 +7791,895 @@ export class MyComponent {}
 export class MyComponentModule {}
 "
 `;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > basic 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input (input)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > bindGroup 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla === 'Plain'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla === 'Whole wheat'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla === 'Spinach'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings === 'Rice'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings === 'Beans'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings === 'Cheese'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings === 'Guac (extra)'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <p>Tortilla: {{tortilla}}</p>
+      <p>Fillings: {{fillings}}</p>
+    </div>
+  \`,
+})
+export class MyComponent {
+  tortilla = \\"Plain\\";
+  fillings = [];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > bindProperty 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input [attr.value]=\\"value\\" />
+  \`,
+})
+export class MyComponent {
+  value = \\"hello\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > classDirective 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+const defaultProps = {};
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input
+      [class]=\\"\\\\\`form-input \\\\\${disabled ? 'disabled' : ''} \\\\\${focus ? 'focus' : ''}\\\\\`\\"
+    />
+  \`,
+})
+export class MyComponent {
+  @Input() disabled: any;
+
+  focus = true;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > context 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{activeTab}}</div>
+  \`,
+})
+export class MyComponent {
+  activeTab = 0;
+
+  constructor(public disabled: \\"disabled\\") {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > each 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ul>
+      <ng-container *ngFor=\\"let num of numbers\\">
+        <li>{{num}}</li>
+      </ng-container>
+    </ul>
+  \`,
+})
+export class MyComponent {
+  numbers = [\\"one\\", \\"two\\", \\"three\\"];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > html 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export class MyComponent {
+  html = \\"<b>bold</b>\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > ifElse 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container *ngIf=\\"show\\">
+      <button (click)=\\"toggle\\">Hide</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  show = true;
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > imports 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+import ButtonModule from \\"./Button.lite/angular\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button type=\\"button\\" [disabled]=\\"disabled\\">
+        <ng-content></ng-content>
+      </button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  disabled = false;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, ButtonModule, SlotModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class MyComponent {
+  ngOnInit() {
+    console.log(\\"onMount\\");
+  }
+
+  ngAfterContentChecked() {
+    console.log(\\"onAfterUpdate\\");
+  }
+
+  ngOnDestroy() {
+    console.log(\\"onDestroy\\");
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > reactive 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [attr.value]=\\"name\\" />
+
+      Lowercase: {{lowercaseName}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+  get lowercaseName() {
+    return this.name.toLowerCase();
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > style 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input class=\\"form-input\\" />
+  \`,
+  styles: [
+    \`
+      input {
+        color: red;
+        font-size: 12px;
+      }
+
+      .form-input:focus {
+        outline: 1px solid blue;
+      }
+    \`,
+  ],
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > textExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      normal: {{a + b}}
+      <br />
+
+      conditional {{a > 2 ? 'hello' : 'bye'}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 5;
+  b = 12;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > basic 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input (input)=\\"name = $event.target.value\\" [attr.value]=\\"name\\" />
+
+      Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > bindGroup 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        [attr.checked]=\\"tortilla === 'Plain'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        [attr.checked]=\\"tortilla === 'Whole wheat'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <input
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        [attr.checked]=\\"tortilla === 'Spinach'\\"
+        (input)=\\"tortilla = $event.target.value\\"
+      />
+      <br />
+      <br />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        [attr.checked]=\\"fillings === 'Rice'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        [attr.checked]=\\"fillings === 'Beans'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        [attr.checked]=\\"fillings === 'Cheese'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <input
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        [attr.checked]=\\"fillings === 'Guac (extra)'\\"
+        (input)=\\"fillings = $event.target.value\\"
+      />
+      <p>Tortilla: {{tortilla}}</p>
+      <p>Fillings: {{fillings}}</p>
+    </div>
+  \`,
+})
+export class MyComponent {
+  tortilla = \\"Plain\\";
+  fillings = [];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > bindProperty 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input [attr.value]=\\"value\\" />
+  \`,
+})
+export class MyComponent {
+  value = \\"hello\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > classDirective 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component, Input } from \\"@angular/core\\";
+
+const defaultProps = {};
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input
+      [class]=\\"\\\\\`form-input \\\\\${disabled ? 'disabled' : ''} \\\\\${focus ? 'focus' : ''}\\\\\`\\"
+    />
+  \`,
+})
+export class MyComponent {
+  @Input() disabled: any;
+
+  focus = true;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > context 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>{{activeTab}}</div>
+  \`,
+})
+export class MyComponent {
+  activeTab = 0;
+
+  constructor(public disabled: \\"disabled\\") {}
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > each 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ul>
+      <ng-container *ngFor=\\"let num of numbers\\">
+        <li>{{num}}</li>
+      </ng-container>
+    </ul>
+  \`,
+})
+export class MyComponent {
+  numbers = [\\"one\\", \\"two\\", \\"three\\"];
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > html 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div [innerHTML]=\\"html\\"></div>
+  \`,
+})
+export class MyComponent {
+  html = \\"<b>bold</b>\\";
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > ifElse 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <ng-container *ngIf=\\"show\\">
+      <button (click)=\\"toggle\\">Hide</button>
+    </ng-container>
+  \`,
+})
+export class MyComponent {
+  show = true;
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > imports 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+import ButtonModule from \\"./Button.lite/angular\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button type=\\"button\\" [disabled]=\\"disabled\\">
+        <ng-content></ng-content>
+      </button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  disabled = false;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, ButtonModule, SlotModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class MyComponent {
+  ngOnInit() {
+    console.log(\\"onMount\\");
+  }
+
+  ngAfterContentChecked() {
+    console.log(\\"onAfterUpdate\\");
+  }
+
+  ngOnDestroy() {
+    console.log(\\"onDestroy\\");
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > reactive 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input [attr.value]=\\"name\\" />
+
+      Lowercase: {{lowercaseName}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  name = \\"Steve\\";
+  get lowercaseName() {
+    return this.name.toLowerCase();
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > style 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <input class=\\"form-input\\" />
+  \`,
+  styles: [
+    \`
+      input {
+        color: red;
+        font-size: 12px;
+      }
+
+      .form-input:focus {
+        outline: 1px solid blue;
+      }
+    \`,
+  ],
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > textExpressions 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      normal: {{a + b}}
+      <br />
+
+      conditional {{a > 2 ? 'hello' : 'bye'}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 5;
+  b = 12;
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;

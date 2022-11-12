@@ -7476,3 +7476,815 @@ outline: 1px solid black;
 }
 "
 `;
+
+exports[`Lit > svelte > Javascript Test > basic 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  render() {
+    return html\`
+      
+      <div>
+      <input @input=\${(event) => (this.name = event.target.value)} .value=\${
+      this.name
+    }
+      /> Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > bindGroup 1`] = `
+"import { LitElement, html, css } from 'lit';
+import { customElement, property, state, query } from 'lit/decorators.js';
+
+
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+    createRenderRoot() {
+      return this;
+    }
+    
+
+  
+
+  
+
+
+  
+
+    @state()  tortilla= \\"Plain\\"
+@state()  fillings= []
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      
+      <div>
+      <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
+      @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+      value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
+      => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
+      .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
+      event.target.value} />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
+      (extra)'} @input=\${event => this.fillings = event.target.value} />
+      <p>Tortilla: \${this.tortilla}</p>
+      <p>Fillings: \${this.fillings}</p>
+    </div>
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit > svelte > Javascript Test > bindProperty 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() value = \\"hello\\";
+
+  render() {
+    return html\`
+      
+      <input .value=\\"\${this.value}\\" />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > classDirective 1`] = `
+"import { LitElement, html, css } from 'lit';
+import { customElement, property, state, query } from 'lit/decorators.js';
+
+
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+    createRenderRoot() {
+      return this;
+    }
+    
+
+  
+
+  
+
+
+  @property() disabled: any
+
+    @state()  focus= true
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      
+      <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
+    'focus' : ''}\`} />
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit > svelte > Javascript Test > context 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() activeTab = 0;
+
+  render() {
+    return html\`
+      
+      <div>\${this.activeTab}</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > each 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  render() {
+    return html\`
+      
+      <ul>
+      \${this.numbers?.map(
+        (num, index) => html\`
+      <li>\${num}</li>
+      \`
+      )}
+    </ul>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > html 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() html = \\"<b>bold</b>\\";
+
+  render() {
+    return html\`
+      
+      <div .innerHTML=\\"\${this.html}\\"></div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > ifElse 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() show = true;
+
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+
+  render() {
+    return html\`
+        
+        \${
+          this.show
+            ? html\`<button  @click=\${(event) => this.toggle} > Hide </button>\`
+            : html\`<button  @click=\${(event) => this.toggle} > Show </button>\`
+        }
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > imports 1`] = `
+"import \\"./Button.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() disabled = false;
+
+  render() {
+    return html\`
+      
+      <div>
+      <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
+        ><my-slot></my-slot
+      ></my-button>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    console.log(\\"onMount\\");
+  }
+  disconnectedCallback() {
+    console.log(\\"onDestroy\\");
+  }
+  updated() {
+    console.log(\\"onAfterUpdate\\");
+  }
+
+  render() {
+    return html\`
+         
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > reactive 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  get lowercaseName() {
+    return this.name.toLowerCase();
+  }
+
+  render() {
+    return html\`
+         
+         <div>
+         <input .value=\\"\${this.name}\\" />
+
+         Lowercase: \${this.lowercaseName}
+       </div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > style 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+        <style>input {
+color: red;
+font-size: 12px;
+}
+
+.form-input:focus {
+outline: 1px solid blue;
+}
+</style>
+        <input />
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Javascript Test > textExpressions 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() a = 5;
+  @state() b = 12;
+
+  render() {
+    return html\`
+      
+      <div>
+      normal: \${this.a + this.b}
+      <br />
+
+      conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > basic 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  render() {
+    return html\`
+      
+      <div>
+      <input @input=\${(event) => (this.name = event.target.value)} .value=\${
+      this.name
+    }
+      /> Hello! I can run in React, Vue, Solid, or Liquid!
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > bindGroup 1`] = `
+"import { LitElement, html, css } from 'lit';
+import { customElement, property, state, query } from 'lit/decorators.js';
+
+
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+    createRenderRoot() {
+      return this;
+    }
+    
+
+  
+
+  
+
+
+  
+
+    @state()  tortilla= \\"Plain\\"
+@state()  fillings= []
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      
+      <div>
+      <input type=\\"radio\\" value=\\"Plain\\" .checked=\${this.tortilla === 'Plain'}
+      @input=\${event => this.tortilla = event.target.value} /> <input type=\\"radio\\"
+      value=\\"Whole wheat\\" .checked=\${this.tortilla === 'Whole wheat'} @input=\${event
+      => this.tortilla = event.target.value} /> <input type=\\"radio\\" value=\\"Spinach\\"
+      .checked=\${this.tortilla === 'Spinach'} @input=\${event => this.tortilla =
+      event.target.value} />
+      <br />
+      <br />
+      <input type=\\"checkbox\\" value=\\"Rice\\" .checked=\${this.fillings === 'Rice'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Beans\\" .checked=\${this.fillings === 'Beans'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Cheese\\" .checked=\${this.fillings === 'Cheese'}
+      @input=\${event => this.fillings = event.target.value} /> <input
+      type=\\"checkbox\\" value=\\"Guac (extra)\\" .checked=\${this.fillings === 'Guac
+      (extra)'} @input=\${event => this.fillings = event.target.value} />
+      <p>Tortilla: \${this.tortilla}</p>
+      <p>Fillings: \${this.fillings}</p>
+    </div>
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit > svelte > Typescript Test > bindProperty 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() value = \\"hello\\";
+
+  render() {
+    return html\`
+      
+      <input .value=\\"\${this.value}\\" />
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > classDirective 1`] = `
+"import { LitElement, html, css } from 'lit';
+import { customElement, property, state, query } from 'lit/decorators.js';
+
+
+
+
+@customElement('my-component')
+export default class MyComponent extends LitElement {
+  
+    createRenderRoot() {
+      return this;
+    }
+    
+
+  
+
+  
+
+
+  @property() disabled: any
+
+    @state()  focus= true
+
+    
+  
+    
+    
+    
+
+  render() {
+    return html\`
+      
+      <input class={\`form-input \${props.disabled ? 'disabled' : ''} \${state.focus ?
+    'focus' : ''}\`} />
+
+    \`
+  }
+}"
+`;
+
+exports[`Lit > svelte > Typescript Test > context 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() activeTab = 0;
+
+  render() {
+    return html\`
+      
+      <div>\${this.activeTab}</div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > each 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() numbers = [\\"one\\", \\"two\\", \\"three\\"];
+
+  render() {
+    return html\`
+      
+      <ul>
+      \${this.numbers?.map(
+        (num, index) => html\`
+      <li>\${num}</li>
+      \`
+      )}
+    </ul>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > html 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() html = \\"<b>bold</b>\\";
+
+  render() {
+    return html\`
+      
+      <div .innerHTML=\\"\${this.html}\\"></div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > ifElse 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() show = true;
+
+  toggle = function toggle() {
+    this.show = !this.show;
+  };
+
+  render() {
+    return html\`
+        
+        \${
+          this.show
+            ? html\`<button  @click=\${(event) => this.toggle} > Hide </button>\`
+            : html\`<button  @click=\${(event) => this.toggle} > Show </button>\`
+        }
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > imports 1`] = `
+"import \\"./Button.js\\";
+
+import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() disabled = false;
+
+  render() {
+    return html\`
+      
+      <div>
+      <my-button type=\\"button\\" .disabled=\\"\${this.disabled}\\"
+        ><my-slot></my-slot
+      ></my-button>
+    </div>
+
+    \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > lifecycleHooks 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  connectedCallback() {
+    console.log(\\"onMount\\");
+  }
+  disconnectedCallback() {
+    console.log(\\"onDestroy\\");
+  }
+  updated() {
+    console.log(\\"onAfterUpdate\\");
+  }
+
+  render() {
+    return html\`
+         
+         <div></div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > reactive 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() name = \\"Steve\\";
+
+  get lowercaseName() {
+    return this.name.toLowerCase();
+  }
+
+  render() {
+    return html\`
+         
+         <div>
+         <input .value=\\"\${this.name}\\" />
+
+         Lowercase: \${this.lowercaseName}
+       </div>
+
+       \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > style 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  render() {
+    return html\`
+        <style>input {
+color: red;
+font-size: 12px;
+}
+
+.form-input:focus {
+outline: 1px solid blue;
+}
+</style>
+        <input />
+
+      \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > textExpressions 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() a = 5;
+  @state() b = 12;
+
+  render() {
+    return html\`
+      
+      <div>
+      normal: \${this.a + this.b}
+      <br />
+
+      conditional \${this.a > 2 ? \\"hello\\" : \\"bye\\"}
+    </div>
+
+    \`;
+  }
+}
+"
+`;

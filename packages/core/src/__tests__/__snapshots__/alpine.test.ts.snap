@@ -4245,3 +4245,511 @@ exports[`Alpine.js > jsx > Typescript Test > use-style-outside-component 1`] = `
 </script>
 "
 `;
+
+exports[`Alpine.js > svelte > Javascript Test > basic 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-on:change=\\"name = $event.target.value\\" x-bind:value=\\"name\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > bindGroup 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > bindProperty 1`] = `
+"<input x-data=\\"myComponent()\\" x-bind:value=\\"value\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      value: \\"hello\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > classDirective 1`] = `
+"<input
+  x-data=\\"myComponent()\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled'  : ''} \${focus ? 'focus'  : ''}\`\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      focus: true,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > context 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"activeTab\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      activeTab: 0,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > each 1`] = `
+"<ul x-data=\\"myComponent()\\">
+  <template x-for=\\"num in numbers\\">
+    <li><span x-html=\\"num\\"></span></li>
+  </template>
+</ul>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
+"<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      html: \\"<b>bold</b>\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > ifElse 1`] = `
+"<template x-if=\\"show\\">
+  <button x-on:click=\\"toggle\\">Hide</button>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      show: true,
+      toggle: function toggle() {
+        this.show = !this.show;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > imports 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button type=\\"button\\" x-bind:disabled=\\"disabled\\"><slot></slot></button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      disabled: false,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > lifecycleHooks 1`] = `
+"unknown: Unexpected token (2:49)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('myComponent', () => ({, init() {
+    |                                                  ^
+  3 |       
+  4 |       
+  5 |   console.log('onMount');"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-bind:value=\\"name\\" />
+
+  Lowercase:
+  <span x-html=\\"lowercaseName\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      get lowercaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > style 1`] = `
+"<style>
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+</style>
+<input class=\\"form-input\\" x-data=\\"myComponent()\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > textExpressions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  normal:
+
+  <span x-html=\\"a + b\\"></span>
+  <br />
+
+  conditional
+
+  <span x-html=\\"a > 2 ? 'hello' : 'bye'\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 5,
+      b: 12,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > basic 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-on:change=\\"name = $event.target.value\\" x-bind:value=\\"name\\" />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > bindGroup 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    x-bind:checked=\\"tortilla === 'Plain'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    x-bind:checked=\\"tortilla === 'Whole wheat'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    x-bind:checked=\\"tortilla === 'Spinach'\\"
+    x-on:change=\\"tortilla = $event.target.value\\"
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    x-bind:checked=\\"fillings === 'Rice'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    x-bind:checked=\\"fillings === 'Beans'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    x-bind:checked=\\"fillings === 'Cheese'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    x-bind:checked=\\"fillings === 'Guac (extra)'\\"
+    x-on:change=\\"fillings = $event.target.value\\"
+  />
+  <p>
+    Tortilla:
+    <span x-html=\\"tortilla\\"></span>
+  </p>
+  <p>
+    Fillings:
+    <span x-html=\\"fillings\\"></span>
+  </p>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      tortilla: \\"Plain\\",
+      fillings: [],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > bindProperty 1`] = `
+"<input x-data=\\"myComponent()\\" x-bind:value=\\"value\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      value: \\"hello\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > classDirective 1`] = `
+"<input
+  x-data=\\"myComponent()\\"
+  x-bind:class=\\"\`form-input \${disabled ? 'disabled'  : ''} \${focus ? 'focus'  : ''}\`\\"
+/>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      focus: true,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > context 1`] = `
+"<div x-data=\\"myComponent()\\"><span x-html=\\"activeTab\\"></span></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      activeTab: 0,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > each 1`] = `
+"<ul x-data=\\"myComponent()\\">
+  <template x-for=\\"num in numbers\\">
+    <li><span x-html=\\"num\\"></span></li>
+  </template>
+</ul>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      numbers: [\\"one\\", \\"two\\", \\"three\\"],
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
+"<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      html: \\"<b>bold</b>\\",
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > ifElse 1`] = `
+"<template x-if=\\"show\\">
+  <button x-on:click=\\"toggle\\">Hide</button>
+</template>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      show: true,
+      toggle: function toggle() {
+        this.show = !this.show;
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > imports 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button type=\\"button\\" x-bind:disabled=\\"disabled\\"><slot></slot></button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      disabled: false,
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > lifecycleHooks 1`] = `
+"unknown: Unexpected token (2:49)
+
+  1 | document.addEventListener('alpine:init', () => {
+> 2 |               Alpine.data('myComponent', () => ({, init() {
+    |                                                  ^
+  3 |       
+  4 |       
+  5 |   console.log('onMount');"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input x-bind:value=\\"name\\" />
+
+  Lowercase:
+  <span x-html=\\"lowercaseName\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      name: \\"Steve\\",
+
+      get lowercaseName() {
+        return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > style 1`] = `
+"<style>
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+</style>
+<input class=\\"form-input\\" x-data=\\"myComponent()\\" />
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > textExpressions 1`] = `
+"<div x-data=\\"myComponent()\\">
+  normal:
+
+  <span x-html=\\"a + b\\"></span>
+  <br />
+
+  conditional
+
+  <span x-html=\\"a > 2 ? 'hello' : 'bye'\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 5,
+      b: 12,
+    }));
+  });
+</script>
+"
+`;

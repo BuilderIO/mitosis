@@ -1,7 +1,7 @@
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
-import { MitosisComponent } from '..';
+import { MitosisComponent, parseSvelte } from '..';
 
 const getRawFile = (path: string) => import(`${path}?raw`).then((x) => x.default as string);
 
@@ -101,6 +101,22 @@ const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 const path = 'test-path';
 
 type Tests = { [index: string]: RawFile };
+
+const SVELTE_SYNTAX_TESTS: Tests = {
+  basic: getRawFile('./syntax/svelte/basic.raw.svelte'),
+  bindGroup: getRawFile('./syntax/svelte/bind-group.raw.svelte'),
+  bindProperty: getRawFile('./syntax/svelte/bind-property.raw.svelte'),
+  classDirective: getRawFile('./syntax/svelte/class-directive.raw.svelte'),
+  context: getRawFile('./syntax/svelte/context.raw.svelte'),
+  each: getRawFile('./syntax/svelte/each.raw.svelte'),
+  html: getRawFile('./syntax/svelte/html.raw.svelte'),
+  ifElse: getRawFile('./syntax/svelte/if-else.raw.svelte'),
+  imports: getRawFile('./syntax/svelte/imports.raw.svelte'),
+  lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),
+  reactive: getRawFile('./syntax/svelte/reactive.raw.svelte'),
+  style: getRawFile('./syntax/svelte/style.raw.svelte'),
+  textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
+};
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
@@ -452,6 +468,11 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
       name: 'jsx',
       parser: async (x) => parseJsx(x, { typescript: options.typescript }),
       testsArray: JSX_TESTS_FOR_TARGET[target],
+    },
+    {
+      name: 'svelte',
+      parser: async (x) => parseSvelte(x),
+      testsArray: [SVELTE_SYNTAX_TESTS],
     },
   ];
 
