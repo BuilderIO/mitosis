@@ -3,7 +3,7 @@ import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
 
 export const theme = observable({
-  darkMode: localStorageGet('darkMode') ?? false,
+  darkMode: localStorageGet('darkMode') ?? true,
 });
 
 reaction(

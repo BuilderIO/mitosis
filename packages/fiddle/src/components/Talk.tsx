@@ -501,11 +501,6 @@ export default function Fiddle() {
 
   return useObserver(() => {
     const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
-    const barStyle: any = {
-      overflow: 'auto',
-      whiteSpace: 'nowrap',
-      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
-    };
 
     return (
       <div
@@ -516,23 +511,10 @@ export default function Fiddle() {
           height: '100vh',
         }}
       >
-        {/* <Typography
-          variant="h3"
-          css={{
-            flexGrow: 1,
-            textAlign: 'left',
-            padding: '0 15px',
-            marginTop: 'auto',
-            marginBottom: 'auto',
-            color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-          }}
-        >
-          Input:
-        </Typography> */}
         <div
           css={{
             position: 'relative',
-            height: 300,
+            height: 280,
             border: '1px solid black',
           }}
         >
@@ -560,7 +542,6 @@ export default function Fiddle() {
             }}
             onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
             theme={monacoTheme}
-            height="calc(100vh - 105px)"
             language="typescript"
             value={state.code}
             onChange={(val = '') => (state.code = val)}
@@ -584,7 +565,6 @@ export default function Fiddle() {
                 <div
                   key={output}
                   css={{
-                    paddingTop: 16,
                     height: '100%',
                     width: '50%',
                     position: 'relative',
@@ -616,7 +596,7 @@ export default function Fiddle() {
                       minimap: { enabled: false },
                       renderLineHighlight: 'none',
                       selectionHighlight: false,
-                      scrollbar: { vertical: 'hidden' },
+                      // scrollbar: { vertical: 'hidden' },
                     }}
                     theme={monacoTheme}
                     language={output === 'qwik' || output === 'solid' ? 'typescript' : 'html'}
@@ -629,274 +609,5 @@ export default function Fiddle() {
         </div>
       </div>
     );
-
-    //     return (
-    //       <div
-    //         css={{
-    //           display: 'flex',
-    //           flexDirection: 'column',
-    //           height: '100vh',
-    //           '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input':
-    //             {
-    //               backgroundColor: 'transparent !important',
-    //             },
-
-    //           'a > span': {
-    //             color: 'white',
-    //             textDecoration: 'none',
-    //           },
-    //         }}
-    //       >
-    //         <div
-    //           css={{
-    //             display: 'flex',
-    //             flexGrow: 1,
-    //             overflow: 'hidden',
-    //             [smallBreakpoint]: { flexDirection: 'column', overflow: 'unset' },
-    //           }}
-    //         >
-    //           <div
-    //             css={{
-    //               width: `${state.jsxCodeTabWidth}%`,
-    //               height: '100%',
-    //               display: 'flex',
-    //               flexDirection: 'column',
-    //               borderRight: `1px solid ${colors.contrast}`,
-    //               [smallBreakpoint]: {
-    //                 width: '100%',
-    //                 height: 'calc(50vh - 30px)',
-    //                 overflow: 'hidden',
-    //               },
-    //             }}
-    //           >
-    //             <div
-    //               css={{
-    //                 borderBottom: `1px solid ${colors.contrast}`,
-    //                 alignItems: 'center',
-    //                 display: 'flex',
-    //                 flexShrink: 0,
-    //                 height: 40,
-    //                 ...barStyle,
-    //               }}
-    //             >
-    //               <Typography
-    //                 variant="h3"
-    //                 css={{
-    //                   flexGrow: 1,
-    //                   textAlign: 'left',
-    //                   padding: '0 15px',
-    //                   marginTop: 'auto',
-    //                   marginBottom: 'auto',
-    //                   color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-    //                 }}
-    //               >
-    //                 Input:
-    //               </Typography>
-    //               <Tabs
-    //                 css={{
-    //                   minHeight: 0,
-    //                   marginLeft: 'auto',
-    //                   // borderBottom: `1px solid ${colors.contrast}`,
-    //                   '& button': {
-    //                     minHeight: 0,
-    //                     minWidth: 100,
-    //                   },
-    //                 }}
-    //                 value={state.inputTab}
-    //                 onChange={(e, value) => (state.inputTab = value)}
-    //                 indicatorColor="primary"
-    //                 textColor="primary"
-    //               >
-    //                 <Tab
-    //                   label={
-    //                     <TabLabelWithIcon
-    //                       label="Mitosis JSX"
-    //                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-    //                     />
-    //                   }
-    //                   value="jsx"
-    //                 />
-    //                 <Tab
-    //                   label={
-    //                     <TabLabelWithIcon
-    //                       label="Sveltosis"
-    //                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
-    //                     />
-    //                   }
-    //                   value="svelte"
-    //                 />
-    //               </Tabs>
-    //             </div>
-    //             <Show when={state.inputTab === 'jsx'}>
-    //               <div
-    //                 css={{
-    //                   paddingTop: 15,
-    //                   flexGrow: 1,
-    //                   position: 'relative',
-    //                   [smallBreakpoint]: {
-    //                     paddingTop: 0,
-    //                   },
-    //                 }}
-    //               >
-    //                 <JsxCodeEditor
-    //                   options={{
-    //                     renderLineHighlightOnlyWhenFocus: true,
-    //                     overviewRulerBorder: false,
-    //                     hideCursorInOverviewRuler: true,
-    //                     automaticLayout: true,
-    //                     minimap: { enabled: false },
-    //                     scrollbar: { vertical: 'hidden' },
-    //                   }}
-    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
-    //                   theme={monacoTheme}
-    //                   height="calc(100vh - 105px)"
-    //                   language="typescript"
-    //                   value={state.code}
-    //                   onChange={(val = '') => (state.code = val)}
-    //                 />
-    //               </div>
-    //             </Show>
-
-    //             <Show when={state.inputTab === 'svelte'}>
-    //               <div
-    //                 css={{
-    //                   paddingTop: 15,
-    //                   flexGrow: 1,
-    //                   position: 'relative',
-    //                   [smallBreakpoint]: {
-    //                     paddingTop: 0,
-    //                   },
-    //                 }}
-    //               >
-    //                 <SvelteCodeEditor
-    //                   options={{
-    //                     renderLineHighlightOnlyWhenFocus: true,
-    //                     overviewRulerBorder: false,
-    //                     hideCursorInOverviewRuler: true,
-    //                     automaticLayout: true,
-    //                     minimap: { enabled: false },
-    //                     scrollbar: { vertical: 'hidden' },
-    //                   }}
-    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
-    //                   theme={monacoTheme}
-    //                   height="calc(100vh - 105px)"
-    //                   language="html"
-    //                   value={state.code}
-    //                   onChange={(val = '') => (state.code = val)}
-    //                 />
-    //               </div>
-    //             </Show>
-    //           </div>
-    //           <div
-    //             css={{
-    //               cursor: 'col-resize',
-    //               position: 'relative',
-    //               zIndex: 100,
-    //               '&::before': {
-    //                 content: '""',
-    //                 position: 'absolute',
-    //                 top: 0,
-    //                 bottom: 0,
-    //                 left: -5,
-    //                 right: -5,
-    //               },
-    //             }}
-    //             onMouseDown={(event) => {
-    //               event.preventDefault();
-    //               state.isDraggingJSXCodeBar = true;
-    //             }}
-    //           ></div>
-    //           <div
-    //             css={{
-    //               width: `${100 - state.jsxCodeTabWidth}%`,
-    //               height: '100%',
-    //               display: 'flex',
-    //               flexDirection: 'column',
-    //               [smallBreakpoint]: {
-    //                 width: '100%',
-    //                 height: 'calc(100vh - 30px)',
-    //                 overflow: 'hidden',
-    //               },
-    //             }}
-    //           >
-
-    // <Typography
-    //                 variant="h3"
-    //                 css={{
-    //                   flexGrow: 1,
-    //                   textAlign: 'left',
-    //                   padding: '0 15px',
-    //                   marginTop: 'auto',
-    //                   marginBottom: 'auto',
-    //                   color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-    //                 }}
-    //               >
-    //                 Input:
-    //               </Typography>
-    //             <div
-    //                 css={{
-    //                   paddingTop: 15,
-    //                   flexGrow: 1,
-    //                   position: 'relative',
-    //                   [smallBreakpoint]: {
-    //                     paddingTop: 0,
-    //                   },
-    //                 }}
-    //               >
-    //                 <JsxCodeEditor
-    //                   options={{
-    //                     renderLineHighlightOnlyWhenFocus: true,
-    //                     overviewRulerBorder: false,
-    //                     hideCursorInOverviewRuler: true,
-    //                     automaticLayout: true,
-    //                     minimap: { enabled: false },
-    //                     scrollbar: { vertical: 'hidden' },
-    //                   }}
-    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
-    //                   theme={monacoTheme}
-    //                   height="calc(100vh - 105px)"
-    //                   language="typescript"
-    //                   value={state.code}
-    //                   onChange={(val = '') => (state.code = val)}
-    //                 />
-    //               </div>
-    //             <div css={{ flexGrow: 1 }}>
-    //               {(['react', 'vue', 'svelte', 'solid', 'qwik'] as const).map((output) => (
-    //                 <div key={output} css={{ paddingTop: 15, height: '25%' }}>
-    //                   <MonacoEditor
-    //                     height="100%"
-    //                     options={{
-    //                       automaticLayout: true,
-    //                       overviewRulerBorder: false,
-    //                       foldingHighlight: false,
-    //                       renderLineHighlightOnlyWhenFocus: true,
-    //                       occurrencesHighlight: false,
-    //                       readOnly: getQueryParam('readOnly') !== 'false',
-    //                       minimap: { enabled: false },
-    //                       renderLineHighlight: 'none',
-    //                       selectionHighlight: false,
-    //                       scrollbar: { vertical: 'hidden' },
-    //                     }}
-    //                     theme={monacoTheme}
-    //                     language={
-    //                       output === 'json' || output === 'builder'
-    //                         ? 'json'
-    //                         : output === 'react' ||
-    //                           output === 'qwik' ||
-    //                           output === 'mitosis' ||
-    //                           output === 'qwik' ||
-    //                           output === 'solid'
-    //                         ? 'typescript'
-    //                         : 'html'
-    //                     }
-    //                     value={state.output[output]}
-    //                   />
-    //                 </div>
-    //               ))}
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     );
   });
 }
