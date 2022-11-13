@@ -24,7 +24,7 @@ import { TranspilerGenerator } from '../../types/transpiler';
 import { gettersToFunctions } from '../../helpers/getters-to-functions';
 import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { hasContext } from '../helpers/context';
+import { hasGetContext, hasSetContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
 import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
@@ -215,8 +215,11 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     if (json.hooks.onUnMount?.code?.length) {
       svelteImports.push('onDestroy');
     }
-    if (hasContext(component)) {
-      svelteImports.push('getContext', 'setContext');
+    if (hasGetContext(component)) {
+      svelteImports.push('getContext');
+    }
+    if (hasSetContext(component)) {
+      svelteImports.push('setContext');
     }
 
     str += dedent`
@@ -347,6 +350,9 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
         console.warn({ string: str }, err);
       }
     }
+
+    str = str.replace(/<script>\n<\/script>/g, '').trim();
+
     str = runPostCodePlugins(str, options.plugins);
 
     return str;
