@@ -12,7 +12,7 @@ export function babelTransformExpression<VisitorContextType = any>(
       babelrc: false,
       presets: [[tsPreset, { allExtensions: true }]],
       plugins: [() => ({ visitor })],
-    })!
+    })
     .code!.trim()
     .replace(/^(let|var)\s+_\s*=\s*/, '')
     .replace(/;$/, '');

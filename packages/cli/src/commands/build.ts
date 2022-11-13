@@ -25,7 +25,7 @@ const command: GluegunCommand = {
     const { parameters } = toolbox;
     const opts = parameters.options;
     const configRelPath = opts.config ?? opts.c;
-    const config: MitosisConfig = getMitosisConfig(configRelPath)!;
+    const config = getMitosisConfig(configRelPath);
     const targets = getTargets(config, opts);
     await build({
       ...config,

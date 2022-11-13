@@ -23,7 +23,7 @@ const getDefaultImport = ({ theImport }: { theImport: MitosisImport }): string |
   return null;
 };
 
-const getFileExtensionForTarget = (target: Target): string => {
+const getFileExtensionForTarget = (target: Target) => {
   switch (target) {
     case 'svelte':
       return '.svelte';

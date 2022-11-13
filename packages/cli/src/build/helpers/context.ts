@@ -22,7 +22,7 @@ export const generateContextFile = async ({
   target: Target;
 }) => {
   // 'foo/bar/my-thing.context.ts' -> 'MyThing'
-  const name = upperFirst(camelCase(last(path.split('/'))?.split('.')[0]));
+  const name = upperFirst(camelCase(last(path.split('/')).split('.')[0]));
   const context = parseContext(await readFile(path, 'utf8'), { name });
   if (!context) {
     console.warn('Could not parse context from file', path);
