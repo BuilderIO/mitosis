@@ -15,4 +15,7 @@ export const checkIsMitosisComponentFilePath = (filePath: string) => {
 /**
  * Matches `.svelte`, `.lite.tsx`, `.lite.jsx` files (with optional `.jsx`/`.tsx` extension)
  */
-export const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))['"]/g;
+export const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))/g;
+
+// Adds trailing quotes to the end of import paths
+export const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))['"]/g;

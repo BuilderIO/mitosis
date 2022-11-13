@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
-import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_REGEX } from './inputs-extensions';
+import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
 
 /**
  * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
@@ -23,7 +23,7 @@ export const transformImports = (target: Target, options: MitosisConfig) => (cod
     )
     // afterwards, we replace all component imports with the correct file extension
     .replace(
-      INPUT_EXTENSION_REGEX,
+      INPUT_EXTENSION_IMPORT_REGEX,
       `${getFileExtensionForTarget({ type: 'import', target, options })}`,
     );
 

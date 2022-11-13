@@ -296,7 +296,7 @@ const checkShouldOutputTypeScript = ({
   return !!options.options[target]?.typescript;
 };
 
-const replaceFileExtensionForTarget = ({
+const getComponentOutputFileName = ({
   target,
   path,
   options,
@@ -304,11 +304,12 @@ const replaceFileExtensionForTarget = ({
   target: Target;
   path: string;
   options: MitosisConfig;
-}) =>
-  path.replace(
+}) => {
+  return path.replace(
     INPUT_EXTENSION_REGEX,
     getFileExtensionForTarget({ type: 'filename', target, options }),
   );
+};
 
 /**
  * Transpiles and outputs Mitosis component files.
@@ -324,7 +325,7 @@ async function buildAndOutputComponentFiles({
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
 
   const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
-    const outputFilePath = replaceFileExtensionForTarget({ target, path, options });
+    const outputFilePath = getComponentOutputFileName({ target, path, options });
 
     /**
      * Try to find override file.
