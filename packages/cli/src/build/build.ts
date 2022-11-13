@@ -61,7 +61,6 @@ const DEFAULT_CONFIG: Partial<MitosisConfig> = {
   dest: 'output',
   files: 'src/*',
   overridesDir: 'overrides',
-  extension: 'lite.tsx',
   getTargetPath,
 };
 
