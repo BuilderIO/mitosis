@@ -38,14 +38,7 @@ const generateValidJson = (codeJSON: {}) => {
   return {
     '@type': '@builder.io/mitosis/component',
     subComponents: [],
-    imports: [
-      // {
-      //   imports: {
-      //     BuilderContext: 'default',
-      //   },
-      //   path: './BuilderContext.context.lite',
-      // },
-    ],
+    imports: [],
     exports: {},
     inputs: [],
     meta: {},
@@ -63,6 +56,7 @@ const generateValidJson = (codeJSON: {}) => {
           x?.children?.map((innerX) => ({
             properties: {},
             '@type': '@builder.io/mitosis/node',
+            children: [],
             ...innerX,
           })) || [],
       })) || [],
@@ -75,42 +69,31 @@ const generateValidJson = (codeJSON: {}) => {
   };
 };
 
-const DEFAULT_JSX_CODE = `onMount(() => {
-  sendComponentsToVisualEditor(props.customComponents);
-});
+const DEFAULT_JSX_CODE = `export default function RenderContent(props) {
+  // onMount(() => {
+  //   sendComponentsToVisualEditor(registeredComponent);
+  // });
 
-// onUpdate(() => {
-//   dispatchNewContentToVisualEditor(props.content);
-// }, [props.content]);
+  // onUpdate(() => {
+  //   dispatchNewContentToVisualEditor(props.content);
+  // }, [props.content]);
 
-// setContext(BuilderContext, {
-//   content: props.content,
-//   customComponents: props.customComponents,
-// });
+  // setContext(BuilderContext, {
+  //   content: props.content,
+  //   registeredComponents: props.customComponents,
+  // });
 
-// return (
-//   <div
-//     css={{ display: 'flex', flexDirection: 'columns' }}
-//   >
-//   </div>
-// );
-
-// return (
-//   <div
-//     onClick={() => trackClick(props.content.id)}
-//   >
-//   </div>
-// );
-
-//   return (
-//   <div
-//     onClick={() => trackClick(props.content.id)}
-//   >
-//   </div>
-// );
-
-// return (<RenderBlocks blocks={props.content.blocks} />);
+  // return (
+  //   <div
+  //     css={{ display: 'flex', flexDirection: 'columns' }}
+  //     onClick={() => trackClick(props.content.id)}
+  //   >
+  //     <RenderBlocks blocks={props.content.blocks} />
+  //   </div>
+  // );
+}
 `;
+
 const DEFAULT_JSON_CODE = {
   hooks: {
     onMount: {
@@ -190,7 +173,7 @@ const JSON_CODE_EXAMPLES = {
         imports: {
           RenderBlocks: 'default',
         },
-        path: './RenderBlocks',
+        path: './RenderBlocks.lite',
       },
     ],
     children: [
@@ -204,6 +187,68 @@ const JSON_CODE_EXAMPLES = {
       },
     ],
     name: 'RenderContent',
+  },
+  COMPLETE: {
+    name: 'RenderContent',
+    imports: [
+      {
+        imports: {
+          RenderBlocks: 'default',
+        },
+        path: './RenderBlocks.lite',
+      },
+    ],
+    hooks: {
+      onMount: {
+        code: '\n  sendComponentsToVisualEditor(registeredComponent);\n',
+      },
+      onUpdate: [
+        {
+          code: '\n  dispatchNewContentToVisualEditor(props.content);\n',
+          deps: '[props.content]',
+        },
+      ],
+    },
+    context: {
+      set: {
+        null: {
+          name: 'BuilderContext',
+          value: {
+            content: {
+              code: 'props.content',
+              type: 'property',
+            },
+            registeredComponents: {
+              code: 'props.customComponents',
+              type: 'property',
+            },
+          },
+        },
+      },
+    },
+    children: [
+      {
+        name: 'div',
+        bindings: {
+          css: {
+            code: "{\n  display: 'flex',\n  flexDirection: 'columns'\n}",
+          },
+          onClick: {
+            code: 'trackClick(props.content.id)',
+          },
+        },
+        children: [
+          {
+            name: 'RenderBlocks',
+            bindings: {
+              blocks: {
+                code: 'props.content.blocks',
+              },
+            },
+          },
+        ],
+      },
+    ],
   },
 };
 
@@ -463,17 +508,22 @@ export default function Fiddle() {
 
         switch (state.inputType) {
           case 'json':
-            json = generateValidJson(JSON.parse(state.code)) as any;
+            json = JSON.parse(state.code);
+            if (state.jsonExample !== 'COMPLETE') {
+              json = generateValidJson(json) as any;
+            } else {
+              json = generateValidJson(json) as any;
+            }
             break;
           case 'jsx':
-            const wrappedCode = `
-            import RenderBlocks from './RenderBlocks';
+            // const wrappedCode = `
+            // import RenderBlocks from './RenderBlocks';
 
-            export default function RenderContent(props) {
-              ${state.code}
-            }`;
-            console.log(wrappedCode);
-            json = parseJsx(wrappedCode);
+            // export default function RenderContent(props) {
+            //   ${state.code}
+            // }`;
+            // console.log(wrappedCode);
+            json = parseJsx(state.code);
             break;
         }
 
