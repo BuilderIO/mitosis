@@ -8,7 +8,7 @@ export const getFileExtensionForTarget = ({
   type: 'import' | 'filename';
   target: Target;
   options: MitosisConfig;
-}) => {
+}): string => {
   const isTs = !!options.options[target]?.typescript;
   switch (target) {
     case 'angular':

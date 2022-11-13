@@ -9,11 +9,11 @@ const command: GluegunCommand = {
     const pkg = toolbox.packageManager;
     const print = toolbox.print;
 
-    async function exec(cmd, opts?) {
+    async function exec(cmd: any, opts?: any) {
       try {
         const result = await sys.exec(cmd, opts);
         result.stdout && print.info(result.stdout);
-      } catch (e) {
+      } catch (e: any) {
         print.error(`Command failed with exit code ${e.exitCode}: ${e.command}`);
         e.stdout && print.error(e.stdout);
         e.stderr && print.error(e.stderr);
