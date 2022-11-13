@@ -35,5 +35,7 @@ export const getFileExtensionForTarget = ({
       return isTs && type === 'filename' ? '.tsx' : '.jsx';
     case 'marko':
       return '.marko';
+    default:
+      return '.js';
   }
 };
