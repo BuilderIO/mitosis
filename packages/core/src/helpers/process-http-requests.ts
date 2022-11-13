@@ -1,7 +1,7 @@
 import { MitosisComponent } from '..';
 
 export function processHttpRequests(json: MitosisComponent) {
-  const httpRequests: Record<string, string> | undefined = (json.meta.useMetadata as any)
+  const httpRequests: Record<string, string> | undefined = (json?.meta?.useMetadata as any)
     ?.httpRequests;
 
   let onMount = json.hooks.onMount?.code ? json.hooks.onMount : { code: '' };
