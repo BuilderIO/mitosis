@@ -523,7 +523,7 @@ export default function Fiddle() {
             css={{
               flexGrow: 1,
               position: 'absolute',
-              top: 0,
+              bottom: 0,
               right: 16,
               color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
               zIndex: 2,
@@ -576,7 +576,7 @@ export default function Fiddle() {
                     css={{
                       flexGrow: 1,
                       position: 'absolute',
-                      top: 0,
+                      bottom: 0,
                       right: 16,
                       color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
                       zIndex: 2,
@@ -596,7 +596,7 @@ export default function Fiddle() {
                       minimap: { enabled: false },
                       renderLineHighlight: 'none',
                       selectionHighlight: false,
-                      // scrollbar: { vertical: 'hidden' },
+                      scrollbar: { vertical: 'hidden' },
                     }}
                     theme={monacoTheme}
                     language={output === 'qwik' || output === 'solid' ? 'typescript' : 'html'}
