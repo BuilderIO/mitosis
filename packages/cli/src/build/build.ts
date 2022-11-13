@@ -27,11 +27,15 @@ import glob from 'fast-glob';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { outputFile, pathExists, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
-import micromatch from 'micromatch';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
 import { getFileExtensionForTarget } from './helpers/extensions';
-import { INPUT_EXTENSIONS, INPUT_EXTENSIONS_ARRAY } from './helpers/inputs-extensions';
+import {
+  checkIsMitosisComponentFilePath,
+  INPUT_EXTENSIONS,
+  INPUT_EXTENSIONS_ARRAY,
+  INPUT_EXTENSION_REGEX,
+} from './helpers/inputs-extensions';
 import { transformImports, transpile } from './helpers/transpile';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
@@ -164,22 +168,23 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 };
 
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
+  const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
+  console.log('pattern', pattern);
+  const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
   return Promise.all(
-    micromatch(await glob(options.files, { cwd }), `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`).map(
-      async (path): Promise<ParsedMitosisJson> => {
-        try {
-          const file = await readFile(path, 'utf8');
-          if (INPUT_EXTENSIONS.svelte.some(path.endsWith)) {
-            return await parseSvelteComponent({ path, file });
-          } else {
-            return await parseJsxComponent({ options, path, file });
-          }
-        } catch (err) {
-          console.error('Could not parse file:', path);
-          throw err;
+    paths.map(async (path): Promise<ParsedMitosisJson> => {
+      try {
+        const file = await readFile(path, 'utf8');
+        if (INPUT_EXTENSIONS.svelte.some((x) => path.endsWith(x))) {
+          return await parseSvelteComponent({ path, file });
+        } else {
+          return await parseJsxComponent({ options, path, file });
         }
-      },
-    ),
+      } catch (err) {
+        console.error('Could not parse file:', path);
+        throw err;
+      }
+    }),
   );
 };
 
@@ -299,10 +304,11 @@ const replaceFileExtensionForTarget = ({
   target: Target;
   path: string;
   options: MitosisConfig;
-}) => {
-  let regex = new RegExp(`.${options.extension}$`);
-  return path.replace(regex, getFileExtensionForTarget({ type: 'filename', target, options }));
-};
+}) =>
+  path.replace(
+    INPUT_EXTENSION_REGEX,
+    getFileExtensionForTarget({ type: 'filename', target, options }),
+  );
 
 /**
  * Transpiles and outputs Mitosis component files.

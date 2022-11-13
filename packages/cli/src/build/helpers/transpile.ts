@@ -2,7 +2,7 @@ import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
-import { INPUT_EXTENSION_REGEX } from './inputs-extensions';
+import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_REGEX } from './inputs-extensions';
 
 /**
  * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
@@ -53,7 +53,7 @@ export const transpile = async ({
        * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
        * a mitosis `.lite.tsx` file.
        */
-      loader: path.endsWith('.tsx') ? 'tsx' : 'ts',
+      loader: checkIsMitosisComponentFilePath(path) ? 'tsx' : 'ts',
       target: 'es6',
     });
 

@@ -7,6 +7,11 @@ export const INPUT_EXTENSIONS = {
 
 export const INPUT_EXTENSIONS_ARRAY = flatten(Object.values(INPUT_EXTENSIONS));
 
+// check if filePath ends with one of the values of INPUT_EXTENSIONS_ARRAY
+export const checkIsMitosisComponentFilePath = (filePath: string) => {
+  return INPUT_EXTENSIONS_ARRAY.some((extension) => filePath.endsWith(extension));
+};
+
 /**
  * Matches `.svelte`, `.lite.tsx`, `.lite.jsx` files (with optional `.jsx`/`.tsx` extension)
  */
