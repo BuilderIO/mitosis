@@ -2,7 +2,6 @@ import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
-import { INPUT_EXTENSION_REGEX } from './inputs-extensions';
 
 /**
  * Remove `.lite` extensions from imports without having to load a slow parser like babel
@@ -17,9 +16,13 @@ export const transformImports = (target: Target, options: MitosisConfig) => (cod
       /\.context\.lite['"]/g,
       `.context.js$1`,
     )
-    // afterwards, we replace all component imports with the correct file extension
     .replace(
-      INPUT_EXTENSION_REGEX,
+      // afterwards, we replace all `.lite` imports with the correct file extension
+      /\.lite['"]/g,
+      `${getFileExtensionForTarget({ type: 'import', target, options })}$1`,
+    )
+    .replace(
+      new RegExp(`.${options.extension}['"]`, 'g'),
       `${getFileExtensionForTarget({ type: 'import', target, options })}`,
     );
 
