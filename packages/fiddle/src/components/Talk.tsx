@@ -10,7 +10,7 @@ import {
   mapStyles,
   parseJsx,
   componentToVue3,
-  parseSvelte,
+  MitosisComponent,
 } from '@builder.io/mitosis';
 import { createTheme, ThemeProvider, Typography } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
@@ -20,9 +20,7 @@ import React, { useRef, useState } from 'react';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
 import { defaultCode } from '../constants/templates/jsx-templates';
-import { defaultCode as defaultSvelteCode } from '../constants/templates/svelte-templates';
 import { theme } from '../constants/theme';
-import { deleteQueryParam } from '../functions/delete-query-param';
 import { getQueryParam } from '../functions/get-query-param';
 import { localStorageGet } from '../functions/local-storage-get';
 import { localStorageSet } from '../functions/local-storage-set';
@@ -33,9 +31,181 @@ import { TextLink } from './TextLink';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { JsxCodeEditor } from './JsxCodeEditor';
-import { ToAlpineOptions } from '@builder.io/mitosis';
 
 type Position = { row: number; column: number };
+
+const generateValidJson = (codeJSON: {}) => {
+  return {
+    '@type': '@builder.io/mitosis/component',
+    subComponents: [],
+    imports: [
+      // {
+      //   imports: {
+      //     BuilderContext: 'default',
+      //   },
+      //   path: './BuilderContext.context.lite',
+      // },
+    ],
+    exports: {},
+    inputs: [],
+    meta: {},
+    refs: {},
+    state: {},
+    hooks: {},
+    name: 'RenderContent',
+    ...codeJSON,
+    children:
+      codeJSON.children?.map((x) => ({
+        '@type': '@builder.io/mitosis/node',
+        properties: {},
+        ...x,
+        children:
+          x?.children?.map((innerX) => ({
+            properties: {},
+            '@type': '@builder.io/mitosis/node',
+            ...innerX,
+          })) || [],
+      })) || [],
+    context: {
+      get: {},
+      set: {
+        ...codeJSON.context?.set,
+      },
+    },
+  };
+};
+
+const DEFAULT_JSX_CODE = `onMount(() => {
+  sendComponentsToVisualEditor(props.customComponents);
+});
+
+// onUpdate(() => {
+//   dispatchNewContentToVisualEditor(props.content);
+// }, [props.content]);
+
+// setContext(BuilderContext, {
+//   content: props.content,
+//   customComponents: props.customComponents,
+// });
+
+// return (
+//   <div
+//     css={{ display: 'flex', flexDirection: 'columns' }}
+//   >
+//   </div>
+// );
+
+// return (
+//   <div
+//     onClick={() => trackClick(props.content.id)}
+//   >
+//   </div>
+// );
+
+//   return (
+//   <div
+//     onClick={() => trackClick(props.content.id)}
+//   >
+//   </div>
+// );
+
+// return (<RenderBlocks blocks={props.content.blocks} />);
+`;
+const DEFAULT_JSON_CODE = {
+  hooks: {
+    onMount: {
+      code: '\n  sendComponentsToVisualEditor(props.registeredComponents);\n',
+    },
+  },
+};
+
+const JSON_CODE_EXAMPLES = {
+  ON_MOUNT: {
+    hooks: {
+      onMount: {
+        code: '\n  sendComponentsToVisualEditor(props.customComponents);\n',
+      },
+    },
+  },
+  ON_UPDATE: {
+    hooks: {
+      onUpdate: [
+        {
+          code: '\n  dispatchNewContentToVisualEditor(props.content);\n',
+          deps: '[props.content]',
+        },
+      ],
+    },
+  },
+  SET_CONTEXT: {
+    context: {
+      set: {
+        './BuilderContext.context.lite:default': {
+          name: 'BuilderContext',
+          value: {
+            content: {
+              code: 'props.content',
+              type: 'property',
+            },
+            customComponents: {
+              code: 'props.customComponents',
+              type: 'property',
+            },
+          },
+        },
+      },
+    },
+    name: 'RenderContent',
+  },
+  STYLES: {
+    children: [
+      {
+        name: 'div',
+        bindings: {
+          css: {
+            code: "{\n  display: 'flex',\n  flexDirection: 'columns'\n}",
+          },
+        },
+        children: [],
+      },
+    ],
+    name: 'RenderContent',
+  },
+  CLICK: {
+    children: [
+      {
+        name: 'div',
+        bindings: {
+          onClick: {
+            code: 'trackClick(props.content.id)',
+          },
+        },
+        children: [],
+      },
+    ],
+  },
+  RENDER_BLOCKS: {
+    imports: [
+      {
+        imports: {
+          RenderBlocks: 'default',
+        },
+        path: './RenderBlocks',
+      },
+    ],
+    children: [
+      {
+        name: 'RenderBlocks',
+        bindings: {
+          blocks: {
+            code: 'props.content.blocks',
+          },
+        },
+      },
+    ],
+    name: 'RenderContent',
+  },
+};
 
 const openTagRe = /(<[a-z]+[^>]*)/gi;
 
@@ -211,11 +381,13 @@ export default function Fiddle() {
   const [builderData, setBuilderData] = useState<any>(null);
   const state = useLocalObservable(() => ({
     code: getQueryParam('code') || defaultCode,
+    inputType: 'json' as 'json' | 'jsx',
+    showInput: true,
+    jsonExample: 'ON_MOUNT' as keyof typeof JSON_CODE_EXAMPLES,
     inputCode: defaultInputCode,
     output: { react: '', vue: '', svelte: '', qwik: '', solid: '' },
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    inputTab: getQueryParam('inputTab') || 'jsx',
     builderData: {} as any,
     isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
@@ -287,24 +459,26 @@ export default function Fiddle() {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
 
-        let json;
+        let json: MitosisComponent;
 
-        switch (state.inputTab) {
-          case 'svelte':
-            json = await parseSvelte(state.code);
+        switch (state.inputType) {
+          case 'json':
+            json = generateValidJson(JSON.parse(state.code)) as any;
             break;
           case 'jsx':
-          default:
-            json = parseJsx(state.code);
+            const wrappedCode = `
+            import RenderBlocks from './RenderBlocks';
+
+            export default function RenderContent(props) {
+              ${state.code}
+            }`;
+            console.log(wrappedCode);
+            json = parseJsx(wrappedCode);
             break;
         }
 
         let commonOptions: { typescript: boolean } = {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
-        };
-        let alpineOptions: ToAlpineOptions = {
-          useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
-          inlineState: this.options.alpineInline === 'true',
         };
 
         state.output = {
@@ -456,31 +630,17 @@ export default function Fiddle() {
     { fireImmediately: false },
   );
   useReaction(
-    () => state.outputTab,
+    () => state.inputType,
     (tab) => {
-      if (state.code) {
-        setQueryParam('outputTab', tab);
+      if (tab === 'json') {
+        state.code = JSON.stringify(DEFAULT_JSON_CODE, null, 2);
       } else {
-        deleteQueryParam('outputTab');
-      }
-      state.updateOutput();
-    },
-  );
-  useReaction(
-    () => state.inputTab,
-    (tab) => {
-      if (tab === 'svelte') {
-        state.code = defaultSvelteCode;
-        if (state.outputTab === 'svelte') {
-          state.outputTab = 'vue';
-        }
-      } else {
-        state.code = defaultCode;
+        state.code = DEFAULT_JSX_CODE;
       }
 
       setQueryParam('inputTab', tab);
     },
-    { fireImmediately: false },
+    { fireImmediately: true },
   );
 
   useReaction(
@@ -513,42 +673,109 @@ export default function Fiddle() {
       >
         <div
           css={{
-            position: 'relative',
-            height: 280,
-            border: '1px solid black',
+            flexGrow: 1,
+            position: 'absolute',
+            top: 0,
+            right: 16,
+            color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+            zIndex: 2,
           }}
         >
-          <Typography
-            variant="h3"
+          <div>
+            <div>JSON examples:</div>
+            <select
+              name="pets"
+              id="pet-select"
+              value={state.jsonExample}
+              onChange={(x) => {
+                const key = x.target.value as keyof typeof JSON_CODE_EXAMPLES;
+                state.jsonExample = key;
+                state.inputType = 'json';
+                state.code = JSON.stringify(JSON_CODE_EXAMPLES[key], null, 2);
+              }}
+            >
+              {Object.keys(JSON_CODE_EXAMPLES).map((key) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div
             css={{
-              flexGrow: 1,
-              position: 'absolute',
-              bottom: 0,
-              right: 16,
-              color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
-              zIndex: 2,
+              paddingTop: 24,
             }}
           >
-            Input
-          </Typography>
-          <JsxCodeEditor
-            options={{
-              renderLineHighlightOnlyWhenFocus: true,
-              overviewRulerBorder: false,
-              hideCursorInOverviewRuler: true,
-              automaticLayout: true,
-              minimap: { enabled: false },
-              scrollbar: { vertical: 'hidden' },
-            }}
-            onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
-            theme={monacoTheme}
-            language="typescript"
-            value={state.code}
-            onChange={(val = '') => (state.code = val)}
-          />
-        </div>
+            <button
+              onClick={() => {
+                state.showInput = !state.showInput;
+              }}
+            >
+              TOGGLE INPUT
+            </button>
+          </div>
 
-        <div css={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          <div
+            css={{
+              paddingTop: 24,
+            }}
+          >
+            <div>Generator:</div>
+            <button
+              onClick={() => {
+                state.inputType = state.inputType === 'json' ? 'jsx' : 'json';
+              }}
+            >
+              {state.inputType}
+            </button>
+          </div>
+        </div>
+        {state.showInput && (
+          <div
+            css={{
+              position: 'relative',
+              height: 280,
+              border: '1px solid black',
+              margin: '0 300px',
+              flexGrow: 1,
+            }}
+          >
+            <Typography
+              variant="h3"
+              css={{
+                flexGrow: 1,
+                position: 'absolute',
+                bottom: 0,
+                right: 16,
+                color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                zIndex: 2,
+              }}
+            >
+              Input
+            </Typography>
+            <JsxCodeEditor
+              options={{
+                renderLineHighlightOnlyWhenFocus: true,
+                overviewRulerBorder: false,
+                hideCursorInOverviewRuler: true,
+                automaticLayout: true,
+                minimap: { enabled: false },
+                scrollbar: { vertical: 'hidden' },
+              }}
+              onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+              theme={monacoTheme}
+              language={state.inputType === 'json' ? 'json' : 'typescript'}
+              value={state.code}
+              onChange={(val = '') => (state.code = val)}
+            />
+          </div>
+        )}
+
+        <div
+          key={state.showInput.toString()}
+          css={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}
+        >
           {(
             [
               ['vue', 'svelte'],
@@ -556,6 +783,7 @@ export default function Fiddle() {
             ] as const
           ).map((outputArr) => (
             <div
+              key={outputArr.join(',')}
               css={{
                 display: 'flex',
                 flexGrow: 1,
