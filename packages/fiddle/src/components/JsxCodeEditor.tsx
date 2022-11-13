@@ -148,6 +148,7 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
         automaticLayout: true,
         minimap: { enabled: false },
         scrollbar: { vertical: 'hidden' },
+        scrollBeyondLastLine: false,
         ...props.options,
       }}
       language="typescript"

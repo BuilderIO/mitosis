@@ -1,0 +1,902 @@
+import {
+  builderContentToMitosisComponent,
+  compileAwayBuilderComponents,
+  componentToBuilder,
+  componentToMitosis,
+  componentToReact,
+  componentToSolid,
+  componentToSvelte,
+  componentToQwik,
+  mapStyles,
+  parseJsx,
+  componentToVue3,
+  parseSvelte,
+} from '@builder.io/mitosis';
+import { createTheme, ThemeProvider, Typography } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { useLocalObservable, useObserver } from 'mobx-react-lite';
+import React, { useRef, useState } from 'react';
+
+import { breakpoints } from '../constants/breakpoints';
+import { colors } from '../constants/colors';
+import { defaultCode } from '../constants/templates/jsx-templates';
+import { defaultCode as defaultSvelteCode } from '../constants/templates/svelte-templates';
+import { theme } from '../constants/theme';
+import { deleteQueryParam } from '../functions/delete-query-param';
+import { getQueryParam } from '../functions/get-query-param';
+import { localStorageGet } from '../functions/local-storage-get';
+import { localStorageSet } from '../functions/local-storage-set';
+import { setQueryParam } from '../functions/set-query-param';
+import { useEventListener } from '../hooks/use-event-listener';
+import { useReaction } from '../hooks/use-reaction';
+import { TextLink } from './TextLink';
+
+import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
+import { JsxCodeEditor } from './JsxCodeEditor';
+import { ToAlpineOptions } from '@builder.io/mitosis';
+
+type Position = { row: number; column: number };
+
+const openTagRe = /(<[a-z]+[^>]*)/gi;
+
+// Sync selections between the Builder editor and the fiddle
+const SYNC_SELECTIONS = false;
+
+const indexToRowAndColumn = (str: string, index: number): Position => {
+  const rows = str.split('\n');
+  let row = 0;
+  let column = 0;
+  let cursor = 0;
+  while (cursor < index) {
+    const rowText = rows[row];
+    column++;
+    if (column > rowText.length) {
+      column = 0;
+      row++;
+      // cursor++;
+    }
+
+    if (cursor === index) {
+      return { row, column };
+    }
+    cursor++;
+  }
+  return { row, column };
+};
+
+const rowColumnToIndex = (str: string, position: Position): number => {
+  const rows = str.split('\n');
+  let row = 0;
+  let column = 0;
+  let cursor = 0;
+  while (true) {
+    const rowText = rows[row];
+    if (typeof rowText === undefined) {
+      return cursor;
+    }
+    column++;
+    if (column > rowText.length) {
+      column = 0;
+      row++;
+      cursor++;
+    }
+
+    if (row === position.row && column === position.column) {
+      return cursor;
+    }
+    cursor++;
+  }
+};
+
+const debug = getQueryParam('debug') === 'true';
+
+const AlphaPreviewMessage = () => (
+  <ThemeProvider
+    theme={createTheme({
+      palette: {
+        type: 'dark',
+        primary: { main: colors.primary },
+      },
+    })}
+  >
+    <Alert
+      severity="info"
+      css={{
+        background: 'none',
+        fontSize: 15,
+      }}
+    >
+      Mitosis is in beta, please{' '}
+      <TextLink
+        css={{ color: 'inherit', textDecoration: 'underline' }}
+        href="https://github.com/BuilderIO/mitosis/issues"
+        target="_blank"
+      >
+        report bugs and share feedback
+      </TextLink>
+    </Alert>
+  </ThemeProvider>
+);
+
+const builderOptions = {
+  useDefaultStyles: false,
+  hideAnimateTab: true,
+};
+
+const smallBreakpoint = breakpoints.mediaQueries.small;
+
+const builderEnvParam = getQueryParam('builderEnv');
+
+const useSaveButton = getQueryParam('realTime') !== 'true';
+
+const TabLogo = (props: { src: string }) => {
+  const size = 12;
+  return (
+    <img
+      alt="Icon"
+      src={`${props.src}?width=${size * 2}`}
+      css={{
+        marginRight: 7,
+        objectFit: 'contain',
+        objectPosition: 'center',
+        height: size,
+        width: size,
+        filter: 'grayscale(100%)',
+        opacity: 0.6,
+        '.Mui-selected.MuiButtonBase-root &': {
+          filter: 'none',
+          opacity: 1,
+        },
+      }}
+    />
+  );
+};
+
+const TabLabelWithIcon = (props: { icon?: string; label: string }) => {
+  const useIcon = false;
+  return (
+    <div css={{ display: 'flex', alignItems: 'center' }}>
+      {useIcon && props.icon && <TabLogo src={props.icon} />} {props.label}
+    </div>
+  );
+};
+
+const defaultInputCode = `
+import { Component, Input } from "@angular/core";
+
+@Component({
+  selector: "foo-component",
+  template: \`
+    <div>
+      <input
+        class="input"
+        [value]="name"
+        (input)="name = $event.target.value"
+      />
+      Hello {{name}} ! I can run in React, Vue, Solid, or Liquid!
+    </div>
+  \`,
+})
+export default class FooComponent {
+  name = "Steve";
+}
+`;
+
+const plugins = [
+  compileAwayBuilderComponents(),
+  mapStyles({
+    map: (styles) => ({
+      ...styles,
+      boxSizing: undefined,
+      flexShrink: undefined,
+      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+    }),
+  }),
+];
+
+type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
+type Editor = EditorRefArgs[0];
+
+const hasBothTsAndJsSupport = (outputTab: string) => {
+  return ['svelte', 'vue'].includes(outputTab);
+};
+
+// TODO: Build this Fiddle app with Mitosis :)
+export default function Fiddle() {
+  const monaco = useMonaco();
+
+  const [staticState] = useState(() => ({
+    ignoreNextBuilderUpdate: false,
+  }));
+  const [builderData, setBuilderData] = useState<any>(null);
+  const state = useLocalObservable(() => ({
+    code: getQueryParam('code') || defaultCode,
+    inputCode: defaultInputCode,
+    output: { react: '', vue: '', svelte: '', qwik: '', solid: '' },
+    outputTab: getQueryParam('outputTab') || 'vue',
+    pendingBuilderChange: null as any,
+    inputTab: getQueryParam('inputTab') || 'jsx',
+    builderData: {} as any,
+    isDraggingBuilderCodeBar: false,
+    isDraggingJSXCodeBar: false,
+    jsxCodeTabWidth: Number(localStorageGet('jsxCodeTabWidth')) || 45,
+    builderPaneHeight: Number(localStorageGet('builderPaneHeight')) || 35,
+    setEditorRef(editor: Editor, monaco: EditorRefArgs[1]) {
+      monacoEditorRef.current = editor;
+      if (editor) {
+        if (SYNC_SELECTIONS) {
+          editor.onDidChangeCursorPosition((event) => {
+            const { position, reason } = event;
+
+            if (reason !== monaco.editor.CursorChangeReason.Explicit) {
+              return;
+            }
+
+            const index = rowColumnToIndex(state.code, {
+              column: position.column - 1,
+              row: position.lineNumber - 1,
+            });
+
+            const elementIndex =
+              Array.from(state.code.substring(0, index).matchAll(openTagRe)).length - 1;
+
+            if (elementIndex === -1) {
+              return;
+            }
+
+            (
+              document.querySelector('builder-editor iframe') as HTMLIFrameElement
+            )?.contentWindow?.postMessage(
+              {
+                type: 'builder.changeSelection',
+                data: {
+                  index: elementIndex,
+                },
+              },
+              '*',
+            );
+          });
+        }
+      }
+    },
+    options: {
+      typescript: localStorageGet('options.typescript') || ('false' as 'true' | 'false'),
+      reactStyleType:
+        localStorageGet('options.reactStyleType') || ('styled-jsx' as 'emotion' | 'styled-jsx'),
+      reactStateType:
+        localStorageGet('options.reactStateType') || ('useState' as 'useState' | 'mobx' | 'solid'),
+      svelteStateType:
+        localStorageGet('options.svelteStateType') || ('variables' as 'variables' | 'proxies'),
+      vueApi: localStorageGet('options.vueApi') || ('options' as 'options' | 'composition'),
+      vueVersion: localStorageGet('options.vueVersion') || ('2' as '2' | '3'),
+      alpineShorthandSyntax: localStorageGet('options.alpineShorthandSyntax') || 'false',
+      alpineInline: localStorageGet('options.alpineInline') || 'false',
+    },
+    applyPendingBuilderChange(update?: any) {
+      const builderJson = update || state.pendingBuilderChange;
+      if (!builderJson) {
+        return;
+      }
+      const jsxJson = builderContentToMitosisComponent(builderJson);
+      state.code = componentToMitosis()({ component: jsxJson });
+      state.pendingBuilderChange = null;
+    },
+
+    async updateOutput() {
+      try {
+        state.pendingBuilderChange = null;
+        staticState.ignoreNextBuilderUpdate = true;
+
+        let json;
+
+        switch (state.inputTab) {
+          case 'svelte':
+            json = await parseSvelte(state.code);
+            break;
+          case 'jsx':
+          default:
+            json = parseJsx(state.code);
+            break;
+        }
+
+        let commonOptions: { typescript: boolean } = {
+          typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
+        };
+        let alpineOptions: ToAlpineOptions = {
+          useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
+          inlineState: this.options.alpineInline === 'true',
+        };
+
+        state.output = {
+          react: componentToReact({
+            stylesType: state.options.reactStyleType,
+            stateType: state.options.reactStateType,
+            plugins,
+            ...commonOptions,
+          })({ component: json }),
+
+          qwik: componentToQwik({ plugins, ...commonOptions })({ component: json })
+            // Remove the comment at the
+            .replace('// GENERATED BY MITOSIS', '')
+            .trim(),
+
+          vue: componentToVue3({
+            plugins,
+            api: state.options.vueApi,
+            ...commonOptions,
+          })({ component: json, path: '' }),
+
+          svelte: componentToSvelte({
+            stateType: state.options.svelteStateType,
+            plugins,
+            ...commonOptions,
+          })({ component: json }),
+
+          solid: componentToSolid({ plugins, ...commonOptions })({ component: json }),
+        };
+
+        const newBuilderData = componentToBuilder()({ component: json });
+        setBuilderData(newBuilderData);
+      } catch (err) {
+        if (debug) {
+          throw err;
+        } else {
+          console.warn(err);
+        }
+      }
+    },
+  }));
+
+  useEventListener<KeyboardEvent>(document.body, 'keydown', (e) => {
+    // Cancel cmd+s, sometimes people hit it instinctively when editing code and the browser
+    // "save webpage" dialog is unwanted and annoying
+    if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+      e.preventDefault();
+      state.applyPendingBuilderChange();
+    }
+  });
+
+  useEventListener<MouseEvent>(document.body, 'mousemove', (e) => {
+    if (state.isDraggingJSXCodeBar) {
+      const windowWidth = window.innerWidth;
+      const pointerRelativeXpos = e.clientX;
+      const newWidth = Math.max((pointerRelativeXpos / windowWidth) * 100, 5);
+      state.jsxCodeTabWidth = Math.min(newWidth, 95);
+    } else if (state.isDraggingBuilderCodeBar) {
+      const bannerHeight = 0;
+      const windowHeight = window.innerHeight;
+      const pointerRelativeYPos = e.clientY;
+      const newHeight = Math.max(
+        (1 - (pointerRelativeYPos + bannerHeight) / windowHeight) * 100,
+        5,
+      );
+      state.builderPaneHeight = Math.min(newHeight, 95);
+    }
+  });
+
+  useEventListener<MouseEvent>(document.body, 'mouseup', (e) => {
+    state.isDraggingJSXCodeBar = false;
+    state.isDraggingBuilderCodeBar = false;
+  });
+  useEventListener<MessageEvent>(window, 'message', (e) => {
+    if (e.data?.type === 'builder.saveCommand') {
+      if (e.data.data || state.pendingBuilderChange) {
+        state.applyPendingBuilderChange(e.data.data || state.pendingBuilderChange);
+      }
+    } else if (e.data?.type === 'builder.selectionChange') {
+      if (SYNC_SELECTIONS) {
+        // TODO: only do this when this editor does *not* have focus
+        const { selectionIndices } = e.data.data;
+        if (Array.isArray(selectionIndices)) {
+          const index = selectionIndices[0];
+          if (typeof index === 'number') {
+            const code = state.code;
+            let match: RegExpExecArray | null;
+
+            let i = 0;
+            while ((match = openTagRe.exec(code)) != null) {
+              if (!match) {
+                break;
+              }
+              if (i++ === index) {
+                const index = match.index;
+                const length = match[1].length;
+                if (monaco) {
+                  const start = indexToRowAndColumn(code, index - 1);
+                  const end = indexToRowAndColumn(code, index + length + 1);
+                  const startPosition = new monaco.Position(start.row + 1, start.column + 1);
+                  const endPosition = new monaco.Position(end.row + 1, end.column + 1);
+
+                  monacoEditorRef.current?.setSelection(
+                    monaco.Selection.fromPositions(startPosition, endPosition),
+                  );
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  });
+
+  const monacoEditorRef = useRef<Editor | null>(null);
+
+  useReaction(
+    () => state.jsxCodeTabWidth,
+    (width) => localStorageSet('jsxCodeTabWidth', width),
+    { fireImmediately: false, delay: 1000 },
+  );
+
+  useReaction(
+    () => state.builderPaneHeight,
+    (width) => localStorageSet('builderPaneHeight', width),
+    { fireImmediately: false, delay: 1000 },
+  );
+
+  useReaction(
+    () => state.options.reactStyleType,
+    (type) => localStorageSet('options.reactStyleType', type),
+  );
+  useReaction(
+    () => state.options.reactStateType,
+    (type) => localStorageSet('options.reactStateType', type),
+  );
+  useReaction(
+    () => state.options.svelteStateType,
+    (type) => localStorageSet('options.svelteStateType', type),
+  );
+  useReaction(
+    () => state.options.vueApi,
+    (type) => localStorageSet('options.vueApi', type),
+  );
+  useReaction(
+    () => state.code,
+    (code) => setQueryParam('code', code),
+    { fireImmediately: false },
+  );
+  useReaction(
+    () => state.outputTab,
+    (tab) => {
+      if (state.code) {
+        setQueryParam('outputTab', tab);
+      } else {
+        deleteQueryParam('outputTab');
+      }
+      state.updateOutput();
+    },
+  );
+  useReaction(
+    () => state.inputTab,
+    (tab) => {
+      if (tab === 'svelte') {
+        state.code = defaultSvelteCode;
+        if (state.outputTab === 'svelte') {
+          state.outputTab = 'vue';
+        }
+      } else {
+        state.code = defaultCode;
+      }
+
+      setQueryParam('inputTab', tab);
+    },
+    { fireImmediately: false },
+  );
+
+  useReaction(
+    () => state.code,
+    (code) => {
+      state.updateOutput();
+    },
+    { delay: 1000 },
+  );
+
+  useReaction(
+    () => state.inputCode,
+    (code) => {
+      state.updateOutput();
+    },
+    { delay: 1000 },
+  );
+
+  return useObserver(() => {
+    const monacoTheme = theme.darkMode ? 'vs-dark' : 'vs';
+    const barStyle: any = {
+      overflow: 'auto',
+      whiteSpace: 'nowrap',
+      ...(theme.darkMode ? null : { backgroundColor: 'white' }),
+    };
+
+    return (
+      <div
+        css={{
+          display: 'flex',
+          flexDirection: 'column',
+          padding: 8,
+          height: '100vh',
+        }}
+      >
+        {/* <Typography
+          variant="h3"
+          css={{
+            flexGrow: 1,
+            textAlign: 'left',
+            padding: '0 15px',
+            marginTop: 'auto',
+            marginBottom: 'auto',
+            color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+          }}
+        >
+          Input:
+        </Typography> */}
+        <div
+          css={{
+            position: 'relative',
+            height: 300,
+            border: '1px solid black',
+          }}
+        >
+          <Typography
+            variant="h3"
+            css={{
+              flexGrow: 1,
+              position: 'absolute',
+              top: 0,
+              right: 16,
+              color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+              zIndex: 2,
+            }}
+          >
+            Input
+          </Typography>
+          <JsxCodeEditor
+            options={{
+              renderLineHighlightOnlyWhenFocus: true,
+              overviewRulerBorder: false,
+              hideCursorInOverviewRuler: true,
+              automaticLayout: true,
+              minimap: { enabled: false },
+              scrollbar: { vertical: 'hidden' },
+            }}
+            onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+            theme={monacoTheme}
+            height="calc(100vh - 105px)"
+            language="typescript"
+            value={state.code}
+            onChange={(val = '') => (state.code = val)}
+          />
+        </div>
+
+        <div css={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          {(
+            [
+              ['vue', 'svelte'],
+              ['solid', 'qwik'],
+            ] as const
+          ).map((outputArr) => (
+            <div
+              css={{
+                display: 'flex',
+                flexGrow: 1,
+              }}
+            >
+              {outputArr.map((output) => (
+                <div
+                  key={output}
+                  css={{
+                    paddingTop: 16,
+                    height: '100%',
+                    width: '50%',
+                    position: 'relative',
+                    border: '1px solid black',
+                  }}
+                >
+                  <Typography
+                    variant="h3"
+                    css={{
+                      flexGrow: 1,
+                      position: 'absolute',
+                      top: 0,
+                      right: 16,
+                      color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+                      zIndex: 2,
+                    }}
+                  >
+                    {output[0].toUpperCase() + output.slice(1)}
+                  </Typography>
+                  <MonacoEditor
+                    height="100%"
+                    options={{
+                      automaticLayout: true,
+                      overviewRulerBorder: false,
+                      foldingHighlight: false,
+                      renderLineHighlightOnlyWhenFocus: true,
+                      occurrencesHighlight: false,
+                      readOnly: getQueryParam('readOnly') !== 'false',
+                      minimap: { enabled: false },
+                      renderLineHighlight: 'none',
+                      selectionHighlight: false,
+                      scrollbar: { vertical: 'hidden' },
+                    }}
+                    theme={monacoTheme}
+                    language={output === 'qwik' || output === 'solid' ? 'typescript' : 'html'}
+                    value={state.output[output]}
+                  />
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+
+    //     return (
+    //       <div
+    //         css={{
+    //           display: 'flex',
+    //           flexDirection: 'column',
+    //           height: '100vh',
+    //           '& .monaco-editor .margin, & .monaco-editor, & .monaco-editor-background, .monaco-editor .inputarea.ime-input':
+    //             {
+    //               backgroundColor: 'transparent !important',
+    //             },
+
+    //           'a > span': {
+    //             color: 'white',
+    //             textDecoration: 'none',
+    //           },
+    //         }}
+    //       >
+    //         <div
+    //           css={{
+    //             display: 'flex',
+    //             flexGrow: 1,
+    //             overflow: 'hidden',
+    //             [smallBreakpoint]: { flexDirection: 'column', overflow: 'unset' },
+    //           }}
+    //         >
+    //           <div
+    //             css={{
+    //               width: `${state.jsxCodeTabWidth}%`,
+    //               height: '100%',
+    //               display: 'flex',
+    //               flexDirection: 'column',
+    //               borderRight: `1px solid ${colors.contrast}`,
+    //               [smallBreakpoint]: {
+    //                 width: '100%',
+    //                 height: 'calc(50vh - 30px)',
+    //                 overflow: 'hidden',
+    //               },
+    //             }}
+    //           >
+    //             <div
+    //               css={{
+    //                 borderBottom: `1px solid ${colors.contrast}`,
+    //                 alignItems: 'center',
+    //                 display: 'flex',
+    //                 flexShrink: 0,
+    //                 height: 40,
+    //                 ...barStyle,
+    //               }}
+    //             >
+    //               <Typography
+    //                 variant="h3"
+    //                 css={{
+    //                   flexGrow: 1,
+    //                   textAlign: 'left',
+    //                   padding: '0 15px',
+    //                   marginTop: 'auto',
+    //                   marginBottom: 'auto',
+    //                   color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+    //                 }}
+    //               >
+    //                 Input:
+    //               </Typography>
+    //               <Tabs
+    //                 css={{
+    //                   minHeight: 0,
+    //                   marginLeft: 'auto',
+    //                   // borderBottom: `1px solid ${colors.contrast}`,
+    //                   '& button': {
+    //                     minHeight: 0,
+    //                     minWidth: 100,
+    //                   },
+    //                 }}
+    //                 value={state.inputTab}
+    //                 onChange={(e, value) => (state.inputTab = value)}
+    //                 indicatorColor="primary"
+    //                 textColor="primary"
+    //               >
+    //                 <Tab
+    //                   label={
+    //                     <TabLabelWithIcon
+    //                       label="Mitosis JSX"
+    //                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+    //                     />
+    //                   }
+    //                   value="jsx"
+    //                 />
+    //                 <Tab
+    //                   label={
+    //                     <TabLabelWithIcon
+    //                       label="Sveltosis"
+    //                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+    //                     />
+    //                   }
+    //                   value="svelte"
+    //                 />
+    //               </Tabs>
+    //             </div>
+    //             <Show when={state.inputTab === 'jsx'}>
+    //               <div
+    //                 css={{
+    //                   paddingTop: 15,
+    //                   flexGrow: 1,
+    //                   position: 'relative',
+    //                   [smallBreakpoint]: {
+    //                     paddingTop: 0,
+    //                   },
+    //                 }}
+    //               >
+    //                 <JsxCodeEditor
+    //                   options={{
+    //                     renderLineHighlightOnlyWhenFocus: true,
+    //                     overviewRulerBorder: false,
+    //                     hideCursorInOverviewRuler: true,
+    //                     automaticLayout: true,
+    //                     minimap: { enabled: false },
+    //                     scrollbar: { vertical: 'hidden' },
+    //                   }}
+    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+    //                   theme={monacoTheme}
+    //                   height="calc(100vh - 105px)"
+    //                   language="typescript"
+    //                   value={state.code}
+    //                   onChange={(val = '') => (state.code = val)}
+    //                 />
+    //               </div>
+    //             </Show>
+
+    //             <Show when={state.inputTab === 'svelte'}>
+    //               <div
+    //                 css={{
+    //                   paddingTop: 15,
+    //                   flexGrow: 1,
+    //                   position: 'relative',
+    //                   [smallBreakpoint]: {
+    //                     paddingTop: 0,
+    //                   },
+    //                 }}
+    //               >
+    //                 <SvelteCodeEditor
+    //                   options={{
+    //                     renderLineHighlightOnlyWhenFocus: true,
+    //                     overviewRulerBorder: false,
+    //                     hideCursorInOverviewRuler: true,
+    //                     automaticLayout: true,
+    //                     minimap: { enabled: false },
+    //                     scrollbar: { vertical: 'hidden' },
+    //                   }}
+    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+    //                   theme={monacoTheme}
+    //                   height="calc(100vh - 105px)"
+    //                   language="html"
+    //                   value={state.code}
+    //                   onChange={(val = '') => (state.code = val)}
+    //                 />
+    //               </div>
+    //             </Show>
+    //           </div>
+    //           <div
+    //             css={{
+    //               cursor: 'col-resize',
+    //               position: 'relative',
+    //               zIndex: 100,
+    //               '&::before': {
+    //                 content: '""',
+    //                 position: 'absolute',
+    //                 top: 0,
+    //                 bottom: 0,
+    //                 left: -5,
+    //                 right: -5,
+    //               },
+    //             }}
+    //             onMouseDown={(event) => {
+    //               event.preventDefault();
+    //               state.isDraggingJSXCodeBar = true;
+    //             }}
+    //           ></div>
+    //           <div
+    //             css={{
+    //               width: `${100 - state.jsxCodeTabWidth}%`,
+    //               height: '100%',
+    //               display: 'flex',
+    //               flexDirection: 'column',
+    //               [smallBreakpoint]: {
+    //                 width: '100%',
+    //                 height: 'calc(100vh - 30px)',
+    //                 overflow: 'hidden',
+    //               },
+    //             }}
+    //           >
+
+    // <Typography
+    //                 variant="h3"
+    //                 css={{
+    //                   flexGrow: 1,
+    //                   textAlign: 'left',
+    //                   padding: '0 15px',
+    //                   marginTop: 'auto',
+    //                   marginBottom: 'auto',
+    //                   color: theme.darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.7)',
+    //                 }}
+    //               >
+    //                 Input:
+    //               </Typography>
+    //             <div
+    //                 css={{
+    //                   paddingTop: 15,
+    //                   flexGrow: 1,
+    //                   position: 'relative',
+    //                   [smallBreakpoint]: {
+    //                     paddingTop: 0,
+    //                   },
+    //                 }}
+    //               >
+    //                 <JsxCodeEditor
+    //                   options={{
+    //                     renderLineHighlightOnlyWhenFocus: true,
+    //                     overviewRulerBorder: false,
+    //                     hideCursorInOverviewRuler: true,
+    //                     automaticLayout: true,
+    //                     minimap: { enabled: false },
+    //                     scrollbar: { vertical: 'hidden' },
+    //                   }}
+    //                   onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+    //                   theme={monacoTheme}
+    //                   height="calc(100vh - 105px)"
+    //                   language="typescript"
+    //                   value={state.code}
+    //                   onChange={(val = '') => (state.code = val)}
+    //                 />
+    //               </div>
+    //             <div css={{ flexGrow: 1 }}>
+    //               {(['react', 'vue', 'svelte', 'solid', 'qwik'] as const).map((output) => (
+    //                 <div key={output} css={{ paddingTop: 15, height: '25%' }}>
+    //                   <MonacoEditor
+    //                     height="100%"
+    //                     options={{
+    //                       automaticLayout: true,
+    //                       overviewRulerBorder: false,
+    //                       foldingHighlight: false,
+    //                       renderLineHighlightOnlyWhenFocus: true,
+    //                       occurrencesHighlight: false,
+    //                       readOnly: getQueryParam('readOnly') !== 'false',
+    //                       minimap: { enabled: false },
+    //                       renderLineHighlight: 'none',
+    //                       selectionHighlight: false,
+    //                       scrollbar: { vertical: 'hidden' },
+    //                     }}
+    //                     theme={monacoTheme}
+    //                     language={
+    //                       output === 'json' || output === 'builder'
+    //                         ? 'json'
+    //                         : output === 'react' ||
+    //                           output === 'qwik' ||
+    //                           output === 'mitosis' ||
+    //                           output === 'qwik' ||
+    //                           output === 'solid'
+    //                         ? 'typescript'
+    //                         : 'html'
+    //                     }
+    //                     value={state.output[output]}
+    //                   />
+    //                 </div>
+    //               ))}
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     );
+  });
+}
