@@ -209,7 +209,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
     if (json.hooks.onMount?.code?.length) {
       svelteImports.push('onMount');
     }
-    if (json.hooks.onUpdate?.length) {
+    if (json.hooks.onUpdate?.filter((x) => !x.deps)?.length) {
       svelteImports.push('afterUpdate');
     }
     if (json.hooks.onUnMount?.code?.length) {
