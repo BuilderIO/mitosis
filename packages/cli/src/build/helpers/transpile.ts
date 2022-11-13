@@ -5,8 +5,12 @@ import { getFileExtensionForTarget } from './extensions';
 import { INPUT_EXTENSION_REGEX } from './inputs-extensions';
 
 /**
- * Remove `.lite` extensions from imports without having to load a slow parser like babel
- * E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+ * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
+ * E.g.
+ *
+ * convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+ *
+ * convert `import { foo } from './block.svelte';` -> `import { foo } from './block';`
  */
 export const transformImports = (target: Target, options: MitosisConfig) => (code: string) =>
   code
