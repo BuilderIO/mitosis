@@ -82,8 +82,8 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
     });
 
     monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
-      noSemanticValidation: true,
-      noSyntaxValidation: true,
+      noSemanticValidation: false,
+      noSyntaxValidation: false,
     });
 
     // add types
@@ -133,7 +133,7 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
       if (!result) {
         return;
       }
-      // monaco.editor.setModelMarkers(model, 'eslint', result.markers);
+      monaco.editor.setModelMarkers(model, 'eslint', result.markers);
     },
     2000,
     [props.value, editor],
@@ -150,7 +150,7 @@ export function JsxCodeEditor(props: MonacoEditorProps) {
         scrollbar: { vertical: 'hidden' },
         ...props.options,
       }}
-      language="javascript"
+      language="typescript"
       path="mitosis.tsx"
       {...props}
       onMount={(editor, monaco) => {
