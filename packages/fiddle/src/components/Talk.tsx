@@ -12,13 +12,10 @@ import {
   componentToVue3,
   MitosisComponent,
 } from '@builder.io/mitosis';
-import { createTheme, ThemeProvider, Typography } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Typography } from '@material-ui/core';
 import { useLocalObservable, useObserver } from 'mobx-react-lite';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
-import { breakpoints } from '../constants/breakpoints';
-import { colors } from '../constants/colors';
 import { defaultCode } from '../constants/templates/jsx-templates';
 import { theme } from '../constants/theme';
 import { getQueryParam } from '../functions/get-query-param';
@@ -27,7 +24,6 @@ import { localStorageSet } from '../functions/local-storage-set';
 import { setQueryParam } from '../functions/set-query-param';
 import { useEventListener } from '../hooks/use-event-listener';
 import { useReaction } from '../hooks/use-reaction';
-import { TextLink } from './TextLink';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { JsxCodeEditor } from './JsxCodeEditor';
@@ -304,45 +300,6 @@ const rowColumnToIndex = (str: string, position: Position): number => {
 };
 
 const debug = getQueryParam('debug') === 'true';
-
-const AlphaPreviewMessage = () => (
-  <ThemeProvider
-    theme={createTheme({
-      palette: {
-        type: 'dark',
-        primary: { main: colors.primary },
-      },
-    })}
-  >
-    <Alert
-      severity="info"
-      css={{
-        background: 'none',
-        fontSize: 15,
-      }}
-    >
-      Mitosis is in beta, please{' '}
-      <TextLink
-        css={{ color: 'inherit', textDecoration: 'underline' }}
-        href="https://github.com/BuilderIO/mitosis/issues"
-        target="_blank"
-      >
-        report bugs and share feedback
-      </TextLink>
-    </Alert>
-  </ThemeProvider>
-);
-
-const builderOptions = {
-  useDefaultStyles: false,
-  hideAnimateTab: true,
-};
-
-const smallBreakpoint = breakpoints.mediaQueries.small;
-
-const builderEnvParam = getQueryParam('builderEnv');
-
-const useSaveButton = getQueryParam('realTime') !== 'true';
 
 const TabLogo = (props: { src: string }) => {
   const size = 12;
@@ -732,6 +689,13 @@ export default function Fiddle() {
           }}
         >
           <div>
+            <button
+              onClick={() => {
+                theme.darkMode = !theme.darkMode;
+              }}
+            >
+              🌚
+            </button>
             <div>JSON examples:</div>
             <select
               name="pets"
