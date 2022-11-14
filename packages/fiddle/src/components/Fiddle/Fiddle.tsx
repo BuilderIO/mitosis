@@ -1,31 +1,4 @@
-import {
-  builderContentToMitosisComponent,
-  compileAwayBuilderComponents,
-  componentToAngular,
-  componentToAlpine,
-  componentToBuilder,
-  componentToCustomElement,
-  componentToHtml,
-  componentToMitosis,
-  componentToLiquid,
-  componentToReact,
-  componentToStencil,
-  componentToMarko,
-  componentToReactNative,
-  componentToSolid,
-  componentToRsc,
-  componentToSvelte,
-  componentToSwift,
-  componentToPreact,
-  componentToLit,
-  componentToQwik,
-  componentToTemplate,
-  mapStyles,
-  parseJsx,
-  componentToVue2,
-  componentToVue3,
-  parseSvelte,
-} from '@builder.io/mitosis';
+import type { MitosisComponent } from '@builder.io/mitosis';
 import {
   Button,
   createTheme,
@@ -47,29 +20,31 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { adapt } from 'webcomponents-in-react';
-import { breakpoints } from '../constants/breakpoints';
-import { colors } from '../constants/colors';
-import { defaultCode, templates } from '../constants/templates/jsx-templates';
+import { breakpoints } from '../../constants/breakpoints';
+import { colors } from '../../constants/colors';
+import { defaultCode, templates } from '../../constants/templates/jsx-templates';
 import {
   defaultCode as defaultSvelteCode,
   templates as svelteTemplates,
-} from '../constants/templates/svelte-templates';
-import { theme } from '../constants/theme';
-import { deleteQueryParam } from '../functions/delete-query-param';
-import { getQueryParam } from '../functions/get-query-param';
-import { localStorageGet } from '../functions/local-storage-get';
-import { localStorageSet } from '../functions/local-storage-set';
-import { setQueryParam } from '../functions/set-query-param';
-import { useEventListener } from '../hooks/use-event-listener';
-import { useReaction } from '../hooks/use-reaction';
-import { Show } from './Show';
-import { TextLink } from './TextLink';
+} from '../../constants/templates/svelte-templates';
+import { theme } from '../../constants/theme';
+import { deleteQueryParam } from '../../functions/delete-query-param';
+import { getQueryParam } from '../../functions/get-query-param';
+import { localStorageGet } from '../../functions/local-storage-get';
+import { localStorageSet } from '../../functions/local-storage-set';
+import { setQueryParam } from '../../functions/set-query-param';
+import { useEventListener } from '../../hooks/use-event-listener';
+import { useReaction } from '../../hooks/use-reaction';
+import { Show } from '../Show';
+import { TextLink } from '../TextLink';
 import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
-import { JsxCodeEditor } from './JsxCodeEditor';
-import { SvelteCodeEditor } from './SvelteCodeEditor';
-import { ToAlpineOptions } from '@builder.io/mitosis';
+import { JsxCodeEditor } from '../JsxCodeEditor';
+import { SvelteCodeEditor } from '../SvelteCodeEditor';
+
+const generateCode = () => import('./generate').then((mod) => mod.generateCode);
+const mitosisCore = () => import('@builder.io/mitosis');
 
 type Position = { row: number; column: number };
 
@@ -220,18 +195,6 @@ export default class FooComponent {
 }
 `;
 
-const plugins = [
-  compileAwayBuilderComponents(),
-  mapStyles({
-    map: (styles) => ({
-      ...styles,
-      boxSizing: undefined,
-      flexShrink: undefined,
-      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
-    }),
-  }),
-];
-
 type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
@@ -315,9 +278,11 @@ export default function Fiddle() {
       if (!builderJson) {
         return;
       }
-      const jsxJson = builderContentToMitosisComponent(builderJson);
-      state.code = componentToMitosis()({ component: jsxJson });
-      state.pendingBuilderChange = null;
+      mitosisCore().then((mitosis) => {
+        const jsxJson = mitosis.builderContentToMitosisComponent(builderJson);
+        state.code = mitosis.componentToMitosis()({ component: jsxJson });
+        state.pendingBuilderChange = null;
+      });
     },
 
     async updateOutput() {
@@ -325,7 +290,9 @@ export default function Fiddle() {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
 
-        let json;
+        let json: MitosisComponent;
+
+        const { parseSvelte, parseJsx } = await mitosisCore();
 
         switch (state.inputTab) {
           case 'svelte':
@@ -340,100 +307,35 @@ export default function Fiddle() {
         let commonOptions: { typescript: boolean } = {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
         };
-        let alpineOptions: ToAlpineOptions = {
-          useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
-          inlineState: this.options.alpineInline === 'true',
-        };
 
-        state.output =
-          state.outputTab === 'liquid'
-            ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'alpine'
-            ? componentToAlpine({ plugins, ...commonOptions, ...alpineOptions })({
-                component: json,
-              })
-            : state.outputTab === 'html'
-            ? componentToHtml({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'webcomponents'
-            ? componentToCustomElement({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'preact'
-            ? componentToPreact({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'lit'
-            ? componentToLit({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'rsc'
-            ? componentToRsc({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'qwik'
-            ? componentToQwik({ plugins, ...commonOptions })({ component: json })
-                // Remove the comment at the
-                .replace('// GENERATED BY MITOSIS', '')
-                .trim()
-            : state.outputTab === 'react'
-            ? componentToReact({
+        const generateOptions = () => {
+          switch (state.outputTab) {
+            case 'alpine':
+              return {
+                useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
+                inlineState: this.options.alpineInline === 'true',
+              };
+            case 'react':
+              return {
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'stencil'
-            ? componentToStencil({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'marko'
-            ? componentToMarko({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'swift'
-            ? componentToSwift()({ component: json })
-            : state.outputTab === 'reactNative'
-            ? componentToReactNative({
-                stateType: state.options.reactStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'template'
-            ? componentToTemplate({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'solid'
-            ? componentToSolid({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'angular'
-            ? componentToAngular({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'svelte'
-            ? componentToSvelte({
-                stateType: state.options.svelteStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : // TODO: add qwik support back again
-            // : state.outputTab === 'qwik'
-            // ? (
-            //     await componentToQwik(json, {
-            //       plugins,
-            //     })
-            //   ).files.find((file) => file.path.endsWith('template.tsx'))!
-            //     ?.contents
-            state.outputTab === 'mitosis'
-            ? componentToMitosis()({ component: json })
-            : state.outputTab === 'json'
-            ? JSON.stringify(json, null, 2)
-            : state.outputTab === 'builder'
-            ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : state.options.vueVersion === '2'
-            ? componentToVue2({ plugins, api: state.options.vueApi, ...commonOptions })({
-                component: json,
-                path: '',
-              })
-            : componentToVue3({
-                plugins,
-                api: state.options.vueApi,
-                ...commonOptions,
-              })({
-                component: json,
-                path: '',
-              });
+              };
+            case 'reactNative':
+              return { stateType: state.options.reactStateType };
+            case 'svelte':
+              return { stateType: state.options.svelteStateType };
+            case 'vue':
+              return { api: state.options.vueApi };
+            default:
+              return {};
+          }
+        };
+
+        state.output = (await generateCode())({
+          output: state.outputTab,
+          options: { ...generateOptions(), ...commonOptions },
+          vueVersion: state.options.vueVersion,
+        })({ component: json, path: '' });
 
         const newBuilderData = componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
