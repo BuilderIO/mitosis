@@ -18,4 +18,4 @@ export const checkIsMitosisComponentFilePath = (filePath: string) => {
 export const INPUT_EXTENSION_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))/g;
 
 // Adds trailing quotes to the end of import paths
-export const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))['"]/g;
+export const INPUT_EXTENSION_IMPORT_REGEX = /\.(svelte|(lite(\.tsx|\.jsx)?))(?<quote>['"])/g;
