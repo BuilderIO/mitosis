@@ -2,10 +2,15 @@ import * as esbuild from 'esbuild';
 import { readFile } from 'fs-extra';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
+import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
 
 /**
- * Remove `.lite` extensions from imports without having to load a slow parser like babel
- * E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+ * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
+ * E.g.
+ *
+ * convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
+ *
+ * convert `import { foo } from './block.svelte';` -> `import { foo } from './block';`
  */
 export const transformImports = (target: Target, options: MitosisConfig) => (code: string) =>
   code
@@ -16,13 +21,9 @@ export const transformImports = (target: Target, options: MitosisConfig) => (cod
       /\.context\.lite['"]/g,
       `.context.js$1`,
     )
+    // afterwards, we replace all component imports with the correct file extension
     .replace(
-      // afterwards, we replace all `.lite` imports with the correct file extension
-      /\.lite['"]/g,
-      `${getFileExtensionForTarget({ type: 'import', target, options })}$1`,
-    )
-    .replace(
-      new RegExp(`.${options.extension}['"]`, 'g'),
+      INPUT_EXTENSION_IMPORT_REGEX,
       `${getFileExtensionForTarget({ type: 'import', target, options })}`,
     );
 
@@ -52,7 +53,7 @@ export const transpile = async ({
        * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
        * a mitosis `.lite.tsx` file.
        */
-      loader: path.endsWith('.tsx') ? 'tsx' : 'ts',
+      loader: checkIsMitosisComponentFilePath(path) ? 'tsx' : 'ts',
       target: 'es6',
     });
 
