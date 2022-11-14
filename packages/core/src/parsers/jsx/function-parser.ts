@@ -23,12 +23,7 @@ export function generateUseStyleCode(expression: babel.types.CallExpression) {
 function processDefaultPropsValue(value: any) {
   if (types.isFunctionExpression(value) || types.isArrowFunctionExpression(value)) {
     const code = generate(value)
-      .code.trim()
-      // Remove arbitrary block wrapping if any
-      // AKA
-      //  { console.log('hi') } -> console.log('hi')
-      .replace(/^{/, '')
-      .replace(/}$/, '');
+      .code.trim();
     return { type: 'method', code };
   } else {
     return { type: 'property', code: value.value };

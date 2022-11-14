@@ -402,7 +402,7 @@ export const componentToAngular: TranspilerGenerator<ToAngularOptions> =
             ? json.defaultProps![prop]?.code
             : {};
           const isMethod = json.defaultProps![prop]?.type === 'method';
-          return `${prop}: ${isMethod ? `${value}}` : json5.stringify(value)}`;
+          return `${prop}: ${isMethod ? `${value}` : json5.stringify(value)}`;
         })
         .join(',');
       return `const defaultProps = {${defalutPropsString}};\n`;

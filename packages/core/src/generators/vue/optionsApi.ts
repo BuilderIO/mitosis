@@ -155,7 +155,7 @@ export function generateOptionsApiScript(
             ? component.defaultProps![prop]?.code
             : {};
           const isMethod = component.defaultProps![prop]?.type === 'method';
-          return `${prop}: { default: ${isMethod ? `${value}}` : json5.stringify(value)}}`;
+          return `${prop}: { default: ${isMethod ? `${value}` : json5.stringify(value)}}`;
         })
         .join(',');
 

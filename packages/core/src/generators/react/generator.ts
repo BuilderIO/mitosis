@@ -509,7 +509,7 @@ const _componentToReact = (
       .map((prop) => {
         const value = json.defaultProps!.hasOwnProperty(prop) ? json.defaultProps![prop]?.code : {};
         const isMethod = json.defaultProps![prop]?.type === 'method';
-        return `${prop}: ${isMethod ? `${value}}` : json5.stringify(value)}`;
+        return `${prop}: ${isMethod ? `${value}` : json5.stringify(value)}`;
       })
       .join(',');
     return `${json.name || 'MyComponent'}.defaultProps = {${defalutPropsString}};`;

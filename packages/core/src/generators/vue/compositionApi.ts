@@ -26,7 +26,7 @@ const getCompositionPropDefinition = ({
           ? component.defaultProps![prop]?.code
           : {};
         const isMethod = component.defaultProps![prop]?.type === 'method';
-        return `${prop}: ${isMethod ? `${value}}` : json5.stringify(value)}`;
+        return `${prop}: ${isMethod ? `${value}` : json5.stringify(value)}`;
       })
       .join(',');
     str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;

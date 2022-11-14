@@ -246,7 +246,7 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
           if (json.defaultProps && json.defaultProps.hasOwnProperty(name)) {
             propDeclaration += `=${
               json.defaultProps[name]?.type === 'method'
-                ? `${json.defaultProps[name]?.code}}`
+                ? `${json.defaultProps[name]?.code}`
                 : json5.stringify(json.defaultProps[name]?.code)
             }`;
           }
