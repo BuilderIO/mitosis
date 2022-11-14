@@ -60,7 +60,7 @@ function eslint(code: string, version: any) {
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
-export function CodeEditor(props: MonacoEditorProps) {
+export function JsxCodeEditor(props: MonacoEditorProps) {
   const monaco = useMonaco();
 
   useEffect(() => {

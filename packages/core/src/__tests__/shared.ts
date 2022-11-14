@@ -1,102 +1,122 @@
 import { BaseTranspilerOptions, TranspilerGenerator } from '../types/transpiler';
 import { Target } from '../types/config';
 import { parseJsx } from '../parsers/jsx';
+import { MitosisComponent, parseSvelte } from '..';
 
-const getRawFile = (path: string) => import(`${path}.tsx?raw`).then((x) => x.default as string);
+const getRawFile = (path: string) => import(`${path}?raw`).then((x) => x.default as string);
 
 type RawFile = ReturnType<typeof getRawFile>;
 
-const basicForShow = getRawFile('./data/basic-for-show.raw');
-const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw');
-const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw');
-const basicContext = getRawFile('./data/basic-context.raw');
-const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw');
-const basicOutputs = getRawFile('./data/basic-outputs.raw');
-const subComponent = getRawFile('./data/sub-component.raw');
-const componentWithContext = getRawFile('./data/context/component-with-context.raw');
+const basicForShow = getRawFile('./data/basic-for-show.raw.tsx');
+const basicBooleanAttribute = getRawFile('./data/basic-boolean-attribute.raw.tsx');
+const basicOnMountUpdate = getRawFile('./data/basic-onMount-update.raw.tsx');
+const basicContext = getRawFile('./data/basic-context.raw.tsx');
+const basicOutputsMeta = getRawFile('./data/basic-outputs-meta.raw.tsx');
+const basicOutputs = getRawFile('./data/basic-outputs.raw.tsx');
+const subComponent = getRawFile('./data/sub-component.raw.tsx');
+const componentWithContext = getRawFile('./data/context/component-with-context.raw.tsx');
 
-const basic = getRawFile('./data/basic.raw');
-const basicAttribute = getRawFile('./data/basic-attribute.raw');
-const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw');
-const basicChildComponent = getRawFile('./data/basic-child-component.raw');
-const basicFor = getRawFile('./data/basic-for.raw');
-const basicRef = getRawFile('./data/basic-ref.raw');
-const basicForwardRef = getRawFile('./data/basic-forwardRef.raw');
-const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw');
-const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw');
-const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw');
-const propsDestructure = getRawFile('./data/basic-props-destructure.raw');
-const nestedStyles = getRawFile('./data/nested-styles.raw');
+const expressionState = getRawFile('./data/expression-state.raw.tsx');
+const contentState = getRawFile('./data/context-state.raw.tsx');
+
+const basic = getRawFile('./data/basic.raw.tsx');
+const basicAttribute = getRawFile('./data/basic-attribute.raw.tsx');
+const basicMitosis = getRawFile('./data/basic-custom-mitosis-package.raw.tsx');
+const basicChildComponent = getRawFile('./data/basic-child-component.raw.tsx');
+const basicFor = getRawFile('./data/basic-for.raw.tsx');
+const basicRef = getRawFile('./data/basic-ref.raw.tsx');
+const basicForwardRef = getRawFile('./data/basic-forwardRef.raw.tsx');
+const basicForwardRefMetadata = getRawFile('./data/basic-forwardRef-metadata.raw.tsx');
+const basicRefPrevious = getRawFile('./data/basic-ref-usePrevious.raw.tsx');
+const basicRefAssignment = getRawFile('./data/basic-ref-assignment.raw.tsx');
+const propsDestructure = getRawFile('./data/basic-props-destructure.raw.tsx');
+const nestedStyles = getRawFile('./data/nested-styles.raw.tsx');
 const preserveExportOrLocalStatement = getRawFile(
-  './data/basic-preserve-export-or-local-statement.raw',
+  './data/basic-preserve-export-or-local-statement.raw.tsx',
 );
-const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw');
+const arrowFunctionInUseStore = getRawFile('./data/arrow-function-in-use-store.raw.tsx');
 
-const propsType = getRawFile('./data/types/component-props-type.raw');
-const propsInterface = getRawFile('./data/types/component-props-interface.raw');
-const preserveTyping = getRawFile('./data/types/preserve-typing.raw');
-const typeDependency = getRawFile('./data/types/type-dependency.raw');
+const propsType = getRawFile('./data/types/component-props-type.raw.tsx');
+const propsInterface = getRawFile('./data/types/component-props-interface.raw.tsx');
+const preserveTyping = getRawFile('./data/types/preserve-typing.raw.tsx');
+const typeDependency = getRawFile('./data/types/type-dependency.raw.tsx');
 
-const defaultProps = getRawFile('./data/default-props/default-props.raw');
+const defaultProps = getRawFile('./data/default-props/default-props.raw.tsx');
 const defaultPropsOutsideComponent = getRawFile(
-  './data/default-props/default-props-outside-component.raw',
+  './data/default-props/default-props-outside-component.raw.tsx',
 );
 
-const classRaw = getRawFile('./data/styles/class.raw');
-const className = getRawFile('./data/styles/className.raw');
-const classAndClassName = getRawFile('./data/styles/class-and-className.raw');
-const classState = getRawFile('./data/styles/classState.raw');
-const useStyle = getRawFile('./data/styles/use-style.raw');
-const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw');
-const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw');
+const classRaw = getRawFile('./data/styles/class.raw.tsx');
+const className = getRawFile('./data/styles/className.raw.tsx');
+const classAndClassName = getRawFile('./data/styles/class-and-className.raw.tsx');
+const classState = getRawFile('./data/styles/classState.raw.tsx');
+const useStyle = getRawFile('./data/styles/use-style.raw.tsx');
+const useStyleOutsideComponent = getRawFile('./data/styles/use-style-outside-component.raw.tsx');
+const useStyleAndCss = getRawFile('./data/styles/use-style-and-css.raw.tsx');
 
-const button = getRawFile('./data/blocks/button.raw');
-const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw');
-const columns = getRawFile('./data/blocks/columns.raw');
-const contentSlotHtml = getRawFile('./data/blocks/content-slot-html.raw');
-const contentSlotJsx = getRawFile('./data/blocks/content-slot-jsx.raw');
-const customCode = getRawFile('./data/blocks/custom-code.raw');
-const formBlock = getRawFile('./data/blocks/form.raw');
-const image = getRawFile('./data/blocks/image.raw');
-const imageState = getRawFile('./data/blocks/img-state.raw');
-const img = getRawFile('./data/blocks/img.raw');
-const inputBlock = getRawFile('./data/blocks/input.raw');
-const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw');
-const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw');
-const onInit = getRawFile('./data/blocks/onInit.raw');
-const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw');
-const onMount = getRawFile('./data/blocks/onMount.raw');
-const onUpdate = getRawFile('./data/blocks/onUpdate.raw');
-const onUpdateWithDeps = getRawFile('./data/blocks/onUpdateWithDeps.raw');
-const rawText = getRawFile('./data/blocks/raw-text.raw');
-const section = getRawFile('./data/blocks/section.raw');
-const sectionState = getRawFile('./data/blocks/section-state.raw');
-const selectBlock = getRawFile('./data/blocks/select.raw');
+const button = getRawFile('./data/blocks/button.raw.tsx');
+const classNameJsx = getRawFile('./data/blocks/classname-jsx.raw.tsx');
+const columns = getRawFile('./data/blocks/columns.raw.tsx');
+const contentSlotHtml = getRawFile('./data/blocks/content-slot-html.raw.tsx');
+const contentSlotJsx = getRawFile('./data/blocks/content-slot-jsx.raw.tsx');
+const customCode = getRawFile('./data/blocks/custom-code.raw.tsx');
+const formBlock = getRawFile('./data/blocks/form.raw.tsx');
+const image = getRawFile('./data/blocks/image.raw.tsx');
+const imageState = getRawFile('./data/blocks/img-state.raw.tsx');
+const img = getRawFile('./data/blocks/img.raw.tsx');
+const inputBlock = getRawFile('./data/blocks/input.raw.tsx');
+const multipleOnUpdate = getRawFile('./data/blocks/multiple-onUpdate.raw.tsx');
+const multipleOnUpdateWithDeps = getRawFile('./data/blocks/multiple-onUpdateWithDeps.raw.tsx');
+const onInit = getRawFile('./data/blocks/onInit.raw.tsx');
+const onInitonMount = getRawFile('./data/blocks/onInit-onMount.raw.tsx');
+const onMount = getRawFile('./data/blocks/onMount.raw.tsx');
+const onUpdate = getRawFile('./data/blocks/onUpdate.raw.tsx');
+const onUpdateWithDeps = getRawFile('./data/blocks/onUpdateWithDeps.raw.tsx');
+const rawText = getRawFile('./data/blocks/raw-text.raw.tsx');
+const section = getRawFile('./data/blocks/section.raw.tsx');
+const sectionState = getRawFile('./data/blocks/section-state.raw.tsx');
+const selectBlock = getRawFile('./data/blocks/select.raw.tsx');
 const selfRefCompWChildren = getRawFile(
-  './data/blocks/self-referencing-component-with-children.raw',
+  './data/blocks/self-referencing-component-with-children.raw.tsx',
 );
-const selfRefComp = getRawFile('./data/blocks/self-referencing-component.raw');
-const slotHtml = getRawFile('./data/blocks/slot-html.raw');
-const slotJsx = getRawFile('./data/blocks/slot-jsx.raw');
-const stamped = getRawFile('./data/blocks/stamped-io.raw');
-const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw');
-const text = getRawFile('./data/blocks/text.raw');
-const textarea = getRawFile('./data/blocks/textarea.raw');
-const video = getRawFile('./data/blocks/video.raw');
+const selfRefComp = getRawFile('./data/blocks/self-referencing-component.raw.tsx');
+const slotHtml = getRawFile('./data/blocks/slot-html.raw.tsx');
+const slotJsx = getRawFile('./data/blocks/slot-jsx.raw.tsx');
+const stamped = getRawFile('./data/blocks/stamped-io.raw.tsx');
+const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw.tsx');
+const text = getRawFile('./data/blocks/text.raw.tsx');
+const textarea = getRawFile('./data/blocks/textarea.raw.tsx');
+const video = getRawFile('./data/blocks/video.raw.tsx');
 
-const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw');
-const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw');
-const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw');
-const spreadProps = getRawFile('./data/spread/spread-props.raw');
+const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw.tsx');
+const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw.tsx');
+const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw.tsx');
+const spreadProps = getRawFile('./data/spread/spread-props.raw.tsx');
 
-const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw');
+const builderRenderContent = getRawFile('./data/blocks/builder-render-content.raw.tsx');
 
-const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw');
-const renderContentExample = getRawFile('./data/render-content.raw');
+const rootFragmentMultiNode = getRawFile('./data/blocks/root-fragment-multi-node.raw.tsx');
+const renderContentExample = getRawFile('./data/render-content.raw.tsx');
 
 const path = 'test-path';
 
 type Tests = { [index: string]: RawFile };
+
+const SVELTE_SYNTAX_TESTS: Tests = {
+  basic: getRawFile('./syntax/svelte/basic.raw.svelte'),
+  bindGroup: getRawFile('./syntax/svelte/bind-group.raw.svelte'),
+  bindProperty: getRawFile('./syntax/svelte/bind-property.raw.svelte'),
+  classDirective: getRawFile('./syntax/svelte/class-directive.raw.svelte'),
+  context: getRawFile('./syntax/svelte/context.raw.svelte'),
+  each: getRawFile('./syntax/svelte/each.raw.svelte'),
+  html: getRawFile('./syntax/svelte/html.raw.svelte'),
+  ifElse: getRawFile('./syntax/svelte/if-else.raw.svelte'),
+  imports: getRawFile('./syntax/svelte/imports.raw.svelte'),
+  lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),
+  reactive: getRawFile('./syntax/svelte/reactive.raw.svelte'),
+  style: getRawFile('./syntax/svelte/style.raw.svelte'),
+  textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
+};
 
 const BASIC_TESTS: Tests = {
   Basic: basic,
@@ -132,7 +152,7 @@ const BASIC_TESTS: Tests = {
   defaultPropsOutsideComponent,
   preserveTyping: preserveTyping,
   typeDependency,
-  defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw'),
+  defaultValsWithTypes: getRawFile('./data/types/component-with-default-values-types.raw.tsx'),
   'import types': builderRenderContent,
   subComponent,
   nestedStyles,
@@ -160,6 +180,8 @@ const BASIC_TESTS: Tests = {
   spreadProps,
   renderContentExample,
   arrowFunctionInUseStore,
+  expressionState,
+  contentState,
 };
 
 const SLOTS_TESTS: Tests = {
@@ -190,21 +212,21 @@ const FORWARD_REF_TESTS: Tests = {
 };
 
 const SHOW_TESTS: Tests = {
-  rootShow: getRawFile('./data/blocks/rootShow.raw'),
-  nestedShow: getRawFile('./data/show/nested-show.raw'),
-  showWithFor: getRawFile('./data/show/show-with-for.raw'),
+  rootShow: getRawFile('./data/blocks/rootShow.raw.tsx'),
+  nestedShow: getRawFile('./data/show/nested-show.raw.tsx'),
+  showWithFor: getRawFile('./data/show/show-with-for.raw.tsx'),
 };
 
 const ADVANCED_REF: Tests = {
-  AdvancedRef: getRawFile('./data/advanced-ref.raw'),
+  AdvancedRef: getRawFile('./data/advanced-ref.raw.tsx'),
 };
 
 const ON_UPDATE_RETURN: Tests = {
-  basicOnUpdateReturn: getRawFile('./data/basic-onUpdate-return.raw'),
+  basicOnUpdateReturn: getRawFile('./data/basic-onUpdate-return.raw.tsx'),
 };
 
 const IMPORT_TEST: Tests = {
-  importRaw: getRawFile('./data/import.raw'),
+  importRaw: getRawFile('./data/import.raw.tsx'),
 };
 
 const CONTEXT_TEST: Tests = {
@@ -224,7 +246,7 @@ const JSX_TESTS: Tests[] = [
   CONTEXT_TEST,
 ];
 
-const TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
+const JSX_TESTS_FOR_TARGET: Partial<Record<Target, Tests[]>> = {
   alpine: [
     CONTEXT_TEST,
     BASIC_TESTS,
@@ -430,38 +452,60 @@ export const runTestsForTarget = <X extends BaseTranspilerOptions>({
   generator: TranspilerGenerator<X>;
   options: X;
 }) => {
-  const testsArray = TESTS_FOR_TARGET[target];
-
-  test('Remove Internal mitosis package', async () => {
-    const component = parseJsx(await basicMitosis, {
-      compileAwayPackages: ['@dummy/custom-mitosis'],
-    });
-    const output = generator(options)({ component, path });
-    expect(output).toMatchSnapshot();
-  });
-
   const configurations: { options: X; testName: string }[] = [
     { options: { ...options, typescript: false }, testName: 'Javascript Test' },
     { options: { ...options, typescript: true }, testName: 'Typescript Test' },
   ];
 
-  if (testsArray) {
-    configurations.forEach(({ options, testName }) => {
-      describe(testName, () => {
-        testsArray.forEach((tests) => {
-          Object.keys(tests).forEach((key) => {
-            test(key, async () => {
-              const component = parseJsx(await tests[key], { typescript: options.typescript });
-              const getOutput = () => generator(options)({ component, path });
-              try {
-                expect(getOutput()).toMatchSnapshot();
-              } catch (error) {
-                expect(getOutput).toThrowErrorMatchingSnapshot();
-              }
+  type ParserConfig = {
+    name: 'jsx' | 'svelte';
+    parser: (code: string) => Promise<MitosisComponent>;
+    testsArray?: Tests[];
+  };
+
+  const parsers: ParserConfig[] = [
+    {
+      name: 'jsx',
+      parser: async (x) => parseJsx(x, { typescript: options.typescript }),
+      testsArray: JSX_TESTS_FOR_TARGET[target],
+    },
+    {
+      name: 'svelte',
+      parser: async (x) => parseSvelte(x),
+      testsArray: [SVELTE_SYNTAX_TESTS],
+    },
+  ];
+
+  for (const { name, parser, testsArray } of parsers) {
+    if (testsArray) {
+      describe(name, () => {
+        configurations.forEach(({ options, testName }) => {
+          if (name === 'jsx' && options.typescript === false) {
+            test('Remove Internal mitosis package', async () => {
+              const component = parseJsx(await basicMitosis, {
+                compileAwayPackages: ['@dummy/custom-mitosis'],
+              });
+              const output = generator(options)({ component, path });
+              expect(output).toMatchSnapshot();
+            });
+          }
+          describe(testName, () => {
+            testsArray.forEach((tests) => {
+              Object.keys(tests).forEach((key) => {
+                test(key, async () => {
+                  const component = await parser(await tests[key]);
+                  const getOutput = () => generator(options)({ component, path });
+                  try {
+                    expect(getOutput()).toMatchSnapshot();
+                  } catch (error) {
+                    expect(getOutput).toThrowErrorMatchingSnapshot();
+                  }
+                });
+              });
             });
           });
         });
       });
-    });
+    }
   }
 };

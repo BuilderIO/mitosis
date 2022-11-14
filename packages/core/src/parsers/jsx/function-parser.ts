@@ -9,7 +9,7 @@ import { MitosisNode } from '../../types/mitosis-node';
 import { HOOKS } from '../../constants/hooks';
 import { parseStateObjectToMitosisState } from './state';
 import { Context } from './types';
-import { parseCodeJson } from './helpers';
+import { parseCode, parseCodeJson } from './helpers';
 import { getPropsTypeRef } from './component-types';
 import { jsxElementToJson } from './element-parser';
 import { METADATA_HOOK_NAME } from './hooks';
@@ -184,14 +184,14 @@ export const componentFunctionToJson = (
             // useState(() => true)
             if (types.isArrowFunctionExpression(value)) {
               state[varName] = {
-                code: parseCodeJson(value.body),
+                code: parseCode(value.body),
                 type: 'function',
               };
             } else {
               // Value as init, like:
               // useState(true)
               state[varName] = {
-                code: parseCodeJson(value),
+                code: parseCode(value),
                 type: 'property',
               };
             }

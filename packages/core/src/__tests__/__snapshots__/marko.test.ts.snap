@@ -1,6 +1,64 @@
 // Vitest Snapshot v1
 
-exports[`Marko > Javascript Test > AdvancedRef 1`] = `
+exports[`Marko > formatting 1`] = `
+"
+      <div>
+        <if _=\\"input.foo === 'bar'\\">
+          Hello
+        </if>
+        <for |items| of=\\"(some.long ? expression : yo)\\">
+          World
+        </for>
+        <input 
+          placeholder=\\"Hello world...\\"
+          value=\\"(this.state.name)\\" 
+          on-click=\\"(event => {&#10;            console.log('hello', &quot;world&quot;)&#10;          })\\"
+          on-input=\\"(event => this.state.name = event.target.value)\\" /> 
+          
+          Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>"
+`;
+
+exports[`Marko > formatting 2`] = `
+"
+      <div>
+        <if(input.foo === 'bar')>
+          Hello
+        </if>
+        <for|items| of=(some.long ? expression : yo)>
+          World
+        </for>
+        <input 
+          placeholder=\\"Hello world...\\"
+          value=(this.state.name) 
+          on-click=(event => {
+            console.log('hello', \\"world\\")
+          })
+          on-input=(event => this.state.name = event.target.value) /> 
+          
+          Hello! I can run in React, Vue, Solid, or Liquid!
+      </div>"
+`;
+
+exports[`Marko > formatting 3`] = `
+"<div>
+  <if(input.foo === 'bar')> Hello </if>
+  <for|items| of=(some.long ? expression : yo)> World </for>
+  <input
+    placeholder=\\"Hello world...\\"
+    value=(this.state.name)
+    on-click=(event => {
+            console.log('hello', \\"world\\")
+          })
+    on-input=(event => this.state.name = event.target.value)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>
+"
+`;
+
+exports[`Marko > jsx > Javascript Test > AdvancedRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
@@ -27,14 +85,14 @@ exports[`Marko > Javascript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-0615816f {
+  .input-08f2a5b6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-0615816f\\"
+      class=\\"input-08f2a5b6\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -55,7 +113,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Basic 1`] = `
+exports[`Marko > jsx > Javascript Test > Basic 1`] = `
 "export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -71,11 +129,11 @@ class {
 }
 
 style { 
-  .div-5fbb42bc {
+  .div-6f8bbe5f {
     padding: 10px;
   }
 }
-<div class=\\"test div-5fbb42bc\\">
+<div class=\\"test div-6f8bbe5f\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -85,7 +143,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Basic 2`] = `
+exports[`Marko > jsx > Javascript Test > Basic 2`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -109,7 +167,7 @@ exports[`Marko > Javascript Test > Basic 2`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Basic Context 1`] = `
+exports[`Marko > jsx > Javascript Test > Basic Context 1`] = `
 "import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 class {
@@ -136,7 +194,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Basic OnMount Update 1`] = `
+exports[`Marko > jsx > Javascript Test > Basic OnMount Update 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -150,7 +208,7 @@ exports[`Marko > Javascript Test > Basic OnMount Update 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > Basic Outputs 1`] = `
+exports[`Marko > jsx > Javascript Test > Basic Outputs 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -165,7 +223,7 @@ exports[`Marko > Javascript Test > Basic Outputs 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > Basic Outputs Meta 1`] = `
+exports[`Marko > jsx > Javascript Test > Basic Outputs Meta 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -180,13 +238,13 @@ exports[`Marko > Javascript Test > Basic Outputs Meta 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > BasicAttribute 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicAttribute 1`] = `
 "class {}
 
 <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck=(true) />"
 `;
 
-exports[`Marko > Javascript Test > BasicBooleanAttribute 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 class {}
@@ -202,7 +260,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Javascript Test > BasicChildComponent 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicChildComponent 1`] = `
 "import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -224,7 +282,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > BasicFor 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicFor 1`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -250,7 +308,7 @@ exports[`Marko > Javascript Test > BasicFor 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > BasicRef 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
@@ -273,14 +331,14 @@ exports[`Marko > Javascript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-a7d46d4c {
+  .input-37a1283e {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-a7d46d4c\\"
+      class=\\"input-37a1283e\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -301,7 +359,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > BasicRefAssignment 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicRefAssignment 1`] = `
 "class {
   handlerClick = function handlerClick(event) {
     event.preventDefault();
@@ -315,7 +373,7 @@ exports[`Marko > Javascript Test > BasicRefAssignment 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > BasicRefPrevious 1`] = `
+exports[`Marko > jsx > Javascript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -346,7 +404,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Button 1`] = `
+exports[`Marko > jsx > Javascript Test > Button 1`] = `
 "class {}
 
 <div>
@@ -364,7 +422,7 @@ exports[`Marko > Javascript Test > Button 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Columns 1`] = `
+exports[`Marko > jsx > Javascript Test > Columns 1`] = `
 "class {
   getColumns() {
     return this.input.columns || [];
@@ -412,7 +470,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > ContentSlotHtml 1`] = `
+exports[`Marko > jsx > Javascript Test > ContentSlotHtml 1`] = `
 "class {}
 
 <div>
@@ -428,7 +486,7 @@ exports[`Marko > Javascript Test > ContentSlotHtml 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > ContentSlotJSX 1`] = `
+exports[`Marko > jsx > Javascript Test > ContentSlotJSX 1`] = `
 "class {}
 
 <div>
@@ -442,7 +500,7 @@ exports[`Marko > Javascript Test > ContentSlotJSX 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > CustomCode 1`] = `
+exports[`Marko > jsx > Javascript Test > CustomCode 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -507,7 +565,7 @@ exports[`Marko > Javascript Test > CustomCode 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Embed 1`] = `
+exports[`Marko > jsx > Javascript Test > Embed 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -572,7 +630,7 @@ exports[`Marko > Javascript Test > Embed 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Form 1`] = `
+exports[`Marko > jsx > Javascript Test > Form 1`] = `
 "import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
 import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
@@ -814,7 +872,7 @@ class {
 }
 
 style { 
-  .pre-15416702 {
+  .pre-2a3c5c5a {
     padding: 10px;
     color: red;
     text-align: center;
@@ -849,7 +907,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-15416702\\">
+    <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -864,7 +922,7 @@ style {
 </form>"
 `;
 
-exports[`Marko > Javascript Test > Image 1`] = `
+exports[`Marko > jsx > Javascript Test > Image 1`] = `
 "class {
   setLoaded() {
     this.state.imageLoaded = true;
@@ -919,7 +977,7 @@ exports[`Marko > Javascript Test > Image 1`] = `
 }
 
 style { 
-  .img-1567cd2c {
+  .img-f006c488 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -932,7 +990,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1567cd2c')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -946,7 +1004,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Image State 1`] = `
+exports[`Marko > jsx > Javascript Test > Image State 1`] = `
 "class {
   onCreate() {
     this.state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
@@ -960,7 +1018,7 @@ exports[`Marko > Javascript Test > Image State 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Img 1`] = `
+exports[`Marko > jsx > Javascript Test > Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -976,7 +1034,7 @@ class {}
 />"
 `;
 
-exports[`Marko > Javascript Test > Input 1`] = `
+exports[`Marko > jsx > Javascript Test > Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -993,14 +1051,14 @@ class {}
 />"
 `;
 
-exports[`Marko > Javascript Test > RawText 1`] = `
+exports[`Marko > jsx > Javascript Test > RawText 1`] = `
 "class {}
 
 <span class=(input.attributes?.class || input.attributes?.className)
   >$!{input.text || ''}</span>"
 `;
 
-exports[`Marko > Javascript Test > Section 1`] = `
+exports[`Marko > jsx > Javascript Test > Section 1`] = `
 "class {}
 
 <section
@@ -1013,7 +1071,7 @@ exports[`Marko > Javascript Test > Section 1`] = `
 </section>"
 `;
 
-exports[`Marko > Javascript Test > Section 2`] = `
+exports[`Marko > jsx > Javascript Test > Section 2`] = `
 "class {
   onCreate(input) {
     this.state = { max: 42, items: [42] };
@@ -1033,7 +1091,7 @@ exports[`Marko > Javascript Test > Section 2`] = `
   </for></if>"
 `;
 
-exports[`Marko > Javascript Test > Select 1`] = `
+exports[`Marko > jsx > Javascript Test > Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -1053,7 +1111,7 @@ class {}
 </select>"
 `;
 
-exports[`Marko > Javascript Test > SlotHtml 1`] = `
+exports[`Marko > jsx > Javascript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 class {}
@@ -1065,7 +1123,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Javascript Test > SlotJsx 1`] = `
+exports[`Marko > jsx > Javascript Test > SlotJsx 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 class {}
@@ -1075,7 +1133,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Stamped.io 1`] = `
+exports[`Marko > jsx > Javascript Test > Stamped.io 1`] = `
 "import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
@@ -1105,16 +1163,16 @@ class {
 }
 
 style { 
-  .input-ce46b830 {
+  .input-53151ff6 {
     display: block;
   }
-  .textarea-ce46b830 {
+  .textarea-53151ff6 {
     display: block;
   }
-  .button-ce46b830 {
+  .button-53151ff6 {
     display: block;
   }
-  .review-ce46b830 {
+  .review-53151ff6 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -1122,7 +1180,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-ce46b830 {
+  .img-53151ff6 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -1135,13 +1193,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-ce46b830\\" />
+    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-ce46b830\\"
+      class=\\"textarea-53151ff6\\"
     ></textarea>
     <button
-      class=\\"button-ce46b830\\"
+      class=\\"button-53151ff6\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -1151,8 +1209,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-ce46b830\\" key=(review.id)>
-      <img class=\\"img-ce46b830\\" src=(review.avatar) />
+    <div class=\\"review-53151ff6\\" key=(review.id)>
+      <img class=\\"img-53151ff6\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -1166,13 +1224,13 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Submit 1`] = `
+exports[`Marko > jsx > Javascript Test > Submit 1`] = `
 "class {}
 
 <button type=\\"submit\\" ...(props.attributes)>\${input.text}</button>"
 `;
 
-exports[`Marko > Javascript Test > Text 1`] = `
+exports[`Marko > jsx > Javascript Test > Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {
@@ -1193,7 +1251,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > Textarea 1`] = `
+exports[`Marko > jsx > Javascript Test > Textarea 1`] = `
 "class {}
 
 <textarea
@@ -1205,7 +1263,7 @@ exports[`Marko > Javascript Test > Textarea 1`] = `
 ></textarea>"
 `;
 
-exports[`Marko > Javascript Test > Video 1`] = `
+exports[`Marko > jsx > Javascript Test > Video 1`] = `
 "class {}
 
 <video
@@ -1230,7 +1288,7 @@ exports[`Marko > Javascript Test > Video 1`] = `
 ></video>"
 `;
 
-exports[`Marko > Javascript Test > arrowFunctionInUseStore 1`] = `
+exports[`Marko > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
     this.state.name = value;
@@ -1247,7 +1305,7 @@ exports[`Marko > Javascript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > basicForwardRef 1`] = `
+exports[`Marko > jsx > Javascript Test > basicForwardRef 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -1259,13 +1317,13 @@ exports[`Marko > Javascript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-06e83566 {
+  .input-110b8dfc {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-06e83566\\"
+    class=\\"input-110b8dfc\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1273,7 +1331,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > basicForwardRefMetadata 1`] = `
+exports[`Marko > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -1285,13 +1343,13 @@ exports[`Marko > Javascript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-6b0e4318 {
+  .input-565a1be8 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-6b0e4318\\"
+    class=\\"input-565a1be8\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -1299,7 +1357,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > basicOnUpdateReturn 1`] = `
+exports[`Marko > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\" };
@@ -1326,7 +1384,7 @@ exports[`Marko > Javascript Test > basicOnUpdateReturn 1`] = `
 <div>Hello! \${state.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > class + ClassName + css 1`] = `
+exports[`Marko > jsx > Javascript Test > class + ClassName + css 1`] = `
 "class {}
 
 style { 
@@ -1339,7 +1397,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > class + css 1`] = `
+exports[`Marko > jsx > Javascript Test > class + css 1`] = `
 "class {}
 
 style { 
@@ -1352,7 +1410,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > className + css 1`] = `
+exports[`Marko > jsx > Javascript Test > className + css 1`] = `
 "class {}
 
 style { 
@@ -1365,7 +1423,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > className 1`] = `
+exports[`Marko > jsx > Javascript Test > className 1`] = `
 "class {
   onCreate() {
     this.state = { bindings: \\"a binding\\" };
@@ -1379,24 +1437,29 @@ exports[`Marko > Javascript Test > className 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > classState 1`] = `
+exports[`Marko > jsx > Javascript Test > classState 1`] = `
 "class {
   onCreate() {
-    this.state = { classState: \\"testClassName\\", styleState: { color: \\"red\\" } };
+    this.state = {
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    };
   }
 }
 
 style { 
-  .div-61288f44 {
+  .div-25715889 {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-61288f44') style=(state.styleState)>
+<div class=(state.classState + ' div-25715889') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
 
-exports[`Marko > Javascript Test > componentWithContext 1`] = `
+exports[`Marko > jsx > Javascript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
@@ -1405,7 +1468,15 @@ class {}
 \${foo.value}"
 `;
 
-exports[`Marko > Javascript Test > defaultProps 1`] = `
+exports[`Marko > jsx > Javascript Test > contentState 1`] = `
+"import BuilderContext from \\"@dummy/context.marko\\";
+
+class {}
+
+<div>setting context</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > defaultProps 1`] = `
 "class {}
 
 <div>
@@ -1429,7 +1500,7 @@ exports[`Marko > Javascript Test > defaultProps 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > defaultPropsOutsideComponent 1`] = `
+exports[`Marko > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
 "class {}
 
 <div>
@@ -1453,7 +1524,7 @@ exports[`Marko > Javascript Test > defaultPropsOutsideComponent 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > defaultValsWithTypes 1`] = `
+exports[`Marko > jsx > Javascript Test > defaultValsWithTypes 1`] = `
 "const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
@@ -1463,7 +1534,21 @@ class {}
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > import types 1`] = `
+exports[`Marko > jsx > Javascript Test > expressionState 1`] = `
+"class {
+  onCreate(input) {
+    this.state = {
+      refToUse: !(input.componentRef instanceof Function)
+        ? input.componentRef
+        : null,
+    };
+  }
+}
+
+<div>\${state.refToUse}</div>"
+`;
+
+exports[`Marko > jsx > Javascript Test > import types 1`] = `
 "import RenderBlock from \\"./builder-render-block.raw\\";
 
 class {
@@ -1481,7 +1566,7 @@ class {
 ></RenderBlock>"
 `;
 
-exports[`Marko > Javascript Test > multipleOnUpdate 1`] = `
+exports[`Marko > jsx > Javascript Test > multipleOnUpdate 1`] = `
 "class {
   onRender() {
     console.log(\\"Runs on every update/rerender\\");
@@ -1493,7 +1578,7 @@ exports[`Marko > Javascript Test > multipleOnUpdate 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`Marko > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 "class {
   onCreate() {
     this.state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
@@ -1517,17 +1602,21 @@ exports[`Marko > Javascript Test > multipleOnUpdateWithDeps 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > multipleSpreads 1`] = `
+exports[`Marko > jsx > Javascript Test > multipleSpreads 1`] = `
 "class {
   onCreate() {
-    this.state = { attrs: { hello: \\"world\\" } };
+    this.state = {
+      attrs: {
+        hello: \\"world\\",
+      },
+    };
   }
 }
 
 <input ...(state.attrs) ...(props) />"
 `;
 
-exports[`Marko > Javascript Test > nestedShow 1`] = `
+exports[`Marko > jsx > Javascript Test > nestedShow 1`] = `
 "class {}
 
 <if(input.conditionA)>
@@ -1536,7 +1625,7 @@ exports[`Marko > Javascript Test > nestedShow 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
-exports[`Marko > Javascript Test > nestedStyles 1`] = `
+exports[`Marko > jsx > Javascript Test > nestedStyles 1`] = `
 "class {}
 
 style { 
@@ -1559,7 +1648,7 @@ style {
 <div class=\\"div-92502f5c\\">Hello world</div>"
 `;
 
-exports[`Marko > Javascript Test > onInit & onMount 1`] = `
+exports[`Marko > jsx > Javascript Test > onInit & onMount 1`] = `
 "class {
   onMount() {
     console.log(\\"onMount\\");
@@ -1569,7 +1658,7 @@ exports[`Marko > Javascript Test > onInit & onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > onInit 1`] = `
+exports[`Marko > jsx > Javascript Test > onInit 1`] = `
 "export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -1583,7 +1672,7 @@ class {
 <div>Default name defined by parent \${state.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > onMount 1`] = `
+exports[`Marko > jsx > Javascript Test > onMount 1`] = `
 "class {
   onMount() {
     console.log(\\"Runs on mount\\");
@@ -1596,7 +1685,7 @@ exports[`Marko > Javascript Test > onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > onUpdate 1`] = `
+exports[`Marko > jsx > Javascript Test > onUpdate 1`] = `
 "class {
   onRender() {
     console.log(\\"Runs on every update/rerender\\");
@@ -1606,7 +1695,7 @@ exports[`Marko > Javascript Test > onUpdate 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > onUpdateWithDeps 1`] = `
+exports[`Marko > jsx > Javascript Test > onUpdateWithDeps 1`] = `
 "class {
   onCreate(input) {
     this.state = { a: \\"a\\", b: \\"b\\" };
@@ -1625,7 +1714,7 @@ exports[`Marko > Javascript Test > onUpdateWithDeps 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > preserveExportOrLocalStatement 1`] = `
+exports[`Marko > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
 "const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -1637,13 +1726,13 @@ class {}
 <div></div>"
 `;
 
-exports[`Marko > Javascript Test > preserveTyping 1`] = `
+exports[`Marko > jsx > Javascript Test > preserveTyping 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > propsDestructure 1`] = `
+exports[`Marko > jsx > Javascript Test > propsDestructure 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"Decadef20\\" };
@@ -1656,19 +1745,19 @@ exports[`Marko > Javascript Test > propsDestructure 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > propsInterface 1`] = `
+exports[`Marko > jsx > Javascript Test > propsInterface 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > propsType 1`] = `
+exports[`Marko > jsx > Javascript Test > propsType 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Javascript Test > renderContentExample 1`] = `
+exports[`Marko > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
@@ -1698,7 +1787,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Javascript Test > rootFragmentMultiNode 1`] = `
+exports[`Marko > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 "class {}
 
 <if(input.link)>
@@ -1714,13 +1803,13 @@ exports[`Marko > Javascript Test > rootFragmentMultiNode 1`] = `
   <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>"
 `;
 
-exports[`Marko > Javascript Test > rootShow 1`] = `
+exports[`Marko > jsx > Javascript Test > rootShow 1`] = `
 "class {}
 
 <if(input.foo === 'bar')> <div>Bar</div></if> <else><div>Foo</div></else>"
 `;
 
-exports[`Marko > Javascript Test > self-referencing component 1`] = `
+exports[`Marko > jsx > Javascript Test > self-referencing component 1`] = `
 "class {}
 
 <div>
@@ -1731,7 +1820,7 @@ exports[`Marko > Javascript Test > self-referencing component 1`] = `
 </div>"
 `;
 
-exports[`Marko > Javascript Test > self-referencing component with children 1`] = `
+exports[`Marko > jsx > Javascript Test > self-referencing component with children 1`] = `
 "class {}
 
 <div>
@@ -1744,7 +1833,7 @@ exports[`Marko > Javascript Test > self-referencing component with children 1`] 
 </div>"
 `;
 
-exports[`Marko > Javascript Test > showWithFor 1`] = `
+exports[`Marko > jsx > Javascript Test > showWithFor 1`] = `
 "class {}
 
 <if(input.conditionA)>
@@ -1754,25 +1843,25 @@ exports[`Marko > Javascript Test > showWithFor 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
-exports[`Marko > Javascript Test > spreadAttrs 1`] = `
+exports[`Marko > jsx > Javascript Test > spreadAttrs 1`] = `
 "class {}
 
 <input ...(attrs) />"
 `;
 
-exports[`Marko > Javascript Test > spreadNestedProps 1`] = `
+exports[`Marko > jsx > Javascript Test > spreadNestedProps 1`] = `
 "class {}
 
 <input ...(props.nested) />"
 `;
 
-exports[`Marko > Javascript Test > spreadProps 1`] = `
+exports[`Marko > jsx > Javascript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
 `;
 
-exports[`Marko > Javascript Test > subComponent 1`] = `
+exports[`Marko > jsx > Javascript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.marko\\";
 
 class {}
@@ -1780,13 +1869,13 @@ class {}
 <Foo></Foo>"
 `;
 
-exports[`Marko > Javascript Test > typeDependency 1`] = `
+exports[`Marko > jsx > Javascript Test > typeDependency 1`] = `
 "class {}
 
 <div>\${input.foo}</div>"
 `;
 
-exports[`Marko > Javascript Test > use-style 1`] = `
+exports[`Marko > jsx > Javascript Test > use-style 1`] = `
 "class {}
 
 style { 
@@ -1800,7 +1889,7 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > Javascript Test > use-style-and-css 1`] = `
+exports[`Marko > jsx > Javascript Test > use-style-and-css 1`] = `
 "class {}
 
 style { 
@@ -1817,7 +1906,7 @@ style {
 <button type=\\"button\\" class=\\"button-625c33fa\\">Button</button>"
 `;
 
-exports[`Marko > Javascript Test > use-style-outside-component 1`] = `
+exports[`Marko > jsx > Javascript Test > use-style-outside-component 1`] = `
 "class {}
 
 style { 
@@ -1831,7 +1920,7 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > Remove Internal mitosis package 1`] = `
+exports[`Marko > jsx > Remove Internal mitosis package 1`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\" };
@@ -1843,7 +1932,7 @@ exports[`Marko > Remove Internal mitosis package 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > AdvancedRef 1`] = `
+exports[`Marko > jsx > Typescript Test > AdvancedRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
@@ -1870,14 +1959,14 @@ exports[`Marko > Typescript Test > AdvancedRef 1`] = `
 }
 
 style { 
-  .input-0615816f {
+  .input-08f2a5b6 {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-0615816f\\"
+      class=\\"input-08f2a5b6\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -1898,7 +1987,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Basic 1`] = `
+exports[`Marko > jsx > Typescript Test > Basic 1`] = `
 "export const DEFAULT_VALUES = {
   name: \\"Steve\\",
 };
@@ -1914,11 +2003,11 @@ class {
 }
 
 style { 
-  .div-5fbb42bc {
+  .div-6f8bbe5f {
     padding: 10px;
   }
 }
-<div class=\\"test div-5fbb42bc\\">
+<div class=\\"test div-6f8bbe5f\\">
   <input
     value=(DEFAULT_VALUES.name || state.name)
     on-input(myEvent => state.name = myEvent.target.value)
@@ -1928,7 +2017,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Basic 2`] = `
+exports[`Marko > jsx > Typescript Test > Basic 2`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -1952,7 +2041,7 @@ exports[`Marko > Typescript Test > Basic 2`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Basic Context 1`] = `
+exports[`Marko > jsx > Typescript Test > Basic Context 1`] = `
 "import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
 class {
@@ -1979,7 +2068,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Basic OnMount Update 1`] = `
+exports[`Marko > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -1993,7 +2082,7 @@ exports[`Marko > Typescript Test > Basic OnMount Update 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > Basic Outputs 1`] = `
+exports[`Marko > jsx > Typescript Test > Basic Outputs 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -2008,7 +2097,7 @@ exports[`Marko > Typescript Test > Basic Outputs 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > Basic Outputs Meta 1`] = `
+exports[`Marko > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -2023,13 +2112,13 @@ exports[`Marko > Typescript Test > Basic Outputs Meta 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > BasicAttribute 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicAttribute 1`] = `
 "class {}
 
 <input autocapitalize=\\"on\\" autocomplete=\\"on\\" spellcheck=(true) />"
 `;
 
-exports[`Marko > Typescript Test > BasicBooleanAttribute 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 class {}
@@ -2045,7 +2134,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Typescript Test > BasicChildComponent 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import MyBasicComponent from \\"./basic.raw\\";
 import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
@@ -2067,7 +2156,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > BasicFor 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicFor 1`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\", names: [\\"Steve\\", \\"PatrickJS\\"] };
@@ -2093,7 +2182,7 @@ exports[`Marko > Typescript Test > BasicFor 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > BasicRef 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicRef 1`] = `
 "class {
   onBlur = function onBlur() {
     // Maintain focus
@@ -2116,14 +2205,14 @@ exports[`Marko > Typescript Test > BasicRef 1`] = `
 }
 
 style { 
-  .input-a7d46d4c {
+  .input-37a1283e {
     color: red;
   }
 }
 <div>
   <if(input.showInput)>
     <input
-      class=\\"input-a7d46d4c\\"
+      class=\\"input-37a1283e\\"
       key=\\"inputRef\\"
       value=(state.name)
       on-blur(event => component.onBlur())
@@ -2144,7 +2233,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > BasicRefAssignment 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "class {
   handlerClick = function handlerClick(event) {
     event.preventDefault();
@@ -2158,7 +2247,7 @@ exports[`Marko > Typescript Test > BasicRefAssignment 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > BasicRefPrevious 1`] = `
+exports[`Marko > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "export function usePrevious<T>(value: T) {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
@@ -2189,7 +2278,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Button 1`] = `
+exports[`Marko > jsx > Typescript Test > Button 1`] = `
 "class {}
 
 <div>
@@ -2207,7 +2296,7 @@ exports[`Marko > Typescript Test > Button 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Columns 1`] = `
+exports[`Marko > jsx > Typescript Test > Columns 1`] = `
 "class {
   getColumns() {
     return this.input.columns || [];
@@ -2255,7 +2344,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > ContentSlotHtml 1`] = `
+exports[`Marko > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "class {}
 
 <div>
@@ -2271,7 +2360,7 @@ exports[`Marko > Typescript Test > ContentSlotHtml 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > ContentSlotJSX 1`] = `
+exports[`Marko > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "class {}
 
 <div>
@@ -2285,7 +2374,7 @@ exports[`Marko > Typescript Test > ContentSlotJSX 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > CustomCode 1`] = `
+exports[`Marko > jsx > Typescript Test > CustomCode 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -2350,7 +2439,7 @@ exports[`Marko > Typescript Test > CustomCode 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Embed 1`] = `
+exports[`Marko > jsx > Typescript Test > Embed 1`] = `
 "class {
   findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
@@ -2415,9 +2504,9 @@ exports[`Marko > Typescript Test > Embed 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Form 1`] = `
+exports[`Marko > jsx > Typescript Test > Form 1`] = `
 "import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
 import { BuilderBlocks } from \\"@fake\\";
 import { set } from \\"@fake\\";
 import { get } from \\"@fake\\";
@@ -2657,7 +2746,7 @@ class {
 }
 
 style { 
-  .pre-78552c52 {
+  .pre-2a3c5c5a {
     padding: 10px;
     color: red;
     text-align: center;
@@ -2692,7 +2781,7 @@ style {
     ></BuilderBlocks></if>
 
   <if(component.submissionState === 'error' && state.responseData)>
-    <pre class=\\"builder-form-error-text pre-78552c52\\">
+    <pre class=\\"builder-form-error-text pre-2a3c5c5a\\">
           
 \${JSON.stringify(state.responseData, null, 2)}
 
@@ -2707,7 +2796,7 @@ style {
 </form>"
 `;
 
-exports[`Marko > Typescript Test > Image 1`] = `
+exports[`Marko > jsx > Typescript Test > Image 1`] = `
 "class {
   setLoaded() {
     this.state.imageLoaded = true;
@@ -2762,7 +2851,7 @@ exports[`Marko > Typescript Test > Image 1`] = `
 }
 
 style { 
-  .img-1567cd2c {
+  .img-f006c488 {
     opacity: 1;
     transition: opacity 0.2s ease-in-out;
     object-fit: cover;
@@ -2775,7 +2864,7 @@ style {
       <img
         alt=(input.altText)
         aria-role=(input.altText ? 'presentation' : undefined)
-        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-1567cd2c')
+        class=('builder-image' + (input._class ? ' ' + input._class : '') + ' img-f006c488')
         src=(input.image)
         on-load(event => component.setLoaded())
         srcset=(input.srcset)
@@ -2789,7 +2878,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Image State 1`] = `
+exports[`Marko > jsx > Typescript Test > Image State 1`] = `
 "class {
   onCreate() {
     this.state = { canShow: true, images: [\\"http://example.com/qwik.png\\"] };
@@ -2803,7 +2892,7 @@ exports[`Marko > Typescript Test > Image State 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Img 1`] = `
+exports[`Marko > jsx > Typescript Test > Img 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -2819,7 +2908,7 @@ class {}
 />"
 `;
 
-exports[`Marko > Typescript Test > Input 1`] = `
+exports[`Marko > jsx > Typescript Test > Input 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -2836,14 +2925,14 @@ class {}
 />"
 `;
 
-exports[`Marko > Typescript Test > RawText 1`] = `
+exports[`Marko > jsx > Typescript Test > RawText 1`] = `
 "class {}
 
 <span class=(input.attributes?.class || input.attributes?.className)
   >$!{input.text || ''}</span>"
 `;
 
-exports[`Marko > Typescript Test > Section 1`] = `
+exports[`Marko > jsx > Typescript Test > Section 1`] = `
 "class {}
 
 <section
@@ -2856,7 +2945,7 @@ exports[`Marko > Typescript Test > Section 1`] = `
 </section>"
 `;
 
-exports[`Marko > Typescript Test > Section 2`] = `
+exports[`Marko > jsx > Typescript Test > Section 2`] = `
 "class {
   onCreate(input) {
     this.state = { max: 42, items: [42] };
@@ -2876,7 +2965,7 @@ exports[`Marko > Typescript Test > Section 2`] = `
   </for></if>"
 `;
 
-exports[`Marko > Typescript Test > Select 1`] = `
+exports[`Marko > jsx > Typescript Test > Select 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {}
@@ -2896,7 +2985,7 @@ class {}
 </select>"
 `;
 
-exports[`Marko > Typescript Test > SlotHtml 1`] = `
+exports[`Marko > jsx > Typescript Test > SlotHtml 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 class {}
@@ -2908,7 +2997,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Typescript Test > SlotJsx 1`] = `
+exports[`Marko > jsx > Typescript Test > SlotJsx 1`] = `
 "import ContentSlotCode from \\"./content-slot-jsx.raw\\";
 
 class {}
@@ -2918,7 +3007,7 @@ class {}
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Stamped.io 1`] = `
+exports[`Marko > jsx > Typescript Test > Stamped.io 1`] = `
 "import { kebabCase } from \\"lodash\\";
 import { snakeCase } from \\"lodash\\";
 
@@ -2948,16 +3037,16 @@ class {
 }
 
 style { 
-  .input-ce46b830 {
+  .input-53151ff6 {
     display: block;
   }
-  .textarea-ce46b830 {
+  .textarea-53151ff6 {
     display: block;
   }
-  .button-ce46b830 {
+  .button-53151ff6 {
     display: block;
   }
-  .review-ce46b830 {
+  .review-53151ff6 {
     margin: 10px;
     padding: 10px;
     background: white;
@@ -2965,7 +3054,7 @@ style {
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
-  .img-ce46b830 {
+  .img-53151ff6 {
     height: 30px;
     width: 30px;
     margin-right: 10px;
@@ -2978,13 +3067,13 @@ style {
 
   <if(state.showReviewPrompt || 'asdf')>
     <input placeholder=\\"Email\\" />
-    <input placeholder=\\"Title\\" class=\\"input-ce46b830\\" />
+    <input placeholder=\\"Title\\" class=\\"input-53151ff6\\" />
     <textarea
       placeholder=\\"How was your experience?\\"
-      class=\\"textarea-ce46b830\\"
+      class=\\"textarea-53151ff6\\"
     ></textarea>
     <button
-      class=\\"button-ce46b830\\"
+      class=\\"button-53151ff6\\"
       on-click(event => {
   event.preventDefault();
   state.showReviewPrompt = false;
@@ -2994,8 +3083,8 @@ style {
     </button></if>
 
   <for|review,index| of=(state.reviews)>
-    <div class=\\"review-ce46b830\\" key=(review.id)>
-      <img class=\\"img-ce46b830\\" src=(review.avatar) />
+    <div class=\\"review-53151ff6\\" key=(review.id)>
+      <img class=\\"img-53151ff6\\" src=(review.avatar) />
 
       <div class=(state.showReviewPrompt ? 'bg-primary' : 'bg-secondary')>
         <div>N: \${index}</div>
@@ -3009,13 +3098,13 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Submit 1`] = `
+exports[`Marko > jsx > Typescript Test > Submit 1`] = `
 "class {}
 
 <button type=\\"submit\\" ...(props.attributes)>\${input.text}</button>"
 `;
 
-exports[`Marko > Typescript Test > Text 1`] = `
+exports[`Marko > jsx > Typescript Test > Text 1`] = `
 "import { Builder } from \\"@builder.io/sdk\\";
 
 class {
@@ -3036,7 +3125,7 @@ class {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > Textarea 1`] = `
+exports[`Marko > jsx > Typescript Test > Textarea 1`] = `
 "class {}
 
 <textarea
@@ -3048,7 +3137,7 @@ exports[`Marko > Typescript Test > Textarea 1`] = `
 ></textarea>"
 `;
 
-exports[`Marko > Typescript Test > Video 1`] = `
+exports[`Marko > jsx > Typescript Test > Video 1`] = `
 "class {}
 
 <video
@@ -3073,7 +3162,7 @@ exports[`Marko > Typescript Test > Video 1`] = `
 ></video>"
 `;
 
-exports[`Marko > Typescript Test > arrowFunctionInUseStore 1`] = `
+exports[`Marko > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "class {
   setName(value) {
     this.state.name = value;
@@ -3090,7 +3179,7 @@ exports[`Marko > Typescript Test > arrowFunctionInUseStore 1`] = `
 <div>Hello \${state.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > basicForwardRef 1`] = `
+exports[`Marko > jsx > Typescript Test > basicForwardRef 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -3102,13 +3191,13 @@ exports[`Marko > Typescript Test > basicForwardRef 1`] = `
 }
 
 style { 
-  .input-06e83566 {
+  .input-110b8dfc {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-06e83566\\"
+    class=\\"input-110b8dfc\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3116,7 +3205,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > basicForwardRefMetadata 1`] = `
+exports[`Marko > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"PatrickJS\\" };
@@ -3128,13 +3217,13 @@ exports[`Marko > Typescript Test > basicForwardRefMetadata 1`] = `
 }
 
 style { 
-  .input-6b0e4318 {
+  .input-565a1be8 {
     color: red;
   }
 }
 <div>
   <input
-    class=\\"input-6b0e4318\\"
+    class=\\"input-565a1be8\\"
     key=\\"propsInputRef\\"
     value=(state.name)
     on-input(event => state.name = event.target.value)
@@ -3142,7 +3231,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > basicOnUpdateReturn 1`] = `
+exports[`Marko > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "class {
   onCreate() {
     this.state = { name: \\"PatrickJS\\" };
@@ -3169,7 +3258,7 @@ exports[`Marko > Typescript Test > basicOnUpdateReturn 1`] = `
 <div>Hello! \${state.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > class + ClassName + css 1`] = `
+exports[`Marko > jsx > Typescript Test > class + ClassName + css 1`] = `
 "class {}
 
 style { 
@@ -3182,7 +3271,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > class + css 1`] = `
+exports[`Marko > jsx > Typescript Test > class + css 1`] = `
 "class {}
 
 style { 
@@ -3195,7 +3284,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > className + css 1`] = `
+exports[`Marko > jsx > Typescript Test > className + css 1`] = `
 "class {}
 
 style { 
@@ -3208,7 +3297,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > className 1`] = `
+exports[`Marko > jsx > Typescript Test > className 1`] = `
 "class {
   onCreate() {
     this.state = { bindings: \\"a binding\\" };
@@ -3222,24 +3311,29 @@ exports[`Marko > Typescript Test > className 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > classState 1`] = `
+exports[`Marko > jsx > Typescript Test > classState 1`] = `
 "class {
   onCreate() {
-    this.state = { classState: \\"testClassName\\", styleState: { color: \\"red\\" } };
+    this.state = {
+      classState: \\"testClassName\\",
+      styleState: {
+        color: \\"red\\",
+      },
+    };
   }
 }
 
 style { 
-  .div-61288f44 {
+  .div-25715889 {
     padding: 10px;
   }
 }
-<div class=(state.classState + ' div-61288f44') style=(state.styleState)>
+<div class=(state.classState + ' div-25715889') style=(state.styleState)>
   Hello! I can run in React, Vue, Solid, or Liquid!
 </div>"
 `;
 
-exports[`Marko > Typescript Test > componentWithContext 1`] = `
+exports[`Marko > jsx > Typescript Test > componentWithContext 1`] = `
 "import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
@@ -3248,7 +3342,15 @@ class {}
 \${foo.value}"
 `;
 
-exports[`Marko > Typescript Test > defaultProps 1`] = `
+exports[`Marko > jsx > Typescript Test > contentState 1`] = `
+"import BuilderContext from \\"@dummy/context.marko\\";
+
+class {}
+
+<div>setting context</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > defaultProps 1`] = `
 "class {}
 
 <div>
@@ -3272,7 +3374,7 @@ exports[`Marko > Typescript Test > defaultProps 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > defaultPropsOutsideComponent 1`] = `
+exports[`Marko > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "class {}
 
 <div>
@@ -3296,7 +3398,7 @@ exports[`Marko > Typescript Test > defaultPropsOutsideComponent 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > defaultValsWithTypes 1`] = `
+exports[`Marko > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 "const DEFAULT_VALUES: Props = {
   name: \\"Sami\\",
 };
@@ -3306,9 +3408,22 @@ class {}
 <div>Hello \${input.name || DEFAULT_VALUES.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > import types 1`] = `
-"import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
+exports[`Marko > jsx > Typescript Test > expressionState 1`] = `
+"class {
+  onCreate(input) {
+    this.state = {
+      refToUse: !(input.componentRef instanceof Function)
+        ? input.componentRef
+        : null,
+    };
+  }
+}
+
+<div>\${state.refToUse}</div>"
+`;
+
+exports[`Marko > jsx > Typescript Test > import types 1`] = `
+"import RenderBlock from \\"./builder-render-block.raw\\";
 
 class {
   getRenderContentProps(block, index) {
@@ -3325,7 +3440,7 @@ class {
 ></RenderBlock>"
 `;
 
-exports[`Marko > Typescript Test > multipleOnUpdate 1`] = `
+exports[`Marko > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "class {
   onRender() {
     console.log(\\"Runs on every update/rerender\\");
@@ -3337,7 +3452,7 @@ exports[`Marko > Typescript Test > multipleOnUpdate 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`Marko > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "class {
   onCreate() {
     this.state = { a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" };
@@ -3361,17 +3476,21 @@ exports[`Marko > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > multipleSpreads 1`] = `
+exports[`Marko > jsx > Typescript Test > multipleSpreads 1`] = `
 "class {
   onCreate() {
-    this.state = { attrs: { hello: \\"world\\" } };
+    this.state = {
+      attrs: {
+        hello: \\"world\\",
+      },
+    };
   }
 }
 
 <input ...(state.attrs) ...(props) />"
 `;
 
-exports[`Marko > Typescript Test > nestedShow 1`] = `
+exports[`Marko > jsx > Typescript Test > nestedShow 1`] = `
 "class {}
 
 <if(input.conditionA)>
@@ -3380,7 +3499,7 @@ exports[`Marko > Typescript Test > nestedShow 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
-exports[`Marko > Typescript Test > nestedStyles 1`] = `
+exports[`Marko > jsx > Typescript Test > nestedStyles 1`] = `
 "class {}
 
 style { 
@@ -3403,7 +3522,7 @@ style {
 <div class=\\"div-92502f5c\\">Hello world</div>"
 `;
 
-exports[`Marko > Typescript Test > onInit & onMount 1`] = `
+exports[`Marko > jsx > Typescript Test > onInit & onMount 1`] = `
 "class {
   onMount() {
     console.log(\\"onMount\\");
@@ -3413,7 +3532,7 @@ exports[`Marko > Typescript Test > onInit & onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > onInit 1`] = `
+exports[`Marko > jsx > Typescript Test > onInit 1`] = `
 "export const defaultValues = {
   name: \\"PatrickJS\\",
 };
@@ -3427,7 +3546,7 @@ class {
 <div>Default name defined by parent \${state.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > onMount 1`] = `
+exports[`Marko > jsx > Typescript Test > onMount 1`] = `
 "class {
   onMount() {
     console.log(\\"Runs on mount\\");
@@ -3440,7 +3559,7 @@ exports[`Marko > Typescript Test > onMount 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > onUpdate 1`] = `
+exports[`Marko > jsx > Typescript Test > onUpdate 1`] = `
 "class {
   onRender() {
     console.log(\\"Runs on every update/rerender\\");
@@ -3450,7 +3569,7 @@ exports[`Marko > Typescript Test > onUpdate 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > onUpdateWithDeps 1`] = `
+exports[`Marko > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "class {
   onCreate(input) {
     this.state = { a: \\"a\\", b: \\"b\\" };
@@ -3469,7 +3588,7 @@ exports[`Marko > Typescript Test > onUpdateWithDeps 1`] = `
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > preserveExportOrLocalStatement 1`] = `
+exports[`Marko > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 "const b = 3;
 const foo = () => {};
 export const a = 3;
@@ -3481,13 +3600,13 @@ class {}
 <div></div>"
 `;
 
-exports[`Marko > Typescript Test > preserveTyping 1`] = `
+exports[`Marko > jsx > Typescript Test > preserveTyping 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > propsDestructure 1`] = `
+exports[`Marko > jsx > Typescript Test > propsDestructure 1`] = `
 "class {
   onCreate(input) {
     this.state = { name: \\"Decadef20\\" };
@@ -3500,19 +3619,19 @@ exports[`Marko > Typescript Test > propsDestructure 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > propsInterface 1`] = `
+exports[`Marko > jsx > Typescript Test > propsInterface 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > propsType 1`] = `
+exports[`Marko > jsx > Typescript Test > propsType 1`] = `
 "class {}
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! \${input.name}</div>"
 `;
 
-exports[`Marko > Typescript Test > renderContentExample 1`] = `
+exports[`Marko > jsx > Typescript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
   dispatchNewContentToVisualEditor,
@@ -3542,7 +3661,7 @@ style {
 </div>"
 `;
 
-exports[`Marko > Typescript Test > rootFragmentMultiNode 1`] = `
+exports[`Marko > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "class {}
 
 <if(input.link)>
@@ -3558,13 +3677,13 @@ exports[`Marko > Typescript Test > rootFragmentMultiNode 1`] = `
   <button type=\\"button\\" ...(props.attributes)>\${input.text}</button></if>"
 `;
 
-exports[`Marko > Typescript Test > rootShow 1`] = `
+exports[`Marko > jsx > Typescript Test > rootShow 1`] = `
 "class {}
 
 <if(input.foo === 'bar')> <div>Bar</div></if> <else><div>Foo</div></else>"
 `;
 
-exports[`Marko > Typescript Test > self-referencing component 1`] = `
+exports[`Marko > jsx > Typescript Test > self-referencing component 1`] = `
 "class {}
 
 <div>
@@ -3575,7 +3694,7 @@ exports[`Marko > Typescript Test > self-referencing component 1`] = `
 </div>"
 `;
 
-exports[`Marko > Typescript Test > self-referencing component with children 1`] = `
+exports[`Marko > jsx > Typescript Test > self-referencing component with children 1`] = `
 "class {}
 
 <div>
@@ -3588,7 +3707,7 @@ exports[`Marko > Typescript Test > self-referencing component with children 1`] 
 </div>"
 `;
 
-exports[`Marko > Typescript Test > showWithFor 1`] = `
+exports[`Marko > jsx > Typescript Test > showWithFor 1`] = `
 "class {}
 
 <if(input.conditionA)>
@@ -3598,25 +3717,25 @@ exports[`Marko > Typescript Test > showWithFor 1`] = `
 <else><div>else-condition-A</div></else>"
 `;
 
-exports[`Marko > Typescript Test > spreadAttrs 1`] = `
+exports[`Marko > jsx > Typescript Test > spreadAttrs 1`] = `
 "class {}
 
 <input ...(attrs) />"
 `;
 
-exports[`Marko > Typescript Test > spreadNestedProps 1`] = `
+exports[`Marko > jsx > Typescript Test > spreadNestedProps 1`] = `
 "class {}
 
 <input ...(props.nested) />"
 `;
 
-exports[`Marko > Typescript Test > spreadProps 1`] = `
+exports[`Marko > jsx > Typescript Test > spreadProps 1`] = `
 "class {}
 
 <input ...(props) />"
 `;
 
-exports[`Marko > Typescript Test > subComponent 1`] = `
+exports[`Marko > jsx > Typescript Test > subComponent 1`] = `
 "import Foo from \\"./foo-sub-component.marko\\";
 
 class {}
@@ -3624,13 +3743,13 @@ class {}
 <Foo></Foo>"
 `;
 
-exports[`Marko > Typescript Test > typeDependency 1`] = `
+exports[`Marko > jsx > Typescript Test > typeDependency 1`] = `
 "class {}
 
 <div>\${input.foo}</div>"
 `;
 
-exports[`Marko > Typescript Test > use-style 1`] = `
+exports[`Marko > jsx > Typescript Test > use-style 1`] = `
 "class {}
 
 style { 
@@ -3644,7 +3763,7 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > Typescript Test > use-style-and-css 1`] = `
+exports[`Marko > jsx > Typescript Test > use-style-and-css 1`] = `
 "class {}
 
 style { 
@@ -3661,7 +3780,7 @@ style {
 <button type=\\"button\\" class=\\"button-625c33fa\\">Button</button>"
 `;
 
-exports[`Marko > Typescript Test > use-style-outside-component 1`] = `
+exports[`Marko > jsx > Typescript Test > use-style-outside-component 1`] = `
 "class {}
 
 style { 
@@ -3675,60 +3794,452 @@ style {
 <button type=\\"button\\">Button</button>"
 `;
 
-exports[`Marko > formatting 1`] = `
-"
-      <div>
-        <if _=\\"input.foo === 'bar'\\">
-          Hello
-        </if>
-        <for |items| of=\\"(some.long ? expression : yo)\\">
-          World
-        </for>
-        <input 
-          placeholder=\\"Hello world...\\"
-          value=\\"(this.state.name)\\" 
-          on-click=\\"(event => {&#10;            console.log('hello', &quot;world&quot;)&#10;          })\\"
-          on-input=\\"(event => this.state.name = event.target.value)\\" /> 
-          
-          Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>"
-`;
+exports[`Marko > svelte > Javascript Test > basic 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
 
-exports[`Marko > formatting 2`] = `
-"
-      <div>
-        <if(input.foo === 'bar')>
-          Hello
-        </if>
-        <for|items| of=(some.long ? expression : yo)>
-          World
-        </for>
-        <input 
-          placeholder=\\"Hello world...\\"
-          value=(this.state.name) 
-          on-click=(event => {
-            console.log('hello', \\"world\\")
-          })
-          on-input=(event => this.state.name = event.target.value) /> 
-          
-          Hello! I can run in React, Vue, Solid, or Liquid!
-      </div>"
-`;
-
-exports[`Marko > formatting 3`] = `
-"<div>
-  <if(input.foo === 'bar')> Hello </if>
-  <for|items| of=(some.long ? expression : yo)> World </for>
+<div>
   <input
-    placeholder=\\"Hello world...\\"
-    value=(this.state.name)
-    on-click=(event => {
-            console.log('hello', \\"world\\")
-          })
-    on-input=(event => this.state.name = event.target.value)
+    on-input(event => state.name = event.target.value)
+    value=(state.name)
   />
 
   Hello! I can run in React, Vue, Solid, or Liquid!
-</div>
-"
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > bindProperty 1`] = `
+"class {
+  onCreate() {
+    this.state = { value: \\"hello\\" };
+  }
+}
+
+<input value=(state.value) />"
+`;
+
+exports[`Marko > svelte > Javascript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
+
+exports[`Marko > svelte > Javascript Test > context 1`] = `
+"class {
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
+}
+
+<div>\${state.activeTab}</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
+
+exports[`Marko > svelte > Javascript Test > html 1`] = `
+"class {
+  onCreate() {
+    this.state = { html: \\"<b>bold</b>\\" };
+  }
+}
+
+<div>$!{state.html}</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.state.show = !this.state.show;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle)>Hide</button></if>
+<else><button on-click(event => component.toggle)>Show</button></else>"
+`;
+
+exports[`Marko > svelte > Javascript Test > imports 1`] = `
+"import Button from \\"./Button.marko\\";
+
+class {
+  onCreate() {
+    this.state = { disabled: false };
+  }
+}
+
+<div>
+  <button type=\\"button\\" disabled=(state.disabled)><slot></slot></button>
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > lifecycleHooks 1`] = `
+"class {
+  onMount() {
+    console.log(\\"onMount\\");
+  }
+  onDestroy() {
+    console.log(\\"onDestroy\\");
+  }
+  onRender() {
+    console.log(\\"onAfterUpdate\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > reactive 1`] = `
+"class {
+  get lowercaseName() {
+    return this.state.name.toLowerCase();
+  }
+
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+<div>
+  <input value=(state.name) />
+
+  Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > style 1`] = `
+"class {}
+
+style { 
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+}
+<input class=\\"form-input\\" />"
+`;
+
+exports[`Marko > svelte > Javascript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
+
+<div>
+  normal: \${state.a + state.b}
+  <br />
+
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > basic 1`] = `
+"class {
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+<div>
+  <input
+    on-input(event => state.name = event.target.value)
+    value=(state.name)
+  />
+
+  Hello! I can run in React, Vue, Solid, or Liquid!
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > bindGroup 1`] = `
+"class {
+  onCreate() {
+    this.state = { tortilla: \\"Plain\\", fillings: [] };
+  }
+}
+
+<div>
+  <input
+    type=\\"radio\\"
+    value=\\"Plain\\"
+    checked=(state.tortilla === 'Plain')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Whole wheat\\"
+    checked=(state.tortilla === 'Whole wheat')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <input
+    type=\\"radio\\"
+    value=\\"Spinach\\"
+    checked=(state.tortilla === 'Spinach')
+    on-input(event => state.tortilla = event.target.value)
+  />
+  <br />
+  <br />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Rice\\"
+    checked=(state.fillings === 'Rice')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Beans\\"
+    checked=(state.fillings === 'Beans')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Cheese\\"
+    checked=(state.fillings === 'Cheese')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <input
+    type=\\"checkbox\\"
+    value=\\"Guac (extra)\\"
+    checked=(state.fillings === 'Guac (extra)')
+    on-input(event => state.fillings = event.target.value)
+  />
+  <p>Tortilla: \${state.tortilla}</p>
+  <p>Fillings: \${state.fillings}</p>
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > bindProperty 1`] = `
+"class {
+  onCreate() {
+    this.state = { value: \\"hello\\" };
+  }
+}
+
+<input value=(state.value) />"
+`;
+
+exports[`Marko > svelte > Typescript Test > classDirective 1`] = `
+"class {
+  onCreate(input) {
+    this.state = { focus: true };
+  }
+}
+
+<input
+  class=(\`form-input \${input.disabled ? 'disabled' : ''} \${state.focus ? 'focus' : ''}\`)
+/>"
+`;
+
+exports[`Marko > svelte > Typescript Test > context 1`] = `
+"class {
+  onCreate() {
+    this.state = { activeTab: 0 };
+  }
+}
+
+<div>\${state.activeTab}</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > each 1`] = `
+"class {
+  onCreate() {
+    this.state = { numbers: [\\"one\\", \\"two\\", \\"three\\"] };
+  }
+}
+
+<ul>
+  <for|num| of=(state.numbers)>
+    <li>\${num}</li>
+  </for>
+</ul>"
+`;
+
+exports[`Marko > svelte > Typescript Test > html 1`] = `
+"class {
+  onCreate() {
+    this.state = { html: \\"<b>bold</b>\\" };
+  }
+}
+
+<div>$!{state.html}</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
+"class {
+  toggle = function toggle() {
+    this.state.show = !this.state.show;
+  };
+
+  onCreate() {
+    this.state = { show: true };
+  }
+}
+
+<if(state.show)>
+  <button on-click(event => component.toggle)>Hide</button></if>
+<else><button on-click(event => component.toggle)>Show</button></else>"
+`;
+
+exports[`Marko > svelte > Typescript Test > imports 1`] = `
+"import Button from \\"./Button.marko\\";
+
+class {
+  onCreate() {
+    this.state = { disabled: false };
+  }
+}
+
+<div>
+  <button type=\\"button\\" disabled=(state.disabled)><slot></slot></button>
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > lifecycleHooks 1`] = `
+"class {
+  onMount() {
+    console.log(\\"onMount\\");
+  }
+  onDestroy() {
+    console.log(\\"onDestroy\\");
+  }
+  onRender() {
+    console.log(\\"onAfterUpdate\\");
+  }
+}
+
+<div></div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactive 1`] = `
+"class {
+  get lowercaseName() {
+    return this.state.name.toLowerCase();
+  }
+
+  onCreate() {
+    this.state = { name: \\"Steve\\" };
+  }
+}
+
+<div>
+  <input value=(state.name) />
+
+  Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > style 1`] = `
+"class {}
+
+style { 
+  input {
+    color: red;
+    font-size: 12px;
+  }
+
+  .form-input:focus {
+    outline: 1px solid blue;
+  }
+}
+<input class=\\"form-input\\" />"
+`;
+
+exports[`Marko > svelte > Typescript Test > textExpressions 1`] = `
+"class {
+  onCreate() {
+    this.state = { a: 5, b: 12 };
+  }
+}
+
+<div>
+  normal: \${state.a + state.b}
+  <br />
+
+  conditional \${state.a > 2 ? 'hello' : 'bye'}
+</div>"
 `;

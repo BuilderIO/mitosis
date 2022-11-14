@@ -113,7 +113,6 @@ describe('Builder', () => {
     `;
 
     const component = parseJsx(code);
-    expect(component.state).toEqual({ people: { code: ['Steve', 'Sewell'], type: 'property' } });
     const builderJson = componentToBuilder()({ component });
     const backToMitosis = builderContentToMitosisComponent(builderJson);
     expect(backToMitosis.state).toEqual(component.state);

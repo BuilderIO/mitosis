@@ -20,11 +20,11 @@ import {
   componentToLit,
   componentToQwik,
   componentToTemplate,
-  angularToMitosisComponent,
   mapStyles,
   parseJsx,
   componentToVue2,
   componentToVue3,
+  parseSvelte,
 } from '@builder.io/mitosis';
 import {
   Button,
@@ -49,7 +49,11 @@ import Image from 'next/image';
 import { adapt } from 'webcomponents-in-react';
 import { breakpoints } from '../constants/breakpoints';
 import { colors } from '../constants/colors';
-import { defaultCode, templates } from '../constants/templates';
+import { defaultCode, templates } from '../constants/templates/jsx-templates';
+import {
+  defaultCode as defaultSvelteCode,
+  templates as svelteTemplates,
+} from '../constants/templates/svelte-templates';
 import { theme } from '../constants/theme';
 import { deleteQueryParam } from '../functions/delete-query-param';
 import { getQueryParam } from '../functions/get-query-param';
@@ -63,7 +67,8 @@ import { TextLink } from './TextLink';
 import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
-import { CodeEditor } from './CodeEditor';
+import { JsxCodeEditor } from './JsxCodeEditor';
+import { SvelteCodeEditor } from './SvelteCodeEditor';
 import { ToAlpineOptions } from '@builder.io/mitosis';
 
 type Position = { row: number; column: number };
@@ -248,7 +253,7 @@ export default function Fiddle() {
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    inputTab: getQueryParam('inputTab') || 'mitosis',
+    inputTab: getQueryParam('inputTab') || 'jsx',
     builderData: {} as any,
     isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
@@ -319,10 +324,18 @@ export default function Fiddle() {
       try {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
-        const json =
-          state.inputTab === 'angular'
-            ? angularToMitosisComponent(state.inputCode)
-            : parseJsx(state.code);
+
+        let json;
+
+        switch (state.inputTab) {
+          case 'svelte':
+            json = await parseSvelte(state.code);
+            break;
+          case 'jsx':
+          default:
+            json = parseJsx(state.code);
+            break;
+        }
 
         let commonOptions: { typescript: boolean } = {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
@@ -556,8 +569,15 @@ export default function Fiddle() {
   useReaction(
     () => state.inputTab,
     (tab) => {
-      const json = parseJsx(state.code);
-      state.inputCode = componentToAngular({ plugins })({ component: json });
+      if (tab === 'svelte') {
+        state.code = defaultSvelteCode;
+        if (state.outputTab === 'svelte') {
+          state.outputTab = 'vue';
+        }
+      } else {
+        state.code = defaultCode;
+      }
+
       setQueryParam('inputTab', tab);
     },
     { fireImmediately: false },
@@ -759,15 +779,24 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="Mitosis"
+                      label="Mitosis JSX"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
                     />
                   }
-                  value="mitosis"
+                  value="jsx"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Sveltosis"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="svelte"
                 />
               </Tabs>
             </div>
-            <Show when={state.inputTab === 'mitosis'}>
+            <Show when={state.inputTab === 'jsx'}>
               <div
                 css={{
                   paddingTop: 15,
@@ -822,7 +851,8 @@ export default function Fiddle() {
                     </MenuItem>
                   ))}
                 </Select>
-                <CodeEditor
+
+                <JsxCodeEditor
                   options={{
                     renderLineHighlightOnlyWhenFocus: true,
                     overviewRulerBorder: false,
@@ -841,27 +871,78 @@ export default function Fiddle() {
               </div>
             </Show>
 
-            <Show when={state.inputTab === 'angular'}>
-              <MonacoEditor
-                height="100%"
-                options={{
-                  automaticLayout: true,
-                  overviewRulerBorder: false,
-                  foldingHighlight: false,
-                  renderLineHighlightOnlyWhenFocus: true,
-                  occurrencesHighlight: false,
-                  minimap: { enabled: false },
-                  renderLineHighlight: 'none',
-                  selectionHighlight: false,
-                  scrollbar: { vertical: 'hidden' },
+            <Show when={state.inputTab === 'svelte'}>
+              <div
+                css={{
+                  paddingTop: 15,
+                  flexGrow: 1,
+                  position: 'relative',
+                  [smallBreakpoint]: {
+                    paddingTop: 0,
+                  },
                 }}
-                onChange={(value = '') => {
-                  state.inputCode = value;
-                }}
-                theme={monacoTheme}
-                language="typescript"
-                value={state.inputCode}
-              />
+              >
+                <Select
+                  disableUnderline
+                  css={{
+                    top: 10,
+                    position: 'absolute',
+                    right: 10,
+                    zIndex: 10,
+                    [smallBreakpoint]: {
+                      display: 'block',
+                      width: '160px',
+                      marginLeft: 'auto',
+                      position: 'relative',
+                      top: 0,
+                      right: 0,
+                    },
+                  }}
+                  renderValue={(value) => (
+                    <span css={{ textTransform: 'capitalize' }}>
+                      {value === '_none' ? 'Choose template' : (value as string)}
+                    </span>
+                  )}
+                  defaultValue="_none"
+                  onChange={(e) => {
+                    const template = svelteTemplates[e.target.value as string];
+                    if (template) {
+                      state.code = template;
+                    }
+                  }}
+                >
+                  <MenuItem value="_none" disabled>
+                    Choose template
+                  </MenuItem>
+                  {Object.keys(svelteTemplates).map((key) => (
+                    <MenuItem
+                      key={key}
+                      value={key}
+                      css={{
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {key}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <SvelteCodeEditor
+                  options={{
+                    renderLineHighlightOnlyWhenFocus: true,
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    automaticLayout: true,
+                    minimap: { enabled: false },
+                    scrollbar: { vertical: 'hidden' },
+                  }}
+                  onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+                  theme={monacoTheme}
+                  height="calc(100vh - 105px)"
+                  language="html"
+                  value={state.code}
+                  onChange={(val = '') => (state.code = val)}
+                />
+              </div>
             </Show>
           </div>
           <div
@@ -957,7 +1038,9 @@ export default function Fiddle() {
                 />
                 <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
-                <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                {state.inputTab !== 'svelte' && (
+                  <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                )}
                 <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
                 <Tab label="RSC" value="rsc" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
@@ -1485,15 +1568,15 @@ export default function Fiddle() {
           </div>
           <style>
             {`
-            builder-editor { 
-              flex-grow: 1; 
-              pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
-            }
-            
-            builder-editor iframe {
-              min-width: unset
-            }
-            `}
+              builder-editor { 
+                flex-grow: 1; 
+                pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
+              }
+              
+              builder-editor iframe {
+                min-width: unset
+              }
+              `}
           </style>
           <BuilderEditor
             onChange={(e: CustomEvent) => {
