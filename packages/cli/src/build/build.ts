@@ -36,8 +36,8 @@ import {
   INPUT_EXTENSIONS_ARRAY,
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
-import { transformImports, transpile } from './helpers/transpile';
-import { transpileSolidFile } from './helpers/transpile-solid-file';
+import { checkShouldOutputTypeScript } from './helpers/options';
+import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 
 const cwd = process.cwd();
 
@@ -168,7 +168,6 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
-  console.log('pattern', pattern);
   const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
@@ -253,6 +252,7 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
       return componentToVue2;
     case 'vue':
       console.log('Targeting Vue: defaulting to vue v3');
+      return componentToVue3;
     case 'vue3':
       return componentToVue3;
     case 'angular':
@@ -280,19 +280,6 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
-};
-
-/**
- * Output generated component file, before it is minified and transpiled into JS.
- */
-const checkShouldOutputTypeScript = ({
-  target,
-  options,
-}: {
-  target: Target;
-  options: MitosisConfig;
-}): boolean => {
-  return !!options.options[target]?.typescript;
 };
 
 const getComponentOutputFileName = ({
@@ -355,29 +342,7 @@ async function buildAndOutputComponentFiles({
       throw error;
     }
 
-    // perform additional transpilation steps per-target when outputting JS
-    if (!shouldOutputTypescript) {
-      // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
-      switch (target) {
-        case 'solid':
-          transpiled = await transpileSolidFile({
-            contents: transpiled,
-            path,
-          });
-          break;
-        case 'reactNative':
-        case 'preact':
-        case 'rsc':
-        case 'react':
-          transpiled = await transpile({
-            path,
-            content: transpiled,
-            target,
-            options,
-          });
-          break;
-      }
-    }
+    transpiled = transformImports({ target, options })(transpiled);
 
     const outputDir = `${options.dest}/${outputPath}`;
 
@@ -460,9 +425,10 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
         : null;
 
       if (overrideFile) {
-        const output = checkShouldOutputTypeScript({ target, options })
-          ? transformImports(target, options)(overrideFile)
-          : await transpile({ path, target, content: overrideFile, options });
+        const output = pipe(
+          await transpileIfNecessary({ path, target, content: overrideFile, options }),
+          transformImports({ target, options }),
+        );
 
         return { output, path };
       }
@@ -472,9 +438,12 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
         return buildContextFile({ ...args, path });
       }
 
-      const output = checkShouldOutputTypeScript({ target, options })
-        ? pipe(await readFile(path, 'utf8'), transformImports(target, options))
-        : await transpile({ path, target, options });
+      const file = await readFile(path, 'utf8');
+
+      const output = pipe(
+        await transpileIfNecessary({ path, target, options, content: file }),
+        transformImports({ target, options }),
+      );
 
       return { output, path };
     }),
