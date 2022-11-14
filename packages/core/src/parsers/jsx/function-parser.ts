@@ -22,8 +22,7 @@ export function generateUseStyleCode(expression: babel.types.CallExpression) {
 
 function processDefaultPropsValue(value: any) {
   if (types.isFunctionExpression(value) || types.isArrowFunctionExpression(value)) {
-    const code = generate(value)
-      .code.trim();
+    const code = generate(value).code;
     return { type: 'method', code };
   } else {
     return { type: 'property', code: value.value };
