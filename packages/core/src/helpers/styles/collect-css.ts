@@ -90,7 +90,7 @@ const classStyleMapToCss = (map: ClassStyleMap): string => {
 
   for (const key in map) {
     const styles = getStylesOnly(map[key]);
-    str += `.${key} { ${styleMapToCss(styles)} }`;
+    str += `.${key} {\n${styleMapToCss(styles)}\n}`;
     const nestedSelectors = getNestedSelectors(map[key]);
     for (const nestedSelector in nestedSelectors) {
       const value = nestedSelectors[nestedSelector] as any;
@@ -100,7 +100,7 @@ const classStyleMapToCss = (map: ClassStyleMap): string => {
         const useSelector = nestedSelector.includes('&')
           ? nestedSelector.replace(/&/g, `.${key}`)
           : `.${key} ${nestedSelector}`;
-        str += `${useSelector} { ${styleMapToCss(value)} }`;
+        str += `${useSelector} {\n${styleMapToCss(value)}\n}`;
       }
     }
   }

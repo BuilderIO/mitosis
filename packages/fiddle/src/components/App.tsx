@@ -14,6 +14,7 @@ export default function App() {
         primary: { main: colors.primary },
       },
     });
+
     return (
       <React.StrictMode>
         <ThemeProvider theme={muiTheme}>
@@ -23,7 +24,7 @@ export default function App() {
               background-color: ${colors.background};
             }
           `}</style>
-          <Fiddle />
+          {<Fiddle />}
         </ThemeProvider>
       </React.StrictMode>
     );
