@@ -38,7 +38,6 @@ import {
 } from './helpers/inputs-extensions';
 import { checkShouldOutputTypeScript } from './helpers/options';
 import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
-import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
 
@@ -169,7 +168,6 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
   const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
-  console.log('pattern', pattern);
   const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
@@ -344,29 +342,7 @@ async function buildAndOutputComponentFiles({
       throw error;
     }
 
-    // perform additional transpilation steps per-target when outputting JS
-    if (!shouldOutputTypescript) {
-      // TO-DO: it makes no sense for there to be this kind of logic here. Move it to the transpiler.
-      switch (target) {
-        case 'solid':
-          transpiled = await transpileSolidFile({
-            contents: transpiled,
-            path,
-          });
-          break;
-        case 'reactNative':
-        case 'preact':
-        case 'rsc':
-        case 'react':
-          transpiled = await transpile({
-            path,
-            content: transpiled,
-            target,
-            options,
-          });
-          break;
-      }
-    }
+    transpiled = transformImports({ target, options })(transpiled);
 
     const outputDir = `${options.dest}/${outputPath}`;
 
@@ -451,7 +427,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
       if (overrideFile) {
         const output = pipe(
           await transpileIfNecessary({ path, target, content: overrideFile, options }),
-          transformImports(target, options),
+          transformImports({ target, options }),
         );
 
         return { output, path };
@@ -466,7 +442,7 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
 
       const output = pipe(
         await transpileIfNecessary({ path, target, options, content: file }),
-        transformImports(target, options),
+        transformImports({ target, options }),
       );
 
       return { output, path };
