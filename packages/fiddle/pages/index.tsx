@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import { theme } from '../src/constants/theme';
 
-const App = dynamic(() => import('../src/components/App'));
+const App = dynamic(() => import('../src/components/App'), { ssr: false });
 
 configure({
   enforceActions: 'never',
