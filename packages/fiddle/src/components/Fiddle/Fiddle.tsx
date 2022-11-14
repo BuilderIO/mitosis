@@ -1,4 +1,4 @@
-import { componentToBuilder, MitosisComponent } from '@builder.io/mitosis';
+import type { MitosisComponent } from '@builder.io/mitosis';
 import {
   Button,
   createTheme,
@@ -43,8 +43,14 @@ import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
 import { JsxCodeEditor } from '../JsxCodeEditor';
 import { SvelteCodeEditor } from '../SvelteCodeEditor';
 
-const generateCode = () => import('./generate').then((mod) => mod.generateCode);
-const mitosisCore = () => import('@builder.io/mitosis');
+const generateCode = () => {
+  console.log('generating code...');
+  return import('./generate').then((mod) => mod.generateCode);
+};
+const mitosisCore = () => {
+  console.log('importing mitosis...');
+  return import('@builder.io/mitosis');
+};
 
 type Position = { row: number; column: number };
 
@@ -337,7 +343,8 @@ export default function Fiddle() {
           vueVersion: state.options.vueVersion,
         })({ component: json, path: '' });
 
-        const newBuilderData = componentToBuilder()({ component: json });
+        const { componentToBuilder } = await mitosisCore();
+        const newBuilderData = await componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
       } catch (err) {
         if (debug) {

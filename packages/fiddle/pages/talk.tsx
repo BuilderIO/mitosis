@@ -14,7 +14,7 @@ export default () => {
       <Head>
         <title>Mitosis Fiddle - compile to common frameworks, import from popular tools</title>
       </Head>
-      <App />
+      <App talk />
     </>
   );
 };

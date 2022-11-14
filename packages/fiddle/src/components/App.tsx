@@ -4,10 +4,10 @@ import { createTheme, ThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { colors } from '../constants/colors';
 import Fiddle from './Fiddle';
-import Talk from './Talk';
 import { theme } from '../constants/theme';
+import Talk from './Talk';
 
-export default function App() {
+export default function App({ talk }: { talk?: boolean }) {
   return useObserver(() => {
     const muiTheme = createTheme({
       palette: {
@@ -16,7 +16,6 @@ export default function App() {
       },
     });
 
-    const talkMode = window.location.pathname.includes('/talk');
     return (
       <React.StrictMode>
         <ThemeProvider theme={muiTheme}>
@@ -26,7 +25,7 @@ export default function App() {
               background-color: ${colors.background};
             }
           `}</style>
-          {talkMode ? <Talk /> : <Fiddle />}
+          {talk ? <Talk /> : <Fiddle />}
         </ThemeProvider>
       </React.StrictMode>
     );

@@ -1,43 +1,6 @@
-import {
-  compileAwayBuilderComponents,
-  mapStyles,
-  Transpiler,
-  componentToLiquid,
-  componentToAlpine,
-  componentToHtml,
-  componentToCustomElement,
-  componentToPreact,
-  componentToLit,
-  componentToRsc,
-  componentToQwik,
-  componentToReact,
-  componentToStencil,
-  componentToMarko,
-  componentToSwift,
-  componentToReactNative,
-  componentToTemplate,
-  componentToSolid,
-  componentToAngular,
-  componentToSvelte,
-  componentToMitosis,
-  componentToBuilder,
-  componentToVue2,
-  componentToVue3,
-} from '@builder.io/mitosis';
+type Transpiler = import('@builder.io/mitosis').Transpiler<string>;
 
-const plugins = [
-  compileAwayBuilderComponents(),
-  mapStyles({
-    map: (styles) => ({
-      ...styles,
-      boxSizing: undefined,
-      flexShrink: undefined,
-      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
-    }),
-  }),
-];
-
-export const generateCode = ({
+export const generateCode = async ({
   output,
   options,
   vueVersion,
@@ -45,7 +8,46 @@ export const generateCode = ({
   output: string;
   options: any;
   vueVersion: '2' | '3';
-}): Transpiler<string> => {
+}): Promise<Transpiler> => {
+  const mitosisCore = await import('@builder.io/mitosis');
+
+  const {
+    compileAwayBuilderComponents,
+    mapStyles,
+    componentToLiquid,
+    componentToAlpine,
+    componentToHtml,
+    componentToCustomElement,
+    componentToPreact,
+    componentToLit,
+    componentToRsc,
+    componentToQwik,
+    componentToReact,
+    componentToStencil,
+    componentToMarko,
+    componentToSwift,
+    componentToReactNative,
+    componentToTemplate,
+    componentToSolid,
+    componentToAngular,
+    componentToSvelte,
+    componentToMitosis,
+    componentToBuilder,
+    componentToVue2,
+    componentToVue3,
+  } = mitosisCore;
+
+  const plugins = [
+    compileAwayBuilderComponents(),
+    mapStyles({
+      map: (styles) => ({
+        ...styles,
+        boxSizing: undefined,
+        flexShrink: undefined,
+        alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
+      }),
+    }),
+  ];
   const allOptions = { plugins, ...options };
   switch (output) {
     case 'liquid':

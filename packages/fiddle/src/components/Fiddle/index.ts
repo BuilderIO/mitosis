@@ -1,1 +1,1 @@
-export * from './Fiddle';
+export { default } from './Fiddle';
