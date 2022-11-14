@@ -36,7 +36,8 @@ import {
   INPUT_EXTENSIONS_ARRAY,
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
-import { transformImports, transpile } from './helpers/transpile';
+import { checkShouldOutputTypeScript } from './helpers/options';
+import { transformImports, transpile, transpileIfNecessary } from './helpers/transpile';
 import { transpileSolidFile } from './helpers/transpile-solid-file';
 
 const cwd = process.cwd();
@@ -253,6 +254,7 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
       return componentToVue2;
     case 'vue':
       console.log('Targeting Vue: defaulting to vue v3');
+      return componentToVue3;
     case 'vue3':
       return componentToVue3;
     case 'angular':
@@ -280,19 +282,6 @@ const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['g
     default:
       throw new Error('CLI does not yet support target: ' + target);
   }
-};
-
-/**
- * Output generated component file, before it is minified and transpiled into JS.
- */
-const checkShouldOutputTypeScript = ({
-  target,
-  options,
-}: {
-  target: Target;
-  options: MitosisConfig;
-}): boolean => {
-  return !!options.options[target]?.typescript;
 };
 
 const getComponentOutputFileName = ({
@@ -460,9 +449,10 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
         : null;
 
       if (overrideFile) {
-        const output = checkShouldOutputTypeScript({ target, options })
-          ? transformImports(target, options)(overrideFile)
-          : await transpile({ path, target, content: overrideFile, options });
+        const output = pipe(
+          await transpileIfNecessary({ path, target, content: overrideFile, options }),
+          transformImports(target, options),
+        );
 
         return { output, path };
       }
@@ -472,9 +462,12 @@ async function buildNonComponentFiles(args: TargetContextWithConfig) {
         return buildContextFile({ ...args, path });
       }
 
-      const output = checkShouldOutputTypeScript({ target, options })
-        ? pipe(await readFile(path, 'utf8'), transformImports(target, options))
-        : await transpile({ path, target, options });
+      const file = await readFile(path, 'utf8');
+
+      const output = pipe(
+        await transpileIfNecessary({ path, target, options, content: file }),
+        transformImports(target, options),
+      );
 
       return { output, path };
     }),

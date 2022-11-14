@@ -1,8 +1,8 @@
 import * as esbuild from 'esbuild';
-import { readFile } from 'fs-extra';
 import { MitosisConfig, Target } from '@builder.io/mitosis';
 import { getFileExtensionForTarget } from './extensions';
 import { checkIsMitosisComponentFilePath, INPUT_EXTENSION_IMPORT_REGEX } from './inputs-extensions';
+import { checkShouldOutputTypeScript } from './options';
 
 /**
  * Remove `.lite` or `.svelte` extensions from imports without having to load a slow parser like babel
@@ -37,17 +37,15 @@ export const transpile = async ({
   options,
 }: {
   path: string;
-  content?: string | null;
+  content: string;
   target: Target;
   options: MitosisConfig;
-}) => {
+}): Promise<string> => {
   try {
     const transpilerOptions = options.options[target]?.transpiler;
     const format = transpilerOptions?.format || 'esm';
 
-    const useContent = content ?? (await readFile(path, 'utf8'));
-
-    const output = await esbuild.transform(useContent, {
+    const output = await esbuild.transform(content, {
       format: format,
       /**
        * Collisions occur between TSX and TS Generic syntax. We want to only provide this loader config if the file is
@@ -61,11 +59,24 @@ export const transpile = async ({
       console.warn(`Warnings found in file: ${path}`, output.warnings);
     }
 
-    const contents = transformImports(target, options)(output.code);
-
-    return contents;
+    return output.code;
   } catch (e) {
     console.error(`Error found in file: ${path}`);
     throw e;
   }
 };
+
+export const transpileIfNecessary = async ({
+  content,
+  options,
+  path,
+  target,
+}: {
+  path: string;
+  content: string;
+  target: Target;
+  options: MitosisConfig;
+}): Promise<string> =>
+  checkShouldOutputTypeScript({ target, options })
+    ? content
+    : await transpile({ path, target, options, content });
