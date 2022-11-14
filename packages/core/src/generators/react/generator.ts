@@ -269,7 +269,9 @@ const getRefsString = (json: MitosisComponent, refs: string[], options: ToReactO
     // domRefs must have null argument
     const argument = json['refs'][ref]?.argument || (domRefs.has(ref) ? 'null' : '');
     hasStateArgument = /state\./.test(argument);
-    code += `\nconst ${ref} = useRef${typeParameter ? `<${typeParameter}>` : ''}(${processHookCode({
+    code += `\nconst ${ref} = useRef${
+      typeParameter && options.typescript ? `<${typeParameter}>` : ''
+    }(${processHookCode({
       str: argument,
       options,
     })});`;
@@ -501,7 +503,8 @@ const _componentToReact = (
   const nativeStyles =
     stylesType === 'react-native' && componentHasStyles && collectReactNativeStyles(json);
 
-  const propsArgs = `props: ${json.propsTypeRef || 'any'}`;
+  const propType = json.propsTypeRef || 'any';
+  const propsArgs = `props${options.typescript ? `:${propType}` : ''}`;
 
   let str = dedent`
   ${
@@ -538,16 +541,20 @@ const _componentToReact = (
         ? `import { useLocalObservable, observer } from 'mobx-react-lite';`
         : ''
     }
-    ${json.types ? json.types.join('\n') : ''}
+    ${json.types && options.typescript ? json.types.join('\n') : ''}
     ${renderPreComponent({
       component: json,
       target: options.type === 'native' ? 'reactNative' : 'react',
     })}
     ${stateType === 'mobx' && isForwardRef ? `const ${json.name || 'MyComponent'} = ` : ``}${
     isSubComponent || stateType === 'mobx' ? '' : 'export default '
-  }${isForwardRef ? `forwardRef${forwardRefType ? `<${forwardRefType}>` : ''}(` : ''}function ${
-    json.name || 'MyComponent'
-  }(${propsArgs}${isForwardRef ? `, ${options.forwardRef}` : ''}) {
+  }${
+    isForwardRef
+      ? `forwardRef${forwardRefType && options.typescript ? `<${forwardRefType}>` : ''}(`
+      : ''
+  }function ${json.name || 'MyComponent'}(${propsArgs}${
+    isForwardRef ? `, ${options.forwardRef}` : ''
+  }) {
     ${
       options.contextType === 'prop-drill'
         ? `const ${contextPropDrillingKey} = { ...props['${contextPropDrillingKey}'] };`

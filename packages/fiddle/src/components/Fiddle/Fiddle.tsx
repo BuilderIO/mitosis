@@ -337,11 +337,15 @@ export default function Fiddle() {
           }
         };
 
-        state.output = (await generateCode())({
-          output: state.outputTab,
-          options: { ...generateOptions(), ...commonOptions },
-          vueVersion: state.options.vueVersion,
-        })({ component: json, path: '' });
+        const generator = await generateCode();
+
+        state.output = (
+          await generator({
+            output: state.outputTab,
+            options: { ...generateOptions(), ...commonOptions },
+            vueVersion: state.options.vueVersion,
+          })
+        )({ component: json, path: '' });
 
         const { componentToBuilder } = await mitosisCore();
         const newBuilderData = await componentToBuilder()({ component: json });
