@@ -1,4 +1,4 @@
-import type { MitosisComponent } from '@builder.io/mitosis';
+import { componentToBuilder, MitosisComponent } from '@builder.io/mitosis';
 import {
   Button,
   createTheme,
