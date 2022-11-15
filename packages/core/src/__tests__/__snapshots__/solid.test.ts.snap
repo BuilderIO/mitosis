@@ -10789,6 +10789,92 @@ export default MyComponent;
 "
 `;
 
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
 exports[`Solid > svelte > Javascript Test > style 1`] = `
 "import { css } from \\"solid-styled-components\\";
 
@@ -11413,6 +11499,92 @@ function MyComponent(props) {
         <input value={name()} />
         Lowercase:
         {lowercaseName()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
       </div>
     </>
   );

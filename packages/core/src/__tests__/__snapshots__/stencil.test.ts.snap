@@ -5594,6 +5594,47 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Javascript Test > style 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5911,6 +5952,47 @@ export default class MyComponent {
         <input value={this.name} />
         Lowercase:
         {this.lowercaseName}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
       </div>
     );
   }

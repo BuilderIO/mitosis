@@ -5367,6 +5367,46 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React Native > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <View>
+      <View
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <View
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      <Text>Result: </Text>
+      <Text>{result}</Text>
+    </View>
+  );
+}
+"
+`;
+
 exports[`React Native > svelte > Javascript Test > style 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -5664,6 +5704,46 @@ export default function MyComponent(props: any) {
       <View value={name} />
       <Text>Lowercase: </Text>
       <Text>{lowercaseName()}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <View>
+      <View
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <View
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      <Text>Result: </Text>
+      <Text>{result}</Text>
     </View>
   );
 }

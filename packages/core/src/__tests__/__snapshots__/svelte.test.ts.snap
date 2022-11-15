@@ -4686,6 +4686,28 @@ exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
 </div>"
 `;
 
+exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<script>
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
+</div>"
+`;
+
 exports[`Svelte > svelte > Javascript Test > style 1`] = `
 "<input class=\\"form-input\\" />
 
@@ -4911,6 +4933,28 @@ exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
 <div>
   <input value={name} />
   Lowercase: {lowercaseName()}
+</div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<script lang=\\"ts\\">
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
 </div>"
 `;
 

@@ -5548,6 +5548,46 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Preact > svelte > Javascript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Javascript Test > style 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5855,6 +5895,46 @@ export default function MyComponent(props: any) {
       <input value={name} />
       Lowercase:
       {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Typescript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
     </div>
   );
 }

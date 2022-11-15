@@ -10911,6 +10911,102 @@ exports[`Html > svelte > Javascript Test > reactive 1`] = `
   2 |  return state.name.toLowerCase()}"
 `;
 
+exports[`Html > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div>
+  <input type=\\"number\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <input type=\\"number\\" data-el=\\"input-3\\" data-dom-state=\\"input-4\\" />
+
+  Result:
+  <template data-el=\\"div-1\\"><!-- state.result --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        state.result = a_ * b_;
+        update();
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.value = state.a;
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+
+        el.value = state.b;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.result);
+      });
+
+      destroyAnyNodes();
+
+      state.calculateResult(state.a, state.b);
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.a = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.b = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
+`;
+
 exports[`Html > svelte > Javascript Test > style 1`] = `
 "<input class=\\"form-input\\" data-dom-state=\\"input-1\\" />
 <style>
@@ -11700,6 +11796,102 @@ exports[`Html > svelte > Typescript Test > reactive 1`] = `
 > 1 | let _ = get lowercaseName() {
     |            ^
   2 |  return state.name.toLowerCase()}"
+`;
+
+exports[`Html > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div>
+  <input type=\\"number\\" data-el=\\"input-1\\" data-dom-state=\\"input-2\\" />
+  <input type=\\"number\\" data-el=\\"input-3\\" data-dom-state=\\"input-4\\" />
+
+  Result:
+  <template data-el=\\"div-1\\"><!-- state.result --></template>
+</div>
+<script>
+  (() => {
+    const state = {
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        state.result = a_ * b_;
+        update();
+      },
+    };
+
+    let context = null;
+    let nodesToDestroy = [];
+    let pendingUpdate = false;
+
+    function destroyAnyNodes() {
+      // destroy current view template refs before rendering again
+      nodesToDestroy.forEach((el) => el.remove());
+      nodesToDestroy = [];
+    }
+
+    // Function to update data bindings and loops
+    // call update() when you mutate state and need the updates to reflect
+    // in the dom
+    function update() {
+      if (pendingUpdate === true) {
+        return;
+      }
+      pendingUpdate = true;
+
+      document.querySelectorAll(\\"[data-el='input-1']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput1Input);
+        el.addEventListener(\\"input\\", onInput1Input);
+
+        el.value = state.a;
+      });
+
+      document.querySelectorAll(\\"[data-el='input-3']\\").forEach((el) => {
+        el.removeEventListener(\\"input\\", onInput3Input);
+        el.addEventListener(\\"input\\", onInput3Input);
+
+        el.value = state.b;
+      });
+
+      document.querySelectorAll(\\"[data-el='div-1']\\").forEach((el) => {
+        renderTextNode(el, state.result);
+      });
+
+      destroyAnyNodes();
+
+      state.calculateResult(state.a, state.b);
+
+      pendingUpdate = false;
+    }
+
+    // Event handler for 'input' event on input-1
+    function onInput1Input(event) {
+      state.a = event.target.value;
+      update();
+    }
+
+    // Event handler for 'input' event on input-3
+    function onInput3Input(event) {
+      state.b = event.target.value;
+      update();
+    }
+
+    // Update with initial state on first load
+    update();
+
+    // Helper text DOM nodes
+    function renderTextNode(el, text) {
+      const textNode = document.createTextNode(text);
+      if (el?.scope) {
+        textNode.scope = el.scope;
+      }
+      if (el?.context) {
+        child.context = el.context;
+      }
+      el.after(textNode);
+      nodesToDestroy.push(el.nextSibling);
+    }
+  })();
+</script>
+"
 `;
 
 exports[`Html > svelte > Typescript Test > style 1`] = `

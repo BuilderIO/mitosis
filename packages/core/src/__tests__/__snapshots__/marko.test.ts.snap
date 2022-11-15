@@ -3964,6 +3964,37 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
 </div>"
 `;
 
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
+</div>"
+`;
+
 exports[`Marko > svelte > Javascript Test > style 1`] = `
 "class {}
 
@@ -4186,6 +4217,37 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
 </div>"
 `;
 

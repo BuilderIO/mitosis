@@ -4458,6 +4458,35 @@ exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Javascript Test > style 1`] = `
 "<style>
   input {
@@ -4705,6 +4734,35 @@ exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
 
       get lowercaseName() {
         return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
       },
     }));
   });

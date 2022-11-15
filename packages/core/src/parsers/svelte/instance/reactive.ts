@@ -32,7 +32,6 @@ export function parseReactive(json: SveltosisComponent, node: LabeledStatement) 
     if (node.body.type === 'ExpressionStatement') {
       json.hooks.onUpdate = json.hooks.onUpdate || [];
 
-      // Handle Update
       json.hooks.onUpdate.push({
         code: generate(node.body),
         deps: `[${expression.arguments.map((arg) => generate(arg))}]`,

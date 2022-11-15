@@ -7825,6 +7825,43 @@ export default class MyComponent extends LitElement {
 "
 `;
 
+exports[`Lit > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() a = 2;
+  @state() b = 5;
+  @state() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  updated() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return html\`
+        
+        <div>
+        <input type=\\"number\\" @input=\${(event) => (this.a = event.target.value)}
+        .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
+      </div>
+
+      \`;
+  }
+}
+"
+`;
+
 exports[`Lit > svelte > Javascript Test > style 1`] = `
 "import { LitElement, html, css } from \\"lit\\";
 import { customElement, property, state, query } from \\"lit/decorators.js\\";
@@ -8226,6 +8263,43 @@ export default class MyComponent extends LitElement {
        </div>
 
        \`;
+  }
+}
+"
+`;
+
+exports[`Lit > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
+
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
+
+  @state() a = 2;
+  @state() b = 5;
+  @state() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  updated() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return html\`
+        
+        <div>
+        <input type=\\"number\\" @input=\${(event) => (this.a = event.target.value)}
+        .value=\${this.a} /> <input type=\\"number\\" @input=\${(event) =>
+      (this.b = event.target.value)} .value=\${this.b} /> Result: \${this.result}
+      </div>
+
+      \`;
   }
 }
 "

@@ -5242,6 +5242,38 @@ const lowercaseName = computed(() => {
 </script>"
 `;
 
+exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup>
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
+</script>"
+`;
+
 exports[`Vue > svelte > Javascript Test > style 1`] = `
 "<template>
   <input class=\\"form-input\\" />
@@ -5503,6 +5535,38 @@ const name = ref(\\"Steve\\");
 const lowercaseName = computed(() => {
   return name.value.toLowerCase();
 });
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
 </script>"
 `;
 

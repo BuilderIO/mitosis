@@ -8170,6 +8170,46 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Javascript Test > style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8603,6 +8643,46 @@ export class MyComponent {
   name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
   }
 }
 
