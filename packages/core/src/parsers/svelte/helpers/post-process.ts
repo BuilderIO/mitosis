@@ -7,9 +7,11 @@ import type { extendedHook, StateValue } from '../../../types/mitosis-component'
 import type { SveltosisComponent } from '../types';
 import { processBindings } from './bindings';
 
+type SveltosisStateValue = StateValue & { arguments?: string[]; type: string };
+
 export function preventNameCollissions(
   json: SveltosisComponent,
-  item: any,
+  item: SveltosisStateValue,
   prepend = '',
   append = '_',
 ) {
@@ -101,7 +103,7 @@ function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode
 
 function postProcessState(json: SveltosisComponent) {
   for (const key of Object.keys(json.state)) {
-    const item = json.state[key] as StateValue & { arguments?: string[]; type: string };
+    const item = json.state[key] as SveltosisStateValue;
 
     if (item?.type !== 'property') {
       const output = preventNameCollissions(json, item);
