@@ -1,4 +1,3 @@
-import json5 from 'json5';
 import { MitosisComponent, MitosisState, StateValue } from '../../../types/mitosis-component';
 import { ToSolidOptions } from '../types';
 import { pipe } from 'fp-ts/lib/function';
@@ -15,16 +14,19 @@ const processSignalStateValue = ({
   const mapValue = updateStateCode({ options, component });
 
   return ([key, stateVal]: [key: string, stateVal: StateValue | undefined]) => {
+    if (!stateVal) {
+      return '';
+    }
+
     const getDefaultCase = () =>
       pipe(
         value,
-        json5.stringify,
         mapValue,
         (x) => `const [${key}, ${getStateSetterName(key)}] = createSignal(${x})`,
       );
 
-    const value = stateVal?.code;
-    const type = stateVal?.type;
+    const value = stateVal.code;
+    const type = stateVal.type;
     if (typeof value === 'string') {
       switch (type) {
         case 'getter':

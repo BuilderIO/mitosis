@@ -1,31 +1,4 @@
-import {
-  builderContentToMitosisComponent,
-  compileAwayBuilderComponents,
-  componentToAngular,
-  componentToAlpine,
-  componentToBuilder,
-  componentToCustomElement,
-  componentToHtml,
-  componentToMitosis,
-  componentToLiquid,
-  componentToReact,
-  componentToStencil,
-  componentToMarko,
-  componentToReactNative,
-  componentToSolid,
-  componentToRsc,
-  componentToSvelte,
-  componentToSwift,
-  componentToPreact,
-  componentToLit,
-  componentToQwik,
-  componentToTemplate,
-  angularToMitosisComponent,
-  mapStyles,
-  parseJsx,
-  componentToVue2,
-  componentToVue3,
-} from '@builder.io/mitosis';
+import type { MitosisComponent } from '@builder.io/mitosis';
 import {
   Button,
   createTheme,
@@ -47,24 +20,37 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 
 import { adapt } from 'webcomponents-in-react';
-import { breakpoints } from '../constants/breakpoints';
-import { colors } from '../constants/colors';
-import { defaultCode, templates } from '../constants/templates';
-import { theme } from '../constants/theme';
-import { deleteQueryParam } from '../functions/delete-query-param';
-import { getQueryParam } from '../functions/get-query-param';
-import { localStorageGet } from '../functions/local-storage-get';
-import { localStorageSet } from '../functions/local-storage-set';
-import { setQueryParam } from '../functions/set-query-param';
-import { useEventListener } from '../hooks/use-event-listener';
-import { useReaction } from '../hooks/use-reaction';
-import { Show } from './Show';
-import { TextLink } from './TextLink';
+import { breakpoints } from '../../constants/breakpoints';
+import { colors } from '../../constants/colors';
+import { defaultCode, templates } from '../../constants/templates/jsx-templates';
+import {
+  defaultCode as defaultSvelteCode,
+  templates as svelteTemplates,
+} from '../../constants/templates/svelte-templates';
+import { theme } from '../../constants/theme';
+import { deleteQueryParam } from '../../functions/delete-query-param';
+import { getQueryParam } from '../../functions/get-query-param';
+import { localStorageGet } from '../../functions/local-storage-get';
+import { localStorageSet } from '../../functions/local-storage-set';
+import { setQueryParam } from '../../functions/set-query-param';
+import { useEventListener } from '../../hooks/use-event-listener';
+import { useReaction } from '../../hooks/use-reaction';
+import { Show } from '../Show';
+import { TextLink } from '../TextLink';
 import stringify from 'fast-json-stable-stringify';
 
 import MonacoEditor, { EditorProps, useMonaco } from '@monaco-editor/react/';
-import { CodeEditor } from './CodeEditor';
-import { ToAlpineOptions } from '@builder.io/mitosis';
+import { JsxCodeEditor } from '../JsxCodeEditor';
+import { SvelteCodeEditor } from '../SvelteCodeEditor';
+
+const generateCode = () => {
+  console.log('generating code...');
+  return import('./generate').then((mod) => mod.generateCode);
+};
+const mitosisCore = () => {
+  console.log('importing mitosis...');
+  return import('@builder.io/mitosis');
+};
 
 type Position = { row: number; column: number };
 
@@ -215,18 +201,6 @@ export default class FooComponent {
 }
 `;
 
-const plugins = [
-  compileAwayBuilderComponents(),
-  mapStyles({
-    map: (styles) => ({
-      ...styles,
-      boxSizing: undefined,
-      flexShrink: undefined,
-      alignItems: styles.alignItems === 'stretch' ? undefined : styles.alignItems,
-    }),
-  }),
-];
-
 type EditorRefArgs = Parameters<NonNullable<EditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
@@ -248,7 +222,7 @@ export default function Fiddle() {
     output: '',
     outputTab: getQueryParam('outputTab') || 'vue',
     pendingBuilderChange: null as any,
-    inputTab: getQueryParam('inputTab') || 'mitosis',
+    inputTab: getQueryParam('inputTab') || 'jsx',
     builderData: {} as any,
     isDraggingBuilderCodeBar: false,
     isDraggingJSXCodeBar: false,
@@ -310,121 +284,73 @@ export default function Fiddle() {
       if (!builderJson) {
         return;
       }
-      const jsxJson = builderContentToMitosisComponent(builderJson);
-      state.code = componentToMitosis()({ component: jsxJson })[0].content;
-      state.pendingBuilderChange = null;
+      mitosisCore().then((mitosis) => {
+        const jsxJson = mitosis.builderContentToMitosisComponent(builderJson);
+        state.code = mitosis.componentToMitosis()({ component: jsxJson })[0].content;
+        state.pendingBuilderChange = null;
+      });
     },
 
     async updateOutput() {
       try {
         state.pendingBuilderChange = null;
         staticState.ignoreNextBuilderUpdate = true;
-        const json =
-          state.inputTab === 'angular'
-            ? angularToMitosisComponent(state.inputCode)
-            : parseJsx(state.code);
+
+        let json: MitosisComponent;
+
+        const { parseSvelte, parseJsx } = await mitosisCore();
+
+        switch (state.inputTab) {
+          case 'svelte':
+            json = await parseSvelte(state.code);
+            break;
+          case 'jsx':
+          default:
+            json = parseJsx(state.code);
+            break;
+        }
 
         let commonOptions: { typescript: boolean } = {
           typescript: hasBothTsAndJsSupport(state.outputTab) && state.options.typescript === 'true',
         };
-        let alpineOptions: ToAlpineOptions = {
-          useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
-          inlineState: this.options.alpineInline === 'true',
-        };
 
-        const output =
-          state.outputTab === 'liquid'
-            ? componentToLiquid({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'alpine'
-            ? componentToAlpine({ plugins, ...commonOptions, ...alpineOptions })({
-                component: json,
-              })
-            : state.outputTab === 'html'
-            ? componentToHtml({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'webcomponents'
-            ? componentToCustomElement({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'preact'
-            ? componentToPreact({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'lit'
-            ? componentToLit({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'rsc'
-            ? componentToRsc({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'qwik'
-            ? componentToQwik({ plugins, ...commonOptions })({ component: json })
-                // Remove the comment at the
-                .replace('// GENERATED BY MITOSIS', '')
-                .trim()
-            : state.outputTab === 'react'
-            ? componentToReact({
+        const generateOptions = () => {
+          switch (state.outputTab) {
+            case 'alpine':
+              return {
+                useShorthandSyntax: this.options.alpineShorthandSyntax === 'true',
+                inlineState: this.options.alpineInline === 'true',
+              };
+            case 'react':
+              return {
                 stylesType: state.options.reactStyleType,
                 stateType: state.options.reactStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'stencil'
-            ? componentToStencil({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'marko'
-            ? componentToMarko({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'swift'
-            ? componentToSwift()({ component: json })
-            : state.outputTab === 'reactNative'
-            ? componentToReactNative({
-                stateType: state.options.reactStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'template'
-            ? componentToTemplate({
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : state.outputTab === 'solid'
-            ? componentToSolid({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'angular'
-            ? componentToAngular({ plugins, ...commonOptions })({ component: json })
-            : state.outputTab === 'svelte'
-            ? componentToSvelte({
-                stateType: state.options.svelteStateType,
-                plugins,
-                ...commonOptions,
-              })({ component: json })
-            : // TODO: add qwik support back again
-            // : state.outputTab === 'qwik'
-            // ? (
-            //     await componentToQwik(json, {
-            //       plugins,
-            //     })
-            //   ).files.find((file) => file.path.endsWith('template.tsx'))!
-            //     ?.contents
-            state.outputTab === 'mitosis'
-            ? componentToMitosis()({ component: json })
-            : state.outputTab === 'json'
-            ? JSON.stringify(json, null, 2)
-            : state.outputTab === 'builder'
-            ? JSON.stringify(componentToBuilder()({ component: json }), null, 2)
-            : state.options.vueVersion === '2'
-            ? componentToVue2({ plugins, api: state.options.vueApi, ...commonOptions })({
-                component: json,
-                path: '',
-              })
-            : componentToVue3({
-                plugins,
-                api: state.options.vueApi,
-                ...commonOptions,
-              })({
-                component: json,
-                path: '',
-              });
+              };
+            case 'reactNative':
+              return { stateType: state.options.reactStateType };
+            case 'svelte':
+              return { stateType: state.options.svelteStateType };
+            case 'vue':
+              return { api: state.options.vueApi };
+            default:
+              return {};
+          }
+        };
+
+        const generator = await generateCode();
+
+        state.output = (
+          await generator({
+            output: state.outputTab,
+            options: { ...generateOptions(), ...commonOptions },
+            vueVersion: state.options.vueVersion,
+          })
+        )({ component: json, path: '' });
 
         state.output = output[0].content;
 
-        const newBuilderData = componentToBuilder()({ component: json });
+        const { componentToBuilder } = await mitosisCore();
+        const newBuilderData = await componentToBuilder()({ component: json });
         setBuilderData(newBuilderData);
       } catch (err) {
         if (debug) {
@@ -558,8 +484,15 @@ export default function Fiddle() {
   useReaction(
     () => state.inputTab,
     (tab) => {
-      const json = parseJsx(state.code);
-      state.inputCode = componentToAngular({ plugins })({ component: json });
+      if (tab === 'svelte') {
+        state.code = defaultSvelteCode;
+        if (state.outputTab === 'svelte') {
+          state.outputTab = 'vue';
+        }
+      } else {
+        state.code = defaultCode;
+      }
+
       setQueryParam('inputTab', tab);
     },
     { fireImmediately: false },
@@ -761,15 +694,24 @@ export default function Fiddle() {
                 <Tab
                   label={
                     <TabLabelWithIcon
-                      label="Mitosis"
+                      label="Mitosis JSX"
                       icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
                     />
                   }
-                  value="mitosis"
+                  value="jsx"
+                />
+                <Tab
+                  label={
+                    <TabLabelWithIcon
+                      label="Sveltosis"
+                      icon="https://cdn.builder.io/api/v1/image/assets%2FYJIGb4i01jvw0SRdL5Bt%2F98d1ee2d3215406c9a6a83efc3f59494"
+                    />
+                  }
+                  value="svelte"
                 />
               </Tabs>
             </div>
-            <Show when={state.inputTab === 'mitosis'}>
+            <Show when={state.inputTab === 'jsx'}>
               <div
                 css={{
                   paddingTop: 15,
@@ -824,7 +766,8 @@ export default function Fiddle() {
                     </MenuItem>
                   ))}
                 </Select>
-                <CodeEditor
+
+                <JsxCodeEditor
                   options={{
                     renderLineHighlightOnlyWhenFocus: true,
                     overviewRulerBorder: false,
@@ -843,27 +786,78 @@ export default function Fiddle() {
               </div>
             </Show>
 
-            <Show when={state.inputTab === 'angular'}>
-              <MonacoEditor
-                height="100%"
-                options={{
-                  automaticLayout: true,
-                  overviewRulerBorder: false,
-                  foldingHighlight: false,
-                  renderLineHighlightOnlyWhenFocus: true,
-                  occurrencesHighlight: false,
-                  minimap: { enabled: false },
-                  renderLineHighlight: 'none',
-                  selectionHighlight: false,
-                  scrollbar: { vertical: 'hidden' },
+            <Show when={state.inputTab === 'svelte'}>
+              <div
+                css={{
+                  paddingTop: 15,
+                  flexGrow: 1,
+                  position: 'relative',
+                  [smallBreakpoint]: {
+                    paddingTop: 0,
+                  },
                 }}
-                onChange={(value = '') => {
-                  state.inputCode = value;
-                }}
-                theme={monacoTheme}
-                language="typescript"
-                value={state.inputCode}
-              />
+              >
+                <Select
+                  disableUnderline
+                  css={{
+                    top: 10,
+                    position: 'absolute',
+                    right: 10,
+                    zIndex: 10,
+                    [smallBreakpoint]: {
+                      display: 'block',
+                      width: '160px',
+                      marginLeft: 'auto',
+                      position: 'relative',
+                      top: 0,
+                      right: 0,
+                    },
+                  }}
+                  renderValue={(value) => (
+                    <span css={{ textTransform: 'capitalize' }}>
+                      {value === '_none' ? 'Choose template' : (value as string)}
+                    </span>
+                  )}
+                  defaultValue="_none"
+                  onChange={(e) => {
+                    const template = svelteTemplates[e.target.value as string];
+                    if (template) {
+                      state.code = template;
+                    }
+                  }}
+                >
+                  <MenuItem value="_none" disabled>
+                    Choose template
+                  </MenuItem>
+                  {Object.keys(svelteTemplates).map((key) => (
+                    <MenuItem
+                      key={key}
+                      value={key}
+                      css={{
+                        textTransform: 'capitalize',
+                      }}
+                    >
+                      {key}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <SvelteCodeEditor
+                  options={{
+                    renderLineHighlightOnlyWhenFocus: true,
+                    overviewRulerBorder: false,
+                    hideCursorInOverviewRuler: true,
+                    automaticLayout: true,
+                    minimap: { enabled: false },
+                    scrollbar: { vertical: 'hidden' },
+                  }}
+                  onMount={(editor, monaco) => state.setEditorRef(editor, monaco)}
+                  theme={monacoTheme}
+                  height="calc(100vh - 105px)"
+                  language="html"
+                  value={state.code}
+                  onChange={(val = '') => (state.code = val)}
+                />
+              </div>
             </Show>
           </div>
           <div
@@ -959,7 +953,9 @@ export default function Fiddle() {
                 />
                 <Tab label={<TabLabelWithIcon label="Qwik" />} value="qwik" />
                 <Tab label={<TabLabelWithIcon label="Angular" />} value="angular" />
-                <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                {state.inputTab !== 'svelte' && (
+                  <Tab label={<TabLabelWithIcon label="Svelte" />} value="svelte" />
+                )}
                 <Tab label={<TabLabelWithIcon label="React Native" />} value="reactNative" />
                 <Tab label="RSC" value="rsc" />
                 <Tab label={<TabLabelWithIcon label="Swift" />} value="swift" />
@@ -1487,15 +1483,15 @@ export default function Fiddle() {
           </div>
           <style>
             {`
-            builder-editor { 
-              flex-grow: 1; 
-              pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
-            }
-            
-            builder-editor iframe {
-              min-width: unset
-            }
-            `}
+              builder-editor { 
+                flex-grow: 1; 
+                pointer-events: ${state.isDraggingBuilderCodeBar ? 'none' : 'auto'}; 
+              }
+              
+              builder-editor iframe {
+                min-width: unset
+              }
+              `}
           </style>
           <BuilderEditor
             onChange={(e: CustomEvent) => {

@@ -1,8 +1,7 @@
 import { Linter as ESLinter } from 'eslint';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-// TODO: add back when build fixed
-// import { rules } from 'eslint-plugin-mitosis';
+import { rules, configs as lintConfigs } from '@builder.io/eslint-plugin-mitosis';
 
 const JsxRuntimeTypes = require('!!raw-loader!@builder.io/mitosis/jsx-runtime').default;
 const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
@@ -10,10 +9,14 @@ const MitosisTypes = require('!!raw-loader!@builder.io/mitosis/types').default;
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
 const Linter: typeof ESLinter = require('eslint/lib/linter/linter').Linter;
-
 const linter = new Linter();
-// TODO: add back when build fixed
-// linter.defineRules(rules as any);
+const recommendedRules: Record<string, any> = {};
+
+linter.defineRules(rules as any);
+Object.entries(lintConfigs.recommended.rules).forEach(([key, value]) => {
+  const trimmedKey = key.replace(/^@builder.io\/mitosis\//, '');
+  recommendedRules[trimmedKey] = value;
+});
 
 function eslint(code: string, version: any) {
   try {
@@ -22,7 +25,8 @@ function eslint(code: string, version: any) {
         code,
         {
           rules: {
-            'static-control-flow': 'error',
+            ...recommendedRules,
+            'no-var-declaration-or-assignment-in-component': 'off',
           },
           parserOptions: {
             sourceType: 'module',
@@ -33,7 +37,7 @@ function eslint(code: string, version: any) {
           },
         },
         {
-          filename: 'mitosis-file.tsx',
+          filename: 'mitosis.lite.tsx',
         },
       )
       .map((err) => ({
@@ -56,7 +60,7 @@ function eslint(code: string, version: any) {
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
 type Editor = EditorRefArgs[0];
 
-export function CodeEditor(props: MonacoEditorProps) {
+export function JsxCodeEditor(props: MonacoEditorProps) {
   const monaco = useMonaco();
 
   useEffect(() => {
@@ -132,7 +136,7 @@ export function CodeEditor(props: MonacoEditorProps) {
       monaco.editor.setModelMarkers(model, 'eslint', result.markers);
     },
     2000,
-    [props.value],
+    [props.value, editor],
   );
 
   return (

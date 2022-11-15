@@ -20,7 +20,6 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { filterEmptyTextNodes } from '../../helpers/filter-empty-text-nodes';
 import { createMitosisNode } from '../../helpers/create-mitosis-node';
-import { hasContext } from '../helpers/context';
 import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { kebabCase } from 'lodash';
@@ -35,13 +34,14 @@ import * as S from 'fp-ts/string';
 import { updateStateCode } from './state/helpers';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';
+import { hasGetContext } from '../helpers/context';
 
 // Transform <foo.bar key="value" /> to <component :is="foo.bar" key="value" />
 function processDynamicComponents(json: MitosisComponent, options: ToSolidOptions) {
   let found = false;
   traverse(json).forEach((node) => {
     if (isMitosisNode(node)) {
-      if (node.name.includes('.')) {
+      if (node.name.includes('.') && !node.name.endsWith('.Provider')) {
         node.bindings.component = { code: node.name };
         node.name = 'Dynamic';
         found = true;
@@ -322,14 +322,13 @@ export const componentToSolid: TranspilerGenerator<Partial<ToSolidOptions>> =
 
     const state = getState({ json, options });
     const componentsUsed = getComponentsUsed(json);
-    const componentHasContext = hasContext(json);
 
     const hasShowComponent = componentsUsed.has('Show');
     const hasForComponent = componentsUsed.has('For');
 
     const solidJSImports = uniq(S.Eq)(
       [
-        componentHasContext ? 'useContext' : undefined,
+        hasGetContext(json) ? 'useContext' : undefined,
         hasShowComponent ? 'Show' : undefined,
         hasForComponent ? 'For' : undefined,
         json.hooks.onMount?.code ? 'onMount' : undefined,

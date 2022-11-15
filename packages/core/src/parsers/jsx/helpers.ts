@@ -29,8 +29,12 @@ export const uncapitalize = (str: string) => {
   return str[0].toLowerCase() + str.slice(1);
 };
 
+export const parseCode = (node: babel.types.Node) => {
+  return generate(node).code;
+};
+
 export const parseCodeJson = (node: babel.types.Node) => {
-  const code = generate(node).code;
+  const code = parseCode(node);
   return tryParseJson(code);
 };
 

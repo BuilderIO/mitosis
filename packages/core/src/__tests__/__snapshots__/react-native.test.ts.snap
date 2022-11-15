@@ -1,6 +1,2387 @@
 // Vitest Snapshot v1
 
-exports[`React Native > Javascript Test > AdvancedRef 1`] = `
+exports[`React Native > jsx > Javascript Test > AdvancedRef 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export default function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  useEffect(() => {
+    console.log(\\"Received an update\\");
+  }, [inputRef.current, inputNoArgRef.current]);
+
+  return (
+    <View>
+      {props.showInput ? (
+        <>
+          <View
+            ref={inputRef}
+            value={name}
+            onBlur={(event) => onBlur()}
+            onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
+          />
+
+          <View for=\\"cars\\" ref={inputNoArgRef}>
+            <Text>Choose a car:</Text>
+          </View>
+
+          <View name=\\"cars\\" id=\\"cars\\">
+            <View value=\\"supra\\">
+              <Text>GR Supra</Text>
+            </View>
+
+            <View value=\\"86\\">
+              <Text>GR 86</Text>
+            </View>
+          </View>
+        </>
+      ) : null}
+      <Text>Hello</Text>
+      <Text>{lowerCaseName()}</Text>
+      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Basic 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export const DEFAULT_VALUES = {
+  name: \\"Steve\\",
+};
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
+
+  const [age, setAge] = useState(() => 1);
+
+  const [sports, setSports] = useState(() => [\\"\\"]);
+
+  return (
+    <View style={styles.view1}>
+      <View
+        value={DEFAULT_VALUES.name || name}
+        onChange={(myEvent) => setName(myEvent.target.value)}
+      />
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Basic Context 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext, useEffect } from \\"react\\";
+import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onChange() {
+    const change = myService.method(\\"change\\");
+    console.log(change);
+  }
+
+  const myService = useContext(MyService);
+
+  useEffect(() => {
+    const hi = myService.method(\\"hi\\");
+    console.log(hi);
+  });
+
+  useEffect(() => {
+    const bye = myService.method(\\"hi\\");
+    console.log(bye);
+  }, []);
+
+  return (
+    <Context.Provider value={createInjector()}>
+      <View>
+        <Text>{myService.method(\\"hello\\") + name}</Text>
+        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+        <View onChange={(event) => onChange} />
+      </View>
+    </Context.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Basic OnMount Update 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOnMountUpdateComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    setName(\\"PatrickJS onInit\\" + props.hi);
+  });
+
+  useEffect(() => {
+    setName(\\"PatrickJS onMount\\" + props.bye);
+  }, []);
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Basic Outputs 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOutputsComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Basic Outputs Meta 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOutputsComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    props.onMessage(name);
+    props.onEvent(props.message);
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicAttribute 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
+
+export default function MyBooleanAttribute(props) {
+  return (
+    <View>
+      <Text>{props.children}</Text>
+
+      <Text>{props.type}</Text>
+
+      <MyBooleanAttributeComponent toggle={true} />
+
+      <MyBooleanAttributeComponent toggle={true} />
+
+      <MyBooleanAttributeComponent list={null} />
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicChildComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import MyBasicComponent from \\"./basic.raw\\";
+import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
+
+export default function MyBasicChildComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <MyBasicComponent id={dev} />
+
+      <View>
+        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicFor 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicForComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
+
+  useEffect(() => {
+    console.log(\\"onMount code\\");
+  }, []);
+
+  return (
+    <View>
+      {names?.map((person) => (
+        <>
+          <View
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value + \\" and \\" + person);
+            }}
+          />
+          <Text>Hello </Text>
+          <Text>{person}</Text>
+          <Text>
+            ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
+          </Text>
+        </>
+      ))}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicRef 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef } from \\"react\\";
+
+export default function MyBasicRefComponent(props) {
+  const inputRef = useRef(null);
+  const inputNoArgRef = useRef(null);
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  function onBlur() {
+    // Maintain focus
+    inputRef.current.focus();
+  }
+
+  function lowerCaseName() {
+    return name.toLowerCase();
+  }
+
+  return (
+    <View>
+      {props.showInput ? (
+        <>
+          <View
+            ref={inputRef}
+            value={name}
+            onBlur={(event) => onBlur()}
+            onChange={(event) => setName(event.target.value)}
+            style={styles.view1}
+          />
+
+          <View for=\\"cars\\" ref={inputNoArgRef}>
+            <Text>Choose a car:</Text>
+          </View>
+
+          <View name=\\"cars\\" id=\\"cars\\">
+            <View value=\\"supra\\">
+              <Text>GR Supra</Text>
+            </View>
+
+            <View value=\\"86\\">
+              <Text>GR 86</Text>
+            </View>
+          </View>
+        </>
+      ) : null}
+      <Text>Hello</Text>
+      <Text>{lowerCaseName()}</Text>
+      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicRefAssignment 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useRef } from \\"react\\";
+
+export default function MyBasicRefAssignmentComponent(props) {
+  const holdValueRef = useRef(\\"Patrick\\");
+  function handlerClick(event) {
+    event.preventDefault();
+    console.log(\\"current value\\", holdValueRef.current);
+    holdValueRef.current = holdValueRef.current + \\"JS\\";
+  }
+
+  return (
+    <View>
+      <View onClick={(evt) => handlerClick(evt)}>
+        <Text>Click</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > BasicRefPrevious 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export function usePrevious<T>(value: T) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  let ref = useRef<T>(null); // Store current value in ref
+
+  onUpdate(() => {
+    ref = value;
+  }, [value]); // Only re-run if value changes
+  // Return previous value (happens before update in useEffect above)
+
+  return ref;
+}
+
+export default function MyPreviousComponent(props) {
+  const [count, setCount] = useState(() => 0);
+
+  const prevCount = useRef(count);
+
+  useEffect(() => {
+    prevCount.current = count;
+  }, [count]);
+
+  return (
+    <View>
+      <View>
+        <Text>Now: </Text>
+        <Text>{count}</Text>
+        <Text>, before: </Text>
+        <Text>{prevCount.current}</Text>
+      </View>
+
+      <View onClick={(event) => setCount(1)}>
+        <Text>Increment</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Button 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Columns 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Column(props) {
+  function getColumns() {
+    return props.columns || [];
+  }
+
+  function getGutterSize() {
+    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
+  }
+
+  function getWidth(index) {
+    const columns = getColumns();
+    return (columns[index] && columns[index].width) || 100 / columns.length;
+  }
+
+  function getColumnCssWidth(index) {
+    const columns = getColumns();
+    const gutterSize = getGutterSize();
+    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
+    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
+  }
+
+  return (
+    <View style={styles.view1}>
+      {props.columns?.map((column, index) => (
+        <View style={styles.view2}>
+          <Text>{column.content}</Text>
+
+          <Text>{index}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
+  view2: { flexGrow: 1 },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > ContentSlotHtml 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function ContentSlotCode(props) {
+  return (
+    <View>
+      {props.slotTesting}
+
+      <View>
+        <View />
+      </View>
+
+      <View>{props.children}</View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > ContentSlotJSX 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function ContentSlotJsxCode(props) {
+  return (
+    <View>
+      {props.slotTesting ? (
+        <>
+          <View>
+            <Text>{props.slotTesting}</Text>
+          </View>
+        </>
+      ) : null}
+
+      <View>
+        <View />
+      </View>
+
+      <View>
+        <Text>{props.children}</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > CustomCode 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export default function CustomCode(props) {
+  const elem = useRef(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Embed 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export default function CustomCode(props) {
+  const elem = useRef(null);
+  const [scriptsInserted, setScriptsInserted] = useState(() => []);
+
+  const [scriptsRun, setScriptsRun] = useState(() => []);
+
+  function findAndRunScripts() {
+    // TODO: Move this function to standalone one in '@builder.io/utils'
+    if (elem.current && typeof window !== \\"undefined\\") {
+      /** @type {HTMLScriptElement[]} */
+      const scripts = elem.current.getElementsByTagName(\\"script\\");
+
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+
+        if (script.src) {
+          if (scriptsInserted.includes(script.src)) {
+            continue;
+          }
+
+          scriptsInserted.push(script.src);
+          const newScript = document.createElement(\\"script\\");
+          newScript.async = true;
+          newScript.src = script.src;
+          document.head.appendChild(newScript);
+        } else if (
+          !script.type ||
+          [
+            \\"text/javascript\\",
+            \\"application/javascript\\",
+            \\"application/ecmascript\\",
+          ].includes(script.type)
+        ) {
+          if (scriptsRun.includes(script.innerText)) {
+            continue;
+          }
+
+          try {
+            scriptsRun.push(script.innerText);
+            new Function(script.innerText)();
+          } catch (error) {
+            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
+          }
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    findAndRunScripts();
+  }, []);
+
+  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Form 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef } from \\"react\\";
+import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
+import { Builder, builder } from \\"@builder.io/sdk\\";
+import { BuilderBlocks } from \\"@fake\\";
+import { set } from \\"@fake\\";
+import { get } from \\"@fake\\";
+
+export default function FormComponent(props) {
+  const formRef = useRef(null);
+  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
+
+  const [responseData, setResponseData] = useState(() => null);
+
+  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
+
+  function submissionState() {
+    return (Builder.isEditing && props.previewState) || formState;
+  }
+
+  function onSubmit(event) {
+    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
+
+    if (props.sendSubmissionsTo === \\"zapier\\") {
+      event.preventDefault();
+    } else if (sendWithJs) {
+      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
+        event.preventDefault();
+        return;
+      }
+
+      event.preventDefault();
+      const el = event.currentTarget;
+      const headers = props.customHeaders || {};
+      let body;
+      const formData = new FormData(el); // TODO: maybe support null
+
+      const formPairs = Array.from(
+        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
+      )
+        .filter((el) => !!el.name)
+        .map((el) => {
+          let value;
+          const key = el.name;
+
+          if (el instanceof HTMLInputElement) {
+            if (el.type === \\"radio\\") {
+              if (el.checked) {
+                value = el.name;
+                return {
+                  key,
+                  value,
+                };
+              }
+            } else if (el.type === \\"checkbox\\") {
+              value = el.checked;
+            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
+              const num = el.valueAsNumber;
+
+              if (!isNaN(num)) {
+                value = num;
+              }
+            } else if (el.type === \\"file\\") {
+              // TODO: one vs multiple files
+              value = el.files;
+            } else {
+              value = el.value;
+            }
+          } else {
+            value = el.value;
+          }
+
+          return {
+            key,
+            value,
+          };
+        });
+      let contentType = props.contentType;
+
+      if (props.sendSubmissionsTo === \\"email\\") {
+        contentType = \\"multipart/form-data\\";
+      }
+
+      Array.from(formPairs).forEach(({ value }) => {
+        if (
+          value instanceof File ||
+          (Array.isArray(value) && value[0] instanceof File) ||
+          value instanceof FileList
+        ) {
+          contentType = \\"multipart/form-data\\";
+        }
+      }); // TODO: send as urlEncoded or multipart by default
+      // because of ease of use and reliability in browser API
+      // for encoding the form?
+
+      if (contentType !== \\"application/json\\") {
+        body = formData;
+      } else {
+        // Json
+        const json = {};
+        Array.from(formPairs).forEach(({ value, key }) => {
+          set(json, key, value);
+        });
+        body = JSON.stringify(json);
+      }
+
+      if (contentType && contentType !== \\"multipart/form-data\\") {
+        if (
+          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
+            sendWithJs && props.action?.includes(\\"zapier.com\\")
+          )
+        ) {
+          headers[\\"content-type\\"] = contentType;
+        }
+      }
+      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
+      if (formRef.current) {
+        formRef.current.dispatchEvent(presubmitEvent);
+        if (presubmitEvent.defaultPrevented) {
+          return;
+        }
+      }
+      setFormState(\\"sending\\");
+      const formUrl = \`\${
+        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
+      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
+        props.sendSubmissionsToEmail || \\"\\"
+      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
+      fetch(
+        props.sendSubmissionsTo === \\"email\\"
+          ? formUrl
+          : props.action /* TODO: throw error if no action URL */,
+        { body, headers, method: props.method || \\"post\\" }
+      ).then(
+        async (res) => {
+          let body;
+          const contentType = res.headers.get(\\"content-type\\");
+          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
+            body = await res.json();
+          } else {
+            body = await res.text();
+          }
+          if (!res.ok && props.errorMessagePath) {
+            /* TODO: allow supplying an error formatter function */ let message =
+              get(body, props.errorMessagePath);
+            if (message) {
+              if (typeof message !== \\"string\\") {
+                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
+                  JSON.stringify(message);
+              }
+              setFormErrorMessage(message);
+            }
+          }
+          setResponseData(body);
+          setFormState(res.ok ? \\"success\\" : \\"error\\");
+          if (res.ok) {
+            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
+              detail: { res, body },
+            });
+            if (formRef.current) {
+              formRef.current.dispatchEvent(submitSuccessEvent);
+              if (submitSuccessEvent.defaultPrevented) {
+                return;
+              }
+              /* TODO: option to turn this on/off? */ if (
+                props.resetFormOnSubmit !== false
+              ) {
+                formRef.current.reset();
+              }
+            }
+            /* TODO: client side route event first that can be preventDefaulted */ if (
+              props.successUrl
+            ) {
+              if (formRef.current) {
+                const event = new CustomEvent(\\"route\\", {
+                  detail: { url: props.successUrl },
+                });
+                formRef.current.dispatchEvent(event);
+                if (!event.defaultPrevented) {
+                  location.href = props.successUrl;
+                }
+              } else {
+                location.href = props.successUrl;
+              }
+            }
+          }
+        },
+        (err) => {
+          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
+            detail: { error: err },
+          });
+          if (formRef.current) {
+            formRef.current.dispatchEvent(submitErrorEvent);
+            if (submitErrorEvent.defaultPrevented) {
+              return;
+            }
+          }
+          setResponseData(err);
+          setFormState(\\"error\\");
+        }
+      );
+    }
+  }
+  return (
+    <View
+      validate={props.validate}
+      ref={formRef}
+      action={!props.sendWithJs && props.action}
+      method={props.method}
+      name={props.name}
+      onSubmit={(event) => onSubmit(event)}
+      {...props.attributes}
+    >
+      {\\" \\"}
+      {props.builderBlock && props.builderBlock.children ? (
+        <>
+          {props.builderBlock?.children?.map((block, index) => (
+            <BuilderBlockComponent key={block.id} block={block} index={index} />
+          ))}
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" ? (
+        <>
+          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"sending\\" ? (
+        <>
+          <BuilderBlocks
+            dataPath=\\"sendingMessage\\"
+            blocks={props.sendingMessage}
+          />
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"error\\" && responseData ? (
+        <>
+          <View style={styles.view1}>
+            {\\" \\"}
+            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
+          </View>
+        </>
+      ) : null}{\\" \\"}
+      {submissionState() === \\"success\\" ? (
+        <>
+          <BuilderBlocks
+            dataPath=\\"successMessage\\"
+            blocks={props.successMessage}
+          />
+        </>
+      ) : null}{\\" \\"}
+    </View>
+  );
+}
+const styles = StyleSheet.create({
+  view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Image 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useRef, useEffect } from \\"react\\";
+
+export default function Image(props) {
+  const pictureRef = useRef(null);
+  const [scrollListener, setScrollListener] = useState(() => null);
+
+  const [imageLoaded, setImageLoaded] = useState(() => false);
+
+  function setLoaded() {
+    setImageLoaded(true);
+  }
+
+  function useLazyLoading() {
+    // TODO: Add more checks here, like testing for real web browsers
+    return !!props.lazy && isBrowser();
+  }
+
+  function isBrowser() {
+    return (
+      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
+    );
+  }
+
+  const [load, setLoad] = useState(() => false);
+
+  useEffect(() => {
+    if (useLazyLoading()) {
+      // throttled scroll capture listener
+      const listener = () => {
+        if (pictureRef.current) {
+          const rect = pictureRef.current.getBoundingClientRect();
+          const buffer = window.innerHeight / 2;
+
+          if (rect.top < window.innerHeight + buffer) {
+            setLoad(true);
+            setScrollListener(null);
+            window.removeEventListener(\\"scroll\\", listener);
+          }
+        }
+      };
+
+      setScrollListener(listener);
+      window.addEventListener(\\"scroll\\", listener, {
+        capture: true,
+        passive: true,
+      });
+      listener();
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollListener) {
+        window.removeEventListener(\\"scroll\\", scrollListener);
+      }
+    };
+  }, []);
+
+  return (
+    <View>
+      <View ref={pictureRef}>
+        {!useLazyLoading() || load ? (
+          <>
+            <View
+              alt={props.altText}
+              aria-role={props.altText ? \\"presentation\\" : undefined}
+              src={props.image}
+              onLoad={(event) => setLoaded()}
+              srcset={props.srcset}
+              sizes={props.sizes}
+              style={styles.view1}
+            />
+          </>
+        ) : null}
+
+        <View srcset={props.srcset} />
+      </View>
+
+      <Text>{props.children}</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: {
+    opacity: 1,
+    transition: \\"opacity 0.2s ease-in-out\\",
+    objectFit: \\"cover\\",
+    objectPosition: \\"center\\",
+  },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Image State 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function ImgStateComponent(props) {
+  const [canShow, setCanShow] = useState(() => true);
+
+  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+
+  return (
+    <View>
+      {images?.map((item, itemIndex) => (
+        <>
+          <View src={item} key={itemIndex} />
+        </>
+      ))}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Img 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function ImgComponent(props) {
+  return (
+    <View
+      style={{
+        objectFit: props.backgroundSize || \\"cover\\",
+        objectPosition: props.backgroundPosition || \\"center\\",
+      }}
+      {...props.attributes}
+      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
+      alt={props.altText}
+      src={props.imgSrc}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Input 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function FormInputComponent(props) {
+  return (
+    <View
+      {...props.attributes}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      placeholder={props.placeholder}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+      required={props.required}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > RawText 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function RawText(props) {
+  return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Section 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SectionComponent(props) {
+  return (
+    <View
+      {...props.attributes}
+      style={
+        props.maxWidth && typeof props.maxWidth === \\"number\\"
+          ? {
+              maxWidth: props.maxWidth,
+            }
+          : undefined
+      }
+    >
+      <Text>{props.children}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Select 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function SelectComponent(props) {
+  return (
+    <View
+      {...props.attributes}
+      value={props.value}
+      key={
+        Builder.isEditing && props.defaultValue
+          ? props.defaultValue
+          : \\"default-key\\"
+      }
+      defaultValue={props.defaultValue}
+      name={props.name}
+    >
+      {props.options?.map((option, index) => (
+        <View value={option.value} data-index={index}>
+          <Text>{option.name || option.value}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > SlotHtml 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default function SlotCode(props) {
+  return (
+    <View>
+      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > SlotJsx 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import ContentSlotCode from \\"./content-slot-jsx.raw\\";
+
+export default function SlotCode(props) {
+  return (
+    <View>
+      <ContentSlotCode slotTesting={<div>Hello</div>} />
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Stamped.io 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+import { kebabCase } from \\"lodash\\";
+import { snakeCase } from \\"lodash\\";
+
+export default function SmileReviews(props) {
+  const [reviews, setReviews] = useState(() => []);
+
+  const [name, setName] = useState(() => \\"test\\");
+
+  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
+
+  function kebabCaseValue() {
+    return kebabCase(\\"testThat\\");
+  }
+
+  function snakeCaseValue() {
+    return snakeCase(\\"testThis\\");
+  }
+
+  useEffect(() => {
+    fetch(
+      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
+        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
+      }&productId=\${props.productId || \\"2410511106127\\"}\`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setReviews(data.data);
+      });
+  }, []);
+
+  return (
+    <View data-user={name}>
+      <View onClick={(event) => setShowReviewPrompt(true)}>
+        <Text>Write a review</Text>
+      </View>
+
+      {showReviewPrompt || \\"asdf\\" ? (
+        <>
+          <View placeholder=\\"Email\\" />
+          <View placeholder=\\"Title\\" style={styles.view1} />
+          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
+          <View
+            onClick={(event) => {
+              event.preventDefault();
+              setShowReviewPrompt(false);
+            }}
+            style={styles.view3}
+          >
+            <Text>Submit</Text>
+          </View>
+        </>
+      ) : null}
+
+      {reviews?.map((review, index) => (
+        <View key={review.id} style={styles.view4}>
+          <View src={review.avatar} style={styles.view5} />
+
+          <View>
+            <View>
+              <Text>N: </Text>
+              <Text>{index}</Text>
+            </View>
+
+            <View>
+              <Text>{review.author}</Text>
+            </View>
+
+            <View>
+              <Text>{review.reviewMessage}</Text>
+            </View>
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"block\\" },
+  view2: { display: \\"block\\" },
+  view3: { display: \\"block\\" },
+  view4: {
+    margin: 10,
+    padding: 10,
+    background: \\"white\\",
+    display: \\"flex\\",
+    borderRadius: 5,
+    boxShadow: 0,
+  },
+  view5: { height: 30, width: 30, marginRight: 10 },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Submit 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function SubmitButton(props) {
+  return (
+    <View type=\\"submit\\" {...props.attributes}>
+      <Text>{props.text}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Text 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import { Builder } from \\"@builder.io/sdk\\";
+
+export default function Text(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <View
+      contentEditable={allowEditingText || undefined}
+      data-name={{
+        test: name || \\"any name\\",
+      }}
+      dangerouslySetInnerHTML={{
+        __html:
+          props.text ||
+          props.content ||
+          name ||
+          '<p class=\\"text-lg\\">my name</p>',
+      }}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Textarea 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Textarea(props) {
+  return (
+    <View
+      {...props.attributes}
+      placeholder={props.placeholder}
+      name={props.name}
+      value={props.value}
+      defaultValue={props.defaultValue}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > Video 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Video(props) {
+  return (
+    <View
+      preload=\\"none\\"
+      {...props.attributes}
+      style={{
+        width: \\"100%\\",
+        height: \\"100%\\",
+        ...props.attributes?.style,
+        objectFit: props.fit,
+        objectPosition: props.position,
+        // Hack to get object fit to work as expected and
+        // not have the video overflow
+        borderRadius: 1,
+      }}
+      key={props.video || \\"no-src\\"}
+      poster={props.posterImage}
+      autoplay={props.autoPlay}
+      muted={props.muted}
+      controls={props.controls}
+      loop={props.loop}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [name, setName] = useState(() => \\"steve\\");
+
+  function setName(value) {
+    setName(value);
+  }
+
+  function updateNameWithArrowFn(value) {
+    setName(value);
+  }
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicForwardRef 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, forwardRef } from \\"react\\";
+
+export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <View
+        ref={inputRef}
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
+      />
+    </View>
+  );
+});
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, forwardRef } from \\"react\\";
+
+export default forwardRef(function MyBasicForwardRefComponent(props, inputRef) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <View
+        ref={inputRef}
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+        style={styles.view1}
+      />
+    </View>
+  );
+});
+
+const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyBasicOnUpdateReturnComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    fetch(\\"https://patrickjs.com/api/resource.json\\", {
+      signal,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setName(data.name);
+      });
+    return () => {
+      if (!signal.aborted) {
+        controller.abort();
+      }
+    };
+  }, [name]);
+
+  return (
+    <View>
+      <Text>Hello! </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > class + ClassName + css 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View style={styles.view1}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > class + css 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View style={styles.view1}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > className + css 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View style={styles.view1}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > className 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function ClassNameCode(props) {
+  const [bindings, setBindings] = useState(() => \\"a binding\\");
+
+  return (
+    <View>
+      <View>
+        <Text>Without Binding</Text>
+      </View>
+
+      <View>
+        <Text>With binding</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > classState 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [classState, setClassState] = useState(() => \\"testClassName\\");
+
+  const [styleState, setStyleState] = useState(() => ({
+    color: \\"red\\",
+  }));
+
+  return (
+    <View style={styles.view1}>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({ view1: { padding: 10 } });
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > componentWithContext 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+import Context1 from \\"@dummy/1\\";
+import Context2 from \\"@dummy/2\\";
+
+export default function ComponentWithContext(props) {
+  const foo = useContext(Context1);
+
+  return (
+    <Context2.Provider
+      value={{
+        bar: \\"baz\\",
+      }}
+    >
+      <Context1.Provider
+        value={{
+          foo: \\"bar\\",
+
+          content() {
+            return props.content;
+          },
+        }}
+      >
+        <>
+          <Text>{foo.value}</Text>
+        </>
+      </Context1.Provider>
+    </Context2.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <View>
+        <Text>setting context</Text>
+      </View>
+    </BuilderContext.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > defaultProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Button(props) {
+  return (
+    <View>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </View>
+  );
+}
+
+Button.defaultProps = {
+  text: \\"default text\\",
+  link: \\"https://builder.io/\\",
+  openLinkInNewTab: false,
+};
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > defaultValsWithTypes 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+const DEFAULT_VALUES: Props = {
+  name: \\"Sami\\",
+};
+
+export default function ComponentWithTypes(props) {
+  return (
+    <View>
+      <Text> Hello </Text>
+      <Text>{props.name || DEFAULT_VALUES.name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return (
+    <View>
+      <Text>{refToUse}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > import types 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import RenderBlock from \\"./builder-render-block.raw\\";
+
+export default function RenderContent(props) {
+  function getRenderContentProps(block, index) {
+    return {
+      block: block,
+      index: index,
+    };
+  }
+
+  return (
+    <RenderBlock
+      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
+    />
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > multipleOnUpdate 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function MultipleOnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender as well\\");
+  });
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MultipleOnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  const [c, setC] = useState(() => \\"c\\");
+
+  const [d, setD] = useState(() => \\"d\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a or b changes\\", a, b);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
+  }, [a, b]);
+  useEffect(() => {
+    console.log(\\"Runs when c or d changes\\", c, d);
+
+    if (a === \\"a\\") {
+      setA(\\"b\\");
+    }
+  }, [c, d]);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > multipleSpreads 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [attrs, setAttrs] = useState(() => ({
+    hello: \\"world\\",
+  }));
+
+  return <View {...state.attrs} {...props} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > nestedShow 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function NestedShow(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {!props.conditionB ? (
+            <>
+              <View>
+                <Text>if condition A and condition B</Text>
+              </View>
+            </>
+          ) : (
+            <View>
+              <Text>else-condition-B</Text>
+            </View>
+          )}
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > nestedStyles 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function NestedStyles(props) {
+  return (
+    <View style={styles.view1}>
+      <Text>Hello world</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: {
+    display: \\"flex\\",
+    foo: \\"var(--bar)\\",
+    \\"&:hover\\": { display: \\"flex\\" },
+    \\".nested-selector\\": { display: \\"grid\\" },
+  },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onInit & onMount 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnInit(props) {
+  useEffect(() => {
+    console.log(\\"onInit\\");
+  });
+
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onInit 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export const defaultValues = {
+  name: \\"PatrickJS\\",
+};
+
+export default function OnInit(props) {
+  const [name, setName] = useState(() => \\"\\");
+
+  useEffect(() => {
+    setName(defaultValues.name || props.name);
+    console.log(\\"set defaults with props\\");
+  });
+
+  return (
+    <View>
+      <Text>Default name defined by parent </Text>
+      <Text>{name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onMount 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function Comp(props) {
+  useEffect(() => {
+    console.log(\\"Runs on mount\\");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"Runs on unMount\\");
+    };
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onUpdate 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  useEffect(() => {
+    console.log(\\"Runs on every update/rerender\\");
+  });
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > onUpdateWithDeps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function OnUpdateWithDeps(props) {
+  const [a, setA] = useState(() => \\"a\\");
+
+  const [b, setB] = useState(() => \\"b\\");
+
+  useEffect(() => {
+    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
+  }, [a, b, props.size]);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+const b = 3;
+const foo = () => {};
+export const a = 3;
+export const bar = () => {};
+export function run<T>(value: T) {}
+
+export default function MyBasicComponent(props) {
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > preserveTyping 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
+      <Text>{props.name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > propsDestructure 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"Decadef20\\");
+
+  return (
+    <View>
+      <Text>{props.children}</Text>
+
+      <Text>{props.type}</Text>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > propsInterface 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
+      <Text>{props.name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > propsType 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return (
+    <View>
+      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
+      <Text>{props.name}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > renderContentExample 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext, useEffect } from \\"react\\";
+import {
+  sendComponentsToVisualEditor,
+  dispatchNewContentToVisualEditor,
+  trackClick,
+} from \\"@dummy/injection-js\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
+
+export default function RenderContent(props) {
+  useEffect(() => {
+    sendComponentsToVisualEditor(props.customComponents);
+  }, []);
+
+  useEffect(() => {
+    dispatchNewContentToVisualEditor(props.content);
+  }, [props.content]);
+
+  return (
+    <BuilderContext.Provider
+      value={{
+        get content() {
+          return 3;
+        },
+
+        get registeredComponents() {
+          return 4;
+        },
+      }}
+    >
+      <View
+        onClick={(event) => trackClick(props.content.id)}
+        style={styles.view1}
+      >
+        <RenderBlocks blocks={props.content.blocks} />
+      </View>
+    </BuilderContext.Provider>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function Button(props) {
+  return (
+    <>
+      {props.link ? (
+        <>
+          <View
+            {...props.attributes}
+            href={props.link}
+            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
+          >
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+
+      {!props.link ? (
+        <>
+          <View type=\\"button\\" {...props.attributes}>
+            <Text>{props.text}</Text>
+          </View>
+        </>
+      ) : null}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > rootShow 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function RenderStyles(props) {
+  return (
+    <>
+      {props.foo === \\"bar\\" ? (
+        <>
+          <View>
+            <Text>Bar</Text>
+          </View>
+        </>
+      ) : (
+        <View>
+          <Text>Foo</Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > self-referencing component 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View>
+      <Text>{props.name}</Text>
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name=\\"Bruce Wayne\\" />
+        </>
+      ) : null}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > self-referencing component with children 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View>
+      <Text>{props.name}</Text>
+
+      <Text>{props.children}</Text>
+
+      {props.name === \\"Batman\\" ? (
+        <>
+          <MyComponent name=\\"Bruce\\">
+            <View>
+              <Text>Wayne</Text>
+            </View>
+          </MyComponent>
+        </>
+      ) : null}
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > showWithFor 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function NestedShow(props) {
+  return (
+    <>
+      {props.conditionA ? (
+        <>
+          {props.items?.map((item, idx) => (
+            <View key={idx}>
+              <Text>{item}</Text>
+            </View>
+          ))}
+        </>
+      ) : (
+        <View>
+          <Text>else-condition-A</Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > spreadAttrs 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return <View {...attrs} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > spreadNestedProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return <View {...props.nested} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > spreadProps 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyBasicComponent(props) {
+  return <View {...props} />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > subComponent 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import Foo from \\"./foo-sub-component.lite\\";
+
+export default function SubComponent(props) {
+  return <Foo />;
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > typeDependency 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function TypeDependency(props) {
+  return (
+    <View>
+      <Text>{props.foo}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > use-style 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View type=\\"button\\">
+      <Text>Button</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > use-style-and-css 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View type=\\"button\\" style={styles.view1}>
+      <Text>Button</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  view1: { background: \\"blue\\", color: \\"white\\" },
+});
+"
+`;
+
+exports[`React Native > jsx > Javascript Test > use-style-outside-component 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+
+export default function MyComponent(props) {
+  return (
+    <View type=\\"button\\">
+      <Text>Button</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({});
+"
+`;
+
+exports[`React Native > jsx > Remove Internal mitosis package 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyBasicComponent(props) {
+  const [name, setName] = useState(() => \\"PatrickJS\\");
+
+  return (
+    <View>
+      <Text>Hello </Text>
+      <Text>{name}</Text>
+      <Text>! I can run in React, Qwik, Vue, Solid, or Liquid!</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > AdvancedRef 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -65,7 +2446,7 @@ const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native > Javascript Test > Basic 1`] = `
+exports[`React Native > jsx > Typescript Test > Basic 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -104,7 +2485,7 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Javascript Test > Basic Context 1`] = `
+exports[`React Native > jsx > Typescript Test > Basic Context 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useContext, useEffect } from \\"react\\";
@@ -143,7 +2524,7 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > Basic OnMount Update 1`] = `
+exports[`React Native > jsx > Typescript Test > Basic OnMount Update 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -176,7 +2557,7 @@ export default function MyBasicOnMountUpdateComponent(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > Basic Outputs 1`] = `
+exports[`React Native > jsx > Typescript Test > Basic Outputs 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -194,7 +2575,7 @@ export default function MyBasicOutputsComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > Basic Outputs Meta 1`] = `
+exports[`React Native > jsx > Typescript Test > Basic Outputs Meta 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -212,7 +2593,7 @@ export default function MyBasicOutputsComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicAttribute 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicAttribute 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -222,7 +2603,7 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicBooleanAttribute 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -250,7 +2631,7 @@ export default function MyBooleanAttribute(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicChildComponent 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicChildComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -275,7 +2656,7 @@ export default function MyBasicChildComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicFor 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicFor 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -312,7 +2693,7 @@ export default function MyBasicForComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicRef 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicRef 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
@@ -373,7 +2754,7 @@ const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native > Javascript Test > BasicRefAssignment 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicRefAssignment 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useRef } from \\"react\\";
@@ -401,7 +2782,7 @@ export default function MyBasicRefAssignmentComponent(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > BasicRefPrevious 1`] = `
+exports[`React Native > jsx > Typescript Test > BasicRefPrevious 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -450,7 +2831,7 @@ export default function MyPreviousComponent(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > Button 1`] = `
+exports[`React Native > jsx > Typescript Test > Button 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -489,7 +2870,7 @@ export default function Button(props: ButtonProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Columns 1`] = `
+exports[`React Native > jsx > Typescript Test > Columns 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -549,7 +2930,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > ContentSlotHtml 1`] = `
+exports[`React Native > jsx > Typescript Test > ContentSlotHtml 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -574,7 +2955,7 @@ export default function ContentSlotCode(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > ContentSlotJSX 1`] = `
+exports[`React Native > jsx > Typescript Test > ContentSlotJSX 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -606,7 +2987,7 @@ export default function ContentSlotJsxCode(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > CustomCode 1`] = `
+exports[`React Native > jsx > Typescript Test > CustomCode 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -673,7 +3054,7 @@ export default function CustomCode(props: CustomCodeProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Embed 1`] = `
+exports[`React Native > jsx > Typescript Test > Embed 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -740,7 +3121,7 @@ export default function CustomCode(props: CustomCodeProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Form 1`] = `
+exports[`React Native > jsx > Typescript Test > Form 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef } from \\"react\\";
@@ -1025,7 +3406,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > Image 1`] = `
+exports[`React Native > jsx > Typescript Test > Image 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useRef, useEffect } from \\"react\\";
@@ -1141,7 +3522,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > Image State 1`] = `
+exports[`React Native > jsx > Typescript Test > Image State 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -1164,7 +3545,7 @@ export default function ImgStateComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > Img 1`] = `
+exports[`React Native > jsx > Typescript Test > Img 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1204,7 +3585,7 @@ export default function ImgComponent(props: ImgProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Input 1`] = `
+exports[`React Native > jsx > Typescript Test > Input 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1241,7 +3622,7 @@ export default function FormInputComponent(props: FormInputProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > RawText 1`] = `
+exports[`React Native > jsx > Typescript Test > RawText 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1256,7 +3637,7 @@ export default function RawText(props: RawTextProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Section 1`] = `
+exports[`React Native > jsx > Typescript Test > Section 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1285,7 +3666,7 @@ export default function SectionComponent(props: SectionProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Select 1`] = `
+exports[`React Native > jsx > Typescript Test > Select 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1326,7 +3707,7 @@ export default function SelectComponent(props: FormSelectProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > SlotHtml 1`] = `
+exports[`React Native > jsx > Typescript Test > SlotHtml 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1345,7 +3726,7 @@ export default function SlotCode(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > SlotJsx 1`] = `
+exports[`React Native > jsx > Typescript Test > SlotJsx 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1364,7 +3745,7 @@ export default function SlotCode(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > Stamped.io 1`] = `
+exports[`React Native > jsx > Typescript Test > Stamped.io 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -1467,7 +3848,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > Submit 1`] = `
+exports[`React Native > jsx > Typescript Test > Submit 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1486,7 +3867,7 @@ export default function SubmitButton(props: ButtonProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Text 1`] = `
+exports[`React Native > jsx > Typescript Test > Text 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -1523,7 +3904,7 @@ export default function Text(props: TextProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Textarea 1`] = `
+exports[`React Native > jsx > Typescript Test > Textarea 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1549,7 +3930,7 @@ export default function Textarea(props: TextareaProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > Video 1`] = `
+exports[`React Native > jsx > Typescript Test > Video 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1606,7 +3987,7 @@ export default function Video(props: VideoProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > arrowFunctionInUseStore 1`] = `
+exports[`React Native > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -1632,7 +4013,7 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > basicForwardRef 1`] = `
+exports[`React Native > jsx > Typescript Test > basicForwardRef 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
@@ -1663,7 +4044,7 @@ const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native > Javascript Test > basicForwardRefMetadata 1`] = `
+exports[`React Native > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, forwardRef } from \\"react\\";
@@ -1694,7 +4075,7 @@ const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
 "
 `;
 
-exports[`React Native > Javascript Test > basicOnUpdateReturn 1`] = `
+exports[`React Native > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -1729,7 +4110,7 @@ export default function MyBasicOnUpdateReturnComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > class + ClassName + css 1`] = `
+exports[`React Native > jsx > Typescript Test > class + ClassName + css 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1745,7 +4126,7 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Javascript Test > class + css 1`] = `
+exports[`React Native > jsx > Typescript Test > class + css 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1761,7 +4142,7 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Javascript Test > className + css 1`] = `
+exports[`React Native > jsx > Typescript Test > className + css 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1777,7 +4158,7 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Javascript Test > className 1`] = `
+exports[`React Native > jsx > Typescript Test > className 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -1805,7 +4186,7 @@ export default function ClassNameCode(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > classState 1`] = `
+exports[`React Native > jsx > Typescript Test > classState 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -1828,7 +4209,7 @@ const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Javascript Test > componentWithContext 1`] = `
+exports[`React Native > jsx > Typescript Test > componentWithContext 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useContext } from \\"react\\";
@@ -1868,7 +4249,30 @@ export default function ComponentWithContext(props: ComponentWithContextProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > defaultProps 1`] = `
+exports[`React Native > jsx > Typescript Test > contentState 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useContext } from \\"react\\";
+import BuilderContext from \\"@dummy/context.lite\\";
+
+export default function RenderContent(props: any) {
+  return (
+    <BuilderContext.Provider
+      value={{
+        content: props.content,
+        registeredComponents: props.customComponents,
+      }}
+    >
+      <View>
+        <Text>setting context</Text>
+      </View>
+    </BuilderContext.Provider>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > defaultProps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1913,7 +4317,7 @@ Button.defaultProps = {
 "
 `;
 
-exports[`React Native > Javascript Test > defaultPropsOutsideComponent 1`] = `
+exports[`React Native > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1958,7 +4362,7 @@ Button.defaultProps = {
 "
 `;
 
-exports[`React Native > Javascript Test > defaultValsWithTypes 1`] = `
+exports[`React Native > jsx > Typescript Test > defaultValsWithTypes 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -1981,7 +4385,26 @@ export default function ComponentWithTypes(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > import types 1`] = `
+exports[`React Native > jsx > Typescript Test > expressionState 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [refToUse, setRefToUse] = useState(() =>
+    !(props.componentRef instanceof Function) ? props.componentRef : null
+  );
+
+  return (
+    <View>
+      <Text>{refToUse}</Text>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > import types 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2009,7 +4432,7 @@ export default function RenderContent(props: RenderContentProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > multipleOnUpdate 1`] = `
+exports[`React Native > jsx > Typescript Test > multipleOnUpdate 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -2027,7 +4450,7 @@ export default function MultipleOnUpdate(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`React Native > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -2061,7 +4484,7 @@ export default function MultipleOnUpdateWithDeps(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > multipleSpreads 1`] = `
+exports[`React Native > jsx > Typescript Test > multipleSpreads 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -2076,7 +4499,7 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > nestedShow 1`] = `
+exports[`React Native > jsx > Typescript Test > nestedShow 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2113,7 +4536,7 @@ export default function NestedShow(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > nestedStyles 1`] = `
+exports[`React Native > jsx > Typescript Test > nestedStyles 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2136,7 +4559,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > onInit & onMount 1`] = `
+exports[`React Native > jsx > Typescript Test > onInit & onMount 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -2155,7 +4578,7 @@ export default function OnInit(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > onInit 1`] = `
+exports[`React Native > jsx > Typescript Test > onInit 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -2186,7 +4609,7 @@ export default function OnInit(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > onMount 1`] = `
+exports[`React Native > jsx > Typescript Test > onMount 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -2207,7 +4630,7 @@ export default function Comp(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > onUpdate 1`] = `
+exports[`React Native > jsx > Typescript Test > onUpdate 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
@@ -2222,7 +4645,7 @@ export default function OnUpdate(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > onUpdateWithDeps 1`] = `
+exports[`React Native > jsx > Typescript Test > onUpdateWithDeps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState, useEffect } from \\"react\\";
@@ -2245,7 +4668,7 @@ export default function OnUpdateWithDeps(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > preserveExportOrLocalStatement 1`] = `
+exports[`React Native > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2271,7 +4694,7 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > preserveTyping 1`] = `
+exports[`React Native > jsx > Typescript Test > preserveTyping 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2299,7 +4722,7 @@ export default function MyBasicComponent(props: MyBasicComponentProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > propsDestructure 1`] = `
+exports[`React Native > jsx > Typescript Test > propsDestructure 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
@@ -2324,7 +4747,7 @@ export default function MyBasicComponent(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > propsInterface 1`] = `
+exports[`React Native > jsx > Typescript Test > propsInterface 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2344,7 +4767,7 @@ export default function MyBasicComponent(props: Person | never) {
 "
 `;
 
-exports[`React Native > Javascript Test > propsType 1`] = `
+exports[`React Native > jsx > Typescript Test > propsType 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2364,7 +4787,7 @@ export default function MyBasicComponent(props: Person) {
 "
 `;
 
-exports[`React Native > Javascript Test > renderContentExample 1`] = `
+exports[`React Native > jsx > Typescript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useContext, useEffect } from \\"react\\";
@@ -2421,7 +4844,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > rootFragmentMultiNode 1`] = `
+exports[`React Native > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2460,7 +4883,7 @@ export default function Button(props: ButtonProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > rootShow 1`] = `
+exports[`React Native > jsx > Typescript Test > rootShow 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2488,7 +4911,7 @@ export default function RenderStyles(props: RenderStylesProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > self-referencing component 1`] = `
+exports[`React Native > jsx > Typescript Test > self-referencing component 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2508,7 +4931,7 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > self-referencing component with children 1`] = `
+exports[`React Native > jsx > Typescript Test > self-referencing component with children 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2534,7 +4957,7 @@ export default function MyComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > showWithFor 1`] = `
+exports[`React Native > jsx > Typescript Test > showWithFor 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2565,7 +4988,7 @@ export default function NestedShow(props: Props) {
 "
 `;
 
-exports[`React Native > Javascript Test > spreadAttrs 1`] = `
+exports[`React Native > jsx > Typescript Test > spreadAttrs 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2575,7 +4998,7 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > spreadNestedProps 1`] = `
+exports[`React Native > jsx > Typescript Test > spreadNestedProps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2585,7 +5008,7 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > spreadProps 1`] = `
+exports[`React Native > jsx > Typescript Test > spreadProps 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2595,7 +5018,7 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > subComponent 1`] = `
+exports[`React Native > jsx > Typescript Test > subComponent 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import Foo from \\"./foo-sub-component.lite\\";
@@ -2606,7 +5029,7 @@ export default function SubComponent(props: any) {
 "
 `;
 
-exports[`React Native > Javascript Test > typeDependency 1`] = `
+exports[`React Native > jsx > Typescript Test > typeDependency 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import type { Foo } from \\"./foo-type\\";
@@ -2626,7 +5049,7 @@ export default function TypeDependency(props: TypeDependencyProps) {
 "
 `;
 
-exports[`React Native > Javascript Test > use-style 1`] = `
+exports[`React Native > jsx > Typescript Test > use-style 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2642,7 +5065,7 @@ const styles = StyleSheet.create({});
 "
 `;
 
-exports[`React Native > Javascript Test > use-style-and-css 1`] = `
+exports[`React Native > jsx > Typescript Test > use-style-and-css 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2660,7 +5083,7 @@ const styles = StyleSheet.create({
 "
 `;
 
-exports[`React Native > Javascript Test > use-style-outside-component 1`] = `
+exports[`React Native > jsx > Typescript Test > use-style-outside-component 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
@@ -2676,161 +5099,136 @@ const styles = StyleSheet.create({});
 "
 `;
 
-exports[`React Native > Remove Internal mitosis package 1`] = `
+exports[`React Native > svelte > Javascript Test > basic 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  return (
-    <View>
-      <Text>Hello </Text>
-      <Text>{name}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Liquid!</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > AdvancedRef 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-}
-
-export default function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  function onBlur() {
-    // Maintain focus
-    inputRef.current.focus();
-  }
-
-  function lowerCaseName() {
-    return name.toLowerCase();
-  }
-
-  useEffect(() => {
-    console.log(\\"Received an update\\");
-  }, [inputRef.current, inputNoArgRef.current]);
-
-  return (
-    <View>
-      {props.showInput ? (
-        <>
-          <View
-            ref={inputRef}
-            value={name}
-            onBlur={(event) => onBlur()}
-            onChange={(event) => setName(event.target.value)}
-            style={styles.view1}
-          />
-
-          <View for=\\"cars\\" ref={inputNoArgRef}>
-            <Text>Choose a car:</Text>
-          </View>
-
-          <View name=\\"cars\\" id=\\"cars\\">
-            <View value=\\"supra\\">
-              <Text>GR Supra</Text>
-            </View>
-
-            <View value=\\"86\\">
-              <Text>GR 86</Text>
-            </View>
-          </View>
-        </>
-      ) : null}
-      <Text>Hello</Text>
-      <Text>{lowerCaseName()}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
-"
-`;
-
-exports[`React Native > Typescript Test > Basic 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
-
-export interface MyBasicComponentProps {
-  id: string;
-}
-
-export const DEFAULT_VALUES = {
-  name: \\"Steve\\",
-};
-
-export default function MyBasicComponent(props: MyBasicComponentProps) {
+export default function MyComponent(props) {
   const [name, setName] = useState(() => \\"Steve\\");
 
-  function underscore_fn_name() {
-    return \\"bar\\";
-  }
-
-  const [age, setAge] = useState(() => 1);
-
-  const [sports, setSports] = useState(() => [\\"\\"]);
-
   return (
-    <View style={styles.view1}>
-      <View
-        value={DEFAULT_VALUES.name || name}
-        onChange={(myEvent) => setName(myEvent.target.value)}
-      />
+    <View>
+      <View onChange={(event) => setName(event.target.value)} value={name} />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Typescript Test > Basic Context 1`] = `
+exports[`React Native > svelte > Javascript Test > bindGroup 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useContext, useEffect } from \\"react\\";
-import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
+import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+export default function MyComponent(props) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
 
-  function onChange() {
-    const change = myService.method(\\"change\\");
-    console.log(change);
-  }
-
-  const myService = useContext(MyService);
-
-  useEffect(() => {
-    const hi = myService.method(\\"hi\\");
-    console.log(hi);
-  });
-
-  useEffect(() => {
-    const bye = myService.method(\\"hi\\");
-    console.log(bye);
-  }, []);
+  const [fillings, setFillings] = useState(() => []);
 
   return (
-    <Context.Provider value={createInjector()}>
+    <View>
+      <View
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View />
+      <View />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
       <View>
-        <Text>{myService.method(\\"hello\\") + name}</Text>
-        <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-        <View onChange={(event) => onChange} />
+        <Text>Tortilla: </Text>
+        <Text>{tortilla}</Text>
+      </View>
+      <View>
+        <Text>Fillings: </Text>
+        <Text>{fillings}</Text>
+      </View>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > bindProperty 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [value, setValue] = useState(() => \\"hello\\");
+
+  return <View value={value} />;
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > classDirective 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [focus, setFocus] = useState(() => true);
+
+  return <View />;
+}
+
+MyComponent.defaultProps = {};
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > context 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState, useContext } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [activeTab, setActiveTab] = useState(() => 0);
+
+  const disabled = useContext(\\"disabled\\");
+
+  return (
+    <Context.Provider value={activeTab}>
+      <View>
+        <Text>{activeTab}</Text>
       </View>
     </Context.Provider>
   );
@@ -2838,168 +5236,20 @@ export default function MyBasicComponent(props: any) {
 "
 `;
 
-exports[`React Native > Typescript Test > Basic OnMount Update 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-export interface Props {
-  hi: string;
-  bye: string;
-}
-
-export default function MyBasicOnMountUpdateComponent(props: Props) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
-
-  useEffect(() => {
-    setName(\\"PatrickJS onInit\\" + props.hi);
-  });
-
-  useEffect(() => {
-    setName(\\"PatrickJS onMount\\" + props.bye);
-  }, []);
-
-  return (
-    <View>
-      <Text>Hello </Text>
-      <Text>{name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Basic Outputs 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-export default function MyBasicOutputsComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  useEffect(() => {
-    props.onMessage(name);
-    props.onEvent(props.message);
-  }, []);
-
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Basic Outputs Meta 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-export default function MyBasicOutputsComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  useEffect(() => {
-    props.onMessage(name);
-    props.onEvent(props.message);
-  }, []);
-
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > BasicAttribute 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyComponent(props: any) {
-  return <View autoCapitalize=\\"on\\" autoComplete=\\"on\\" spellCheck={true} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > BasicBooleanAttribute 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  children: any;
-  type: string;
-};
-import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
-
-export default function MyBooleanAttribute(props: Props) {
-  return (
-    <View>
-      <Text>{props.children}</Text>
-
-      <Text>{props.type}</Text>
-
-      <MyBooleanAttributeComponent toggle={true} />
-
-      <MyBooleanAttributeComponent toggle={true} />
-
-      <MyBooleanAttributeComponent list={null} />
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > BasicChildComponent 1`] = `
+exports[`React Native > svelte > Javascript Test > each 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
-import MyBasicComponent from \\"./basic.raw\\";
-import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
-export default function MyBasicChildComponent(props: any) {
-  const [name, setName] = useState(() => \\"Steve\\");
-
-  const [dev, setDev] = useState(() => \\"PatrickJS\\");
+export default function MyComponent(props) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
   return (
     <View>
-      <MyBasicComponent id={dev} />
-
-      <View>
-        <MyBasicOnMountUpdateComponent hi={name} bye={dev} />
-      </View>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > BasicFor 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-export default function MyBasicForComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  const [names, setNames] = useState(() => [\\"Steve\\", \\"PatrickJS\\"]);
-
-  useEffect(() => {
-    console.log(\\"onMount code\\");
-  }, []);
-
-  return (
-    <View>
-      {names?.map((person) => (
-        <>
-          <View
-            value={name}
-            onChange={(event) => {
-              setName(event.target.value + \\" and \\" + person);
-            }}
-          />
-          <Text>Hello </Text>
-          <Text>{person}</Text>
-          <Text>
-            ! I can run in Qwik, Web Component, React, Vue, Solid, or Liquid!
-          </Text>
-        </>
+      {numbers?.map((num) => (
+        <View>
+          <Text>{num}</Text>
+        </View>
       ))}
     </View>
   );
@@ -3007,1492 +5257,232 @@ export default function MyBasicForComponent(props: any) {
 "
 `;
 
-exports[`React Native > Typescript Test > BasicRef 1`] = `
+exports[`React Native > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef } from \\"react\\";
+import { useState } from \\"react\\";
 
-export interface Props {
-  showInput: boolean;
+export default function MyComponent(props) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
+"
+`;
 
-export default function MyBasicRefComponent(props: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const inputNoArgRef = useRef<HTMLLabelElement>(null);
-  const [name, setName] = useState(() => \\"PatrickJS\\");
+exports[`React Native > svelte > Javascript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 
-  function onBlur() {
-    // Maintain focus
-    inputRef.current.focus();
+export default function MyComponent(props) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
   }
 
-  function lowerCaseName() {
+  return (
+    <>
+      {show ? (
+        <View onClick={(event) => toggle}>
+          <Text> Hide </Text>
+        </View>
+      ) : (
+        <View onClick={(event) => toggle}>
+          <Text> Show </Text>
+        </View>
+      )}
+    </>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > imports 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
+
+export default function MyComponent(props) {
+  const [disabled, setDisabled] = useState(() => false);
+
+  return (
+    <View>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
+    </View>
+  );
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > lifecycleHooks 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function MyComponent(props) {
+  useEffect(() => {
+    console.log(\\"onMount\\");
+  }, []);
+
+  useEffect(() => {
+    console.log(\\"onAfterUpdate\\");
+  });
+
+  useEffect(() => {
+    return () => {
+      console.log(\\"onDestroy\\");
+    };
+  }, []);
+
+  return <View />;
+}
+"
+`;
+
+exports[`React Native > svelte > Javascript Test > reactive 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [name, setName] = useState(() => \\"Steve\\");
+
+  function lowercaseName() {
     return name.toLowerCase();
   }
 
   return (
     <View>
-      {props.showInput ? (
-        <>
-          <View
-            ref={inputRef}
-            value={name}
-            onBlur={(event) => onBlur()}
-            onChange={(event) => setName(event.target.value)}
-            style={styles.view1}
-          />
-
-          <View for=\\"cars\\" ref={inputNoArgRef}>
-            <Text>Choose a car:</Text>
-          </View>
-
-          <View name=\\"cars\\" id=\\"cars\\">
-            <View value=\\"supra\\">
-              <Text>GR Supra</Text>
-            </View>
-
-            <View value=\\"86\\">
-              <Text>GR 86</Text>
-            </View>
-          </View>
-        </>
-      ) : null}
-      <Text>Hello</Text>
-      <Text>{lowerCaseName()}</Text>
-      <Text>! I can run in React, Qwik, Vue, Solid, or Web Component!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
-"
-`;
-
-exports[`React Native > Typescript Test > BasicRefAssignment 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useRef } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-}
-
-export default function MyBasicRefAssignmentComponent(props: Props) {
-  const holdValueRef = useRef(\\"Patrick\\");
-  function handlerClick(event) {
-    event.preventDefault();
-    console.log(\\"current value\\", holdValueRef.current);
-    holdValueRef.current = holdValueRef.current + \\"JS\\";
-  }
-
-  return (
-    <View>
-      <View onClick={(evt) => handlerClick(evt)}>
-        <Text>Click</Text>
-      </View>
+      <View value={name} />
+      <Text>Lowercase: </Text>
+      <Text>{lowercaseName()}</Text>
     </View>
   );
 }
 "
 `;
 
-exports[`React Native > Typescript Test > BasicRefPrevious 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-}
-
-export function usePrevious<T>(value: T) {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  let ref = useRef<T>(null); // Store current value in ref
-
-  onUpdate(() => {
-    ref = value;
-  }, [value]); // Only re-run if value changes
-  // Return previous value (happens before update in useEffect above)
-
-  return ref;
-}
-
-export default function MyPreviousComponent(props: Props) {
-  const [count, setCount] = useState(() => 0);
-
-  const prevCount = useRef(count);
-
-  useEffect(() => {
-    prevCount.current = count;
-  }, [count]);
-
-  return (
-    <View>
-      <View>
-        <Text>Now: </Text>
-        <Text>{count}</Text>
-        <Text>, before: </Text>
-        <Text>{prevCount.current}</Text>
-      </View>
-
-      <View onClick={(event) => setCount(1)}>
-        <Text>Increment</Text>
-      </View>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Button 1`] = `
+exports[`React Native > svelte > Javascript Test > style 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
+export default function MyComponent(props) {
+  return <View />;
 }
 
-export default function Button(props: ButtonProps) {
-  return (
-    <View>
-      {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-
-      {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-    </View>
-  );
-}
+const styles = StyleSheet.create({});
 "
 `;
 
-exports[`React Native > Typescript Test > Columns 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Column = {
-  content: any; // TODO: Implement this when support for dynamic CSS lands
-
-  width?: number;
-};
-export interface ColumnProps {
-  columns?: Column[]; // TODO: Implement this when support for dynamic CSS lands
-
-  space?: number; // TODO: Implement this when support for dynamic CSS lands
-
-  stackColumnsAt?: \\"tablet\\" | \\"mobile\\" | \\"never\\"; // TODO: Implement this when support for dynamic CSS lands
-
-  reverseColumnsWhenStacked?: boolean;
-}
-
-export default function Column(props: ColumnProps) {
-  function getColumns() {
-    return props.columns || [];
-  }
-
-  function getGutterSize() {
-    return typeof props.space === \\"number\\" ? props.space || 0 : 20;
-  }
-
-  function getWidth(index) {
-    const columns = getColumns();
-    return (columns[index] && columns[index].width) || 100 / columns.length;
-  }
-
-  function getColumnCssWidth(index) {
-    const columns = getColumns();
-    const gutterSize = getGutterSize();
-    const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
-    return \`calc(\${getWidth(index)}% - \${subtractWidth}px)\`;
-  }
-
-  return (
-    <View style={styles.view1}>
-      {props.columns?.map((column, index) => (
-        <View style={styles.view2}>
-          <Text>{column.content}</Text>
-
-          <Text>{index}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: { display: \\"flex\\", flexDirection: \\"column\\", alignItems: \\"stretch\\" },
-  view2: { flexGrow: 1 },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > ContentSlotHtml 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
-
-export default function ContentSlotCode(props: Props) {
-  return (
-    <View>
-      {props.slotTesting}
-
-      <View>
-        <View />
-      </View>
-
-      <View>{props.children}</View>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > ContentSlotJSX 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  [key: string]: string | JSX.Element;
-};
-
-export default function ContentSlotJsxCode(props: Props) {
-  return (
-    <View>
-      {props.slotTesting ? (
-        <>
-          <View>
-            <Text>{props.slotTesting}</Text>
-          </View>
-        </>
-      ) : null}
-
-      <View>
-        <View />
-      </View>
-
-      <View>
-        <Text>{props.children}</Text>
-      </View>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > CustomCode 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
-
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
-  const [scriptsInserted, setScriptsInserted] = useState(() => []);
-
-  const [scriptsRun, setScriptsRun] = useState(() => []);
-
-  function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  }
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Embed 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
-
-export interface CustomCodeProps {
-  code: string;
-  replaceNodes?: boolean;
-}
-
-export default function CustomCode(props: CustomCodeProps) {
-  const elem = useRef<HTMLDivElement>(null);
-  const [scriptsInserted, setScriptsInserted] = useState(() => []);
-
-  const [scriptsRun, setScriptsRun] = useState(() => []);
-
-  function findAndRunScripts() {
-    // TODO: Move this function to standalone one in '@builder.io/utils'
-    if (elem.current && typeof window !== \\"undefined\\") {
-      /** @type {HTMLScriptElement[]} */
-      const scripts = elem.current.getElementsByTagName(\\"script\\");
-
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i];
-
-        if (script.src) {
-          if (scriptsInserted.includes(script.src)) {
-            continue;
-          }
-
-          scriptsInserted.push(script.src);
-          const newScript = document.createElement(\\"script\\");
-          newScript.async = true;
-          newScript.src = script.src;
-          document.head.appendChild(newScript);
-        } else if (
-          !script.type ||
-          [
-            \\"text/javascript\\",
-            \\"application/javascript\\",
-            \\"application/ecmascript\\",
-          ].includes(script.type)
-        ) {
-          if (scriptsRun.includes(script.innerText)) {
-            continue;
-          }
-
-          try {
-            scriptsRun.push(script.innerText);
-            new Function(script.innerText)();
-          } catch (error) {
-            console.warn(\\"\`CustomCode\`: Error running script:\\", error);
-          }
-        }
-      }
-    }
-  }
-
-  useEffect(() => {
-    findAndRunScripts();
-  }, []);
-
-  return <View ref={elem} dangerouslySetInnerHTML={{ __html: props.code }} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Form 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef } from \\"react\\";
-
-export interface FormProps {
-  attributes?: any;
-  name?: string;
-  action?: string;
-  validate?: boolean;
-  method?: string;
-  builderBlock?: BuilderElement;
-  sendSubmissionsTo?: string;
-  sendSubmissionsToEmail?: string;
-  sendWithJs?: boolean;
-  contentType?: string;
-  customHeaders?: {
-    [key: string]: string;
-  };
-  successUrl?: string;
-  previewState?: FormState;
-  successMessage?: BuilderElement[];
-  errorMessage?: BuilderElement[];
-  sendingMessage?: BuilderElement[];
-  resetFormOnSubmit?: boolean;
-  errorMessagePath?: string;
-}
-export type FormState = \\"unsubmitted\\" | \\"sending\\" | \\"success\\" | \\"error\\";
-import { BuilderBlock as BuilderBlockComponent } from \\"@fake\\";
-import { BuilderElement, Builder, builder } from \\"@builder.io/sdk\\";
-import { BuilderBlocks } from \\"@fake\\";
-import { set } from \\"@fake\\";
-import { get } from \\"@fake\\";
-
-export default function FormComponent(props: FormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [formState, setFormState] = useState(() => \\"unsubmitted\\");
-
-  const [responseData, setResponseData] = useState(() => null);
-
-  const [formErrorMessage, setFormErrorMessage] = useState(() => \\"\\");
-
-  function submissionState() {
-    return (Builder.isEditing && props.previewState) || formState;
-  }
-
-  function onSubmit(event) {
-    const sendWithJs = props.sendWithJs || props.sendSubmissionsTo === \\"email\\";
-
-    if (props.sendSubmissionsTo === \\"zapier\\") {
-      event.preventDefault();
-    } else if (sendWithJs) {
-      if (!(props.action || props.sendSubmissionsTo === \\"email\\")) {
-        event.preventDefault();
-        return;
-      }
-
-      event.preventDefault();
-      const el = event.currentTarget;
-      const headers = props.customHeaders || {};
-      let body;
-      const formData = new FormData(el); // TODO: maybe support null
-
-      const formPairs = Array.from(
-        event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
-      )
-        .filter((el) => !!el.name)
-        .map((el) => {
-          let value;
-          const key = el.name;
-
-          if (el instanceof HTMLInputElement) {
-            if (el.type === \\"radio\\") {
-              if (el.checked) {
-                value = el.name;
-                return {
-                  key,
-                  value,
-                };
-              }
-            } else if (el.type === \\"checkbox\\") {
-              value = el.checked;
-            } else if (el.type === \\"number\\" || el.type === \\"range\\") {
-              const num = el.valueAsNumber;
-
-              if (!isNaN(num)) {
-                value = num;
-              }
-            } else if (el.type === \\"file\\") {
-              // TODO: one vs multiple files
-              value = el.files;
-            } else {
-              value = el.value;
-            }
-          } else {
-            value = el.value;
-          }
-
-          return {
-            key,
-            value,
-          };
-        });
-      let contentType = props.contentType;
-
-      if (props.sendSubmissionsTo === \\"email\\") {
-        contentType = \\"multipart/form-data\\";
-      }
-
-      Array.from(formPairs).forEach(({ value }) => {
-        if (
-          value instanceof File ||
-          (Array.isArray(value) && value[0] instanceof File) ||
-          value instanceof FileList
-        ) {
-          contentType = \\"multipart/form-data\\";
-        }
-      }); // TODO: send as urlEncoded or multipart by default
-      // because of ease of use and reliability in browser API
-      // for encoding the form?
-
-      if (contentType !== \\"application/json\\") {
-        body = formData;
-      } else {
-        // Json
-        const json = {};
-        Array.from(formPairs).forEach(({ value, key }) => {
-          set(json, key, value);
-        });
-        body = JSON.stringify(json);
-      }
-
-      if (contentType && contentType !== \\"multipart/form-data\\") {
-        if (
-          /* Zapier doesn't allow content-type header to be sent from browsers */ !(
-            sendWithJs && props.action?.includes(\\"zapier.com\\")
-          )
-        ) {
-          headers[\\"content-type\\"] = contentType;
-        }
-      }
-      const presubmitEvent = new CustomEvent(\\"presubmit\\", { detail: { body } });
-      if (formRef.current) {
-        formRef.current.dispatchEvent(presubmitEvent);
-        if (presubmitEvent.defaultPrevented) {
-          return;
-        }
-      }
-      setFormState(\\"sending\\");
-      const formUrl = \`\${
-        builder.env === \\"dev\\" ? \\"http://localhost:5000\\" : \\"https://builder.io\\"
-      }/api/v1/form-submit?apiKey=\${builder.apiKey}&to=\${btoa(
-        props.sendSubmissionsToEmail || \\"\\"
-      )}&name=\${encodeURIComponent(props.name || \\"\\")}\`;
-      fetch(
-        props.sendSubmissionsTo === \\"email\\"
-          ? formUrl
-          : props.action /* TODO: throw error if no action URL */,
-        { body, headers, method: props.method || \\"post\\" }
-      ).then(
-        async (res) => {
-          let body;
-          const contentType = res.headers.get(\\"content-type\\");
-          if (contentType && contentType.indexOf(\\"application/json\\") !== -1) {
-            body = await res.json();
-          } else {
-            body = await res.text();
-          }
-          if (!res.ok && props.errorMessagePath) {
-            /* TODO: allow supplying an error formatter function */ let message =
-              get(body, props.errorMessagePath);
-            if (message) {
-              if (typeof message !== \\"string\\") {
-                /* TODO: ideally convert json to yaml so it woul dbe like            error: - email has been taken */ message =
-                  JSON.stringify(message);
-              }
-              setFormErrorMessage(message);
-            }
-          }
-          setResponseData(body);
-          setFormState(res.ok ? \\"success\\" : \\"error\\");
-          if (res.ok) {
-            const submitSuccessEvent = new CustomEvent(\\"submit:success\\", {
-              detail: { res, body },
-            });
-            if (formRef.current) {
-              formRef.current.dispatchEvent(submitSuccessEvent);
-              if (submitSuccessEvent.defaultPrevented) {
-                return;
-              }
-              /* TODO: option to turn this on/off? */ if (
-                props.resetFormOnSubmit !== false
-              ) {
-                formRef.current.reset();
-              }
-            }
-            /* TODO: client side route event first that can be preventDefaulted */ if (
-              props.successUrl
-            ) {
-              if (formRef.current) {
-                const event = new CustomEvent(\\"route\\", {
-                  detail: { url: props.successUrl },
-                });
-                formRef.current.dispatchEvent(event);
-                if (!event.defaultPrevented) {
-                  location.href = props.successUrl;
-                }
-              } else {
-                location.href = props.successUrl;
-              }
-            }
-          }
-        },
-        (err) => {
-          const submitErrorEvent = new CustomEvent(\\"submit:error\\", {
-            detail: { error: err },
-          });
-          if (formRef.current) {
-            formRef.current.dispatchEvent(submitErrorEvent);
-            if (submitErrorEvent.defaultPrevented) {
-              return;
-            }
-          }
-          setResponseData(err);
-          setFormState(\\"error\\");
-        }
-      );
-    }
-  }
-  return (
-    <View
-      validate={props.validate}
-      ref={formRef}
-      action={!props.sendWithJs && props.action}
-      method={props.method}
-      name={props.name}
-      onSubmit={(event) => onSubmit(event)}
-      {...props.attributes}
-    >
-      {\\" \\"}
-      {props.builderBlock && props.builderBlock.children ? (
-        <>
-          {props.builderBlock?.children?.map((block, index) => (
-            <BuilderBlockComponent key={block.id} block={block} index={index} />
-          ))}
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" ? (
-        <>
-          <BuilderBlocks dataPath=\\"errorMessage\\" blocks={props.errorMessage} />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"sending\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"sendingMessage\\"
-            blocks={props.sendingMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"error\\" && responseData ? (
-        <>
-          <View style={styles.view1}>
-            {\\" \\"}
-            <Text>{JSON.stringify(responseData, null, 2)}</Text>{\\" \\"}
-          </View>
-        </>
-      ) : null}{\\" \\"}
-      {submissionState() === \\"success\\" ? (
-        <>
-          <BuilderBlocks
-            dataPath=\\"successMessage\\"
-            blocks={props.successMessage}
-          />
-        </>
-      ) : null}{\\" \\"}
-    </View>
-  );
-}
-const styles = StyleSheet.create({
-  view1: { padding: 10, color: \\"red\\", textAlign: \\"center\\" },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > Image 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useRef, useEffect } from \\"react\\";
-
-// TODO: AMP Support?
-export interface ImageProps {
-  _class?: string;
-  image: string;
-  sizes?: string;
-  lazy?: boolean;
-  height?: number;
-  width?: number;
-  altText?: string;
-  backgroundSize?: string;
-  backgroundPosition?: string; // TODO: Support generating Builder.io and or Shopify \`srcset\`s when needed
-
-  srcset?: string; // TODO: Implement support for custom aspect ratios
-
-  aspectRatio?: number; // TODO: This might not work as expected in terms of positioning
-
-  children?: any;
-}
-
-export default function Image(props: ImageProps) {
-  const pictureRef = useRef<HTMLElement>(null);
-  const [scrollListener, setScrollListener] = useState(() => null);
-
-  const [imageLoaded, setImageLoaded] = useState(() => false);
-
-  function setLoaded() {
-    setImageLoaded(true);
-  }
-
-  function useLazyLoading() {
-    // TODO: Add more checks here, like testing for real web browsers
-    return !!props.lazy && isBrowser();
-  }
-
-  function isBrowser() {
-    return (
-      typeof window !== \\"undefined\\" && window.navigator.product != \\"ReactNative\\"
-    );
-  }
-
-  const [load, setLoad] = useState(() => false);
-
-  useEffect(() => {
-    if (useLazyLoading()) {
-      // throttled scroll capture listener
-      const listener = () => {
-        if (pictureRef.current) {
-          const rect = pictureRef.current.getBoundingClientRect();
-          const buffer = window.innerHeight / 2;
-
-          if (rect.top < window.innerHeight + buffer) {
-            setLoad(true);
-            setScrollListener(null);
-            window.removeEventListener(\\"scroll\\", listener);
-          }
-        }
-      };
-
-      setScrollListener(listener);
-      window.addEventListener(\\"scroll\\", listener, {
-        capture: true,
-        passive: true,
-      });
-      listener();
-    }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (scrollListener) {
-        window.removeEventListener(\\"scroll\\", scrollListener);
-      }
-    };
-  }, []);
-
-  return (
-    <View>
-      <View ref={pictureRef}>
-        {!useLazyLoading() || load ? (
-          <>
-            <View
-              alt={props.altText}
-              aria-role={props.altText ? \\"presentation\\" : undefined}
-              src={props.image}
-              onLoad={(event) => setLoaded()}
-              srcset={props.srcset}
-              sizes={props.sizes}
-              style={styles.view1}
-            />
-          </>
-        ) : null}
-
-        <View srcset={props.srcset} />
-      </View>
-
-      <Text>{props.children}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: {
-    opacity: 1,
-    transition: \\"opacity 0.2s ease-in-out\\",
-    objectFit: \\"cover\\",
-    objectPosition: \\"center\\",
-  },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > Image State 1`] = `
+exports[`React Native > svelte > Javascript Test > textExpressions 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function ImgStateComponent(props: any) {
-  const [canShow, setCanShow] = useState(() => true);
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 5);
 
-  const [images, setImages] = useState(() => [\\"http://example.com/qwik.png\\"]);
+  const [b, setB] = useState(() => 12);
 
   return (
     <View>
-      {images?.map((item, itemIndex) => (
-        <>
-          <View src={item} key={itemIndex} />
-        </>
-      ))}
+      <Text>normal:</Text>
+      <Text>{a + b}</Text>
+      <View />
+      <Text>conditional</Text>
+      <Text>{a > 2 ? \\"hello\\" : \\"bye\\"}</Text>
     </View>
   );
 }
 "
 `;
 
-exports[`React Native > Typescript Test > Img 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface ImgProps {
-  attributes?: any;
-  imgSrc?: string;
-  altText?: string;
-  backgroundSize?: \\"cover\\" | \\"contain\\";
-  backgroundPosition?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-}
-
-import { Builder } from \\"@builder.io/sdk\\";
-
-export default function ImgComponent(props: ImgProps) {
-  return (
-    <View
-      style={{
-        objectFit: props.backgroundSize || \\"cover\\",
-        objectPosition: props.backgroundPosition || \\"center\\",
-      }}
-      {...props.attributes}
-      key={(Builder.isEditing && props.imgSrc) || \\"default-key\\"}
-      alt={props.altText}
-      src={props.imgSrc}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Input 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface FormInputProps {
-  type?: string;
-  attributes?: any;
-  name?: string;
-  value?: string;
-  placeholder?: string;
-  defaultValue?: string;
-  required?: boolean;
-}
-
-import { Builder } from \\"@builder.io/sdk\\";
-
-export default function FormInputComponent(props: FormInputProps) {
-  return (
-    <View
-      {...props.attributes}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      placeholder={props.placeholder}
-      type={props.type}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-      required={props.required}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > RawText 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface RawTextProps {
-  attributes?: any;
-  text?: string; // builderBlock?: any;
-}
-
-export default function RawText(props: RawTextProps) {
-  return <View dangerouslySetInnerHTML={{ __html: props.text || \\"\\" }} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Section 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface SectionProps {
-  maxWidth?: number;
-  attributes?: any;
-  children?: any;
-}
-
-export default function SectionComponent(props: SectionProps) {
-  return (
-    <View
-      {...props.attributes}
-      style={
-        props.maxWidth && typeof props.maxWidth === \\"number\\"
-          ? {
-              maxWidth: props.maxWidth,
-            }
-          : undefined
-      }
-    >
-      <Text>{props.children}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Select 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface FormSelectProps {
-  options?: {
-    name?: string;
-    value: string;
-  }[];
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-}
-
-import { Builder } from \\"@builder.io/sdk\\";
-
-export default function SelectComponent(props: FormSelectProps) {
-  return (
-    <View
-      {...props.attributes}
-      value={props.value}
-      key={
-        Builder.isEditing && props.defaultValue
-          ? props.defaultValue
-          : \\"default-key\\"
-      }
-      defaultValue={props.defaultValue}
-      name={props.name}
-    >
-      {props.options?.map((option, index) => (
-        <View value={option.value} data-index={index}>
-          <Text>{option.name || option.value}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > SlotHtml 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  [key: string]: string;
-};
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
-export default function SlotCode(props: Props) {
-  return (
-    <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>}></ContentSlotCode>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > SlotJsx 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  [key: string]: string;
-};
-import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-
-export default function SlotCode(props: Props) {
-  return (
-    <View>
-      <ContentSlotCode slotTesting={<div>Hello</div>} />
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Stamped.io 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-type SmileReviewsProps = {
-  productId: string;
-  apiKey: string;
-};
-import { kebabCase } from \\"lodash\\";
-import { snakeCase } from \\"lodash\\";
-
-export default function SmileReviews(props: SmileReviewsProps) {
-  const [reviews, setReviews] = useState(() => []);
-
-  const [name, setName] = useState(() => \\"test\\");
-
-  const [showReviewPrompt, setShowReviewPrompt] = useState(() => false);
-
-  function kebabCaseValue() {
-    return kebabCase(\\"testThat\\");
-  }
-
-  function snakeCaseValue() {
-    return snakeCase(\\"testThis\\");
-  }
-
-  useEffect(() => {
-    fetch(
-      \`https://stamped.io/api/widget/reviews?storeUrl=builder-io.myshopify.com&apiKey=\${
-        props.apiKey || \\"pubkey-8bbDq7W6w4sB3OWeM1HUy2s47702hM\\"
-      }&productId=\${props.productId || \\"2410511106127\\"}\`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setReviews(data.data);
-      });
-  }, []);
-
-  return (
-    <View data-user={name}>
-      <View onClick={(event) => setShowReviewPrompt(true)}>
-        <Text>Write a review</Text>
-      </View>
-
-      {showReviewPrompt || \\"asdf\\" ? (
-        <>
-          <View placeholder=\\"Email\\" />
-          <View placeholder=\\"Title\\" style={styles.view1} />
-          <View placeholder=\\"How was your experience?\\" style={styles.view2} />
-          <View
-            onClick={(event) => {
-              event.preventDefault();
-              setShowReviewPrompt(false);
-            }}
-            style={styles.view3}
-          >
-            <Text>Submit</Text>
-          </View>
-        </>
-      ) : null}
-
-      {reviews?.map((review, index) => (
-        <View key={review.id} style={styles.view4}>
-          <View src={review.avatar} style={styles.view5} />
-
-          <View>
-            <View>
-              <Text>N: </Text>
-              <Text>{index}</Text>
-            </View>
-
-            <View>
-              <Text>{review.author}</Text>
-            </View>
-
-            <View>
-              <Text>{review.reviewMessage}</Text>
-            </View>
-          </View>
-        </View>
-      ))}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: { display: \\"block\\" },
-  view2: { display: \\"block\\" },
-  view3: { display: \\"block\\" },
-  view4: {
-    margin: 10,
-    padding: 10,
-    background: \\"white\\",
-    display: \\"flex\\",
-    borderRadius: 5,
-    boxShadow: 0,
-  },
-  view5: { height: 30, width: 30, marginRight: 10 },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > Submit 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-}
-
-export default function SubmitButton(props: ButtonProps) {
-  return (
-    <View type=\\"submit\\" {...props.attributes}>
-      <Text>{props.text}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Text 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState } from \\"react\\";
-
-export interface TextProps {
-  attributes?: any;
-  rtlMode: boolean;
-  text?: string;
-  content?: string;
-  builderBlock?: any;
-}
-
-import { Builder } from \\"@builder.io/sdk\\";
-
-export default function Text(props: TextProps) {
-  const [name, setName] = useState(() => \\"Decadef20\\");
-
-  return (
-    <View
-      contentEditable={allowEditingText || undefined}
-      data-name={{
-        test: name || \\"any name\\",
-      }}
-      dangerouslySetInnerHTML={{
-        __html:
-          props.text ||
-          props.content ||
-          name ||
-          '<p class=\\"text-lg\\">my name</p>',
-      }}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Textarea 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface TextareaProps {
-  attributes?: any;
-  name?: string;
-  value?: string;
-  defaultValue?: string;
-  placeholder?: string;
-}
-
-export default function Textarea(props: TextareaProps) {
-  return (
-    <View
-      {...props.attributes}
-      placeholder={props.placeholder}
-      name={props.name}
-      value={props.value}
-      defaultValue={props.defaultValue}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > Video 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface VideoProps {
-  attributes?: any;
-  video?: string;
-  autoPlay?: boolean;
-  controls?: boolean;
-  muted?: boolean;
-  loop?: boolean;
-  playsInline?: boolean;
-  aspectRatio?: number;
-  width?: number;
-  height?: number;
-  fit?: \\"contain\\" | \\"cover\\" | \\"fill\\";
-  position?:
-    | \\"center\\"
-    | \\"top\\"
-    | \\"left\\"
-    | \\"right\\"
-    | \\"bottom\\"
-    | \\"top left\\"
-    | \\"top right\\"
-    | \\"bottom left\\"
-    | \\"bottom right\\";
-  posterImage?: string;
-  lazyLoad?: boolean;
-}
-
-export default function Video(props: VideoProps) {
-  return (
-    <View
-      preload=\\"none\\"
-      {...props.attributes}
-      style={{
-        width: \\"100%\\",
-        height: \\"100%\\",
-        ...props.attributes?.style,
-        objectFit: props.fit,
-        objectPosition: props.position,
-        // Hack to get object fit to work as expected and
-        // not have the video overflow
-        borderRadius: 1,
-      }}
-      key={props.video || \\"no-src\\"}
-      poster={props.posterImage}
-      autoplay={props.autoPlay}
-      muted={props.muted}
-      controls={props.controls}
-      loop={props.loop}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > arrowFunctionInUseStore 1`] = `
+exports[`React Native > svelte > Typescript Test > basic 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
 export default function MyComponent(props: any) {
-  const [name, setName] = useState(() => \\"steve\\");
-
-  function setName(value) {
-    setName(value);
-  }
-
-  function updateNameWithArrowFn(value) {
-    setName(value);
-  }
+  const [name, setName] = useState(() => \\"Steve\\");
 
   return (
     <View>
-      <Text>Hello </Text>
-      <Text>{name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > basicForwardRef 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, forwardRef } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
-export default forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
-
-    return (
-      <View>
-        <View
-          ref={inputRef}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          style={styles.view1}
-        />
-      </View>
-    );
-  }
-);
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
-"
-`;
-
-exports[`React Native > Typescript Test > basicForwardRefMetadata 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, forwardRef } from \\"react\\";
-
-export interface Props {
-  showInput: boolean;
-  inputRef: HTMLInputElement;
-}
-
-export default forwardRef<Props[\\"inputRef\\"]>(
-  function MyBasicForwardRefComponent(props: Props, inputRef) {
-    const [name, setName] = useState(() => \\"PatrickJS\\");
-
-    return (
-      <View>
-        <View
-          ref={inputRef}
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          style={styles.view1}
-        />
-      </View>
-    );
-  }
-);
-
-const styles = StyleSheet.create({ view1: { color: \\"red\\" } });
-"
-`;
-
-exports[`React Native > Typescript Test > basicOnUpdateReturn 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-export default function MyBasicOnUpdateReturnComponent(props: any) {
-  const [name, setName] = useState(() => \\"PatrickJS\\");
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    fetch(\\"https://patrickjs.com/api/resource.json\\", {
-      signal,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setName(data.name);
-      });
-    return () => {
-      if (!signal.aborted) {
-        controller.abort();
-      }
-    };
-  }, [name]);
-
-  return (
-    <View>
-      <Text>Hello! </Text>
-      <Text>{name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > class + ClassName + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return (
-    <View style={styles.view1}>
+      <View onChange={(event) => setName(event.target.value)} value={name} />
       <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
 "
 `;
 
-exports[`React Native > Typescript Test > class + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
-"
-`;
-
-exports[`React Native > Typescript Test > className + css 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
-"
-`;
-
-exports[`React Native > Typescript Test > className 1`] = `
+exports[`React Native > svelte > Typescript Test > bindGroup 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-type Props = {
-  [key: string]: string | JSX.Element;
-  slotTesting: JSX.Element;
-};
+export default function MyComponent(props: any) {
+  const [tortilla, setTortilla] = useState(() => \\"Plain\\");
 
-export default function ClassNameCode(props: Props) {
-  const [bindings, setBindings] = useState(() => \\"a binding\\");
+  const [fillings, setFillings] = useState(() => []);
 
   return (
     <View>
+      <View
+        type=\\"radio\\"
+        value=\\"Plain\\"
+        checked={tortilla === \\"Plain\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Whole wheat\\"
+        checked={tortilla === \\"Whole wheat\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View
+        type=\\"radio\\"
+        value=\\"Spinach\\"
+        checked={tortilla === \\"Spinach\\"}
+        onChange={(event) => setTortilla(event.target.value)}
+      />
+      <View />
+      <View />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Rice\\"
+        checked={fillings === \\"Rice\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Beans\\"
+        checked={fillings === \\"Beans\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Cheese\\"
+        checked={fillings === \\"Cheese\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
+      <View
+        type=\\"checkbox\\"
+        value=\\"Guac (extra)\\"
+        checked={fillings === \\"Guac (extra)\\"}
+        onChange={(event) => setFillings(event.target.value)}
+      />
       <View>
-        <Text>Without Binding</Text>
+        <Text>Tortilla: </Text>
+        <Text>{tortilla}</Text>
       </View>
-
       <View>
-        <Text>With binding</Text>
+        <Text>Fillings: </Text>
+        <Text>{fillings}</Text>
       </View>
     </View>
   );
@@ -4500,307 +5490,110 @@ export default function ClassNameCode(props: Props) {
 "
 `;
 
-exports[`React Native > Typescript Test > classState 1`] = `
+exports[`React Native > svelte > Typescript Test > bindProperty 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
-  const [classState, setClassState] = useState(() => \\"testClassName\\");
+export default function MyComponent(props: any) {
+  const [value, setValue] = useState(() => \\"hello\\");
 
-  const [styleState, setStyleState] = useState(() => ({
-    color: \\"red\\",
-  }));
-
-  return (
-    <View style={styles.view1}>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({ view1: { padding: 10 } });
-"
-`;
-
-exports[`React Native > Typescript Test > componentWithContext 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
-import Context1 from \\"@dummy/1\\";
-import Context2 from \\"@dummy/2\\";
-
-export default function ComponentWithContext(props: ComponentWithContextProps) {
-  const foo = useContext(Context1);
-
-  return (
-    <Context2.Provider
-      value={{
-        bar: \\"baz\\",
-      }}
-    >
-      <Context1.Provider
-        value={{
-          foo: \\"bar\\",
-
-          content() {
-            return props.content;
-          },
-        }}
-      >
-        <>
-          <Text>{foo.value}</Text>
-        </>
-      </Context1.Provider>
-    </Context2.Provider>
-  );
+  return <View value={value} />;
 }
 "
 `;
 
-exports[`React Native > Typescript Test > defaultProps 1`] = `
+exports[`React Native > svelte > Typescript Test > classDirective 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
-  return (
-    <View>
-      {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-
-      {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-    </View>
-  );
-}
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-};
-"
-`;
-
-exports[`React Native > Typescript Test > defaultPropsOutsideComponent 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
-  return (
-    <View>
-      {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-
-      {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-    </View>
-  );
-}
-
-Button.defaultProps = {
-  text: \\"default text\\",
-  link: \\"https://builder.io/\\",
-  openLinkInNewTab: false,
-};
-"
-`;
-
-exports[`React Native > Typescript Test > defaultValsWithTypes 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Props = {
-  name: string;
-};
-
-const DEFAULT_VALUES: Props = {
-  name: \\"Sami\\",
-};
-
-export default function ComponentWithTypes(props: Props) {
-  return (
-    <View>
-      <Text> Hello </Text>
-      <Text>{props.name || DEFAULT_VALUES.name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > import types 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type RenderContentProps = {
-  options?: GetContentOptions;
-  content: BuilderContent;
-  renderContentProps: RenderBlockProps;
-};
-import { BuilderContent, GetContentOptions } from \\"@builder.io/sdk\\";
-import RenderBlock, { RenderBlockProps } from \\"./builder-render-block.raw\\";
-
-export default function RenderContent(props: RenderContentProps) {
-  function getRenderContentProps(block, index) {
-    return {
-      block: block,
-      index: index,
-    };
-  }
-
-  return (
-    <RenderBlock
-      {...state.getRenderContentProps(props.renderContentProps.block, 0)}
-    />
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > multipleOnUpdate 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
-
-export default function MultipleOnUpdate(props: any) {
-  useEffect(() => {
-    console.log(\\"Runs on every update/rerender\\");
-  });
-  useEffect(() => {
-    console.log(\\"Runs on every update/rerender as well\\");
-  });
+export default function MyComponent(props: any) {
+  const [focus, setFocus] = useState(() => true);
 
   return <View />;
 }
+
+MyComponent.defaultProps = {};
 "
 `;
 
-exports[`React Native > Typescript Test > multipleOnUpdateWithDeps 1`] = `
+exports[`React Native > svelte > Typescript Test > context 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
+import { useState, useContext } from \\"react\\";
 
-export default function MultipleOnUpdateWithDeps(props: any) {
-  const [a, setA] = useState(() => \\"a\\");
+export default function MyComponent(props: any) {
+  const [activeTab, setActiveTab] = useState(() => 0);
 
-  const [b, setB] = useState(() => \\"b\\");
+  const disabled = useContext(\\"disabled\\");
 
-  const [c, setC] = useState(() => \\"c\\");
-
-  const [d, setD] = useState(() => \\"d\\");
-
-  useEffect(() => {
-    console.log(\\"Runs when a or b changes\\", a, b);
-
-    if (a === \\"a\\") {
-      setA(\\"b\\");
-    }
-  }, [a, b]);
-  useEffect(() => {
-    console.log(\\"Runs when c or d changes\\", c, d);
-
-    if (a === \\"a\\") {
-      setA(\\"b\\");
-    }
-  }, [c, d]);
-
-  return <View />;
+  return (
+    <Context.Provider value={activeTab}>
+      <View>
+        <Text>{activeTab}</Text>
+      </View>
+    </Context.Provider>
+  );
 }
 "
 `;
 
-exports[`React Native > Typescript Test > multipleSpreads 1`] = `
+exports[`React Native > svelte > Typescript Test > each 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-export default function MyBasicComponent(props: any) {
-  const [attrs, setAttrs] = useState(() => ({
-    hello: \\"world\\",
-  }));
+export default function MyComponent(props: any) {
+  const [numbers, setNumbers] = useState(() => [\\"one\\", \\"two\\", \\"three\\"]);
 
-  return <View {...state.attrs} {...props} />;
+  return (
+    <View>
+      {numbers?.map((num) => (
+        <View>
+          <Text>{num}</Text>
+        </View>
+      ))}
+    </View>
+  );
 }
 "
 `;
 
-exports[`React Native > Typescript Test > nestedShow 1`] = `
+exports[`React Native > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 
-interface Props {
-  conditionA: boolean;
-  conditionB: boolean;
+export default function MyComponent(props: any) {
+  const [html, setHtml] = useState(() => \\"<b>bold</b>\\");
+
+  return <View dangerouslySetInnerHTML={{ __html: html }} />;
 }
+"
+`;
 
-export default function NestedShow(props: Props) {
+exports[`React Native > svelte > Typescript Test > ifElse 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [show, setShow] = useState(() => true);
+
+  function toggle() {
+    setShow(!show);
+  }
+
   return (
     <>
-      {props.conditionA ? (
-        <>
-          {!props.conditionB ? (
-            <>
-              <View>
-                <Text>if condition A and condition B</Text>
-              </View>
-            </>
-          ) : (
-            <View>
-              <Text>else-condition-B</Text>
-            </View>
-          )}
-        </>
+      {show ? (
+        <View onClick={(event) => toggle}>
+          <Text> Hide </Text>
+        </View>
       ) : (
-        <View>
-          <Text>else-condition-A</Text>
+        <View onClick={(event) => toggle}>
+          <Text> Show </Text>
         </View>
       )}
     </>
@@ -4809,92 +5602,43 @@ export default function NestedShow(props: Props) {
 "
 `;
 
-exports[`React Native > Typescript Test > nestedStyles 1`] = `
+exports[`React Native > svelte > Typescript Test > imports 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
+import Button from \\"./Button.lite\\";
 
-export default function NestedStyles(props: any) {
+export default function MyComponent(props: any) {
+  const [disabled, setDisabled] = useState(() => false);
+
   return (
-    <View style={styles.view1}>
-      <Text>Hello world</Text>
+    <View>
+      <Button type=\\"button\\" disabled={disabled}>
+        {props.children}
+      </Button>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: {
-    display: \\"flex\\",
-    foo: \\"var(--bar)\\",
-    \\"&:hover\\": { display: \\"flex\\" },
-    \\".nested-selector\\": { display: \\"grid\\" },
-  },
-});
 "
 `;
 
-exports[`React Native > Typescript Test > onInit & onMount 1`] = `
+exports[`React Native > svelte > Typescript Test > lifecycleHooks 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useEffect } from \\"react\\";
 
-export default function OnInit(props: any) {
-  useEffect(() => {
-    console.log(\\"onInit\\");
-  });
-
+export default function MyComponent(props: any) {
   useEffect(() => {
     console.log(\\"onMount\\");
   }, []);
 
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > onInit 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-type Props = {
-  name: string;
-};
-
-export const defaultValues = {
-  name: \\"PatrickJS\\",
-};
-
-export default function OnInit(props: Props) {
-  const [name, setName] = useState(() => \\"\\");
-
   useEffect(() => {
-    setName(defaultValues.name || props.name);
-    console.log(\\"set defaults with props\\");
+    console.log(\\"onAfterUpdate\\");
   });
-
-  return (
-    <View>
-      <Text>Default name defined by parent </Text>
-      <Text>{name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > onMount 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
-
-export default function Comp(props: any) {
-  useEffect(() => {
-    console.log(\\"Runs on mount\\");
-  }, []);
 
   useEffect(() => {
     return () => {
-      console.log(\\"Runs on unMount\\");
+      console.log(\\"onDestroy\\");
     };
   }, []);
 
@@ -4903,471 +5647,60 @@ export default function Comp(props: any) {
 "
 `;
 
-exports[`React Native > Typescript Test > onUpdate 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useEffect } from \\"react\\";
-
-export default function OnUpdate(props: any) {
-  useEffect(() => {
-    console.log(\\"Runs on every update/rerender\\");
-  });
-
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > onUpdateWithDeps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useState, useEffect } from \\"react\\";
-
-type Props = {
-  size: string;
-};
-
-export default function OnUpdateWithDeps(props: Props) {
-  const [a, setA] = useState(() => \\"a\\");
-
-  const [b, setB] = useState(() => \\"b\\");
-
-  useEffect(() => {
-    console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }, [a, b, props.size]);
-
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > preserveExportOrLocalStatement 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Types = {
-  s: any[];
-};
-interface IPost {
-  len: number;
-}
-export interface MyBasicComponentProps {
-  id: string;
-}
-
-const b = 3;
-const foo = () => {};
-export const a = 3;
-export const bar = () => {};
-export function run<T>(value: T) {}
-
-export default function MyBasicComponent(props: MyBasicComponentProps) {
-  return <View />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > preserveTyping 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export type A = \\"test\\";
-export interface C {
-  n: \\"test\\";
-}
-type B = \\"test2\\";
-interface D {
-  n: \\"test\\";
-}
-export interface MyBasicComponentProps {
-  name: string;
-  age?: number;
-}
-
-export default function MyBasicComponent(props: MyBasicComponentProps) {
-  return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > propsDestructure 1`] = `
+exports[`React Native > svelte > Typescript Test > reactive 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useState } from \\"react\\";
 
-type Props = {
-  children: any;
-  type: string;
-};
+export default function MyComponent(props: any) {
+  const [name, setName] = useState(() => \\"Steve\\");
 
-export default function MyBasicComponent(props: Props) {
-  const [name, setName] = useState(() => \\"Decadef20\\");
+  function lowercaseName() {
+    return name.toLowerCase();
+  }
 
   return (
     <View>
-      <Text>{props.children}</Text>
-
-      <Text>{props.type}</Text>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid!</Text>
+      <View value={name} />
+      <Text>Lowercase: </Text>
+      <Text>{lowercaseName()}</Text>
     </View>
   );
 }
 "
 `;
 
-exports[`React Native > Typescript Test > propsInterface 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-interface Person {
-  name: string;
-  age?: number;
-}
-
-export default function MyBasicComponent(props: Person | never) {
-  return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > propsType 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-type Person = {
-  name: string;
-  age?: number;
-};
-
-export default function MyBasicComponent(props: Person) {
-  return (
-    <View>
-      <Text>Hello! I can run in React, Vue, Solid, or Liquid! </Text>
-      <Text>{props.name}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > renderContentExample 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import { useContext, useEffect } from \\"react\\";
-
-type Props = {
-  customComponents: string[];
-  content: {
-    blocks: any[];
-    id: string;
-  };
-};
-import {
-  sendComponentsToVisualEditor,
-  dispatchNewContentToVisualEditor,
-  trackClick,
-} from \\"@dummy/injection-js\\";
-import BuilderContext from \\"@dummy/context.lite\\";
-import RenderBlocks from \\"@dummy/RenderBlocks.lite.tsx\\";
-
-export default function RenderContent(props: Props) {
-  useEffect(() => {
-    sendComponentsToVisualEditor(props.customComponents);
-  }, []);
-
-  useEffect(() => {
-    dispatchNewContentToVisualEditor(props.content);
-  }, [props.content]);
-
-  return (
-    <BuilderContext.Provider
-      value={{
-        get content() {
-          return 3;
-        },
-
-        get registeredComponents() {
-          return 4;
-        },
-      }}
-    >
-      <View
-        onClick={(event) => trackClick(props.content.id)}
-        style={styles.view1}
-      >
-        <RenderBlocks blocks={props.content.blocks} />
-      </View>
-    </BuilderContext.Provider>
-  );
-}
-
-const styles = StyleSheet.create({
-  view1: { display: \\"flex\\", flexDirection: \\"columns\\" },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > rootFragmentMultiNode 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface ButtonProps {
-  attributes?: any;
-  text?: string;
-  link?: string;
-  openLinkInNewTab?: boolean;
-}
-
-export default function Button(props: ButtonProps) {
-  return (
-    <>
-      {props.link ? (
-        <>
-          <View
-            {...props.attributes}
-            href={props.link}
-            target={props.openLinkInNewTab ? \\"_blank\\" : undefined}
-          >
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-
-      {!props.link ? (
-        <>
-          <View type=\\"button\\" {...props.attributes}>
-            <Text>{props.text}</Text>
-          </View>
-        </>
-      ) : null}
-    </>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > rootShow 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export interface RenderStylesProps {
-  foo: string;
-}
-
-export default function RenderStyles(props: RenderStylesProps) {
-  return (
-    <>
-      {props.foo === \\"bar\\" ? (
-        <>
-          <View>
-            <Text>Bar</Text>
-          </View>
-        </>
-      ) : (
-        <View>
-          <Text>Foo</Text>
-        </View>
-      )}
-    </>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > self-referencing component 1`] = `
+exports[`React Native > svelte > Typescript Test > style 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 
 export default function MyComponent(props: any) {
-  return (
-    <View>
-      <Text>{props.name}</Text>
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce Wayne\\" />
-        </>
-      ) : null}
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > self-referencing component with children 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyComponent(props: any) {
-  return (
-    <View>
-      <Text>{props.name}</Text>
-
-      <Text>{props.children}</Text>
-
-      {props.name === \\"Batman\\" ? (
-        <>
-          <MyComponent name=\\"Bruce\\">
-            <View>
-              <Text>Wayne</Text>
-            </View>
-          </MyComponent>
-        </>
-      ) : null}
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > showWithFor 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-interface Props {
-  conditionA: boolean;
-  items: string[];
-}
-
-export default function NestedShow(props: Props) {
-  return (
-    <>
-      {props.conditionA ? (
-        <>
-          {props.items?.map((item, idx) => (
-            <View key={idx}>
-              <Text>{item}</Text>
-            </View>
-          ))}
-        </>
-      ) : (
-        <View>
-          <Text>else-condition-A</Text>
-        </View>
-      )}
-    </>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > spreadAttrs 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return <View {...attrs} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > spreadNestedProps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return <View {...props.nested} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > spreadProps 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyBasicComponent(props: any) {
-  return <View {...props} />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > subComponent 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import Foo from \\"./foo-sub-component.lite\\";
-
-export default function SubComponent(props: any) {
-  return <Foo />;
-}
-"
-`;
-
-exports[`React Native > Typescript Test > typeDependency 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-import type { Foo } from \\"./foo-type\\";
-import type { Foo as Foo2 } from \\"./type-export\\";
-export type TypeDependencyProps = {
-  foo: Foo;
-  foo2: Foo2;
-};
-
-export default function TypeDependency(props: TypeDependencyProps) {
-  return (
-    <View>
-      <Text>{props.foo}</Text>
-    </View>
-  );
-}
-"
-`;
-
-exports[`React Native > Typescript Test > use-style 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyComponent(props: any) {
-  return (
-    <View type=\\"button\\">
-      <Text>Button</Text>
-    </View>
-  );
+  return <View />;
 }
 
 const styles = StyleSheet.create({});
 "
 `;
 
-exports[`React Native > Typescript Test > use-style-and-css 1`] = `
+exports[`React Native > svelte > Typescript Test > textExpressions 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useState } from \\"react\\";
 
 export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 5);
+
+  const [b, setB] = useState(() => 12);
+
   return (
-    <View type=\\"button\\" style={styles.view1}>
-      <Text>Button</Text>
+    <View>
+      <Text>normal:</Text>
+      <Text>{a + b}</Text>
+      <View />
+      <Text>conditional</Text>
+      <Text>{a > 2 ? \\"hello\\" : \\"bye\\"}</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  view1: { background: \\"blue\\", color: \\"white\\" },
-});
-"
-`;
-
-exports[`React Native > Typescript Test > use-style-outside-component 1`] = `
-"import * as React from \\"react\\";
-import { View, StyleSheet, Image, Text } from \\"react-native\\";
-
-export default function MyComponent(props: any) {
-  return (
-    <View type=\\"button\\">
-      <Text>Button</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({});
 "
 `;

@@ -1,5 +1,4 @@
 import { MitosisContext } from '../types/mitosis-context';
-import json5 from 'json5';
 import { MitosisComponent, StateValue } from '../types/mitosis-component';
 
 interface GetStateObjectStringOptions {
@@ -65,7 +64,7 @@ const convertStateMemberToString =
           return undefined;
         }
         return `${keyPrefix} ${key}${keyValueDelimiter} ${valueMapper(
-          json5.stringify(code),
+          code,
           'data',
           typeParameter,
         )}`;

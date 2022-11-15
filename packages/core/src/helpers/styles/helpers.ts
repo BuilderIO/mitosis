@@ -89,17 +89,8 @@ export const parseCssObject = (css: string) => {
 };
 
 export const styleMapToCss = (map: StyleMap): string => {
-  let str = '';
-
-  for (const key in map) {
-    const value = map[key];
-
-    if (typeof value === 'string') {
-      str += `\n${dashCase(key)}: ${value};`;
-    } else {
-      // TODO: do nothing
-    }
-  }
-
-  return str;
+  return Object.entries(map)
+    .filter(([key, value]) => typeof value === 'string')
+    .map(([key, value]) => `  ${dashCase(key)}: ${value};`)
+    .join('\n');
 };

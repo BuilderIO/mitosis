@@ -11,8 +11,19 @@ const nextConfig = {
       // https://webpack.js.org/configuration/resolve/#resolvealias
       fs: false,
     };
+    config.resolve.mainFields = ['browser', 'main', 'module'];
 
     config.resolve.plugins = [...config.resolve.plugins, new TsconfigPathsPlugin()];
+
+    config.module.rules.push({
+      test: /svelte-preprocess.+d\.ts/,
+      loader: 'ignore-loader',
+    });
+
+    config.module.rules.push({
+      test: /postcss-load-config/,
+      loader: 'ignore-loader',
+    });
 
     return config;
   },

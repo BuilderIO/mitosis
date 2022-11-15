@@ -15,9 +15,9 @@ export async function transpileSolidFile(options: TranspileSolidFileOptions) {
         filename: 'file.tsx',
         presets: [tsPreset],
       })
-      .code // Remove .lite extensions from imports without having to load a slow parser like babel
+      ?.code // Remove .lite extensions from imports without having to load a slow parser like babel
       // E.g. convert `import { foo } from './block.lite';` -> `import { foo } from './block';`
-      .replace(/\.lite(['"];)/g, '$1');
+      ?.replace(/\.lite(['"];)/g, '$1');
 
     return output;
   } catch (error) {

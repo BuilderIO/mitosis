@@ -54,11 +54,6 @@ export type MitosisConfig = {
    */
   options: Partial<GeneratorOptions>;
   /**
-   * Configure the extension of the files you want to compile
-   * Default value: 'lite.tsx'
-   */
-  extension: string;
-  /**
    * Configure a custom parser function which takes a string and returns MitosisJSON
    * Defaults to the JSXParser of this project (src/parsers/jsx)
    */

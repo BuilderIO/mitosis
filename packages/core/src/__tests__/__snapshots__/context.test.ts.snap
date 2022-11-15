@@ -6,15 +6,15 @@ exports[`Context > Parse context 1`] = `
   "name": "SimpleExample",
   "value": {
     "content": {
-      "code": null,
+      "code": "null",
       "type": "property",
     },
     "context": {
-      "code": {},
+      "code": "{}",
       "type": "property",
     },
     "foo": {
-      "code": "bar",
+      "code": "'bar'",
       "type": "property",
     },
     "fooUpperCase": {
@@ -30,7 +30,7 @@ exports[`Context > Parse context 1`] = `
       "type": "method",
     },
     "state": {
-      "code": {},
+      "code": "{}",
       "type": "property",
     },
   },
@@ -475,11 +475,6 @@ exports[`Context > Use and set context in complex components 1`] = `
 exports[`Context > Use and set context in complex components 2`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
-
-export type RenderBlockProps = {
-  block: BuilderBlock;
-  index: number;
-};
 import { getBlockComponentOptions } from \\"../functions/get-block-component-options\\";
 import { getBlockProperties } from \\"../functions/get-block-properties\\";
 import { getBlockStyles } from \\"../functions/get-block-styles\\";
@@ -490,7 +485,7 @@ import { getBlockActions } from \\"../functions/get-block-actions\\";
 import { getProcessedBlock } from \\"../functions/get-processed-block\\";
 import BlockStyles from \\"./block-styles.lite\\";
 
-export default function RenderBlock(props: RenderBlockProps) {
+export default function RenderBlock(props) {
   function component() {
     const componentName = useBlock().component?.name;
 
@@ -663,7 +658,7 @@ exports[`Context > Use and set context in components 1`] = `
             "type": "method",
           },
           "foo": {
-            "code": "bar",
+            "code": "'bar'",
             "type": "property",
           },
         },
@@ -672,7 +667,7 @@ exports[`Context > Use and set context in components 1`] = `
         "name": "Context2",
         "value": {
           "bar": {
-            "code": "baz",
+            "code": "'baz'",
             "type": "property",
           },
         },
@@ -713,15 +708,10 @@ exports[`Context > Use and set context in components 1`] = `
 exports[`Context > Use and set context in components 2`] = `
 "import * as React from \\"react\\";
 import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+export default function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
@@ -751,15 +741,10 @@ exports[`Context > Use and set context in components 3`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
 import { useContext } from \\"react\\";
-
-export interface ComponentWithContextProps {
-  content: string;
-}
-
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
 
-export default function ComponentWithContext(props: ComponentWithContextProps) {
+export default function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (

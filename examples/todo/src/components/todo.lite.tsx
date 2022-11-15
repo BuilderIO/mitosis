@@ -10,7 +10,8 @@ export default function Todo(props: TodoProps) {
   const state = useStore({
     editing: false,
     toggle() {
-      props.todo.completed = !props.todo.completed;
+      const newBool: boolean = !props.todo.completed;
+      props.todo.completed = newBool
     },
   });
 

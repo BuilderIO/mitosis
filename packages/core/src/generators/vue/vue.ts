@@ -195,9 +195,13 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     const tsLangAttribute = options.typescript ? `lang='ts'` : '';
 
     let str: string = dedent`
-    <template>
+    ${
+      template.trim().length > 0
+        ? `<template>
       ${template}
-    </template>
+    </template>`
+        : ''
+    }
 
 
     <script ${options.api === 'composition' ? 'setup' : ''} ${tsLangAttribute}>
@@ -261,8 +265,9 @@ const componentToVue: TranspilerGenerator<Partial<ToVueOptions>> =
     str = runPostCodePlugins(str, options.plugins);
 
     for (const pattern of removePatterns) {
-      str = str.replace(pattern, '');
+      str = str.replace(pattern, '').trim();
     }
+    str = str.replace(/<script(.*)>\n?<\/script>/g, '').trim();
 
     return [{ content: str, type: 'component' }];
   };

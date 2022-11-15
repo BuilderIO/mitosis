@@ -80,7 +80,7 @@ const trimExpression = (type: ExpressionType) => (code: string) => {
 
 type ExpressionType = 'expression' | 'unknown' | 'block' | 'functionBody';
 
-export const getType = (code: string, initialType: ExpressionType): ExpressionType => {
+const getType = (code: string, initialType: ExpressionType): ExpressionType => {
   // match for object literal like { foo: ... }
   if (initialType === 'unknown' && code.trim().match(/^\s*{\s*[a-z0-9]+:/i)) {
     return 'expression';
