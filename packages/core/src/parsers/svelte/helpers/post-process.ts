@@ -73,12 +73,8 @@ function prependState(json: SveltosisComponent, input: string) {
   let output = input;
   const stateKeys = Object.keys(json.state);
   for (const state of stateKeys) {
-    const regex = new RegExp(
-      `(?<!(\\.|'|"|\`|function ))\\b(state\\.)?${state}\\b(?!(\\s+)?\\()`,
-      'g',
-    );
-    let isSelf = json.state[state]?.code === input;
-    if (!(isSelf && json.state[state]?.type === 'getter') && regex.test(output)) {
+    const regex = new RegExp(`(?<!(\\.|'|"|\`|function |get ))\\b(state\\.)?${state}\\b`, 'g');
+    if (regex.test(output)) {
       output = output.replace(regex, `state.${state}`);
     }
   }
