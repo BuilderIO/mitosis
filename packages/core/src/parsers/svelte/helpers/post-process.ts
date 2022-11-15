@@ -1,18 +1,16 @@
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
 import type { SveltosisComponent } from '../types';
-
 import { processBindings } from './bindings';
 
 export function preventNameCollissions(
   json: SveltosisComponent,
-  input: string,
-  arguments_: string[],
+  item: any,
   prepend = '',
   append = '_',
 ) {
-  let output = input;
-  const argumentsOutput = arguments_;
+  let output = item.code;
+  const argumentsOutput = item.arguments ?? [];
 
   const keys = [...Object.keys(json.props), ...Object.keys(json.state), ...Object.keys(json.refs)];
 
@@ -20,7 +18,7 @@ export function preventNameCollissions(
     const regex = () => new RegExp(`(?<!=(?:\\s))${key}\\b`, 'g');
     let isInArguments = false;
 
-    argumentsOutput.forEach((argument, index) => {
+    argumentsOutput.forEach((argument: any, index: number) => {
       if (regex().test(argument)) {
         isInArguments = true;
         argumentsOutput.splice(index, 1, argument.replace(regex(), `${prepend}${key}${append}`));
@@ -36,10 +34,11 @@ export function preventNameCollissions(
 
   return argumentsOutput?.length
     ? {
+        ...item,
         code: output,
         arguments: argumentsOutput,
       }
-    : { code: output };
+    : { ...item, code: output };
 }
 
 function prependProperties(json: SveltosisComponent, input: string) {
@@ -91,10 +90,10 @@ function addPropertiesAndStateToNode(json: SveltosisComponent, node: MitosisNode
 
 function postProcessState(json: SveltosisComponent) {
   for (const key of Object.keys(json.state)) {
-    const item: StateValue & { arguments?: string[] } = json.state[key] as StateValue;
+    const item = json.state[key] as StateValue & { arguments?: string[]; type: string };
 
     if (item?.type !== 'property') {
-      const output = preventNameCollissions(json, item.code, item?.arguments || []);
+      const output = preventNameCollissions(json, item);
 
       output.code = addPropertiesAndState(json, output.code);
 
@@ -142,7 +141,6 @@ function postProcessHooks(json: SveltosisComponent) {
   const hookKeys = Object.keys(json.hooks) as Array<keyof typeof json.hooks>;
   for (const key of hookKeys) {
     const hook = json.hooks[key];
-
     if (!hook) {
       continue;
     }
