@@ -1,3 +1,8 @@
+import * as babel from '@babel/core';
+import generate from '@babel/generator';
+import * as parser from '@babel/parser';
+import * as types from '@babel/types';
+
 import type { MitosisNode } from '../../../types/mitosis-node';
 import type { extendedHook, StateValue } from '../../../types/mitosis-component';
 import type { SveltosisComponent } from '../types';
@@ -10,7 +15,15 @@ export function preventNameCollissions(
   append = '_',
 ) {
   let output = item.code;
-  const argumentsOutput = item.arguments ?? [];
+  let argumentsOutput: string[] = [];
+
+  try {
+    let parsed = parser.parse(item.code);
+    let body = parsed.program.body[0];
+    if (types.isFunctionDeclaration(body)) {
+      argumentsOutput = body.params.map((p) => generate(p).code);
+    }
+  } catch (e) {}
 
   const keys = [...Object.keys(json.props), ...Object.keys(json.state), ...Object.keys(json.refs)];
 
@@ -25,10 +38,12 @@ export function preventNameCollissions(
       }
     });
 
-    const isInOutput = regex().test(output);
+    const outputRegex = () => new RegExp(`\\b${key}\\b`, 'g');
+
+    const isInOutput = outputRegex().test(output);
 
     if (isInArguments && isInOutput) {
-      output = output.replace(regex(), `${prepend}${key}${append}`);
+      output = output.replace(outputRegex(), `${prepend}${key}${append}`);
     }
   }
 
@@ -63,7 +78,8 @@ function prependState(json: SveltosisComponent, input: string) {
       `(?<!(\\.|'|"|\`|function ))\\b(state\\.)?${state}\\b(?!(\\s+)?\\()`,
       'g',
     );
-    if (regex.test(output)) {
+    let isSelf = json.state[state]?.code === input;
+    if (!(isSelf && json.state[state]?.type === 'getter') && regex.test(output)) {
       output = output.replace(regex, `state.${state}`);
     }
   }

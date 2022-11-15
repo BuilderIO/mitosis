@@ -211,9 +211,10 @@ export function generateOptionsApiScript(
             ${onUpdateWithDeps
               .map(
                 (hook, index) =>
-                  `${getOnUpdateHookName(index)}() {
+                  `${getOnUpdateHookName(index)}: {
+                    handler() {
                   ${hook.code}
-                  }
+                  }, immediate: true }
                 `,
               )
               .join(',')}

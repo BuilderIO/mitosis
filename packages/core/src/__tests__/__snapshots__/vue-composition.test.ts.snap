@@ -36,10 +36,11 @@ const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -400,10 +401,11 @@ const count = ref(0);
 const prevCount = ref(null);
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -1625,7 +1627,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -1641,7 +1643,8 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -1948,24 +1951,26 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -2117,10 +2122,11 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -2228,7 +2234,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
@@ -2499,10 +2506,11 @@ const inputRef = ref<HTMLInputElement>();
 const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -2885,10 +2893,11 @@ const count = ref(0);
 const prevCount = ref<undefined>();
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -4247,7 +4256,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -4263,7 +4272,8 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -4601,24 +4611,26 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -4781,10 +4793,11 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
 </script>
 "
@@ -4936,7 +4949,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
