@@ -30,7 +30,7 @@ export function preventNameCollissions(
     const regex = () => new RegExp(`(?<!=(?:\\s))${key}\\b`, 'g');
     let isInArguments = false;
 
-    argumentsOutput.forEach((argument: any, index: number) => {
+    argumentsOutput.forEach((argument: string, index: number) => {
       if (regex().test(argument)) {
         isInArguments = true;
         argumentsOutput.splice(index, 1, argument.replace(regex(), `${prepend}${key}${append}`));
