@@ -1,4 +1,3 @@
-import * as babel from '@babel/core';
 import generate from '@babel/generator';
 import * as parser from '@babel/parser';
 import * as types from '@babel/types';
