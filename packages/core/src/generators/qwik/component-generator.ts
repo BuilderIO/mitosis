@@ -276,7 +276,7 @@ function emitUseStyles(file: File, component: MitosisComponent): string {
 
 function emitStyles(file: File, css: string | null) {
   if (css) {
-    file.exportConst('STYLES', '`' + css.replace(/`/g, '\\`') + '`');
+    file.exportConst('STYLES', '`\n' + css.replace(/`/g, '\\`') + '`\n');
   }
 }
 

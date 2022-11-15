@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'react-use';
-const prettierPluginSvelte = require('prettier-plugin-svelte');
+import prettierPluginSvelte from 'prettier-plugin-svelte';
 import MonacoEditor, { EditorProps as MonacoEditorProps, useMonaco } from '@monaco-editor/react';
 
 type EditorRefArgs = Parameters<NonNullable<MonacoEditorProps['onMount']>>;
