@@ -5483,6 +5483,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={() => log(\\"bye\\")}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5509,9 +5529,9 @@ export default function MyComponent(props) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -5822,6 +5842,26 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`React > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={() => log(\\"bye\\")}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5848,9 +5888,9 @@ export default function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );

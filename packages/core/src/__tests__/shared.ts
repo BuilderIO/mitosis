@@ -110,6 +110,7 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   context: getRawFile('./syntax/svelte/context.raw.svelte'),
   each: getRawFile('./syntax/svelte/each.raw.svelte'),
   html: getRawFile('./syntax/svelte/html.raw.svelte'),
+  eventHandlers: getRawFile('./syntax/svelte/event-handlers.raw.svelte'),
   ifElse: getRawFile('./syntax/svelte/if-else.raw.svelte'),
   imports: getRawFile('./syntax/svelte/imports.raw.svelte'),
   lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),

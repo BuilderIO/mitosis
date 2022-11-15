@@ -5442,6 +5442,27 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Preact > svelte > Javascript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={() => log(\\"bye\\")}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Javascript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5470,9 +5491,9 @@ export default function MyComponent(props) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );
@@ -5795,6 +5816,27 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`Preact > svelte > Typescript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={() => log(\\"bye\\")}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Typescript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5823,9 +5865,9 @@ export default function MyComponent(props: any) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );

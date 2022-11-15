@@ -8012,6 +8012,39 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Javascript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log('bye')\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Javascript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8048,7 +8081,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
@@ -8498,6 +8531,39 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > svelte > Typescript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log('bye')\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+  bootstrap: [SomeOtherComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > svelte > Typescript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -8534,7 +8600,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
