@@ -10,7 +10,7 @@ export default function ItemList(props: ItemListProps) {
         <li class="border-gray-200 border-b flex items-center p-2.5">
           <span>{item}</span>
           <button
-            class="bg-red-300 rounded text-white py-2 px-4 ml-auto"
+            class="bg-red-500 rounded text-white py-2 px-4 ml-auto"
             onClick={() => props.deleteItem(props.list.indexOf(item))}
           >
             Delete
