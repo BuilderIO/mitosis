@@ -5494,14 +5494,27 @@ export default class MyComponent {
 `;
 
 exports[`Stencil > svelte > Javascript Test > eventHandlers 1`] = `
-"'(' expected. (27:20)
-  25 | <button  onClick={event => this.log(event)} >Log</button>
-  26 | <button  onClick={event => this.log(event)} >Log</button>
-> 27 | <button  onClick={ => this.log('bye')} >Log</button></div>
-     |                    ^
-  28 |
-  29 |       )
-  30 |     }"
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > svelte > Javascript Test > html 1`] = `
@@ -5870,14 +5883,27 @@ export default class MyComponent {
 `;
 
 exports[`Stencil > svelte > Typescript Test > eventHandlers 1`] = `
-"'(' expected. (27:20)
-  25 | <button  onClick={event => this.log(event)} >Log</button>
-  26 | <button  onClick={event => this.log(event)} >Log</button>
-> 27 | <button  onClick={ => this.log('bye')} >Log</button></div>
-     |                    ^
-  28 |
-  29 |       )
-  30 |     }"
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
 `;
 
 exports[`Stencil > svelte > Typescript Test > html 1`] = `

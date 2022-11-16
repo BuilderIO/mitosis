@@ -5847,8 +5847,7 @@ exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
   <div>
     <button @click=\\"log('hi')\\">Log</button
     ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log('bye')\\">Log</button>
+    ><button @click=\\"log($event)\\">Log</button>
   </div>
 </template>
 
@@ -5981,8 +5980,11 @@ export default {
   data: () => ({ a: 2, b: 5, result: null }),
 
   watch: {
-    onUpdateHook0() {
-      this.calculateResult(this.a, this.b);
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
     },
   },
 
@@ -6210,8 +6212,7 @@ exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
   <div>
     <button @click=\\"log('hi')\\">Log</button
     ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log('bye')\\">Log</button>
+    ><button @click=\\"log($event)\\">Log</button>
   </div>
 </template>
 
@@ -6344,8 +6345,11 @@ export default {
   data: () => ({ a: 2, b: 5, result: null }),
 
   watch: {
-    onUpdateHook0() {
-      this.calculateResult(this.a, this.b);
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
     },
   },
 

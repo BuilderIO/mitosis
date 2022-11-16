@@ -5162,8 +5162,7 @@ exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
   <div>
     <button @click=\\"log('hi')\\">Log</button
     ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log('bye')\\">Log</button>
+    ><button @click=\\"log($event)\\">Log</button>
   </div>
 </template>
 
@@ -5279,10 +5278,11 @@ const b = ref(5);
 const result = ref(null);
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     calculateResult(a, b);
-  }
+  },
+  { immediate: true }
 );
 function calculateResult(a_, b_) {
   result.value = a_ * b_;
@@ -5474,8 +5474,7 @@ exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
   <div>
     <button @click=\\"log('hi')\\">Log</button
     ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log($event)\\">Log</button
-    ><button @click=\\"log('bye')\\">Log</button>
+    ><button @click=\\"log($event)\\">Log</button>
   </div>
 </template>
 
@@ -5591,10 +5590,11 @@ const b = ref(5);
 const result = ref(null);
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     calculateResult(a, b);
-  }
+  },
+  { immediate: true }
 );
 function calculateResult(a_, b_) {
   result.value = a_ * b_;

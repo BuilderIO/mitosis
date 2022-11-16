@@ -7682,47 +7682,29 @@ export default class MyComponent extends LitElement {
 `;
 
 exports[`Lit > svelte > Javascript Test > eventHandlers 1`] = `
-"import { LitElement, html, css } from 'lit';
-  import { customElement, property, state, query } from 'lit/decorators.js';
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-  
-  
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
 
-  @customElement('my-component')
-  export default class MyComponent extends LitElement {
-    
-      createRenderRoot() {
-        return this;
-      }
-      
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
 
-    
-
-    
-  
-
-    
-
-      
-       log = function log(msg = 'hello') {
-console.log(msg);
-}
-
-    
-      
-      
-      
-  
-    render() {
-      return html\`
+  render() {
+    return html\`
         
-        <div ><button  @click=\${a => this.log('hi')} >Log</button>
-      <button  @click=\${event => this.log(event)} >Log</button>
-      <button  @click=\${event => this.log(event)} >Log</button>
-      <button  @click=\${ => this.log('bye')} >Log</button></div>
-      \`
-    }
-  }"
+        <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
+      <button  @click=\${(event) => this.log(event)} >Log</button>
+      <button  @click=\${(event) => this.log(event)} >Log</button></div>
+      \`;
+  }
+}
+"
 `;
 
 exports[`Lit > svelte > Javascript Test > html 1`] = `
@@ -8171,47 +8153,29 @@ export default class MyComponent extends LitElement {
 `;
 
 exports[`Lit > svelte > Typescript Test > eventHandlers 1`] = `
-"import { LitElement, html, css } from 'lit';
-  import { customElement, property, state, query } from 'lit/decorators.js';
+"import { LitElement, html, css } from \\"lit\\";
+import { customElement, property, state, query } from \\"lit/decorators.js\\";
 
-  
-  
+@customElement(\\"my-component\\")
+export default class MyComponent extends LitElement {
+  createRenderRoot() {
+    return this;
+  }
 
-  @customElement('my-component')
-  export default class MyComponent extends LitElement {
-    
-      createRenderRoot() {
-        return this;
-      }
-      
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
 
-    
-
-    
-  
-
-    
-
-      
-       log = function log(msg = 'hello') {
-console.log(msg);
-}
-
-    
-      
-      
-      
-  
-    render() {
-      return html\`
+  render() {
+    return html\`
         
-        <div ><button  @click=\${a => this.log('hi')} >Log</button>
-      <button  @click=\${event => this.log(event)} >Log</button>
-      <button  @click=\${event => this.log(event)} >Log</button>
-      <button  @click=\${ => this.log('bye')} >Log</button></div>
-      \`
-    }
-  }"
+        <div ><button  @click=\${(a) => this.log(\\"hi\\")} >Log</button>
+      <button  @click=\${(event) => this.log(event)} >Log</button>
+      <button  @click=\${(event) => this.log(event)} >Log</button></div>
+      \`;
+  }
+}
+"
 `;
 
 exports[`Lit > svelte > Typescript Test > html 1`] = `
