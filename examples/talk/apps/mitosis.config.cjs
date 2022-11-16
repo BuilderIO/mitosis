@@ -9,7 +9,7 @@ module.exports = {
       typescript: false,
     },
     svelte: {
-      typescript: false,
+      typescript: true,
     },
   },
 };

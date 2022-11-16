@@ -1,23 +1,15 @@
-import { onUpdate, Show, useStore } from '@builder.io/mitosis';
-import { mockApi } from './mockApi';
-
-export interface State {
-  list: string[];
-  input: string;
-  addItem: () => void;
-  deleteItem: (k: number) => void;
-  showSuggestions: boolean;
-  readonly suggestionsToShow: string[];
-}
+import { onUpdate, Show, useDefaultProps, useStore } from '@builder.io/mitosis';
 
 export type Props = {
-  list?: string[] | ((input: string) => Promise<string[]>);
+  getValues: (input: string) => Promise<any[]>;
+  renderChild?: any;
+  transformData: (item: any) => string;
 };
 
 export default function Example2(props: Props) {
   const state = useStore({
     showSuggestions: false,
-    suggestions: [] as string[],
+    suggestions: [] as any[],
 
     input: '',
 
@@ -27,30 +19,18 @@ export default function Example2(props: Props) {
       console.log('set input value', state.input);
     },
 
-    handleClick(item: string) {
+    handleClick(item: any) {
       console.log('handling click');
-      state.setInputValue(item);
+      state.setInputValue(props.transformData(item));
       state.showSuggestions = false;
     },
   });
 
   onUpdate(() => {
-    if (!props.list) {
-      // state.suggestions = DEFAULT_LIST.filter((x: string) => x.startsWith(state.input));
-      mockApi(state.input).then((x) => {
-        const newSug = x.map((k) => k.name);
-        state.suggestions = newSug;
-      });
-    } else if (Array.isArray(props.list)) {
-      state.suggestions = props.list.filter((x: string) => x.startsWith(state.input));
-    } else {
-      // make API call
-      mockApi(state.input).then((x) => {
-        const newSug = x.map((k) => k.name);
-        state.suggestions = newSug;
-      });
-    }
-  }, [state.input, props.list]);
+    props.getValues(state.input).then((x) => {
+      state.suggestions = x;
+    });
+  }, [state.input, props.getValues]);
 
   // http://universities.hipolabs.com/search?country=United+Kingdom
   return (
@@ -59,6 +39,7 @@ export default function Example2(props: Props) {
         href="/Users/samijaber/code/work/mitosis/examples/talk/apps/src/tailwind.min.css"
         rel="stylesheet"
       />
+      Autocomplete:
       <input
         class="shadow-md rounded w-full px-4 py-2"
         value={state.input}
@@ -75,7 +56,9 @@ export default function Example2(props: Props) {
               }}
               onClick={() => state.handleClick(item)}
             >
-              <span>{item}</span>
+              <Show when={props.renderChild} else={<span>{props.transformData(item)}</span>}>
+                <props.renderChild item={item} />
+              </Show>
             </li>
           ))}
         </ul>
