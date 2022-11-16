@@ -1,3 +1,4 @@
+import fs from 'fs';
 import {
   componentToAlpine,
   componentToAngular,
@@ -24,8 +25,9 @@ import {
 } from '@builder.io/mitosis';
 import debug from 'debug';
 import glob from 'fast-glob';
+import { flatten } from 'fp-ts/lib/Array';
 import { flow, pipe } from 'fp-ts/lib/function';
-import { outputFile, pathExists, readFile, remove } from 'fs-extra';
+import { outputFile, pathExists, pathExistsSync, readFile, remove } from 'fs-extra';
 import { kebabCase } from 'lodash';
 import { fastClone } from '../helpers/fast-clone';
 import { generateContextFile } from './helpers/context';
@@ -33,7 +35,6 @@ import { getFileExtensionForTarget } from './helpers/extensions';
 import {
   checkIsMitosisComponentFilePath,
   INPUT_EXTENSIONS,
-  INPUT_EXTENSIONS_ARRAY,
   INPUT_EXTENSION_REGEX,
 } from './helpers/inputs-extensions';
 import { checkShouldOutputTypeScript } from './helpers/options';
@@ -73,14 +74,25 @@ const getOptions = (config?: MitosisConfig): MitosisConfig => ({
   },
 });
 
-async function clean(options: MitosisConfig) {
+async function clean({
+  options,
+  generatedFiles,
+}: {
+  options: MitosisConfig;
+  generatedFiles: FileData[];
+}) {
   const patterns = options.targets.map(
     (target) => `${options.dest}/${options.getTargetPath({ target })}/${options.files}`,
   );
-  const files = await glob(patterns);
+  const allFiles = await glob(patterns);
+  const allGeneratedFilePaths = generatedFiles.map((x) => x.path);
+
   await Promise.all(
-    files.map(async (file) => {
-      await remove(file);
+    allFiles.map(async (file) => {
+      // we only remove files that were not generated just earlier.
+      if (!allGeneratedFilePaths.find((x) => x === file)) {
+        await remove(file);
+      }
     }),
   );
 }
@@ -167,7 +179,6 @@ const parseSvelteComponent = async ({ path, file }: { path: string; file: string
 };
 
 const getMitosisComponentJSONs = async (options: MitosisConfig): Promise<ParsedMitosisJson[]> => {
-  const pattern = `**/*(${INPUT_EXTENSIONS_ARRAY.join('|')})`;
   const paths = (await glob(options.files, { cwd })).filter(checkIsMitosisComponentFilePath);
   return Promise.all(
     paths.map(async (path): Promise<ParsedMitosisJson> => {
@@ -207,35 +218,51 @@ const getTargetContexts = (options: MitosisConfig) =>
 
 const buildAndOutputNonComponentFiles = async (targetContext: TargetContextWithConfig) => {
   const files = await buildNonComponentFiles(targetContext);
-  await outputNonComponentFiles({ ...targetContext, files });
+  return outputNonComponentFiles({ ...targetContext, files });
 };
 
 export async function build(config?: MitosisConfig) {
   // merge default options
   const options = getOptions(config);
 
-  // clean output directory
-  await clean(options);
-
+  if (!pathExistsSync(options.dest)) {
+    console.log(`output path '${options.dest}' does not exist...creating`);
+    fs.mkdirSync(options.dest);
+  }
   // get all mitosis component JSONs
   const mitosisComponents = await getMitosisComponentJSONs(options);
 
   const targetContexts = getTargetContexts(options);
 
-  await Promise.all(
+  const outputs = await Promise.all(
     targetContexts.map(async (targetContext) => {
       // clone mitosis JSONs for each target, so we can modify them in each generator without affecting future runs.
       // each generator also clones the JSON before manipulating it, but this is an extra safety measure.
       const files = fastClone(mitosisComponents);
 
-      await Promise.all([
-        buildAndOutputNonComponentFiles({ ...targetContext, options }),
-        buildAndOutputComponentFiles({ ...targetContext, options, files }),
-      ]);
+      const targetPath = `${options.dest}/${targetContext.outputPath}`;
+      if (!pathExistsSync(targetPath)) {
+        console.log(`Target path '${targetPath}' does not exist...creating`);
+        fs.mkdirSync(targetPath);
+      }
+
+      const x = flatten(
+        await Promise.all([
+          buildAndOutputNonComponentFiles({ ...targetContext, options }),
+          buildAndOutputComponentFiles({ ...targetContext, options, files }),
+        ]),
+      );
+
+      console.log(`Generated ${x.length} ${targetContext.target} files.`);
+
+      return x;
     }),
   );
 
-  console.info('Done!');
+  // clean output directory
+  await clean({ options, generatedFiles: flatten(outputs) });
+
+  console.info('Mitosis generation completed.');
 }
 
 const getGeneratorForTarget = ({ target }: { target: Target }): TargetContext['generator'] => {
@@ -306,55 +333,64 @@ async function buildAndOutputComponentFiles({
   options,
   generator,
   outputPath,
-}: TargetContextWithConfig & { files: ParsedMitosisJson[] }) {
+}: TargetContextWithConfig & { files: ParsedMitosisJson[] }): Promise<FileData[]> {
   const debugTarget = debug(`mitosis:${target}`);
   const shouldOutputTypescript = checkShouldOutputTypeScript({ options, target });
 
-  const output = files.map(async ({ path, typescriptMitosisJson, javascriptMitosisJson }) => {
-    const outputFilePath = getComponentOutputFileName({ target, path, options });
+  const outputs = files.map(
+    async ({ path, typescriptMitosisJson, javascriptMitosisJson }): Promise<FileData> => {
+      const outputFilePath = getComponentOutputFileName({ target, path, options });
 
-    /**
-     * Try to find override file.
-     * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
-     * user-provided alternative is only for the output path, not the override input path.
-     */
-    const overrideFilePath = `${options.overridesDir}/${getTargetPath({
-      target,
-    })}/${outputFilePath}`;
-    const overrideFile = (await pathExists(overrideFilePath))
-      ? await readFile(overrideFilePath, 'utf8')
-      : null;
+      /**
+       * Try to find override file.
+       * NOTE: we use the default `getTargetPath` even if a user-provided alternative is given. That's because the
+       * user-provided alternative is only for the output path, not the override input path.
+       */
+      const overrideFilePath = `${options.overridesDir}/${getTargetPath({
+        target,
+      })}/${outputFilePath}`;
+      const overrideFile = (await pathExists(overrideFilePath))
+        ? await readFile(overrideFilePath, 'utf8')
+        : null;
 
-    debugTarget(`transpiling ${path}...`);
-    let transpiled = '';
+      debugTarget(`transpiling ${path}...`);
+      let transpiled = '';
 
-    if (overrideFile) {
-      debugTarget(`override exists for ${path}: ${!!overrideFile}`);
-    }
-    try {
-      const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
+      if (overrideFile) {
+        debugTarget(`override exists for ${path}: ${!!overrideFile}`);
+      }
+      try {
+        const component = shouldOutputTypescript ? typescriptMitosisJson : javascriptMitosisJson;
 
-      transpiled = overrideFile ?? generator(options.options[target])({ path, component });
-      debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
-    } catch (error) {
-      debugTarget(`Failure: transpiled ${path}.`);
-      debugTarget(error);
-      throw error;
-    }
+        transpiled = overrideFile ?? generator(options.options[target])({ path, component });
+        debugTarget(`Success: transpiled ${path}. Output length: ${transpiled.length}`);
+      } catch (error) {
+        debugTarget(`Failure: transpiled ${path}.`);
+        debugTarget(error);
+        throw error;
+      }
 
-    transpiled = transformImports({ target, options })(transpiled);
+      transpiled = transformImports({ target, options })(transpiled);
 
-    const outputDir = `${options.dest}/${outputPath}`;
+      return await { output: transpiled, path: `${options.dest}/${outputPath}/${outputFilePath}` };
+    },
+  );
 
-    await outputFile(`${outputDir}/${outputFilePath}`, transpiled);
-  });
-  await Promise.all(output);
+  const awaitedOutputs = await Promise.all(outputs);
+
+  await Promise.all(awaitedOutputs.map(({ output, path }) => outputFile(path, output)));
+
+  return awaitedOutputs;
 }
 
 const getNonComponentFileExtension = flow(checkShouldOutputTypeScript, (shouldOutputTypeScript) =>
   shouldOutputTypeScript ? '.ts' : '.js',
 );
 
+type FileData = {
+  path: string;
+  output: string;
+};
 /**
  * Outputs non-component files to the destination directory, without modifying them.
  */
@@ -366,14 +402,16 @@ const outputNonComponentFiles = async ({
 }: TargetContext & {
   files: { path: string; output: string }[];
   options: MitosisConfig;
-}) => {
+}): Promise<FileData[]> => {
   const extension = getNonComponentFileExtension({ target, options });
   const folderPath = `${options.dest}/${outputPath}`;
-  await Promise.all(
-    files.map(({ path, output }) =>
-      outputFile(`${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output),
-    ),
-  );
+  const fileData = files.map(({ path, output }) => {
+    return { path: `${folderPath}/${path.replace(/\.tsx?$/, extension)}`, output };
+  });
+
+  await Promise.all(fileData.map(({ path, output }) => outputFile(path, output)));
+
+  return fileData;
 };
 
 async function buildContextFile({
