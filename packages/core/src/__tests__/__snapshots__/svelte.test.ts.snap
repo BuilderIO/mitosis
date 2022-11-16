@@ -4605,6 +4605,30 @@ exports[`Svelte > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Javascript Test > eventHandlers 1`] = `
+"<script>
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Javascript Test > html 1`] = `
 "<script>
   let html = \\"<b>bold</b>\\";
@@ -4625,7 +4649,7 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Hide
@@ -4633,7 +4657,7 @@ exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 {:else}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Show
@@ -4683,6 +4707,28 @@ exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
 <div>
   <input value={name} />
   Lowercase: {lowercaseName()}
+</div>"
+`;
+
+exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<script>
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
 </div>"
 `;
 
@@ -4833,6 +4879,30 @@ exports[`Svelte > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Svelte > svelte > Typescript Test > eventHandlers 1`] = `
+"<script lang=\\"ts\\">
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+</script>
+
+<div>
+  <button
+    on:click={(a) => {
+      log(\\"hi\\");
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  ><button
+    on:click={(event) => {
+      log(event);
+    }}>Log</button
+  >
+</div>"
+`;
+
 exports[`Svelte > svelte > Typescript Test > html 1`] = `
 "<script lang=\\"ts\\">
   let html = \\"<b>bold</b>\\";
@@ -4853,7 +4923,7 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 {#if show}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Hide
@@ -4861,7 +4931,7 @@ exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 {:else}
   <button
     on:click={(event) => {
-      toggle;
+      toggle(event);
     }}
   >
     Show
@@ -4911,6 +4981,28 @@ exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
 <div>
   <input value={name} />
   Lowercase: {lowercaseName()}
+</div>"
+`;
+
+exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<script lang=\\"ts\\">
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
+
+  let a = 2;
+  let b = 5;
+  let result = null;
+
+  function onUpdateFn_0() {
+    calculateResult(a, b);
+  }
+  $: onUpdateFn_0(...[a, b]);
+</script>
+
+<div>
+  <input type=\\"number\\" bind:value={a} /><input type=\\"number\\" bind:value={b} />
+  Result: {result}
 </div>"
 `;
 

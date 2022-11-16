@@ -4383,6 +4383,24 @@ exports[`Alpine.js > svelte > Javascript Test > each 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Javascript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 "<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
 <script>
@@ -4397,7 +4415,7 @@ exports[`Alpine.js > svelte > Javascript Test > html 1`] = `
 
 exports[`Alpine.js > svelte > Javascript Test > ifElse 1`] = `
 "<template x-if=\\"show\\">
-  <button x-on:click=\\"toggle\\">Hide</button>
+  <button x-on:click=\\"toggle(event)\\">Hide</button>
 </template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4451,6 +4469,35 @@ exports[`Alpine.js > svelte > Javascript Test > reactive 1`] = `
 
       get lowercaseName() {
         return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
       },
     }));
   });
@@ -4637,6 +4684,24 @@ exports[`Alpine.js > svelte > Typescript Test > each 1`] = `
 "
 `;
 
+exports[`Alpine.js > svelte > Typescript Test > eventHandlers 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <button x-on:click=\\"log('hi')\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+  <button x-on:click=\\"log(event)\\">Log</button>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      log: function log(msg = \\"hello\\") {
+        console.log(msg);
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
 "<div x-data=\\"myComponent()\\" x-bind:innerHTML=\\"html\\"></div>
 <script>
@@ -4651,7 +4716,7 @@ exports[`Alpine.js > svelte > Typescript Test > html 1`] = `
 
 exports[`Alpine.js > svelte > Typescript Test > ifElse 1`] = `
 "<template x-if=\\"show\\">
-  <button x-on:click=\\"toggle\\">Hide</button>
+  <button x-on:click=\\"toggle(event)\\">Hide</button>
 </template>
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
@@ -4705,6 +4770,35 @@ exports[`Alpine.js > svelte > Typescript Test > reactive 1`] = `
 
       get lowercaseName() {
         return this.name.toLowerCase();
+      },
+    }));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<div x-data=\\"myComponent()\\">
+  <input type=\\"number\\" x-on:change=\\"a = $event.target.value\\" x-bind:value=\\"a\\" />
+  <input type=\\"number\\" x-on:change=\\"b = $event.target.value\\" x-bind:value=\\"b\\" />
+
+  Result:
+  <span x-html=\\"result\\"></span>
+</div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"myComponent\\", () => ({
+      a: 2,
+      b: 5,
+      result: null,
+      calculateResult: function calculateResult(a_, b_) {
+        this.result = a_ * b_;
+      },
+
+      init() {
+        this.$watch(\\"a,this.b\\", (value, oldValue) => {
+          this.calculateResult(this.a, this.b);
+        });
       },
     }));
   });

@@ -5842,6 +5842,28 @@ export default {
 </script>"
 `;
 
+exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  methods: {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > svelte > Javascript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -5858,8 +5880,8 @@ export default {
 
 exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
-  <button v-else @click=\\"toggle\\">Show</button>
+  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
+  <button v-else @click=\\"toggle($event)\\">Show</button>
 </template>
 
 <script>
@@ -5933,6 +5955,51 @@ export default {
   computed: {
     lowercaseName() {
       return this.name.toLowerCase();
+    },
+  },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script>
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 2, b: 5, result: null }),
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+  },
+
+  methods: {
+    calculateResult: function calculateResult(a_, b_) {
+      this.result = a_ * b_;
     },
   },
 };
@@ -6140,6 +6207,28 @@ export default {
 </script>"
 `;
 
+exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  methods: {
+    log: function log(msg = \\"hello\\") {
+      console.log(msg);
+    },
+  },
+};
+</script>"
+`;
+
 exports[`Vue > svelte > Typescript Test > html 1`] = `
 "<template>
   <div v-html=\\"html\\"></div>
@@ -6156,8 +6245,8 @@ export default {
 
 exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 "<template>
-  <button v-if=\\"show\\" @click=\\"toggle\\">Hide</button>
-  <button v-else @click=\\"toggle\\">Show</button>
+  <button v-if=\\"show\\" @click=\\"toggle($event)\\">Hide</button>
+  <button v-else @click=\\"toggle($event)\\">Show</button>
 </template>
 
 <script lang=\\"ts\\">
@@ -6231,6 +6320,51 @@ export default {
   computed: {
     lowercaseName() {
       return this.name.toLowerCase();
+    },
+  },
+};
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script lang=\\"ts\\">
+export default {
+  name: \\"my-component\\",
+
+  data: () => ({ a: 2, b: 5, result: null }),
+
+  watch: {
+    onUpdateHook0: {
+      handler() {
+        this.calculateResult(this.a, this.b);
+      },
+      immediate: true,
+    },
+  },
+
+  computed: {
+    onUpdateHook0() {
+      return {
+        0: this.a,
+        1: this.b,
+      };
+    },
+  },
+
+  methods: {
+    calculateResult: function calculateResult(a_, b_) {
+      this.result = a_ * b_;
     },
   },
 };

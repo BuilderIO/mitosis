@@ -5493,6 +5493,30 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Javascript Test > eventHandlers 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Javascript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5515,8 +5539,8 @@ exports[`Stencil > svelte > Javascript Test > ifElse 1`] = `
   24 |       
 > 25 |         {this.show ? (
      |              ^
-  26 |     <button  onClick={event => this.toggle} > Hide </button>
-  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  26 |     <button  onClick={event => this.toggle(event)} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle(event)} > Show </button>}
   28 |"
 `;
 
@@ -5587,6 +5611,47 @@ export default class MyComponent {
         <input value={this.name} />
         Lowercase:
         {this.lowercaseName}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
       </div>
     );
   }
@@ -5817,6 +5882,30 @@ export default class MyComponent {
 "
 `;
 
+exports[`Stencil > svelte > Typescript Test > eventHandlers 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+
+  render() {
+    return (
+      <div>
+        <button onClick={(a) => this.log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+        <button onClick={(event) => this.log(event)}>Log</button>
+      </div>
+    );
+  }
+}
+"
+`;
+
 exports[`Stencil > svelte > Typescript Test > html 1`] = `
 "import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 
@@ -5839,8 +5928,8 @@ exports[`Stencil > svelte > Typescript Test > ifElse 1`] = `
   24 |       
 > 25 |         {this.show ? (
      |              ^
-  26 |     <button  onClick={event => this.toggle} > Hide </button>
-  27 |   ) : <button  onClick={event => this.toggle} > Show </button>}
+  26 |     <button  onClick={event => this.toggle(event)} > Hide </button>
+  27 |   ) : <button  onClick={event => this.toggle(event)} > Show </button>}
   28 |"
 `;
 
@@ -5911,6 +6000,47 @@ export default class MyComponent {
         <input value={this.name} />
         Lowercase:
         {this.lowercaseName}
+      </div>
+    );
+  }
+}
+"
+`;
+
+exports[`Stencil > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"my-component\\",
+})
+export default class MyComponent {
+  @State() a = 2;
+  @State() b = 5;
+  @State() result = null;
+
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  componentDidUpdate() {
+    this.calculateResult(this.a, this.b);
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.a = event.target.value)}
+          value={this.a}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => (this.b = event.target.value)}
+          value={this.b}
+        />
+        Result:
+        {this.result}
       </div>
     );
   }
