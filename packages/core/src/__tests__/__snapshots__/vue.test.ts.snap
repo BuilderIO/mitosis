@@ -35,11 +35,8 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(\\"Received an update\\");
-      },
-      immediate: true,
+    onUpdateHook0() {
+      console.log(\\"Received an update\\");
     },
   },
 
@@ -439,11 +436,8 @@ export default {
   data: () => ({ count: 0 }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        this.$refs.prevCount = this.count;
-      },
-      immediate: true,
+    onUpdateHook0() {
+      this.$refs.prevCount = this.count;
     },
   },
 
@@ -1727,24 +1721,21 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name = data.name;
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      },
-      immediate: true,
+    onUpdateHook0() {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
     },
   },
 
@@ -2081,25 +2072,19 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
-        if (this.a === \\"a\\") {
-          this.a = \\"b\\";
-        }
-      },
-      immediate: true,
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
-    onUpdateHook1: {
-      handler() {
-        console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    onUpdateHook1() {
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
-        if (this.a === \\"a\\") {
-          this.a = \\"b\\";
-        }
-      },
-      immediate: true,
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
   },
 
@@ -2281,16 +2266,8 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a,
-          this.b,
-          this.size
-        );
-      },
-      immediate: true,
+    onUpdateHook0() {
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -2427,11 +2404,8 @@ export default {
   },
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        dispatchNewContentToVisualEditor(this.content);
-      },
-      immediate: true,
+    onUpdateHook0() {
+      dispatchNewContentToVisualEditor(this.content);
     },
   },
 
@@ -2716,11 +2690,8 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(\\"Received an update\\");
-      },
-      immediate: true,
+    onUpdateHook0() {
+      console.log(\\"Received an update\\");
     },
   },
 
@@ -3146,11 +3117,8 @@ export default {
   data: () => ({ count: 0 }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        this.$refs.prevCount = this.count;
-      },
-      immediate: true,
+    onUpdateHook0() {
+      this.$refs.prevCount = this.count;
     },
   },
 
@@ -4643,24 +4611,21 @@ export default {
   data: () => ({ name: \\"PatrickJS\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        const controller = new AbortController();
-        const signal = controller.signal;
-        fetch(\\"https://patrickjs.com/api/resource.json\\", {
-          signal,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            this.name = data.name;
-          });
-        return () => {
-          if (!signal.aborted) {
-            controller.abort();
-          }
-        };
-      },
-      immediate: true,
+    onUpdateHook0() {
+      const controller = new AbortController();
+      const signal = controller.signal;
+      fetch(\\"https://patrickjs.com/api/resource.json\\", {
+        signal,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          this.name = data.name;
+        });
+      return () => {
+        if (!signal.aborted) {
+          controller.abort();
+        }
+      };
     },
   },
 
@@ -5026,25 +4991,19 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\", c: \\"c\\", d: \\"d\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(\\"Runs when a or b changes\\", this.a, this.b);
+    onUpdateHook0() {
+      console.log(\\"Runs when a or b changes\\", this.a, this.b);
 
-        if (this.a === \\"a\\") {
-          this.a = \\"b\\";
-        }
-      },
-      immediate: true,
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
-    onUpdateHook1: {
-      handler() {
-        console.log(\\"Runs when c or d changes\\", this.c, this.d);
+    onUpdateHook1() {
+      console.log(\\"Runs when c or d changes\\", this.c, this.d);
 
-        if (this.a === \\"a\\") {
-          this.a = \\"b\\";
-        }
-      },
-      immediate: true,
+      if (this.a === \\"a\\") {
+        this.a = \\"b\\";
+      }
     },
   },
 
@@ -5239,16 +5198,8 @@ export default {
   data: () => ({ a: \\"a\\", b: \\"b\\" }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        console.log(
-          \\"Runs when a, b or size changes\\",
-          this.a,
-          this.b,
-          this.size
-        );
-      },
-      immediate: true,
+    onUpdateHook0() {
+      console.log(\\"Runs when a, b or size changes\\", this.a, this.b, this.size);
     },
   },
 
@@ -5431,11 +5382,8 @@ export default {
   },
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        dispatchNewContentToVisualEditor(this.content);
-      },
-      immediate: true,
+    onUpdateHook0() {
+      dispatchNewContentToVisualEditor(this.content);
     },
   },
 
@@ -5981,11 +5929,8 @@ export default {
   data: () => ({ a: 2, b: 5, result: null }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        this.calculateResult(this.a, this.b);
-      },
-      immediate: true,
+    onUpdateHook0() {
+      this.calculateResult(this.a, this.b);
     },
   },
 
@@ -6347,11 +6292,8 @@ export default {
   data: () => ({ a: 2, b: 5, result: null }),
 
   watch: {
-    onUpdateHook0: {
-      handler() {
-        this.calculateResult(this.a, this.b);
-      },
-      immediate: true,
+    onUpdateHook0() {
+      this.calculateResult(this.a, this.b);
     },
   },
 

@@ -6,7 +6,6 @@ import { MitosisComponent, extendedHook } from '../../types/mitosis-component';
 import { getContextValue } from './helpers';
 import { ToVueOptions } from './types';
 import { stripStateAndPropsRefs } from '../../helpers/strip-state-and-props-refs';
-import { processBinding } from './helpers';
 
 const getCompositionPropDefinition = ({
   options,
@@ -126,13 +125,10 @@ export function generateCompositionApiScript(
 
     ${
       onUpdateWithDeps
-        ?.map((hook) => {
-          return `watch(() => ${processBinding({
-            code: hook.deps || '',
-            options,
-            json: component,
-          })}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} }, {immediate: true})`;
-        })
+        ?.map(
+          (hook) =>
+            `watch(() => ${hook.deps}, (${stripStateAndPropsRefs(hook.deps)}) => { ${hook.code} })`,
+        )
         .join('\n') || ''
     }
     ${methods ?? ''}
