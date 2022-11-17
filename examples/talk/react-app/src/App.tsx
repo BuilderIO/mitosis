@@ -2,7 +2,7 @@ import { Todos, AutoComplete } from '@builder.io/talk-app-react';
 
 function App() {
   const getValues = async () => {
-    return ['foo', 'bar', 'baz'];
+    return ['Hello', 'Modern', 'Frontends', 'Live!'];
   };
   const getComponentForPath = (path: string) => {
     switch (path) {
