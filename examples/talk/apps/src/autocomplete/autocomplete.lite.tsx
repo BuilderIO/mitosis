@@ -14,13 +14,10 @@ export default function Example2(props: Props) {
     input: '',
 
     setInputValue(value: string) {
-      console.log('setting input value', value, state.input);
       state.input = value;
-      console.log('set input value', state.input);
     },
 
     handleClick(item: any) {
-      console.log('handling click');
       state.setInputValue(props.transformData(item));
       state.showSuggestions = false;
     },
