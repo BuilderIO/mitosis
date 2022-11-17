@@ -510,9 +510,10 @@ const _componentToReact = (
     if (!json.defaultProps) return '';
     const defalutPropsString = Object.keys(json.defaultProps)
       .map((prop) => {
-        const value = json.defaultProps!.hasOwnProperty(prop) ? json.defaultProps![prop]?.code : {};
-        const isMethod = json.defaultProps![prop]?.type === 'method';
-        return `${prop}: ${isMethod ? `${value}` : json5.stringify(value)}`;
+        const value = json.defaultProps!.hasOwnProperty(prop)
+          ? json.defaultProps![prop]?.code
+          : '{}';
+        return `${prop}: ${value}`;
       })
       .join(',');
     return `${json.name || 'MyComponent'}.defaultProps = {${defalutPropsString}};`;

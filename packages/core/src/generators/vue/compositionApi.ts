@@ -24,9 +24,8 @@ const getCompositionPropDefinition = ({
       .map((prop) => {
         const value = component.defaultProps!.hasOwnProperty(prop)
           ? component.defaultProps![prop]?.code
-          : {};
-        const isMethod = component.defaultProps![prop]?.type === 'method';
-        return `${prop}: ${isMethod ? `${value}` : json5.stringify(value)}`;
+          : '{}';
+        return `${prop}: ${value}`;
       })
       .join(',');
     str += `withDefaults(defineProps${generic}(), {${defalutPropsString}})`;

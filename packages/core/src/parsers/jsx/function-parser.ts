@@ -20,31 +20,13 @@ export function generateUseStyleCode(expression: babel.types.CallExpression) {
   return generate(expression.arguments[0]).code.replace(/(^("|'|`)|("|'|`)$)/g, '');
 }
 
-function processDefaultPropsValue(value: any) {
-  if (types.isFunctionExpression(value) || types.isArrowFunctionExpression(value)) {
-    const code = generate(value).code;
-    return { type: 'method', code };
-  } else {
-    return { type: 'property', code: value.value };
-  }
-}
-
 export function parseDefaultPropsHook(
   component: MitosisComponent,
   expression: babel.types.CallExpression,
 ) {
   const firstArg = expression.arguments[0];
-
   if (types.isObjectExpression(firstArg)) {
-    const objectProperties = firstArg.properties?.filter((i) => types.isObjectProperty(i));
-    objectProperties?.forEach((i: any) => {
-      if (i.key?.name) {
-        component.defaultProps = {
-          ...(component.defaultProps ?? {}),
-          [i.key?.name]: processDefaultPropsValue(i.value),
-        };
-      }
-    });
+    component.defaultProps = parseStateObjectToMitosisState(firstArg, false);
   }
 }
 
