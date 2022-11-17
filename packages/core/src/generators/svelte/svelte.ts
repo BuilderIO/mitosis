@@ -26,7 +26,6 @@ import { babelTransformCode } from '../../helpers/babel-transform';
 import { flow, pipe } from 'fp-ts/lib/function';
 import { hasContext } from '../helpers/context';
 import { isSlotProperty } from '../../helpers/slots';
-import json5 from 'json5';
 import { FUNCTION_HACK_PLUGIN } from '../helpers/functions';
 import { mergeOptions } from '../../helpers/merge-options';
 import { CODE_PROCESSOR_PLUGIN } from '../../helpers/plugins/process-code';

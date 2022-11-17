@@ -1,5 +1,4 @@
 import dedent from 'dedent';
-import json5 from 'json5';
 import { format } from 'prettier/standalone';
 import { collectCss } from '../helpers/styles/collect-css';
 import { fastClone } from '../helpers/fast-clone';
