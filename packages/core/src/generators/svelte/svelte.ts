@@ -271,13 +271,6 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
       `
           : ''
       }
-      ${getContextCode(json)}
-      ${setContextCode({ json, options })}
-
-      ${functionsString.length < 4 ? '' : functionsString}
-      ${getterString.length < 4 ? '' : getterString}
-
-      ${refs.map((ref) => `let ${stripStateAndProps({ json, options })(ref)}`).join('\n')}
 
       ${
         options.stateType === 'proxies'
@@ -286,6 +279,15 @@ export const componentToSvelte: TranspilerGenerator<ToSvelteOptions> =
             : `let state = onChange(${dataString}, () => state = state)`
           : dataString
       }
+
+      ${getContextCode(json)}
+      ${setContextCode({ json, options })}
+
+      ${functionsString.length < 4 ? '' : functionsString}
+      ${getterString.length < 4 ? '' : getterString}
+
+      ${refs.map((ref) => `let ${stripStateAndProps({ json, options })(ref)}`).join('\n')}
+
       ${json.hooks.onInit?.code ?? ''}
       
       ${!json.hooks.onMount?.code ? '' : `onMount(() => { ${json.hooks.onMount.code} });`}
