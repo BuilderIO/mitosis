@@ -256,7 +256,9 @@ const NODE_MAPPERS: {
     }
   },
   Slot(json, options) {
-    if (!json.bindings.name) {
+    const slotName = json.bindings.name?.code || json.properties.name;
+
+    if (!slotName) {
       const key = Object.keys(json.bindings).find(Boolean);
       if (!key) return '<slot />';
 
@@ -267,7 +269,7 @@ const NODE_MAPPERS: {
       `;
     }
 
-    return `<slot name="${stripSlotPrefix(json.bindings.name.code).toLowerCase()}">${json.children
+    return `<slot name="${stripSlotPrefix(slotName).toLowerCase()}">${json.children
       ?.map((item) => blockToVue(item, options))
       .join('\n')}</slot>`;
   },
