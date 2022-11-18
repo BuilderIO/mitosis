@@ -38,6 +38,20 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
   );
 }
 
+export function mapStateInObjectExpressions(
+  node: babel.types.ObjectExpression,
+  stateProperties: string[],
+) {
+  node.properties = node.properties.map((p) => {
+    if (types.isObjectProperty(p) && types.isIdentifier(p.value)) {
+      p.value.name = stateProperties.includes(p.value.name)
+        ? `state.${p.value.name}`
+        : p.value.name;
+    }
+    return p;
+  });
+}
+
 /**
  * Convert state identifiers from React hooks format to the state.* format Mitosis needs
  * e.g.
