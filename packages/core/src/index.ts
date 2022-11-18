@@ -27,7 +27,7 @@ export const useContext = <T = { [key: string]: any }>(key: Context<T>): T => nu
 export const createContext = <T = { [key: string]: any }>(value: T): Context<T> =>
   null as unknown as Context<T>;
 export const setContext = <T = { [key: string]: any }>(
-  key: Context<T>,
+  key: Context<T> | string,
   value: Partial<T>,
 ): void => {};
 export const onMount = (fn: () => any) => {
