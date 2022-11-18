@@ -102,7 +102,16 @@ function processRefs(input: string, component: MitosisComponent, options: ToVueO
 
   return babelTransformExpression(input, {
     Identifier(path: babel.NodePath<babel.types.Identifier>) {
+      // we should not add .value to object properties
+      if (
+        (types.isObjectProperty(path.parent) && path.parent.key === path.node) ||
+        (types.isMemberExpression(path.parent) && path.parent.property === path.node)
+      ) {
+        return;
+      }
+
       const name = path.node.name;
+
       if (refs.includes(name) && shouldAppendValueToRef(path)) {
         const newValue = options.api === 'options' ? `this.${name}` : `${name}.value`;
         path.replaceWith(types.identifier(newValue));
@@ -159,14 +168,23 @@ export const processBinding = ({
 export const getContextValue =
   ({ options, json }: { options: ToVueOptions; json: MitosisComponent }) =>
   ({ name, ref, value }: ContextSetInfo): Nullable<string> => {
-    const valueStr = value
-      ? stringifyContextValue(value, {
-          valueMapper: (code) => processBinding({ code, options, json, preserveGetter: true }),
-        })
-      : ref
-      ? processBinding({ code: ref, options, json, preserveGetter: true })
-      : null;
+    const compositionApi = options.api === 'composition';
 
+    let valueStr;
+
+    // we don't want to add .value to the ref when 'providing' it
+    // as it will lose reactivity if we do so
+    if (compositionApi) {
+      valueStr = value ? stringifyContextValue(value) : ref || null;
+    } else {
+      valueStr = value
+        ? stringifyContextValue(value, {
+            valueMapper: (code) => processBinding({ code, options, json, preserveGetter: true }),
+          })
+        : ref
+        ? processBinding({ code: ref, options, json, preserveGetter: true })
+        : null;
+    }
     return valueStr;
   };
 
