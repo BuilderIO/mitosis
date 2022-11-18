@@ -50,3 +50,39 @@ export default function ComponentWithContext(props: { content: string }) {
   );
 }
 ```
+
+More examples:
+
+```tsx
+import { setContext, useState } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const [disabled, setDisabled] = useState(false);
+
+  setContext('disabled', { disabled });
+
+  return <h1>Hello World</h1>;
+}
+```
+
+```tsx
+import { setContext, useState } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  const [disabled, setDisabled] = useState(false);
+
+  setContext('disabled', disabled);
+
+  return <h1>Hello World</h1>;
+}
+```
+
+```tsx
+import { setContext, useState } from '@builder.io/mitosis';
+
+export default function MyComponent(props) {
+  setContext('hello', props.world);
+
+  return <h1>Hello World</h1>;
+}
+```
