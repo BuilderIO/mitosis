@@ -4,6 +4,8 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
 "<script>
   export let showInput;
 
+  let name = \\"PatrickJS\\";
+
   function onBlur() {
     // Maintain focus
     inputRef.focus();
@@ -15,8 +17,6 @@ exports[`Svelte > jsx > Javascript Test > AdvancedRef 1`] = `
 
   let inputRef;
   let inputNoArgRef;
-
-  let name = \\"PatrickJS\\";
 
   function onUpdateFn_0() {
     console.log(\\"Received an update\\");
@@ -59,13 +59,13 @@ exports[`Svelte > jsx > Javascript Test > Basic 1`] = `
     name: \\"Steve\\",
   };
 
-  function underscore_fn_name() {
-    return \\"bar\\";
-  }
-
   let name = \\"Steve\\";
   let age = 1;
   let sports = [\\"\\"];
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
 </script>
 
 <div class=\\"test div\\">
@@ -115,6 +115,8 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+  let name = \\"PatrickJS\\";
+
   let myService = getContext(MyService.key);
   setContext(Injector, createInjector());
 
@@ -123,7 +125,6 @@ exports[`Svelte > jsx > Javascript Test > Basic Context 1`] = `
     console.log(change);
   }
 
-  let name = \\"PatrickJS\\";
   const hi = myService.method(\\"hi\\");
   console.log(hi);
 
@@ -149,6 +150,7 @@ exports[`Svelte > jsx > Javascript Test > Basic OnMount Update 1`] = `
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
+
   name = \\"PatrickJS onInit\\" + hi;
 
   onMount(() => {
@@ -264,6 +266,8 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
 "<script>
   export let showInput;
 
+  let name = \\"PatrickJS\\";
+
   function onBlur() {
     // Maintain focus
     inputRef.focus();
@@ -275,8 +279,6 @@ exports[`Svelte > jsx > Javascript Test > BasicRef 1`] = `
 
   let inputRef;
   let inputNoArgRef;
-
-  let name = \\"PatrickJS\\";
 </script>
 
 <div>
@@ -453,6 +455,9 @@ exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
   export let replaceNodes;
   export let code;
 
+  let scriptsInserted = [];
+  let scriptsRun = [];
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
@@ -496,9 +501,6 @@ exports[`Svelte > jsx > Javascript Test > CustomCode 1`] = `
   }
 
   let elem;
-
-  let scriptsInserted = [];
-  let scriptsRun = [];
 
   onMount(() => {
     findAndRunScripts();
@@ -520,6 +522,9 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
   export let replaceNodes;
   export let code;
 
+  let scriptsInserted = [];
+  let scriptsRun = [];
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
@@ -563,9 +568,6 @@ exports[`Svelte > jsx > Javascript Test > Embed 1`] = `
   }
 
   let elem;
-
-  let scriptsInserted = [];
-  let scriptsRun = [];
 
   onMount(() => {
     findAndRunScripts();
@@ -606,6 +608,10 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
   export let errorMessage;
   export let sendingMessage;
   export let successMessage;
+
+  let formState = \\"unsubmitted\\";
+  let responseData = null;
+  let formErrorMessage = \\"\\";
 
   function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
@@ -825,10 +831,6 @@ exports[`Svelte > jsx > Javascript Test > Form 1`] = `
   };
 
   let formRef;
-
-  let formState = \\"unsubmitted\\";
-  let responseData = null;
-  let formErrorMessage = \\"\\";
 </script>
 
 <form
@@ -887,6 +889,10 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
   export let srcset;
   export let sizes;
 
+  let scrollListener = null;
+  let imageLoaded = false;
+  let load = false;
+
   function setLoaded() {
     imageLoaded = true;
   }
@@ -903,10 +909,6 @@ exports[`Svelte > jsx > Javascript Test > Image 1`] = `
   }
 
   let pictureRef;
-
-  let scrollListener = null;
-  let imageLoaded = false;
-  let load = false;
 
   onMount(() => {
     if (useLazyLoading()) {
@@ -1148,6 +1150,10 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
   export let apiKey;
   export let productId;
 
+  let reviews = [];
+  let name = \\"test\\";
+  let showReviewPrompt = false;
+
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
   }
@@ -1155,10 +1161,6 @@ exports[`Svelte > jsx > Javascript Test > Stamped.io 1`] = `
   function snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-
-  let reviews = [];
-  let name = \\"test\\";
-  let showReviewPrompt = false;
 
   onMount(() => {
     fetch(
@@ -1326,6 +1328,8 @@ exports[`Svelte > jsx > Javascript Test > Video 1`] = `
 
 exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
 "<script>
+  let name = \\"steve\\";
+
   function setName(value) {
     name = value;
   }
@@ -1333,8 +1337,6 @@ exports[`Svelte > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
   function updateNameWithArrowFn(value) {
     name = value;
   }
-
-  let name = \\"steve\\";
 </script>
 
 <div>Hello {name}</div>"
@@ -1344,9 +1346,9 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRef 1`] = `
 "<script>
   export let inputRef;
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
+
+  let inputRef;
 </script>
 
 <div>
@@ -1364,9 +1366,9 @@ exports[`Svelte > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
 "<script>
   export let inputRef;
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
+
+  let inputRef;
 </script>
 
 <div>
@@ -1698,6 +1700,7 @@ exports[`Svelte > jsx > Javascript Test > onInit 1`] = `
   export let name;
 
   let name = \\"\\";
+
   name = defaultValues.name || name;
   console.log(\\"set defaults with props\\");
 </script>
@@ -2021,6 +2024,8 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
 <script lang=\\"ts\\">
   export let showInput: Props[\\"showInput\\"];
 
+  let name = \\"PatrickJS\\";
+
   function onBlur() {
     // Maintain focus
     inputRef.focus();
@@ -2032,8 +2037,6 @@ exports[`Svelte > jsx > Typescript Test > AdvancedRef 1`] = `
 
   let inputRef;
   let inputNoArgRef;
-
-  let name = \\"PatrickJS\\";
 
   function onUpdateFn_0() {
     console.log(\\"Received an update\\");
@@ -2082,13 +2085,13 @@ exports[`Svelte > jsx > Typescript Test > Basic 1`] = `
     name: \\"Steve\\",
   };
 
-  function underscore_fn_name() {
-    return \\"bar\\";
-  }
-
   let name = \\"Steve\\";
   let age = 1;
   let sports = [\\"\\"];
+
+  function underscore_fn_name() {
+    return \\"bar\\";
+  }
 </script>
 
 <div class=\\"test div\\">
@@ -2138,6 +2141,8 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
 
   import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
+  let name = \\"PatrickJS\\";
+
   let myService = getContext(MyService.key);
   setContext(Injector, createInjector());
 
@@ -2146,7 +2151,6 @@ exports[`Svelte > jsx > Typescript Test > Basic Context 1`] = `
     console.log(change);
   }
 
-  let name = \\"PatrickJS\\";
   const hi = myService.method(\\"hi\\");
   console.log(hi);
 
@@ -2179,6 +2183,7 @@ exports[`Svelte > jsx > Typescript Test > Basic OnMount Update 1`] = `
 
   let name = \\"PatrickJS\\";
   let names = [\\"Steve\\", \\"PatrickJS\\"];
+
   name = \\"PatrickJS onInit\\" + hi;
 
   onMount(() => {
@@ -2312,6 +2317,8 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 <script lang=\\"ts\\">
   export let showInput: Props[\\"showInput\\"];
 
+  let name = \\"PatrickJS\\";
+
   function onBlur() {
     // Maintain focus
     inputRef.focus();
@@ -2323,8 +2330,6 @@ exports[`Svelte > jsx > Typescript Test > BasicRef 1`] = `
 
   let inputRef;
   let inputNoArgRef;
-
-  let name = \\"PatrickJS\\";
 </script>
 
 <div>
@@ -2547,6 +2552,9 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
   export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
   export let code: CustomCodeProps[\\"code\\"];
 
+  let scriptsInserted = [];
+  let scriptsRun = [];
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
@@ -2590,9 +2598,6 @@ exports[`Svelte > jsx > Typescript Test > CustomCode 1`] = `
   }
 
   let elem;
-
-  let scriptsInserted = [];
-  let scriptsRun = [];
 
   onMount(() => {
     findAndRunScripts();
@@ -2621,6 +2626,9 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
   export let replaceNodes: CustomCodeProps[\\"replaceNodes\\"];
   export let code: CustomCodeProps[\\"code\\"];
 
+  let scriptsInserted = [];
+  let scriptsRun = [];
+
   function findAndRunScripts() {
     // TODO: Move this function to standalone one in '@builder.io/utils'
     if (elem && typeof window !== \\"undefined\\") {
@@ -2664,9 +2672,6 @@ exports[`Svelte > jsx > Typescript Test > Embed 1`] = `
   }
 
   let elem;
-
-  let scriptsInserted = [];
-  let scriptsRun = [];
 
   onMount(() => {
     findAndRunScripts();
@@ -2734,6 +2739,10 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
   export let errorMessage: FormProps[\\"errorMessage\\"];
   export let sendingMessage: FormProps[\\"sendingMessage\\"];
   export let successMessage: FormProps[\\"successMessage\\"];
+
+  let formState = \\"unsubmitted\\";
+  let responseData = null;
+  let formErrorMessage = \\"\\";
 
   function onSubmit(event) {
     const sendWithJs = sendWithJs || sendSubmissionsTo === \\"email\\";
@@ -2953,10 +2962,6 @@ exports[`Svelte > jsx > Typescript Test > Form 1`] = `
   };
 
   let formRef;
-
-  let formState = \\"unsubmitted\\";
-  let responseData = null;
-  let formErrorMessage = \\"\\";
 </script>
 
 <form
@@ -3036,6 +3041,10 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
   export let srcset: ImageProps[\\"srcset\\"];
   export let sizes: ImageProps[\\"sizes\\"];
 
+  let scrollListener = null;
+  let imageLoaded = false;
+  let load = false;
+
   function setLoaded() {
     imageLoaded = true;
   }
@@ -3052,10 +3061,6 @@ exports[`Svelte > jsx > Typescript Test > Image 1`] = `
   }
 
   let pictureRef;
-
-  let scrollListener = null;
-  let imageLoaded = false;
-  let load = false;
 
   onMount(() => {
     if (useLazyLoading()) {
@@ -3371,6 +3376,10 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
   export let apiKey: SmileReviewsProps[\\"apiKey\\"];
   export let productId: SmileReviewsProps[\\"productId\\"];
 
+  let reviews = [];
+  let name = \\"test\\";
+  let showReviewPrompt = false;
+
   function kebabCaseValue() {
     return kebabCase(\\"testThat\\");
   }
@@ -3378,10 +3387,6 @@ exports[`Svelte > jsx > Typescript Test > Stamped.io 1`] = `
   function snakeCaseValue() {
     return snakeCase(\\"testThis\\");
   }
-
-  let reviews = [];
-  let name = \\"test\\";
-  let showReviewPrompt = false;
 
   onMount(() => {
     fetch(
@@ -3604,6 +3609,8 @@ exports[`Svelte > jsx > Typescript Test > Video 1`] = `
 
 exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
 "<script lang=\\"ts\\">
+  let name = \\"steve\\";
+
   function setName(value) {
     name = value;
   }
@@ -3611,8 +3618,6 @@ exports[`Svelte > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
   function updateNameWithArrowFn(value) {
     name = value;
   }
-
-  let name = \\"steve\\";
 </script>
 
 <div>Hello {name}</div>"
@@ -3629,9 +3634,9 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRef 1`] = `
 <script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
+
+  let inputRef;
 </script>
 
 <div>
@@ -3656,9 +3661,9 @@ exports[`Svelte > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
 <script lang=\\"ts\\">
   export let inputRef: Props[\\"inputRef\\"];
 
-  let inputRef;
-
   let name = \\"PatrickJS\\";
+
+  let inputRef;
 </script>
 
 <div>
@@ -4060,6 +4065,7 @@ exports[`Svelte > jsx > Typescript Test > onInit 1`] = `
   export let name: Props[\\"name\\"];
 
   let name = \\"\\";
+
   name = defaultValues.name || name;
   console.log(\\"set defaults with props\\");
 </script>
@@ -4584,10 +4590,10 @@ exports[`Svelte > svelte > Javascript Test > context 1`] = `
 "<script>
   import { getContext, setContext } from \\"svelte\\";
 
+  let activeTab = 0;
+
   let disabled = getContext(\\"disabled\\".key);
   setContext(\\"activeTab\\", activeTab);
-
-  let activeTab = 0;
 </script>
 
 <div>{activeTab}</div>"
@@ -4639,11 +4645,11 @@ exports[`Svelte > svelte > Javascript Test > html 1`] = `
 
 exports[`Svelte > svelte > Javascript Test > ifElse 1`] = `
 "<script>
+  let show = true;
+
   function toggle() {
     show = !show;
   }
-
-  let show = true;
 </script>
 
 {#if show}
@@ -4697,11 +4703,11 @@ exports[`Svelte > svelte > Javascript Test > lifecycleHooks 1`] = `
 
 exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
 "<script>
+  let name = \\"Steve\\";
+
   $: lowercaseName = () => {
     return name.toLowerCase();
   };
-
-  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4712,13 +4718,13 @@ exports[`Svelte > svelte > Javascript Test > reactive 1`] = `
 
 exports[`Svelte > svelte > Javascript Test > reactiveWithFn 1`] = `
 "<script>
-  function calculateResult(a_, b_) {
-    result = a_ * b_;
-  }
-
   let a = 2;
   let b = 5;
   let result = null;
+
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
 
   function onUpdateFn_0() {
     calculateResult(a, b);
@@ -4858,10 +4864,10 @@ exports[`Svelte > svelte > Typescript Test > context 1`] = `
 "<script lang=\\"ts\\">
   import { getContext, setContext } from \\"svelte\\";
 
+  let activeTab = 0;
+
   let disabled = getContext(\\"disabled\\".key);
   setContext(\\"activeTab\\", activeTab);
-
-  let activeTab = 0;
 </script>
 
 <div>{activeTab}</div>"
@@ -4913,11 +4919,11 @@ exports[`Svelte > svelte > Typescript Test > html 1`] = `
 
 exports[`Svelte > svelte > Typescript Test > ifElse 1`] = `
 "<script lang=\\"ts\\">
+  let show = true;
+
   function toggle() {
     show = !show;
   }
-
-  let show = true;
 </script>
 
 {#if show}
@@ -4971,11 +4977,11 @@ exports[`Svelte > svelte > Typescript Test > lifecycleHooks 1`] = `
 
 exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
 "<script lang=\\"ts\\">
+  let name = \\"Steve\\";
+
   $: lowercaseName = () => {
     return name.toLowerCase();
   };
-
-  let name = \\"Steve\\";
 </script>
 
 <div>
@@ -4986,13 +4992,13 @@ exports[`Svelte > svelte > Typescript Test > reactive 1`] = `
 
 exports[`Svelte > svelte > Typescript Test > reactiveWithFn 1`] = `
 "<script lang=\\"ts\\">
-  function calculateResult(a_, b_) {
-    result = a_ * b_;
-  }
-
   let a = 2;
   let b = 5;
   let result = null;
+
+  function calculateResult(a_, b_) {
+    result = a_ * b_;
+  }
 
   function onUpdateFn_0() {
     calculateResult(a, b);
