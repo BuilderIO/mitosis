@@ -175,7 +175,7 @@ export const getContextValue =
     // we don't want to add .value to the ref when 'providing' it
     // as it will lose reactivity if we do so
     if (compositionApi) {
-      valueStr = value ? stringifyContextValue(value) : ref || null;
+      valueStr = value ? stringifyContextValue(value) : stripStateAndPropsRefs(ref) || null;
     } else {
       valueStr = value
         ? stringifyContextValue(value, {
