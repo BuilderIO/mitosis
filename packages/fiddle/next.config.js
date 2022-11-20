@@ -25,6 +25,12 @@ const nextConfig = {
       loader: 'ignore-loader',
     });
 
+    config.module.rules.push({
+      test: [/\/CLIEngine/, /\/globby/],
+      issuer: /\/@typescript-eslint\//,
+      use: 'null-loader',
+    });
+
     return config;
   },
   experimental: {

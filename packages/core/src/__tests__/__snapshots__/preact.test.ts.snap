@@ -5468,6 +5468,26 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`Preact > svelte > Javascript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Javascript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5496,9 +5516,9 @@ export default function MyComponent(props) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );
@@ -5568,6 +5588,46 @@ export default function MyComponent(props) {
       <input value={name} />
       Lowercase:
       {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Javascript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
     </div>
   );
 }
@@ -5781,6 +5841,26 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`Preact > svelte > Typescript Test > eventHandlers 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`Preact > svelte > Typescript Test > html 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -5809,9 +5889,9 @@ export default function MyComponent(props: any) {
   return (
     <Fragment>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </Fragment>
   );
@@ -5881,6 +5961,46 @@ export default function MyComponent(props: any) {
       <input value={name} />
       Lowercase:
       {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`Preact > svelte > Typescript Test > reactiveWithFn 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useState, useEffect } from \\"preact/hooks\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
     </div>
   );
 }

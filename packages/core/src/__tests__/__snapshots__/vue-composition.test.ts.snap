@@ -36,10 +36,11 @@ const inputRef = ref(null);
 const inputNoArgRef = ref(null);
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -54,8 +55,7 @@ function lowerCaseName() {
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic 1`] = `
@@ -89,8 +89,7 @@ function underscore_fn_name() {
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic 2`] = `
@@ -116,8 +115,7 @@ import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic Context 1`] = `
@@ -151,8 +149,7 @@ function onChange() {
   const change = myService.method(\\"change\\");
   console.log(change);
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic OnMount Update 1`] = `
@@ -171,8 +168,7 @@ name.value = \\"PatrickJS onInit\\" + props.hi;
 onMounted(() => {
   name.value = \\"PatrickJS onMount\\" + props.bye;
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic Outputs 1`] = `
@@ -190,8 +186,7 @@ onMounted(() => {
   props.onMessage(name);
   props.onEvent(props.message);
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Basic Outputs Meta 1`] = `
@@ -209,17 +204,13 @@ onMounted(() => {
   props.onMessage(name);
   props.onEvent(props.message);
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicAttribute 1`] = `
 "<template>
   <input autocapitalize=\\"on\\" autocomplete=\\"on\\" :spellcheck=\\"true\\" />
-</template>
-
-<script setup></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
@@ -242,8 +233,7 @@ exports[`Vue > jsx > Javascript Test > BasicBooleanAttribute 1`] = `
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 const props = defineProps([\\"children\\", \\"type\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicChildComponent 1`] = `
@@ -267,8 +257,7 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicFor 1`] = `
@@ -296,8 +285,7 @@ const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 onMounted(() => {
   console.log(\\"onMount code\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicRef 1`] = `
@@ -348,8 +336,7 @@ function lowerCaseName() {
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicRefAssignment 1`] = `
@@ -367,8 +354,7 @@ function handlerClick(event) {
   console.log(\\"current value\\", holdValueRef);
   holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > BasicRefPrevious 1`] = `
@@ -400,13 +386,13 @@ const count = ref(0);
 const prevCount = ref(null);
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Button 1`] = `
@@ -432,8 +418,7 @@ exports[`Vue > jsx > Javascript Test > Button 1`] = `
 
 <script setup>
 const props = defineProps([\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Columns 1`] = `
@@ -486,8 +471,7 @@ function getColumnCssWidth(index) {
 .div-2 {
   flex-grow: 1;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
@@ -501,10 +485,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotHtml 1`] = `
       <slot />
     </div>
   </div>
-</template>
-
-<script setup></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
@@ -523,8 +504,7 @@ exports[`Vue > jsx > Javascript Test > ContentSlotJSX 1`] = `
 
 <script setup>
 const props = defineProps([\\"children\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > CustomCode 1`] = `
@@ -605,8 +585,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Embed 1`] = `
@@ -687,8 +666,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Form 1`] = `
@@ -1003,8 +981,7 @@ function onSubmit(event) {
   color: red;
   text-align: center;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Image 1`] = `
@@ -1113,8 +1090,7 @@ function _classStringToObject(str) {
   object-fit: cover;
   object-position: center;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Image State 1`] = `
@@ -1131,8 +1107,7 @@ import { ref } from \\"vue\\";
 
 const canShow = ref(true);
 const images = ref([\\"http://example.com/qwik.png\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Img 1`] = `
@@ -1159,8 +1134,7 @@ const props = defineProps([
   \\"imgSrc\\",
   \\"altText\\",
 ]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Input 1`] = `
@@ -1189,8 +1163,7 @@ const props = defineProps([
   \\"value\\",
   \\"required\\",
 ]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > RawText 1`] = `
@@ -1215,8 +1188,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Section 1`] = `
@@ -1237,8 +1209,7 @@ exports[`Vue > jsx > Javascript Test > Section 1`] = `
 
 <script setup>
 const props = defineProps([\\"attributes\\", \\"maxWidth\\", \\"children\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Section 2`] = `
@@ -1263,8 +1234,7 @@ import { ref } from \\"vue\\";
 const props = defineProps([\\"attributes\\", \\"children\\"]);
 const max = ref(42);
 const items = ref([42]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Select 1`] = `
@@ -1294,8 +1264,7 @@ const props = defineProps([
   \\"name\\",
   \\"options\\",
 ]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
@@ -1311,8 +1280,7 @@ exports[`Vue > jsx > Javascript Test > SlotHtml 1`] = `
 
 <script setup>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
@@ -1324,8 +1292,7 @@ exports[`Vue > jsx > Javascript Test > SlotJsx 1`] = `
 
 <script setup>
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Stamped.io 1`] = `
@@ -1438,8 +1405,7 @@ function _classStringToObject(str) {
   width: 30px;
   margin-right: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Submit 1`] = `
@@ -1451,8 +1417,7 @@ exports[`Vue > jsx > Javascript Test > Submit 1`] = `
 
 <script setup>
 const props = defineProps([\\"attributes\\", \\"text\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Text 1`] = `
@@ -1473,8 +1438,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 const props = defineProps([\\"text\\", \\"content\\"]);
 const name = ref(\\"Decadef20\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Textarea 1`] = `
@@ -1496,8 +1460,7 @@ const props = defineProps([
   \\"value\\",
   \\"defaultValue\\",
 ]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > Video 1`] = `
@@ -1536,8 +1499,7 @@ const props = defineProps([
   \\"controls\\",
   \\"loop\\",
 ]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > arrowFunctionInUseStore 1`] = `
@@ -1556,8 +1518,7 @@ function setName(value) {
 function updateNameWithArrowFn(value) {
   name.value = value;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > basicForwardRef 1`] = `
@@ -1583,8 +1544,7 @@ const name = ref(\\"PatrickJS\\");
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > basicForwardRefMetadata 1`] = `
@@ -1610,8 +1570,7 @@ const name = ref(\\"PatrickJS\\");
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > basicOnUpdateReturn 1`] = `
@@ -1625,7 +1584,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -1641,10 +1600,10 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
@@ -1654,14 +1613,13 @@ exports[`Vue > jsx > Javascript Test > class + ClassName + css 1`] = `
   </div>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > class + css 1`] = `
@@ -1669,14 +1627,13 @@ exports[`Vue > jsx > Javascript Test > class + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > className + css 1`] = `
@@ -1684,14 +1641,13 @@ exports[`Vue > jsx > Javascript Test > className + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > className 1`] = `
@@ -1719,8 +1675,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > classState 1`] = `
@@ -1755,8 +1710,7 @@ function _classStringToObject(str) {
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > componentWithContext 1`] = `
@@ -1781,8 +1735,7 @@ provide(Context1, {
   },
 });
 provide(Context2, { bar: \\"baz\\" });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > contentState 1`] = `
@@ -1801,8 +1754,7 @@ provide(BuilderContext, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > defaultProps 1`] = `
@@ -1836,8 +1788,7 @@ const props = withDefaults(defineProps(), {
     console.log(\\"hi\\");
   },
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > defaultPropsOutsideComponent 1`] = `
@@ -1869,8 +1820,7 @@ const props = withDefaults(defineProps(), {
   text: \\"default text\\",
   onClick: () => {},
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > defaultValsWithTypes 1`] = `
@@ -1884,8 +1834,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > expressionState 1`] = `
@@ -1900,8 +1849,7 @@ const props = defineProps([\\"componentRef\\"]);
 const refToUse = ref(
   !(props.componentRef instanceof Function) ? props.componentRef : null
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > import types 1`] = `
@@ -1922,8 +1870,7 @@ function getRenderContentProps(block, index) {
     index: index,
   };
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > multipleOnUpdate 1`] = `
@@ -1936,8 +1883,7 @@ import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
 onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > multipleOnUpdateWithDeps 1`] = `
@@ -1954,27 +1900,28 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > multipleSpreads 1`] = `
@@ -1988,8 +1935,7 @@ import { ref } from \\"vue\\";
 const attrs = ref({
   hello: \\"world\\",
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > nestedShow 1`] = `
@@ -2011,8 +1957,7 @@ exports[`Vue > jsx > Javascript Test > nestedShow 1`] = `
 
 <script setup>
 const props = defineProps([\\"conditionA\\", \\"conditionB\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
@@ -2020,7 +1965,7 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
   <div class=\\"div\\">Hello world</div>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 .div {
@@ -2038,8 +1983,7 @@ exports[`Vue > jsx > Javascript Test > nestedStyles 1`] = `
 .div .nested-selector {
   display: grid;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > onInit & onMount 1`] = `
@@ -2054,8 +1998,7 @@ console.log(\\"onInit\\");
 onMounted(() => {
   console.log(\\"onMount\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > onInit 1`] = `
@@ -2075,8 +2018,7 @@ const name = ref(\\"\\");
 
 name.value = defaultValues.name || props.name;
 console.log(\\"set defaults with props\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > onMount 1`] = `
@@ -2093,8 +2035,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log(\\"Runs on unMount\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > onUpdate 1`] = `
@@ -2106,8 +2047,7 @@ exports[`Vue > jsx > Javascript Test > onUpdate 1`] = `
 import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > onUpdateWithDeps 1`] = `
@@ -2123,13 +2063,13 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > preserveExportOrLocalStatement 1`] = `
@@ -2143,8 +2083,7 @@ const foo = () => {};
 export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > preserveTyping 1`] = `
@@ -2154,8 +2093,7 @@ exports[`Vue > jsx > Javascript Test > preserveTyping 1`] = `
 
 <script setup>
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > propsDestructure 1`] = `
@@ -2171,8 +2109,7 @@ import { ref } from \\"vue\\";
 
 const props = defineProps([\\"children\\", \\"type\\"]);
 const name = ref(\\"Decadef20\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > propsInterface 1`] = `
@@ -2182,8 +2119,7 @@ exports[`Vue > jsx > Javascript Test > propsInterface 1`] = `
 
 <script setup>
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > propsType 1`] = `
@@ -2193,8 +2129,7 @@ exports[`Vue > jsx > Javascript Test > propsType 1`] = `
 
 <script setup>
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > renderContentExample 1`] = `
@@ -2234,7 +2169,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
@@ -2243,8 +2179,7 @@ watch(
   display: flex;
   flex-direction: columns;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
@@ -2268,8 +2203,7 @@ exports[`Vue > jsx > Javascript Test > rootFragmentMultiNode 1`] = `
 
 <script setup>
 const props = defineProps([\\"link\\", \\"attributes\\", \\"openLinkInNewTab\\", \\"text\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
@@ -2285,8 +2219,7 @@ exports[`Vue > jsx > Javascript Test > rootShow 1`] = `
 
 <script setup>
 const props = defineProps([\\"foo\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
@@ -2302,8 +2235,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component 1`] = `
 
 <script setup>
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > self-referencing component with children 1`] = `
@@ -2322,8 +2254,7 @@ exports[`Vue > jsx > Javascript Test > self-referencing component with children 
 
 <script setup>
 const props = defineProps([\\"name\\", \\"children\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
@@ -2341,17 +2272,13 @@ exports[`Vue > jsx > Javascript Test > showWithFor 1`] = `
 
 <script setup>
 const props = defineProps([\\"conditionA\\", \\"items\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > spreadAttrs 1`] = `
 "<template>
   <input v-bind=\\"attrs\\" />
-</template>
-
-<script setup></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Javascript Test > spreadNestedProps 1`] = `
@@ -2361,17 +2288,13 @@ exports[`Vue > jsx > Javascript Test > spreadNestedProps 1`] = `
 
 <script setup>
 const props = defineProps([\\"nested\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > spreadProps 1`] = `
 "<template>
   <input v-bind=\\"$props\\" />
-</template>
-
-<script setup></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
@@ -2381,8 +2304,7 @@ exports[`Vue > jsx > Javascript Test > subComponent 1`] = `
 
 <script setup>
 import Foo from \\"./foo-sub-component.vue\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > typeDependency 1`] = `
@@ -2392,8 +2314,7 @@ exports[`Vue > jsx > Javascript Test > typeDependency 1`] = `
 
 <script setup>
 const props = defineProps([\\"foo\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Javascript Test > use-style 1`] = `
@@ -2401,7 +2322,7 @@ exports[`Vue > jsx > Javascript Test > use-style 1`] = `
   <button type=\\"button\\">Button</button>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 button {
@@ -2410,8 +2331,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > use-style-and-css 1`] = `
@@ -2419,7 +2339,7 @@ exports[`Vue > jsx > Javascript Test > use-style-and-css 1`] = `
   <button type=\\"button\\" class=\\"button\\">Button</button>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 .button {
@@ -2431,8 +2351,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Javascript Test > use-style-outside-component 1`] = `
@@ -2440,7 +2359,7 @@ exports[`Vue > jsx > Javascript Test > use-style-outside-component 1`] = `
   <button type=\\"button\\">Button</button>
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 button {
@@ -2449,8 +2368,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
@@ -2462,8 +2380,7 @@ exports[`Vue > jsx > Remove Internal mitosis package 1`] = `
 import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > AdvancedRef 1`] = `
@@ -2505,10 +2422,11 @@ const inputRef = ref<HTMLInputElement>();
 const inputNoArgRef = ref<HTMLLabelElement>();
 
 watch(
-  () => [inputRef, inputNoArgRef],
+  () => [inputRef.value, inputNoArgRef.value],
   ([inputRef, inputNoArgRef]) => {
     console.log(\\"Received an update\\");
-  }
+  },
+  { immediate: true }
 );
 function onBlur() {
   // Maintain focus
@@ -2523,8 +2441,7 @@ function lowerCaseName() {
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic 1`] = `
@@ -2561,8 +2478,7 @@ function underscore_fn_name() {
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic 2`] = `
@@ -2588,8 +2504,7 @@ import { ref } from \\"vue\\";
 
 const name = ref(\\"PatrickJS\\");
 const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic Context 1`] = `
@@ -2623,8 +2538,7 @@ function onChange() {
   const change = myService.method(\\"change\\");
   console.log(change);
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic OnMount Update 1`] = `
@@ -2647,8 +2561,7 @@ name.value = \\"PatrickJS onInit\\" + props.hi;
 onMounted(() => {
   name.value = \\"PatrickJS onMount\\" + props.bye;
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic Outputs 1`] = `
@@ -2666,8 +2579,7 @@ onMounted(() => {
   props.onMessage(name);
   props.onEvent(props.message);
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Basic Outputs Meta 1`] = `
@@ -2685,17 +2597,13 @@ onMounted(() => {
   props.onMessage(name);
   props.onEvent(props.message);
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicAttribute 1`] = `
 "<template>
   <input autocapitalize=\\"on\\" autocomplete=\\"on\\" :spellcheck=\\"true\\" />
-</template>
-
-<script setup lang=\\"ts\\"></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicBooleanAttribute 1`] = `
@@ -2723,8 +2631,7 @@ type Props = {
 import MyBooleanAttributeComponent from \\"./basic-boolean-attribute-component.raw\\";
 
 const props = defineProps<Props>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicChildComponent 1`] = `
@@ -2748,8 +2655,7 @@ import MyBasicOnMountUpdateComponent from \\"./basic-onMount-update.raw\\";
 
 const name = ref(\\"Steve\\");
 const dev = ref(\\"PatrickJS\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicFor 1`] = `
@@ -2777,8 +2683,7 @@ const names = ref([\\"Steve\\", \\"PatrickJS\\"]);
 onMounted(() => {
   console.log(\\"onMount code\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicRef 1`] = `
@@ -2832,8 +2737,7 @@ function lowerCaseName() {
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicRefAssignment 1`] = `
@@ -2855,8 +2759,7 @@ function handlerClick(event) {
   console.log(\\"current value\\", holdValueRef);
   holdValueRef.value = holdValueRef.value + \\"JS\\";
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > BasicRefPrevious 1`] = `
@@ -2891,13 +2794,13 @@ const count = ref(0);
 const prevCount = ref<undefined>();
 
 watch(
-  () => [count],
+  () => [count.value],
   ([count]) => {
     prevCount.value = count.value;
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Button 1`] = `
@@ -2930,8 +2833,7 @@ export interface ButtonProps {
 }
 
 const props = defineProps<ButtonProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Columns 1`] = `
@@ -2999,8 +2901,7 @@ function getColumnCssWidth(index) {
 .div-2 {
   flex-grow: 1;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > ContentSlotHtml 1`] = `
@@ -3021,8 +2922,7 @@ type Props = {
   [key: string]: string | JSX.Element;
   slotTesting: JSX.Element;
 };
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > ContentSlotJSX 1`] = `
@@ -3045,8 +2945,7 @@ type Props = {
 };
 
 const props = defineProps<Props>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > CustomCode 1`] = `
@@ -3131,8 +3030,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Embed 1`] = `
@@ -3217,8 +3115,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Form 1`] = `
@@ -3537,8 +3434,7 @@ function onSubmit(event) {
   color: red;
   text-align: center;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Image 1`] = `
@@ -3657,8 +3553,7 @@ function _classStringToObject(str) {
   object-fit: cover;
   object-position: center;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Image State 1`] = `
@@ -3675,8 +3570,7 @@ import { ref } from \\"vue\\";
 
 const canShow = ref(true);
 const images = ref([\\"http://example.com/qwik.png\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Img 1`] = `
@@ -3714,8 +3608,7 @@ export interface ImgProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 const props = defineProps<ImgProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Input 1`] = `
@@ -3746,8 +3639,7 @@ export interface FormInputProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 const props = defineProps<FormInputProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > RawText 1`] = `
@@ -3777,8 +3669,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Section 1`] = `
@@ -3805,8 +3696,7 @@ export interface SectionProps {
 }
 
 const props = defineProps<SectionProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Section 2`] = `
@@ -3836,8 +3726,7 @@ export interface SectionProps {
 const props = defineProps<SectionProps>();
 const max = ref(42);
 const items = ref([42]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Select 1`] = `
@@ -3872,8 +3761,7 @@ export interface FormSelectProps {
 import { Builder } from \\"@builder.io/sdk\\";
 
 const props = defineProps<FormSelectProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > SlotHtml 1`] = `
@@ -3893,8 +3781,7 @@ type Props = {
 };
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > SlotJsx 1`] = `
@@ -3910,8 +3797,7 @@ type Props = {
 };
 
 import ContentSlotCode from \\"./content-slot-jsx.raw\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Stamped.io 1`] = `
@@ -4028,8 +3914,7 @@ function _classStringToObject(str) {
   width: 30px;
   margin-right: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Submit 1`] = `
@@ -4046,8 +3931,7 @@ export interface ButtonProps {
 }
 
 const props = defineProps<ButtonProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Text 1`] = `
@@ -4075,8 +3959,7 @@ import { Builder } from \\"@builder.io/sdk\\";
 
 const props = defineProps<TextProps>();
 const name = ref(\\"Decadef20\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Textarea 1`] = `
@@ -4100,8 +3983,7 @@ export interface TextareaProps {
 }
 
 const props = defineProps<TextareaProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > Video 1`] = `
@@ -4156,8 +4038,7 @@ export interface VideoProps {
 }
 
 const props = defineProps<VideoProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > arrowFunctionInUseStore 1`] = `
@@ -4176,8 +4057,7 @@ function setName(value) {
 function updateNameWithArrowFn(value) {
   name.value = value;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > basicForwardRef 1`] = `
@@ -4207,8 +4087,7 @@ const name = ref(\\"PatrickJS\\");
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > basicForwardRefMetadata 1`] = `
@@ -4238,8 +4117,7 @@ const name = ref(\\"PatrickJS\\");
 .input {
   color: red;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > basicOnUpdateReturn 1`] = `
@@ -4253,7 +4131,7 @@ import { ref, watch } from \\"vue\\";
 const name = ref(\\"PatrickJS\\");
 
 watch(
-  () => [name],
+  () => [name.value],
   ([name]) => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -4269,10 +4147,10 @@ watch(
         controller.abort();
       }
     };
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
@@ -4282,14 +4160,13 @@ exports[`Vue > jsx > Typescript Test > class + ClassName + css 1`] = `
   </div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > class + css 1`] = `
@@ -4297,14 +4174,13 @@ exports[`Vue > jsx > Typescript Test > class + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > className + css 1`] = `
@@ -4312,14 +4188,13 @@ exports[`Vue > jsx > Typescript Test > className + css 1`] = `
   <div class=\\"test div\\">Hello! I can run in React, Vue, Solid, or Liquid!</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > className 1`] = `
@@ -4351,8 +4226,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > classState 1`] = `
@@ -4387,8 +4261,7 @@ function _classStringToObject(str) {
 .div {
   padding: 10px;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > componentWithContext 1`] = `
@@ -4416,8 +4289,7 @@ provide(Context1, {
   },
 });
 provide(Context2, { bar: \\"baz\\" });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > contentState 1`] = `
@@ -4436,8 +4308,7 @@ provide(BuilderContext, {
   content: props.content,
   registeredComponents: props.customComponents,
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > defaultProps 1`] = `
@@ -4479,8 +4350,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
     console.log(\\"hi\\");
   },
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > defaultPropsOutsideComponent 1`] = `
@@ -4520,8 +4390,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   text: \\"default text\\",
   onClick: () => {},
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > defaultValsWithTypes 1`] = `
@@ -4539,8 +4408,7 @@ const DEFAULT_VALUES: Props = {
 };
 
 const props = defineProps<Props>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > expressionState 1`] = `
@@ -4555,8 +4423,7 @@ const props = defineProps([\\"componentRef\\"]);
 const refToUse = ref(
   !(props.componentRef instanceof Function) ? props.componentRef : null
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > import types 1`] = `
@@ -4583,8 +4450,7 @@ function getRenderContentProps(block, index) {
     index: index,
   };
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > multipleOnUpdate 1`] = `
@@ -4597,8 +4463,7 @@ import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
 onUpdated(() => console.log(\\"Runs on every update/rerender as well\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > multipleOnUpdateWithDeps 1`] = `
@@ -4615,27 +4480,28 @@ const c = ref(\\"c\\");
 const d = ref(\\"d\\");
 
 watch(
-  () => [a, b],
+  () => [a.value, b.value],
   ([a, b]) => {
     console.log(\\"Runs when a or b changes\\", a, b);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
 watch(
-  () => [c, d],
+  () => [c.value, d.value],
   ([c, d]) => {
     console.log(\\"Runs when c or d changes\\", c, d);
 
     if (a.value === \\"a\\") {
       a.value = \\"b\\";
     }
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > multipleSpreads 1`] = `
@@ -4649,8 +4515,7 @@ import { ref } from \\"vue\\";
 const attrs = ref({
   hello: \\"world\\",
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > nestedShow 1`] = `
@@ -4677,8 +4542,7 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
@@ -4686,7 +4550,7 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
   <div class=\\"div\\">Hello world</div>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 .div {
@@ -4704,8 +4568,7 @@ exports[`Vue > jsx > Typescript Test > nestedStyles 1`] = `
 .div .nested-selector {
   display: grid;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onInit & onMount 1`] = `
@@ -4720,8 +4583,7 @@ console.log(\\"onInit\\");
 onMounted(() => {
   console.log(\\"onMount\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onInit 1`] = `
@@ -4744,8 +4606,7 @@ const name = ref(\\"\\");
 
 name.value = defaultValues.name || props.name;
 console.log(\\"set defaults with props\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onMount 1`] = `
@@ -4762,8 +4623,7 @@ onMounted(() => {
 onUnmounted(() => {
   console.log(\\"Runs on unMount\\");
 });
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onUpdate 1`] = `
@@ -4775,8 +4635,7 @@ exports[`Vue > jsx > Typescript Test > onUpdate 1`] = `
 import { onUpdated } from \\"vue\\";
 
 onUpdated(() => console.log(\\"Runs on every update/rerender\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > onUpdateWithDeps 1`] = `
@@ -4795,13 +4654,13 @@ const a = ref(\\"a\\");
 const b = ref(\\"b\\");
 
 watch(
-  () => [a, b, props.size],
+  () => [a.value, b.value, props.size],
   ([a, b, size]) => {
     console.log(\\"Runs when a, b or size changes\\", a, b, props.size);
-  }
+  },
+  { immediate: true }
 );
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > preserveExportOrLocalStatement 1`] = `
@@ -4825,8 +4684,7 @@ const foo = () => {};
 export const a = 3;
 export const bar = () => {};
 export function run<T>(value: T) {}
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > preserveTyping 1`] = `
@@ -4849,8 +4707,7 @@ export interface MyBasicComponentProps {
 }
 
 const props = defineProps<MyBasicComponentProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > propsDestructure 1`] = `
@@ -4870,8 +4727,7 @@ type Props = {
 
 const props = defineProps<Props>();
 const name = ref(\\"Decadef20\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > propsInterface 1`] = `
@@ -4886,8 +4742,7 @@ interface Person {
 }
 
 const props = defineProps<Person | never>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > propsType 1`] = `
@@ -4902,8 +4757,7 @@ type Person = {
 };
 
 const props = defineProps<Person>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > renderContentExample 1`] = `
@@ -4950,7 +4804,8 @@ watch(
   () => [props.content],
   ([content]) => {
     dispatchNewContentToVisualEditor(props.content);
-  }
+  },
+  { immediate: true }
 );
 </script>
 
@@ -4959,8 +4814,7 @@ watch(
   display: flex;
   flex-direction: columns;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > rootFragmentMultiNode 1`] = `
@@ -4991,8 +4845,7 @@ export interface ButtonProps {
 }
 
 const props = defineProps<ButtonProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > rootShow 1`] = `
@@ -5012,8 +4865,7 @@ export interface RenderStylesProps {
 }
 
 const props = defineProps<RenderStylesProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
@@ -5029,8 +4881,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component 1`] = `
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"name\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > self-referencing component with children 1`] = `
@@ -5049,8 +4900,7 @@ exports[`Vue > jsx > Typescript Test > self-referencing component with children 
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"name\\", \\"children\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > showWithFor 1`] = `
@@ -5073,17 +4923,13 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > spreadAttrs 1`] = `
 "<template>
   <input v-bind=\\"attrs\\" />
-</template>
-
-<script setup lang=\\"ts\\"></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Typescript Test > spreadNestedProps 1`] = `
@@ -5093,17 +4939,13 @@ exports[`Vue > jsx > Typescript Test > spreadNestedProps 1`] = `
 
 <script setup lang=\\"ts\\">
 const props = defineProps([\\"nested\\"]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > spreadProps 1`] = `
 "<template>
   <input v-bind=\\"$props\\" />
-</template>
-
-<script setup lang=\\"ts\\"></script>
-"
+</template>"
 `;
 
 exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
@@ -5113,8 +4955,7 @@ exports[`Vue > jsx > Typescript Test > subComponent 1`] = `
 
 <script setup lang=\\"ts\\">
 import Foo from \\"./foo-sub-component.vue\\";
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > typeDependency 1`] = `
@@ -5131,8 +4972,7 @@ export type TypeDependencyProps = {
 };
 
 const props = defineProps<TypeDependencyProps>();
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > jsx > Typescript Test > use-style 1`] = `
@@ -5140,7 +4980,7 @@ exports[`Vue > jsx > Typescript Test > use-style 1`] = `
   <button type=\\"button\\">Button</button>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 button {
@@ -5149,8 +4989,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > use-style-and-css 1`] = `
@@ -5158,7 +4997,7 @@ exports[`Vue > jsx > Typescript Test > use-style-and-css 1`] = `
   <button type=\\"button\\" class=\\"button\\">Button</button>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 .button {
@@ -5170,8 +5009,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > jsx > Typescript Test > use-style-outside-component 1`] = `
@@ -5179,7 +5017,7 @@ exports[`Vue > jsx > Typescript Test > use-style-outside-component 1`] = `
   <button type=\\"button\\">Button</button>
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 button {
@@ -5188,8 +5026,7 @@ button {
   font-size: 12px;
   outline: 1px solid black;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > svelte > Javascript Test > basic 1`] = `
@@ -5204,8 +5041,7 @@ exports[`Vue > svelte > Javascript Test > basic 1`] = `
 import { ref } from \\"vue\\";
 
 const name = ref(\\"Steve\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > bindGroup 1`] = `
@@ -5257,8 +5093,7 @@ import { ref } from \\"vue\\";
 
 const tortilla = ref(\\"Plain\\");
 const fillings = ref([]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
@@ -5270,8 +5105,7 @@ exports[`Vue > svelte > Javascript Test > bindProperty 1`] = `
 import { ref } from \\"vue\\";
 
 const value = ref(\\"hello\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > classDirective 1`] = `
@@ -5302,8 +5136,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > context 1`] = `
@@ -5319,8 +5152,7 @@ const activeTab = ref(0);
 const disabled = inject(\\"disabled\\");
 
 provide(\\"activeTab\\", activeTab.value);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > each 1`] = `
@@ -5336,8 +5168,23 @@ exports[`Vue > svelte > Javascript Test > each 1`] = `
 import { ref } from \\"vue\\";
 
 const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
-</script>
-"
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script setup>
+function log(msg = \\"hello\\") {
+  console.log(msg);
+}
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > html 1`] = `
@@ -5349,18 +5196,17 @@ exports[`Vue > svelte > Javascript Test > html 1`] = `
 import { ref } from \\"vue\\";
 
 const html = ref(\\"<b>bold</b>\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > ifElse 1`] = `
 "<template>
   <template v-if=\\"show\\">
-    <button @click=\\"toggle\\">Hide</button>
+    <button @click=\\"toggle($event)\\">Hide</button>
   </template>
 
   <template v-else>
-    <button @click=\\"toggle\\">Show</button>
+    <button @click=\\"toggle($event)\\">Show</button>
   </template>
 </template>
 
@@ -5372,8 +5218,7 @@ const show = ref(true);
 function toggle() {
   show.value = !show.value;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > imports 1`] = `
@@ -5389,8 +5234,7 @@ import { ref } from \\"vue\\";
 import Button from \\"./Button.vue\\";
 
 const disabled = ref(false);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > lifecycleHooks 1`] = `
@@ -5409,8 +5253,7 @@ onUnmounted(() => {
 });
 
 onUpdated(() => console.log(\\"onAfterUpdate\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > reactive 1`] = `
@@ -5426,8 +5269,39 @@ const name = ref(\\"Steve\\");
 const lowercaseName = computed(() => {
   return name.value.toLowerCase();
 });
-</script>
-"
+</script>"
+`;
+
+exports[`Vue > svelte > Javascript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup>
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
+</script>"
 `;
 
 exports[`Vue > svelte > Javascript Test > style 1`] = `
@@ -5435,7 +5309,7 @@ exports[`Vue > svelte > Javascript Test > style 1`] = `
   <input class=\\"form-input\\" />
 </template>
 
-<script setup></script>
+
 
 <style scoped>
 input {
@@ -5446,8 +5320,7 @@ input {
 .form-input:focus {
   outline: 1px solid blue;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > svelte > Javascript Test > textExpressions 1`] = `
@@ -5465,8 +5338,7 @@ import { ref } from \\"vue\\";
 
 const a = ref(5);
 const b = ref(12);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > basic 1`] = `
@@ -5481,8 +5353,7 @@ exports[`Vue > svelte > Typescript Test > basic 1`] = `
 import { ref } from \\"vue\\";
 
 const name = ref(\\"Steve\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > bindGroup 1`] = `
@@ -5534,8 +5405,7 @@ import { ref } from \\"vue\\";
 
 const tortilla = ref(\\"Plain\\");
 const fillings = ref([]);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
@@ -5547,8 +5417,7 @@ exports[`Vue > svelte > Typescript Test > bindProperty 1`] = `
 import { ref } from \\"vue\\";
 
 const value = ref(\\"hello\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > classDirective 1`] = `
@@ -5579,8 +5448,7 @@ function _classStringToObject(str) {
   }
   return obj;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > context 1`] = `
@@ -5596,8 +5464,7 @@ const activeTab = ref(0);
 const disabled = inject(\\"disabled\\");
 
 provide(\\"activeTab\\", activeTab.value);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > each 1`] = `
@@ -5613,8 +5480,23 @@ exports[`Vue > svelte > Typescript Test > each 1`] = `
 import { ref } from \\"vue\\";
 
 const numbers = ref([\\"one\\", \\"two\\", \\"three\\"]);
-</script>
-"
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > eventHandlers 1`] = `
+"<template>
+  <div>
+    <button @click=\\"log('hi')\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button
+    ><button @click=\\"log($event)\\">Log</button>
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+function log(msg = \\"hello\\") {
+  console.log(msg);
+}
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > html 1`] = `
@@ -5626,18 +5508,17 @@ exports[`Vue > svelte > Typescript Test > html 1`] = `
 import { ref } from \\"vue\\";
 
 const html = ref(\\"<b>bold</b>\\");
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > ifElse 1`] = `
 "<template>
   <template v-if=\\"show\\">
-    <button @click=\\"toggle\\">Hide</button>
+    <button @click=\\"toggle($event)\\">Hide</button>
   </template>
 
   <template v-else>
-    <button @click=\\"toggle\\">Show</button>
+    <button @click=\\"toggle($event)\\">Show</button>
   </template>
 </template>
 
@@ -5649,8 +5530,7 @@ const show = ref(true);
 function toggle() {
   show.value = !show.value;
 }
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > imports 1`] = `
@@ -5666,8 +5546,7 @@ import { ref } from \\"vue\\";
 import Button from \\"./Button.vue\\";
 
 const disabled = ref(false);
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > lifecycleHooks 1`] = `
@@ -5686,8 +5565,7 @@ onUnmounted(() => {
 });
 
 onUpdated(() => console.log(\\"onAfterUpdate\\"));
-</script>
-"
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > reactive 1`] = `
@@ -5703,8 +5581,39 @@ const name = ref(\\"Steve\\");
 const lowercaseName = computed(() => {
   return name.value.toLowerCase();
 });
-</script>
-"
+</script>"
+`;
+
+exports[`Vue > svelte > Typescript Test > reactiveWithFn 1`] = `
+"<template>
+  <div>
+    <input type=\\"number\\" @input=\\"a = $event.target.value\\" :value=\\"a\\" /><input
+      type=\\"number\\"
+      @input=\\"b = $event.target.value\\"
+      :value=\\"b\\"
+    />
+    Result: {{ result }}
+  </div>
+</template>
+
+<script setup lang=\\"ts\\">
+import { ref, watch } from \\"vue\\";
+
+const a = ref(2);
+const b = ref(5);
+const result = ref(null);
+
+watch(
+  () => [a.value, b.value],
+  ([a, b]) => {
+    calculateResult(a, b);
+  },
+  { immediate: true }
+);
+function calculateResult(a_, b_) {
+  result.value = a_ * b_;
+}
+</script>"
 `;
 
 exports[`Vue > svelte > Typescript Test > style 1`] = `
@@ -5712,7 +5621,7 @@ exports[`Vue > svelte > Typescript Test > style 1`] = `
   <input class=\\"form-input\\" />
 </template>
 
-<script setup lang=\\"ts\\"></script>
+
 
 <style scoped>
 input {
@@ -5723,8 +5632,7 @@ input {
 .form-input:focus {
   outline: 1px solid blue;
 }
-</style>
-"
+</style>"
 `;
 
 exports[`Vue > svelte > Typescript Test > textExpressions 1`] = `
@@ -5742,6 +5650,5 @@ import { ref } from \\"vue\\";
 
 const a = ref(5);
 const b = ref(12);
-</script>
-"
+</script>"
 `;

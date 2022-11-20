@@ -15,7 +15,7 @@ function getContextInjectString(component: MitosisComponent, options: ToVueOptio
 
   for (const key in component.context.get) {
     str += `
-      ${key}: "${encodeQuotes(component.context.get[key].name)}",
+      ${key}: ${encodeQuotes(component.context.get[key].name)},
     `;
   }
 
@@ -223,10 +223,7 @@ export function generateOptionsApiScript(
             ${onUpdateWithDeps
               .map(
                 (hook, index) =>
-                  `${getOnUpdateHookName(index)}() {
-                  ${hook.code}
-                  }
-                `,
+                  `${getOnUpdateHookName(index)}: { handler() { ${hook.code} }, immediate: true }`,
               )
               .join(',')}
           },`

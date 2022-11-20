@@ -16239,6 +16239,71 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular > svelte > Javascript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Javascript Test > eventHandlers 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular > svelte > Javascript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -16302,7 +16367,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
@@ -16333,7 +16398,7 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
   standalone: true,
@@ -16546,6 +16611,87 @@ export class MyComponent {
   name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Javascript Test > reactiveWithFn 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
   }
 }
 
@@ -17142,6 +17288,71 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular > svelte > Typescript Test > eventHandlers 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Typescript Test > eventHandlers 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <button (click)=\\"log('hi')\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+      <button (click)=\\"log($event)\\">Log</button>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular > svelte > Typescript Test > html 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -17205,7 +17416,7 @@ import { Component } from \\"@angular/core\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
 })
@@ -17236,7 +17447,7 @@ import { CommonModule } from \\"@angular/common\\";
   selector: \\"my-component, MyComponent\\",
   template: \`
     <ng-container *ngIf=\\"show\\">
-      <button (click)=\\"toggle\\">Hide</button>
+      <button (click)=\\"toggle($event)\\">Hide</button>
     </ng-container>
   \`,
   standalone: true,
@@ -17449,6 +17660,87 @@ export class MyComponent {
   name = \\"Steve\\";
   get lowercaseName() {
     return this.name.toLowerCase();
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
+  }
+}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Typescript Test > reactiveWithFn 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <input type=\\"number\\" (input)=\\"a = $event.target.value\\" [attr.value]=\\"a\\" />
+      <input type=\\"number\\" (input)=\\"b = $event.target.value\\" [attr.value]=\\"b\\" />
+
+      Result: {{result}}
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class MyComponent {
+  a = 2;
+  b = 5;
+  result = null;
+  calculateResult = function calculateResult(a_, b_) {
+    this.result = a_ * b_;
+  };
+
+  ngAfterContentChecked() {
+    this.calculateResult(this.a, this.b);
   }
 }
 

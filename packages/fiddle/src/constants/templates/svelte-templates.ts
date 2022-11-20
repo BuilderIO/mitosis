@@ -40,7 +40,46 @@ export const templates: { [key: string]: string } = {
     </div>
 
   `,
+  'reactive 2': dedent`
+    <script>
+      let a = 2
+      let b = 5
+      let result;
 
+      $: calculateResult(a, b)
+
+      function calculateResult(a, b) {
+        result = a * b
+      }
+    </script>
+
+    <div>
+      <input type="number" bind:value={a} />
+      <input type="number" bind:value={b} />
+      Result: {result}
+    </div>
+  `,
+  'event handlers': dedent`
+    <script>
+      function log(msg = 'hello') {
+        console.log(msg)
+      }
+    </script>
+    <div>
+      <button on:click={(a) => log('hi')}>
+        Log hi
+      </button>
+      <button on:click={log}>
+        Log default
+      </button>
+      <button on:click={log()}>
+        Log default
+      </button>
+      <button on:click={log('bye')}>
+        Log Bye
+      </button>
+    </div>      
+  `,
   'if / else': dedent`
     <script>
       let show = true;

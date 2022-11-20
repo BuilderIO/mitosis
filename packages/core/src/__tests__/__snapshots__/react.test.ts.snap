@@ -5227,19 +5227,24 @@ function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-3a46cf08 { 
-display: block; }.textarea-3a46cf08 { 
-display: block; }.button-3a46cf08 { 
-display: block; }.review-3a46cf08 { 
+      <style>{\`.input-3a46cf08 {
+display: block;
+}.textarea-3a46cf08 {
+display: block;
+}.button-3a46cf08 {
+display: block;
+}.review-3a46cf08 {
 margin: 10px;
 padding: 10px;
 background: white;
 display: flex;
 border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-3a46cf08 { 
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-3a46cf08 {
 height: 30px;
 width: 30px;
-margin-right: 10px; }\`}</style>
+margin-right: 10px;
+}\`}</style>
     </>
   );
 }
@@ -5326,19 +5331,24 @@ export default function SmileReviews(props) {
           </div>
         ))}
       </div>
-      <style>{\`.input-857f8768 { 
-display: block; }.textarea-857f8768 { 
-display: block; }.button-857f8768 { 
-display: block; }.review-857f8768 { 
+      <style>{\`.input-857f8768 {
+display: block;
+}.textarea-857f8768 {
+display: block;
+}.button-857f8768 {
+display: block;
+}.review-857f8768 {
 margin: 10px;
 padding: 10px;
 background: white;
 display: flex;
 border-radius: 5px;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); }.img-857f8768 { 
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}.img-857f8768 {
 height: 30px;
 width: 30px;
-margin-right: 10px; }\`}</style>
+margin-right: 10px;
+}\`}</style>
     </>
   );
 }
@@ -5499,6 +5509,25 @@ export default function MyComponent(props) {
 "
 `;
 
+exports[`React > svelte > Javascript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Javascript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5525,9 +5554,9 @@ export default function MyComponent(props) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -5594,6 +5623,45 @@ export default function MyComponent(props) {
       <input value={name} />
       Lowercase:
       {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
     </div>
   );
 }
@@ -5799,6 +5867,25 @@ export default function MyComponent(props: any) {
 "
 `;
 
+exports[`React > svelte > Typescript Test > eventHandlers 1`] = `
+"import * as React from \\"react\\";
+
+export default function MyComponent(props: any) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+"
+`;
+
 exports[`React > svelte > Typescript Test > html 1`] = `
 "import * as React from \\"react\\";
 import { useState } from \\"react\\";
@@ -5825,9 +5912,9 @@ export default function MyComponent(props: any) {
   return (
     <>
       {show ? (
-        <button onClick={(event) => toggle}> Hide </button>
+        <button onClick={(event) => toggle(event)}> Hide </button>
       ) : (
-        <button onClick={(event) => toggle}> Show </button>
+        <button onClick={(event) => toggle(event)}> Show </button>
       )}
     </>
   );
@@ -5894,6 +5981,45 @@ export default function MyComponent(props: any) {
       <input value={name} />
       Lowercase:
       {lowercaseName()}
+    </div>
+  );
+}
+"
+`;
+
+exports[`React > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import * as React from \\"react\\";
+import { useState, useEffect } from \\"react\\";
+
+export default function MyComponent(props: any) {
+  const [a, setA] = useState(() => 2);
+
+  const [b, setB] = useState(() => 5);
+
+  const [result, setResult] = useState(() => null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  useEffect(() => {
+    calculateResult(a, b);
+  }, [a, b]);
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onChange={(event) => setA(event.target.value)}
+        value={a}
+      />
+      <input
+        type=\\"number\\"
+        onChange={(event) => setB(event.target.value)}
+        value={b}
+      />
+      Result:
+      {result}
     </div>
   );
 }

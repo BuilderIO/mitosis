@@ -282,7 +282,6 @@ export default MyBasicForShowComponent;
 
 exports[`Solid > jsx > Javascript Test > Basic Context 1`] = `
 "import { useContext, onMount, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
@@ -302,13 +301,13 @@ function MyBasicComponent(props) {
   });
 
   return (
-    <Dynamic component={Injector.Provider}>
+    <Injector.Provider>
       <div>
         {myService.method(\\"hello\\") + name()}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onInput={(event) => onChange} />
       </div>
-    </Dynamic>
+    </Injector.Provider>
   );
 }
 
@@ -318,7 +317,6 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Javascript Test > Basic Context 2`] = `
 "import { useContext, onMount, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -341,13 +339,13 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <Dynamic component={Injector.Provider}>
+      <Injector.Provider>
         <div>
           {myService.method(\\"hello\\") + name()}
           Hello! I can run in React, Vue, Solid, or Liquid!
           <input onInput={(event) => onChange} />
         </div>
-      </Dynamic>
+      </Injector.Provider>
     </>
   );
 }
@@ -3552,7 +3550,6 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Javascript Test > componentWithContext 1`] = `
 "import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -3561,13 +3558,12 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Dynamic
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
-      component={Context2.Provider}
     >
-      <Dynamic
+      <Context1.Provider
         value={{
           foo: \\"bar\\",
 
@@ -3575,13 +3571,12 @@ function ComponentWithContext(props) {
             return props.content;
           },
         }}
-        component={Context1.Provider}
       >
         <>
           <>{foo.value}</>
         </>
-      </Dynamic>
-    </Dynamic>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
@@ -3591,7 +3586,6 @@ export default ComponentWithContext;
 
 exports[`Solid > jsx > Javascript Test > componentWithContext 2`] = `
 "import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -3603,13 +3597,12 @@ function ComponentWithContext(props) {
 
   return (
     <>
-      <Dynamic
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
-        component={Context2.Provider}
       >
-        <Dynamic
+        <Context1.Provider
           value={{
             foo: \\"bar\\",
 
@@ -3617,13 +3610,12 @@ function ComponentWithContext(props) {
               return props.content;
             },
           }}
-          component={Context1.Provider}
         >
           <>
             <>{foo.value}</>
           </>
-        </Dynamic>
-      </Dynamic>
+        </Context1.Provider>
+      </Context2.Provider>
     </>
   );
 }
@@ -3633,22 +3625,18 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Javascript Test > contentState 1`] = `
-"import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import BuilderContext from \\"@dummy/context.jsx\\";
+"import BuilderContext from \\"@dummy/context.jsx\\";
 
 function RenderContent(props) {
   return (
-    <Dynamic
+    <BuilderContext.Provider
       value={{
         content: props.content,
         registeredComponents: props.customComponents,
       }}
-      component={BuilderContext.Provider}
     >
       <div>setting context</div>
-    </Dynamic>
+    </BuilderContext.Provider>
   );
 }
 
@@ -3657,25 +3645,21 @@ export default RenderContent;
 `;
 
 exports[`Solid > jsx > Javascript Test > contentState 2`] = `
-"import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import { css } from \\"solid-styled-components\\";
+"import { css } from \\"solid-styled-components\\";
 
 import BuilderContext from \\"@dummy/context.jsx\\";
 
 function RenderContent(props) {
   return (
     <>
-      <Dynamic
+      <BuilderContext.Provider
         value={{
           content: props.content,
           registeredComponents: props.customComponents,
         }}
-        component={BuilderContext.Provider}
       >
         <div>setting context</div>
-      </Dynamic>
+      </BuilderContext.Provider>
     </>
   );
 }
@@ -4560,8 +4544,7 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Javascript Test > renderContentExample 1`] = `
-"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
+"import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -4584,7 +4567,7 @@ function RenderContent(props) {
   createEffect(on(() => [props.content], onUpdateFn_0));
 
   return (
-    <Dynamic
+    <BuilderContext.Provider
       value={{
         get content() {
           return 3;
@@ -4594,7 +4577,6 @@ function RenderContent(props) {
           return 4;
         },
       }}
-      component={BuilderContext.Provider}
     >
       <div
         class={css({
@@ -4605,7 +4587,7 @@ function RenderContent(props) {
       >
         <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
       </div>
-    </Dynamic>
+    </BuilderContext.Provider>
   );
 }
 
@@ -4614,8 +4596,7 @@ export default RenderContent;
 `;
 
 exports[`Solid > jsx > Javascript Test > renderContentExample 2`] = `
-"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
+"import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -4639,7 +4620,7 @@ function RenderContent(props) {
 
   return (
     <>
-      <Dynamic
+      <BuilderContext.Provider
         value={{
           get content() {
             return 3;
@@ -4649,17 +4630,16 @@ function RenderContent(props) {
             return 4;
           },
         }}
-        component={BuilderContext.Provider}
       >
         <div
-          class=\\"div-4d48d7ae\\"
+          class=\\"div-975179a0\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
-      </Dynamic>
+      </BuilderContext.Provider>
       <style jsx>{\`
-        .div-4d48d7ae {
+        .div-975179a0 {
           display: flex;
           flex-direction: columns;
         }
@@ -5459,7 +5439,6 @@ export default MyBasicForShowComponent;
 
 exports[`Solid > jsx > Typescript Test > Basic Context 1`] = `
 "import { useContext, onMount, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { Injector, createInjector, MyService } from \\"@dummy/injection-js\\";
 
@@ -5479,13 +5458,13 @@ function MyBasicComponent(props) {
   });
 
   return (
-    <Dynamic component={Injector.Provider}>
+    <Injector.Provider>
       <div>
         {myService.method(\\"hello\\") + name()}
         Hello! I can run in React, Vue, Solid, or Liquid!
         <input onInput={(event) => onChange} />
       </div>
-    </Dynamic>
+    </Injector.Provider>
   );
 }
 
@@ -5495,7 +5474,6 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > Basic Context 2`] = `
 "import { useContext, onMount, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -5518,13 +5496,13 @@ function MyBasicComponent(props) {
 
   return (
     <>
-      <Dynamic component={Injector.Provider}>
+      <Injector.Provider>
         <div>
           {myService.method(\\"hello\\") + name()}
           Hello! I can run in React, Vue, Solid, or Liquid!
           <input onInput={(event) => onChange} />
         </div>
-      </Dynamic>
+      </Injector.Provider>
     </>
   );
 }
@@ -8729,7 +8707,6 @@ export default MyBasicComponent;
 
 exports[`Solid > jsx > Typescript Test > componentWithContext 1`] = `
 "import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import Context1 from \\"@dummy/1\\";
 import Context2 from \\"@dummy/2\\";
@@ -8738,13 +8715,12 @@ function ComponentWithContext(props) {
   const foo = useContext(Context1);
 
   return (
-    <Dynamic
+    <Context2.Provider
       value={{
         bar: \\"baz\\",
       }}
-      component={Context2.Provider}
     >
-      <Dynamic
+      <Context1.Provider
         value={{
           foo: \\"bar\\",
 
@@ -8752,13 +8728,12 @@ function ComponentWithContext(props) {
             return props.content;
           },
         }}
-        component={Context1.Provider}
       >
         <>
           <>{foo.value}</>
         </>
-      </Dynamic>
-    </Dynamic>
+      </Context1.Provider>
+    </Context2.Provider>
   );
 }
 
@@ -8768,7 +8743,6 @@ export default ComponentWithContext;
 
 exports[`Solid > jsx > Typescript Test > componentWithContext 2`] = `
 "import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -8780,13 +8754,12 @@ function ComponentWithContext(props) {
 
   return (
     <>
-      <Dynamic
+      <Context2.Provider
         value={{
           bar: \\"baz\\",
         }}
-        component={Context2.Provider}
       >
-        <Dynamic
+        <Context1.Provider
           value={{
             foo: \\"bar\\",
 
@@ -8794,13 +8767,12 @@ function ComponentWithContext(props) {
               return props.content;
             },
           }}
-          component={Context1.Provider}
         >
           <>
             <>{foo.value}</>
           </>
-        </Dynamic>
-      </Dynamic>
+        </Context1.Provider>
+      </Context2.Provider>
     </>
   );
 }
@@ -8810,22 +8782,18 @@ export default ComponentWithContext;
 `;
 
 exports[`Solid > jsx > Typescript Test > contentState 1`] = `
-"import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import BuilderContext from \\"@dummy/context.jsx\\";
+"import BuilderContext from \\"@dummy/context.jsx\\";
 
 function RenderContent(props) {
   return (
-    <Dynamic
+    <BuilderContext.Provider
       value={{
         content: props.content,
         registeredComponents: props.customComponents,
       }}
-      component={BuilderContext.Provider}
     >
       <div>setting context</div>
-    </Dynamic>
+    </BuilderContext.Provider>
   );
 }
 
@@ -8834,25 +8802,21 @@ export default RenderContent;
 `;
 
 exports[`Solid > jsx > Typescript Test > contentState 2`] = `
-"import { useContext } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import { css } from \\"solid-styled-components\\";
+"import { css } from \\"solid-styled-components\\";
 
 import BuilderContext from \\"@dummy/context.jsx\\";
 
 function RenderContent(props) {
   return (
     <>
-      <Dynamic
+      <BuilderContext.Provider
         value={{
           content: props.content,
           registeredComponents: props.customComponents,
         }}
-        component={BuilderContext.Provider}
       >
         <div>setting context</div>
-      </Dynamic>
+      </BuilderContext.Provider>
     </>
   );
 }
@@ -9737,8 +9701,7 @@ export default MyBasicComponent;
 `;
 
 exports[`Solid > jsx > Typescript Test > renderContentExample 1`] = `
-"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
+"import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -9761,7 +9724,7 @@ function RenderContent(props) {
   createEffect(on(() => [props.content], onUpdateFn_0));
 
   return (
-    <Dynamic
+    <BuilderContext.Provider
       value={{
         get content() {
           return 3;
@@ -9771,7 +9734,6 @@ function RenderContent(props) {
           return 4;
         },
       }}
-      component={BuilderContext.Provider}
     >
       <div
         class={css({
@@ -9782,7 +9744,7 @@ function RenderContent(props) {
       >
         <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
       </div>
-    </Dynamic>
+    </BuilderContext.Provider>
   );
 }
 
@@ -9791,8 +9753,7 @@ export default RenderContent;
 `;
 
 exports[`Solid > jsx > Typescript Test > renderContentExample 2`] = `
-"import { useContext, onMount, on, createEffect } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
+"import { onMount, on, createEffect } from \\"solid-js\\";
 
 import { css } from \\"solid-styled-components\\";
 
@@ -9816,7 +9777,7 @@ function RenderContent(props) {
 
   return (
     <>
-      <Dynamic
+      <BuilderContext.Provider
         value={{
           get content() {
             return 3;
@@ -9826,17 +9787,16 @@ function RenderContent(props) {
             return 4;
           },
         }}
-        component={BuilderContext.Provider}
       >
         <div
-          class=\\"div-4d48d7ae\\"
+          class=\\"div-975179a0\\"
           onClick={(event) => trackClick(props.content.id)}
         >
           <RenderBlocks blocks={props.content.blocks}></RenderBlocks>
         </div>
-      </Dynamic>
+      </BuilderContext.Provider>
       <style jsx>{\`
-        .div-4d48d7ae {
+        .div-975179a0 {
           display: flex;
           flex-direction: columns;
         }
@@ -10576,47 +10536,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Javascript Test > context 1`] = `
-"import { useContext, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = createSignal(0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Dynamic component={\\"activeTab\\".Provider}>
-      <div>{activeTab()}</div>
-    </Dynamic>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (27:19)
+  25 |
+  26 |     return (
+> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+     |                   ^
+  28 |       
+  29 |       )
+  30 |   }"
 `;
 
 exports[`Solid > svelte > Javascript Test > context 2`] = `
-"import { useContext, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = createSignal(0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <>
-      <Dynamic component={\\"activeTab\\".Provider}>
-        <div>{activeTab()}</div>
-      </Dynamic>
-    </>
-  );
-}
-
-export default MyComponent;
-"
+"Identifier expected. (27:8)
+  25 |
+  26 |     return (<>
+> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+     |        ^
+  28 |       
+  29 |       </>)
+  30 |   }"
 `;
 
 exports[`Solid > svelte > Javascript Test > each 1`] = `
@@ -10659,6 +10597,52 @@ function MyComponent(props) {
           }}
         </For>
       </ul>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > eventHandlers 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > eventHandlers 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
     </>
   );
 }
@@ -10711,10 +10695,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
       when={show()}
     >
-      <button onClick={(event) => toggle}>Hide</button>
+      <button onClick={(event) => toggle(event)}>Hide</button>
     </Show>
   );
 }
@@ -10738,10 +10722,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
         when={show()}
       >
-        <button onClick={(event) => toggle}>Hide</button>
+        <button onClick={(event) => toggle(event)}>Hide</button>
       </Show>
     </>
   );
@@ -10874,6 +10858,92 @@ function MyComponent(props) {
         <input value={name()} />
         Lowercase:
         {lowercaseName()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Javascript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
       </div>
     </>
   );
@@ -11231,47 +11301,25 @@ export default MyComponent;
 `;
 
 exports[`Solid > svelte > Typescript Test > context 1`] = `
-"import { useContext, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = createSignal(0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <Dynamic component={\\"activeTab\\".Provider}>
-      <div>{activeTab()}</div>
-    </Dynamic>
-  );
-}
-
-export default MyComponent;
-"
+"'>' expected. (27:19)
+  25 |
+  26 |     return (
+> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+     |                   ^
+  28 |       
+  29 |       )
+  30 |   }"
 `;
 
 exports[`Solid > svelte > Typescript Test > context 2`] = `
-"import { useContext, createSignal } from \\"solid-js\\";
-import { Dynamic } from \\"solid-js/web\\";
-
-import { css } from \\"solid-styled-components\\";
-
-function MyComponent(props) {
-  const [activeTab, setActiveTab] = createSignal(0);
-
-  const disabled = useContext(\\"disabled\\");
-
-  return (
-    <>
-      <Dynamic component={\\"activeTab\\".Provider}>
-        <div>{activeTab()}</div>
-      </Dynamic>
-    </>
-  );
-}
-
-export default MyComponent;
-"
+"Identifier expected. (27:8)
+  25 |
+  26 |     return (<>
+> 27 |       <'activeTab'.Provider ><div >{activeTab()}</div></'activeTab'.Provider>
+     |        ^
+  28 |       
+  29 |       </>)
+  30 |   }"
 `;
 
 exports[`Solid > svelte > Typescript Test > each 1`] = `
@@ -11314,6 +11362,52 @@ function MyComponent(props) {
           }}
         </For>
       </ul>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > eventHandlers 1`] = `
+"import { createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <div>
+      <button onClick={(a) => log(\\"hi\\")}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+      <button onClick={(event) => log(event)}>Log</button>
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > eventHandlers 2`] = `
+"import { createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  function log(msg = \\"hello\\") {
+    console.log(msg);
+  }
+
+  return (
+    <>
+      <div>
+        <button onClick={(a) => log(\\"hi\\")}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+        <button onClick={(event) => log(event)}>Log</button>
+      </div>
     </>
   );
 }
@@ -11366,10 +11460,10 @@ function MyComponent(props) {
 
   return (
     <Show
-      fallback={<button onClick={(event) => toggle}>Show</button>}
+      fallback={<button onClick={(event) => toggle(event)}>Show</button>}
       when={show()}
     >
-      <button onClick={(event) => toggle}>Hide</button>
+      <button onClick={(event) => toggle(event)}>Hide</button>
     </Show>
   );
 }
@@ -11393,10 +11487,10 @@ function MyComponent(props) {
   return (
     <>
       <Show
-        fallback={<button onClick={(event) => toggle}>Show</button>}
+        fallback={<button onClick={(event) => toggle(event)}>Show</button>}
         when={show()}
       >
-        <button onClick={(event) => toggle}>Hide</button>
+        <button onClick={(event) => toggle(event)}>Hide</button>
       </Show>
     </>
   );
@@ -11529,6 +11623,92 @@ function MyComponent(props) {
         <input value={name()} />
         Lowercase:
         {lowercaseName()}
+      </div>
+    </>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 1`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <div>
+      <input
+        type=\\"number\\"
+        onInput={(event) => setA(event.target.value)}
+        value={a()}
+      />
+      <input
+        type=\\"number\\"
+        onInput={(event) => setB(event.target.value)}
+        value={b()}
+      />
+      Result:
+      {result()}
+    </div>
+  );
+}
+
+export default MyComponent;
+"
+`;
+
+exports[`Solid > svelte > Typescript Test > reactiveWithFn 2`] = `
+"import { on, createEffect, createSignal } from \\"solid-js\\";
+
+import { css } from \\"solid-styled-components\\";
+
+function MyComponent(props) {
+  const [a, setA] = createSignal(2);
+
+  const [b, setB] = createSignal(5);
+
+  const [result, setResult] = createSignal(null);
+
+  function calculateResult(a_, b_) {
+    setResult(a_ * b_);
+  }
+
+  function onUpdateFn_0() {
+    calculateResult(a(), b());
+  }
+  createEffect(on(() => [a(), b()], onUpdateFn_0));
+
+  return (
+    <>
+      <div>
+        <input
+          type=\\"number\\"
+          onInput={(event) => setA(event.target.value)}
+          value={a()}
+        />
+        <input
+          type=\\"number\\"
+          onInput={(event) => setB(event.target.value)}
+          value={b()}
+        />
+        Result:
+        {result()}
       </div>
     </>
   );

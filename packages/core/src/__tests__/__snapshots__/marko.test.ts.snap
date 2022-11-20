@@ -3914,6 +3914,20 @@ exports[`Marko > svelte > Javascript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Javascript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Javascript Test > html 1`] = `
 "class {
   onCreate() {
@@ -3936,8 +3950,8 @@ exports[`Marko > svelte > Javascript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Javascript Test > imports 1`] = `
@@ -3985,6 +3999,37 @@ exports[`Marko > svelte > Javascript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Javascript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
 </div>"
 `;
 
@@ -4139,6 +4184,20 @@ exports[`Marko > svelte > Typescript Test > each 1`] = `
 </ul>"
 `;
 
+exports[`Marko > svelte > Typescript Test > eventHandlers 1`] = `
+"class {
+  log = function log(msg = \\"hello\\") {
+    console.log(msg);
+  };
+}
+
+<div>
+  <button on-click(a => component.log('hi'))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+  <button on-click(event => component.log(event))>Log</button>
+</div>"
+`;
+
 exports[`Marko > svelte > Typescript Test > html 1`] = `
 "class {
   onCreate() {
@@ -4161,8 +4220,8 @@ exports[`Marko > svelte > Typescript Test > ifElse 1`] = `
 }
 
 <if(state.show)>
-  <button on-click(event => component.toggle)>Hide</button></if>
-<else><button on-click(event => component.toggle)>Show</button></else>"
+  <button on-click(event => component.toggle(event))>Hide</button></if>
+<else><button on-click(event => component.toggle(event))>Show</button></else>"
 `;
 
 exports[`Marko > svelte > Typescript Test > imports 1`] = `
@@ -4210,6 +4269,37 @@ exports[`Marko > svelte > Typescript Test > reactive 1`] = `
   <input value=(state.name) />
 
   Lowercase: \${component.lowercaseName}
+</div>"
+`;
+
+exports[`Marko > svelte > Typescript Test > reactiveWithFn 1`] = `
+"class {
+  calculateResult = function calculateResult(a_, b_) {
+    this.state.result = a_ * b_;
+  };
+
+  onCreate() {
+    this.state = { a: 2, b: 5, result: null };
+  }
+
+  onRender() {
+    this.calculateResult(this.state.a, this.state.b);
+  }
+}
+
+<div>
+  <input
+    type=\\"number\\"
+    on-input(event => state.a = event.target.value)
+    value=(state.a)
+  />
+  <input
+    type=\\"number\\"
+    on-input(event => state.b = event.target.value)
+    value=(state.b)
+  />
+
+  Result: \${state.result}
 </div>"
 `;
 
