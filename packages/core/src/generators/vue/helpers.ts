@@ -9,6 +9,7 @@ import { babelTransformExpression } from '../../helpers/babel-transform';
 import { types } from '@babel/core';
 import { pickBy } from 'lodash';
 import { GETTER, stripGetter } from '../../helpers/patterns';
+import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 
 export const addPropertiesToJson =
   (properties: MitosisNode['properties']) =>
@@ -111,6 +112,20 @@ function processRefs(input: string, component: MitosisComponent, options: ToVueO
   });
 }
 
+function prefixMethodsWithThis(input: string, component: MitosisComponent, options: ToVueOptions) {
+  if (options.api === 'options') {
+    const allMethodNames = Object.entries(component.state).filter(
+      ([_key, value]) => (value?.type === 'function'),
+    ).map(([key]) => key);
+
+    if (!allMethodNames.length) return input
+    
+    return replaceIdentifiers({ code: input, from: allMethodNames, to: (name) => `this.${name}` })
+  } else {
+    return input
+  }
+}
+
 // TODO: migrate all stripStateAndPropsRefs to use this here
 // to properly replace context refs
 export const processBinding = ({
@@ -150,6 +165,7 @@ export const processBinding = ({
         // workaround so that getter code is valid and parseable by babel.
         stripGetter,
         (code) => processRefs(code, json, options),
+        (code) => prefixMethodsWithThis(code, json, options),
         (code) => (preserveGetter && wasGetter ? `get ${code}` : code),
       );
     },
