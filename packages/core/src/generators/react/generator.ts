@@ -1,6 +1,6 @@
 import dedent from 'dedent';
 import json5 from 'json5';
-import { camelCase, startsWith, upperFirst } from 'lodash';
+import { camelCase, upperFirst } from 'lodash';
 import { format } from 'prettier/standalone';
 import { TranspilerGenerator } from '../../types/transpiler';
 import { collectCss } from '../../helpers/styles/collect-css';
