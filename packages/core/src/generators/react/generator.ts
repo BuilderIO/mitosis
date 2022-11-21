@@ -99,7 +99,7 @@ const NODE_MAPPERS: {
 
     let slotProp = processBinding(slotName as string, options).replace('name=', '');
 
-    if (!startsWith('props.slot')) {
+    if (!slotProp.startsWith('props.slot')) {
       slotProp = `props.slot${upperFirst(camelCase(slotProp))}`;
     }
 
