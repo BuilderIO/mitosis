@@ -118,6 +118,7 @@ const SVELTE_SYNTAX_TESTS: Tests = {
   lifecycleHooks: getRawFile('./syntax/svelte/lifecycle-hooks.raw.svelte'),
   reactive: getRawFile('./syntax/svelte/reactive.raw.svelte'),
   reactiveWithFn: getRawFile('./syntax/svelte/reactive-with-fn.raw.svelte'),
+  slots: getRawFile('./syntax/svelte/slots.raw.svelte'),
   style: getRawFile('./syntax/svelte/style.raw.svelte'),
   textExpressions: getRawFile('./syntax/svelte/text-expressions.raw.svelte'),
 };

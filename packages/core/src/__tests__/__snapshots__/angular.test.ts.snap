@@ -16916,6 +16916,61 @@ export class MyComponentModule {}
 "
 `;
 
+exports[`Angular > svelte > Javascript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Javascript Test > slots 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule, Slot],
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
 exports[`Angular > svelte > Javascript Test > style 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -17959,6 +18014,61 @@ export class MyComponent {
 @NgModule({
   declarations: [MyComponent],
   imports: [BrowserModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Typescript Test > slots 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
+  exports: [MyComponent],
+})
+export class MyComponentModule {}
+"
+`;
+
+exports[`Angular > svelte > Typescript Test > slots 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"my-component, MyComponent\\",
+  template: \`
+    <div>
+      <ng-content>default</ng-content>
+      <ng-content select=\\"[test]\\"><div>default</div></ng-content>
+    </div>
+  \`,
+  standalone: true,
+  imports: [CommonModule, Slot],
+})
+export class MyComponent {}
+
+@NgModule({
+  declarations: [MyComponent],
+  imports: [BrowserModule, SlotModule],
   exports: [MyComponent],
 })
 export class MyComponentModule {}
