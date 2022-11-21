@@ -114,15 +114,15 @@ function processRefs(input: string, component: MitosisComponent, options: ToVueO
 
 function prefixMethodsWithThis(input: string, component: MitosisComponent, options: ToVueOptions) {
   if (options.api === 'options') {
-    const allMethodNames = Object.entries(component.state).filter(
-      ([_key, value]) => (value?.type === 'function'),
-    ).map(([key]) => key);
+    const allMethodNames = Object.entries(component.state)
+      .filter(([_key, value]) => value?.type === 'function')
+      .map(([key]) => key);
 
-    if (!allMethodNames.length) return input
-    
-    return replaceIdentifiers({ code: input, from: allMethodNames, to: (name) => `this.${name}` })
+    if (!allMethodNames.length) return input;
+
+    return replaceIdentifiers({ code: input, from: allMethodNames, to: (name) => `this.${name}` });
   } else {
-    return input
+    return input;
   }
 }
 
