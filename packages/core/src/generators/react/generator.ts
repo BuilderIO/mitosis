@@ -92,7 +92,10 @@ const NODE_MAPPERS: {
       }
 
       if (hasChildren) {
-        component.defaultProps = { ...(component.defaultProps || {}), children: renderChildren() };
+        component.defaultProps = {
+          ...(component.defaultProps || {}),
+          children: renderChildren().trim(),
+        };
       }
       return `{${processBinding('props.children', options)}}`;
     }
@@ -204,7 +207,7 @@ export const blockToReact = (
     const value = (json.properties[key] || '').replace(/"/g, '&quot;').replace(/\n/g, '\\n');
 
     if (key === 'class') {
-      str += ` className="${value}" `;
+      str = `${str.trim()} className="${value}" `;
     } else if (BINDING_MAPPERS[key]) {
       const mapper = BINDING_MAPPERS[key];
       if (typeof mapper === 'function') {
@@ -280,7 +283,7 @@ export const blockToReact = (
       str += ` ${key}={${value}} `;
     });
   }
-  str += '>';
+  str = str.trim() + '>';
 
   if (json.children) {
     str += childrenNodes;
