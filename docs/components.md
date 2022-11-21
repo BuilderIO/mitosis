@@ -247,6 +247,29 @@ export default function Layout(props) {
 }
 ```
 
+or use the Slot component provided by component
+
+```jsx
+import { Slot } from '@builder.io/mitosis';
+
+export default function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">
+        <Slot name="top" />
+      </div>
+      <div className="left">
+        <Slot name="left" />
+      </div>
+      <div className="center">
+        <Slot name="center" />
+      </div>
+      <Slot />
+    </div>
+  );
+}
+```
+
 For vue component `slot` prop will be compiled into named slot
 
 ```html
@@ -318,3 +341,26 @@ export default function Layout(props) {
 ```
 
 </details>
+
+## Default Slot content
+
+```jsx
+import { Slot } from '@builder.io/mitosis';
+
+export default function Layout(props) {
+  return (
+    <div className="layout">
+      <div className="top">
+        <Slot name="top">Top default</Slot>
+      </div>
+      <div className="left">
+        <Slot name="left" />
+      </div>
+      <div className="center">
+        <Slot name="center" />
+      </div>
+      <Slot>Default child</Slot>
+    </div>
+  );
+}
+```
