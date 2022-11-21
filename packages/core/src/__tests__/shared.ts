@@ -80,8 +80,10 @@ const selfRefCompWChildren = getRawFile(
   './data/blocks/self-referencing-component-with-children.raw.tsx',
 );
 const selfRefComp = getRawFile('./data/blocks/self-referencing-component.raw.tsx');
+const slotDefault = getRawFile('./data/blocks/slot-default.raw.tsx');
 const slotHtml = getRawFile('./data/blocks/slot-html.raw.tsx');
 const slotJsx = getRawFile('./data/blocks/slot-jsx.raw.tsx');
+const slotNamed = getRawFile('./data/blocks/slot-named.raw.tsx');
 const stamped = getRawFile('./data/blocks/stamped-io.raw.tsx');
 const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw.tsx');
 const text = getRawFile('./data/blocks/text.raw.tsx');
@@ -189,8 +191,10 @@ const BASIC_TESTS: Tests = {
 const SLOTS_TESTS: Tests = {
   ContentSlotJSX: contentSlotJsx,
   ContentSlotHtml: contentSlotHtml,
+  SlotDefault: slotDefault,
   SlotJsx: slotJsx,
   SlotHtml: slotHtml,
+  SlotNamed: slotNamed,
   classState,
 };
 
