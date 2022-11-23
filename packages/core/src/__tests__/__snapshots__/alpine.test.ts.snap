@@ -1909,6 +1909,30 @@ exports[`Alpine.js > jsx > Javascript Test > propsType 1`] = `
 "
 `;
 
+exports[`Alpine.js > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
+  });
+</script>
+"
+`;
+
 exports[`Alpine.js > jsx > Javascript Test > renderContentExample 1`] = `
 "unknown: Unexpected token (2:51)
 
@@ -4035,6 +4059,30 @@ exports[`Alpine.js > jsx > Typescript Test > propsType 1`] = `
 <script>
   document.addEventListener(\\"alpine:init\\", () => {
     Alpine.data(\\"myBasicComponent\\", () => ({}));
+  });
+</script>
+"
+`;
+
+exports[`Alpine.js > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<div x-data=\\"onUpdate()\\" x-effect=\\"onUpdate\\"></div>
+<script>
+  document.addEventListener(\\"alpine:init\\", () => {
+    Alpine.data(\\"onUpdate\\", () => ({
+      foo: function foo(params) {},
+      bar: function bar() {},
+      zoo: function zoo() {
+        const params = {
+          cb: this.bar,
+        };
+      },
+
+      onUpdate() {
+        foo({
+          someOption: bar,
+        });
+      },
+    }));
   });
 </script>
 "

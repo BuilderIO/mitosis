@@ -2080,6 +2080,33 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`React Native > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <View />;
+}
+"
+`;
+
 exports[`React Native > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import { View, StyleSheet, Image, Text } from \\"react-native\\";
@@ -4783,6 +4810,33 @@ export default function MyBasicComponent(props: Person) {
       <Text>{props.name}</Text>
     </View>
   );
+}
+"
+`;
+
+exports[`React Native > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+import { View, StyleSheet, Image, Text } from \\"react-native\\";
+import { useEffect } from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <View />;
 }
 "
 `;

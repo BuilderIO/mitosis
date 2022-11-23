@@ -1930,6 +1930,27 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`RSC > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+
+export default function OnUpdate(props) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: state.bar,
+      };
+    },
+  };
+
+  return <div />;
+}
+"
+`;
+
 exports[`RSC > jsx > Javascript Test > renderContentExample 1`] = `
 "import * as React from \\"react\\";
 import {
@@ -4490,6 +4511,27 @@ export default function MyBasicComponent(props: Person) {
       {props.name}
     </div>
   );
+}
+"
+`;
+
+exports[`RSC > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import * as React from \\"react\\";
+
+export default function OnUpdate(props: any) {
+  const _context = { ...props[\\"_context\\"] };
+
+  const state = {
+    foo: function foo(params) {},
+    bar: function bar() {},
+    zoo: function zoo() {
+      const params = {
+        cb: state.bar,
+      };
+    },
+  };
+
+  return <div />;
 }
 "
 `;

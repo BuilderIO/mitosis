@@ -87,7 +87,9 @@ const submitButtonBlock = getRawFile('./data/blocks/submit-button.raw.tsx');
 const text = getRawFile('./data/blocks/text.raw.tsx');
 const textarea = getRawFile('./data/blocks/textarea.raw.tsx');
 const video = getRawFile('./data/blocks/video.raw.tsx');
-
+const referencingFunInsideHook = getRawFile(
+  './data/blocks/referencing-function-inside-hook.raw.tsx',
+);
 const multipleSpreads = getRawFile('./data/spread/multiple-spreads.raw.tsx');
 const spreadAttrs = getRawFile('./data/spread/spread-attrs.raw.tsx');
 const spreadNestedProps = getRawFile('./data/spread/spread-nested-props.raw.tsx');
@@ -184,6 +186,7 @@ const BASIC_TESTS: Tests = {
   arrowFunctionInUseStore,
   expressionState,
   contentState,
+  referencingFunInsideHook,
 };
 
 const SLOTS_TESTS: Tests = {

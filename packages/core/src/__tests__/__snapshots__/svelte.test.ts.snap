@@ -1799,6 +1799,30 @@ exports[`Svelte > jsx > Javascript Test > propsType 1`] = `
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
 `;
 
+exports[`Svelte > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"<script>
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
+`;
+
 exports[`Svelte > jsx > Javascript Test > renderContentExample 1`] = `
 "<script>
   import { onMount, setContext } from \\"svelte\\";
@@ -4219,6 +4243,30 @@ exports[`Svelte > jsx > Typescript Test > propsType 1`] = `
 </script>
 
 <div>Hello! I can run in React, Vue, Solid, or Liquid! {name}</div>"
+`;
+
+exports[`Svelte > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"<script lang=\\"ts\\">
+  import { afterUpdate } from \\"svelte\\";
+
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  afterUpdate(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+</script>
+
+<div />"
 `;
 
 exports[`Svelte > jsx > Typescript Test > renderContentExample 1`] = `

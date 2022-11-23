@@ -2363,6 +2363,34 @@ export default class MyBasicComponent {
 "
 `;
 
+exports[`Stencil > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update\\",
+})
+export default class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  componentDidUpdate() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return <div></div>;
+  }
+}
+"
+`;
+
 exports[`Stencil > jsx > Javascript Test > renderContentExample 1`] = `
 "import {
   sendComponentsToVisualEditor,
@@ -5028,6 +5056,34 @@ export default class MyBasicComponent {
         {this.name}
       </div>
     );
+  }
+}
+"
+`;
+
+exports[`Stencil > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
+
+@Component({
+  tag: \\"on-update\\",
+})
+export default class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  componentDidUpdate() {
+    foo({
+      someOption: bar,
+    });
+  }
+
+  render() {
+    return <div></div>;
   }
 }
 "

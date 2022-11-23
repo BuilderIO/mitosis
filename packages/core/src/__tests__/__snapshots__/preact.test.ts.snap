@@ -2164,6 +2164,33 @@ export default function MyBasicComponent(props) {
 "
 `;
 
+exports[`Preact > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdate(props) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
+}
+"
+`;
+
 exports[`Preact > jsx > Javascript Test > renderContentExample 1`] = `
 "/** @jsx h */
 import { h, Fragment } from \\"preact\\";
@@ -4958,6 +4985,33 @@ export default function MyBasicComponent(props: Person) {
       {props.name}
     </div>
   );
+}
+"
+`;
+
+exports[`Preact > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"/** @jsx h */
+import { h, Fragment } from \\"preact\\";
+import { useEffect } from \\"preact/hooks\\";
+
+export default function OnUpdate(props: any) {
+  function foo(params) {}
+
+  function bar() {}
+
+  function zoo() {
+    const params = {
+      cb: bar,
+    };
+  }
+
+  useEffect(() => {
+    foo({
+      someOption: bar,
+    });
+  });
+
+  return <div />;
 }
 "
 `;

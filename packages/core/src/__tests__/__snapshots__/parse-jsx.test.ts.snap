@@ -9413,6 +9413,64 @@ exports[`Parse JSX > propsType 1`] = `
 }
 `;
 
+exports[`Parse JSX > referencingFunInsideHook 1`] = `
+{
+  "@type": "@builder.io/mitosis/component",
+  "children": [
+    {
+      "@type": "@builder.io/mitosis/node",
+      "bindings": {},
+      "children": [],
+      "meta": {},
+      "name": "div",
+      "properties": {},
+      "scope": {},
+    },
+  ],
+  "context": {
+    "get": {},
+    "set": {},
+  },
+  "exports": {},
+  "hooks": {
+    "onUpdate": [
+      {
+        "code": "
+  foo({
+    someOption: bar
+  });
+",
+        "deps": "",
+      },
+    ],
+  },
+  "imports": [],
+  "inputs": [],
+  "meta": {},
+  "name": "OnUpdate",
+  "refs": {},
+  "state": {
+    "bar": {
+      "code": "function bar() {}",
+      "type": "function",
+    },
+    "foo": {
+      "code": "function foo(params) {}",
+      "type": "function",
+    },
+    "zoo": {
+      "code": "function zoo() {
+  const params = {
+    cb: state.bar
+  };
+}",
+      "type": "function",
+    },
+  },
+  "subComponents": [],
+}
+`;
+
 exports[`Parse JSX > renderContentExample 1`] = `
 {
   "@type": "@builder.io/mitosis/component",

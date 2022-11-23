@@ -3397,6 +3397,44 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular with Import Mapper Tests > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+  bootstrap: [SomeOtherComponent],
+})
+export class OnUpdateModule {}
+"
+`;
+
 exports[`Angular with Import Mapper Tests > jsx > Javascript Test > renderContentExample 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -7303,6 +7341,44 @@ export class MyBasicComponent {
   bootstrap: [SomeOtherComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular with Import Mapper Tests > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+  bootstrap: [SomeOtherComponent],
+})
+export class OnUpdateModule {}
 "
 `;
 

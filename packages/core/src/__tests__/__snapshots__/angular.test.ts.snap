@@ -6860,6 +6860,83 @@ export class MyBasicComponentModule {}
 "
 `;
 
+exports[`Angular > jsx > Javascript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+})
+export class OnUpdateModule {}
+"
+`;
+
+exports[`Angular > jsx > Javascript Test > referencingFunInsideHook 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+})
+export class OnUpdateModule {}
+"
+`;
+
 exports[`Angular > jsx > Javascript Test > renderContentExample 1`] = `
 "import { NgModule } from \\"@angular/core\\";
 import { BrowserModule } from \\"@angular/platform-browser\\";
@@ -14752,6 +14829,83 @@ export class MyBasicComponent {
   exports: [MyBasicComponent],
 })
 export class MyBasicComponentModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > referencingFunInsideHook 1`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+})
+export class OnUpdateModule {}
+"
+`;
+
+exports[`Angular > jsx > Typescript Test > referencingFunInsideHook 2`] = `
+"import { NgModule } from \\"@angular/core\\";
+import { BrowserModule } from \\"@angular/platform-browser\\";
+
+import { Component } from \\"@angular/core\\";
+import { CommonModule } from \\"@angular/common\\";
+
+@Component({
+  selector: \\"on-update, OnUpdate\\",
+  template: \`
+    <div></div>
+  \`,
+  standalone: true,
+  imports: [CommonModule],
+})
+export class OnUpdate {
+  foo = function foo(params) {};
+  bar = function bar() {};
+  zoo = function zoo() {
+    const params = {
+      cb: this.bar,
+    };
+  };
+
+  ngAfterContentChecked() {
+    this.foo({
+      someOption: this.bar,
+    });
+  }
+}
+
+@NgModule({
+  declarations: [OnUpdate],
+  imports: [BrowserModule],
+  exports: [OnUpdate],
+})
+export class OnUpdateModule {}
 "
 `;
 
