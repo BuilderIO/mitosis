@@ -4,7 +4,7 @@ function App() {
   const getValues = async () => {
     return ['Hello', 'Modern', 'Frontends', 'Live!'];
   };
-  const getComponentForPath = (path: string) => {
+  const getComponentForPath = (path) => {
     switch (path) {
       case '/todo':
         return <Todos />;
