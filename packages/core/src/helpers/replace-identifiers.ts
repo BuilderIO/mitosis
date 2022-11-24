@@ -1,44 +1,47 @@
 import { types } from '@babel/core';
 import { babelTransformExpression } from './babel-transform';
 
-const checkShouldReplaceIdentifier = (path: babel.NodePath<babel.types.Identifier>) => {
-  // Identifier should not be an (optional) property access - like `foo` in `this.foo` or `this?.foo`
-  const isPropertyAccess =
-    (types.isMemberExpression(path.parent) || types.isOptionalMemberExpression(path.parent)) &&
-    path.parent.property === path.node;
-
-  if (isPropertyAccess) {
-    return false;
-  }
-
-  // Identifier should not be a function name - like `foo` in `function foo() {}`
-  const isFunctionName = types.isFunctionDeclaration(path.parent) && path.parent.id === path.node;
-
-  if (isFunctionName) {
-    return false;
-  }
-
-  return true;
-};
-
-export const replaceIdentifiers = ({
-  code,
-  from,
-  to,
-}: {
+type ReplaceArgs = {
   code: string;
   from: string | string[];
-  to: string | ((identifier: string) => string);
-}) => {
-  return babelTransformExpression(code, {
-    Identifier(path: babel.NodePath<babel.types.Identifier>) {
-      const matchesFrom = Array.isArray(from)
-        ? from.includes(path.node.name)
-        : path.node.name === from;
+  to?: string | ((identifier: string) => string);
+};
 
-      if (checkShouldReplaceIdentifier(path) && matchesFrom) {
-        path.replaceWith(types.identifier(typeof to === 'string' ? to : to(path.node.name)));
-      }
+const _replaceIdentifiers = (
+  path: babel.NodePath<types.MemberExpression | types.OptionalMemberExpression>,
+  { from, to }: Pick<ReplaceArgs, 'from' | 'to'>,
+) => {
+  const memberExpressionObject = path.node.object;
+
+  if (!types.isIdentifier(memberExpressionObject)) {
+    return;
+  }
+
+  const normalizedFrom = Array.isArray(from) ? from : [from];
+
+  const objName = memberExpressionObject.name;
+  const matchesFrom = normalizedFrom.includes(objName);
+
+  if (matchesFrom) {
+    if (!to) {
+      path.replaceWith(path.node.property);
+    } else {
+      path.replaceWith(
+        types.memberExpression(
+          types.identifier(typeof to === 'string' ? to : to(memberExpressionObject.name)),
+          path.node.property,
+        ),
+      );
+    }
+  }
+};
+
+export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) =>
+  babelTransformExpression(code, {
+    MemberExpression(path) {
+      _replaceIdentifiers(path, { from, to });
+    },
+    OptionalMemberExpression(path) {
+      _replaceIdentifiers(path, { from, to });
     },
   });
-};

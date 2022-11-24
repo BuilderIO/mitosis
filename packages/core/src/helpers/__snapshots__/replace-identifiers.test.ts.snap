@@ -1,3 +1,28 @@
 // Vitest Snapshot v1
 
-exports[`replaceIdentifiers > Check #0 1`] = `"$slots.slotName"`;
+exports[`replaceIdentifiers > Check #0 1`] = `
+"function updateThing() {
+  state.thing1 = $SPECIAL.thing2 + 123;
+  state?.fn($SPECIAL.abc.foo);
+  const x = someRandomObj.state.foo;
+  const y = someRandomObj.props.state.foo;
+}"
+`;
+
+exports[`replaceIdentifiers > Check #1 1`] = `
+"function updateThing() {
+  thing1 = thing2 + 123;
+  fn(abc.foo);
+  const x = someRandomObj.state.foo;
+  const y = someRandomObj.props.state.foo;
+}"
+`;
+
+exports[`replaceIdentifiers > Check #2 1`] = `
+"function updateThing() {
+  this.thing1 = this.thing2 + 123;
+  this.fn(this.abc.foo);
+  const x = someRandomObj.state.foo;
+  const y = someRandomObj.props.state.foo;
+}"
+`;
