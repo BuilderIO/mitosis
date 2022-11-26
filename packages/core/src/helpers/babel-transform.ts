@@ -28,20 +28,25 @@ const handleErrorOrExpression = <VisitorContextType = any>({
     if (isMethod) {
       useCode = `function ${useCode}`;
     }
-    // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
-    // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
-    // that is an object
-    useCode = `let _ = ${useCode}`;
-    result = pipe(babelTransformCode(useCode, visitor), trimSemicolons, (str) =>
+
+    result = pipe(
+      // Parse the code as an expression (instead of the default, a block) by giving it a fake variable assignment
+      // e.g. if the code parsed is { ... } babel will treat that as a block by deafult, unless processed as an expression
+      // that is an object
+      `let _ = ${useCode}`,
+      (code) => babelTransformCode(code, visitor),
+      trimSemicolons,
       // Remove our fake variable assignment
-      str.replace(/let _ =\s/, ''),
+      (str) => str.replace(/let _ =\s/, ''),
     );
+
     if (isMethod) {
       return result.replace('function', '');
     }
+
     return result;
   } catch (err) {
-    console.error('Error parsing code:\n', code, '\n', result);
+    console.error('Error parsing code:\n', { code, result, useCode });
     throw err;
   }
 };
@@ -106,6 +111,8 @@ export const babelTransformExpression = <VisitorContextType = any>(
   if (!code) {
     return '';
   }
+
+  code = code.trim();
 
   const type = getType(code, initialType);
 
