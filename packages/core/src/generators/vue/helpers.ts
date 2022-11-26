@@ -124,36 +124,41 @@ export const processBinding = ({
   json: MitosisComponent;
   preserveGetter?: boolean;
 }): string => {
-  return pipe(
-    stripStateAndPropsRefs(code, {
-      includeState: true,
-      // we don't want to process `props` in the Composition API because it has a `props` ref,
-      // therefore we can keep pointing to `props.${value}`
-      includeProps: options.api === 'options',
-      replaceWith: (name) => {
-        switch (options.api) {
-          case 'composition':
-            return name;
-          case 'options':
-            if (name === 'children' || name.startsWith('children.')) {
-              return 'this.$slots.default';
-            }
-            return `this.${name}`;
-        }
-      },
-    }),
-    (x) => {
-      const wasGetter = x.match(GETTER);
+  try {
+    return pipe(
+      stripStateAndPropsRefs(code, {
+        includeState: true,
+        // we don't want to process `props` in the Composition API because it has a `props` ref,
+        // therefore we can keep pointing to `props.${value}`
+        includeProps: options.api === 'options',
+        replaceWith: (name) => {
+          switch (options.api) {
+            case 'composition':
+              return name;
+            case 'options':
+              if (name === 'children' || name.startsWith('children.')) {
+                return 'this.$slots.default';
+              }
+              return `this.${name}`;
+          }
+        },
+      }),
+      (x) => {
+        const wasGetter = x.match(GETTER);
 
-      return pipe(
-        x,
-        // workaround so that getter code is valid and parseable by babel.
-        stripGetter,
-        (code) => processRefs(code, json, options),
-        (code) => (preserveGetter && wasGetter ? `get ${code}` : code),
-      );
-    },
-  );
+        return pipe(
+          x,
+          // workaround so that getter code is valid and parseable by babel.
+          stripGetter,
+          (code) => processRefs(code, json, options),
+          (code) => (preserveGetter && wasGetter ? `get ${code}` : code),
+        );
+      },
+    );
+  } catch (e) {
+    console.log('could not process bindings in ', { code });
+    throw e;
+  }
 };
 
 export const getContextValue =
