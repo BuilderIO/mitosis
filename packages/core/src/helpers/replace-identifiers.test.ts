@@ -21,13 +21,18 @@ const TEST_SPECS: Spec[] = [
   },
   {
     from: ['props', 'state'],
-    to: undefined,
+    to: null,
     code: CODE_BLOCK,
   },
   {
     from: ['props', 'state'],
     to: 'this',
     code: CODE_BLOCK,
+  },
+  {
+    code: '!state.useLazyLoading() || load',
+    from: ['scrollListener', 'imageLoaded', 'setLoaded', 'useLazyLoading', 'isBrowser', 'load'],
+    to: (name) => `state.${name}`,
   },
 ];
 

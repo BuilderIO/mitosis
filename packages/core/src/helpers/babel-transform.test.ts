@@ -1,7 +1,7 @@
 import { babelTransformCode } from './babel-transform';
 
-test('babelTransform', () => {
-  const code = `
+const SPECS = [
+  `
 const symbol = symbol;
 
 if (symbol) {
@@ -11,7 +11,14 @@ if (symbol) {
     content = response;
   });
 }
-`;
+`,
+];
 
-  expect(babelTransformCode(code)).toMatchSnapshot();
+describe('babelTransform', () => {
+  SPECS.forEach((args, index) => {
+    test(`Check #${index}`, () => {
+      const output = babelTransformCode(args);
+      expect(output).toMatchSnapshot();
+    });
+  });
 });
