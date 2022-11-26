@@ -7,34 +7,43 @@ import { capitalize } from '../../helpers/capitalize';
 import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCode, uncapitalize } from './helpers';
+import { pipe } from 'fp-ts/lib/function';
 
 const { types } = babel;
 
 function mapStateIdentifiersInExpression(expression: string, stateProperties: string[]) {
   const setExpressions = stateProperties.map((propertyName) => `set${capitalize(propertyName)}`);
 
-  return babelTransformExpression(
-    // foo -> state.foo
-    replaceIdentifiers({ code: expression, from: stateProperties, to: (name) => `state.${name}` }),
-    {
-      CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
-        if (types.isIdentifier(path.node.callee)) {
-          if (setExpressions.includes(path.node.callee.name)) {
-            // setFoo -> foo
-            const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
+  return pipe(
+    replaceIdentifiers({
+      code: expression,
+      from: stateProperties,
+      to: (name) => `state.${name}`,
+    }),
+    (code) =>
+      babelTransformExpression(
+        // foo -> state.foo
+        code,
+        {
+          CallExpression(path: babel.NodePath<babel.types.CallExpression>) {
+            if (types.isIdentifier(path.node.callee)) {
+              if (setExpressions.includes(path.node.callee.name)) {
+                // setFoo -> foo
+                const statePropertyName = uncapitalize(path.node.callee.name.slice(3));
 
-            // setFoo(...) -> state.foo = ...
-            path.replaceWith(
-              types.assignmentExpression(
-                '=',
-                types.identifier(`state.${statePropertyName}`),
-                path.node.arguments[0] as any,
-              ),
-            );
-          }
-        }
-      },
-    },
+                // setFoo(...) -> state.foo = ...
+                path.replaceWith(
+                  types.assignmentExpression(
+                    '=',
+                    types.identifier(`state.${statePropertyName}`),
+                    path.node.arguments[0] as any,
+                  ),
+                );
+              }
+            }
+          },
+        },
+      ),
   );
 }
 
