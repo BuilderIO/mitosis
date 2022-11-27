@@ -34,6 +34,11 @@ const TEST_SPECS: Spec[] = [
     from: ['scrollListener', 'imageLoaded', 'setLoaded', 'useLazyLoading', 'isBrowser', 'load'],
     to: (name) => `state.${name}`,
   },
+  {
+    code: `state.name = 'PatrickJS onInit' + props.hi;`,
+    from: ['props'],
+    to: (name) => `this.${name}`,
+  },
 ];
 
 describe('replaceIdentifiers', () => {

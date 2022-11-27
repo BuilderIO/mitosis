@@ -176,15 +176,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${
-           myService.method(\\"hello\\") + this.name
-         } Hello! I can run in React, Vue,
-         Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-       </div>
+        
+        <div>
+        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
+        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -217,10 +215,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -249,10 +247,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -281,10 +279,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -411,19 +409,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${this.names?.map(
-           (person, index) => html\`<my-fragment>
-           <input .value=\${this.name} @input=\${(event) => {
-             this.name = event.target.value + \\" and \\" + person;
-           }} /> Hello \${person} ! I can run in
-           Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
-         >\`
-         )}
-       </div>
+      
+      <div>
+      \${this.names?.map(
+        (person, index) => html\`<my-fragment>
+        <input .value=\${this.name} @input=\${(event) => {
+          this.name = event.target.value + \\" and \\" + person;
+        }} /> Hello \${person} ! I can run in
+        Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
+      >\`
+      )}
+    </div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -683,11 +681,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -696,35 +694,35 @@ export default class Column extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: column;
- align-items: stretch;
- line-height: normal;
+        <style>.div {
+display: flex;
+flex-direction: column;
+align-items: stretch;
+line-height: normal;
 }
 @media (max-width: 999px) {
- .div {
-   flex-direction: row;
- }
+.div {
+  flex-direction: row;
+}
 }
 @media (max-width: 639px) {
- .div {
-   flex-direction: row-reverse;
- }
+.div {
+  flex-direction: row-reverse;
+}
 }
 .div-2 {
- flex-grow: 1;
+flex-grow: 1;
 }
 </style>
-         <div>
-         \${this.columns?.map(
-           (column, index) => html\`
-         <div>\${column.content} \${index}</div>
-         \`
-         )}
-       </div>
+        <div>
+        \${this.columns?.map(
+          (column, index) => html\`
+        <div>\${column.content} \${index}</div>
+        \`
+        )}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -882,9 +880,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -962,9 +960,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -1047,11 +1045,7 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -1065,19 +1059,16 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -1103,7 +1094,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -1170,7 +1161,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -1195,7 +1186,7 @@ export default class FormComponent extends LitElement {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
+           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -1270,60 +1261,60 @@ export default class FormComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.pre {
- padding: 10px;
- color: red;
- text-align: center;
+        <style>.pre {
+padding: 10px;
+color: red;
+text-align: center;
 }
 </style>
-         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+        <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
       !this.sendWithJs && this.action
     }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
       this.onSubmit(event)}  \${spread(props.attributes)} >
-             
-       \${
-         this.builderBlock && this.builderBlock.children
-           ? html\`\${this.builderBlock?.children?.map(
-               (block, index) =>
-                 html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
-             )}\`
-           : null
-       }
+            
+      \${
+        this.builderBlock && this.builderBlock.children
+          ? html\`\${this.builderBlock?.children?.map(
+              (block, index) =>
+                html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
+            )}\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"error\\"
+          ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"sending\\"
+          ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"error\\" && this.responseData
-           ? html\`<pre >
-                 
-       \${JSON.stringify(this.responseData, null, 2)}
+            
+      \${
+        this.submissionState === \\"error\\" && this.responseData
+          ? html\`<pre >
+                
+      \${JSON.stringify(this.responseData, null, 2)}
 
-               </pre>\`
-           : null
-       }
+              </pre>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"success\\"
+          ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
+          : null
+      }
 
-           </form>
-       \`;
+          </form>
+      \`;
   }
 }
 "
@@ -1900,75 +1891,75 @@ export default class SmileReviews extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- display: block;
+        <style>.input {
+display: block;
 }
 .textarea {
- display: block;
+display: block;
 }
 .button {
- display: block;
+display: block;
 }
 .review {
- margin: 10px;
- padding: 10px;
- background: white;
- display: flex;
- border-radius: 5px;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+margin: 10px;
+padding: 10px;
+background: white;
+display: flex;
+border-radius: 5px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .img {
- height: 30px;
- width: 30px;
- margin-right: 10px;
+height: 30px;
+width: 30px;
+margin-right: 10px;
 }
 </style>
-         <div  data-user=\${this.name} >
-             
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+        <div  data-user=\${this.name} >
+            
+      <button  @click=\${(event) =>
+        (this.showReviewPrompt = true)} >Write a review</button>
 
-             
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
-       <input  placeholder=\\"Title\\"  />
-       <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
-         event.preventDefault();
-         this.showReviewPrompt = false;
-       }} >
-                 Submit
-               </button>\`
-           : null
-       }
+            
+      \${
+        this.showReviewPrompt || \\"asdf\\"
+          ? html\`<input  placeholder=\\"Email\\"  />
+      <input  placeholder=\\"Title\\"  />
+      <textarea  placeholder=\\"How was your experience?\\" ></textarea>
+      <button  @click=\${(event) => {
+        event.preventDefault();
+        this.showReviewPrompt = false;
+      }} >
+                Submit
+              </button>\`
+          : null
+      }
 
-             
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
-                   
-       <img  .src=\${review.avatar}  />
+            
+      \${this.reviews?.map(
+        (review, index) =>
+          html\`<div  .key=\${review.id} >
+                  
+      <img  .src=\${review.avatar}  />
 
-                   
-       <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-                     
-       <div >N: 
-       \${index}</div>
+                  
+      <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
+                    
+      <div >N: 
+      \${index}</div>
 
-                     
-       <div >\${review.author}</div>
+                    
+      <div >\${review.author}</div>
 
-                     
-       <div >\${review.reviewMessage}</div>
+                    
+      <div >\${review.reviewMessage}</div>
 
-                   </div>
+                  </div>
 
-                 </div>\`
-       )}
+                </div>\`
+      )}
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -2197,10 +2188,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -2772,10 +2763,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -2949,10 +2940,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -3010,10 +3001,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -3035,10 +3026,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -3280,17 +3271,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
+        <style>.div {
+display: flex;
+flex-direction: columns;
 }
 </style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+        <div  @click=\${(event) => trackClick(this.content.id)} >
+            
+      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -3926,15 +3917,13 @@ export default class MyBasicComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${
-           myService.method(\\"hello\\") + this.name
-         } Hello! I can run in React, Vue,
-         Solid, or Liquid! <input @input=\${(event) => this.onChange} />
-       </div>
+        
+        <div>
+        \${myService.method(\\"hello\\") + this.name} Hello! I can run in React, Vue,
+        Solid, or Liquid! <input @input=\${(event) => this.onChange} />
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -3967,10 +3956,10 @@ export default class MyBasicOnMountUpdateComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -3999,10 +3988,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4031,10 +4020,10 @@ export default class MyBasicOutputsComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4161,19 +4150,19 @@ export default class MyBasicForComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         \${this.names?.map(
-           (person, index) => html\`<my-fragment>
-           <input .value=\${this.name} @input=\${(event) => {
-             this.name = event.target.value + \\" and \\" + person;
-           }} /> Hello \${person} ! I can run in
-           Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
-         >\`
-         )}
-       </div>
+      
+      <div>
+      \${this.names?.map(
+        (person, index) => html\`<my-fragment>
+        <input .value=\${this.name} @input=\${(event) => {
+          this.name = event.target.value + \\" and \\" + person;
+        }} /> Hello \${person} ! I can run in
+        Qwik, Web Component, React, Vue, Solid, or Liquid! </my-fragment
+      >\`
+      )}
+    </div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -4433,11 +4422,11 @@ export default class Column extends LitElement {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -4446,35 +4435,35 @@ export default class Column extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: column;
- align-items: stretch;
- line-height: normal;
+        <style>.div {
+display: flex;
+flex-direction: column;
+align-items: stretch;
+line-height: normal;
 }
 @media (max-width: 999px) {
- .div {
-   flex-direction: row;
- }
+.div {
+  flex-direction: row;
+}
 }
 @media (max-width: 639px) {
- .div {
-   flex-direction: row-reverse;
- }
+.div {
+  flex-direction: row-reverse;
+}
 }
 .div-2 {
- flex-grow: 1;
+flex-grow: 1;
 }
 </style>
-         <div>
-         \${this.columns?.map(
-           (column, index) => html\`
-         <div>\${column.content} \${index}</div>
-         \`
-         )}
-       </div>
+        <div>
+        \${this.columns?.map(
+          (column, index) => html\`
+        <div>\${column.content} \${index}</div>
+        \`
+        )}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -4632,9 +4621,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -4712,9 +4701,9 @@ export default class CustomCode extends LitElement {
 
   render() {
     return html\`
-         
-         <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
-       \`;
+        
+        <div  class={'builder-custom-code' + (props.replaceNodes ? ' replace-nodes' : '')}  ref=\\"elem\\"  .innerHTML=\${this.code} ></div>
+      \`;
   }
 }
 "
@@ -4797,11 +4786,7 @@ export default class FormComponent extends LitElement {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -4815,19 +4800,16 @@ export default class FormComponent extends LitElement {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -4853,7 +4835,7 @@ export default class FormComponent extends LitElement {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -4920,7 +4902,7 @@ export default class FormComponent extends LitElement {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -4945,7 +4927,7 @@ export default class FormComponent extends LitElement {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
+           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -5020,60 +5002,60 @@ export default class FormComponent extends LitElement {
 
   render() {
     return html\`
-         <style>.pre {
- padding: 10px;
- color: red;
- text-align: center;
+        <style>.pre {
+padding: 10px;
+color: red;
+text-align: center;
 }
 </style>
-         <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
+        <form  .validate=\${this.validate}  ref=\\"formRef\\"  .action=\${
       !this.sendWithJs && this.action
     }  .method=\${this.method}  .name=\${this.name}  @submit=\${(event) =>
       this.onSubmit(event)}  \${spread(props.attributes)} >
-             
-       \${
-         this.builderBlock && this.builderBlock.children
-           ? html\`\${this.builderBlock?.children?.map(
-               (block, index) =>
-                 html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
-             )}\`
-           : null
-       }
+            
+      \${
+        this.builderBlock && this.builderBlock.children
+          ? html\`\${this.builderBlock?.children?.map(
+              (block, index) =>
+                html\`<builder-block-component  .key=\${block.id}  .block=\${block}  .index=\${index} ></builder-block-component>\`
+            )}\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"error\\"
-           ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"error\\"
+          ? html\`<builder-blocks  dataPath=\\"errorMessage\\"  .blocks=\${this.errorMessage} ></builder-blocks>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"sending\\"
-           ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"sending\\"
+          ? html\`<builder-blocks  dataPath=\\"sendingMessage\\"  .blocks=\${this.sendingMessage} ></builder-blocks>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"error\\" && this.responseData
-           ? html\`<pre >
-                 
-       \${JSON.stringify(this.responseData, null, 2)}
+            
+      \${
+        this.submissionState === \\"error\\" && this.responseData
+          ? html\`<pre >
+                
+      \${JSON.stringify(this.responseData, null, 2)}
 
-               </pre>\`
-           : null
-       }
+              </pre>\`
+          : null
+      }
 
-             
-       \${
-         this.submissionState === \\"success\\"
-           ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
-           : null
-       }
+            
+      \${
+        this.submissionState === \\"success\\"
+          ? html\`<builder-blocks  dataPath=\\"successMessage\\"  .blocks=\${this.successMessage} ></builder-blocks>\`
+          : null
+      }
 
-           </form>
-       \`;
+          </form>
+      \`;
   }
 }
 "
@@ -5650,75 +5632,75 @@ export default class SmileReviews extends LitElement {
 
   render() {
     return html\`
-         <style>.input {
- display: block;
+        <style>.input {
+display: block;
 }
 .textarea {
- display: block;
+display: block;
 }
 .button {
- display: block;
+display: block;
 }
 .review {
- margin: 10px;
- padding: 10px;
- background: white;
- display: flex;
- border-radius: 5px;
- box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+margin: 10px;
+padding: 10px;
+background: white;
+display: flex;
+border-radius: 5px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 .img {
- height: 30px;
- width: 30px;
- margin-right: 10px;
+height: 30px;
+width: 30px;
+margin-right: 10px;
 }
 </style>
-         <div  data-user=\${this.name} >
-             
-       <button  @click=\${(event) =>
-         (this.showReviewPrompt = true)} >Write a review</button>
+        <div  data-user=\${this.name} >
+            
+      <button  @click=\${(event) =>
+        (this.showReviewPrompt = true)} >Write a review</button>
 
-             
-       \${
-         this.showReviewPrompt || \\"asdf\\"
-           ? html\`<input  placeholder=\\"Email\\"  />
-       <input  placeholder=\\"Title\\"  />
-       <textarea  placeholder=\\"How was your experience?\\" ></textarea>
-       <button  @click=\${(event) => {
-         event.preventDefault();
-         this.showReviewPrompt = false;
-       }} >
-                 Submit
-               </button>\`
-           : null
-       }
+            
+      \${
+        this.showReviewPrompt || \\"asdf\\"
+          ? html\`<input  placeholder=\\"Email\\"  />
+      <input  placeholder=\\"Title\\"  />
+      <textarea  placeholder=\\"How was your experience?\\" ></textarea>
+      <button  @click=\${(event) => {
+        event.preventDefault();
+        this.showReviewPrompt = false;
+      }} >
+                Submit
+              </button>\`
+          : null
+      }
 
-             
-       \${this.reviews?.map(
-         (review, index) =>
-           html\`<div  .key=\${review.id} >
-                   
-       <img  .src=\${review.avatar}  />
+            
+      \${this.reviews?.map(
+        (review, index) =>
+          html\`<div  .key=\${review.id} >
+                  
+      <img  .src=\${review.avatar}  />
 
-                   
-       <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
-                     
-       <div >N: 
-       \${index}</div>
+                  
+      <div  class={state.showReviewPrompt ? 'bg-primary' : 'bg-secondary'} >
+                    
+      <div >N: 
+      \${index}</div>
 
-                     
-       <div >\${review.author}</div>
+                    
+      <div >\${review.author}</div>
 
-                     
-       <div >\${review.reviewMessage}</div>
+                    
+      <div >\${review.reviewMessage}</div>
 
-                   </div>
+                  </div>
 
-                 </div>\`
-       )}
+                </div>\`
+      )}
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -5947,10 +5929,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>Hello \${this.name}</div>
+        
+        <div>Hello \${this.name}</div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -6522,10 +6504,10 @@ export default class MultipleOnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -6699,10 +6681,10 @@ export default class OnInit extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -6760,10 +6742,10 @@ export default class Comp extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -6785,10 +6767,10 @@ export default class OnUpdate extends LitElement {
 
   render() {
     return html\`
-        
-        <div></div>
+      
+      <div></div>
 
-      \`;
+    \`;
   }
 }
 "
@@ -7030,17 +7012,17 @@ export default class RenderContent extends LitElement {
 
   render() {
     return html\`
-         <style>.div {
- display: flex;
- flex-direction: columns;
+        <style>.div {
+display: flex;
+flex-direction: columns;
 }
 </style>
-         <div  @click=\${(event) => trackClick(this.content.id)} >
-             
-       <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
+        <div  @click=\${(event) => trackClick(this.content.id)} >
+            
+      <render-blocks  .blocks=\${this.content.blocks} ></render-blocks>
 
-           </div>
-       \`;
+          </div>
+      \`;
   }
 }
 "
@@ -7785,10 +7767,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -7812,14 +7794,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         <input .value=\\"\${this.name}\\" />
+        
+        <div>
+        <input .value=\\"\${this.name}\\" />
 
-         Lowercase: \${this.lowercaseName}
-       </div>
+        Lowercase: \${this.lowercaseName}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "
@@ -8191,10 +8173,10 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div></div>
+      
+      <div></div>
 
-       \`;
+    \`;
   }
 }
 "
@@ -8218,14 +8200,14 @@ export default class MyComponent extends LitElement {
 
   render() {
     return html\`
-         
-         <div>
-         <input .value=\\"\${this.name}\\" />
+        
+        <div>
+        <input .value=\\"\${this.name}\\" />
 
-         Lowercase: \${this.lowercaseName}
-       </div>
+        Lowercase: \${this.lowercaseName}
+      </div>
 
-       \`;
+      \`;
   }
 }
 "

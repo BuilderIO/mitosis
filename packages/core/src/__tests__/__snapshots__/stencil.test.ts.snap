@@ -501,25 +501,25 @@ exports[`Stencil > jsx > Javascript Test > Columns 1`] = `
 @Component({
   tag: \\"column\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: column;
-         align-items: stretch;
-         line-height: normal;
-       }
-       @media (max-width: 999px) {
-         .div {
-           flex-direction: row;
-         }
-       }
-       @media (max-width: 639px) {
-         .div {
-           flex-direction: row-reverse;
-         }
-       }
-       .div-2 {
-         flex-grow: 1;
-       }
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        line-height: normal;
+      }
+      @media (max-width: 999px) {
+        .div {
+          flex-direction: row;
+        }
+      }
+      @media (max-width: 639px) {
+        .div {
+          flex-direction: row-reverse;
+        }
+      }
+      .div-2 {
+        flex-grow: 1;
+      }
 \`,
 })
 export default class Column {
@@ -532,11 +532,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -779,11 +779,11 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"form-component\\",
   styles: \`
-       .pre {
-         padding: 10px;
-         color: red;
-         text-align: center;
-       }
+      .pre {
+        padding: 10px;
+        color: red;
+        text-align: center;
+      }
 \`,
 })
 export default class FormComponent {
@@ -813,11 +813,7 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -831,19 +827,16 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -869,7 +862,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -936,7 +929,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -961,7 +954,7 @@ export default class FormComponent {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
+           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -1440,28 +1433,28 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"smile-reviews\\",
   styles: \`
-       .input {
-         display: block;
-       }
-       .textarea {
-         display: block;
-       }
-       .button {
-         display: block;
-       }
-       .review {
-         margin: 10px;
-         padding: 10px;
-         background: white;
-         display: flex;
-         border-radius: 5px;
-         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-       }
-       .img {
-         height: 30px;
-         width: 30px;
-         margin-right: 10px;
-       }
+      .input {
+        display: block;
+      }
+      .textarea {
+        display: block;
+      }
+      .button {
+        display: block;
+      }
+      .review {
+        margin: 10px;
+        padding: 10px;
+        background: white;
+        display: flex;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .img {
+        height: 30px;
+        width: 30px;
+        margin-right: 10px;
+      }
 \`,
 })
 export default class SmileReviews {
@@ -2377,10 +2370,10 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"render-content\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
 \`,
 })
 export default class RenderContent {
@@ -3171,25 +3164,25 @@ exports[`Stencil > jsx > Typescript Test > Columns 1`] = `
 @Component({
   tag: \\"column\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: column;
-         align-items: stretch;
-         line-height: normal;
-       }
-       @media (max-width: 999px) {
-         .div {
-           flex-direction: row;
-         }
-       }
-       @media (max-width: 639px) {
-         .div {
-           flex-direction: row-reverse;
-         }
-       }
-       .div-2 {
-         flex-grow: 1;
-       }
+      .div {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        line-height: normal;
+      }
+      @media (max-width: 999px) {
+        .div {
+          flex-direction: row;
+        }
+      }
+      @media (max-width: 639px) {
+        .div {
+          flex-direction: row-reverse;
+        }
+      }
+      .div-2 {
+        flex-grow: 1;
+      }
 \`,
 })
 export default class Column {
@@ -3202,11 +3195,11 @@ export default class Column {
   getGutterSize() {
     return typeof this.space === \\"number\\" ? this.space || 0 : 20;
   }
-  getWidth(index: number) {
+  getWidth(index) {
     const columns = this.getColumns();
     return (columns[index] && columns[index].width) || 100 / columns.length;
   }
-  getColumnCssWidth(index: number) {
+  getColumnCssWidth(index) {
     const columns = this.getColumns();
     const gutterSize = this.getGutterSize();
     const subtractWidth = (gutterSize * (columns.length - 1)) / columns.length;
@@ -3449,11 +3442,11 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"form-component\\",
   styles: \`
-       .pre {
-         padding: 10px;
-         color: red;
-         text-align: center;
-       }
+      .pre {
+        padding: 10px;
+        color: red;
+        text-align: center;
+      }
 \`,
 })
 export default class FormComponent {
@@ -3483,11 +3476,7 @@ export default class FormComponent {
   get submissionState() {
     return (Builder.isEditing && this.previewState) || this.formState;
   }
-  onSubmit(
-    event: Event & {
-      currentTarget: HTMLFormElement;
-    }
-  ) {
+  onSubmit(event) {
     const sendWithJs = this.sendWithJs || this.sendSubmissionsTo === \\"email\\";
 
     if (this.sendSubmissionsTo === \\"zapier\\") {
@@ -3501,19 +3490,16 @@ export default class FormComponent {
       event.preventDefault();
       const el = event.currentTarget;
       const headers = this.customHeaders || {};
-      let body: any;
+      let body;
       const formData = new FormData(el); // TODO: maybe support null
 
-      const formPairs: {
-        key: string;
-        value: File | boolean | number | string | FileList;
-      }[] = Array.from(
+      const formPairs = Array.from(
         event.currentTarget.querySelectorAll(\\"input,select,textarea\\")
       )
-        .filter((el) => !!(el as HTMLInputElement).name)
+        .filter((el) => !!el.name)
         .map((el) => {
-          let value: any;
-          const key = (el as HTMLImageElement).name;
+          let value;
+          const key = el.name;
 
           if (el instanceof HTMLInputElement) {
             if (el.type === \\"radio\\") {
@@ -3539,7 +3525,7 @@ export default class FormComponent {
               value = el.value;
             }
           } else {
-            value = (el as HTMLInputElement).value;
+            value = el.value;
           }
 
           return {
@@ -3606,7 +3592,7 @@ export default class FormComponent {
         this.sendSubmissionsToEmail || \\"\\"
       )}&name=\${encodeURIComponent(this.name || \\"\\")}\`;
       fetch(
-        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action!,
+        this.sendSubmissionsTo === \\"email\\" ? formUrl : this.action,
         /* TODO: throw error if no action URL */
         {
           body,
@@ -3631,7 +3617,7 @@ export default class FormComponent {
             if (message) {
               if (typeof message !== \\"string\\") {
                 /* TODO: ideally convert json to yaml so it woul dbe like
-            error: - email has been taken */
+           error: - email has been taken */
                 message = JSON.stringify(message);
               }
 
@@ -4110,28 +4096,28 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"smile-reviews\\",
   styles: \`
-       .input {
-         display: block;
-       }
-       .textarea {
-         display: block;
-       }
-       .button {
-         display: block;
-       }
-       .review {
-         margin: 10px;
-         padding: 10px;
-         background: white;
-         display: flex;
-         border-radius: 5px;
-         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-       }
-       .img {
-         height: 30px;
-         width: 30px;
-         margin-right: 10px;
-       }
+      .input {
+        display: block;
+      }
+      .textarea {
+        display: block;
+      }
+      .button {
+        display: block;
+      }
+      .review {
+        margin: 10px;
+        padding: 10px;
+        background: white;
+        display: flex;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .img {
+        height: 30px;
+        width: 30px;
+        margin-right: 10px;
+      }
 \`,
 })
 export default class SmileReviews {
@@ -5047,10 +5033,10 @@ import { Component, Prop, h, State, Fragment } from \\"@stencil/core\\";
 @Component({
   tag: \\"render-content\\",
   styles: \`
-       .div {
-         display: flex;
-         flex-direction: columns;
-       }
+    .div {
+      display: flex;
+      flex-direction: columns;
+    }
 \`,
 })
 export default class RenderContent {
