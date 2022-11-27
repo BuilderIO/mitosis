@@ -9,21 +9,25 @@ type ReplaceArgs = {
   to: string | ((identifier: string) => string) | null;
 };
 
+/**
+ * Given a `to` function given by the user, figure out the best argument to provide to the `to` function.
+ * This function makes a best guess based on the AST structure it's dealing with.
+ */
 const getToParam = (
   path: babel.NodePath<types.Identifier | types.MemberExpression | types.OptionalMemberExpression>,
 ): string => {
   if (types.isMemberExpression(path.node) || types.isOptionalMemberExpression(path.node)) {
-    // `props.foo`, returns `foo`
+    // if simple member expression e.g. `props.foo`, returns `foo`
     if (types.isIdentifier(path.node.property)) {
       const newLocal = path.node.property.name;
       return newLocal;
     } else {
-      // `props.foo.bar.baz`, returns `foo.bar.baz`
+      // if nested member expression e.g. `props.foo.bar.baz`, returns `foo.bar.baz`
       const x = generate(path.node.property).code;
       return x;
     }
   } else {
-    // `load`, returns `load`
+    // if naked identifier e.g. `foo`, returns `foo`
     return path.node.name;
   }
 };
@@ -46,6 +50,8 @@ const _replaceIdentifiers = (
       // `props.foo` to `state`, e.g. `state.foo`
       if (typeof to === 'string') {
         const cleanedIdentifier = pipe(
+          // Remove trailing `.` if it exists in the user-provided string, as the dot is generated
+          // by babel from the AST
           to.endsWith('.') ? to.substring(0, to.length - 1) : to,
           types.identifier,
         );
