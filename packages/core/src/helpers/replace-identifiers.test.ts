@@ -39,6 +39,11 @@ const TEST_SPECS: Spec[] = [
     from: ['props'],
     to: (name) => `this.${name}`,
   },
+  {
+    code: 'state.lowerCaseName()',
+    from: 'state',
+    to: (name) => (name === 'children' ? '$$slots.default' : name),
+  },
 ];
 
 describe('replaceIdentifiers', () => {

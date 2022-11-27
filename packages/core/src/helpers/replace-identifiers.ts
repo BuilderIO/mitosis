@@ -15,10 +15,12 @@ const getToParam = (
   if (types.isMemberExpression(path.node) || types.isOptionalMemberExpression(path.node)) {
     // `props.foo`, returns `foo`
     if (types.isIdentifier(path.node.property)) {
-      return path.node.property.name;
+      const newLocal = path.node.property.name;
+      return newLocal;
     } else {
       // `props.foo.bar.baz`, returns `foo.bar.baz`
-      return generate(path.node.property).code;
+      const x = generate(path.node.property).code;
+      return x;
     }
   } else {
     // `load`, returns `load`
@@ -64,7 +66,12 @@ const _replaceIdentifiers = (
             return [head, tail.join('')];
           },
           ([obj, prop]) => {
-            return types.memberExpression(types.identifier(obj), types.identifier(prop));
+            const objIdentifier = types.identifier(obj);
+            if (prop === '') {
+              return objIdentifier;
+            } else {
+              return types.memberExpression(objIdentifier, types.identifier(prop));
+            }
           },
         );
         path.replaceWith(newMemberExpression);

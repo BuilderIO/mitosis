@@ -73,12 +73,7 @@ export const stripStateAndPropsRefs = (
     }
   }
   if (includeState !== false) {
-    if (typeof replaceWith === 'string') {
-      newCode = newCode.replace(/state\./g, replaceWith);
-    } else {
-      newCode = newCode.replace(/state\.([\$a-z0-9_]+)/gi, (memo, name) => replaceWith(name));
-    }
-    // newCode = replaceIdentifiers({ code: newCode, from: 'state', to: replaceWith || null });
+    newCode = replaceIdentifiers({ code: newCode, from: 'state', to: replaceWith || null });
   }
 
   const matchPropertyAccessorsArguments = '\\?\\.|,|\\.|\\(| |;|\\)|\\]|$'; // foo?.stuff | foo) | foo | foo] etc.
