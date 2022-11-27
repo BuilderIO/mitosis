@@ -8,6 +8,7 @@ import { isMitosisNode } from '../../helpers/is-mitosis-node';
 import { replaceIdentifiers } from '../../helpers/replace-identifiers';
 import { parseCode, uncapitalize } from './helpers';
 import { pipe } from 'fp-ts/lib/function';
+import { MitosisNode } from '@builder.io/mitosis';
 
 const { types } = babel;
 
@@ -47,6 +48,31 @@ function mapStateIdentifiersInExpression(expression: string, stateProperties: st
   );
 }
 
+const consolidateClassBindings = (item: MitosisNode) => {
+  if (item.bindings.className) {
+    if (item.bindings.class) {
+      // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
+      item.bindings.class = item.bindings.className;
+    } else {
+      item.bindings.class = item.bindings.className;
+    }
+    delete item.bindings.className;
+  }
+
+  if (item.properties.className) {
+    if (item.properties.class) {
+      item.properties.class = `${item.properties.class} ${item.properties.className}`;
+    } else {
+      item.properties.class = item.properties.className;
+    }
+    delete item.properties.className;
+  }
+
+  if (item.properties.class && item.bindings.class) {
+    console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
+  }
+};
+
 /**
  * Convert state identifiers from React hooks format to the state.* format Mitosis needs
  * e.g.
@@ -84,28 +110,7 @@ export function mapStateIdentifiers(json: MitosisComponent) {
         }
       }
 
-      if (item.bindings.className) {
-        if (item.bindings.class) {
-          // TO-DO: it's too much work to merge 2 bindings, so just remove the old one for now.
-          item.bindings.class = item.bindings.className;
-        } else {
-          item.bindings.class = item.bindings.className;
-        }
-        delete item.bindings.className;
-      }
-
-      if (item.properties.className) {
-        if (item.properties.class) {
-          item.properties.class = `${item.properties.class} ${item.properties.className}`;
-        } else {
-          item.properties.class = item.properties.className;
-        }
-        delete item.properties.className;
-      }
-
-      if (item.properties.class && item.bindings.class) {
-        console.warn(`[${json.name}]: Ended up with both a property and binding for 'class'.`);
-      }
+      consolidateClassBindings(item);
     }
   });
 }
