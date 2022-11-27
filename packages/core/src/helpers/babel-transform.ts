@@ -113,18 +113,32 @@ export const babelTransformExpression = <VisitorContextType = any>(
   }
 
   code = code.trim();
+  const isGetter = code.startsWith('get ');
 
-  const type = getType(code, initialType);
+  return pipe(
+    code,
+    (code) => {
+      code = code.replace(/^get /, 'function ');
 
-  const useCode = type === 'functionBody' ? `function(){${code}}` : code;
+      const type = getType(code, initialType);
 
-  if (type !== 'expression') {
-    try {
-      return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
-    } catch (error) {
-      return handleErrorOrExpression({ code, useCode, result: null, visitor });
-    }
-  } else {
-    return handleErrorOrExpression({ code, useCode, result: null, visitor });
-  }
+      const useCode = type === 'functionBody' ? `function(){${code}}` : code;
+
+      return { type, useCode };
+    },
+    ({ type, useCode }) => {
+      if (type !== 'expression') {
+        try {
+          return pipe(babelTransformCode(useCode, visitor), trimExpression(type));
+        } catch (error) {
+          return handleErrorOrExpression({ code, useCode, result: null, visitor });
+        }
+      } else {
+        return handleErrorOrExpression({ code, useCode, result: null, visitor });
+      }
+    },
+    (transformed) => {
+      return isGetter ? transformed.trim().replace(/^function /, 'get ') : transformed;
+    },
+  );
 };

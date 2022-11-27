@@ -82,11 +82,8 @@ const _replaceIdentifiers = (
 };
 
 export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
-  const isGetter = code.trim().startsWith('get ');
-  const newCode = code.trim().replace(/^get /, 'function ');
-
   try {
-    const transformed = babelTransformExpression(newCode, {
+    return babelTransformExpression(code, {
       MemberExpression(path) {
         _replaceIdentifiers(path, { from, to });
       },
@@ -106,8 +103,6 @@ export const replaceIdentifiers = ({ code, from, to }: ReplaceArgs) => {
         }
       },
     });
-    const newLocal = isGetter ? transformed.trim().replace(/^function /, 'get ') : transformed;
-    return newLocal;
   } catch (err) {
     console.log('could not replace identifiers for ', code);
     return code;
